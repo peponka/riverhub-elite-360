@@ -64,7 +64,7 @@ function startAISStream() {
     });
 }
 
-// startAISStream(); // ✅ ACTIVADO: Modo Real
+startAISStream(); // ✅ ACTIVADO: Modo Real - Datos AIS en vivo
 
 // --- SIMULATION MODE (DISABLED FOR PRODUCTION) ---
 /*

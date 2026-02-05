@@ -9,14 +9,14 @@
     min-height: 100%;
 }
 
-/* Force visibility for content wrapper and all children */
-.audit-content-wrapper,
-.audit-content-wrapper * {
+/* Force visibility for content box and all children */
+.auditoria-content-box,
+.auditoria-content-box * {
     visibility: visible !important;
     opacity: 1 !important;
 }
 
-.audit-content-wrapper>div {
+.auditoria-content-box>div {
     display: block !important;
 }
 
@@ -29,8 +29,9 @@
         overflow-y: auto;
     }
 
-    .audit-content-wrapper {
+    .auditoria-content-box {
         padding-top: 10px !important;
+        padding-bottom: 120px !important;
     }
 }
 

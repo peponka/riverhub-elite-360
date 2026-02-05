@@ -55,7 +55,7 @@ var mapLogic = {
             zoomControl: false,
             attributionControl: false,
             background: '#0b1116'
-        }).setView([-29.0, -59.5], 6);
+        }).setView([-30.0, -58.5], 5); // Hidrovía completa: Paraguay → Río de la Plata
 
         // Add tile layer - CARTO DARK MATTER (Dark + Cities + Roads)
         // This is the best balance: Premium look, but with useful labels.

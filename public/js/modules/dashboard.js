@@ -144,7 +144,7 @@ const dashboardLogic = {
             zoomControl: true,
             attributionControl: false,
             background: '#0b1116'
-        }).setView([-29.0, -59.5], 6); // Centered on Hidrovía (Corrientes/Santa Fe axis) with Zoom 6 to see full river
+        }).setView([-30.0, -58.5], 5); // Hidrovía completa: Paraguay → Río de la Plata
 
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 17, opacity: 1.0
