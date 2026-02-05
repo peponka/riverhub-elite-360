@@ -1,0 +1,491 @@
+/* ============================================
+   AUDITORÍA SISTEMA & DB - ELITE 360
+   ============================================ */
+
+/* Base styles for the view */
+#view-auditoria {
+    background: #090e14;
+    position: relative;
+    min-height: 100%;
+}
+
+/* Force visibility for content wrapper and all children */
+.audit-content-wrapper,
+.audit-content-wrapper * {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.audit-content-wrapper>div {
+    display: block !important;
+}
+
+/* Mobile positioning when visible */
+@media (max-width: 768px) {
+    #view-auditoria[style*="block"] {
+        position: relative;
+        min-height: calc(100vh - 130px);
+        padding-bottom: 80px;
+        overflow-y: auto;
+    }
+
+    .audit-content-wrapper {
+        padding-top: 10px !important;
+    }
+}
+
+/* Standard view-section visibility handled by JS */
+
+.auditoria-container {
+    min-height: 100%;
+    height: auto;
+    overflow-y: visible;
+    background: #090e14;
+    color: #e2e8f0;
+    font-family: 'Rajdhani', sans-serif;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Children styling */
+.auditoria-container>* {
+    display: flex;
+}
+
+.audit-grid {
+    display: grid;
+}
+
+/* --- HEADER --- */
+.auditoria-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1f2937;
+    flex-shrink: 0;
+}
+
+.title-group-audit h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.title-group-audit span {
+    font-size: 0.75rem;
+    color: #64748b;
+    letter-spacing: 2px;
+    display: block;
+    margin-top: 5px;
+    font-weight: 700;
+}
+
+.icon-box-audit {
+    color: #f59e0b;
+    /* Amber for System/Warning */
+    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.5));
+}
+
+/* --- DASHBOARD GRID --- */
+.audit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Status Cards (Top Row) */
+.status-card {
+    background: var(--md-sys-color-surface-variant);
+    border: none;
+    /* Removed border reliance */
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: var(--md-sys-motion-easing-standard) 0.2s;
+    box-shadow: var(--md-sys-elevation-level-1);
+    cursor: default;
+    /* Unless actionable */
+}
+
+.status-card:hover {
+    box-shadow: var(--md-sys-elevation-level-2);
+    /* No border color shift, use elevation */
+}
+
+.status-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #64748b;
+}
+
+.status-card.active .status-icon {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.status-card.warning .status-icon {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.status-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.status-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Main Terminal / Logs (Bottom Left - Spans 2) */
+.terminal-panel {
+    grid-column: span 2;
+    background: #05080a;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.terminal-header {
+    background: #1e293b;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+}
+
+.terminal-title {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.terminal-actions button {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.terminal-actions button:hover {
+    color: #fff;
+}
+
+.terminal-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    color: #a3e635;
+    /* Terminal Green */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.log-entry {
+    display: flex;
+    gap: 10px;
+}
+
+.log-time {
+    color: #64748b;
+}
+
+.log-type.info {
+    color: #3b82f6;
+}
+
+.log-type.error {
+    color: #ef4444;
+}
+
+.log-type.success {
+    color: #10b981;
+}
+
+/* Database Query Tool (Bottom Right - Spans 1) */
+.db-panel {
+    grid-column: span 1;
+    background: #0f1621;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.db-header {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.db-control-group {
+    margin-bottom: 20px;
+}
+
+.db-control-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-bottom: 5px;
+}
+
+.db-select {
+    width: 100%;
+    background: #0b1116;
+    border: 1px solid #334155;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: inherit;
+}
+
+.btn-audit-action {
+    /* STRICT MATERIAL 3 FILLED BUTTON */
+    width: 100%;
+    background: var(--md-sys-color-primary) !important;
+    color: var(--md-sys-color-on-primary) !important;
+    border: none !important;
+    height: 48px !important;
+    border-radius: 9999px !important;
+    /* Stadium */
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer;
+    font-family: var(--md-ref-typeface-brand) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    box-shadow: var(--md-sys-elevation-level-1) !important;
+    transition: var(--md-sys-motion-easing-standard) 0.2s !important;
+    margin-top: 10px;
+    text-transform: capitalize !important;
+    letter-spacing: 0.1px;
+}
+
+.btn-audit-action:hover {
+    box-shadow: var(--md-sys-elevation-level-2) !important;
+    filter: brightness(1.05);
+    /* State layer */
+    transform: none !important;
+}
+
+.btn-audit-danger {
+    /* STRICT MATERIAL 3 OUTLINED BUTTON (Error) */
+    background: transparent !important;
+    color: var(--md-sys-color-error) !important;
+    border: 1px solid var(--md-sys-color-error) !important;
+    width: 100%;
+    height: 48px !important;
+    border-radius: 9999px !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer;
+    font-family: var(--md-ref-typeface-brand) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    transition: var(--md-sys-motion-easing-standard) 0.2s !important;
+    margin-top: 10px;
+    text-transform: capitalize !important;
+}
+
+.btn-audit-danger:hover {
+    background: rgba(186, 26, 26, 0.08) !important;
+    /* Error opacity */
+    box-shadow: none !important;
+}
+
+/* ============================================
+   RESPONSIVE - MATERIAL DESIGN 3 MOBILE
+   ============================================ */
+@media (max-width: 1024px) {
+    .auditoria-container {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 16px !important;
+        padding-top: 20px !important;
+        padding-bottom: 120px !important;
+        min-height: 100vh !important;
+        height: auto !important;
+        overflow-y: auto !important;
+        background: #090e14 !important;
+    }
+
+    /* Header Mobile */
+    .auditoria-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+        padding-bottom: 16px !important;
+    }
+
+    .title-group-audit h2 {
+        font-size: 1.3rem !important;
+        flex-wrap: wrap !important;
+    }
+
+    .title-group-audit span {
+        font-size: 0.65rem !important;
+        margin-top: 4px !important;
+    }
+
+    /* Grid to Column */
+    .audit-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    /* Status Cards - Horizontal scroll or stack */
+    .status-card {
+        padding: 16px !important;
+        gap: 12px !important;
+        border-radius: 12px !important;
+        background: #0f1621 !important;
+        border: 1px solid #1f2937 !important;
+    }
+
+    .status-icon {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.2rem !important;
+        border-radius: 10px !important;
+    }
+
+    .status-info h4 {
+        font-size: 0.75rem !important;
+    }
+
+    .status-value {
+        font-size: 1rem !important;
+    }
+
+    /* Terminal Panel */
+    .terminal-panel {
+        min-height: 250px !important;
+        max-height: 350px !important;
+        grid-column: auto !important;
+    }
+
+    .terminal-header {
+        padding: 10px 12px !important;
+    }
+
+    .terminal-title {
+        font-size: 0.75rem !important;
+    }
+
+    .terminal-actions button {
+        font-size: 0.75rem !important;
+        padding: 4px 8px !important;
+    }
+
+    .terminal-body {
+        padding: 12px !important;
+        font-size: 0.75rem !important;
+    }
+
+    /* DB Panel */
+    .db-panel {
+        grid-column: auto !important;
+        padding: 16px !important;
+        border-radius: 12px !important;
+    }
+
+    .db-header {
+        font-size: 0.9rem !important;
+        margin-bottom: 12px !important;
+    }
+
+    .db-control-group {
+        margin-bottom: 16px !important;
+    }
+
+    .db-control-group label {
+        font-size: 0.7rem !important;
+    }
+
+    /* Buttons M3 */
+    .btn-audit-action {
+        height: 44px !important;
+        font-size: 0.85rem !important;
+        border-radius: 100px !important;
+    }
+
+    .btn-audit-danger {
+        height: 44px !important;
+        font-size: 0.85rem !important;
+        border-radius: 100px !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .auditoria-container {
+        padding: 12px !important;
+        padding-bottom: 130px !important;
+    }
+
+    .title-group-audit h2 {
+        font-size: 1.1rem !important;
+    }
+
+    .icon-box-audit {
+        display: none !important;
+    }
+
+    .terminal-panel {
+        min-height: 200px !important;
+    }
+
+    .status-card {
+        padding: 12px !important;
+    }
+
+    .status-icon {
+        width: 36px !important;
+        height: 36px !important;
+    }
+}

@@ -1,0 +1,322 @@
+/* ============================================
+   HIDROLOGÍA & CLIMA - ELITE 360
+   ============================================ */
+
+.hydro-container {
+    height: 100%;
+    overflow-y: auto;
+    background: #090e14;
+    color: #e2e8f0;
+    font-family: 'Rajdhani', sans-serif;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HEADER --- */
+.hydro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1f2937;
+    flex-shrink: 0;
+}
+
+.title-group-blue h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.title-group-blue span {
+    font-size: 0.75rem;
+    color: #64748b;
+    letter-spacing: 2px;
+    display: block;
+    margin-top: 5px;
+    font-weight: 700;
+}
+
+.icon-box-blue {
+    color: #3b82f6;
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+}
+
+.btn-ghost-blue {
+    /* STRICT MATERIAL 3 OUTLINED BUTTON */
+    background: transparent;
+    border: 1px solid var(--md-sys-color-outline) !important;
+    color: var(--md-sys-color-primary) !important;
+    padding: 0 24px !important;
+    height: 40px !important;
+    border-radius: 9999px !important;
+    /* Stadium */
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer;
+    font-family: var(--md-ref-typeface-brand) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    transition: var(--md-sys-motion-easing-standard) 0.2s !important;
+    text-transform: capitalize !important;
+    letter-spacing: 0.1px;
+}
+
+.btn-ghost-blue:hover {
+    background: rgba(6, 182, 212, 0.08) !important;
+    border-color: var(--md-sys-color-primary) !important;
+    color: var(--md-sys-color-primary) !important;
+}
+
+/* --- GRID LAYOUT --- */
+.hydro-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Weather Cards */
+.weather-card {
+    background: #0f1621;
+    border-top: 3px solid #3b82f6;
+    /* Default Blue */
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.weather-card:hover {
+    transform: translateY(-3px);
+}
+
+.loc-name {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.weather-icon-lg {
+    font-size: 3rem;
+    color: #fbbf24;
+    /* Sun Yellow default */
+    margin: 10px 0;
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));
+}
+
+.temp-big {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.temp-unit {
+    font-size: 1.5rem;
+    color: #64748b;
+    vertical-align: top;
+}
+
+.hydro-details {
+    width: 100%;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+}
+
+.h-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.h-label {
+    font-size: 0.6rem;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.h-val {
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+.h-val.warning {
+    color: #f59e0b;
+}
+
+/* Alerts Panel (Top Right - spans 1) */
+.alerts-panel {
+    background: #0f1621;
+    border: 1px solid #ef4444;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+.alert-header {
+    color: #ef4444;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+    padding-bottom: 10px;
+}
+
+.alert-card {
+    background: rgba(239, 68, 68, 0.05);
+    border-left: 3px solid #ef4444;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.alert-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #ef4444;
+    text-transform: uppercase;
+}
+
+.alert-desc {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    line-height: 1.3;
+}
+
+/* Chart Section (Bottom - Spans 3) */
+.hydro-chart-section {
+    grid-column: span 3;
+    background: #0b1116;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.chart-tabs {
+    display: flex;
+    gap: 5px;
+    background: #0f1621;
+    padding: 3px;
+    border-radius: 8px;
+}
+
+.chart-tabs button {
+    background: transparent;
+    border: 1px solid var(--md-sys-color-outline);
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 0 16px;
+    /* Standard chip padding */
+    height: 32px;
+    border-radius: 8px;
+    /* M3 small shape */
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.chart-tabs button.active {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    border-color: transparent;
+}
+
+.chart-tabs button:hover:not(.active) {
+    background: var(--md-sys-color-surface-container-high);
+}
+
+.mock-chart-container {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    padding-top: 10px;
+}
+
+/* Radar (Bottom Right - Spans 1) */
+.radar-box {
+    grid-column: span 1;
+    background: #000;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    background-image: radial-gradient(rgba(6, 182, 212, 0.2) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.radar-sweep {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(6, 182, 212, 0.1) 60deg, rgba(6, 182, 212, 0.5) 90deg, transparent 91deg);
+    transform-origin: 0% 0%;
+    animation: radarSpin 4s linear infinite;
+}
+
+@keyframes radarSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .hydro-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hydro-chart-section,
+    .radar-box {
+        grid-column: auto;
+        /* Reset grid spans */
+        width: 100%;
+        min-height: 250px;
+    }
+}

@@ -1,0 +1,283 @@
+/* ============================================
+   LOAD MASTER (CÁLCULO DE ESTIBA) - ELITE 360
+   ============================================ */
+
+.loadmaster-container {
+    height: 100%;
+    overflow-y: auto;
+    background: #090e14;
+    color: #e2e8f0;
+    font-family: 'Rajdhani', sans-serif;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HEADER --- */
+.lm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #1f2937;
+    flex-shrink: 0;
+}
+
+.title-group-lm h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.title-group-lm span {
+    font-size: 0.75rem;
+    color: #64748b;
+    letter-spacing: 2px;
+    display: block;
+    margin-top: 5px;
+    font-weight: 700;
+}
+
+.icon-box-lm {
+    color: #f59e0b;
+    /* Amber/Orange for technical/warning feel */
+    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+}
+
+/* --- MAIN GRID --- */
+.lm-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr 300px;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    /* Prevent overflow */
+}
+
+/* LEFT PANEL: CONTROLS */
+.lm-controls-panel {
+    background: #0f1621;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.lm-section-title {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 5px;
+}
+
+.lm-input-group {
+    margin-bottom: 15px;
+}
+
+.lm-input-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    margin-bottom: 5px;
+}
+
+.lm-input {
+    width: 100%;
+    background: #0b1116;
+    border: 1px solid #334155;
+    color: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    /* Fix width issues */
+}
+
+.lm-input:focus {
+    border-color: #f59e0b;
+    outline: none;
+}
+
+.btn-lm-action {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.2s;
+}
+
+.btn-lm-action.reset {
+    background: transparent;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+
+.btn-lm-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* CENTER PANEL: VISUALIZER */
+.lm-visualizer-panel {
+    background: #05080a;
+    /* Darker for contrast */
+    border: 1px solid #334155;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image:
+        linear-gradient(rgba(51, 65, 85, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(51, 65, 85, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.barge-silouhette {
+    width: 200px;
+    height: 600px;
+    border: 4px solid #475569;
+    border-radius: 40px 40px 10px 10px;
+    /* Bow shape */
+    position: relative;
+    background: rgba(15, 23, 42, 0.8);
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    /* Holds */
+    gap: 2px;
+}
+
+.barge-hold {
+    border: 1px dashed #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.3s;
+}
+
+.barge-hold span {
+    z-index: 2;
+    font-weight: 700;
+    text-shadow: 0 0 5px #000;
+}
+
+.hold-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(245, 158, 11, 0.3);
+    /* Cargo interior */
+    transition: height 0.5s ease;
+}
+
+.water-line {
+    position: absolute;
+    width: 300px;
+    height: 2px;
+    background: #0ea5e9;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    opacity: 0.5;
+}
+
+/* RIGHT PANEL: METRICS & RESULTS */
+.lm-metrics-panel {
+    background: #0f1621;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.metric-card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-bottom: 5px;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.metric-value.safe {
+    color: #10b981;
+}
+
+.metric-value.warn {
+    color: #f59e0b;
+}
+
+.metric-value.danger {
+    color: #ef4444;
+}
+
+.stability-indicator {
+    height: 10px;
+    background: #334155;
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.stability-bar {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #fff;
+    transition: left 0.5s ease, background 0.2s;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .lm-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .barge-silouhette {
+        width: 150px;
+        height: 400px;
+    }
+
+    .lm-visualizer-panel {
+        min-height: 450px;
+    }
+}

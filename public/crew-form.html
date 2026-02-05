@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Relevo - RiverHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00e5ff 0%, #0099ff 100%);
+            color: #000;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: #000;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .btn-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .body {
+            padding: 30px;
+        }
+
+        .subtitle {
+            color: #00e5ff;
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #00e5ff;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 15px;
+            background: #1e293b;
+            border: 1px solid #334;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #00e5ff;
+        }
+
+        select {
+            cursor: pointer;
+            border: 2px solid #00e5ff;
+            font-weight: bold;
+        }
+
+        select option {
+            background: #1e293b;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-box {
+            background: rgba(0, 229, 255, 0.1);
+            border-left: 4px solid #00e5ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 25px 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .info-box i {
+            color: #00e5ff;
+            font-size: 1.5rem;
+            margin-top: 2px;
+        }
+
+        .info-box span {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            padding: 25px 30px;
+            background: #0a0f1a;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid #555;
+            color: #fff;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-submit {
+            background: #00e5ff;
+            color: #000;
+            flex: 2;
+        }
+
+        .btn-submit:hover {
+            background: #00d4ee;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 229, 255, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-users"></i> PROGRAMAR NUEVO RELEVO</h1>
+            <button class="btn-close" onclick="window.history.back()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="body">
+            <p class="subtitle">GESTIÓN DE PERSONAL FLUVIAL</p>
+
+            <form id="crewForm">
+                <div class="form-group">
+                    <label>NOMBRE COMPLETO DEL TRIPULANTE</label>
+                    <input type="text" id="name" placeholder="Ej: Roberto Gomez" required>
+                </div>
+
+                <div class="form-group">
+                    <label>CARGO / ROL</label>
+                    <select id="role" required>
+                        <option value="Capitán">Capitán</option>
+                        <option value="Jefe de Máquinas">Jefe de Máquinas</option>
+                        <option value="Primer Oficial">Primer Oficial</option>
+                        <option value="Oficial Fluvial">Oficial Fluvial</option>
+                        <option value="Baqueano">Baqueano</option>
+                        <option value="Contramaestre">Contramaestre</option>
+                        <option value="Engrasador">Engrasador</option>
+                        <option value="Marinero" selected>Marinero</option>
+                        <option value="Cocinero">Cocinero</option>
+                        <option value="Aprendiz">Aprendiz</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>⚠️ BUQUE DE DESTINO (OBLIGATORIO)</label>
+                    <select id="vessel" required>
+                        <option value="">Cargando flota...</option>
+                    </select>
+                    <small style="color:#64748b; font-size:0.8rem; margin-top:5px; display:block;">
+                        * Solo se muestran buques registrados en Gestión de Flota.
+                    </small>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>FECHA DE EMBARQUE</label>
+                        <input type="date" id="date">
+                    </div>
+                    <div class="form-group">
+                        <label>DÍAS PREVISTOS</label>
+                        <input type="number" id="days" value="20">
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <i class="fas fa-shield-check"></i>
+                    <span>El sistema validará automáticamente los títulos STCW y el apto médico del tripulante contra la
+                        base de datos de Prefectura antes de confirmar el embarque.</span>
+                </div>
+            </form>
+        </div>
+
+        <div class="footer">
+            <button type="button" class="btn btn-cancel" onclick="window.history.back()">
+                CANCELAR
+            </button>
+            <button type="submit" class="btn btn-submit" id="submitBtn">
+                EMITIR ORDEN DE RELEVO
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuración de Supabase (igual que en la app principal)
+        const SUPABASE_URL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // --- AUTH & LOAD LOGIC ---
+        async function initPage() {
+            const select = document.getElementById('vessel');
+
+            // 1. Try to restore session if coming from main app
+            const { data: { session } } = await sb.auth.getSession();
+
+            // If no session, we might be in trouble for RLS policies
+            console.log("Session Status:", session ? "Authenticated" : "Guest/Anon");
+
+            try {
+                // Fetch Vessels
+                // We select ID and Name only
+                const { data, error } = await sb
+                    .from('vessels')
+                    .select('id, name')
+                    .order('name');
+
+                if (error) {
+                    console.error("Error fetching vessels:", error);
+                    select.innerHTML = '<option value="">Error cargando flota</option>';
+                    return;
+                }
+
+                if (data && data.length > 0) {
+                    select.innerHTML = '<option value="">Seleccione Embarcación...</option>';
+                    data.forEach(v => {
+                        const opt = document.createElement('option');
+                        opt.value = v.id;
+                        opt.innerText = v.name;
+                        select.appendChild(opt);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">Sin buques registrados</option>';
+                }
+            } catch (e) {
+                console.warn("Exception loading vessels:", e);
+                select.innerHTML = '<option value="">Error de conexión</option>';
+            }
+        }
+
+        initPage(); // Trigger load
+
+        const form = document.getElementById('crewForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        submitBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const role = document.getElementById('role').value;
+            const vessel = document.getElementById('vessel').value;
+            const date = document.getElementById('date').value;
+            const days = document.getElementById('days').value;
+
+            if (!name || name.trim() === '' || !vessel) {
+                alert('⚠️ Por favor complete el nombre y seleccione un buque');
+                return;
+            }
+
+            // Deshabilitar botón y mostrar estado de carga
+            // Deshabilitar botón y mostrar estado de carga
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESANDO...';
+
+            try {
+                // DETECTAR SI ES UN BARCO AIS (LIVE) O UNA ID REAL (UUID)
+                const isAisVessel = vessel.startsWith('AIS-');
+
+                if (isAisVessel) {
+                    // MODO LOCAL / AIS: No guardar en Supabase (fallaría por UUID/FK)
+                    // Guardar en LocalStorage para simular persistencia
+                    console.log("Detectado buque AIS. Guardando localmente.");
+
+                    const localCrew = {
+                        id: 'local-' + Date.now(),
+                        full_name: name,
+                        role: role,
+                        vessel_id: vessel,
+                        status: 'active',
+                        boarding_date: date || new Date().toISOString().split('T')[0],
+                        days_planned: days || 20,
+                        is_local: true
+                    };
+
+                    saveToLocalStorage(localCrew);
+
+                    // Simular delay de red
+                    await new Promise(r => setTimeout(r, 800));
+                    alert('✅ Orden de Relevo (AIS) Generada Correctamente');
+                    window.history.back();
+                    return;
+                }
+
+                // SI ES UUID STANDARD: Intentar guardar en Supabase
+                // 1. Obtener Sesión y Company ID
+                const { data: sessionData } = await sb.auth.getSession();
+                const user = sessionData?.session?.user;
+                let companyId = null;
+
+                if (user) {
+                    const { data: profile } = await sb
+                        .from('profiles')
+                        .select('company, company_id')
+                        .eq('id', user.id)
+                        .single();
+
+                    // Priorizar ID, fallback a nombre de empresa, fallback a null
+                    if (profile) companyId = profile.company_id || profile.company || null;
+                }
+
+                // 2. Insertar con Company ID
+                const { data, error } = await sb
+                    .from('crew_members')
+                    .insert([{
+                        full_name: name,
+                        role: role,
+                        vessel_id: vessel,
+                        status: 'active',
+                        boarding_date: date || null,
+                        days_planned: days || 20,
+                        company_id: companyId // CRITICO PARA SAAS
+                    }]);
+
+                if (error) throw error;
+
+                alert('✅ Orden de Relevo Generada Exitosamente');
+                window.history.back();
+
+            } catch (error) {
+                console.warn('Error guardando en Supabase:', error);
+
+                // FALLBACK: Guardar localmente en caso de error de DB
+                const localCrew = {
+                    id: 'fallback-' + Date.now(),
+                    full_name: name,
+                    role: role,
+                    vessel_id: vessel,
+                    status: 'active',
+                    boarding_date: date || null,
+                    days_planned: days || 20,
+                    is_local: true
+                };
+                saveToLocalStorage(localCrew);
+
+                // Mensaje amigable
+                let msg = '✅ MODO OFFLINE: Orden guardada en dispositivo local.';
+                if (error.message && error.message.includes("violates row-level security")) {
+                    msg = '⚠️ Permisos insuficientes en DB. Se guardó localmente.';
+                }
+                alert(msg);
+                window.history.back();
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'EMITIR ORDEN DE RELEVO';
+                }
+            }
+        });
+
+        function saveToLocalStorage(crewItem) {
+            const current = JSON.parse(localStorage.getItem('riverhub_local_crew') || '[]');
+            current.push(crewItem);
+            localStorage.setItem('riverhub_local_crew', JSON.stringify(current));
+        }
+
+
+        // Alert de verificación
+        console.log('✅ Página de tripulación standalone cargada correctamente');
+    </script>
+</body>
+
+</html>

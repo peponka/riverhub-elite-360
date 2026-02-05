@@ -1,0 +1,19 @@
+{
+  "name": "riverhub-elite",
+  "version": "1.0.0",
+  "description": "Scada System",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.1",
+    "@capacitor/cli": "^8.0.1",
+    "@capacitor/core": "^8.0.1",
+    "@capacitor/ios": "^8.0.1",
+    "@supabase/supabase-js": "^2.94.0",
+    "express": "^4.22.1",
+    "socket.io": "^4.8.3",
+    "ws": "^8.19.0"
+  }
+}

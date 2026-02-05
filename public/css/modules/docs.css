@@ -1,0 +1,248 @@
+/* --- LAYOUT PRINCIPAL --- */
+.docs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 85vh;
+    padding: 30px 50px;
+}
+
+.docs-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-main);
+}
+
+.docs-header p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+/* --- TOOLBAR --- */
+.docs-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.search-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 60%;
+}
+
+.doc-search {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 10px 15px;
+    border-radius: 6px;
+    width: 100%;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.doc-search:focus {
+    border-color: var(--cyan);
+}
+
+.filter-pills {
+    display: flex;
+    gap: 8px;
+}
+
+.pill {
+    background: transparent;
+    border: 1px solid var(--md-sys-color-outline);
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 0 16px;
+    height: 32px;
+    /* Standard Chip height */
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    /* Flex usually safer for alignment */
+    align-items: center;
+    justify-content: center;
+}
+
+.pill.active {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    border-color: transparent;
+}
+
+.pill:hover:not(.active) {
+    background: var(--md-sys-color-surface-container-high);
+}
+
+.action-group {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-upload {
+    /* STRICT MATERIAL 3 FILLED BUTTON */
+    background: var(--md-sys-color-primary) !important;
+    color: var(--md-sys-color-on-primary) !important;
+    border: none !important;
+    padding: 0 24px !important;
+    height: 48px !important;
+    border-radius: 9999px !important;
+    /* Stadium */
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer;
+    font-family: var(--md-ref-typeface-brand) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    /* Ensuring center alignment */
+    gap: 8px;
+    box-shadow: var(--md-sys-elevation-level-1) !important;
+    transition: var(--md-sys-motion-easing-standard) 0.2s !important;
+    text-transform: capitalize !important;
+    letter-spacing: 0.1px;
+}
+
+.btn-upload:hover {
+    box-shadow: var(--md-sys-elevation-level-2) !important;
+    filter: brightness(1.05);
+    /* State layer */
+    transform: none !important;
+    opacity: 1;
+    /* Reset legacy opacity rule */
+}
+
+/* --- GRILLA DE TARJETAS --- */
+.docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+}
+
+.doc-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 20px;
+    position: relative;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.doc-card:hover {
+    border-color: var(--text-muted);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.doc-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.badge-signed {
+    color: var(--green);
+    background: rgba(74, 222, 128, 0.1);
+}
+
+.badge-sent {
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.badge-archived {
+    color: var(--yellow);
+    background: rgba(251, 191, 36, 0.1);
+}
+
+.file-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    margin-bottom: 15px;
+    color: #fff;
+    margin-top: 10px;
+}
+
+.icon-pdf {
+    background: #ef4444;
+    /* Clean solid color */
+    box-shadow: none;
+}
+
+.icon-xls {
+    background: #10b981;
+    box-shadow: none;
+}
+
+.doc-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 5px;
+}
+
+.card-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    margin-top: 15px;
+    padding-top: 10px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* MOBILE RESPONSIVE Docs */
+@media (max-width: 768px) {
+    .docs-container {
+        padding: 20px;
+        height: auto;
+        overflow-y: auto;
+    }
+
+    .docs-toolbar {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .search-group {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-group {
+        justify-content: flex-end;
+    }
+
+    .docs-grid {
+        grid-template-columns: 1fr;
+        /* 1 Column cards */
+    }
+}

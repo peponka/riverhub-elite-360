@@ -1,0 +1,260 @@
+/* css/modules/daily_report.css */
+
+/* Report Overlay */
+.daily-report-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 10, 20, 0.95);
+    z-index: 25000;
+    display: none;
+    /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.daily-report-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* The "Magazine" Page */
+.daily-report-page {
+    width: 210mm;
+    /* A4 Width */
+    height: 90vh;
+    background: #0f172a;
+    /* Midnight Navy */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 2px #334155;
+    position: relative;
+    overflow-y: auto;
+    font-family: 'Inter', sans-serif;
+    color: #e2e8f0;
+    padding: 0;
+    border: 1px solid #1e293b;
+}
+
+/* Print Friendly Scrollbar */
+.daily-report-page::-webkit-scrollbar {
+    width: 8px;
+}
+
+.daily-report-page::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+.daily-report-page::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+
+/* Report Header */
+.report-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 30px 40px;
+    border-bottom: 2px solid #0ea5e9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.report-brand h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.5rem;
+    color: #fff;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.report-brand h1 span {
+    color: #0ea5e9;
+}
+
+.report-meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+/* Ticker Tape */
+.report-ticker {
+    background: #000;
+    color: #0ea5e9;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    border-bottom: 1px solid #1e293b;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.ticker-content {
+    display: inline-block;
+    padding-left: 100%;
+    animation: ticker 20s linear infinite;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+/* Grid Layout */
+.report-body {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* Section Styling */
+.report-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2rem;
+    color: #94a3b8;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Metrics Cards */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    background: rgba(30, 41, 59, 0.5);
+    padding: 15px;
+    border-left: 3px solid #0ea5e9;
+}
+
+.metric-card.alert {
+    border-left-color: #ef4444;
+}
+
+.metric-card.good {
+    border-left-color: #10b981;
+}
+
+.metric-val {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-top: 5px;
+}
+
+/* Table Clean Style */
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.report-table th {
+    text-align: left;
+    color: #64748b;
+    padding: 8px;
+    border-bottom: 1px solid #334155;
+    font-weight: 600;
+}
+
+.report-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #1e293b;
+    color: #cbd5e1;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.bg-green {
+    background-color: #10b981;
+}
+
+.bg-red {
+    background-color: #ef4444;
+}
+
+.bg-yellow {
+    background-color: #f59e0b;
+}
+
+/* Right Column (Sidebar) */
+.sidebar-box {
+    background: #1e293b;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.highlight-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+}
+
+.highlight-text strong {
+    color: #fff;
+}
+
+/* Footer Actions */
+.report-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 26000;
+}
+
+.action-btn {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #334155;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background: #0ea5e9;
+    border-color: #0ea5e9;
+}

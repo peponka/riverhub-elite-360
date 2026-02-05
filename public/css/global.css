@@ -1,0 +1,1783 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700;800&display=swap');
+
+/* Import Unified Theme Tokens */
+@import url('./theme.css');
+
+/* ============================================
+   EMERGENCY FIX: AUDITORÍA MODULE MOBILE
+   ============================================ */
+#view-auditoria[style*="block"],
+#view-auditoria:not([style*="none"]) {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#view-auditoria .auditoria-container,
+#view-auditoria .auditoria-header,
+#view-auditoria .audit-grid,
+#view-auditoria .status-card,
+#view-auditoria .terminal-panel,
+#view-auditoria .db-panel {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+@media (max-width: 768px) {
+    #view-auditoria .auditoria-container {
+        flex-direction: column !important;
+        padding: 16px !important;
+        padding-bottom: 120px !important;
+        background: #090e14 !important;
+    }
+
+    #view-auditoria .audit-grid {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    #view-auditoria .status-card {
+        background: #0f1621 !important;
+        border: 1px solid #1f2937 !important;
+        border-radius: 12px !important;
+        padding: 16px !important;
+    }
+
+    #view-auditoria .terminal-panel {
+        min-height: 200px !important;
+        background: #05080a !important;
+        border-radius: 12px !important;
+    }
+
+    #view-auditoria .db-panel {
+        background: #0f1621 !important;
+        border-radius: 12px !important;
+        padding: 16px !important;
+    }
+}
+
+/* --- CUSTOM SCROLLBAR (CLEANED) --- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-panel, #0f172a);
+    border-left: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-hover, #334155);
+    border-radius: 4px;
+    border: 1px solid var(--bg-panel, #0f172a);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-cyan, #06b6d4);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-hover, #334155) var(--bg-dark, #020617);
+}
+
+
+/* --- ROOT VARIABLES (Now inheriting from theme.css) --- */
+/* Legacy overrides for backward compatibility */
+:root {
+    /* Map old names to new theme tokens */
+    --bg-sidebar: var(--bg-panel);
+    --bg-card: var(--bg-card);
+    --border: var(--border-color);
+    --card-radius: var(--radius-md);
+}
+
+/* --- GLOBAL INPUT STYLES --- */
+input,
+select,
+textarea {
+    background: var(--bg-dark, #020617) !important;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08)) !important;
+    color: var(--text-main, #f1f5f9) !important;
+    border-radius: var(--radius-md, 8px);
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--neon-cyan, #06b6d4) !important;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-muted, #64748b) !important;
+}
+
+/* --- MAP VIEW CONTAINER --- */
+.map-view-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    background: var(--bg-dark, #020617);
+    overflow: hidden;
+}
+
+/* --- NEXUS HEADER --- */
+.nexus-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    flex-shrink: 0;
+    z-index: 100;
+}
+
+.nexus-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nexus-logo {
+    width: 40px;
+    height: 40px;
+    background: rgba(6, 182, 212, 0.15);
+    border-radius: var(--radius-md, 8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-cyan, #06b6d4);
+    font-size: 1.2rem;
+}
+
+.nexus-text h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main, #f1f5f9);
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 1px;
+}
+
+.nexus-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted, #64748b);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- CONTENT AREA --- */
+/* Default: Normal scrollable content */
+#content-area {
+    flex: 1;
+    min-height: 0;
+}
+
+/* --- VIEW MAPA SPECIFIC --- */
+#view-mapa {
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    flex-direction: column;
+}
+
+/* Only show flex when map is actually displayed (JS sets this) */
+body.mode-map-active #view-mapa {
+    display: flex;
+}
+
+/* When map is active, hide main-content scroll */
+#view-mapa .map-view-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+#view-mapa .nexus-map-area {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+}
+
+/* --- MAP ACTIVE MODE (Applied via JS) --- */
+body.mode-map-active .main-content {
+    overflow: hidden !important;
+}
+
+body.mode-map-active #content-area {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.mode-map-active .top-bar {
+    flex-shrink: 0;
+}
+
+/* --- NEXUS MAP COMPONENTS --- */
+.nexus-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nexus-search i {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted, #64748b);
+    z-index: 10;
+}
+
+.nexus-search input {
+    width: 200px;
+    padding-left: 35px !important;
+    background: var(--bg-panel, #0f172a) !important;
+}
+
+.btn-neural {
+    background: var(--bg-panel, #0f172a);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    color: var(--text-main, #f1f5f9);
+    padding: 8px 16px;
+    border-radius: var(--radius-md, 8px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-neural:hover {
+    border-color: var(--neon-green, #10b981);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.nexus-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* --- NEXUS MAP LAYOUT --- */
+.nexus-map-area {
+    flex: 1;
+    position: relative;
+    display: flex;
+    height: 100%;
+    min-height: 0;
+}
+
+#map-nexus {
+    flex: 1;
+    height: 100%;
+    min-height: 400px;
+    z-index: 1;
+    border: none !important;
+    outline: none !important;
+}
+
+/* Clean map rendering - remove any unwanted lines */
+#map-nexus .leaflet-tile-pane,
+#map-nexus .leaflet-overlay-pane,
+#map-nexus .leaflet-container {
+    border: none !important;
+    outline: none !important;
+}
+
+/* Map rendering - Fix white grid lines/gaps */
+#map-nexus {
+    background-color: #0b1116 !important;
+    /* Match dark theme so gaps aren't white */
+}
+
+#map-nexus .leaflet-tile-container img {
+    /* Aggressive fix for tile gaps */
+    mix-blend-mode: normal !important;
+    outline: 1px solid transparent;
+    transform: scale(1.01);
+    /* Overlap tiles by 1% to hide seams */
+    will-change: transform;
+}
+
+/* Map marker pane z-index */
+#map-nexus .leaflet-marker-pane {
+    z-index: 600;
+}
+
+/* --- NEXUS SIDEBAR RIGHT --- */
+.nexus-sidebar-right {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 280px;
+    max-height: calc(100% - 20px);
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-radius: var(--radius-lg, 12px);
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.nexus-list-header {
+    padding: 15px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--neon-cyan, #06b6d4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#nexus-ship-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* --- SHIP ITEM --- */
+.ship-item-nexus {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-card, #18181b);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-radius: var(--radius-md, 8px);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ship-item-nexus:hover {
+    background: var(--bg-hover, #334155);
+    border-color: var(--neon-cyan, #06b6d4);
+    transform: translateX(3px);
+}
+
+.ship-av-pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.ship-av-pulse.p-green {
+    background: var(--neon-green, #10b981);
+    box-shadow: 0 0 8px var(--neon-green, #10b981);
+    animation: pulse 2s infinite;
+}
+
+.ship-av-pulse.p-orange {
+    background: var(--neon-gold, #f59e0b);
+    box-shadow: 0 0 8px var(--neon-gold, #f59e0b);
+}
+
+.ship-n-det {
+    flex: 1;
+    min-width: 0;
+}
+
+.ship-n-det h4 {
+    margin: 0;
+    color: var(--text-main, #f1f5f9);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ship-n-det span {
+    font-size: 0.75rem;
+    color: var(--text-muted, #64748b);
+}
+
+.ship-n-act {
+    color: var(--text-muted, #64748b);
+    font-size: 0.8rem;
+}
+
+.ship-n-act i {
+    transition: transform 0.2s;
+}
+
+.ship-item-nexus:hover .ship-n-act i {
+    transform: translateX(3px);
+    color: var(--neon-cyan, #06b6d4);
+}
+
+/* --- BOTTOM SHEET (Mobile) --- */
+.bottom-sheet {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    background: var(--bg-panel, #0f172a);
+    border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-radius: 20px 20px 0 0;
+    padding: 15px 20px 25px;
+    z-index: 1000;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    display: none;
+    /* Hidden by default on desktop */
+}
+
+@media (max-width: 768px) {
+    .bottom-sheet {
+        display: block;
+        /* Only show on mobile */
+    }
+}
+
+.bottom-sheet.open {
+    transform: translateY(0);
+}
+
+.bs-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--text-muted, #64748b);
+    border-radius: 2px;
+    margin: 0 auto 15px;
+}
+
+.bs-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.bs-img {
+    width: 50px;
+    height: 50px;
+    background: rgba(6, 182, 212, 0.15);
+    border-radius: var(--radius-md, 8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-cyan, #06b6d4);
+    font-size: 1.5rem;
+}
+
+.bs-info h3 {
+    margin: 0 0 5px 0;
+    color: var(--text-main, #f1f5f9);
+    font-size: 1.1rem;
+}
+
+.bs-info p {
+    margin: 0;
+    color: var(--text-muted, #64748b);
+    font-size: 0.85rem;
+}
+
+.bs-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.bs-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-md, 8px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.bs-btn-primary {
+    background: var(--neon-cyan, #06b6d4);
+    color: var(--bg-dark, #020617);
+}
+
+.bs-btn-primary:hover {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+}
+
+.bs-btn-secondary {
+    background: var(--bg-card, #18181b);
+    color: var(--text-main, #f1f5f9);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+}
+
+/* --- LOCK ON BUTTON --- */
+.lock-on-btn {
+    position: absolute;
+    bottom: 80px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    background: var(--bg-panel, #0f172a);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.lock-on-btn.active {
+    background: var(--neon-cyan);
+    color: var(--bg-dark);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+}
+
+/* --- MAP MARKERS --- */
+.marker-pulse,
+.marker-pulse-demo {
+    animation: markerPulse 2s infinite;
+}
+
+.marker-pulse i {
+    color: var(--neon-cyan, #06b6d4);
+}
+
+.marker-pulse-demo i {
+    color: var(--neon-gold, #f59e0b);
+}
+
+@keyframes markerPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* --- MAP POPUP --- */
+.n-popup {
+    min-width: 180px;
+}
+
+.n-pop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.n-pop-header strong {
+    color: var(--text-main);
+}
+
+.n-pop-body {
+    font-size: 0.85rem;
+}
+
+.n-pop-body div {
+    margin-bottom: 5px;
+}
+
+.n-pop-body span {
+    color: var(--text-muted);
+}
+
+/* --- WEATHER WIDGET --- */
+.weather-widget-control {
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg, 12px);
+    padding: 10px 15px;
+    min-width: 100px;
+}
+
+.weather-box {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.weather-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.w-icon {
+    font-size: 1.5rem;
+    color: var(--neon-cyan);
+}
+
+.w-temp {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.w-temp .unit {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.weather-details {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.weather-loading {
+    color: var(--neon-cyan);
+    text-align: center;
+}
+
+/* Mobile: Hide desktop sidebar, show bottom sheet */
+@media (max-width: 768px) {
+    .nexus-sidebar-right {
+        display: none;
+    }
+
+    .lock-on-btn {
+        display: flex;
+    }
+}
+
+/* --- 2. BASE --- */
+body {
+    margin: 0;
+    font-family: 'Inter', 'Roboto', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+    /* Tighter premium feel */
+}
+
+/* Monospace Helper for IDs/Tracking Numbers */
+.font-mono,
+.tracking-number,
+.shipment-id,
+.kpi-value,
+.doc-id {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    letter-spacing: 0;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* --- 3. BARRA LATERAL (SIDEBAR) --- */
+.sidebar {
+    width: 280px;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    padding-right: 10px;
+    /* Space for scrollbar */
+    overflow: hidden;
+    /* Main container hidden */
+    flex-shrink: 0;
+    z-index: 1000;
+}
+
+/* Scrollable Menu Area */
+.sidebar nav.menu {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 14px;
+    padding-bottom: 200px;
+    margin-right: -10px;
+}
+
+
+/* --- RESTORED SIDEBAR STYLES --- */
+.logo-area {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.logo-icon {
+    font-size: 20px;
+    color: var(--text-main);
+    margin-right: 12px;
+}
+
+.logo-area h2 {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+}
+
+.logo-area span {
+    font-size: 10px;
+    background: var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--text-muted);
+    letter-spacing: 0;
+    margin-left: 8px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Menú */
+.menu-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin: 24px 0 8px 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Navigation Items (Material 3 Drawer) */
+.menu a {
+    display: flex;
+    align-items: center;
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+    padding: 0 16px 0 24px;
+    height: 56px;
+    /* Material Standard */
+    margin-bottom: 4px;
+    border-radius: var(--md-sys-shape-corner-full);
+    /* Stadium shape */
+    margin-right: 12px;
+    /* Gap from edge */
+    font: var(--md-sys-typescale-label-large);
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu a:hover {
+    color: var(--md-sys-color-on-surface);
+    background-color: rgba(255, 255, 255, 0.05);
+    /* State layer */
+}
+
+.menu a.active {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-weight: 700;
+}
+
+.menu a i {
+    width: 24px;
+    text-align: center;
+    margin-right: 12px;
+    font-size: 1.2rem;
+    color: inherit;
+    /* Inherit from parent for active state contrast */
+    text-shadow: none;
+    /* Remove neon glow for cleaner look */
+}
+
+.menu a.active i {
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+.badge-vhf {
+    background: var(--red);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    margin-left: auto;
+    font-weight: 700;
+}
+
+/* Perfil de Usuario (Abajo a la izquierda) */
+.user-profile {
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-card);
+    border-radius: 6px;
+    /* Squarer avatar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.user-info strong {
+    display: block;
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.user-info span {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+
+/* --- 4. CONTENIDO PRINCIPAL --- */
+.main-content {
+    flex: 1;
+    padding: 0;
+    overflow-y: scroll;
+    /* Forces the track to appear always */
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* --- TOP APP BAR (Material 3 Small) --- */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 24px;
+    /* Reduced vertical padding for 64px height target */
+    height: 64px;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--md-sys-color-surface-variant);
+    margin-bottom: 0;
+    background: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.top-bar h1 {
+    margin: 0;
+    font: var(--md-sys-typescale-title-large);
+    color: var(--md-sys-color-on-surface);
+    text-transform: none;
+}
+
+.status-badge {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    border: none;
+    padding: 6px 12px;
+    border-radius: var(--md-sys-shape-corner-small);
+    font: var(--md-sys-typescale-label-small);
+    font-weight: 600;
+    cursor: default;
+}
+
+.btn-icon {
+    /* M3 Standard Icon Button */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-left: 8px;
+    /* Tighter spacing */
+    cursor: pointer;
+    font-size: 24px;
+    /* M3 Icon Size */
+    transition: all 0.2s;
+    background: transparent;
+}
+
+.btn-icon:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    /* State layer */
+    color: var(--md-sys-color-on-surface);
+}
+
+/* --- VIEW SECTIONS (Prevent Mixing) --- */
+.view-section {
+    background-color: var(--bg-dark);
+    /* Ensure opaque background */
+    width: 100%;
+    min-height: 100%;
+    /* Cover full height */
+    position: relative;
+    /* Animation for smooth switch */
+    animation: fadeInView 0.3s ease-out;
+}
+
+@keyframes fadeInView {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-icon:hover {
+    color: var(--text-main);
+}
+
+/* CLASE UTILITARIA PARA OCULTAR VISTAS (Importante para que funcione el menú) */
+.view-section {
+    display: none;
+}
+
+/* --- 5. MODAL SYSTEM (Global) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    /* Darker backdrop */
+    backdrop-filter: blur(5px);
+    z-index: 200000 !important;
+    /* Ultra high z-index to cover bottom nav */
+    display: flex;
+    /* Centering magic */
+    justify-content: center;
+    align-items: center;
+    animation: fadeInModal 0.3s;
+}
+
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-card {
+    background: #09090b;
+    /* Zinc-950 */
+    width: 600px;
+    max-width: 95vw;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+    position: relative;
+}
+
+.modal-header {
+    background: #18181b;
+    /* Zinc-900 */
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-close-modal:hover {
+    color: var(--text-main);
+}
+
+.modal-body {
+    padding: 20px;
+    color: var(--text-main);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    background: #18181b;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+}
+
+/* Inputs common in modals */
+.input-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group-modal {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group-modal label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.modal-input {
+    background: #27272a;
+    /* Zinc-800 */
+    border: 1px solid #3f3f46;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+}
+
+/* --- 6. NATIVE APP RESPONSIVE STYLES (Capacitor/Mobile Polishing) --- */
+/* Scrollbar policy moved to media query below */
+
+* {
+    -ms-overflow-style: none !important;
+    /* IE and Edge */
+    scrollbar-width: none !important;
+    /* Firefox */
+}
+
+/* MOBILE SAFE AREA UTILITY */
+.mobile-safe-top {
+    padding-top: 50px !important;
+    /* Base Safe Area */
+}
+
+@media (max-width: 768px) {
+
+    /* Auto-fix for all module headers colliding with notch */
+    .tripulacion-container,
+    .panol-container,
+    .incidentes-container,
+    .comunicaciones-container {
+        padding-top: 90px !important;
+        /* Force content below notch */
+    }
+
+    /* Fix Modals Width */
+    .modal-content,
+    .forense-modal {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 0 auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        overflow-x: hidden !important;
+    }
+}
+
+/* Mobile Bottom Nav Styles - MATERIAL / IOS BLEND */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    /* Taller for touch targets */
+    background: rgba(15, 15, 18, 0.85);
+    /* Glass Background */
+    backdrop-filter: blur(15px);
+    /* Native Blur Effect */
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: none;
+    /* Hidden on desktop */
+    justify-content: space-around;
+    align-items: center;
+    z-index: 99999;
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: max(env(safe-area-inset-bottom), 10px);
+    /* Manual safe area adjustment */
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #64748b;
+    /* Muted Slate */
+    font-size: 10px;
+    gap: 4px;
+    flex: 1;
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.mobile-nav-item i {
+    font-size: 20px;
+    margin-bottom: 2px;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Bouncy Icon */
+}
+
+.mobile-nav-item span {
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.3px;
+    opacity: 0.8;
+}
+
+/* Active State - Material You / Glosw Style */
+.mobile-nav-item.active {
+    color: var(--cyan);
+}
+
+.mobile-nav-item.active i {
+    transform: translateY(-2px);
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.mobile-nav-item.active::before {
+    /* Active Indicator Pill (Material You style) */
+    content: '';
+    position: absolute;
+    top: 5px;
+    width: 40px;
+    height: 32px;
+    background: rgba(56, 189, 248, 0.1);
+    border-radius: 16px;
+    z-index: -1;
+    animation: pillPop 0.3s ease-out;
+}
+
+@keyframes pillPop {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Mobile Media Query - NATIVE BEHAVIOR OVERRIDES */
+@media (max-width: 768px) {
+
+    /* Reset Scrollbars for Native Feel */
+    body,
+    .main-content,
+    .sidebar {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+    }
+
+    body::-webkit-scrollbar,
+    .main-content::-webkit-scrollbar,
+    .sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .app-container {
+        flex-direction: column;
+    }
+
+    /* --- SIDEBAR DRAWER (Android Style) --- */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        z-index: 100000;
+        background: #09090b;
+        /* Solid background for performace */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-105%);
+        /* Using transform for performance */
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: env(safe-area-inset-top);
+        /* Notch Support */
+        will-change: transform;
+    }
+
+    .sidebar.mobile-visible {
+        transform: translateX(0);
+    }
+
+    /* Overlay for Sidebar */
+    .app-container::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(2px);
+        z-index: 99999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+
+    body.drawer-open .app-container::after {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+
+    /* --- MAIN CONTENT AREA --- */
+    .main-content {
+        width: 100%;
+        height: 100vh;
+        overflow-y: scroll;
+        /* Native scroll momentum */
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 90px;
+        /* Space for Nav */
+        padding-top: env(safe-area-inset-top);
+    }
+
+    /* Show Bottom Nav */
+    .mobile-bottom-nav {
+        display: flex;
+    }
+
+    /* --- APP HEADER (Modern Clean) --- */
+    .top-bar {
+        padding: 10px 15px;
+        padding-top: max(10px, env(safe-area-inset-top));
+        position: sticky;
+        top: 0;
+        z-index: 800;
+        background: rgba(9, 9, 11, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        height: auto;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+    }
+
+    .top-bar h1 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        white-space: normal;
+        /* Allow wrapping */
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .status-badge {
+        font-size: 9px;
+        padding: 2px 8px;
+        border-radius: 12px;
+    }
+
+    /* --- APP-WIDE UI ENFORCEMENT (Mobile First Consisteny) --- */
+    /* Force Stadium Shape (Pill) for ALL primary interaction elements */
+    button,
+    .btn,
+    .btn-login,
+    .btn-primary,
+    .btn-action,
+    .btn-new-request,
+    .btn-admin-action,
+    .btn-apertura,
+    .btn-fleet-select,
+    input[type="submit"],
+    input[type="button"] {
+        border-radius: 9999px !important;
+        /* Full rounded pill shape */
+        min-height: 48px !important;
+        /* Mobile Touch Target Standard */
+        font-weight: 600 !important;
+        letter-spacing: 0.5px !important;
+        text-transform: capitalize !important;
+        /* Modern app style */
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 24px !important;
+        transition: transform 0.1s ease, box-shadow 0.2s ease !important;
+    }
+
+    /* Exceptions for specific icon-only buttons */
+    .btn-icon,
+    .btn-close,
+    .action-btn,
+    .btn-table-action,
+    .btn-arrow-action {
+        border-radius: 50% !important;
+        /* Circle for icons */
+        width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+        min-height: 40px !important;
+        aspect-ratio: 1/1 !important;
+    }
+
+    /* Modernize Text Inputs */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    input[type="search"],
+    select,
+    textarea {
+        border-radius: 12px !important;
+        /* Soft corners for inputs */
+        min-height: 50px !important;
+        padding: 12px 16px !important;
+        font-size: 16px !important;
+        /* Prevent iOS zoom */
+        background-color: var(--md-sys-color-surface) !important;
+        border: 1px solid var(--md-sys-color-outline) !important;
+        color: var(--md-sys-color-on-surface) !important;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--md-sys-color-primary) !important;
+        box-shadow: 0 0 0 2px rgba(var(--md-sys-color-primary-rgb), 0.2) !important;
+        outline: none !important;
+    }
+
+    .login-card {
+        width: 90%;
+        padding: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #09090b;
+    }
+
+    .login-logo {
+        font-size: 2.5rem;
+        margin-bottom: 30px;
+    }
+
+    /* Full Screen Modals for Mobile (Force overrides) */
+    .modal-card,
+    .forense-modal,
+    /* Explicitly target the problem modal class */
+    .modal-content {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        display: flex;
+        flex-direction: column;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+    }
+
+    /* MOBILE MODAL FIX V3 */
+    .modal-card {
+        width: 100% !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        position: relative !important;
+        /* Context for absolute footer */
+        padding-bottom: 0 !important;
+        padding-top: max(20px, env(safe-area-inset-top)) !important;
+        /* NOTCH SAFE */
+    }
+
+    .modal-body {
+        flex: 1 1 auto;
+        /* Grow and shrink */
+        overflow-y: auto;
+        padding-bottom: 120px !important;
+        /* Space for footer */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-footer {
+        position: relative !important;
+        /* Natural flow */
+        bottom: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        flex-shrink: 0 !important;
+        /* Don't squash */
+        background: #18181b !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex !important;
+        justify-content: space-around !important;
+        /* Center buttons */
+        padding: 20px !important;
+        padding-bottom: 100px !important;
+        /* Giant padding for bottom clearance */
+        z-index: 100 !important;
+    }
+}
+
+/* === MOBILE FIX: HIDE SIDEBAR === */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .top-bar {
+        padding: 15px !important;
+    }
+
+    .dashboard-container {
+        padding-bottom: 100px !important;
+    }
+}
+
+
+/* === MOBILE SIDEBAR DRAWER === */
+@media (max-width: 768px) {
+    .sidebar {
+        display: flex !important;
+        position: fixed !important;
+        left: -100% !important;
+        top: 0;
+        bottom: 0;
+        width: 280px !important;
+        z-index: 9999 !important;
+        transition: left 0.3s ease-in-out;
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar.active {
+        left: 0 !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9998;
+        backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.active {
+        display: block !important;
+    }
+}
+
+
+/* === FIX SIDEBAR CLASS NAME === */
+.sidebar.mobile-visible {
+    left: 0 !important;
+}
+
+.sidebar-overlay.mobile-visible {
+    display: block !important;
+}
+
+
+/* === MOBILE SIDEBAR: HARD COMPATIBILITY MODE === */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 85% !important;
+        z-index: 99999 !important;
+        background: #0f0f12 !important;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8) !important;
+    }
+
+    .sidebar.mobile-visible {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 100px !important;
+        /* Space for bottom items */
+    }
+
+    /* Make nav menu scrollable within sidebar */
+    .sidebar.mobile-visible nav.menu {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        padding-bottom: 120px !important;
+    }
+
+    /* Scrollbar visible para móvil - Material Design */
+    .sidebar.mobile-visible::-webkit-scrollbar,
+    .sidebar.mobile-visible nav.menu::-webkit-scrollbar {
+        width: 4px !important;
+        display: block !important;
+    }
+
+    .sidebar.mobile-visible::-webkit-scrollbar-track,
+    .sidebar.mobile-visible nav.menu::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .sidebar.mobile-visible::-webkit-scrollbar-thumb,
+    .sidebar.mobile-visible nav.menu::-webkit-scrollbar-thumb {
+        background: rgba(0, 229, 255, 0.4) !important;
+        border-radius: 2px !important;
+    }
+
+    /* Firefox scroll */
+    .sidebar.mobile-visible,
+    .sidebar.mobile-visible nav.menu {
+        scrollbar-width: thin !important;
+        scrollbar-color: rgba(0, 229, 255, 0.4) rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        filter: none !important;
+    }
+
+    .sidebar-overlay {
+        display: none !important;
+    }
+
+    /* === FULLSCREEN MODE FOR CONVOYS (MOBILE FIX) === */
+    @media (max-width: 768px) {
+        body.mode-fullscreen-convoys .top-bar {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            pointer-events: none !important;
+            border: none !important;
+        }
+
+        /* Remove global helper push */
+        body.mode-fullscreen-convoys .main-content {
+            padding-top: 0 !important;
+            height: 100vh !important;
+            overflow: hidden !important;
+            /* Let module handle scroll */
+        }
+
+        /* Ensure module container fills space and handles its own scroll */
+        body.mode-fullscreen-convoys .convoys-container {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 100000 !important;
+            padding-top: 70px !important;
+            /* Space for Custom Header */
+            background: #0f172a !important;
+            overflow-y: auto !important;
+        }
+
+        /* Force Custom Header on top */
+        body.mode-fullscreen-convoys .mobile-header-bar {
+            top: 0 !important;
+            position: fixed !important;
+            z-index: 100001 !important;
+            display: flex !important;
+        }
+    }
+}
+
+/* --- EMERGENCY MOBILE RESET & ADMIN FIXES --- */
+@media (max-width: 768px) {
+
+    /* 1. Ensure Layout Containers fit screen */
+    body,
+    html {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+
+    .main-content,
+    .app-container,
+    #view-admin,
+    #admin-main-content,
+    .admin-container {
+        display: block !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* 2. Kill Disruptive Sidebars (Unless explicitly toggled by JS) */
+    .sidebar:not(.mobile-visible-override),
+    .nexus-sidebar-right,
+    #sidebar-wrapper {
+        display: none !important;
+        width: 0 !important;
+    }
+
+    /* 3. Typography Reset for Mobile to prevent giant cut-off text */
+    h1,
+    h2,
+    h3,
+    h4,
+    .nexus-text h2,
+    .admin-header-top div {
+        font-size: clamp(1rem, 5vw, 1.5rem) !important;
+        line-height: 1.3 !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        max-width: 100%;
+    }
+
+    /* 4. Fix Grid Systems to Single Column */
+    .grid,
+    .kpi-grid,
+    .fleet-grid,
+    .admin-table-container {
+        display: flex !important;
+        flex-direction: column !important;
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    /* 5. Specific Admin Module Fixes */
+    .admin-module-header {
+        padding: 15px !important;
+        margin: 10px !important;
+        border-radius: 12px !important;
+        width: auto !important;
+    }
+
+    .nav-tab {
+        flex-shrink: 0 !important;
+        font-size: 0.85rem !important;
+    }
+
+    .admin-nav-horizontal {
+        justify-content: flex-start !important;
+        padding-bottom: 10px !important;
+    }
+
+    /* 6. Form Elements */
+    input,
+    select,
+    textarea {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 7. Hide "Ghost" Overlays */
+    .modal-overlay {
+        z-index: 10000 !important;
+        /* Ensure modals are ON TOP */
+    }
+}

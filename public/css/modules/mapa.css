@@ -1,0 +1,374 @@
+/* ============================================
+   MAPA MODULE - NEON ELITE THEME
+   ============================================ */
+
+.mapa-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--bg-dark);
+    position: relative;
+}
+
+/* Map Header */
+.mapa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 100;
+}
+
+.mapa-header h2 {
+    color: var(--text-main);
+    font-size: 1.3rem;
+    font-family: var(--font-heading);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mapa-header h2 i {
+    color: var(--neon-cyan);
+}
+
+.mapa-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-map-control {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 8px 15px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-map-control:hover,
+.btn-map-control.active {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+/* Map Canvas */
+.mapa-canvas {
+    flex: 1;
+    position: relative;
+    background: #000;
+}
+
+.mapa-canvas #map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Sidebar Panel */
+.mapa-sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 360px;
+    height: 100%;
+    background: var(--bg-panel);
+    border-left: 1px solid var(--border-color);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.mapa-sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar-header {
+    padding: 15px 20px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h3 {
+    color: var(--text-main);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.btn-close-sidebar {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.btn-close-sidebar:hover {
+    color: var(--text-main);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+/* Vessel Card in Sidebar */
+.vessel-detail-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.vessel-detail-header {
+    padding: 15px;
+    background: linear-gradient(90deg, rgba(6, 182, 212, 0.1) 0%, var(--bg-card) 100%);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.vessel-detail-name {
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.vessel-detail-type {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.vessel-detail-body {
+    padding: 15px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.detail-value {
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.vessel-status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.vessel-status-indicator.navegando {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--neon-cyan);
+}
+
+.vessel-status-indicator.fondeado {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--neon-gold);
+}
+
+.vessel-status-indicator.atracado {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--neon-green);
+}
+
+/* Map Legend */
+.mapa-legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 15px;
+    z-index: 100;
+}
+
+.legend-title {
+    color: var(--text-main);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.legend-item:last-child {
+    margin-bottom: 0;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-dot.navegando {
+    background: var(--neon-cyan);
+}
+
+.legend-dot.fondeado {
+    background: var(--neon-gold);
+}
+
+.legend-dot.atracado {
+    background: var(--neon-green);
+}
+
+.legend-dot.sin-senal {
+    background: var(--neon-red);
+}
+
+/* Vessel Markers */
+.vessel-marker {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.vessel-marker:hover {
+    transform: scale(1.2);
+}
+
+/* Stats Bar */
+.mapa-stats-bar {
+    display: flex;
+    gap: 20px;
+    padding: 10px 20px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.stat-item i {
+    color: var(--neon-cyan);
+}
+
+.stat-item .value {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* Search Overlay */
+.mapa-search {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    width: 300px;
+    z-index: 100;
+}
+
+.search-input-wrapper {
+    position: relative;
+}
+
+.search-input-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.mapa-search-input {
+    width: 100%;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 12px 15px 12px 45px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-md);
+}
+
+.mapa-search-input:focus {
+    outline: none;
+    border-color: var(--neon-cyan);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .mapa-header {
+        padding: 10px 15px;
+    }
+
+    .mapa-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .mapa-sidebar {
+        width: 100%;
+    }
+
+    .mapa-legend {
+        bottom: 80px;
+        left: 10px;
+        right: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 12px;
+    }
+
+    .legend-title {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .mapa-search {
+        left: 10px;
+        right: 10px;
+        width: auto;
+    }
+
+    .mapa-stats-bar {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-bottom: 80px;
+    }
+}

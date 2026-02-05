@@ -1,0 +1,9 @@
+{
+  "appId": "com.riverhub.elite360",
+  "appName": "Riverhub Mobile",
+  "webDir": "public",
+  "server": {
+    "cleartext": true,
+    "androidScheme": "http"
+  }
+}

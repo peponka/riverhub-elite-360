@@ -1,0 +1,43 @@
+/* Add to css/modules/comunicaciones.css */
+
+.channel-card.official-channel {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);
+}
+
+.channel-card.official-channel:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+    border-color: #f59e0b;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+.channel-card.official-channel.active {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(0, 0, 0, 0.8) 100%);
+    border: 1px solid #f59e0b;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
+}
+
+.channel-card.official-channel.active::before {
+    background: #f59e0b;
+    box-shadow: 0 0 15px #f59e0b;
+}
+
+.channel-card.official-channel .ch-number {
+    color: #f59e0b;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.channel-card.official-channel.active .ch-number {
+    color: #fff;
+    text-shadow: 0 0 15px #f59e0b;
+}
+
+.channel-card.official-channel .bar {
+    background: #78350f;
+}
+
+.channel-card.official-channel.active .bar {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+}

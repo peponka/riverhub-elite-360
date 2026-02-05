@@ -1,0 +1,412 @@
+/* ============================================
+   MANTENIMIENTO MODULE - ELITE 360 VITALS
+   ============================================ */
+
+/* === MAINTENANCE CONTAINER (Material Update) === */
+.maintenance-container {
+    padding: var(--space-lg);
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: var(--md-sys-color-background);
+    font-family: var(--md-ref-typeface-brand);
+    color: var(--md-sys-color-on-background);
+    overflow-y: auto;
+}
+
+/* --- HEADER --- */
+.maintenance-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.nexus-title-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nexus-logo {
+    width: 48px;
+    height: 48px;
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid var(--neon-cyan);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+.nexus-text h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-main);
+}
+
+.nexus-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+/* Controls Right */
+.control-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-fleet-select {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition-normal);
+}
+
+.btn-fleet-select:hover {
+    border-color: var(--neon-cyan);
+    color: var(--text-main);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+}
+
+.btn-apertura {
+    /* STRICT MATERIAL 3 FILLED BUTTON (warning variant) */
+    background: var(--md-sys-color-tertiary-container);
+    /* Using Tertiary or Warning container */
+    color: var(--md-sys-color-on-tertiary-container);
+    border: none !important;
+    padding: 0 24px !important;
+    height: 48px !important;
+    border-radius: 9999px !important;
+    /* Stadium */
+    font-family: var(--md-ref-typeface-brand) !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer;
+    box-shadow: var(--md-sys-elevation-level-1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    transition: var(--md-sys-motion-easing-standard) 0.2s !important;
+    text-transform: capitalize !important;
+    letter-spacing: 0.1px;
+}
+
+.btn-apertura:hover {
+    box-shadow: var(--md-sys-elevation-level-2) !important;
+    filter: brightness(1.05);
+    /* State layer */
+    transform: none !important;
+}
+
+
+/* --- DASHBOARD GRID --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    /* Left (2/3) Right (1/3) */
+    grid-template-rows: auto auto;
+    gap: 24px;
+    flex: 1;
+}
+
+/* CARDS COMMON */
+.dash-card {
+    background: var(--md-sys-color-surface-variant);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 24px;
+    position: relative;
+    box-shadow: var(--md-sys-elevation-level-1);
+    transition: var(--md-sys-motion-easing-standard) 0.2s;
+}
+
+.dash-card:hover {
+    box-shadow: var(--md-sys-elevation-level-2);
+}
+
+.card-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* SINCROSCOPIO (LEFT) */
+.sincro-card {
+    grid-row: span 2;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Charts Containers */
+.chart-container {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    min-height: 250px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+}
+
+.chart-label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.7rem;
+    color: var(--neon-green);
+    font-weight: 700;
+    background: rgba(16, 185, 129, 0.15);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    z-index: 10;
+}
+
+.chart-label.secondary {
+    color: var(--neon-gold);
+    background: rgba(245, 158, 11, 0.15);
+}
+
+.rpm-val-overlay {
+    position: absolute;
+    top: 35px;
+    left: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+/* INYECTORES (RIGHT TOP) */
+.injectors-card {
+    background: radial-gradient(circle at top right, #1a2333 0%, var(--bg-panel) 60%);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    /* Subtle Gold border hint */
+}
+
+.injectors-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tag-propulsion {
+    background: var(--neon-gold);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+}
+
+.hash-id {
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+}
+
+.main-metric-display {
+    margin-top: 25px;
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+}
+
+.metric-label-small {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.metric-huge {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.metric-limit {
+    font-size: 1.2rem;
+    color: var(--neon-gold);
+    font-family: var(--font-mono);
+}
+
+.progress-bar-container {
+    height: 6px;
+    background: var(--bg-hover);
+    border-radius: 3px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--neon-gold);
+    box-shadow: 0 0 10px var(--neon-gold);
+}
+
+/* SYSTEMS (RIGHT BOTTOM) */
+.system-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.sys-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.sys-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    transition: var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.sys-row:hover .sys-icon {
+    color: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+    background: rgba(6, 182, 212, 0.1);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+}
+
+.sys-info {
+    flex: 1;
+}
+
+.sys-name {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-main);
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.sys-val {
+    font-family: var(--font-mono);
+    color: var(--neon-cyan);
+}
+
+.sys-bar-bg {
+    height: 4px;
+    background: var(--bg-card);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.sys-bar-fill {
+    height: 100%;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 5px var(--neon-cyan);
+}
+
+.sys-bar-fill.yellow {
+    background: var(--neon-gold);
+    box-shadow: 0 0 5px var(--neon-gold);
+}
+
+/* MODAL OVERRIDES */
+#modal-mnt-create .modal-card {
+    /* Resetting to global M3 modal style */
+    /* background, border, shadow handled by global .modal-card */
+}
+
+#modal-mnt-create h3 {
+    color: var(--text-main);
+    font-family: var(--font-heading);
+}
+
+.mnt-priority-select option {
+    background: var(--bg-panel);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .maintenance-container {
+        padding: 15px;
+        padding-bottom: 100px;
+        /* Space for Bottom Nav */
+    }
+
+    .maintenance-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .nexus-title-group {
+        width: 100%;
+    }
+
+    .control-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .btn-fleet-select,
+    .btn-apertura {
+        flex: 1;
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 15px;
+    }
+
+    .sincro-card {
+        grid-row: auto;
+        min-height: 350px;
+    }
+
+    .metric-huge {
+        font-size: 2.5rem;
+        /* Smaller metric on mobile */
+    }
+}

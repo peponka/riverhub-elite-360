@@ -1,0 +1,373 @@
+/* ============================================
+   TRIPULACION MODULE - ELITE 360 REFINED
+   ============================================ */
+
+.tripulacion-container {
+    padding: 30px;
+    font-family: 'Rajdhani', sans-serif;
+    color: #e2e8f0;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* --- HEADER --- */
+.trip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1e293b;
+}
+
+.title-group h2 {
+    font-size: 1.8rem;
+    margin: 0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.title-group span {
+    font-size: 0.8rem;
+    color: #64748b;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 5px;
+    font-weight: 700;
+}
+
+.btn-neon-cyan {
+    /* STRICT MATERIAL 3 FILLED BUTTON MAPPING */
+    background: var(--md-sys-color-primary) !important;
+    color: var(--md-sys-color-on-primary) !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    /* Stadium */
+    padding: 0 24px !important;
+    height: 48px !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer;
+    box-shadow: var(--md-sys-elevation-level-1) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: capitalize !important;
+    /* Modern text style */
+    font-family: var(--md-ref-typeface-brand) !important;
+    transition: box-shadow 0.2s, background 0.2s !important;
+}
+
+.btn-neon-cyan:hover {
+    background: var(--md-sys-color-primary) !important;
+    /* State layer handled by opacity usually, but keeping solid for now */
+    box-shadow: var(--md-sys-elevation-level-2) !important;
+    filter: brightness(1.08);
+    transform: none !important;
+    /* No jumpy movement */
+}
+
+/* --- FILTERS --- */
+.filters-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    background: #0f172a;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #1e293b;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-input-group {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+}
+
+.filter-label {
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    font-size: 0.7rem;
+    color: #06b6d4;
+    background: #0f172a;
+    padding: 0 5px;
+    font-weight: 700;
+}
+
+.input-filter-dark {
+    width: 100%;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #fff;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border 0.2s;
+}
+
+.input-filter-dark:focus {
+    outline: none;
+    border-color: #06b6d4;
+}
+
+.btn-clear-radar {
+    background: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-clear-radar:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* --- CREW GRID --- */
+.crew-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 25px;
+    padding-bottom: 40px;
+}
+
+/* --- ELITE CARD DESIGN --- */
+.crew-card-elite {
+    background: #0b1116;
+    /* Near black */
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.crew-card-elite:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-color: #334155;
+}
+
+/* Card Header Strip */
+.card-top-strip {
+    height: 4px;
+    width: 100%;
+    background: #334155;
+    /* Default */
+}
+
+.card-status-active .card-top-strip {
+    background: #10b981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.card-status-leave .card-top-strip {
+    background: #f59e0b;
+}
+
+.card-status-medical .card-top-strip {
+    background: #ef4444;
+}
+
+.card-body-elite {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+}
+
+/* Profile Section */
+.profile-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.avatar-elite {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.avatar-elite img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #fff;
+    font-weight: 700;
+}
+
+.profile-role {
+    color: #06b6d4;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-top: 2px;
+}
+
+.doc-id {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 2px;
+    display: block;
+}
+
+/* Stats Grid inside Card */
+.card-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.stat-chip {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-mini-label {
+    font-size: 0.65rem;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.stat-mini-value {
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Health Bar */
+.health-strip {
+    margin-top: 5px;
+}
+
+.health-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.health-track {
+    height: 4px;
+    background: #1e293b;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.health-fill {
+    height: 100%;
+    background: #10b981;
+    width: 90%;
+    /* Default mock */
+}
+
+/* Footer Actions */
+.card-actions-elite {
+    border-top: 1px solid #1e293b;
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+    background: rgba(15, 23, 42, 0.4);
+}
+
+.btn-card-action {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--md-sys-color-outline);
+    color: var(--md-sys-color-primary);
+    padding: 0 16px;
+    height: 40px;
+    /* Smaller height for card actions */
+    border-radius: 9999px !important;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-transform: capitalize !important;
+}
+
+.btn-card-action:hover {
+    background: rgba(6, 182, 212, 0.08);
+    /* Primary Opacity */
+    border-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-primary);
+}
+
+.btn-card-action.primary {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    border: none;
+}
+
+.btn-card-action.primary:hover {
+    box-shadow: var(--md-sys-elevation-level-1);
+    filter: brightness(1.05);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .tripulacion-container {
+        padding: 15px;
+    }
+
+    .trip-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .filters-row {
+        flex-direction: column;
+    }
+
+    .filter-input-group {
+        width: 100%;
+    }
+
+    .crew-list {
+        grid-template-columns: 1fr;
+        /* Single column */
+    }
+}

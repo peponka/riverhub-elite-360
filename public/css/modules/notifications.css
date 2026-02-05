@@ -1,0 +1,227 @@
+/* ============================================
+   NOTIFICATION CENTER MODULE - ELITE 360
+   ============================================ */
+
+/* The Panel Container */
+.notification-panel {
+    position: absolute;
+    top: 60px;
+    /* Below top bar */
+    right: 20px;
+    width: 350px;
+    background: #0f172a;
+    /* Slate 900 */
+    border: 1px solid #1e293b;
+    /* Slate 800 */
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: none;
+    /* Hidden by default */
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.notif-header {
+    background: #020617;
+    padding: 15px;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notif-header h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 1px;
+}
+
+.notif-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-notif-action {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-notif-action:hover {
+    color: #38bdf8;
+}
+
+/* List Container */
+.notif-list {
+    max-height: 400px;
+    overflow-y: auto;
+    background: #0f172a;
+}
+
+.notif-empty {
+    padding: 30px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Notification Item */
+.notif-item {
+    padding: 15px;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    gap: 12px;
+    transition: background 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.notif-item:hover {
+    background: #1e293b;
+}
+
+.notif-item:last-child {
+    border-bottom: none;
+}
+
+.notif-item.unread {
+    background: rgba(56, 189, 248, 0.05);
+}
+
+.notif-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #38bdf8;
+}
+
+/* Types colors */
+.notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notif-icon i {
+    font-size: 1rem;
+}
+
+/* Critical */
+.notif-item.critical .notif-icon {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Warning */
+.notif-item.warning .notif-icon {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+/* Info */
+.notif-item.info .notif-icon {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+/* Success */
+.notif-item.success .notif-icon {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.notif-content {
+    flex: 1;
+}
+
+.notif-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 3px;
+    display: block;
+}
+
+.notif-msg {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.3;
+    display: block;
+}
+
+.notif-time {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Footer */
+.notif-footer {
+    background: #020617;
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #1e293b;
+}
+
+.btn-view-all {
+    background: transparent;
+    border: none;
+    color: #38bdf8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Badge on Bell Icon */
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 10px;
+    min-width: 14px;
+    text-align: center;
+    border: 2px solid #0f172a;
+    /* Border to match background */
+    display: none;
+    /* Auto-show via JS */
+}
+
+/* Make parent relative for badge positioning */
+.top-actions .btn-icon {
+    position: relative;
+}

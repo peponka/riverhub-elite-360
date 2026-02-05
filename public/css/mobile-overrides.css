@@ -1,0 +1,168 @@
+/* === RIVERHUB MOBILE OVERRIDES FINAL === */
+
+/* 1. GLOBAL UI CLEANUP */
+@media (max-width: 768px) {
+
+    body,
+    html {
+        overflow-x: hidden;
+        user-select: none;
+    }
+
+    /* Hide redundant headers on mobile */
+    .app-header,
+    .module-header h2 {
+        display: none !important;
+    }
+
+    /* Fix Main Content spacing */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-top: 10px !important;
+        padding-bottom: 80px !important;
+        /* Space for bottom nav */
+    }
+}
+
+/* 2. CONVOY MODULE FIXES */
+@media (max-width: 768px) {
+
+    /* Container Reset */
+    .convoys-container {
+        display: flex !important;
+        flex-direction: column !important;
+        height: calc(100vh - 70px) !important;
+        padding: 0 !important;
+        background: #0f172a !important;
+        overflow: hidden !important;
+    }
+
+    /* SECTION 1: CANVAS (TOP) */
+    .canvas-panel {
+        order: 1 !important;
+        flex: 1 !important;
+        width: 100% !important;
+        background: transparent !important;
+        border: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        overflow-y: auto !important;
+        padding-top: 10px !important;
+    }
+
+    /* Header inside Canvas (Name input) */
+    .canvas-header {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 0 10px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .convoy-name-input {
+        width: 90% !important;
+        text-align: center !important;
+        border-bottom: 1px solid #00e5ff !important;
+        font-size: 1.1rem !important;
+    }
+
+    /* Floating Save Button */
+    .btn-save-convoy {
+        position: fixed !important;
+        bottom: 150px !important;
+        /* Above assets panel */
+        right: 20px !important;
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
+        background: #00e5ff !important;
+        color: #000 !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+        z-index: 999 !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center !important;
+        font-size: 0 !important;
+        /* Hide text */
+    }
+
+    .btn-save-convoy i {
+        font-size: 24px !important;
+        margin: 0 !important;
+        display: block !important;
+    }
+
+    /* Grid Area */
+    .matrix-wrapper {
+        margin-top: 10px !important;
+        transform: scale(0.65) !important;
+        /* Shrink to fit width */
+        transform-origin: top center !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    /* SECTION 2: ASSETS PANEL (BOTTOM) */
+    .assets-panel {
+        order: 2 !important;
+        width: 100% !important;
+        height: 120px !important;
+        /* Fixed height strip */
+        background: #1e293b !important;
+        border-top: 1px solid #334155 !important;
+        padding: 5px !important;
+        z-index: 100 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* Clean up Asset Header */
+    .assets-header {
+        display: none !important;
+        /* Remove title */
+    }
+
+    .asset-list {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        gap: 10px !important;
+        height: 100% !important;
+        align-items: center !important;
+        padding-left: 10px !important;
+    }
+
+    /* Individual Asset Card */
+    .draggable-asset {
+        min-width: 80px !important;
+        height: 90px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 6px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .draggable-asset i {
+        font-size: 24px !important;
+        margin-bottom: 5px !important;
+        color: #00e5ff !important;
+    }
+
+    /* Hide unneeded text inside assets if specific classes exist */
+    .draggable-asset span {
+        font-size: 0.7rem !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 75px !important;
+    }
+}

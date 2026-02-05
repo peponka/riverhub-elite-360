@@ -1,0 +1,143 @@
+<div id="view-commercial" class="view-section" style="display:none;">
+    <div class="commercial-container" style="padding:20px; color:#fff;">
+        <div class="module-header"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <div>
+                <h1
+                    style="font-size:1.8rem; margin:0; background:linear-gradient(90deg, #00e5ff, #00afff); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+                    <i class="fas fa-handshake"></i> GESTIÓN COMERCIAL</h1>
+                <p class="subtitle" style="color:#667; margin-top:5px;">CONTRATOS DIGITALES Y ÓRDENES DE SERVICIO</p>
+            </div>
+            <button onclick="CommercialModule.createContract()"
+                style="background:rgba(0, 229, 255, 0.1); border:1px solid #00e5ff; color:#00e5ff; padding:10px 20px; border-radius:5px; cursor:pointer;">
+                <i class="fas fa-plus"></i> NUEVA ORDEN
+            </button>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 350px 1fr; gap:20px; height:calc(100vh - 200px);">
+            <!-- Left: Contracts List -->
+            <div class="contracts-panel"
+                style="background:rgba(15, 23, 42, 0.6); border:1px solid #334; border-radius:10px; padding:15px; overflow-y:auto;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="font-size:0.9rem; color:#889; font-weight:600;">ÓRDENES DE SERVICIO</h3>
+                    <span style="font-size:0.7rem; background:#334; padding:2px 8px; border-radius:10px;">RECENT</span>
+                </div>
+                <div id="contract-list" style="display:flex; flex-direction:column; gap:10px;">
+                    <!-- JS Injected items -->
+                    <div style="text-align:center; padding:20px; color:#556;">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando contratos...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Editor Panel -->
+            <div id="cargo-editor-panel"
+                style="background:rgba(15, 23, 42, 0.6); border:1px solid #334; border-radius:10px; padding:20px; display:flex; flex-direction:column; gap:20px;">
+                <div class="editor-header" style="border-bottom:1px solid #334; padding-bottom:15px;">
+                    <h2 id="active-contract-title" style="margin:0; font-size:1.2rem; color:#fff;">Seleccione una Orden
+                    </h2>
+                    <div class="status-steps" style="display:flex; gap:5px; margin-top:10px;">
+                        <div style="height:4px; width:30px; background:#00e5ff; border-radius:2px;"></div>
+                        <div style="height:4px; width:30px; background:#334; border-radius:2px;"></div>
+                        <div style="height:4px; width:30px; background:#334; border-radius:2px;"></div>
+                    </div>
+                </div>
+
+                <!-- Financial Summary Area -->
+                <div id="financial-summary">
+                    <!-- JS Injected -->
+                </div>
+
+                <!-- Manifest List -->
+                <div style="flex:1;">
+                    <h3 style="font-size:0.9rem; color:#889; margin-bottom:10px;">MANIFIESTO DE CARGA</h3>
+                    <div id="manifest-list"
+                        style="background:rgba(0,0,0,0.2); border-radius:8px; padding:10px; min-height:100px;">
+                        <!-- JS Injected -->
+                    </div>
+                </div>
+
+                <div style="margin-top:auto; padding-top:15px; border-top:1px solid #334; text-align:right;">
+                    <button
+                        style="background:#00e5ff; color:#000; border:none; padding:10px 25px; border-radius:5px; font-weight:bold; cursor:pointer;">
+                        <i class="fas fa-save"></i> GUARDAR CAMBIOS
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .contract-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .contract-card:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .contract-card.active {
+        background: rgba(0, 229, 255, 0.1);
+        border-color: #00e5ff;
+    }
+
+    .contract-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .client-name {
+        font-weight: 600;
+        color: #eef;
+    }
+
+    .contract-status {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .status-borrador {
+        background: #556;
+        color: #fff;
+    }
+
+    .status-activo {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+    }
+
+    .route-info {
+        font-size: 0.8rem;
+        color: #00e5ff;
+    }
+
+    .manifest-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .manifest-barge {
+        font-weight: bold;
+        color: #fff;
+        font-size: 0.9rem;
+    }
+
+    .manifest-qty {
+        font-family: monospace;
+        color: #00e5ff;
+    }
+</style>

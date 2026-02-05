@@ -1,0 +1,661 @@
+/* ============================================
+   CONVOYS MODULE - NEON ENGINEERING THEME
+   ============================================ */
+/* GLOBAL RESET FOR MODULE */
+#view-convoys {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.convoys-container {
+    flex: 1;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    /* overflow: hidden; REMOVED FOR SCROLL */
+    background: var(--bg-dark);
+    font-family: var(--font-heading);
+}
+
+/* --- LEFT: ASSETS PANEL --- */
+.assets-panel {
+    background: rgba(15, 23, 42, 0.95);
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-md);
+    z-index: 20;
+}
+
+.assets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.assets-header h3 {
+    color: var(--text-main);
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.btn-icon-only {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-short);
+}
+
+.btn-icon-only:hover {
+    background: var(--neon-blue);
+    color: white;
+}
+
+.asset-list {
+    flex: 1;
+    /* overflow-y: auto; REMOVED */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 5px;
+    padding-bottom: 20px;
+}
+
+/* ASSET ITEM (SIDEBAR) */
+.draggable-asset {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-light);
+    border-left: 4px solid var(--text-muted);
+    padding: 15px;
+    border-radius: var(--radius-md);
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    transition: var(--transition-normal);
+    user-select: none;
+}
+
+.draggable-asset:hover {
+    transform: translateX(4px);
+    background: var(--bg-hover);
+    box-shadow: var(--shadow-sm);
+}
+
+.draggable-asset.selected {
+    border-color: var(--neon-cyan);
+    background: rgba(6, 182, 212, 0.1);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+.draggable-asset .asset-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    color: var(--text-muted);
+    width: 30px;
+    text-align: center;
+}
+
+.asset-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.asset-name {
+    color: var(--text-main);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.type-tag {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* TYPE VARIANTS */
+.draggable-asset[data-type="REMOLCADOR"] {
+    border-left-color: var(--neon-blue);
+}
+
+.draggable-asset[data-type="REMOLCADOR"] .asset-icon {
+    color: var(--neon-blue);
+}
+
+.draggable-asset[data-type*="TANQUE"] {
+    border-left-color: var(--neon-gold);
+}
+
+.draggable-asset[data-type*="TANQUE"] .asset-icon {
+    color: var(--neon-gold);
+}
+
+.draggable-asset[data-type*="GRANEL"] {
+    border-left-color: var(--neon-green);
+}
+
+.draggable-asset[data-type*="GRANEL"] .asset-icon {
+    color: var(--neon-green);
+}
+
+.loading-state {
+    text-align: center;
+    color: var(--text-muted);
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+
+/* --- RIGHT: CANVAS PANEL --- */
+.canvas-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 20px;
+    background-image:
+        linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    overflow: hidden;
+}
+
+/* CANVAS HEADER */
+.canvas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    height: 60px;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(5px);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.convoy-name-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--neon-cyan);
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 300px;
+    padding: 5px;
+    transition: var(--transition-normal);
+}
+
+.convoy-name-input:focus {
+    outline: none;
+    border-bottom-color: var(--neon-cyan);
+    box-shadow: 0 10px 20px -10px rgba(6, 182, 212, 0.2);
+}
+
+.btn-save-convoy {
+    /* STRICT MATERIAL 3 FILLED BUTTON */
+    background: var(--md-sys-color-secondary-container) !important;
+    color: var(--md-sys-color-on-secondary-container) !important;
+    border: none !important;
+    padding: 0 24px !important;
+    height: 48px !important;
+    border-radius: 9999px !important;
+    /* Stadium */
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer;
+    box-shadow: var(--md-sys-elevation-level-1) !important;
+    transition: var(--md-sys-motion-easing-standard) 0.2s !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px;
+    text-transform: capitalize !important;
+    letter-spacing: 0.1px;
+    font-family: var(--md-ref-typeface-brand) !important;
+}
+
+.btn-save-convoy:hover {
+    box-shadow: var(--md-sys-elevation-level-2) !important;
+    filter: brightness(1.05);
+    /* State layer */
+    transform: none !important;
+}
+
+/* CENTER GRID / STAGE */
+.matrix-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* overflow: auto; REMOVED */
+    position: relative;
+    padding: 20px;
+    padding-bottom: 100px;
+}
+
+/* THE GRID ITSELF */
+#convoy-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 110px);
+    grid-template-rows: repeat(6, 110px);
+    gap: 12px;
+    padding: 25px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), inset 0 0 100px rgba(0, 0, 0, 0.5);
+    position: relative;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+/* Waterline / Grid Marks */
+#convoy-grid::before {
+    content: 'PROA';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: var(--neon-cyan);
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+#convoy-grid::after {
+    content: 'POPA';
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+/* GRID CELL */
+.grid-cell {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-sm);
+    transition: var(--transition-short);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.grid-cell:hover {
+    border-color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.grid-cell.drag-over {
+    border-color: var(--neon-cyan);
+    background: rgba(6, 182, 212, 0.15);
+    box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.2);
+}
+
+/* DEPLOYED BARGE COMPONENT */
+.deployed-barge {
+    width: 95%;
+    height: 95%;
+    background: #1e293b;
+    border: 1px solid var(--text-muted);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.deployed-barge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--barge-color, #64748b);
+    border-radius: 4px 4px 0 0;
+}
+
+.deployed-barge.tanker {
+    --barge-color: var(--neon-gold);
+}
+
+.deployed-barge.bulk {
+    --barge-color: var(--neon-green);
+}
+
+.deployed-barge.container {
+    --barge-color: var(--neon-blue);
+}
+
+.deployed-tug {
+    width: 95%;
+    height: 95%;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    border-radius: 50% 50% 10px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 5px;
+}
+
+.barge-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    text-align: center;
+    line-height: 1.2;
+    padding: 0 2px;
+    margin-top: 5px;
+    word-break: break-all;
+}
+
+.btn-remove-barge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--neon-red);
+    color: white;
+    border: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 5;
+    transition: 0.2s;
+}
+
+.btn-remove-barge:hover {
+    transform: scale(1.1);
+}
+
+/* SCALING AND ANIMATIONS */
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* LEGEND */
+.canvas-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    align-self: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dot.bulk {
+    background: var(--neon-green);
+}
+
+.dot.tanker {
+    background: var(--neon-gold);
+}
+
+.dot.tug {
+    background: var(--neon-cyan);
+}
+
+
+/* MOBILE RESPONSIVE - OPTIMIZED */
+@media (max-width: 1024px) {
+    #convoy-grid {
+        grid-template-columns: repeat(5, 90px);
+        grid-template-rows: repeat(6, 90px);
+    }
+}
+
+@media (max-width: 768px) {
+    .convoys-container {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 250px;
+        overflow-y: auto !important;
+        position: relative;
+        /* Context for z-index */
+    }
+
+    /* 1. TOP: Assets List */
+    .assets-panel {
+        order: 1;
+        width: 100%;
+        height: auto;
+        min-height: 120px;
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 10px;
+        overflow-x: auto;
+        white-space: nowrap;
+        background: #0f172a;
+        z-index: 50;
+        position: relative;
+    }
+
+    /* 2. MIDDLE: Controls & Save Button */
+    .canvas-header {
+        order: 2;
+        flex-direction: column;
+        gap: 15px;
+        height: auto;
+        padding: 20px;
+        background: rgba(15, 23, 42, 1);
+        /* Solid back */
+        position: relative;
+        z-index: 100 !important;
+        /* Highest priority */
+        margin-bottom: 10px;
+        border-bottom: 1px solid #334155;
+    }
+
+    /* 3. BOTTOM: Grid */
+    .matrix-wrapper {
+        order: 3;
+        padding: 10px;
+        align-items: center;
+        /* Center grid */
+        z-index: 10;
+        margin-top: 10px;
+    }
+
+    .canvas-panel {
+        padding: 0;
+        display: contents;
+        /* Let children follow container flex */
+    }
+
+    .assets-header {
+        display: none;
+    }
+
+    .asset-list {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        /* Prevent wrapping */
+        overflow-x: auto;
+        padding-bottom: 5px;
+        align-items: center;
+        gap: 15px;
+        /* More space */
+        width: 100%;
+    }
+
+    .draggable-asset {
+        flex: 0 0 auto;
+        /* Don't shrink */
+        width: 140px;
+        /* Fixed generous width */
+        min-width: 140px;
+        height: 80px;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        padding: 8px;
+        white-space: normal;
+        /* Allow text wrap inside card */
+        border: 1px solid var(--border-light);
+        background: var(--bg-panel);
+    }
+
+    .draggable-asset .asset-icon {
+        margin: 0 0 5px 0;
+        font-size: 1.2rem;
+    }
+
+    .asset-name {
+        font-size: 0.75rem;
+    }
+
+    .type-tag {
+        display: block;
+        /* Show type again, small */
+        font-size: 0.6rem;
+        opacity: 0.7;
+        margin-top: 2px;
+    }
+
+    .convoy-name-input {
+        width: 100%;
+        font-size: 1.2rem;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        pointer-events: auto;
+        /* Ensure clickable */
+    }
+
+    .btn-save-convoy span {
+        display: inline;
+        /* Show text again */
+    }
+
+    .btn-save-convoy {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px !important;
+        font-size: 0.95rem;
+        font-weight: bold;
+        padding: 0;
+        margin-top: 10px;
+        /* Space from input */
+        border-radius: 8px;
+        position: relative;
+        z-index: 10000;
+        /* MASTER ELEMENT */
+        pointer-events: auto !important;
+        /* FORCE CLICKABLE */
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        /* Visual lift */
+        transition: transform 0.1s;
+    }
+
+    .btn-save-convoy:active {
+        transform: scale(0.95);
+        background-color: #0891b2;
+        /* Slightly different cyan */
+    }
+
+    #convoy-grid {
+        /* BIGGER CELLS FOR VISIBILITY */
+        grid-template-columns: repeat(5, 18vw);
+        grid-template-rows: repeat(6, 18vw);
+        gap: 6px;
+        padding: 5px;
+        width: auto;
+    }
+
+    /* Fallback for very small logic */
+    @media (max-width: 360px) {
+        #convoy-grid {
+            grid-template-columns: repeat(5, 16vw);
+            grid-template-rows: repeat(6, 16vw);
+        }
+    }
+
+    .deployed-barge {
+        border-width: 1px;
+    }
+
+    .barge-label {
+        font-size: 0.65rem;
+        /* Readable font */
+        padding: 2px;
+    }
+
+    .btn-remove-barge {
+        width: 20px;
+        /* Bigger touch target */
+        height: 20px;
+        top: -8px;
+        right: -8px;
+    }
+}

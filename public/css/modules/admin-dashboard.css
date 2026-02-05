@@ -1,0 +1,678 @@
+/* ============================================
+   ADMIN DASHBOARD MODULE - NEON ELITE THEME
+   ============================================ */
+
+.admin-container {
+    padding: var(--space-lg);
+    font-family: var(--md-ref-typeface-brand);
+    /* Ensure font consistency */
+    min-height: 100%;
+    background: var(--md-sys-color-background);
+}
+
+/* Header */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-header h2 {
+    font-size: 2rem;
+    color: var(--text-main);
+    margin: 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-header h2 i {
+    color: var(--neon-purple);
+}
+
+.admin-badge {
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--neon-purple);
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Stats Grid */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+    margin-bottom: 30px;
+}
+
+.admin-stat-card {
+    background: var(--md-sys-color-surface-variant);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-medium);
+    padding: 20px;
+    text-align: center;
+    transition: var(--md-sys-motion-easing-standard) 0.2s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--md-sys-elevation-level-1);
+}
+
+.admin-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-color, var(--neon-purple));
+}
+
+.admin-stat-card:hover {
+    border-color: var(--neon-purple);
+    transform: translateY(-3px);
+}
+
+.admin-stat-card .stat-icon {
+    font-size: 2rem;
+    color: var(--accent-color, var(--neon-purple));
+    margin-bottom: 15px;
+}
+
+.admin-stat-card .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.admin-stat-card .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+/* Accent Colors */
+.admin-stat-card.users {
+    --accent-color: var(--neon-cyan);
+}
+
+.admin-stat-card.companies {
+    --accent-color: var(--neon-purple);
+}
+
+.admin-stat-card.vessels {
+    --accent-color: var(--neon-blue);
+}
+
+.admin-stat-card.revenue {
+    --accent-color: var(--neon-green);
+}
+
+/* Admin Sections */
+.admin-sections {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-bottom: 30px;
+}
+
+.admin-section-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    transition: var(--transition-normal);
+    cursor: pointer;
+}
+
+.admin-section-card:hover {
+    border-color: var(--neon-purple);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.section-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--neon-purple);
+    margin-bottom: 20px;
+}
+
+.section-title {
+    color: var(--text-main);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.section-desc {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.section-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--neon-cyan);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Data Table */
+.admin-table-section {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.table-header h3 {
+    color: var(--text-main);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.table-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    background: var(--bg-card);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 0.9rem;
+}
+
+.admin-table tr:hover td {
+    background: var(--bg-card);
+}
+
+.admin-table .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-card);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-cyan);
+    font-weight: 600;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.active {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--neon-green);
+}
+
+.status-badge.inactive {
+    background: rgba(100, 116, 139, 0.15);
+    color: var(--text-muted);
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--neon-gold);
+}
+
+.role-badge {
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.role-badge.admin {
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--neon-purple);
+}
+
+.role-badge.user {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--neon-blue);
+}
+
+.role-badge.superadmin {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--neon-red);
+}
+
+.action-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-table-action {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-table-action:hover {
+    border-color: var(--neon-purple);
+    color: var(--neon-purple);
+}
+
+.btn-table-action.danger:hover {
+    border-color: var(--neon-red);
+    color: var(--neon-red);
+}
+
+/* Action Button */
+.btn-admin-action {
+    background: linear-gradient(90deg, var(--neon-purple) 0%, #7c3aed 100%);
+    border: none;
+    color: var(--text-main);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-glow-purple);
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+}
+
+.btn-admin-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+}
+
+/* Mobile */
+@media (max-width: 1200px) {
+    .admin-sections {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* --- FLEET MANAGEMENT STYLES --- */
+.fleet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.fleet-card {
+    background: var(--md-sys-color-surface-variant);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-medium);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: var(--md-sys-motion-easing-standard) 0.2s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--md-sys-elevation-level-1);
+}
+
+.fleet-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--status-color, var(--text-muted));
+}
+
+.fleet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--status-color, var(--border-color));
+}
+
+.fleet-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fleet-card-title {
+    margin: 0;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.fleet-badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fleet-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fleet-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.fleet-info-val {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.fleet-card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+/* Status variants */
+.fleet-card[data-status="active"] {
+    --status-color: var(--neon-green);
+}
+
+.fleet-card[data-status="warning"] {
+    --status-color: var(--neon-gold);
+}
+
+.fleet-card[data-status="maintenance"] {
+    --status-color: var(--neon-red);
+}
+
+.fleet-card[data-status="port"] {
+    --status-color: var(--neon-blue);
+}
+
+@media (max-width: 768px) {
+    .fleet-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-container {
+        padding: var(--space-md);
+        padding-bottom: 120px;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .admin-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .admin-sections {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-table-section {
+        overflow-x: auto;
+    }
+
+    .grid-cell {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+
+/* --- RESPONSIVE TOGGLES --- */
+.mobile-menu-btn {
+    display: none !important;
+}
+
+.mobile-close-btn {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block !important;
+    }
+
+    .mobile-close-btn {
+        display: block !important;
+    }
+}
+
+/* --- ASSET MANAGEMENT GRID (Elite 360) --- */
+.asset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 25px;
+    padding-bottom: 50px;
+}
+
+.asset-card {
+    background: var(--md-sys-color-surface);
+    /* Very dark/black */
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 280px;
+    box-shadow: var(--md-sys-elevation-level-1);
+}
+
+.asset-card:hover {
+    border-color: #00e5ff;
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+.asset-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.asset-icon-box {
+    color: #00e5ff;
+    font-size: 1.5rem;
+    background: rgba(0, 229, 255, 0.05);
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 229, 255, 0.1);
+}
+
+.asset-status {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.asset-status.operativo {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.asset-status.transito {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.asset-status.mantenimiento {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.asset-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.asset-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.asset-type {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+
+.asset-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.metric-box {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.metric-label {
+    font-size: 0.6rem;
+    color: #475569;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.metric-val {
+    font-size: 0.9rem;
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.tank-progress {
+    width: 100%;
+    height: 4px;
+    background: #1e293b;
+    border-radius: 2px;
+    margin-top: 5px;
+    position: relative;
+}
+
+.tank-fill {
+    height: 100%;
+    background: #00e5ff;
+    border-radius: 2px;
+    box-shadow: 0 0 10px #00e5ff;
+}
+
+.asset-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.location-display {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.btn-arrow-action {
+    background: transparent;
+    border: none;
+    color: #00e5ff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-arrow-action:hover {
+    transform: translateX(5px);
+}
