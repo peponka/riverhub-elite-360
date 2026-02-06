@@ -838,7 +838,11 @@
                                     (function () {
                                         setTimeout(function () {
                                             var container = document.getElementById('map-dashboard-new');
-                                            if (!container || container._leaflet_id) return;
+                                            if (!container) return;
+
+                                            // SIEMPRE limpiar y recrear
+                                            container.innerHTML = '';
+                                            container._leaflet_id = null;
 
                                             console.log('🗺️ INLINE: Creating dark map for dashboard...');
 
@@ -854,9 +858,10 @@
                                             }).addTo(map);
 
                                             setTimeout(function () { map.invalidateSize(); }, 500);
+                                            window.dashboardMapInstance = map;
 
                                             console.log('✅ INLINE: Dark map created successfully');
-                                        }, 3000);
+                                        }, 2500);
                                     })();
                                 </script>
                             </div>
