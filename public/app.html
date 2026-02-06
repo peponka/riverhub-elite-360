@@ -833,6 +833,32 @@
                                 </div>
                                 <div id="map-dashboard-new" class="map-canvas-v3"
                                     style="flex: 1; width: 100%; min-height: 0;"></div>
+                                <!-- FORCE DARK MAP INLINE -->
+                                <script>
+                                    (function () {
+                                        setTimeout(function () {
+                                            var container = document.getElementById('map-dashboard-new');
+                                            if (!container || container._leaflet_id) return;
+
+                                            console.log('🗺️ INLINE: Creating dark map for dashboard...');
+
+                                            var map = L.map('map-dashboard-new', {
+                                                zoomControl: true,
+                                                attributionControl: false
+                                            }).setView([-30.0, -58.5], 6);
+
+                                            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                                                attribution: '',
+                                                subdomains: 'abcd',
+                                                maxZoom: 19
+                                            }).addTo(map);
+
+                                            setTimeout(function () { map.invalidateSize(); }, 500);
+
+                                            console.log('✅ INLINE: Dark map created successfully');
+                                        }, 3000);
+                                    })();
+                                </script>
                             </div>
                         </div>
 
