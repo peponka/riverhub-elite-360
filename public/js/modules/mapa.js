@@ -1,10 +1,10 @@
 // js/modules/mapa.js
-// FRESH BUILD - 2026-01-30 - CLEAN MAP WITHOUT POLYLINES
+// FRESH BUILD - 2026-02-06 - SOLO AIS REAL EN VIVO
 
 var mapLogic = {
     map: null,
     isInitialized: false,
-    vessels: [],
+    aisMarkers: {},
 
     // Called when map view is shown
     onShow: function () {
@@ -47,25 +47,22 @@ var mapLogic = {
             container.innerHTML = '';
         }
 
-        // Reset vessels
-        this.vessels = [];
+        // Reset markers
+        this.aisMarkers = {};
 
         // Create new map
         this.map = L.map('map-nexus', {
             zoomControl: false,
             attributionControl: false,
             background: '#0b1116'
-        }).setView([-30.0, -58.5], 5); // Hidrovía completa: Paraguay → Río de la Plata
+        }).setView([-30.0, -58.5], 5);
 
-        // Add tile layer - CARTO DARK MATTER (Dark + Cities + Roads)
-        // This is the best balance: Premium look, but with useful labels.
+        // Add tile layer - CARTO DARK MATTER
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '',
             subdomains: 'abcd',
             maxZoom: 19
         }).addTo(this.map);
-
-        // (Overlay removed to keep labels bright)
 
         // Add zoom control
         L.control.zoom({ position: 'bottomright' }).addTo(this.map);
@@ -73,8 +70,8 @@ var mapLogic = {
         // Add weather widget
         this.addWeatherWidget();
 
-        // Load vessels from database
-        await this.loadVessels();
+        // Conectar a AIS REAL
+        this.connectAIS();
 
         // Add home button
         this.addHomeControl();
@@ -93,129 +90,81 @@ var mapLogic = {
         setTimeout(() => this.refreshMap(), 500);
     },
 
-    // Load vessels from Supabase
-    loadVessels: async function () {
-        console.log("🚢 Loading vessels...");
+    // Conectar a AIS real
+    connectAIS: function () {
+        console.log("🚢 Conectando a AIS en tiempo real...");
 
-        if (!window.sb) {
-            console.warn("Supabase not available, using demo data");
-            this.loadDemoVessels();
-            return;
-        }
+        const list = document.getElementById('nexus-ship-list');
+        if (list) list.innerHTML = '<div style="padding:20px;text-align:center;color:#94a3b8;">Esperando barcos AIS...</div>';
 
-        try {
-            const { data, error } = await window.sb.fetchMine('vessels', '*');
+        if (window.AisStreamService && window.AisStreamService.subscribe) {
+            window.AisStreamService.subscribe((vessel) => {
+                if (!vessel.lat || !vessel.lon) return;
 
-            if (error) throw error;
+                const key = vessel.mmsi || vessel.name;
 
-            if (data && data.length > 0) {
-                data.forEach(v => {
-                    const lat = v.current_location?.lat || (-25 + Math.random() * -8);
-                    const lng = v.current_location?.lng || (-57 + Math.random() * -4);
-
-                    this.vessels.push({
-                        id: v.id,
-                        name: v.name,
-                        mmsi: v.mmsi,
-                        _lat: lat,
-                        _lng: lng,
-                        status: v.status,
-                        isDemo: false
-                    });
-                });
-
-                this.addMarkersToMap();
-                this.renderVesselList();
-                console.log(`✅ Loaded ${data.length} vessels`);
-            } else {
-                console.log("No vessels found, loading demo...");
-                this.loadDemoVessels();
-            }
-        } catch (e) {
-            console.error("Error loading vessels:", e);
-            this.loadDemoVessels();
-        }
-    },
-
-    // Demo vessels fallback
-    loadDemoVessels: function () {
-        const demoData = [
-            { name: "HIDROVÍA I", mmsi: "701000001", _lat: -27.47, _lng: -58.83 },
-            { name: "PARANÁ EXPRESS", mmsi: "701000002", _lat: -32.94, _lng: -60.65 },
-            { name: "RÍO PLATA", mmsi: "701000003", _lat: -34.60, _lng: -58.38 }
-        ];
-
-        demoData.forEach((v, i) => {
-            this.vessels.push({
-                id: `demo-${i}`,
-                name: v.name,
-                mmsi: v.mmsi,
-                _lat: v._lat,
-                _lng: v._lng,
-                status: 'active',
-                isDemo: true
-            });
-        });
-
-        this.addMarkersToMap();
-        this.renderVesselList();
-    },
-
-    // Add markers to map
-    addMarkersToMap: function () {
-        this.vessels.forEach(v => {
-            const color = v.isDemo ? '#f59e0b' : '#00e5ff';
-
-            const icon = L.divIcon({
-                className: 'custom-ship-marker',
-                html: `<div class="marker-pulse" style="color:${color};"><i class="fas fa-ship"></i></div>`,
-                iconSize: [30, 30],
-                iconAnchor: [15, 15]
-            });
-
-            const marker = L.marker([v._lat, v._lng], { icon }).addTo(this.map);
-            v.marker = marker;
-
-            marker.on('click', () => {
-                if (window.innerWidth <= 768) {
-                    this.openBottomSheet(v);
+                if (this.aisMarkers[key]) {
+                    // Actualizar posición existente
+                    this.aisMarkers[key].setLatLng([vessel.lat, vessel.lon]);
                 } else {
-                    marker.bindPopup(`
-                        <b>${v.name}</b><br>
-                        MMSI: ${v.mmsi}<br>
-                        Estado: ${v.status || 'Activo'}
-                    `).openPopup();
+                    // Crear nuevo marcador AIS (verde)
+                    const icon = L.divIcon({
+                        className: 'ais-live-marker',
+                        html: '<div class="marker-pulse" style="color:#10b981;"><i class="fas fa-ship"></i></div>',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    });
+
+                    this.aisMarkers[key] = L.marker([vessel.lat, vessel.lon], { icon })
+                        .addTo(this.map)
+                        .bindPopup(`<b>${vessel.name || 'Desconocido'}</b><br>MMSI: ${vessel.mmsi}<br>🟢 AIS EN VIVO`);
+
+                    // Agregar a la lista visual
+                    this.addVesselToList(vessel);
+                    console.log(`📡 AIS: ${vessel.name} @ ${vessel.lat.toFixed(2)}, ${vessel.lon.toFixed(2)}`);
                 }
             });
-        });
+
+            console.log("✅ Conectado a AIS - Solo barcos reales");
+        } else {
+            console.warn("⚠️ AisStreamService no disponible, reintentando...");
+            setTimeout(() => this.connectAIS(), 2000);
+        }
     },
 
-    // Render vessel list in sidebar
-    renderVesselList: function () {
+    // Agregar barco a la lista del sidebar
+    addVesselToList: function (vessel) {
         const list = document.getElementById('nexus-ship-list');
         if (!list) return;
 
-        list.innerHTML = '';
+        // Limpiar mensaje de espera
+        const waiting = list.querySelector('div[style*="text-align:center"]');
+        if (waiting) waiting.remove();
 
-        this.vessels.forEach(v => {
-            const item = document.createElement('div');
-            item.className = 'ship-item-nexus';
-            item.innerHTML = `
-                <div class="ship-n-dot" style="background: ${v.isDemo ? '#f59e0b' : '#00e5ff'};"></div>
-                <div class="ship-n-info">
-                    <strong>${v.name}</strong>
-                    <span>MMSI: ${v.mmsi}</span>
-                </div>
-                <div class="ship-n-act"><i class="fas fa-chevron-right"></i></div>
-            `;
+        // Evitar duplicados
+        if (document.getElementById(`ais-${vessel.mmsi}`)) return;
 
-            item.onclick = () => {
-                this.map.setView([v._lat, v._lng], 10);
-                if (v.marker) v.marker.openPopup();
-            };
+        const item = document.createElement('div');
+        item.className = 'ship-item-nexus';
+        item.id = `ais-${vessel.mmsi}`;
+        item.innerHTML = `
+            <div class="ship-n-dot" style="background: #10b981;"></div>
+            <div class="ship-n-info">
+                <strong>${vessel.name || 'Desconocido'}</strong>
+                <span>MMSI: ${vessel.mmsi}</span>
+            </div>
+            <div class="ship-n-act"><i class="fas fa-chevron-right"></i></div>
+        `;
 
-            list.appendChild(item);
-        });
+        const self = this;
+        item.onclick = function () {
+            if (self.map && self.aisMarkers[vessel.mmsi]) {
+                self.map.setView([vessel.lat, vessel.lon], 10);
+                self.aisMarkers[vessel.mmsi].openPopup();
+            }
+        };
+
+        list.appendChild(item);
     },
 
     // Mobile bottom sheet
