@@ -144,20 +144,24 @@ const dashboardLogic = {
             zoomControl: true,
             attributionControl: false,
             background: '#0b1116'
-        }).setView([-30.0, -58.5], 5); // Hidrovía completa: Paraguay → Río de la Plata
+        }).setView([-30.0, -58.5], 6); // Hidrovía completa: Paraguay → Río de la Plata
 
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 17, opacity: 1.0
-        }).addTo(this.dashMap);
-
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 17, opacity: 1.0
+        // CARTO Dark Matter - Estilo igual al Mapa de Flota
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap © CARTO'
         }).addTo(this.dashMap);
 
         await this.loadShips();
 
+        // Subscribe to AIS live updates
+        this.subscribeToAIS();
+
         setTimeout(() => { if (this.dashMap) this.dashMap.invalidateSize(); }, 600);
     },
+
+    // AIS Live markers storage
+    aisMarkers: {},
 
     loadShips: async function () {
         if (!this.dashMap) return;
@@ -201,6 +205,48 @@ const dashboardLogic = {
         } catch (e) {
             console.error(e);
         }
+    },
+
+    // Subscribe to AISStream for live vessel updates
+    subscribeToAIS: function () {
+        if (!window.AisStreamService) {
+            console.warn("Dashboard: AisStreamService not available");
+            return;
+        }
+
+        console.log("📡 Dashboard: Subscribing to AIS live updates...");
+
+        window.AisStreamService.subscribe((vessel) => {
+            if (!this.dashMap) return;
+
+            const mmsi = vessel.mmsi;
+            const lat = vessel.lat;
+            const lon = vessel.lon;
+
+            if (!lat || !lon) return;
+
+            // Create icon for AIS vessels (green color to differentiate)
+            const aisIcon = L.divIcon({
+                className: 'custom-ship-marker ais-live',
+                html: `<div class="marker-pulse" style="border-color:#10b981; color:#10b981;"><i class="fas fa-ship"></i></div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            // Update existing marker or create new one
+            if (this.aisMarkers[mmsi]) {
+                // Update position
+                this.aisMarkers[mmsi].setLatLng([lat, lon]);
+            } else {
+                // Create new marker
+                const marker = L.marker([lat, lon], { icon: aisIcon })
+                    .addTo(this.dashMap)
+                    .bindPopup(`<b>${vessel.name}</b><br>MMSI: ${mmsi}<br>Velocidad: ${vessel.speed?.toFixed(1) || 0} kn`);
+
+                this.aisMarkers[mmsi] = marker;
+                console.log(`🚢 Dashboard: New AIS vessel - ${vessel.name}`);
+            }
+        });
     },
 
     initMapOffline: function () {
