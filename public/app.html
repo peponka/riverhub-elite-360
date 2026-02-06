@@ -836,11 +836,20 @@
                                 <!-- FORCE DARK MAP INLINE -->
                                 <script>
                                     (function () {
-                                        setTimeout(function () {
+                                        function initDashboardMap() {
                                             var container = document.getElementById('map-dashboard-new');
-                                            if (!container) return;
+                                            if (!container) {
+                                                setTimeout(initDashboardMap, 500);
+                                                return;
+                                            }
 
-                                            // SIEMPRE limpiar y recrear
+                                            // Verificar que el contenedor sea visible
+                                            if (container.offsetWidth < 100) {
+                                                setTimeout(initDashboardMap, 500);
+                                                return;
+                                            }
+
+                                            // Limpiar mapa previo
                                             container.innerHTML = '';
                                             container._leaflet_id = null;
 
@@ -857,11 +866,41 @@
                                                 maxZoom: 19
                                             }).addTo(map);
 
-                                            setTimeout(function () { map.invalidateSize(); }, 500);
+                                            // Múltiples invalidateSize para asegurar
+                                            setTimeout(function () { map.invalidateSize(); }, 300);
+                                            setTimeout(function () { map.invalidateSize(); }, 800);
+                                            setTimeout(function () { map.invalidateSize(); }, 1500);
+
                                             window.dashboardMapInstance = map;
 
+                                            // Conectar AIS si está disponible
+                                            if (window.AisStreamService && window.AisStreamService.subscribe) {
+                                                var aisMarkers = {};
+                                                window.AisStreamService.subscribe(function (vessel) {
+                                                    if (!vessel.lat || !vessel.lon) return;
+                                                    var key = vessel.mmsi || vessel.name;
+                                                    if (aisMarkers[key]) {
+                                                        aisMarkers[key].setLatLng([vessel.lat, vessel.lon]);
+                                                    } else {
+                                                        var icon = L.divIcon({
+                                                            className: 'ais-marker',
+                                                            html: '<div style="background:#10b981;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px #10b981;"></div>',
+                                                            iconSize: [12, 12],
+                                                            iconAnchor: [6, 6]
+                                                        });
+                                                        aisMarkers[key] = L.marker([vessel.lat, vessel.lon], { icon: icon })
+                                                            .addTo(map)
+                                                            .bindPopup('<b>' + vessel.name + '</b><br>MMSI: ' + vessel.mmsi);
+                                                    }
+                                                });
+                                                console.log('📡 AIS conectado al mapa dashboard');
+                                            }
+
                                             console.log('✅ INLINE: Dark map created successfully');
-                                        }, 2500);
+                                        }
+
+                                        // Iniciar después de que la página cargue
+                                        setTimeout(initDashboardMap, 2000);
                                     })();
                                 </script>
                             </div>
