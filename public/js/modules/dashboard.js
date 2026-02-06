@@ -148,8 +148,9 @@ const dashboardLogic = {
 
         // CARTO Dark Matter - Estilo igual al Mapa de Flota
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap © CARTO'
+            attribution: '',
+            subdomains: 'abcd',
+            maxZoom: 19
         }).addTo(this.dashMap);
 
         await this.loadShips();
