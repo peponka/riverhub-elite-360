@@ -1,5 +1,5 @@
 // js/modules/dashboard.js
-
+// Updated: 2026-02-06 07:36 - Dark Map + AIS Integration
 const dashboardLogic = {
     ships: [],
     dashMap: null,
