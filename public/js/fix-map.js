@@ -1,5 +1,6 @@
+// fix-map.js: Force Load Map with Dark Theme
+// Updated: 2026-02-06 - Estilo igual al Mapa de Flota
 
-// fix-map.js: Force Load Map
 console.log("🚀 Módulo Fix-Map Cargado");
 
 window.addEventListener('load', () => {
@@ -13,17 +14,19 @@ window.addEventListener('load', () => {
         }
         mapContainer.innerHTML = '';
 
-        console.log("🔄 Re-iniciando Mapa desde Fix-Map...");
+        console.log("🔄 Re-iniciando Mapa Dashboard (Estilo Dark)...");
 
         const map = L.map('map-dashboard-new', {
-            zoomControl: false,
-            attributionControl: false
-        }).setView([-27.1, -58.55], 8);
+            zoomControl: true,
+            attributionControl: false,
+            background: '#0b1116'
+        }).setView([-30.0, -58.5], 6); // Hidrovía: Paraguay → Río de la Plata
 
-        // Capa Satelital ESRI
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri',
-            maxZoom: 17
+        // CARTO Dark Matter - Igual que Mapa de Flota
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap © CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
         }).addTo(map);
 
         // Resize Final
@@ -34,24 +37,39 @@ window.addEventListener('load', () => {
         if (window.sb) {
             loadShipsFix(map);
         }
+
+        // Guardar referencia global para AIS
+        window.dashboardMap = map;
+
     }, 2000); // Esperar 2 segundos a que todo lo demás cargue
 });
 
 async function loadShipsFix(map) {
-    const { data } = await window.sb
-        .from('vessels')
-        .select('*')
-        .eq('status', 'active');
+    try {
+        const { data } = await window.sb.fetchMine('vessels', '*');
 
-    if (data) {
-        data.forEach(v => {
-            const icon = L.divIcon({
-                className: 'custom-ship-marker',
-                html: '<div style="background:#00e5ff;width:10px;height:10px;border-radius:50%;box-shadow:0 0 10px #00e5ff"></div>'
+        if (data && data.length > 0) {
+            data.forEach(v => {
+                if (v.status !== 'active') return;
+
+                const icon = L.divIcon({
+                    className: 'custom-ship-marker',
+                    html: '<div class="marker-pulse" style="border-color:#00e5ff; color:#00e5ff;"><i class="fas fa-ship"></i></div>',
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+
+                let lat = v.current_location?.lat || (-27 + Math.random() * -5);
+                let lng = v.current_location?.lng || (-58 + Math.random() * -3);
+
+                L.marker([lat, lng], { icon: icon })
+                    .addTo(map)
+                    .bindPopup(`<b>${v.name}</b><br>Estado: ${v.status}`);
             });
-            let lat = v.current_location?.lat || -27.1;
-            let lng = v.current_location?.lng || -58.55;
-            if (lat !== 0) L.marker([lat, lng], { icon: icon }).addTo(map);
-        });
+
+            console.log(`✅ Dashboard: ${data.length} barcos cargados`);
+        }
+    } catch (e) {
+        console.warn("Dashboard loadShips error:", e);
     }
 }
