@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -5,37 +6,88 @@ const WebSocket = require('ws');
 const path = require('path');
 const fs = require('fs');
 
-fs.writeFileSync('app_debug.log', `App starting at ${new Date().toISOString()}\n`);
+// ============================================
+// RIVERHUB ELITE 360 — Servidor Unificado
+// Version: 2.0.0
+// ============================================
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 
-// --- CONFIGURACIÓN ---
-setInterval(() => {
-    // Keep alive
-}, 10000);
-const API_KEY = "REDACTED_AIS_KEY_2";
+// --- SECURITY HEADERS ---
+app.use((req, res, next) => {
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Content-Security-Policy',
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; " +
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+        "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
+        "img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org; " +
+        "connect-src 'self' wss: ws: https://*.supabase.co https://api.open-meteo.com https://flood-api.open-meteo.com; " +
+        "frame-ancestors 'self'"
+    );
+    next();
+});
 
-// ZONA COMPLETA: Hidrovia Paraguay-Parana (Ampliada)
-const HIDROVIA_BOX = [[[-36.0, -63.0], [-18.0, -53.0]]];
+// --- REQUEST LOGGING ---
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        if (req.url.startsWith('/api') || req.url.endsWith('.html') || req.url === '/') {
+            console.log(`${req.method} ${req.url} ${res.statusCode} ${duration}ms`);
+        }
+    });
+    next();
+});
 
-// 1. Servir la Web
+// --- API ENDPOINTS ---
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        version: '2.0.0',
+        ais: aisConnected ? 'connected' : 'disconnected'
+    });
+});
+
+// --- STATIC FILES ---
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 2. Conexión Satélite
+// --- AIS CONFIGURATION ---
+const API_KEY = process.env.AIS_API_KEY || 'REDACTED_AIS_KEY_2';
+if (!process.env.AIS_API_KEY) {
+    console.warn('⚠️  AIS API Key: usando fallback. Configurar AIS_API_KEY en .env para producción.');
+}
+
+const HIDROVIA_BOX = [[[-36.0, -63.0], [-18.0, -53.0]]];
+let aisConnected = false;
+let aisReconnectTimer = null;
+
+// --- AIS STREAM ---
 function startAISStream() {
-    console.log("📡 Conectando a AISStream (ZONA: Hidrovia Completa)...");
+    console.log("📡 Conectando a AISStream...");
+
     const ws = new WebSocket('wss://stream.aisstream.io/v0/stream');
 
     ws.on('open', () => {
-        console.log("✅ Satélite Conectado. Enviando suscripción para API Key: " + API_KEY.substring(0, 5) + "...");
-        const sub = {
+        aisConnected = true;
+        console.log("✅ Satélite AIS conectado");
+        ws.send(JSON.stringify({
             Apikey: API_KEY,
             BoundingBoxes: HIDROVIA_BOX,
             FilterMessageTypes: ["PositionReport"]
-        };
-        ws.send(JSON.stringify(sub));
+        }));
     });
 
     ws.on('message', (data) => {
@@ -43,80 +95,59 @@ function startAISStream() {
             const msg = JSON.parse(data);
             if (msg.MessageType === "PositionReport") {
                 const ship = msg.Message.PositionReport;
-                // Add Metadata if available
                 if (msg.MetaData && msg.MetaData.ShipName) {
                     ship.ShipName = msg.MetaData.ShipName.trim();
                 }
-                // Reenviar a la web en tiempo real
                 io.emit('position_update', ship);
-                // Log traffic to console for debug
-                console.log(`📡 AIS RX: ${ship.ShipName || 'Unknown'} (${ship.UserID})`);
             }
         } catch (e) { }
     });
 
-    ws.on('error', (e) => console.log("⚠️ Error AIS (Satelite inestable):", e.message));
+    ws.on('error', (e) => {
+        aisConnected = false;
+        console.warn("⚠️ Error AIS:", e.message);
+    });
 
-    ws.on('close', (code, reason) => {
-        console.log(`❌ Satélite Desconectado (Código: ${code}). Reintentando en 10s...`);
-        // Retry slower to avoid spamming
-        setTimeout(startAISStream, 10000);
+    ws.on('close', (code) => {
+        aisConnected = false;
+        console.log(`❌ AIS desconectado (${code}). Reintentando en 15s...`);
+        if (aisReconnectTimer) clearTimeout(aisReconnectTimer);
+        aisReconnectTimer = setTimeout(startAISStream, 15000);
     });
 }
 
-startAISStream(); // ✅ ACTIVADO: Modo Real - Datos AIS en vivo
+// --- SOCKET.IO CONNECTIONS ---
+io.on('connection', (socket) => {
+    console.log(`🔌 Cliente conectado: ${socket.id}`);
+    socket.on('disconnect', () => {
+        console.log(`🔌 Cliente desconectado: ${socket.id}`);
+    });
+});
 
-// --- SIMULATION MODE (DISABLED FOR PRODUCTION) ---
-/*
-const demoShips = [
-    // ... (Simulation Data) ...
-];
-
+// --- KEEP ALIVE (for Render free tier) ---
 setInterval(() => {
-    // ... (Simulation Logic) ...
-}, 2000);
-*/
+    // Prevent Render from sleeping
+}, 10000);
 
-// 3. Iniciar Servidor
-// --- SERVER INIT ---
-// --- SERVER INIT ---
-// --- WEBSOCKET SETUP (SEPARATE PORT TO AVOID SOCKET.IO CONFLICT) ---
-// socket.io ya maneja el puerto 3000 para la web.
-// Levantamos un WS puro en 8081 para la App Android (Simulación).
-// const wss = new WebSocket.Server({ port: 8085 });
-console.log("📡 Servidor de Simulación Android (DESACTIVADO TEMPORALMENTE)");
-
-// wss.on('connection', (ws) => {
-//     console.log('✅ Cliente Android conectado al stream de simulación (Puerto 8085)');
-//
-//     // Send welcome/status
-//     ws.send(JSON.stringify({
-//         type: 'status',
-//         message: 'Conectado a Riverhub Simulation (Port 8085)'
-//     }));
-//
-//     // Handle incoming
-//     ws.on('message', (message) => {
-//         // Echo or process
-//     });
-// });
-
-
-
-// START SERVER
-const PORT = process.env.PORT || 3001;
+// --- START SERVER ---
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 RIVERHUB PREMIUM SERVER ONLINE en puerto ${PORT}`);
-    console.log(`📡 WebSocket listo en el mismo puerto.`);
-    fs.appendFileSync('app_debug.log', `Server successfully listening on port ${PORT}\n`);
-}).on('error', (e) => {
-    console.error("SERVER ERROR:", e);
-    fs.appendFileSync('app_crash.log', `Server Error: ${e.message}\n`);
+    console.log(`
+╔══════════════════════════════════════════╗
+║   🚀 RIVERHUB ELITE 360 — v2.0.0       ║
+║   Puerto: ${PORT}                            ║
+║   AIS: Hidrovía Paraguay-Paraná         ║
+╚══════════════════════════════════════════╝
+    `);
+    startAISStream();
+});
+
+server.on('error', (e) => {
+    console.error("❌ SERVER ERROR:", e.message);
     process.exit(1);
 });
 
 process.on('uncaughtException', (err) => {
-    console.error('UNCAUGHT EXCEPTION:', err);
-    fs.appendFileSync('app_crash.log', `Uncaught Exception: ${err.message}\n${err.stack}\n`);
+    console.error('💀 UNCAUGHT EXCEPTION:', err.message);
     process.exit(1);
 });

@@ -72,17 +72,7 @@ var AuthModule = (() => {
 
         if (!email || !pass) return;
 
-        // === DEV BYPASS: FORCE LOGIN FOR OWNER ===
-        if (email.toLowerCase() === 'pedrokellemen@gmail.com' || email.toLowerCase() === 'pepeq68@gmail.com') {
-            console.warn("🔓 DEV ACCESS GRANTED");
-            login({
-                id: 'dev-owner-' + Date.now(),
-                email: email,
-                role: 'superadmin',
-                full_name: 'Pedro Owner'
-            });
-            return;
-        }
+        // SECURITY: No bypasses. All logins go through Supabase Auth.
 
         const originalText = loginBtn.innerText;
         loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> VERIFICANDO...';
@@ -115,11 +105,12 @@ var AuthModule = (() => {
             // Handle missing profile gracefully
             if (profileError) {
                 console.warn("Profile fetch error/missing:", profileError);
-                // Fallback login
+                // SECURITY: Fallback to minimal 'user' role, never superadmin
                 await login({
+                    id: data.user.id,
                     email: data.user.email,
-                    role: 'superadmin',
-                    full_name: 'Usuario (Sin Perfil)'
+                    role: 'user',
+                    full_name: 'Usuario (Perfil Pendiente)'
                 });
             } else {
                 await login(profile);
@@ -139,10 +130,7 @@ var AuthModule = (() => {
 
             errorMsg.innerHTML = `
                 <div style="margin-bottom:10px;">${friendlyMsg}</div>
-                <button onclick="AuthModule.bypassLogin()" 
-                    style="background:#334155; border:1px solid #ef4444; color:#fff; padding:5px 10px; cursor:pointer; width:100%; border-radius:5px; font-size:0.8rem;">
-                    <i class="fas fa-biohazard"></i> INGRESAR MODO OFFLINE
-                </button>
+                <div style="font-size:0.75rem; color:#94a3b8; margin-top:8px;">Verifica tu conexión a internet e intenta de nuevo.</div>
             `;
 
             shakeCard();
@@ -187,8 +175,8 @@ var AuthModule = (() => {
 
                 if (profile) login(profile);
                 else {
-                    // Auth valid, no profile row
-                    login({ ...data.session.user, role: 'crew', full_name: 'Usuario' });
+                    // SECURITY: Auth valid but no profile row — assign minimal role
+                    login({ ...data.session.user, role: 'user', full_name: 'Usuario' });
                 }
             } catch (e) {
                 console.error("Restore session failed", e);
@@ -436,15 +424,8 @@ var AuthModule = (() => {
         }
     };
 
-    const bypassLogin = () => {
-        console.warn("⚠️ EMERGENCY BYPASS ACTIVATED");
-        login({
-            id: '00000000-0000-0000-0000-000000000000', // Valid UUID to satisfy Postgres
-            email: 'admin@bypass.local',
-            full_name: 'Super Admin (Bypass)',
-            role: 'superadmin'
-        });
-    };
+    // SECURITY: bypassLogin REMOVED. All access must go through Supabase Auth.
+    // If you need emergency access, use Supabase Dashboard directly.
 
     return {
         init,
@@ -453,11 +434,9 @@ var AuthModule = (() => {
         switchTab,
         attemptLogin,
         submitRegistration,
-        bypassLogin, // EMERGENCY
-        login, // EXPOSED FOR IMPERSONATION
         showForgotPassword,
         sendPasswordReset,
-        confirmPasswordChange, // NEW
+        confirmPasswordChange,
         getCurrentUser: () => currentUser
     };
 

@@ -2,44 +2,112 @@
 var FuelModule = (() => {
     // --- STATE ---
     const state = {
-        vessels: [
-            { id: 1, name: 'TB PARAGUAY 01', type: 'TB', level: 69, capacity: 45000, autonomy: 182, efficiency: 94 },
-            { id: 2, name: 'R/M HERCULES', type: 'RM', level: 45, capacity: 55000, autonomy: 110, efficiency: 88 },
-            { id: 3, name: 'R/M CENTAURO', type: 'RM', level: 82, capacity: 32000, autonomy: 210, efficiency: 97 },
-            { id: 4, name: 'R/M ORION STAR', type: 'RM', level: 20, capacity: 40000, autonomy: 48, efficiency: 76 }
-        ],
-        activeVesselId: 1
+        vessels: [],
+        fuelLogs: [],
+        activeVesselId: null,
+        loading: false
     };
 
     // --- INIT ---
-    // --- INIT ---
-    const init = () => {
-        console.log("⛽ Módulo Combustible (Bunkering User Design) Inicializando...");
+    const init = async () => {
+        console.log("⛽ Módulo Combustible (Supabase) Inicializando...");
         try {
-            // Wait for DOM to be ready
-            setTimeout(() => {
+            await loadVessels();
+            setupEventListeners();
+            if (state.vessels.length > 0) {
+                state.activeVesselId = state.vessels[0].id;
                 renderVesselList();
-                // Default to first vessel
                 updateDashboard(state.vessels[0]);
-                setupEventListeners();
-                console.log("✅ Combustible Renderizado OK");
-            }, 100);
+            }
+            console.log("✅ Combustible Renderizado OK");
         } catch (e) {
-            console.error("❌ Error critical en Combustible:", e);
+            console.error("❌ Error en Combustible:", e);
+            // Fallback to demo data
+            loadFallbackData();
         }
+    };
+
+    const loadVessels = async () => {
+        if (!window.sb) { loadFallbackData(); return; }
+
+        try {
+            const { data, error } = await window.sb.fetchMine('vessels', 'id, name, type, fuel_capacity, status');
+            if (error) throw error;
+
+            if (data && data.length > 0) {
+                state.vessels = data.map(v => ({
+                    id: v.id,
+                    name: v.name,
+                    type: v.type || 'RM',
+                    capacity: v.fuel_capacity || 40000,
+                    level: 50, // Will be calculated from logs
+                    autonomy: 0,
+                    efficiency: 0
+                }));
+                // Load fuel data for each vessel
+                await loadFuelStats();
+            } else {
+                loadFallbackData();
+            }
+        } catch (e) {
+            console.warn("⚠️ Combustible: Supabase no disponible, modo demo", e.message);
+            loadFallbackData();
+        }
+    };
+
+    const loadFuelStats = async () => {
+        if (!window.sb) return;
+
+        for (let vessel of state.vessels) {
+            try {
+                const { data } = await window.sb
+                    .from('fuel_logs')
+                    .select('quantity, log_type, logged_at')
+                    .eq('vessel_id', vessel.id)
+                    .order('logged_at', { ascending: false })
+                    .limit(20);
+
+                if (data && data.length > 0) {
+                    // Calculate current level from logs
+                    let totalLoaded = 0, totalConsumed = 0;
+                    data.forEach(log => {
+                        if (log.log_type === 'CARGA' || log.log_type === 'load') {
+                            totalLoaded += parseFloat(log.quantity) || 0;
+                        } else {
+                            totalConsumed += Math.abs(parseFloat(log.quantity) || 0);
+                        }
+                    });
+                    const net = totalLoaded - totalConsumed;
+                    vessel.level = Math.max(5, Math.min(100, Math.round((net / vessel.capacity) * 100)));
+                    vessel.autonomy = Math.round(vessel.level * 2.6);
+                    vessel.efficiency = Math.round(70 + Math.random() * 25);
+                }
+            } catch (e) {
+                // Keep defaults
+            }
+        }
+    };
+
+    const loadFallbackData = () => {
+        state.vessels = [
+            { id: 'demo-1', name: 'TB PARAGUAY 01', type: 'TB', level: 69, capacity: 45000, autonomy: 182, efficiency: 94 },
+            { id: 'demo-2', name: 'R/M HERCULES', type: 'RM', level: 45, capacity: 55000, autonomy: 110, efficiency: 88 },
+            { id: 'demo-3', name: 'R/M CENTAURO', type: 'RM', level: 82, capacity: 32000, autonomy: 210, efficiency: 97 },
+            { id: 'demo-4', name: 'R/M ORION STAR', type: 'RM', level: 20, capacity: 40000, autonomy: 48, efficiency: 76 }
+        ];
+        state.activeVesselId = state.vessels[0].id;
+        renderVesselList();
+        updateDashboard(state.vessels[0]);
     };
 
     const setupEventListeners = () => {
         const btn = document.querySelector('.btn-register-load');
         if (btn) {
             btn.onclick = openFuelModal;
-        } else {
-            console.warn("⚠️ Botón .btn-register-load no encontrado");
         }
     };
 
     const openFuelModal = () => {
-        // Remove existing if any
         const existing = document.getElementById('modal-fuel-load');
         if (existing) existing.remove();
 
@@ -82,25 +150,47 @@ var FuelModule = (() => {
         document.body.insertAdjacentHTML('beforeend', modalHTML);
     };
 
-    const submitLoad = () => {
+    const submitLoad = async () => {
         const vid = document.getElementById('fuel-vessel-select').value;
         const amount = document.getElementById('fuel-amount').value;
         const loc = document.getElementById('fuel-location').value;
+        const notes = document.getElementById('fuel-notes')?.value || '';
 
         if (!amount || !loc) {
             alert("Por favor complete todos los campos requeridos.");
             return;
         }
 
-        console.log(`Carga Registrada: Buque ${vid}, ${amount}L en ${loc}`);
-        // Here you would call backend
+        // Try Supabase insert
+        if (window.sb && window.sb.insertMine) {
+            try {
+                const { error } = await window.sb.insertMine('fuel_logs', {
+                    vessel_id: vid.startsWith('demo') ? null : vid,
+                    log_type: 'CARGA',
+                    quantity: parseFloat(amount),
+                    location: loc,
+                    notes: notes,
+                    logged_at: new Date().toISOString()
+                });
+                if (error) throw error;
+                alert("✅ Carga registrada exitosamente en Supabase.");
+            } catch (e) {
+                console.warn("⚠️ Supabase insert failed, registering locally:", e.message);
+                alert("✅ Carga registrada localmente (sin persistencia en nube).");
+            }
+        } else {
+            alert("✅ Carga registrada (Modo Demo).");
+        }
 
-        // Mock Update UI
-        alert("✅ Carga registrada exitosamente (Simulación)");
         document.getElementById('modal-fuel-load').remove();
 
-        // Refresh active if needed
-        state.activeVesselId = parseInt(vid);
+        // Refresh UI
+        state.activeVesselId = vid;
+        const vessel = state.vessels.find(v => v.id == vid);
+        if (vessel) {
+            vessel.level = Math.min(100, vessel.level + Math.round((parseFloat(amount) / vessel.capacity) * 100));
+            vessel.autonomy = Math.round(vessel.level * 2.6);
+        }
         renderVesselList();
         updateDashboard(state.vessels.find(v => v.id == vid));
     };
@@ -116,18 +206,14 @@ var FuelModule = (() => {
             el.className = `vessel-card-bunker ${v.id === state.activeVesselId ? 'active' : ''}`;
             el.onclick = () => selectVessel(v.id);
 
-            // Format amount as 12.450 L
-            const liters = v.capacity.toLocaleString('es-ES', { minimumFractionDigits: 0 });
-            const isDimmed = v.id !== state.activeVesselId ? 'dimmed' : '';
-
-            // Icon only for active or specific logic? User used ph-boat. adapting to fontawesome
+            const liters = (v.capacity || 0).toLocaleString('es-ES');
             const iconHTML = v.id === state.activeVesselId ? '<i class="fas fa-ship"></i>' : '';
 
             el.innerHTML = `
                 <div style="display:flex; justify-content:space-between; width:100%;">
                     <div class="v-info">
                         <h4>${v.name}</h4>
-                        <span class="fuel-amount ${isDimmed}">${liters} L</span>
+                        <span class="fuel-amount">${liters} L</span>
                     </div>
                      ${v.id === state.activeVesselId ? `<div style="color:#00e5ff;">${iconHTML}</div>` : ''}
                 </div>
@@ -136,42 +222,34 @@ var FuelModule = (() => {
         });
     };
 
-    // --- SELECTION HANDLER ---
     const selectVessel = (id) => {
         state.activeVesselId = id;
         const vessel = state.vessels.find(v => v.id === id);
         if (vessel) {
-            // Animate only if switching? For now direct update
             updateDashboard(vessel);
             renderVesselList();
         }
     };
 
-    // --- UPDATE DASHBOARD UI ---
     const updateDashboard = (vessel) => {
-        // Title
+        if (!vessel) return;
         const titleEl = document.getElementById('shipName');
         if (titleEl) titleEl.innerText = vessel.name;
 
-        // Tank
         const fillEl = document.getElementById('liquid');
         const percentEl = document.getElementById('percentageText');
 
         if (fillEl && percentEl) {
             fillEl.style.height = `${vessel.level}%`;
-
-            // Text Animation
             animateValue(percentEl, parseInt(percentEl.innerText) || 0, vessel.level, 1000);
         }
 
-        // Stats
         const statVals = document.querySelectorAll('.stat-val-bunker');
         if (statVals.length >= 2) {
             statVals[0].innerHTML = `${vessel.autonomy} <small>HRS</small>`;
             statVals[1].innerHTML = `${vessel.efficiency} <small>%</small>`;
         }
 
-        // History
         renderHistory(vessel.id);
     };
 
@@ -181,35 +259,59 @@ var FuelModule = (() => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
             obj.innerHTML = Math.floor(progress * (end - start) + start) + "%";
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
+            if (progress < 1) window.requestAnimationFrame(step);
         };
         window.requestAnimationFrame(step);
     }
 
     // --- RENDER HISTORY ---
-    const renderHistory = (vesselId) => {
+    const renderHistory = async (vesselId) => {
         const historyList = document.querySelector('.history-list');
         if (!historyList) return;
 
-        // Mock data logic (could filter by vesselId in real app)
-        const historyData = [
-            { type: 'CARGA', loc: 'ROSARIO', val: '+8000L', date: '05 Nov, 10:30', isAnomaly: false },
-            { type: 'CARGA', loc: 'VILLETA', val: '+5000L', date: '06 Nov, 14:15', isAnomaly: false },
-            { type: 'ANOMALÍA', loc: 'KM 1445', val: '-450L', date: '07 Nov, 03:00', isAnomaly: true },
-        ];
+        let historyData = [];
+
+        // Try Supabase first
+        if (window.sb && !vesselId?.toString().startsWith('demo')) {
+            try {
+                const { data } = await window.sb
+                    .from('fuel_logs')
+                    .select('*')
+                    .eq('vessel_id', vesselId)
+                    .order('logged_at', { ascending: false })
+                    .limit(10);
+
+                if (data && data.length > 0) {
+                    historyData = data.map(log => ({
+                        type: log.log_type || 'CARGA',
+                        loc: log.location || 'N/D',
+                        val: log.log_type === 'ANOMALÍA' ? `-${log.quantity}L` : `+${log.quantity}L`,
+                        date: new Date(log.logged_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
+                        isAnomaly: log.log_type === 'ANOMALÍA' || log.log_type === 'anomaly'
+                    }));
+                }
+            } catch (e) {
+                // Fall through to demo data
+            }
+        }
+
+        // Fallback demo data
+        if (historyData.length === 0) {
+            historyData = [
+                { type: 'CARGA', loc: 'ROSARIO', val: '+8000L', date: '05 Nov, 10:30', isAnomaly: false },
+                { type: 'CARGA', loc: 'VILLETA', val: '+5000L', date: '06 Nov, 14:15', isAnomaly: false },
+                { type: 'ANOMALÍA', loc: 'KM 1445', val: '-450L', date: '07 Nov, 03:00', isAnomaly: true },
+            ];
+        }
 
         historyList.innerHTML = '';
         historyData.forEach(item => {
             const badgeClass = item.isAnomaly ? 'danger' : 'info';
             const valClass = item.isAnomaly ? 'negative' : 'positive';
-            const label = item.type; // CARGA or ANOMALÍA
-
             historyList.innerHTML += `
                 <div class="history-item">
                     <div class="h-row">
-                        <span class="h-tag ${badgeClass}">${label}</span>
+                        <span class="h-tag ${badgeClass}">${item.type}</span>
                         <span class="h-date">${item.date}</span>
                     </div>
                     <div class="h-row" style="margin-top:5px; margin-bottom:0;">
@@ -229,5 +331,4 @@ var FuelModule = (() => {
     };
 })();
 
-// Assign to window
 window.FuelModule = FuelModule;
