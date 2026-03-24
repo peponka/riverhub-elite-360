@@ -105,7 +105,7 @@ try {
                                 <div id="tracking-detail-overlay" class="tracking-detail-overlay">
                                     <div class="overlay-header">
                                         <h3><i class="fas fa-info-circle"></i> DETALLE DE CARGA</h3>
-                                        <button class="btn-close-overlay" onclick="TrackingModule.closeOverlay()"><i class="fas fa-times"></i></button>
+                                        <button class="btn-close-overlay" onclick="TrackingModule.closeOverlay()" data-tooltip="Cerrar Radar"><i class="fas fa-times"></i></button>
                                     </div>
                                     <div class="overlay-body">
                                         <div class="overlay-grid">

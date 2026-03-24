@@ -313,7 +313,7 @@
 
             badge.innerHTML = `
             <span class="barge-label">${asset.name}</span>
-            <button class="btn-remove-barge"><i class="fas fa-times"></i></button>
+            <button class="btn-remove-barge" data-tooltip="Desenganchar Barcaza"><i class="fas fa-times"></i></button>
         `;
 
             badge.querySelector('.btn-remove-barge').onclick = (e) => {

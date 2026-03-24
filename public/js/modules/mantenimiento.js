@@ -106,7 +106,7 @@ const MaintenanceModule = (() => {
                 <div class="modal-card">
                     <div class="modal-header">
                         <h3><i class="fas fa-wrench"></i> NUEVA ORDEN DE TRABAJO</h3>
-                        <button class="btn-close-modal" onclick="MaintenanceModule.closeCreateModal()"><i class="fas fa-times"></i></button>
+                        <button class="btn-close-modal" onclick="MaintenanceModule.closeCreateModal()" data-tooltip="Cerrar Reporte"><i class="fas fa-times"></i></button>
                     </div>
                     <form onsubmit="MaintenanceModule.handleCreate(event)">
                         <div class="modal-body">

@@ -46,7 +46,7 @@ const AdminCliente = (() => {
                         </div>
                     </div>
                     <div class="ac-header-actions">
-                        <button class="ac-btn-icon" onclick="AdminCliente.refresh()"><i class="fas fa-sync-alt"></i></button>
+                        <button class="ac-btn-icon" onclick="AdminCliente.refresh()" data-tooltip="Recargar Datos"><i class="fas fa-sync-alt"></i></button>
                     </div>
                 </div>
 
@@ -282,8 +282,8 @@ const AdminCliente = (() => {
                                 <span class="ac-role-tag" style="color:${rc}; border-color:${rc};">${(u.role || 'user').toUpperCase()}</span>
                                 <span class="ac-user-status ${u.is_active !== false ? 'on' : 'off'}">${u.is_active !== false ? 'ACTIVO' : 'INACTIVO'}</span>
                                 <div class="ac-user-actions">
-                                    <button class="ac-btn-sm" onclick="AdminCliente.toggleUserRole('${u.id}')"><i class="fas fa-exchange-alt"></i></button>
-                                    <button class="ac-btn-sm" style="color:#ef4444;" onclick="AdminCliente.removeUser('${u.id}', '${u.full_name}')"><i class="fas fa-trash"></i></button>
+                                    <button class="ac-btn-sm" onclick="AdminCliente.toggleUserRole('${u.id}')" data-tooltip="Cambiar Rol"><i class="fas fa-exchange-alt"></i></button>
+                                    <button class="ac-btn-sm" style="color:#ef4444;" onclick="AdminCliente.removeUser('${u.id}', '${u.full_name}')" data-tooltip="Eliminar Usuario"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
                         `;
@@ -377,7 +377,7 @@ const AdminCliente = (() => {
                                 </div>
                                 <span class="ac-invoice-amount">$${inv.amount} ${inv.currency || 'USD'}</span>
                                 <span class="ac-invoice-status" style="color:${isPaid ? '#10b981' : '#f59e0b'};">${isPaid ? 'PAGADO' : 'PENDIENTE'}</span>
-                                <button class="ac-btn-sm" onclick="window.print()"><i class="fas fa-download"></i></button>
+                                <button class="ac-btn-sm" onclick="window.print()" data-tooltip="Descargar Resumen PDF"><i class="fas fa-download"></i></button>
                             </div>
                         `;
                     }).join('')}

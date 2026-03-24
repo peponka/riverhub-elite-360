@@ -1029,7 +1029,7 @@ const AdminDashboard = (() => {
 
                 <div class="fleet-card-actions">
                     <button class="btn-admin-primary" onclick="AdminDashboard.openGlobalTrackingModal('${s.name}', '${s.loc}')" style="font-size:0.8rem;"><i class="fas fa-satellite-dish"></i> TRACKING</button>
-                    <button class="btn-table-action" onclick="RiverToast.info('Abriendo visor del contrato comercial activo de: ${s.client}')" style="width:auto; padding:0 15px;"><i class="fas fa-file-contract"></i></button>
+                    <button class="btn-table-action" onclick="RiverToast.info('Abriendo visor del contrato comercial activo de: ${s.client}')" style="width:auto; padding:0 15px;" data-tooltip="Visor de Contrato"><i class="fas fa-file-contract"></i></button>
                 </div>
             </div>
         `).join('');
@@ -1043,7 +1043,7 @@ const AdminDashboard = (() => {
                     </div>
                     <div style="display:flex; gap:10px; margin-top:10px;">
                         <input type="text" placeholder="Buscar barco o empresa..." style="background:var(--bg-panel); border:1px solid var(--border-color); color:white; padding:8px; border-radius:6px; min-width:200px;">
-                        <button class="btn-table-action" onclick="RiverToast.info('Funcionalidad de filtros avanzados inicializando...')"><i class="fas fa-filter"></i></button>
+                        <button class="btn-table-action" onclick="RiverToast.info('Funcionalidad de filtros avanzados inicializando...')" data-tooltip="Filtros Avanzados"><i class="fas fa-filter"></i></button>
                     </div>
                 </div>
                 
@@ -1316,7 +1316,7 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                 </div>
                 <div style="display:flex; gap:10px; margin-top:5px;">
                      <button class="btn-admin-primary" onclick="RiverToast.info('Ingresando al panel de administración de la empresa: ${t.name}...')" style="flex:1; font-size:0.8rem;">ADMINISTRAR</button>
-                     <button class="btn-icon-action" onclick="RiverToast.info('Abriendo menú de opciones extendidas para: ${t.name}')" style="background:transparent; border:1px solid #334; color:#fff; padding:8px 12px; border-radius:6px;"><i class="fas fa-ellipsis-v"></i></button>
+                     <button class="btn-icon-action" onclick="RiverToast.info('Abriendo menú de opciones extendidas para: ${t.name}')" style="background:transparent; border:1px solid #334; color:#fff; padding:8px 12px; border-radius:6px;" data-tooltip="Menú de Acciones"><i class="fas fa-ellipsis-v"></i></button>
                 </div>
             </div>
         `).join('');
@@ -1362,7 +1362,7 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                     <div style="font-size:1.2rem; font-weight:700; color:#fff;">${inv.amount}</div>
                     <div style="display:flex; gap:10px;">
                          ${inv.status === 'overdue' ? `<button class="btn-admin-primary" onclick="RiverToast.info('Servicio suspendido preventivamente por falta de pago a ${inv.client}.', 'Billing', 'fas fa-gavel')" style="background:#ef4444; font-size:0.7rem;">SUSPENDER</button>` : ''}
-                         <button class="btn-icon-action" onclick="RiverToast.success('Descargando copia comercial de la Factura ID #${inv.id}...\\nEl PDF se generará en segundo plano.')" style="background:transparent; border:1px solid #475569; color:#fff; padding:8px; border-radius:6px;"><i class="fas fa-file-pdf"></i></button>
+                         <button class="btn-icon-action" onclick="RiverToast.success('Descargando copia comercial de la Factura ID #${inv.id}...\\nEl PDF se generará en segundo plano.')" style="background:transparent; border:1px solid #475569; color:#fff; padding:8px; border-radius:6px;" data-tooltip="Descargar PDF Factura"><i class="fas fa-file-pdf"></i></button>
                     </div>
                 </div>
             </div>

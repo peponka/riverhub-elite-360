@@ -115,7 +115,7 @@ var FuelModule = (() => {
             <div class="modal-content card-elite" style="max-width:450px; width:100%; border:1px solid var(--border-color);">
                 <div class="modal-header" style="border-bottom:1px solid var(--border-light); padding-bottom:15px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
                     <h3 style="color:var(--neon-cyan); margin:0;"><i class="fas fa-gas-pump"></i> NUEVA CARGA</h3>
-                    <button onclick="document.getElementById('modal-fuel-load').remove()" class="btn-ghost" style="padding:5px 10px;"><i class="fas fa-times"></i></button>
+                    <button onclick="document.getElementById('modal-fuel-load').remove()" class="btn-ghost" style="padding:5px 10px;" data-tooltip="Cerrar Panel"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="modal-body">
                      <div style="margin-bottom:15px;">
