@@ -145,32 +145,47 @@ const MaintenanceModule = (() => {
     // --- DATA LOADING ---
     const loadVessels = async () => {
         try {
-            const { data } = await window.sb.from('vessels').select('id, name');
+            let res = await window.sb.fetchMine('fleet_assets', 'id, name');
+            if (res.error) res = await window.sb.from('fleet_assets').select('id, name');
+            
             const select = document.getElementById('mnt-new-vessel');
-            if (select && data) {
-                select.innerHTML = data.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
+            if (select && res.data) {
+                stateVessels = res.data; // Store for resolving in loadTasks
+                select.innerHTML = res.data.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
             }
         } catch (e) { console.warn("MNT Error loading vessels", e); }
     };
 
+    let stateVessels = [];
+
     const loadTasks = async () => {
         try {
-            // Using correct table 'maintenance_tasks'
-            const { data, error } = await window.sb
-                .from('maintenance_tasks')
-                .select(`
-                    *,
-                    vessels (name)
-                `)
-                .order('created_at', { ascending: false });
+            let { data, error } = await window.sb.fetchMine('maintenance_tasks', '*');
+            
+            if (error) {
+                console.warn("fetchMine Error, fallback to normal select...", error);
+                let res = await window.sb.from('maintenance_tasks')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                data = res.data;
+                error = res.error;
+            }
 
             if (error) throw error;
+            
+            // Map vessels locally
+            if (data) {
+                 data.forEach(t => {
+                     const fv = stateVessels.find(v => v.id === t.vessel_id);
+                     if (fv) t.vessels = { name: fv.name };
+                 });
+            }
+
             tasks = data || [];
             renderBoard();
             updateKPIs();
         } catch (e) {
             console.error("MNT Error loading tasks:", e);
-            // If table doesn't exist yet, show active mock to not break UI
             if (e.message && e.message.includes("relation")) {
                 console.warn("Table missing? Switching to Mock Mode");
                 tasks = getMockTasks();
@@ -274,7 +289,7 @@ const MaintenanceModule = (() => {
                 if (error) throw error;
             } catch (e) {
                 console.error("Drop save failed:", e);
-                alert("Error al actualizar estado. Revierta cambio.");
+                RiverToast.error("Error al actualizar estado. Revierta cambio.", 'Fallo de Sincronización');
                 loadTasks(); // Revert
             }
         }
@@ -314,7 +329,7 @@ const MaintenanceModule = (() => {
 
             if (error) throw error;
 
-            alert("✅ Orden creada");
+            RiverToast.success("Orden creada exitosamente", "Operación Exitosa");
             closeCreateModal();
             loadTasks();
 
@@ -332,9 +347,9 @@ const MaintenanceModule = (() => {
                 });
                 renderBoard();
                 closeCreateModal();
-                alert("⚠️ Modo Offline: Orden creada localmente");
+                RiverToast.warning("Orden creada localmente. Se sincronizará al recuperar conexión.", "Modo Offline");
             } else {
-                alert("Error: " + err.message);
+                RiverToast.error("No se pudo crear la Orden: " + err.message, "Error");
             }
         }
     };
@@ -398,10 +413,7 @@ const MaintenanceModule = (() => {
         }, 1000);
     };
 
-    const getMockTasks = () => [
-        { id: 1, description: "Revisión Filtros Aceite", status: 'pending', priority: 'medium', created_at: new Date(), vessels: { name: 'TB PARAGUAY 01' } },
-        { id: 2, description: "Falla Sensor Proa", status: 'in_progress', priority: 'high', created_at: new Date(), vessels: { name: 'RM HERCULES' } }
-    ];
+    const getMockTasks = () => [];
 
     return { init, openCreateModal, closeCreateModal, handleCreate, allowDrop, drop };
 })();

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RiverHub Elite 360 - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1281e2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111a22", // Matching the provided dark bg
+                        "card-dark": "#1c2a38", // Slightly lighter for cards
+                        "border-dark": "#233748",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for industrial look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111a22; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #233748; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #324e67; 
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .map-marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            transition: all 0.2s ease-in-out;
+        }
+        .map-marker:hover {
+            transform: translate(-50%, -60%) scale(1.1);
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden h-screen flex">
+<!-- Sidebar -->
+<aside class="w-72 bg-[#111a22] border-r border-[#233748] flex flex-col hidden md:flex shrink-0 z-20">
+<div class="p-6 pb-2">
+<div class="flex items-center gap-3 mb-8">
+<div class="size-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">anchor</span>
+</div>
+<h1 class="text-white text-lg font-bold leading-tight">RiverHub 360</h1>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92afc9] hover:bg-[#233748] hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">map</span>
+<p class="text-sm font-medium leading-normal">Flota en Vivo</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92afc9] hover:bg-[#233748] hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">build</span>
+<p class="text-sm font-medium leading-normal">Mantenimiento</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92afc9] hover:bg-[#233748] hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+<p class="text-sm font-medium leading-normal">Tripulación</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92afc9] hover:bg-[#233748] hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Logística</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92afc9] hover:bg-[#233748] hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<p class="text-sm font-medium leading-normal">Reportes</p>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6 border-t border-[#233748]">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92afc9] hover:bg-[#233748] hover:text-white transition-colors mb-4" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<p class="text-sm font-medium leading-normal">Configuración</p>
+</a>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-[#1c2a38] border border-[#233748]">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-gray-600" data-alt="Admin user profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC5wZwmkp_Oxp-VExn9iepC__hAeZmBHDsmgYIjRJJo-5s0ucwKpKfEDXD4mKQAMieDwWwRPY9_WbZK-Mgx3Tke5SEub_026JWXesmZA8QHCwZN8Kr17jAv58Dahi-AGcon2DdA7BACS7Cf0IgCTgPAsmzMWS0FUGdQyqJ9IaE-5Guq3p5C2WHGNBCVlpWYSXuduV-SA69X_q3AdtlSWhaGuQTo8lNoZSeSrWlUBCkpCvdnCxfVvjwMH-Gckg43AZE0pZAi-0nMrQo");'></div>
+<div class="flex flex-col overflow-hidden">
+<h1 class="text-white text-sm font-bold truncate">Carlos Mendez</h1>
+<p class="text-[#92afc9] text-xs font-normal truncate">Admin Empresa</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full relative overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="h-16 flex items-center justify-between px-6 border-b border-[#233748] bg-[#111a22] shrink-0 z-10">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden md:flex flex-col">
+<h2 class="text-white text-lg font-bold leading-tight">Resumen Operativo</h2>
+<p class="text-[#92afc9] text-xs">Última actualización: Hace 1 min</p>
+</div>
+</div>
+<div class="flex items-center gap-4 flex-1 justify-end max-w-2xl">
+<!-- Search -->
+<div class="flex w-full max-w-md items-center h-10 bg-[#1c2a38] rounded-lg border border-[#233748] overflow-hidden focus-within:ring-1 focus-within:ring-primary/50">
+<div class="pl-3 text-[#92afc9] flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="w-full bg-transparent border-none text-white text-sm placeholder-[#64748b] focus:ring-0 px-3" placeholder="Buscar barco, ID o alerta..."/>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center size-10 rounded-lg hover:bg-[#233748] text-[#92afc9] hover:text-white transition-colors relative">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-[#111a22]"></span>
+</button>
+<button class="flex items-center justify-center size-10 rounded-lg hover:bg-[#233748] text-[#92afc9] hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[22px]">help</span>
+</button>
+<div class="h-6 w-px bg-[#233748] mx-1"></div>
+<button class="flex items-center gap-2 px-3 h-10 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-colors shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span class="hidden sm:inline">Nuevo Viaje</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Scrollable Dashboard Content -->
+<div class="flex-1 overflow-y-auto overflow-x-hidden p-6">
+<div class="max-w-[1600px] mx-auto flex flex-col gap-6">
+<!-- KPI Stats Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Stat 1 -->
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-[#1c2a38] border border-[#233748] shadow-sm relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-primary">directions_boat</span>
+</div>
+<p class="text-[#92afc9] text-sm font-medium">Embarcaciones Activas</p>
+<div class="flex items-end gap-2 mt-1">
+<p class="text-white text-3xl font-bold tracking-tight">42</p>
+<div class="flex items-center text-[#0bda5b] text-sm font-bold mb-1 bg-[#0bda5b]/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+2</span>
+</div>
+</div>
+<p class="text-[#64748b] text-xs mt-2">Total flota: 48 unidades</p>
+</div>
+<!-- Stat 2 -->
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-[#1c2a38] border border-[#233748] shadow-sm relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-blue-400">local_gas_station</span>
+</div>
+<p class="text-[#92afc9] text-sm font-medium">Consumo Combustible (24h)</p>
+<div class="flex items-end gap-2 mt-1">
+<p class="text-white text-3xl font-bold tracking-tight">12.4k L</p>
+<div class="flex items-center text-[#0bda5b] text-sm font-bold mb-1 bg-[#0bda5b]/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+<span>-5%</span>
+</div>
+</div>
+<p class="text-[#64748b] text-xs mt-2">Eficiencia: 92%</p>
+</div>
+<!-- Stat 3 -->
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-[#1c2a38] border border-[#233748] shadow-sm relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-orange-400">warning</span>
+</div>
+<p class="text-[#92afc9] text-sm font-medium">Alertas Mantenimiento</p>
+<div class="flex items-end gap-2 mt-1">
+<p class="text-white text-3xl font-bold tracking-tight">3</p>
+<div class="flex items-center text-orange-400 text-sm font-bold mb-1 bg-orange-400/10 px-1.5 py-0.5 rounded">
+<span>Urgentes</span>
+</div>
+</div>
+<p class="text-[#64748b] text-xs mt-2">7 mantenimientos programados</p>
+</div>
+<!-- Stat 4 -->
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-[#1c2a38] border border-[#233748] shadow-sm relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-purple-400">inventory</span>
+</div>
+<p class="text-[#92afc9] text-sm font-medium">Carga en Tránsito</p>
+<div class="flex items-end gap-2 mt-1">
+<p class="text-white text-3xl font-bold tracking-tight">85k T</p>
+<div class="flex items-center text-[#0bda5b] text-sm font-bold mb-1 bg-[#0bda5b]/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+1.5%</span>
+</div>
+</div>
+<p class="text-[#64748b] text-xs mt-2">Valor est: $4.2M USD</p>
+</div>
+</div>
+<!-- Main Grid: Map & Alerts -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] min-h-[500px]">
+<!-- Interactive Map Module -->
+<div class="lg:col-span-2 bg-[#1c2a38] border border-[#233748] rounded-xl flex flex-col overflow-hidden shadow-sm relative group/map">
+<div class="p-4 border-b border-[#233748] flex justify-between items-center bg-[#1c2a38] z-10">
+<div class="flex items-center gap-3">
+<h3 class="text-white font-bold text-base">Ubicación de Flota en Vivo</h3>
+<span class="flex size-2.5 rounded-full bg-[#0bda5b] animate-pulse"></span>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 rounded bg-[#233748] text-[#92afc9] hover:text-white hover:bg-[#324e67]">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+</button>
+<button class="p-1.5 rounded bg-[#233748] text-[#92afc9] hover:text-white hover:bg-[#324e67]">
+<span class="material-symbols-outlined text-[20px]">filter_alt</span>
+</button>
+<button class="p-1.5 rounded bg-[#233748] text-[#92afc9] hover:text-white hover:bg-[#324e67]">
+<span class="material-symbols-outlined text-[20px]">fullscreen</span>
+</button>
+</div>
+</div>
+<div class="flex-1 relative bg-[#0f161e]">
+<!-- Dark Map Background Image -->
+<div class="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-luminosity" data-alt="Satellite map view of a river system with dark overlay" data-location="River Parana" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDmADvRjHP08RSJ6HaLFKkb1Gpnsytuvz4qH-_Gv-H6v39CPW3RPGPHeSf1J4Pk58brFGwebYU9NPpyCgLDnL_TLs1YFZvheot4iZLkwj--BysJYlAEVv2-enG8dzEpssZ1QMthhmIphMHEhaOtwMYh6DTnfTtM-P3PO-GaQw66vC50R0sBbHH2hkXZfMmN82J2HjPxo6wt3jF2XXw38b7zD2LrvGyL3f_ceELqMZ7t101bGDFuAEJvN6U-5sbQXv6oIfmJ93HFx1Q"); filter: grayscale(100%) contrast(120%) brightness(50%);'>
+</div>
+<!-- Map Markers (Simulated) -->
+<!-- Vessel 1 -->
+<div class="map-marker absolute top-[40%] left-[30%] cursor-pointer group/marker">
+<div class="relative">
+<div class="size-4 bg-primary rounded-full border-2 border-white shadow-[0_0_15px_rgba(18,129,226,0.5)]"></div>
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#111a22] text-white text-xs px-2 py-1 rounded border border-[#233748] whitespace-nowrap opacity-0 group-hover/marker:opacity-100 transition-opacity pointer-events-none z-50">
+<p class="font-bold">Tug Rio III</p>
+<p class="text-[#92afc9]">12 kts • En ruta</p>
+</div>
+</div>
+</div>
+<!-- Vessel 2 -->
+<div class="map-marker absolute top-[60%] left-[55%] cursor-pointer group/marker">
+<div class="relative">
+<div class="size-4 bg-primary rounded-full border-2 border-white shadow-[0_0_15px_rgba(18,129,226,0.5)]"></div>
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#111a22] text-white text-xs px-2 py-1 rounded border border-[#233748] whitespace-nowrap opacity-0 group-hover/marker:opacity-100 transition-opacity pointer-events-none z-50">
+<p class="font-bold">Barge Alpha-01</p>
+<p class="text-[#92afc9]">Anchored</p>
+</div>
+</div>
+</div>
+<!-- Vessel 3 (Warning) -->
+<div class="map-marker absolute top-[25%] left-[70%] cursor-pointer group/marker">
+<div class="relative">
+<div class="size-4 bg-orange-500 rounded-full border-2 border-white animate-pulse shadow-[0_0_15px_rgba(249,115,22,0.6)]"></div>
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#111a22] text-white text-xs px-2 py-1 rounded border border-orange-500/50 whitespace-nowrap opacity-0 group-hover/marker:opacity-100 transition-opacity pointer-events-none z-50">
+<p class="font-bold text-orange-400">Tug Bravo</p>
+<p class="text-[#92afc9]">Mantenimiento Req.</p>
+</div>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute bottom-6 right-6 flex flex-col gap-2">
+<button class="size-8 bg-[#1c2a38] text-white border border-[#233748] rounded flex items-center justify-center hover:bg-[#233748] shadow-lg">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+<button class="size-8 bg-[#1c2a38] text-white border border-[#233748] rounded flex items-center justify-center hover:bg-[#233748] shadow-lg">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Side Panel: Status & Alerts -->
+<div class="flex flex-col gap-6 h-full">
+<!-- Notifications/Alerts -->
+<div class="flex-1 bg-[#1c2a38] border border-[#233748] rounded-xl flex flex-col overflow-hidden shadow-sm">
+<div class="p-4 border-b border-[#233748] flex justify-between items-center bg-[#1c2a38]">
+<h3 class="text-white font-bold text-base">Notificaciones</h3>
+<button class="text-[#1281e2] text-xs font-bold hover:underline">VER TODAS</button>
+</div>
+<div class="flex-1 overflow-y-auto p-2">
+<div class="flex flex-col gap-2">
+<!-- Alert Item 1 (Critical) -->
+<div class="p-3 rounded bg-[#233748]/50 hover:bg-[#233748] border-l-2 border-red-500 transition-colors flex gap-3 cursor-pointer">
+<div class="mt-0.5 text-red-500 shrink-0">
+<span class="material-symbols-outlined text-[20px]">error</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-sm font-semibold">Fallo Motor Auxiliar</p>
+<p class="text-[#92afc9] text-xs">Tug Hercules • Hace 10 min</p>
+</div>
+</div>
+<!-- Alert Item 2 (Warning) -->
+<div class="p-3 rounded bg-[#233748]/50 hover:bg-[#233748] border-l-2 border-orange-500 transition-colors flex gap-3 cursor-pointer">
+<div class="mt-0.5 text-orange-500 shrink-0">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-sm font-semibold">Nivel de Combustible Bajo</p>
+<p class="text-[#92afc9] text-xs">Barge XL-20 • Hace 45 min</p>
+</div>
+</div>
+<!-- Alert Item 3 (Info) -->
+<div class="p-3 rounded bg-[#233748]/50 hover:bg-[#233748] border-l-2 border-blue-500 transition-colors flex gap-3 cursor-pointer">
+<div class="mt-0.5 text-blue-500 shrink-0">
+<span class="material-symbols-outlined text-[20px]">info</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-sm font-semibold">Arribo a Puerto Rosario</p>
+<p class="text-[#92afc9] text-xs">Convoy A-4 • Hace 2 horas</p>
+</div>
+</div>
+<!-- Alert Item 4 (Info) -->
+<div class="p-3 rounded bg-[#233748]/50 hover:bg-[#233748] border-l-2 border-[#92afc9] transition-colors flex gap-3 cursor-pointer">
+<div class="mt-0.5 text-[#92afc9] shrink-0">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-sm font-semibold">Mantenimiento Programado</p>
+<p class="text-[#92afc9] text-xs">Mañana 08:00 AM</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Fleet Status Breakdown -->
+<div class="h-48 bg-[#1c2a38] border border-[#233748] rounded-xl flex flex-col overflow-hidden shadow-sm p-4">
+<h3 class="text-white font-bold text-sm mb-3">Estado de Flota</h3>
+<div class="flex items-center gap-4 h-full">
+<!-- Simple CSS Donut Chart representation -->
+<div class="relative size-24 rounded-full shrink-0 border-[8px] border-[#233748]" style="background: conic-gradient(#1281e2 0% 65%, #0bda5b 65% 85%, #fb923c 85% 95%, #ef4444 95% 100%);">
+<div class="absolute inset-2 bg-[#1c2a38] rounded-full flex items-center justify-center">
+<span class="text-white text-xs font-bold">100%</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5 flex-1 min-w-0">
+<div class="flex justify-between items-center text-xs">
+<span class="text-[#92afc9] flex items-center gap-2"><span class="size-2 rounded-full bg-[#1281e2]"></span>En Viaje</span>
+<span class="text-white font-medium">28</span>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-[#92afc9] flex items-center gap-2"><span class="size-2 rounded-full bg-[#0bda5b]"></span>En Puerto</span>
+<span class="text-white font-medium">14</span>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-[#92afc9] flex items-center gap-2"><span class="size-2 rounded-full bg-orange-400"></span>Mantenimiento</span>
+<span class="text-white font-medium">4</span>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-[#92afc9] flex items-center gap-2"><span class="size-2 rounded-full bg-red-500"></span>Inactivo</span>
+<span class="text-white font-medium">2</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="bg-[#1c2a38] border border-[#233748] rounded-xl p-6 shadow-sm">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+<div>
+<h3 class="text-white text-lg font-bold">Tendencia de Consumo de Combustible</h3>
+<p class="text-[#92afc9] text-sm">Comparativa semanal vs. semana anterior</p>
+</div>
+<select class="bg-[#233748] border-none text-white text-sm rounded-lg py-2 pl-3 pr-8 focus:ring-1 focus:ring-primary cursor-pointer">
+<option>Últimos 7 días</option>
+<option>Últimos 30 días</option>
+<option>Este Año</option>
+</select>
+</div>
+<div class="h-64 w-full">
+<!-- Simplified SVG Chart using Tailwind gradients -->
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 1000 200">
+<!-- Grid Lines -->
+<line stroke="#233748" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="0" y2="0"></line>
+<line stroke="#233748" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="#233748" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="100" y2="100"></line>
+<line stroke="#233748" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+<line stroke="#233748" stroke-width="1" x1="0" x2="1000" y1="200" y2="200"></line>
+<!-- Gradient Defs -->
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#1281e2" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#1281e2" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Area Path -->
+<path d="M0,150 C100,150 150,80 250,100 C350,120 400,160 500,130 C600,100 650,40 750,60 C850,80 900,120 1000,100 V200 H0 Z" fill="url(#chartGradient)"></path>
+<!-- Line Path -->
+<path d="M0,150 C100,150 150,80 250,100 C350,120 400,160 500,130 C600,100 650,40 750,60 C850,80 900,120 1000,100" fill="none" stroke="#1281e2" stroke-linecap="round" stroke-width="3"></path>
+<!-- Dots -->
+<circle cx="0" cy="150" fill="#1281e2" r="4" stroke="#1c2a38" stroke-width="2"></circle>
+<circle cx="250" cy="100" fill="#1281e2" r="4" stroke="#1c2a38" stroke-width="2"></circle>
+<circle cx="500" cy="130" fill="#1281e2" r="4" stroke="#1c2a38" stroke-width="2"></circle>
+<circle cx="750" cy="60" fill="#1281e2" r="4" stroke="#1c2a38" stroke-width="2"></circle>
+<circle cx="1000" cy="100" fill="#1281e2" r="4" stroke="#1c2a38" stroke-width="2"></circle>
+</svg>
+<div class="flex justify-between text-[#92afc9] text-xs font-medium mt-2">
+<span>Lun</span>
+<span>Mar</span>
+<span>Mié</span>
+<span>Jue</span>
+<span>Vie</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -50,47 +50,76 @@
             // Simple alert for now, can be expanded to real modal if needed
             if (btnAdd) {
                 btnAdd.onclick = () => {
-                    const assetName = prompt("Nombre de la nueva barcaza:");
-                    if (assetName) {
-                        state.assets.push({
-                            id: 'local-' + Date.now(),
-                            name: assetName,
-                            type: 'BARCAZA_GRANEL',
-                            length_meters: 60,
-                            width_meters: 15
-                        });
-                        renderAssetsList();
-                    }
+                    const newId = 'local-' + Date.now();
+                    const assetName = "BA-" + Math.floor(Math.random() * 9000 + 1000);
+                    
+                    state.assets.push({
+                        id: newId,
+                        name: assetName,
+                        type: 'BARCAZA_GRANEL',
+                        length_meters: 60,
+                        width_meters: 15
+                    });
+                    
+                    RiverToast.success(`Barcaza simulada ${assetName} agregada a la lista.`, 'Activo Creado');
+                    renderAssetsList();
                 };
             }
         };
 
-        // 1. DATA: Fetch Assets from Supabase
         const loadAssets = async () => {
             const listContainer = document.getElementById('asset-list-container');
             if (listContainer) listContainer.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Cargando Flota...</div>';
 
             try {
-                // Check Supabase connection
                 if (!window.sb) throw new Error("Supabase client not found");
 
-                const { data, error } = await window.sb
-                    .from('vessels')
-                    .select('*')
-                    .order('name', { ascending: true });
+                let { data, error } = await window.sb
+                    .fetchMine('fleet_assets', '*');
 
-                if (error) throw error;
+                // Sort manually if required, fetchMine might not support order directly if it returns a promise directly
+                if (data) {
+                    data.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+                }
+
+                if (error) {
+                     console.warn("fetchMine failed on fleet_assets, trying normal select...", error);
+                     let res = await window.sb.from('fleet_assets').select('*').order('name', { ascending: true });
+                     if (res.error) throw res.error;
+                     data = res.data;
+                }
 
                 if (data && data.length > 0) {
                     state.assets = data.map(v => ({
                         id: v.id,
                         name: v.name,
-                        type: mapVesselType(v.vessel_type),
+                        type: mapVesselType(v.vessel_type || v.type),
                         raw: v
                     }));
                 } else {
-                    console.warn("DB Empty: Using Mock Data");
-                    useMockAssets();
+                    console.log("Creando barcazas y remolcadores por defecto en Supabase...");
+                    const defaultVessels = [
+                        { name: 'B-101 (Grano)', type: 'Barcaza', status: 'OPERATIVO' },
+                        { name: 'B-102 (Grano)', type: 'Barcaza', status: 'OPERATIVO' },
+                        { name: 'T-505 (Tanque)', type: 'Barcaza', status: 'OPERATIVO' },
+                        { name: 'HERCULES (Tug)', type: 'Remolcador', status: 'OPERATIVO' }
+                    ];
+                    
+                    for (let dv of defaultVessels) {
+                         await window.sb.insertMine('fleet_assets', dv).catch(()=>{});
+                    }
+                    
+                    let refetch = await window.sb.fetchMine('fleet_assets', '*');
+                    if (refetch.data) {
+                         state.assets = refetch.data.map(v => ({
+                             id: v.id,
+                             name: v.name,
+                             type: mapVesselType(v.vessel_type || v.type),
+                             raw: v
+                         }));
+                    } else {
+                         useMockAssets();
+                    }
                 }
 
             } catch (err) {
@@ -113,10 +142,10 @@
 
         const useMockAssets = () => {
             state.assets = [
-                { id: 'b1', name: 'B-101 (Demo)', type: 'BARCAZA_GRANEL' },
-                { id: 'b2', name: 'B-102 (Demo)', type: 'BARCAZA_GRANEL' },
-                { id: 't1', name: 'T-505 (Demo)', type: 'BARCAZA_TANQUE' },
-                { id: 'tug1', name: 'HERCULES (Demo)', type: 'REMOLCADOR' }
+                { id: 'b1', name: 'B-101 (Local)', type: 'BARCAZA_GRANEL' },
+                { id: 'b2', name: 'B-102 (Local)', type: 'BARCAZA_GRANEL' },
+                { id: 't1', name: 'T-505 (Local)', type: 'BARCAZA_TANQUE' },
+                { id: 'tug1', name: 'HERCULES (Local)', type: 'REMOLCADOR' }
             ];
         };
 
@@ -321,7 +350,7 @@
                 const convoyName = nameInput ? nameInput.value : "Convoy Sin Nombre";
 
                 if (!state.currentConvoy || !state.currentConvoy.slots || state.currentConvoy.slots.length === 0) {
-                    alert("El convoy está vacío. Agregue activos antes de guardar.");
+                    RiverToast.warning("El convoy está vacío. Agregue activos antes de guardar.", "Datos Insuficientes");
                     return;
                 }
 
@@ -440,10 +469,9 @@
                 // ACTIONS
                 item.querySelector('.btn-load-action').onclick = () => loadConvoyState(c);
                 item.querySelector('.btn-delete-action').onclick = async () => {
-                    if (confirm('¿Eliminar este convoy?')) {
-                        await window.sb.from('convoys').delete().eq('id', c.id);
-                        fetchSavedConvoys(); // Refresh
-                    }
+                    RiverToast.info("Eliminando convoy...", "Convoy descartado", "fas fa-trash");
+                    await window.sb.from('convoys').delete().eq('id', c.id);
+                    fetchSavedConvoys(); // Refresh
                 };
 
                 container.appendChild(item);

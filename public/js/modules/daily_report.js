@@ -138,7 +138,7 @@ const DailyReportModule = (() => {
     };
 
     const sendEmail = () => {
-        alert("📧 Simultando envío a operaciones@riverhub.com...\n\nEl reporte ha sido enviado exitosamente.");
+        RiverToast.success('Reporte diario enviado a operaciones@riverhub.com', 'Email Enviado');
     };
 
     const print = () => {

@@ -23,7 +23,7 @@ const BitacoraModule = (() => {
         const text = input ? input.value.trim() : '';
 
         if (!text) {
-            alert("Por favor escriba una descripción del evento.");
+            RiverToast.warning('Por favor escriba una descripción del evento.', 'Campo vacío');
             return;
         }
 
@@ -33,13 +33,13 @@ const BitacoraModule = (() => {
         }
 
         try {
-            // 1. Try Supabase Insert
-            const { error } = await window.sb.from('logs').insert([{
+            // 1. Try Supabase Insert (with tenant isolation)
+            const { error } = await window.sb.insertMine('logs', {
                 description: text,
                 action_type: identifyType(text),
                 user_id: window.AuthModule?.getCurrentUser()?.id || null,
                 vessel_id: null // Global log for now
-            }]);
+            });
 
             if (error) throw error;
 
@@ -80,14 +80,15 @@ const BitacoraModule = (() => {
         container.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;"><i class="fas fa-sync fa-spin"></i> Cargando historial...</div>';
 
         try {
-            const { data, error } = await window.sb
-                .from('logs')
-                .select(`*, profiles:user_id(full_name)`)
-                .order('created_at', { ascending: false })
-                .limit(20);
+            // Use fetchMine for tenant isolation, then sort client-side
+            const { data, error } = await window.sb.fetchMine('logs', '*, profiles:user_id(full_name)');
 
             if (error) throw error;
-            renderLogs(data || []);
+            // Sort by created_at descending and limit to 20
+            const sorted = (data || [])
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                .slice(0, 20);
+            renderLogs(sorted);
 
         } catch (e) {
             console.error("Error loading logs, showing demo data");

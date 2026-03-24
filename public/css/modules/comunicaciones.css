@@ -89,10 +89,10 @@
 }
 
 .channel-card.active {
-    background: linear-gradient(90deg, rgba(6, 182, 212, 0.1) 0%, rgba(15, 22, 33, 1) 100%);
-    border: 1px solid #06b6d4;
+    background: linear-gradient(90deg, rgba(0, 229, 255, 0.1) 0%, rgba(15, 22, 33, 1) 100%);
+    border: 1px solid #00E5FF;
     /* Cyan border */
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.1);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
 }
 
 .ch-info {
@@ -109,7 +109,7 @@
 }
 
 .channel-card.active .ch-number {
-    color: #06b6d4;
+    color: #00E5FF;
     /* Cyan when active */
 }
 
@@ -218,13 +218,13 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: rgba(6, 182, 212, 0.1);
-    color: #06b6d4;
+    background: rgba(0, 229, 255, 0.1);
+    color: #00E5FF;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
-    border: 1px solid rgba(6, 182, 212, 0.3);
+    border: 1px solid rgba(0, 229, 255, 0.3);
 }
 
 .header-text h2 {
@@ -334,9 +334,9 @@
 
 .msg-wrapper.self .msg-bubble {
     border-radius: 12px 0 12px 12px;
-    background: rgba(6, 182, 212, 0.1);
+    background: rgba(0, 229, 255, 0.1);
     /* Cyan tint */
-    border-color: rgba(6, 182, 212, 0.3);
+    border-color: rgba(0, 229, 255, 0.3);
     color: #cbd5e1;
 }
 
@@ -347,7 +347,7 @@
     top: 0;
     bottom: 0;
     width: 3px;
-    background: #06b6d4;
+    background: #00E5FF;
     border-radius: 3px 0 0 3px;
 }
 
@@ -377,7 +377,7 @@
 }
 
 .input-mic {
-    color: #06b6d4;
+    color: #00E5FF;
     font-size: 1.2rem;
     padding-left: 15px;
     cursor: pointer;
@@ -398,7 +398,7 @@
 }
 
 .btn-ptt-bg {
-    background: #06b6d4;
+    background: #00E5FF;
     color: #000;
     font-weight: 800;
     border: none;
@@ -412,7 +412,7 @@
 
 .btn-ptt-bg:hover {
     background: #fff;
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
 }
 
 /* Footer Status */

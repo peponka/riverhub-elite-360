@@ -89,7 +89,7 @@ const monitoringLogic = (() => {
     const checkDraftRules = async () => {
         // 1. Get Active Vessels (Filter those with draft)
         let vessels = [];
-        const { data } = await window.sb.from('vessels').select('*').not('current_draft', 'is', null);
+        const { data } = await window.sb.from('fleet_assets').select('*').not('current_draft', 'is', null);
         vessels = data || [];
 
         // 2. Check each vessel against Geofences

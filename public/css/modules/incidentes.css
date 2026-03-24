@@ -311,16 +311,21 @@
     font-weight: 600;
 }
 
-.input-forense {
-    background: #0b1116;
-    border: 1px solid #334155;
+#modal-forense-premium .input-forense {
+    background: #0b1116 !important;
+    border: 1px solid #334155 !important;
     padding: 10px;
     border-radius: 8px;
-    color: #fff;
+    color: #fff !important;
     font-family: inherit;
 }
 
-.input-forense:focus {
+#modal-forense-premium .input-forense option {
+    background: #0b1116 !important;
+    color: #fff !important;
+}
+
+#modal-forense-premium .input-forense:focus {
     border-color: #ef4444;
     outline: none;
 }

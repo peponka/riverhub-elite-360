@@ -26,10 +26,10 @@ const AuditoriaModule = (() => {
         else log('error', 'Sin conexión a internet detectada.');
 
         // 2. Check Supabase
-        if (typeof supabase !== 'undefined') { // Assuming supabase client is global
+        if (window.sb) {
             try {
-                const { data, error } = await window.supabaseClient
-                    .from('users') // Try a safe public table or just raw query
+                const { data, error } = await window.sb
+                    .from('profiles')
                     .select('count', { count: 'exact', head: true });
 
                 if (error) throw error;
@@ -135,7 +135,9 @@ const AuditoriaModule = (() => {
     };
 
     const exportLogs = () => {
-        alert("Función Log Export: Generando archivo .log...");
+        if (window.RiverToast) {
+            RiverToast.info("Función Log Export: Generando archivo .log...", "Exportando Registros");
+        }
         log('info', 'Logs exportados a CSV.');
     };
 

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestión Central de Bitácoras - RiverHub Elite 360</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1281e2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111a22",
+                        "surface-dark": "#1a2632",
+                        "border-dark": "#233748",
+                        "text-secondary": "#92afc9"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111a22; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #233748; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #324e67; 
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary selection:text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-[#111a22]/95 backdrop-blur px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary flex items-center justify-center">
+<svg class="w-full h-full" fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">RiverHub Elite 360</h2>
+</div>
+<div class="hidden lg:flex items-center gap-9">
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Flota</a>
+<a class="text-primary text-sm font-bold leading-normal" href="#">Bitácoras</a>
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Mantenimiento</a>
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Reportes</a>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full group focus-within:ring-2 ring-primary/50 transition-all">
+<div class="text-text-secondary flex border-none bg-surface-dark items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-surface-dark focus:border-none h-full placeholder:text-text-secondary px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal" placeholder="Buscar en bitácora..." value=""/>
+</div>
+</label>
+<div class="flex gap-3 items-center">
+<button class="flex items-center justify-center rounded-lg size-10 bg-surface-dark hover:bg-[#2a4055] text-white transition-colors relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-[#111a22]"></span>
+</button>
+<button class="flex items-center justify-center rounded-lg size-10 bg-surface-dark hover:bg-[#2a4055] text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-border-dark cursor-pointer" data-alt="Profile picture of the logged in fleet manager" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAS06phd-s3P4gEq2r5TUmJrRy1hz7gGygOorYsmqf67yPQ6BEWlqQSZIx323d8c3Y7MlKtwgNx0zJ9rxnSarQwGh4eZSixgCtaScVamIjXnHYdTKuZDTGsZ-ymrtKNCqbNMNLbPdOywr2AUkzlaAwkU2vd_igvcGWW49zCT4eRa04I9KSzoBcv_nV_H94HwnJLSdT0B5ftVuF122LvuuL2A7LqzG8kIBKlcF3ATbDZ6nkwHsK_mMQbVj3Nl4cgtElQgKfkE1zjYNY");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 px-6 lg:px-40 py-8 w-full max-w-[1440px] mx-auto">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 pb-6">
+<a class="text-text-secondary hover:text-white transition-colors text-sm font-medium" href="#">Inicio</a>
+<span class="text-text-secondary text-sm font-medium">/</span>
+<a class="text-text-secondary hover:text-white transition-colors text-sm font-medium" href="#">Gestión de Flota</a>
+<span class="text-text-secondary text-sm font-medium">/</span>
+<span class="text-white text-sm font-medium">Bitácora Central</span>
+</div>
+<!-- Page Heading & Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+<div class="flex flex-col gap-2 max-w-2xl">
+<h1 class="text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">Gestión Central de Bitácoras</h1>
+<p class="text-text-secondary text-base font-normal">Auditoría, control y firma digital de los registros operativos de toda la flota en tiempo real.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 h-10 px-4 bg-surface-dark hover:bg-[#2a4055] text-white text-sm font-bold rounded-lg border border-border-dark transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+                        Configuración
+                    </button>
+<button class="flex items-center gap-2 h-10 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-900/20 transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Nueva Entrada Manual
+                    </button>
+</div>
+</div>
+<!-- Stats Dashboard -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="flex flex-col gap-3 rounded-xl p-5 border border-border-dark bg-surface-dark relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-white">description</span>
+</div>
+<p class="text-text-secondary text-sm font-medium">Total Entradas (Mes)</p>
+<div class="flex items-end gap-3">
+<p class="text-white text-3xl font-bold leading-none">1,245</p>
+<p class="text-emerald-400 text-sm font-bold mb-1 flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            12%
+                        </p>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-5 border border-border-dark bg-surface-dark relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-orange-500">draw</span>
+</div>
+<p class="text-text-secondary text-sm font-medium">Firmas Pendientes</p>
+<div class="flex items-end gap-3">
+<p class="text-white text-3xl font-bold leading-none">34</p>
+<span class="text-orange-400 text-xs font-medium px-2 py-0.5 rounded bg-orange-400/10 border border-orange-400/20">Acción Requerida</span>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-5 border border-border-dark bg-surface-dark relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-red-500">warning</span>
+</div>
+<p class="text-text-secondary text-sm font-medium">Alertas Críticas</p>
+<div class="flex items-end gap-3">
+<p class="text-white text-3xl font-bold leading-none">5</p>
+<p class="text-red-400 text-sm font-bold mb-1 flex items-center">
+                            2 Activas hoy
+                        </p>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-5 border border-border-dark bg-surface-dark relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-blue-500">water_drop</span>
+</div>
+<p class="text-text-secondary text-sm font-medium">Combustible (Gal)</p>
+<div class="flex items-end gap-3">
+<p class="text-white text-3xl font-bold leading-none">12.5k</p>
+<p class="text-emerald-400 text-sm font-bold mb-1 flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            8% vs prom.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Filters & Tools Section -->
+<div class="flex flex-col gap-4 bg-surface-dark rounded-t-xl border border-border-dark border-b-0 p-5">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<h3 class="text-white text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">filter_list</span>
+                        Filtros Avanzados
+                    </h3>
+<div class="flex gap-2 w-full md:w-auto">
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 h-9 px-3 bg-[#233748] hover:bg-[#2d465b] text-text-secondary hover:text-white text-sm font-medium rounded border border-transparent hover:border-border-dark transition-all">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                            Exportar CSV
+                        </button>
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 h-9 px-3 bg-[#233748] hover:bg-[#2d465b] text-text-secondary hover:text-white text-sm font-medium rounded border border-transparent hover:border-border-dark transition-all">
+<span class="material-symbols-outlined text-[18px]">print</span>
+                            Imprimir Reporte
+                        </button>
+</div>
+</div>
+<!-- Active Filters Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+<!-- Vessel Selector -->
+<div class="relative group">
+<label class="block text-xs text-text-secondary mb-1 font-medium ml-1">Embarcación</label>
+<div class="relative">
+<select class="w-full h-10 bg-[#111a22] border border-border-dark text-white text-sm rounded-lg focus:ring-1 focus:ring-primary focus:border-primary block p-2.5 appearance-none cursor-pointer">
+<option>Todas las Unidades</option>
+<option>Remolcador Alpha</option>
+<option>Remolcador Beta</option>
+<option>Barcaza 104</option>
+<option>Barcaza 202</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-secondary pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Date Range -->
+<div class="relative group">
+<label class="block text-xs text-text-secondary mb-1 font-medium ml-1">Periodo</label>
+<div class="relative">
+<input class="w-full h-10 bg-[#111a22] border border-border-dark text-white text-sm rounded-lg focus:ring-1 focus:ring-primary focus:border-primary block pl-9 p-2.5" type="text" value="Oct 10 - Oct 17, 2023"/>
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-text-secondary pointer-events-none text-[20px]">calendar_today</span>
+</div>
+</div>
+<!-- Event Type -->
+<div class="relative group">
+<label class="block text-xs text-text-secondary mb-1 font-medium ml-1">Tipo de Evento</label>
+<div class="relative">
+<select class="w-full h-10 bg-[#111a22] border border-border-dark text-white text-sm rounded-lg focus:ring-1 focus:ring-primary focus:border-primary block p-2.5 appearance-none cursor-pointer">
+<option>Todos los Eventos</option>
+<option>Navegación</option>
+<option>Mantenimiento</option>
+<option>Carga de Combustible</option>
+<option>Seguridad</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-secondary pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Signature Status -->
+<div class="relative group">
+<label class="block text-xs text-text-secondary mb-1 font-medium ml-1">Estado de Firma</label>
+<div class="relative">
+<select class="w-full h-10 bg-[#111a22] border border-border-dark text-white text-sm rounded-lg focus:ring-1 focus:ring-primary focus:border-primary block p-2.5 appearance-none cursor-pointer">
+<option>Cualquier Estado</option>
+<option>Pendiente</option>
+<option>Firmado</option>
+<option>Verificado</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-secondary pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Apply Button -->
+<div class="flex items-end pb-0.5">
+<button class="w-full h-10 bg-primary hover:bg-blue-600 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
+                            Aplicar Filtros
+                        </button>
+</div>
+</div>
+</div>
+<!-- Main Data Table -->
+<div class="overflow-x-auto rounded-b-xl border border-border-dark border-t-0 bg-[#111a22]">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#15202b] border-b border-border-dark">
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-text-secondary whitespace-nowrap w-[180px]">Fecha / Hora</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-text-secondary whitespace-nowrap">Embarcación</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-text-secondary whitespace-nowrap">Evento</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-text-secondary">Descripción</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-text-secondary whitespace-nowrap">Autor</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-text-secondary whitespace-nowrap text-center">Estado</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-text-secondary whitespace-nowrap text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-dark text-sm">
+<!-- Row 1: Critical Alert -->
+<tr class="group hover:bg-surface-dark transition-colors relative">
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    2023-10-17 08:45
+                                </div>
+</td>
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">Remolcador Alpha</td>
+<td class="p-4 text-white align-top">
+<div class="flex items-center gap-2 text-red-400">
+<span class="material-symbols-outlined text-[18px] filled-icon">warning</span>
+<span class="font-medium">Falla Mecánica</span>
+</div>
+</td>
+<td class="p-4 text-text-secondary align-top max-w-xs truncate">
+                                Sobrecalentamiento detectado en motor de estribor. Se detuvo la marcha para inspección inmediata según protocolo.
+                            </td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDO3V6a5V9fKiLHVBwUI4siCuG_5OpZ4QBbQH-toN-StuTcO8R6vyNApGdEQWJFM3BFN6PeLhLgoT_Q810Snkpy8m_3IDbn_3Vac6fIBRbIyOVt9v6TGZaX33-VMLxU9r1tG9h_h5rP7jJOAFDkhWtH-OaZgyauvjZoyqNz8dXjeur4zHnqFB9PULWFMkTsWGA9F9DBU9J12E112YrH6DMrrk52PRE-_DEv11PdhvM9xs7v7-zsKLzKzz-TQLD1UN-VTsdhIjTwGFA");'></div>
+<span class="text-white text-xs">Cap. J. Perez</span>
+</div>
+</td>
+<td class="p-4 align-top text-center">
+<span class="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-1 text-xs font-medium text-red-500 border border-red-500/20">
+                                    Crítico
+                                </span>
+</td>
+<td class="p-4 align-top text-right">
+<button class="text-text-secondary hover:text-white p-1 rounded hover:bg-[#233748] transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Routine Navigation -->
+<tr class="group hover:bg-surface-dark transition-colors">
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    2023-10-17 06:30
+                                </div>
+</td>
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">Barcaza 104</td>
+<td class="p-4 text-white align-top">
+<div class="flex items-center gap-2 text-blue-400">
+<span class="material-symbols-outlined text-[18px]">anchor</span>
+<span class="font-medium">Zarpe</span>
+</div>
+</td>
+<td class="p-4 text-text-secondary align-top max-w-xs truncate">
+                                Salida del puerto base con destino a Terminal Norte. Carga completa y asegurada.
+                            </td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDiAL2TM8JfnV-7voLpntK615tuG8bnEV_LXzjsp4IDgEbYX8BaHATKMZLVzYQm3SJpJfnB78sIh9kzhAyLfsCYpkUNpG2Zq7YHv8iJVoNeBPvdzdf_7b08RwvkjOmLnHnAlrAmiWaV4apoNjJR60wqRG5FlYI_2Oezo1J199Z9lzsSBB3SHcgN6pxPSzDFpnPU2ux-XqjHbuwd7ZQJWTdqQHUg7CFcu4VmL9XeWZY_jS4pIlGPO0gCwGWms0HkFQEz5UY_G8Eh1JA");'></div>
+<span class="text-white text-xs">Of. M. Rodriguez</span>
+</div>
+</td>
+<td class="p-4 align-top text-center">
+<span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-500 border border-emerald-500/20">
+                                    Verificado
+                                </span>
+</td>
+<td class="p-4 align-top text-right">
+<button class="text-text-secondary hover:text-white p-1 rounded hover:bg-[#233748] transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Pending Signature -->
+<tr class="group hover:bg-surface-dark transition-colors">
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                                    2023-10-16 22:15
+                                </div>
+</td>
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">Remolcador Beta</td>
+<td class="p-4 text-white align-top">
+<div class="flex items-center gap-2 text-orange-400">
+<span class="material-symbols-outlined text-[18px]">local_gas_station</span>
+<span class="font-medium">Combustible</span>
+</div>
+</td>
+<td class="p-4 text-text-secondary align-top max-w-xs truncate">
+                                Reabastecimiento de 5,000 galones de Diesel Marino en estación flotante KM-45.
+                            </td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuApgjbChagpOWBnrJ06jUa6iRlHiiq_S2f40BVEE1FeVw5kMNRP2dcjhzL2Qaivrog8ieVatBKhgMtfHHuinhKBZqUXJYDg0MmtaD5sr8LIkzoK8m7aWbXomqx_dbkvsQFjWxannv6PLnZfD1kgLoJC1K58FFHqVph43EON3dqvHJvGnNGOEU5BfdKCwzaKKbEUNjt0x8_RKIz4DlmXTRgT3tvx_Hk3Afp7UlbSKyk4QW-s6IFhAZg6YuyqIUga8Py5NcAYKwJqJe0");'></div>
+<span class="text-white text-xs">Ing. A. Silva</span>
+</div>
+</td>
+<td class="p-4 align-top text-center">
+<span class="inline-flex items-center gap-1 rounded-full bg-orange-500/10 px-2 py-1 text-xs font-medium text-orange-500 border border-orange-500/20">
+                                    Pendiente
+                                </span>
+</td>
+<td class="p-4 align-top text-right">
+<div class="flex justify-end gap-1">
+<button class="text-primary hover:text-blue-400 p-1 rounded hover:bg-[#233748] transition-colors" title="Firmar">
+<span class="material-symbols-outlined text-[20px]">ink_pen</span>
+</button>
+<button class="text-text-secondary hover:text-white p-1 rounded hover:bg-[#233748] transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Maintenance -->
+<tr class="group hover:bg-surface-dark transition-colors">
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    2023-10-16 14:00
+                                </div>
+</td>
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">Barcaza 202</td>
+<td class="p-4 text-white align-top">
+<div class="flex items-center gap-2 text-purple-400">
+<span class="material-symbols-outlined text-[18px]">build</span>
+<span class="font-medium">Mantenimiento</span>
+</div>
+</td>
+<td class="p-4 text-text-secondary align-top max-w-xs truncate">
+                                Revisión rutinaria de sistemas de bombeo y válvulas de seguridad. Todo operativo.
+                            </td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC0A47QtSqA51RwEyfPW3ybs5qN-CJcb-c2zZ3Es0V8vlZ0D1WNfYU64i2LbZtMEIFEfKDHP_bAtXU_Rpctse-Wf4b1l-E5aHHccu9LnykL94FBU3TMqnF-dqStYjPw4Crjgj5MzhDXN3IDokqa1oJrd9HdkWbHC8WCa4_S9p98ptq1F_L7gbS89l2rPgqfFExJnBONz6CSl_p22O6fPIzwWqDkfP9D7dqTF4L03aAxSiz0rbzrXq0Y15Tbvofg_RckhwYMqpDZ_6I");'></div>
+<span class="text-white text-xs">Téc. R. Gomez</span>
+</div>
+</td>
+<td class="p-4 align-top text-center">
+<span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-500 border border-emerald-500/20">
+                                    Verificado
+                                </span>
+</td>
+<td class="p-4 align-top text-right">
+<button class="text-text-secondary hover:text-white p-1 rounded hover:bg-[#233748] transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Navigation -->
+<tr class="group hover:bg-surface-dark transition-colors">
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    2023-10-16 10:20
+                                </div>
+</td>
+<td class="p-4 text-white font-medium whitespace-nowrap align-top">Remolcador Alpha</td>
+<td class="p-4 text-white align-top">
+<div class="flex items-center gap-2 text-blue-400">
+<span class="material-symbols-outlined text-[18px]">navigation</span>
+<span class="font-medium">Cambio Rumbo</span>
+</div>
+</td>
+<td class="p-4 text-text-secondary align-top max-w-xs truncate">
+                                Ajuste de ruta debido a condiciones climáticas adversas en el sector sur.
+                            </td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCoGfIP6eirrJikPkjUsz2ULxk0m3LCJXObW2O_Xf6GEjMTrZJ7vRw0fSs3dLhiq_vxp4hWGlwEUBp8BwGnDsATfdqkrkPT6y25PN1z-ULvLjcUTr66lt5ZwhnaAYrUs2bASCg3HN_xZqiLLN2CoYJMmFNRojnb0GkKkYgAyy-rgzIaB5Rz0hWyabpv9HVxj9RFfML55mR0EJINk9UxqLY7ss5129S1gm3ioCpt9r2z7jcQY9NtXTO4ig1RBiDDFiRlUR-Ilg6yd0g");'></div>
+<span class="text-white text-xs">Cap. J. Perez</span>
+</div>
+</td>
+<td class="p-4 align-top text-center">
+<span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-500 border border-emerald-500/20">
+                                    Firmado
+                                </span>
+</td>
+<td class="p-4 align-top text-right">
+<button class="text-text-secondary hover:text-white p-1 rounded hover:bg-[#233748] transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="flex items-center justify-between border-t border-border-dark bg-[#15202b] px-4 py-3 sm:px-6">
+<div class="hidden sm:flex flex-1 sm:items-center sm:justify-between">
+<div>
+<p class="text-sm text-text-secondary">
+                                Mostrando <span class="font-bold text-white">1</span> a <span class="font-bold text-white">10</span> de <span class="font-bold text-white">1,245</span> resultados
+                            </p>
+</div>
+<div>
+<nav aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+<a class="relative inline-flex items-center rounded-l-md px-2 py-2 text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-surface-dark focus:z-20 focus:outline-offset-0" href="#">
+<span class="sr-only">Anterior</span>
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</a>
+<a aria-current="page" class="relative z-10 inline-flex items-center bg-primary px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" href="#">1</a>
+<a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-surface-dark focus:z-20 focus:outline-offset-0" href="#">2</a>
+<a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-surface-dark focus:z-20 focus:outline-offset-0" href="#">3</a>
+<span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-text-secondary ring-1 ring-inset ring-border-dark focus:outline-offset-0">...</span>
+<a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-surface-dark focus:z-20 focus:outline-offset-0" href="#">12</a>
+<a class="relative inline-flex items-center rounded-r-md px-2 py-2 text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-surface-dark focus:z-20 focus:outline-offset-0" href="#">
+<span class="sr-only">Siguiente</span>
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</a>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

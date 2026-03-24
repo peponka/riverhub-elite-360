@@ -5,42 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
-    <title>RiverHub - LIMPIO</title>
+    <title>RiverHub Elite 360</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- jsPDF loaded below via 2.5.1 UMD -->
 
-    <!-- JSPDF (VERSION VIEJA Y CONFIABLE 1.5.3 - NO MODULES) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
-
-    <!-- INLINE GENERATOR TO ENSURE LOADING -->
+    <!-- PDF GENERATOR (jsPDF 2.5.1 UMD compatible) -->
     <script>
         window.descargarPDF = function () {
-            if (typeof jsPDF === 'undefined') {
-                alert("Error: La librería PDF no se cargó. Verifica tu internet.");
+            // jsPDF 2.x UMD exposes window.jspdf.jsPDF
+            var jsPDFClass = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+            if (!jsPDFClass) {
+                console.error("jsPDF library not loaded");
                 return;
             }
             try {
-                var doc = new jsPDF();
+                var doc = new jsPDFClass();
 
-                // Header
+                // Header bar
                 doc.setFillColor(15, 23, 42);
                 doc.rect(0, 0, 210, 40, 'F');
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(22);
-                doc.text(15, 25, 'RIVERHUB ELITE');
+                doc.text('RIVERHUB ELITE', 15, 25);
                 doc.setFontSize(10);
                 doc.setTextColor(0, 229, 255);
-                doc.text(150, 25, 'COTIZACION OFICIAL');
+                doc.text('COTIZACION OFICIAL', 150, 25);
 
                 // Info
                 doc.setTextColor(0, 0, 0);
                 doc.setFontSize(11);
                 var fecha = new Date().toLocaleDateString();
                 var cliente = (document.getElementById('reg-name') && document.getElementById('reg-name').value) || "Cliente Invitado";
-                doc.text(15, 55, "FECHA: " + fecha);
-                doc.text(15, 62, "CLIENTE: " + cliente);
+                doc.text("FECHA: " + fecha, 15, 55);
+                doc.text("CLIENTE: " + cliente, 15, 62);
 
                 // Data values
                 var origin = (document.getElementById('cot-origin') && document.getElementById('cot-origin').value) || "---";
@@ -48,18 +47,18 @@
                 var river = (document.getElementById('rio-slider') && document.getElementById('rio-slider').value) || "---";
                 var price = (document.getElementById('precio-magico-indestructible') && document.getElementById('precio-magico-indestructible').innerText) || "---";
 
-                // Table
+                // Table header
                 var y = 80;
                 doc.setFillColor(240, 240, 240);
                 doc.rect(15, y, 180, 10, 'F');
-                doc.setFontType("bold");
-                doc.text(20, y + 7, "CONCEPTO");
-                doc.text(140, y + 7, "DETALLE");
+                doc.setFont(undefined, 'bold');
+                doc.text("CONCEPTO", 20, y + 7);
+                doc.text("DETALLE", 140, y + 7);
 
                 var row = function (l, v, oy) {
-                    doc.setFontType("normal");
-                    doc.text(20, oy + 7, l);
-                    doc.text(140, oy + 7, v);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(l, 20, oy + 7);
+                    doc.text(v, 140, oy + 7);
                     doc.line(15, oy + 10, 195, oy + 10);
                 };
 
@@ -67,18 +66,18 @@
                 row("Nivel Rio", river + " Metros", y + 20);
                 row("Carga", "15,000 TN", y + 30);
 
-                // Total
+                // Total bar
                 doc.setFillColor(15, 23, 42);
                 doc.rect(15, y + 45, 180, 15, 'F');
                 doc.setTextColor(0, 229, 255);
                 doc.setFontSize(14);
-                doc.text(20, y + 55, "TARIFA FINAL:");
+                doc.text("TARIFA FINAL:", 20, y + 55);
                 doc.setFontSize(18);
-                doc.text(140, y + 55, price);
+                doc.text(price, 140, y + 55);
 
                 doc.save('RiverHub_Quote.pdf');
             } catch (e) {
-                alert("Error PDF: " + e.message);
+                console.error("Error generating PDF:", e);
             }
         };
     </script>
@@ -101,11 +100,14 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- OpenLayers - Canvas 2D rendering (no DPR tile gaps, no WebGL needed) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@8.2.0/ol.css" />
+    <script src="https://cdn.jsdelivr.net/npm/ol@8.2.0/dist/ol.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF for PDF export in Reports module -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <link rel="stylesheet" href="css/global.css?v=FORCE_REFRESH_9999">
+    <link rel="stylesheet" href="css/global.css?v=ELITE_DARK_100">
     <link rel="stylesheet" href="css/modules/dashboard.css?v=999">
     <link rel="stylesheet" href="css/modules/mapa.css?v=999">
     <link rel="stylesheet" href="css/modules/cotizador.css">
@@ -113,7 +115,6 @@
     <link rel="stylesheet" href="css/modules/reportes.css">
     <link rel="stylesheet" href="css/modules/viajes.css">
     <link rel="stylesheet" href="css/modules/commercial.css">
-    <link rel="stylesheet" href="css/modules/tracking.css">
     <link rel="stylesheet" href="css/modules/tracking.css">
     <!-- REVERTED MOBILE OVERRIDES DUE TO BLACK SCREEN -->
 
@@ -135,16 +136,53 @@
     <link rel="stylesheet" href="css/modules/admin.css">
     <link rel="stylesheet" href="css/modules/auditoria.css?v=ELITE_MOBILE_V2"> <!-- AUDITORIA MODULE -->
     <link rel="stylesheet" href="css/modules/admin-dashboard.css"> <!-- NEW ADMIN BACKOFFICE -->
+    <link rel="stylesheet" href="css/modules/backoffice.css"> <!-- SUPERADMIN BACKOFFICE -->
+    <link rel="stylesheet" href="css/modules/admin-cliente.css"> <!-- ADMIN CLIENTE -->
+    <link rel="stylesheet" href="css/modules/billing.css"> <!-- BILLING / SUSCRIPCIÓN -->
+    <link rel="stylesheet" href="css/modules/monitoring.css"> <!-- TORRE DE CONTROL -->
+    <link rel="stylesheet" href="css/modules/fleet_manager.css"> <!-- FLEET MANAGER -->
+    <link rel="stylesheet" href="css/modules/financial_risk.css"> <!-- FINANCIAL RISK -->
     <link rel="stylesheet" href="css/maritime-elite.css"> <!-- MARITIME ELITE THEME -->
-    <link rel="stylesheet" href="css/mejoras-ui.css"> <!-- UI IMPROVEMENTS -->
-    <link rel="stylesheet" href="css/login.css?v=ELITE_MOBILE_V2"> <!-- RESTORED MAIN LOGIN CSS -->
+    <link rel="stylesheet" href="css/mejoras-ui.css?v=ELITE_DARK_300"> <!-- UI IMPROVEMENTS -->
+    <link rel="stylesheet" href="css/login.css?v=ELITE_DARK_300"> <!-- RESTORED MAIN LOGIN CSS -->
+    <link rel="stylesheet" href="css/flutter-override.css?v=ELITE_DARK_300"> <!-- FLUTTER CUPERTINO STYLE -->
 
     <!-- APP CONFIGURATION (MUST BE LOADED FIRST) -->
+    <script src="js/services/toast.js"></script> <!-- TOAST SYSTEM (intercepts alert) -->
     <script src="js/config.js"></script>
     <script src="js/modules/auth.js"></script>
     <script src="js/services/supabase.js"></script>
     <script src="js/global.js"></script>
     <script src="js/modules/convoys.js"></script> <!-- CONVOYS MODULE -->
+
+    <!-- FLUTTER SIDEBAR COLORS — INLINE TO AVOID CACHE ISSUES -->
+    <script>
+        (function () {
+            var C = {
+                'nav-dashboard': '#3B82F6', 'nav-mapa': '#00E5FF', 'nav-fleet-reboot': '#00E5FF',
+                'nav-combustible': '#8B5CF6', 'nav-calado': '#3B82F6', 'nav-hidrologia': '#06B6D4',
+                'nav-convoys': '#10B981', 'nav-loadmaster': '#F59E0B', 'nav-tracking': '#EF4444',
+                'nav-viajes': '#F97316', 'nav-cotizador': '#10B981', 'nav-commercial': '#8B5CF6',
+                'nav-docs': '#3B82F6', 'nav-mantenimiento': '#F59E0B', 'nav-panol': '#06B6D4',
+                'nav-incidentes': '#EF4444', 'nav-tripulacion': '#10B981', 'nav-comunicaciones': '#00E5FF',
+                'nav-bitacora': '#F97316', 'nav-reportes': '#F97316', 'nav-integraciones': '#10B981',
+                'nav-billing': '#3B82F6', 'nav-auditoria': '#64748B', 'nav-admin-console': '#8B5CF6',
+                'nav-backoffice': '#EF4444'
+            };
+            function h2r(h, a) { var r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16); return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')'; }
+            function apply() {
+                for (var id in C) {
+                    var el = document.getElementById(id); if (!el) continue;
+                    var i = el.querySelector('i'); if (!i) continue;
+                    var c = C[id];
+                    i.style.cssText = 'color:' + c + '!important;background:' + h2r(c, 0.15) + '!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:30px!important;height:30px!important;border-radius:8px!important;font-size:14px!important;margin-right:12px!important;text-shadow:none!important;flex-shrink:0!important;';
+                }
+                console.log('🎨 Flutter sidebar colors applied');
+            }
+            window._applyFlutterSidebarColors = apply;
+            document.addEventListener('DOMContentLoaded', function () { setTimeout(apply, 200); setTimeout(apply, 1000); setTimeout(apply, 3000); });
+        })();
+    </script>
 
     <style>
         /* CRITICAL: HIDE APP UNTIL AUTH CHECK */
@@ -155,6 +193,17 @@
         /* But allow login view */
         #login-view {
             display: flex !important;
+        }
+
+        /* VITAL FOR MAPS/CANVAS: Prevents global CSS (like img { max-width: 100%; }) from breaking OpenLayers canvases into staggered fragments */
+        .ol-layer canvas,
+        .ol-layer img {
+            max-width: none !important;
+            max-height: none !important;
+            min-width: 0 !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
     </style>
 
@@ -282,6 +331,13 @@
                 height: auto !important;
                 min-height: calc(100vh - 64px) !important;
             }
+
+            /* FIX RESCATE RENDER: Mapas estrictamente pantalla completa, sin scroll colapsable */
+            #view-mapa, #view-tracking {
+                height: calc(100vh - 64px) !important;
+                min-height: calc(100vh - 64px) !important;
+                overflow: hidden !important;
+            }
         }
     </style>
     <!-- CRITICAL SCROLLBAR OVERRIDE (FINAL FIX) -->
@@ -374,7 +430,7 @@
 
             <!-- BACK TO LANDING LINK -->
             <a href="index.html"
-                style="display:block; text-align:center; color:#64748b; text-decoration:none; margin-bottom:15px; font-size:0.9rem;">
+                style="display:block; text-align:center; color:var(--md-sys-color-on-surface-variant); text-decoration:none; margin-bottom:15px; font-size:0.9rem;">
                 <i class="fas fa-arrow-left"></i> Volver a Landing Page
             </a>
 
@@ -391,7 +447,8 @@
                 <!-- Forgot Password Link inside Login Form -->
                 <div style="text-align: right; margin-bottom: 10px;">
                     <a href="#" onclick="AuthModule.showForgotPassword()"
-                        style="color:#64748b; font-size:0.8rem; text-decoration:none;">¿Olvidaste tu contraseña?</a>
+                        style="color:var(--md-sys-color-on-surface-variant); font-size:0.8rem; text-decoration:none;">¿Olvidaste
+                        tu contraseña?</a>
                 </div>
 
                 <button id="btn-login-action" class="btn-login ripple-effect"
@@ -399,7 +456,7 @@
                     SISTEMA</button>
 
                 <button onclick="AuthModule.bypassLogin()"
-                    style="margin-top:15px; background:rgba(255,255,255,0.05); border:1px solid #334155; color:#94a3b8; width:100%; padding:10px; border-radius:8px; cursor:pointer;">
+                    style="margin-top:15px; background:rgba(255,255,255,0.05); border:1px solid var(--md-sys-color-outline); color:var(--md-sys-color-on-surface-variant); width:100%; padding:10px; border-radius:8px; cursor:pointer;">
                     <i class="fas fa-plane-slash"></i> MODO OFFLINE (SIMULADOR)
                 </button>
             </div>
@@ -441,7 +498,8 @@
         <!-- FORGOT PASSWORD MODAL -->
         <div id="modal-forgot-pass" class="modal-overlay"
             style="display:none; z-index: 10000; align-items:center; justify-content:center;">
-            <div class="modal-content" style="background:#0f172a; border:1px solid #1e293b; max-width:400px;">
+            <div class="modal-content"
+                style="background:var(--md-sys-color-surface); border:1px solid var(--md-sys-color-outline); max-width:400px;">
                 <div class="modal-header">
                     <h3>RECUPERAR ACCESO</h3>
                     <button class="close-modal"
@@ -449,7 +507,8 @@
                             class="fas fa-times"></i></button>
                 </div>
                 <div class="modal-body">
-                    <p style="color:#94a3b8; margin-bottom:15px; font-size:0.9rem;">Ingresa tu email corporativo. Te
+                    <p style="color:var(--md-sys-color-on-surface-variant); margin-bottom:15px; font-size:0.9rem;">
+                        Ingresa tu email corporativo. Te
                         enviaremos un enlace seguro de recuperación.</p>
                     <div class="input-group">
                         <label>Email Registrado</label>
@@ -468,13 +527,15 @@
         <div id="modal-change-pass" class="modal-overlay"
             style="display:none; z-index: 10001; align-items:center; justify-content:center; background:rgba(0,0,0,0.9);">
             <div class="modal-content"
-                style="background:#0f172a; border:1px solid #10b981; max-width:400px; box-shadow: 0 0 50px rgba(16,185,129,0.2);">
+                style="background:var(--md-sys-color-surface); border:1px solid var(--neon-green); max-width:400px; box-shadow: 0 0 50px rgba(16,185,129,0.2);">
                 <div class="modal-header">
-                    <h3 style="color:#10b981"><i class="fas fa-shield-alt"></i> SEGURIDAD</h3>
+                    <h3 style="color:var(--neon-green)"><i class="fas fa-shield-alt"></i> SEGURIDAD</h3>
                 </div>
                 <div class="modal-body">
-                    <p style="color:#fff; margin-bottom:15px; font-weight:bold;">Restablecimiento de Contraseña</p>
-                    <p style="color:#94a3b8; margin-bottom:15px; font-size:0.9rem;">Has ingresado mediante un enlace
+                    <p style="color:var(--md-sys-color-on-surface); margin-bottom:15px; font-weight:bold;">
+                        Restablecimiento de Contraseña</p>
+                    <p style="color:var(--md-sys-color-on-surface-variant); margin-bottom:15px; font-size:0.9rem;">Has
+                        ingresado mediante un enlace
                         seguro. Por favor define tu nueva contraseña para continuar.</p>
 
                     <div class="input-group">
@@ -484,7 +545,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-primary" style="background:#10b981; color:#000; font-weight:bold; width:100%"
+                    <button class="btn-primary"
+                        style="background:var(--neon-green); color:#000; font-weight:bold; width:100%"
                         onclick="AuthModule.confirmPasswordChange()">ACTUALIZAR Y ENTRAR</button>
                 </div>
             </div>
@@ -503,8 +565,8 @@
             </div>
             <nav class="menu">
                 <p class="menu-label">PRINCIPAL</p>
-                <a href="#" id="nav-dashboard" class="active"><i class="fas fa-th-large"></i> Panel de Control</a>
-                <a href="#" id="nav-mapa"><i class="fas fa-map"></i> Mapa de Flota</a>
+                <a href="#" id="nav-dashboard" class="active" data-tooltip="Visión general de métricas en tiempo real"><i class="fas fa-th-large"></i> Panel de Control</a>
+                <a href="#" id="nav-mapa" data-tooltip="Geolocalización satelital de activos"><i class="fas fa-map"></i> Mapa de Flota</a>
 
                 <p class="menu-label">CONFIGURACIÓN INICIAL</p>
                 <a href="#" id="nav-fleet-reboot" style="color: #00e5ff; display: flex !important; font-weight:bold;"
@@ -530,56 +592,61 @@
                 ">
                     <i class="fas fa-ship"></i> Gestión de Flota (Activos)
                 </a>
-                <a href="#" id="nav-tripulacion"><i class="fas fa-user-friends"></i> Tripulación & Safety</a>
+                <a href="#" id="nav-tripulacion" data-tooltip="Gestión de personal y certificados de seguridad"><i class="fas fa-user-friends"></i> Tripulación & Safety</a>
 
                 <p class="menu-label">OPERATIVA DIARIA</p>
-                <a href="#" id="nav-convoys" style="color: #00e5ff; font-weight: bold;"><i class="fas fa-th"></i>
-                    Armador de Convoy</a>
-                <a href="#" id="nav-viajes"><i class="fas fa-route"></i> Gestión de Viajes</a>
-                <a href="#" id="nav-comunicaciones"><i class="fas fa-satellite-dish"></i> Comunicaciones</a>
-                <a href="#" id="nav-bitacora"><i class="fas fa-book"></i> Bitácora Digital</a>
+                <a href="#" id="nav-convoys" style="color: #00e5ff; font-weight: bold;" data-tooltip="Creación y gestión de formaciones de barcazas"><i class="fas fa-th"></i> Armador de Convoy</a>
+                <a href="#" id="nav-viajes" data-tooltip="Monitoreo y despacho de viajes activos"><i class="fas fa-route"></i> Gestión de Viajes</a>
+                <a href="#" id="nav-comunicaciones" data-tooltip="Mensajería y enlaces satelitales"><i class="fas fa-satellite-dish"></i> Comunicaciones</a>
+                <a href="#" id="nav-bitacora" data-tooltip="Registro oficial de novedades en base de datos"><i class="fas fa-book"></i> Bitácora Digital</a>
 
                 <p class="menu-label">SOPORTE TÉCNICO</p>
-                <a href="#" id="nav-combustible"><i class="fas fa-gas-pump"></i> Combustible</a>
-                <a href="#" id="nav-mantenimiento"><i class="fas fa-wrench"></i> Mantenimiento</a>
-                <a href="#" id="nav-panol"><i class="fas fa-box pr-2"></i> Pañol Digital</a>
-                <a href="#" id="nav-calado"><i class="fas fa-ruler-vertical"></i> Monitoreo de Calado</a>
-                <a href="#" id="nav-incidentes"><i class="fas fa-user-shield"></i> Incidentes & SMS</a>
+                <a href="#" id="nav-combustible" data-tooltip="Control de sondajes y consumos Búnker"><i class="fas fa-gas-pump"></i> Combustible</a>
+                <a href="#" id="nav-mantenimiento" data-tooltip="Órdenes de trabajo preventivas y correctivas"><i class="fas fa-wrench"></i> Mantenimiento</a>
+                <a href="#" id="nav-panol" data-tooltip="Gestión de inventario y repuestos a bordo"><i class="fas fa-box pr-2"></i> Pañol Digital</a>
+                <a href="#" id="nav-calado" data-tooltip="Navegabilidad y márgenes de seguridad"><i class="fas fa-ruler-vertical"></i> Monitoreo de Calado</a>
+                <a href="#" id="nav-incidentes" data-tooltip="Módulo SMS (Safety Management System)"><i class="fas fa-user-shield"></i> Incidentes & SMS</a>
 
                 <p class="menu-label">COMERCIAL & CLIENTES</p>
-                <a href="#" id="nav-commercial"><i class="fas fa-file-contract"></i> Gestión Comercial</a>
-                <a href="#" id="nav-tracking"><i class="fas fa-globe-americas"></i> Tracking (Clientes)</a>
-                <a href="#" id="nav-cotizador"><i class="fas fa-robot"></i> Cotizador IA</a>
-                <a href="#" id="nav-docs"><i class="fas fa-file-contract"></i> Documentación</a>
+                <a href="#" id="nav-commercial" data-tooltip="Contratos, Tarifas y Operaciones SPOT"><i class="fas fa-file-contract"></i> Gestión Comercial</a>
+                <a href="#" id="nav-tracking" data-tooltip="Plataforma de visualización para cliente final"><i class="fas fa-globe-americas"></i> Tracking (Clientes)</a>
+                <a href="#" id="nav-cotizador" data-tooltip="Avaluaciones dinámicas con IA Gemini"><i class="fas fa-robot"></i> Cotizador IA</a>
+                <a href="#" id="nav-docs" data-tooltip="Repositorio de documentos legales y certificados"><i class="fas fa-file-contract"></i> Documentación</a>
 
                 <p class="menu-label">REPORTES</p>
-                <a href="#" id="nav-reportes"><i class="fas fa-chart-bar"></i> Centro de Reportes</a>
-                <a href="#" id="nav-hidrologia"><i class="fas fa-water"></i> Hidrología & Clima</a>
+                <a href="#" id="nav-reportes" data-tooltip="Exportación avanzada PDF/CSV"><i class="fas fa-chart-bar"></i> Centro de Reportes</a>
+                <a href="#" id="nav-hidrologia" data-tooltip="Análisis de cuencas hídricas"><i class="fas fa-water"></i> Hidrología & Clima</a>
 
                 <p class="menu-label">SISTEMA</p>
-                <a href="#" id="nav-integraciones"><i class="fas fa-network-wired"></i> Integraciones API</a>
-                <a href="#" id="nav-auditoria"><i class="fas fa-stethoscope"></i> Auditoría & DB</a>
-                <a href="#" id="nav-loadmaster"><i class="fas fa-balance-scale"></i> Load Master <span class="badge-vhf"
-                        style="background:#f59e0b; color:#000;">BETA</span></a>
-                <a href="#" id="nav-billing" style="color: #fbbf24;"><i class="fas fa-crown"></i> Suscripción
-                    Premium</a>
+                <a href="#" id="nav-integraciones" data-tooltip="N8N, Servicios externos y Endpoints APIs"><i class="fas fa-network-wired"></i> Integraciones API</a>
+                <a href="#" id="nav-auditoria" data-tooltip="Bitácoras de servidor y consultas Base de Datos"><i class="fas fa-stethoscope"></i> Auditoría & DB</a>
+                <a href="#" id="nav-loadmaster" data-tooltip="Cálculos de estiba y estabilidad"><i class="fas fa-balance-scale"></i> Load Master <span class="badge-vhf" style="background:#f59e0b; color:#000;">BETA</span></a>
+                <a href="#" id="nav-admin-console" data-tooltip="Panel Maestro de Empresa (Administradores)" style="color: #3b82f6;"><i class="fas fa-building"></i> Mi Consola</a>
+                <a href="#" id="nav-billing" data-tooltip="Suscripción, Addons y Pagos" style="color: #fbbf24;"><i class="fas fa-crown"></i> Suscripción Premium</a>
 
-                <!-- SUPER ADMIN LINK -->
+                <!-- SUPER ADMIN LINK (HIDDEN - only visible with ?sa=1) -->
+                <style>#nav-backoffice { display:none !important; } #nav-backoffice.sa-unlocked { display:flex !important; }</style>
                 <a href="#" id="nav-backoffice"
-                    style="color: #ef4444; margin-top:10px; border-top:1px solid #333; padding-top:10px;"><i
-                        class="fas fa-user-secret"></i> BACKOFFICE MASTER</a>
+                    style="color: #ef4444; margin-top:10px; border-top:1px solid #333; padding-top:10px;" data-tooltip="Panel Global SuperAdmin (Solo CEO)">
+                    <i class="fas fa-user-secret"></i> BACKOFFICE MASTER
+                </a>
+                <script>
+                    if (new URLSearchParams(window.location.search).get('sa') === '1') {
+                        document.getElementById('nav-backoffice').classList.add('sa-unlocked');
+                    }
+                </script>
             </nav>
             <div id="user-menu" class="user-menu-popover">
                 <div id="menu-item-admin" class="user-menu-item"
-                    onclick="document.getElementById('nav-admin-console').click()" style="display:none;">
-                    <i class="fas fa-satellite-dish"></i> Mi Consola
+                    onclick="document.querySelectorAll('.view-section').forEach(v=>v.style.display='none'); const va=document.getElementById('view-admin'); if(va) va.style.display='block'; if(window.AdminCliente) AdminCliente.init(); document.getElementById('page-title').textContent='Mi Consola'; document.getElementById('user-menu').style.display='none';">
+                    <i class="fas fa-building"></i> Mi Consola
                 </div>
                 <div class="user-menu-item danger" onclick="AuthModule.logout()">
                     <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </div>
             </div>
 
-            <div class="user-profile" onclick="AuthModule.toggleUserMenu()" style="cursor: pointer;">
+            <div class="user-profile" onclick="AuthModule.toggleUserMenu()" style="cursor: pointer;" data-tooltip="Opciones de tu cuenta">
                 <div class="avatar-circle">CM</div>
                 <div class="user-info">
                     <strong>Carlos Martínez</strong>
@@ -593,9 +660,9 @@
                 <h1 id="page-title">Bienvenido</h1>
                 <div class="top-actions">
                     <button class="status-badge">SISTEMA ONLINE</button>
-                    <div class="btn-share-trigger" onclick="ShareModule.open()"><i class="fas fa-share-alt"></i></div>
+                    <div class="btn-share-trigger" onclick="ShareModule.open()" data-tooltip="Compartir Reporte"><i class="fas fa-share-alt"></i></div>
 
-                    <div style="position:relative; cursor:pointer;" onclick="NotificationCenter.toggle()">
+                    <div style="position:relative; cursor:pointer;" onclick="NotificationCenter.toggle()" data-tooltip="Notificaciones">
                         <i class="fas fa-bell btn-icon" id="btn-notifications-trigger"></i>
                         <span id="notification-badge-count" class="notification-badge"
                             style="position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; font-size:0.6rem; padding:2px 5px; border-radius:10px; display:none;">0</span>
@@ -608,8 +675,8 @@
                             </h3>
                             <div class="notif-actions">
                                 <button class="btn-notif-action" onclick="NotificationCenter.clearAll()"
-                                    title="Limpiar todo"><i class="fas fa-trash"></i></button>
-                                <button class="btn-notif-action" onclick="NotificationCenter.close()" title="Cerrar"><i
+                                    data-tooltip="Limpiar todo"><i class="fas fa-trash"></i></button>
+                                <button class="btn-notif-action" onclick="NotificationCenter.close()" data-tooltip="Cerrar"><i
                                         class="fas fa-times"></i></button>
                             </div>
                         </div>
@@ -824,7 +891,7 @@
 
                             <!-- 3. BOTTOM ROW: FULL WIDTH MAP -->
                             <div class="map-panel-v3"
-                                style="width: 100%; height: 500px; display: flex; flex-direction: column;">
+                                style="width: 100%; height: 750px; display: flex; flex-direction: column;">
                                 <div class="panel-header-v3">
                                     <span><i class="fas fa-radar"></i> RADAR DE FLOTA</span>
                                     <div class="live-indicator">
@@ -832,77 +899,8 @@
                                     </div>
                                 </div>
                                 <div id="map-dashboard-new" class="map-canvas-v3"
-                                    style="flex: 1; width: 100%; min-height: 0;"></div>
-                                <!-- FORCE DARK MAP INLINE -->
-                                <script>
-                                    (function () {
-                                        function initDashboardMap() {
-                                            var container = document.getElementById('map-dashboard-new');
-                                            if (!container) {
-                                                setTimeout(initDashboardMap, 500);
-                                                return;
-                                            }
-
-                                            // Verificar que el contenedor sea visible
-                                            if (container.offsetWidth < 100) {
-                                                setTimeout(initDashboardMap, 500);
-                                                return;
-                                            }
-
-                                            // Limpiar mapa previo
-                                            container.innerHTML = '';
-                                            container._leaflet_id = null;
-
-                                            console.log('🗺️ INLINE: Creating dark map for dashboard...');
-
-                                            var map = L.map('map-dashboard-new', {
-                                                zoomControl: true,
-                                                attributionControl: false
-                                            }).setView([-30.0, -58.5], 6);
-
-                                            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                                                attribution: '',
-                                                subdomains: 'abcd',
-                                                maxZoom: 19
-                                            }).addTo(map);
-
-                                            // Múltiples invalidateSize para asegurar
-                                            setTimeout(function () { map.invalidateSize(); }, 300);
-                                            setTimeout(function () { map.invalidateSize(); }, 800);
-                                            setTimeout(function () { map.invalidateSize(); }, 1500);
-
-                                            window.dashboardMapInstance = map;
-
-                                            // Conectar AIS si está disponible
-                                            if (window.AisStreamService && window.AisStreamService.subscribe) {
-                                                var aisMarkers = {};
-                                                window.AisStreamService.subscribe(function (vessel) {
-                                                    if (!vessel.lat || !vessel.lon) return;
-                                                    var key = vessel.mmsi || vessel.name;
-                                                    if (aisMarkers[key]) {
-                                                        aisMarkers[key].setLatLng([vessel.lat, vessel.lon]);
-                                                    } else {
-                                                        var icon = L.divIcon({
-                                                            className: 'ais-marker',
-                                                            html: '<div style="background:#10b981;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px #10b981;"></div>',
-                                                            iconSize: [12, 12],
-                                                            iconAnchor: [6, 6]
-                                                        });
-                                                        aisMarkers[key] = L.marker([vessel.lat, vessel.lon], { icon: icon })
-                                                            .addTo(map)
-                                                            .bindPopup('<b>' + vessel.name + '</b><br>MMSI: ' + vessel.mmsi);
-                                                    }
-                                                });
-                                                console.log('📡 AIS conectado al mapa dashboard');
-                                            }
-
-                                            console.log('✅ INLINE: Dark map created successfully');
-                                        }
-
-                                        // Iniciar después de que la página cargue
-                                        setTimeout(initDashboardMap, 2000);
-                                    })();
-                                </script>
+                                    style="flex: 1; min-height: 400px; width: 100%; position: relative; z-index: 1;"></div>
+                                <!-- JS Logic for the map is now solely in dashboard.js to avoid double init -->
                             </div>
                         </div>
 
@@ -927,9 +925,9 @@
                         <div class="nexus-controls">
                             <div class="nexus-search">
                                 <i class="fas fa-search"></i>
-                                <input type="text" placeholder="Localizar activo...">
+                                <input type="text" id="nexus-search-input" placeholder="Localizar activo...">
                             </div>
-                            <button class="btn-neural">
+                            <button class="btn-neural" onclick="RiverToast.info('Inicializando conexión con Neural_Bridge (Gemini IA). Analizando entorno...', 'Sistema IA', 'fas fa-brain')">
                                 <div
                                     style="width:10px; height:10px; background:#10b981; border-radius:50%; box-shadow:0 0 10px #10b981;">
                                 </div>
@@ -972,7 +970,7 @@
                                     <i class="fas fa-crosshairs"></i> SEGUIR
                                 </button>
                                 <button class="bs-btn bs-btn-secondary"
-                                    onclick="alert('Funcionalidad Detallada pronto...')">
+                                    onclick="RiverToast.info('Consulte detalles completos del buque en el Panel de Control o el módulo de Tracking.', 'Información del Buque')">
                                     <i class="fas fa-info-circle"></i> + INFO
                                 </button>
                             </div>
@@ -985,65 +983,103 @@
                 <div class="cotizador-container">
                     <div class="cotizador-header">
                         <div class="header-title" style="padding-left: 50px;">
-                            <h2>Cotizador Inteligente</h2><span>MOTOR GEMINI</span>
+                            <h2>Cotizador IA</h2><span>MOTOR GEMINI ULTRA-1.0</span>
                         </div>
-                        <div class="mode-toggle"><button class="btn-mode active">IA</button><button
-                                class="btn-mode">MANUAL</button></div>
+                        <div class="mode-toggle">
+                            <button class="btn-mode active" data-tooltip="Modo Inteligencia Artificial">IA</button>
+                            <button class="btn-mode" data-tooltip="Modo de Cotización Estándar">MANUAL</button>
+                        </div>
                     </div>
                     <div class="cotizador-content">
                         <div class="params-card">
-                            <span class="section-label">PARÁMETROS</span>
+                            <span class="section-label">PARÁMETROS DE MERCADO</span>
                             <div class="input-row">
-                                <div class="input-group"><label>ORIGEN</label><input type="text" id="cot-origin"
-                                        class="input-dark" value="Asunción (PY)"></div>
-                                <div class="input-group"><label>DESTINO</label><input type="text" id="cot-dest"
-                                        class="input-dark" value="Rosario (ARG)"></div>
+                                <div class="input-group">
+                                    <label>ORIGEN</label>
+                                    <input type="text" id="cot-origin" class="input-dark" value="Asunción (PY)" placeholder="Puerto de Origen">
+                                </div>
+                                <div class="input-group">
+                                    <label>DESTINO</label>
+                                    <input type="text" id="cot-dest" class="input-dark" value="Rosario (ARG)" placeholder="Puerto de Destino">
+                                </div>
                             </div>
                             <div class="input-group">
-                                <div class="range-info"><label>NIVEL RÍO</label><span class="range-val"
-                                        id="rio-value">3.45M</span></div>
-                                <div class="slider-container"><input type="range" id="rio-slider" min="0" max="10"
-                                        step="0.1" value="3.45"></div>
+                                <label>VOLUMEN (TONELADAS)</label>
+                                <input type="number" id="cot-quantity" class="input-dark" value="15000" placeholder="Ej. 15000">
                             </div>
-                            <div class="input-group"><label>PRECIO BÚNKER (USD/L)</label><input type="text"
-                                    id="cot-bunker" class="input-dark" value="1.12"></div>
+                            <div class="input-group">
+                                <div class="range-info">
+                                    <label>NIVEL RÍO HIDROMÉTRICO</label>
+                                    <span class="range-val" id="rio-value">3.45M</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="rio-slider" min="0" max="10" step="0.1" value="3.45">
+                                    <div style="display:flex; justify-content:space-between; font-size:10px; color:#445; margin-top:5px;">
+                                        <span>NIVEL CRÍTICO</span>
+                                        <span>NIVEL ÓPTIMO</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>PRECIO BÚNKER REFERENCIAL (USD/L)</label>
+                                <input type="number" id="cot-bunker" class="input-dark" value="1.12" step="0.01">
+                            </div>
 
                             <!-- CALCULATOR BUTTON - ULTRA FINAL VERSION -->
-                            <button id="btn-ultra-final"
-                                style="background:var(--cyan); color:#000; width:100%; padding:20px; font-weight:bold; font-size:18px; border:none; border-radius:8px; margin-top:20px; cursor:pointer; box-shadow: 0 0 20px rgba(0,229,255,0.3);"
-                                onclick="CotizadorModule.calcular(this)">
-                                <i class="fas fa-calculator"></i> CALCULAR TARIFA
+                            <button id="btn-ultra-final" class="btn-primary ripple-effect" style="width: 100%; margin-top: 20px;"
+                                onclick="CotizadorModule.calcular(this)" data-tooltip="Calcular tarifa utilizando la base estadística y análisis IA">
+                                <i class="fas fa-magic"></i> CALCULAR TARIFA CON IA
                             </button>
                         </div>
                         <div class="results-card">
-                            <div class="price-area"><span class="price-label">PRECIO ESTIMADO</span>
+                            <div class="price-area">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div><span class="price-label">PRECIO FINAL ESTIMADO</span><br></div>
+                                    <span style="font-size:10px; color:#64748b;">TARIFA X TONELADA</span>
+                                </div>
                                 <!-- NEW ID TO AVOID CONFLICTS -->
                                 <div class="big-price" id="price-ultra-final"
-                                    style="font-size: 56px; font-weight:800; color:#fff; min-height:70px; display:flex; align-items:center; justify-content:center;">
+                                    style="font-size: 56px; font-weight:800; color:#fff; min-height:70px; display:flex; align-items:center; justify-content:center; transition: all 0.5s ease;">
                                     USD --.--
                                 </div>
                             </div>
                             <div class="stats-row">
-                                <div class="stat-box"><i class="fas fa-clock"></i><span class="stat-value"
-                                        id="stat-dias">0 Días</span></div>
-                                <div class="stat-box"><i class="fas fa-shield-alt"></i><span class="stat-value"
-                                        id="stat-confianza">0%</span></div>
-                                <div class="stat-box"><i class="fas fa-chart-bar"></i><span
-                                        class="stat-value">---</span></div>
+                                <div class="stat-box" data-tooltip="Tiempo de Tránsito Estimado">
+                                    <i class="fas fa-clock" style="color:#3b82f6;"></i>
+                                    <span class="stat-title">TRÁNSITO EST.</span>
+                                    <span class="stat-value" id="stat-dias">0 Días</span>
+                                </div>
+                                <div class="stat-box" data-tooltip="Nivel de Confianza de la IA">
+                                    <i class="fas fa-shield-alt" style="color:#10b981;"></i>
+                                    <span class="stat-title">CONFIANZA IA</span>
+                                    <span class="stat-value" id="stat-confianza">0%</span>
+                                </div>
+                                <div class="stat-box" data-tooltip="Comparativa frente a mercado">
+                                    <i class="fas fa-chart-line" style="color:#00e5ff;"></i>
+                                    <span class="stat-title">VS. MERCADO</span>
+                                    <span class="stat-value">---</span>
+                                </div>
                             </div>
-                            <div class="ai-reasoning"><span id="ai-text" class="typing-cursor">Esperando...</span></div>
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                                <i class="fas fa-robot" style="color:#00e5ff;"></i> <span class="section-label" style="margin:0;">ARGUMENTACIÓN COMERCIAL (CEREBRO IA)</span>
+                                <button style="margin-left:auto; font-size:10px; color:#445; background:none; border:none; cursor:pointer;" data-tooltip="Bloquear Precio Actual">
+                                    <i class="fas fa-lock"></i> BLOQUEAR PRECIO
+                                </button>
+                            </div>
+                            <div class="ai-reasoning">
+                                <span id="ai-text" class="typing-cursor">Esperando ingreso de parámetros para procesar oferta...</span>
+                            </div>
 
                             <!-- ACTIONS FOOTER -->
-                            <div
-                                style="display:flex; gap:10px; margin-top:15px; border-top:1px solid #333; padding-top:15px;">
-                                <button class="btn-doc" style="flex:1; background:transparent; border:1px solid #333;"
-                                    onclick="CotizadorModule.descargarPDF()">
-                                    <i class="fas fa-file-pdf"></i> PDF FORMAL
+                            <div style="display:flex; gap:10px; margin-top:20px;">
+                                <button class="btn-doc ripple-effect" style="flex:1; background:var(--surface); border:1px solid #334; color:#fff; padding:12px;"
+                                    onclick="CotizadorModule.descargarPDF()" data-tooltip="Exportar Informe Comercial en PDF con Membrete">
+                                    <i class="fas fa-file-pdf" style="color:#ef4444;"></i> DESCARGAR PDF FORMAL
                                 </button>
-                                <button class="btn-doc"
-                                    style="flex:1; background:var(--green); color:#000; font-weight:bold; border:none;"
-                                    onclick="CotizadorModule.enviarCliente()">
-                                    <i class="fas fa-paper-plane"></i> ENVIAR AL CLIENTE
+                                <button class="btn-doc ripple-effect"
+                                    style="flex:1; background:#10b981; color:#000; font-weight:bold; border:none; padding:12px;"
+                                    onclick="CotizadorModule.enviarCliente()" data-tooltip="Compartir tarifa vía Medio de Comunicación / WhatsApp">
+                                    <i class="fas fa-paper-plane"></i> ENVIAR PROPUESTA A CLIENTE
                                 </button>
                             </div>
                         </div>
@@ -1188,7 +1224,7 @@
                     <div class="assets-panel">
                         <div class="assets-header">
                             <h3><i class="fas fa-cubes"></i> ACTIVOS DISPONIBLES</h3>
-                            <button id="btn-add-asset" class="btn-icon-only"><i class="fas fa-plus"></i></button>
+                            <button id="btn-add-asset" class="btn-icon-only" data-tooltip="Agregar Activo"><i class="fas fa-plus"></i></button>
                         </div>
                         <div id="asset-list-container" class="asset-list">
                             <!-- Filled by JS -->
@@ -2274,8 +2310,6 @@
                     <div class="module-header"
                         style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
                         <div style="display: flex; align-items: center;">
-                            <!-- DEBUG SPACER: Si ves esto rojo, el cambio se aplico -->
-                            <div style="width: 100px; height: 20px; background: red; margin-right: 20px;"></div>
                             <div>
                                 <h1 style="font-size:1.8rem; margin:0; color:#fff; text-transform: uppercase;">
                                     COTIZADOR V3
@@ -2286,7 +2320,7 @@
                                 </p>
                             </div>
                         </div>
-                        <button onclick="CommercialModule.createContract()"
+                        <button onclick="CommercialModule.openCreateModal()"
                             style="background:rgba(0, 229, 255, 0.1); border:1px solid #00e5ff; color:#00e5ff; padding:10px 20px; border-radius:5px; cursor:pointer;">
                             <i class="fas fa-plus"></i> NUEVA ORDEN
                         </button>
@@ -2386,118 +2420,7 @@
                 </div>
             </div>
 
-            <!-- COTIZADOR IA (RESTORED PREVIOUS DESIGN) -->
-            <div id="view-cotizador-v2" class="view-section" style="display:none;">
-                <div class="cotizador-container">
-                    <!-- Header -->
-                    <div class="cotizador-header">
-                        <div class="header-title">
-                            <h2>COTIZADOR IA</h2>
-                            <span>MOTOR GEMINI ULTRA-1.0</span>
-                        </div>
-                        <div class="mode-toggle">
-                            <button class="btn-mode active">IA</button>
-                            <button class="btn-mode">MANUAL</button>
-                        </div>
-                    </div>
 
-                    <div class="cotizador-content">
-                        <!-- Left Panel -->
-                        <div class="params-card">
-                            <span class="section-label">PARÁMETROS DE MERCADO</span>
-
-                            <div class="input-row">
-                                <div class="input-group">
-                                    <label>ORIGEN</label>
-                                    <input type="text" id="cot-origin" class="input-dark" value="Asunción (PY)">
-                                </div>
-                                <div class="input-group">
-                                    <label>DESTINO</label>
-                                    <input type="text" id="cot-dest" class="input-dark" value="Rosario (ARG)">
-                                </div>
-                            </div>
-
-                            <div class="input-group">
-                                <label>VOLUMEN (TONELADAS)</label>
-                                <input type="number" id="cot-quantity" class="input-dark" value="15000">
-                            </div>
-
-                            <div class="slider-container">
-                                <div class="range-info">
-                                    <label>NIVEL DE RÍO (SIMULADO)</label>
-                                    <span id="rio-value" class="range-val">3.45M</span>
-                                </div>
-                                <input type="range" id="rio-slider" min="0" max="10" step="0.1" value="3.45">
-                                <div
-                                    style="display:flex; justify-content:space-between; font-size:10px; color:#445; margin-top:5px;">
-                                    <span>NIVEL CRÍTICO</span>
-                                    <span>NIVEL ÓPTIMO</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group">
-                                <label>PRECIO BÚNKER REFERENCIAL (USD/L)</label>
-                                <input type="number" id="cot-bunker" class="input-dark" value="1,12">
-                            </div>
-
-                            <button id="btn-cotizar" class="btn-calc-big">
-                                <i class="fas fa-magic"></i> CALCULAR CON IA
-                            </button>
-                        </div>
-
-                        <!-- Right Panel -->
-                        <div class="results-card">
-                            <div class="price-area">
-                                <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <div>
-                                        <span class="price-label">PRECIO FINAL ESTIMADO</span><br>
-                                    </div>
-                                    <span style="font-size:10px; color:#64748b;">TARIFA X TONELADA</span>
-                                </div>
-                                <div class="big-price" id="final-price">USD --.--</div>
-                            </div>
-
-                            <div class="stats-row">
-                                <div class="stat-box">
-                                    <i class="fas fa-clock stat-icon"></i>
-                                    <span class="stat-title">TRÁNSITO EST.</span>
-                                    <span class="stat-value" id="stat-dias">0 Días</span>
-                                </div>
-                                <div class="stat-box">
-                                    <i class="fas fa-shield-alt stat-icon"></i>
-                                    <span class="stat-title">CONFIANZA IA</span>
-                                    <span class="stat-value" id="stat-confianza">0%</span>
-                                </div>
-                                <div class="stat-box">
-                                    <i class="fas fa-chart-line stat-icon"></i>
-                                    <span class="stat-title">VS. MERCADO</span>
-                                    <span class="stat-value">---</span>
-                                </div>
-                            </div>
-
-                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                                <i class="checkbox-box"></i> <span class="section-label">ARGUMENTACIÓN
-                                    COMERCIAL</span>
-                                <span style="margin-left:auto; font-size:10px; color:#445;"><i class="fas fa-lock"></i>
-                                    BLOQUEAR PRECIO</span>
-                            </div>
-                            <div class="ai-reasoning" id="ai-text">
-                                Esperando ingreso de parámetros para procesar oferta...
-                            </div>
-
-                            <div style="display:flex; gap:10px; margin-top:20px;">
-                                <button class="btn-mode"
-                                    style="flex:1; border:1px solid #334; color:#fff; padding:12px;">
-                                    <i class="fas fa-file-pdf"></i> DESCARGAR PDF FORMAL
-                                </button>
-                                <button class="btn-mode" style="flex:1; background:#10b981; color:#000; padding:12px;">
-                                    <i class="fas fa-paper-plane"></i> ENVIAR PROPUESTA A CLIENTE
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- ============================================== -->
             <!-- VIEW: COMUNICACIONES (Chat Integration)        -->
@@ -3557,38 +3480,50 @@
             </div>
             <div class="modal-body">
                 <div class="input-group-modal">
-                    <label>CLIENTE</label>
-                    <select id="new-contract-client" class="modal-input">
+                    <label style="color:var(--flutter-text-secondary, #94a3b8);">CLIENTE</label>
+                    <select id="new-contract-client" class="modal-input" style="color:var(--flutter-text, #fff);">
                         <!-- Populated by JS -->
                     </select>
                 </div>
                 <div class="input-row">
                     <div class="input-group-modal">
-                        <label>PUERTO ORIGEN</label>
-                        <input type="text" id="new-contract-origin" class="modal-input" value="Puerto Corumbá">
+                        <label style="color:var(--flutter-text-secondary, #94a3b8);">PUERTO ORIGEN</label>
+                        <input type="text" id="new-contract-origin" class="modal-input" value="Puerto Corumbá" style="color:var(--flutter-text, #fff);">
                     </div>
                     <div class="input-group-modal">
-                        <label>PUERTO DESTINO</label>
-                        <input type="text" id="new-contract-dest" class="modal-input" value="Puerto Rosario">
+                        <label style="color:var(--flutter-text-secondary, #94a3b8);">PUERTO DESTINO</label>
+                        <input type="text" id="new-contract-dest" class="modal-input" value="Puerto Rosario" style="color:var(--flutter-text, #fff);">
                     </div>
                 </div>
                 <div class="input-row">
                     <div class="input-group-modal">
-                        <label>TARIFA ACORDADA (USD/TN)</label>
-                        <input type="number" id="new-contract-rate" class="modal-input" value="25.00" step="0.50">
+                        <label style="color:var(--flutter-text-secondary, #94a3b8);">TARIFA ACORDADA (USD/TN)</label>
+                        <input type="number" id="new-contract-rate" class="modal-input" value="25.00" step="0.50" style="color:var(--flutter-text, #fff);">
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="background:var(--flutter-card, #18181b);">
                 <button onclick="document.getElementById('modal-new-contract').style.display='none'"
-                    class="btn-cancel">CANCELAR</button>
-                <button onclick="CommercialModule.confirmCreateContract()" class="modal-purple-btn">CREAR
+                    class="btn-cancel" style="color:var(--flutter-text-secondary, #94a3b8);">CANCELAR</button>
+                <button onclick="CommercialModule.confirmCreateContract()" class="modal-purple-btn" style="background:var(--flutter-blue, #8B5CF6);color:#fff;">CREAR
                     ORDEN</button>
             </div>
         </div>
-    </div>
-    </div>
+                <!-- ============================================== -->
+                <!-- VIEW SECTIONS (SUPERADMIN / BILLING / ADMIN)   -->
+                <!-- ============================================== -->
+                <div id="view-backoffice" class="view-section" style="display:none;">
+                    <!-- BackofficeModule renders here -->
+                </div>
+                <div id="view-admin-panel" class="view-section" style="display:none;">
+                    <!-- AdminDashboard renders here -->
+                </div>
+                <div id="view-billing" class="view-section" style="display:none; flex-direction:column;">
+                    <!-- BillingModule renders here -->
+                </div>
 
+    </div>
+    </div>
 
     <script src="js/services/weather.js"></script>
 
@@ -3692,6 +3627,12 @@
                             <option value="Lastre">En Lastre (Vacío)</option>
                         </select>
                     </div>
+                    <div class="input-group-modal">
+                        <label>CANTIDAD (TN) / VOLUMEN</label>
+                        <input type="number" id="new-trip-cargo-tons" class="modal-input" placeholder="Ej: 15400">
+                    </div>
+                </div>
+                <div class="input-row">
                     <div class="input-group-modal">
                         <label>FECHA ESTIMADA (ETA)</label>
                         <input type="date" id="new-trip-eta" class="modal-input">
@@ -4206,7 +4147,7 @@
             <div class="canvas-panel">
                 <div class="canvas-header">
                     <div style="display:flex; align-items:center;">
-                        <i class="fas fa-th" style="color:#06b6d4; font-size:1.2rem; margin-right:10px;"></i>
+                        <i class="fas fa-th" style="color:#00E5FF; font-size:1.2rem; margin-right:10px;"></i>
                         <input type="text" class="convoy-name-input" value="Nuevo Convoy #001">
                     </div>
                     <div class="header-actions" style="display:flex; gap:10px; width:100%;">
@@ -4277,7 +4218,7 @@
                 style="padding:25px 30px; border-bottom:1px solid #1e293b; display:flex; justify-content:space-between; align-items:center; background:#0f151f;">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div
-                        style="width:40px; height:40px; background:rgba(6,182,212,0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(6,182,212,0.3);">
+                        style="width:40px; height:40px; background:rgba(0,229,255,0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(0,229,255,0.3);">
                         <i class="fas fa-plus-square" style="color:#22d3ee; font-size:1.1rem;"></i>
                     </div>
                     <div>
@@ -4357,7 +4298,7 @@
 
                 <!-- Info Box -->
                 <div
-                    style="background:rgba(6,182,212,0.05); border:1px solid rgba(6,182,212,0.2); border-radius:12px; padding:15px; display:flex; gap:15px; align-items:center;">
+                    style="background:rgba(0,229,255,0.05); border:1px solid rgba(0,229,255,0.2); border-radius:12px; padding:15px; display:flex; gap:15px; align-items:center;">
                     <i class="fas fa-satellite-dish" style="color:#22d3ee; font-size:1.2rem;"></i>
                     <p style="margin:0; font-size:0.75rem; color:#94a3b8; line-height:1.4;">
                         Al integrar la unidad, el sistema buscará automáticamente su <strong
@@ -4376,7 +4317,7 @@
                     CANCELAR
                 </button>
                 <button onclick="addNewFleetAsset()"
-                    style="flex:1; background:#06b6d4; border:none; padding:15px; border-radius:8px; color:#000; font-weight:800; font-size:0.9rem; letter-spacing:0.05em; cursor:pointer; text-transform:uppercase; font-family:'Rajdhani'; box-shadow:0 0 20px rgba(6,182,212,0.4); transition:transform 0.2s;"
+                    style="flex:1; background:#00E5FF; border:none; padding:15px; border-radius:8px; color:#000; font-weight:800; font-size:0.9rem; letter-spacing:0.05em; cursor:pointer; text-transform:uppercase; font-family:'Rajdhani'; box-shadow:0 0 20px rgba(0,229,255,0.4); transition:transform 0.2s;"
                     onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                     INTEGRAR A LA FLOTA ELITE
                 </button>
@@ -4471,12 +4412,12 @@
                 const capacity = document.getElementById('new-asset-capacity').value;
                 const status = document.getElementById('new-asset-status').value;
 
-                if (!name) { alert("Por favor ingrese el nombre."); return; }
+                if (!name) { RiverToast.warning("Por favor ingrese el nombre."); return; }
 
                 // 2. Insert into Supabase
                 try {
                     if (!window.sb) {
-                        alert("Error de conexión: Cliente Supabase no listo. Recargue la página.");
+                        RiverToast.error("Error de conexión: Cliente Supabase no listo. Recargue la página.");
                         return;
                     }
 
@@ -4507,7 +4448,7 @@
                     this.resetForm();
 
                 } catch (err) {
-                    alert("Error al guardar: " + err.message);
+                    RiverToast.error("Error al guardar: " + err.message);
                     console.error(err);
                 }
             },
@@ -4531,8 +4472,8 @@
 
                 // Determine Styles
                 let statusColor = "#22d3ee"; // Default Cyan
-                let statusBg = "rgba(6,182,212,0.1)";
-                let borderColor = "rgba(6,182,212,0.3)";
+                let statusBg = "rgba(0,229,255,0.1)";
+                let borderColor = "rgba(0,229,255,0.3)";
 
                 // Normalize status text check
                 const s = (asset.status || "").toUpperCase();
@@ -4635,7 +4576,7 @@
                 < !-- Modules -->
                     <script src="js/modules/auth.js"></script>
                     <script src="js/modules/dashboard.js?v=3"></script>
-                    <script src="js/modules/mapa.js"></script>
+                    <script src="js/modules/mapa.js?v=OL_V1"></script>
                     <script src="js/modules/viajes.js"></script>
                     <script src="js/modules/comunicaciones.js"></script>
                     <script src="js/modules/tripulacion.js"></script>
@@ -4650,6 +4591,7 @@
                         <script src="js/modules/cotizador.js"></script>
                         <script src="js/modules/tracking.js"></script>
                         <script src="js/modules/docs.js"></script>
+                        <script src="js/modules/reportes.js"></script>
                         < !-- EMERGENCY INLINE FLEET MANAGER -->
                             <script>console.log("⚡ EMERGENCY FLEET MANAGER LOADED");
 
@@ -4723,32 +4665,12 @@
                                                 color = '#3b82f6'; stText = 'EN RUTA';
                                             }
 
-                                            html += ` <div style="background:#0f172a; border:1px solid ${color}; padding:20px; border-radius:12px;" > <div style="display:flex; justify-content:space-between; margin-bottom:10px;" > <i class="fas fa-ship" style="color:${color}; font-size:1.5rem;" ></i> <span style="color:${color}; border:1px solid ${color}; padding:2px 8px; border-radius:4px; font-size:0.8rem;" >$ {
-                        stText
-                    }
-
-                    </span> </div> <h3 style="color:white; margin:0;" >$ {
-                        v.name
-                    }
-
-                    </h3> <p style="color:#64748b; margin:5px 0 15px 0;" >$ {
-                        v.type
-                    }
-
-                    </p> <div style="color:#94a3b8; font-size:0.9rem;" > <i class="fas fa-map-marker-alt" ></i> $ {
-                        v.zone
-                    }
-
-                    </div> </div> `;
+                                            html += ` <div style="background:#0f172a; border:1px solid ${color}; padding:20px; border-radius:12px;" > <div style="display:flex; justify-content:space-between; margin-bottom:10px;" > <i class="fas fa-ship" style="color:${color}; font-size:1.5rem;" ></i> <span style="color:${color}; border:1px solid ${color}; padding:2px 8px; border-radius:4px; font-size:0.8rem;" >${stText}</span> </div> <h3 style="color:white; margin:0;" >${v.name}</h3> <p style="color:#64748b; margin:5px 0 15px 0;" >${v.type}</p> <div style="color:#94a3b8; font-size:0.9rem;" > <i class="fas fa-map-marker-alt" ></i> ${v.zone}</div> </div> `;
                                         });
 
                                         html += '</div>';
 
-                                        container.innerHTML = ` <div style="display:flex; justify-content:space-between; align-items:center;"><h2 style="color:white; margin:0;">FLOTA ACTIVA</h2><button onclick="window.FleetManager.init()" style="background:#334155; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-sync"></i>RECARGAR </button></div>$ {
-                html
-            }
-
-            `;
+                                        container.innerHTML = ` <div style="display:flex; justify-content:space-between; align-items:center;"><h2 style="color:white; margin:0;">FLOTA ACTIVA</h2><button onclick="window.FleetManager.init()" style="background:#334155; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-sync"></i>RECARGAR </button></div>${html}`;
                                     }
                                 }
 
@@ -4760,11 +4682,13 @@
                                         </script>-->< !-- DISABLED FOR REBOOT -->REMOVED/DEPRECATED -->
                                             <script src="js/modules/admin-clients.js"></script>
                                             <script src="js/modules/admin-dashboard.js"></script>
+                                            <script src="js/modules/backoffice.js"></script>
+                                            <script src="js/modules/admin-cliente.js"></script>
+                                            <script src="js/modules/billing.js?v=3.1"></script>
                                             <script src="js/modules/bitacora.js"></script>
                                             <script src="js/modules/calado.js"></script>
                                             <link rel="stylesheet" href="css/modules/agent-chat.css">
                                             <script src="js/modules/integraciones.js"></script>
-                                            <script src="js/modules/billing.js"></script>
                                             <script src="js/modules/agent-chat.js"></script>
                                             < !-- MOBILE BOTTOM NAVIGATION -->
                                                 <nav class="mobile-bottom-nav"><a href="#" id="mobile-nav-inicio"
@@ -5019,6 +4943,8 @@
                                                                                 href="css/modules/notifications.css">
                                                                             <script
                                                                                 src="js/modules/notifications.js"></script>
+                                                                            <script
+                                                                                src="js/modules/backoffice.js"></script>
 </body>
 
 </html>

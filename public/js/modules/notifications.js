@@ -6,19 +6,23 @@
 const NotificationCenter = {
     notifications: [],
 
-    init: function () {
+    init: async function () {
         console.log("🔔 Notification Center Initialized");
         this.renderBadge();
         this.setupListeners();
 
-        // --- MOCK ALERTS FOR DEMO ---
-        // Verify if we already have alerts to avoid dupes on re-init
+        // Try loading real alerts from Supabase first
+        if (this.notifications.length === 0) {
+            await this.loadFromSupabase();
+        }
+
+        // If still empty after Supabase attempt, use demo alerts
         if (this.notifications.length === 0) {
             this.addNotification({
                 id: 1,
                 title: "Alerta Hidrológica",
                 message: "Nivel del río en baja en Puerto Rosario (-0.5m en 24hs).",
-                type: "warning", // critical, warning, info, success
+                type: "warning",
                 time: "Hace 10 min",
                 module: "hidrologia"
             });
@@ -40,6 +44,38 @@ const NotificationCenter = {
                 time: "Hace 4 horas",
                 module: "tracking"
             });
+        }
+    },
+
+    loadFromSupabase: async function () {
+        if (!window.sb) return;
+        try {
+            const { data, error } = await window.sb
+                .from('system_alerts') // Cambiado de 'alerts' a 'system_alerts' (n8n schema)
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(20);
+
+            if (error) throw error;
+            if (data && data.length > 0) {
+                data.forEach(alert => {
+                    this.addNotification({
+                        id: alert.id,
+                        title: alert.title || alert.type || 'Alerta',
+                        message: alert.message || alert.description || '',
+                        type: alert.severity === 'high' ? 'critical' :
+                            alert.severity === 'medium' ? 'warning' :
+                                alert.severity === 'low' ? 'info' : 'info',
+                        time: new Date(alert.created_at).toLocaleString('es-AR', {
+                            hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short'
+                        }),
+                        module: alert.module || 'sistema'
+                    });
+                });
+                console.log(`🔔 ${data.length} alertas cargadas de Supabase`);
+            }
+        } catch (e) {
+            console.warn("NotificationCenter: Supabase error, using demo:", e.message);
         }
     },
 

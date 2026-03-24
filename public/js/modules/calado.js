@@ -33,10 +33,15 @@ const CaladoModule = (() => {
 
         try {
             // 1. Fetch Vessels
-            const { data: vessels, error: vErr } = await window.sb
-                .from('vessels')
-                .select('*')
-                .order('name');
+            let { data: vessels, error: vErr } = await window.sb
+                .fetchMine('fleet_assets', '*');
+
+            if (vErr) {
+                // fallback
+                let res = await window.sb.from('fleet_assets').select('*').order('name');
+                vessels = res.data;
+                vErr = res.error;
+            }
 
             if (vErr) throw vErr;
             state.embarcaciones = vessels || [];
@@ -298,7 +303,7 @@ const CaladoModule = (() => {
             const obs = document.getElementById('input-obs').value;
 
             if (!idEmb || isNaN(calado)) {
-                alert('Datos inválidos');
+                RiverToast.warning('Datos inválidos', 'Validación');
                 return;
             }
 
@@ -326,7 +331,7 @@ const CaladoModule = (() => {
 
         } catch (err) {
             console.error("❌ ERROR DIRECT INSERT:", err);
-            alert("Error al guardar: " + (err.message || err));
+            RiverToast.error("Error al guardar: " + (err.message || err), 'Error DB');
         } finally {
             if (btn) {
                 btn.innerHTML = '<i class="fas fa-save"></i> GUARDAR';
@@ -374,19 +379,28 @@ const CaladoModule = (() => {
             const max = parseFloat(document.getElementById('new-max').value);
 
             if (!name || isNaN(max)) {
-                alert("Completa los datos");
+                RiverToast.warning("Completa los datos", 'Validación');
                 return;
             }
 
             try {
-                const { error } = await window.sb
-                    .from('vessels')
-                    .insert([{
+                let { error } = await window.sb
+                    .insertMine('fleet_assets', {
                         name: name,
                         max_draft: max,
                         current_draft: 0,
-                        status: 'active'
-                    }]);
+                        status: 'OPERATIVO'
+                    });
+
+                if (error) {
+                     let res = await window.sb.from('fleet_assets').insert([{
+                        name: name,
+                        max_draft: max,
+                        current_draft: 0,
+                        status: 'OPERATIVO'
+                     }]);
+                     error = res.error;
+                }
 
                 if (error) throw error;
 
@@ -394,7 +408,7 @@ const CaladoModule = (() => {
                 await loadData();
 
             } catch (e) {
-                alert("Error: " + e.message);
+                RiverToast.error("Error: " + e.message, 'Error de Operación');
             }
         }
     };

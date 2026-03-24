@@ -84,8 +84,7 @@ if (!tryConnect()) {
             clearInterval(check);
         } else if (attempts > 25) { // 5 seconds
             clearInterval(check);
-            console.error("🔴 CRITICAL: Supabase Library failed to load.");
-            alert("Error: No se pudo cargar la librería de conexión (Supabase CDN). Verifica tu internet o firewall.");
+            console.error("🔴 CRITICAL: Supabase Library failed to load. Check internet/firewall.");
         }
     }, 200);
 }

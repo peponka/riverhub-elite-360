@@ -1,0 +1,293 @@
+/* ============================================
+   FLEET MANAGER MODULE
+   RiverHub Elite 360
+   ============================================ */
+
+/* --- Container --- */
+.fleet-container {
+    padding: 24px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: #090e14;
+    font-family: 'Rajdhani', sans-serif;
+    color: #e2e8f0;
+    overflow-y: auto;
+}
+
+/* --- Header --- */
+.fleet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1f2937;
+}
+
+.fleet-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fleet-header h2 i {
+    color: #00e5ff;
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.5));
+}
+
+.fleet-header .fleet-count {
+    font-size: 1rem;
+    color: #64748b;
+    font-weight: 400;
+}
+
+/* --- Stats Row --- */
+.fleet-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.fleet-stat-card {
+    background: #0f1621;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.fleet-stat-card:hover {
+    border-color: #00e5ff;
+    transform: translateY(-2px);
+}
+
+.fleet-stat-card .stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.fleet-stat-card .stat-label {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 4px;
+}
+
+/* --- Vessel Grid --- */
+.fleet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.vessel-card {
+    background: #0f172a;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.vessel-card:hover {
+    border-color: #00e5ff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 229, 255, 0.1);
+}
+
+.vessel-card .vessel-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.vessel-card .vessel-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.vessel-card .vessel-icon.active {
+    background: rgba(0, 229, 255, 0.15);
+    color: #00e5ff;
+}
+
+.vessel-card .vessel-icon.maintenance {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.vessel-card .vessel-icon.transito {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+}
+
+.vessel-card .status-badge {
+    font-weight: 700;
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.vessel-card .status-badge.active {
+    color: #00e5ff;
+    border: 1px solid #00e5ff;
+}
+
+.vessel-card .status-badge.maintenance {
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+.vessel-card .status-badge.transito {
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+}
+
+.vessel-card .vessel-name {
+    color: #fff;
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.vessel-card .vessel-type {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.vessel-card .vessel-footer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vessel-card .vessel-location {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.vessel-card .vessel-location i {
+    margin-right: 4px;
+    color: #3b82f6;
+}
+
+.vessel-card .btn-detail {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.vessel-card .btn-detail:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* --- Search & Filters --- */
+.fleet-toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.fleet-search {
+    flex: 1;
+    background: #0f1621;
+    border: 1px solid #1f2937;
+    padding: 10px 16px;
+    color: #fff;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.fleet-search:focus {
+    outline: none;
+    border-color: #00e5ff;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+}
+
+.fleet-filter-btn {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.fleet-filter-btn:hover,
+.fleet-filter-btn.active {
+    background: rgba(0, 229, 255, 0.1);
+    border-color: #00e5ff;
+    color: #00e5ff;
+}
+
+.btn-add-vessel {
+    background: #00e5ff;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(0, 229, 255, 0.3);
+}
+
+.btn-add-vessel:hover {
+    box-shadow: 0 4px 20px rgba(0, 229, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .fleet-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fleet-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .fleet-toolbar {
+        flex-direction: column;
+    }
+
+    .fleet-search {
+        width: 100%;
+    }
+}

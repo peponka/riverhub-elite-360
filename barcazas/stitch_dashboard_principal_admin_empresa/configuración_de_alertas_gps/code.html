@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuración de Alertas GPS - RiverHub Elite 360</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1281e2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                        "surface-dark": "#1c2a35", // Slightly lighter dark for cards
+                        "surface-border": "#2c3b47", // Border color for dark mode
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for dark mode industrial look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111a22; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #233748; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #344c60; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden h-screen flex flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-[#233748] px-6 py-3 bg-white dark:bg-[#111a22] shrink-0 z-20">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-slate-900 dark:text-white">
+<div class="size-6 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">RiverHub Elite 360</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Tablero</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Mapa en Vivo</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Reportes</a>
+<a class="text-primary text-sm font-medium leading-normal" href="#">Configuración</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-[#233748] border-none rounded-lg text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:ring-1 focus:ring-primary w-64" placeholder="Buscar activo, alerta o puerto..."/>
+</div>
+<div class="flex items-center gap-3">
+<button class="relative p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#233748] rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-9 border border-slate-200 dark:border-slate-700" data-alt="User profile picture showing a professional headshot" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBMyJTHP8VJHkg9_eJI3Fpkqg5FT1pbHw3eVPdPuvLerdmJm-Yk4YtbGmb8EEhqHytA4lJThbhV9ocwJ1V-RffsKMm9ypfjbBJWeUucC_En8ztAxRfLTPmPZ6sfuJkHh3tDg_ObHWcXJlRbOj0KSGVDaQ4rB2-vLolhMU2uXC1KTYtdYkLmMjzbpbIqXpt-qqyp0RQY79f5OZo--L2Ry8QMZ-finUJsizd9Y4PbMQIFFEr91m_mobmVYHLeY1NiiinDnfrFEMPLwW4");'></div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-20 lg:w-64 bg-white dark:bg-[#111a22] border-r border-slate-200 dark:border-[#233748] flex-shrink-0 flex flex-col hidden md:flex">
+<div class="flex flex-col gap-1 p-3">
+<div class="px-3 py-4">
+<h1 class="hidden lg:block text-slate-900 dark:text-white text-xs uppercase font-bold tracking-wider text-opacity-50 dark:text-opacity-50 mb-1">Gestión de Flota</h1>
+<p class="hidden lg:block text-slate-500 dark:text-[#92afc9] text-xs font-normal">Admin Console</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c2a35] transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">bar_chart</span>
+<span class="hidden lg:block text-sm font-medium">Resumen</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c2a35] transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">directions_boat</span>
+<span class="hidden lg:block text-sm font-medium">Flota</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c2a35] transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">map</span>
+<span class="hidden lg:block text-sm font-medium">Geocercas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-white" href="#">
+<span class="material-symbols-outlined text-primary dark:text-primary">warning</span>
+<span class="hidden lg:block text-sm font-medium">Alertas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c2a35] transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">group</span>
+<span class="hidden lg:block text-sm font-medium">Usuarios</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50 dark:bg-background-dark relative">
+<!-- Breadcrumbs & Header -->
+<div class="px-6 py-4 flex flex-col gap-4 border-b border-slate-200 dark:border-[#233748] bg-white dark:bg-[#111a22]">
+<div class="flex items-center gap-2 text-sm">
+<a class="text-slate-500 dark:text-[#92afc9] hover:text-primary" href="#">Inicio</a>
+<span class="text-slate-400 dark:text-[#92afc9]">/</span>
+<a class="text-slate-500 dark:text-[#92afc9] hover:text-primary" href="#">Gestión de Flota</a>
+<span class="text-slate-400 dark:text-[#92afc9]">/</span>
+<span class="text-slate-900 dark:text-white font-medium">Configuración de Alertas</span>
+</div>
+<div class="flex flex-wrap justify-between items-end gap-4">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Configuración de Alertas GPS</h1>
+<p class="text-slate-500 dark:text-[#92afc9] text-sm mt-1 max-w-2xl">Defina reglas automáticas para eventos de geocercas, desvíos y seguridad operativa.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#233748] transition-colors">
+<span class="material-symbols-outlined text-[20px]">history</span>
+                            Historial
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded-lg text-sm font-medium shadow-lg shadow-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                            Guardar Regla
+                        </button>
+</div>
+</div>
+</div>
+<!-- Two-Panel Layout -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Left Panel: List of Alerts -->
+<div class="w-80 border-r border-slate-200 dark:border-[#233748] bg-white dark:bg-[#16202a] flex flex-col flex-shrink-0 z-10 hidden xl:flex">
+<div class="p-4 border-b border-slate-200 dark:border-[#233748]">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">filter_list</span>
+<input class="w-full pl-9 pr-3 py-2 bg-slate-100 dark:bg-[#1c2a35] border-none rounded-md text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:ring-1 focus:ring-primary" placeholder="Filtrar alertas..."/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-2 space-y-1">
+<!-- Active Item -->
+<div class="flex flex-col gap-2 p-3 rounded-lg bg-primary/10 border border-primary/20 cursor-pointer">
+<div class="flex justify-between items-start">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary text-white uppercase tracking-wide">Nueva</span>
+<div class="w-8 h-4 bg-primary rounded-full relative cursor-pointer">
+<div class="absolute right-1 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white">Salida Puerto Asunción</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Geocerca: Salida • Alta Prioridad</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex flex-col gap-2 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#1c2a35] border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer transition-all">
+<div class="flex justify-between items-start">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 uppercase tracking-wide">Inactiva</span>
+<div class="w-8 h-4 bg-slate-300 dark:bg-slate-600 rounded-full relative cursor-pointer">
+<div class="absolute left-1 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">Detención &gt; 2h (Ruta Norte)</h4>
+<p class="text-xs text-slate-500 dark:text-slate-500 mt-1">Tiempo: Detención • Media Prioridad</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex flex-col gap-2 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#1c2a35] border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer transition-all">
+<div class="flex justify-between items-start">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-600 dark:text-green-400 uppercase tracking-wide">Activa</span>
+<div class="w-8 h-4 bg-green-500 rounded-full relative cursor-pointer">
+<div class="absolute right-1 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">Entrada Zona Restringida B</h4>
+<p class="text-xs text-slate-500 dark:text-slate-500 mt-1">Geocerca: Entrada • Crítica</p>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="flex flex-col gap-2 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#1c2a35] border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer transition-all">
+<div class="flex justify-between items-start">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-600 dark:text-green-400 uppercase tracking-wide">Activa</span>
+<div class="w-8 h-4 bg-green-500 rounded-full relative cursor-pointer">
+<div class="absolute right-1 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">Exceso Velocidad Canal</h4>
+<p class="text-xs text-slate-500 dark:text-slate-500 mt-1">Telemetría: Velocidad • Baja Prioridad</p>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-[#233748]">
+<button class="w-full py-2 flex items-center justify-center gap-2 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-sm text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary transition-colors">
+<span class="material-symbols-outlined">add</span>
+                            Crear Nueva Regla
+                        </button>
+</div>
+</div>
+<!-- Right Panel: Form Configuration -->
+<div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 dark:bg-[#111a22]">
+<div class="max-w-5xl mx-auto space-y-6">
+<!-- Section 1: Definition -->
+<div class="bg-white dark:bg-[#1c2a35] rounded-xl shadow-sm border border-slate-200 dark:border-[#233748] overflow-hidden">
+<div class="border-b border-slate-200 dark:border-[#233748] px-6 py-4 flex items-center justify-between">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+<span class="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-bold">1</span>
+                                    Definición del Evento
+                                </h3>
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-500 uppercase font-semibold">Estado:</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+<span class="ml-2 text-sm font-medium text-slate-900 dark:text-gray-300">Activa</span>
+</label>
+</div>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-6">
+<div>
+<label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nombre de la Regla</label>
+<input class="w-full bg-slate-50 dark:bg-[#111a22] border border-slate-300 dark:border-[#2c3b47] rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none text-sm font-medium placeholder-slate-400" placeholder="Ej: Salida de Puerto Asunción" type="text" value="Salida Puerto Asunción"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Tipo de Evento</label>
+<div class="relative">
+<select class="w-full bg-slate-50 dark:bg-[#111a22] border border-slate-300 dark:border-[#2c3b47] rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none appearance-none text-sm">
+<option>Entrada a Geocerca</option>
+<option selected="">Salida de Geocerca</option>
+<option>Detención Prolongada</option>
+<option>Desvío de Ruta</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Geocerca Objetivo</label>
+<div class="relative">
+<select class="w-full bg-slate-50 dark:bg-[#111a22] border border-slate-300 dark:border-[#2c3b47] rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none appearance-none text-sm">
+<option>Puerto Asunción (Terminal A)</option>
+<option>Puerto Rosario</option>
+<option>Zona de Espera #4</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">expand_more</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Activos Afectados</label>
+<div class="flex flex-wrap gap-2 p-3 bg-slate-50 dark:bg-[#111a22] border border-slate-300 dark:border-[#2c3b47] rounded-lg min-h-[50px]">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-200 dark:bg-[#233748] text-slate-700 dark:text-slate-200 text-xs font-medium border border-slate-300 dark:border-slate-600">
+<span class="material-symbols-outlined text-[14px]">directions_boat</span>
+                                                Remolcador Bravo
+                                                <button class="hover:text-red-400 ml-1"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-200 dark:bg-[#233748] text-slate-700 dark:text-slate-200 text-xs font-medium border border-slate-300 dark:border-slate-600">
+<span class="material-symbols-outlined text-[14px]">directions_boat</span>
+                                                Barcaza 104-X
+                                                <button class="hover:text-red-400 ml-1"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<button class="text-primary text-xs font-bold hover:underline px-2">+ Agregar Activo</button>
+</div>
+</div>
+</div>
+<div class="relative rounded-lg overflow-hidden border border-slate-300 dark:border-[#2c3b47] bg-slate-100 dark:bg-[#111a22] min-h-[240px]">
+<!-- Map Placeholder with Data-Location -->
+<div class="absolute inset-0 bg-cover bg-center opacity-80" data-alt="Satellite map view showing a defined geofence zone over a river bend" data-location="Paraguay River Terminal" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCc5-rrOKN_DcnPt5gH7Ad3bTTUtcZZw_SE2L9KVmOvneQTt_-8dIuJ2OINbbHMvobbjoNRRJVDHoFP7qMFfHTQ-cMw2PU7BQrx8MNE0hkL1YMrZm35a_kd6ALvdmn_REZVhGh5Z-i6TqlHMeU1zqxsICwdFhS4uMzOOLj4ZaId3-XjJsr3fIlgaV1O2QmHs26OCEK25cK37ffnrFRNE7lxfavX85s0fgeoC6VK7Rusbky_PF2QmBn7vGiGJ01_mIDYihVmzyrdtY");'></div>
+<!-- Overlay Elements -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#1c2a35] via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-3 left-3 right-3 p-3 bg-[#1c2a35]/90 backdrop-blur-sm rounded border border-slate-600">
+<div class="flex items-center justify-between text-xs">
+<span class="text-white font-medium flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                                Puerto Asunción (Terminal A)
+                                            </span>
+<span class="text-slate-400">Area: 4.2 km²</span>
+</div>
+</div>
+<!-- Map Controls (Fake) -->
+<div class="absolute top-3 right-3 flex flex-col gap-1">
+<button class="w-8 h-8 bg-white dark:bg-[#233748] rounded shadow flex items-center justify-center text-slate-600 dark:text-white"><span class="material-symbols-outlined text-[18px]">add</span></button>
+<button class="w-8 h-8 bg-white dark:bg-[#233748] rounded shadow flex items-center justify-center text-slate-600 dark:text-white"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Actions & Recipients -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Notification Settings -->
+<div class="lg:col-span-2 bg-white dark:bg-[#1c2a35] rounded-xl shadow-sm border border-slate-200 dark:border-[#233748] flex flex-col">
+<div class="border-b border-slate-200 dark:border-[#233748] px-6 py-4">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+<span class="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-bold">2</span>
+                                        Configuración de Aviso
+                                    </h3>
+</div>
+<div class="p-6 space-y-6 flex-1">
+<div>
+<label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Nivel de Urgencia</label>
+<div class="flex gap-4">
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="urgency" type="radio"/>
+<div class="rounded-lg border border-slate-200 dark:border-[#2c3b47] bg-slate-50 dark:bg-[#111a22] p-3 text-center transition-all peer-checked:border-green-500 peer-checked:bg-green-500/10 peer-checked:text-green-500 hover:border-slate-300 dark:hover:border-slate-600">
+<span class="block font-bold text-sm">Baja</span>
+<span class="block text-[10px] text-slate-500 dark:text-slate-400 mt-1">Solo registro</span>
+</div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="urgency" type="radio"/>
+<div class="rounded-lg border border-slate-200 dark:border-[#2c3b47] bg-slate-50 dark:bg-[#111a22] p-3 text-center transition-all peer-checked:border-yellow-500 peer-checked:bg-yellow-500/10 peer-checked:text-yellow-500 hover:border-slate-300 dark:hover:border-slate-600">
+<span class="block font-bold text-sm">Media</span>
+<span class="block text-[10px] text-slate-500 dark:text-slate-400 mt-1">Aviso App</span>
+</div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input checked="" class="peer sr-only" name="urgency" type="radio"/>
+<div class="rounded-lg border border-slate-200 dark:border-[#2c3b47] bg-slate-50 dark:bg-[#111a22] p-3 text-center transition-all peer-checked:border-red-500 peer-checked:bg-red-500/10 peer-checked:text-red-500 hover:border-slate-300 dark:hover:border-slate-600">
+<span class="block font-bold text-sm">Alta</span>
+<span class="block text-[10px] text-slate-500 dark:text-slate-400 mt-1">Email + SMS</span>
+</div>
+</label>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Mensaje de Alerta</label>
+<div class="flex gap-1">
+<button class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-[#233748] text-primary font-medium hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">[Nombre Activo]</button>
+<button class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-[#233748] text-primary font-medium hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">[Ubicación]</button>
+<button class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-[#233748] text-primary font-medium hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">[Hora]</button>
+</div>
+</div>
+<textarea class="w-full h-28 bg-slate-50 dark:bg-[#111a22] border border-slate-300 dark:border-[#2c3b47] rounded-lg p-3 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none text-sm font-mono leading-relaxed" placeholder="Escriba el mensaje...">ATENCIÓN: El activo {Nombre Activo} ha salido de {Geocerca} a las {Hora}. Por favor contactar al capitán inmediatamente.</textarea>
+<p class="text-[10px] text-slate-400 mt-1 text-right">0 / 160 caracteres (1 SMS)</p>
+</div>
+</div>
+</div>
+<!-- Recipients List -->
+<div class="bg-white dark:bg-[#1c2a35] rounded-xl shadow-sm border border-slate-200 dark:border-[#233748] flex flex-col">
+<div class="border-b border-slate-200 dark:border-[#233748] px-6 py-4 flex justify-between items-center">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+<span class="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-bold">3</span>
+                                        Destinatarios
+                                    </h3>
+<button class="text-primary hover:text-blue-400"><span class="material-symbols-outlined text-[20px]">person_add</span></button>
+</div>
+<div class="p-2 flex-1 overflow-y-auto max-h-[300px]">
+<ul class="space-y-1">
+<li class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-[#111a22] group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs font-bold">JD</div>
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Juan Diaz</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Gerente de Operaciones</p>
+</div>
+</div>
+<div class="flex gap-2 opacity-100 lg:opacity-60 lg:group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-green-500 text-[18px]" title="SMS Active">sms</span>
+<span class="material-symbols-outlined text-green-500 text-[18px]" title="Email Active">mail</span>
+</div>
+</li>
+<li class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-[#111a22] group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-bold">CP</div>
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Carlos Perez</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Capitán de Puerto</p>
+</div>
+</div>
+<div class="flex gap-2 opacity-100 lg:opacity-60 lg:group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-slate-500 text-[18px]" title="SMS Inactive">sms</span>
+<span class="material-symbols-outlined text-green-500 text-[18px]" title="Email Active">mail</span>
+</div>
+</li>
+<li class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-[#111a22] group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs font-bold">SG</div>
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Seguridad Global</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Grupo de Rol</p>
+</div>
+</div>
+<div class="flex gap-2 opacity-100 lg:opacity-60 lg:group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-green-500 text-[18px]" title="Push Active">notifications_active</span>
+</div>
+</li>
+</ul>
+</div>
+<div class="p-3 border-t border-slate-200 dark:border-[#233748] bg-slate-50 dark:bg-[#111a22]/50">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span>El grupo 'Seguridad' recibirá notificaciones push en la app móvil.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom spacing -->
+<div class="h-20"></div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -33,6 +33,8 @@
 .report-controls {
     display: flex;
     gap: 15px;
+    align-items: center; /* keep them aligned */
+    flex-wrap: wrap; /* allow wrap on small screens instead of pushing */
 }
 
 .report-period-select {
@@ -51,7 +53,7 @@
 
 .report-period-select:focus {
     border-color: var(--md-sys-color-primary);
-    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2);
 }
 
 .btn-print-report {
@@ -61,6 +63,7 @@
     border: none !important;
     padding: 0 24px !important;
     height: 48px !important;
+    margin-right: 15px;
     border-radius: 9999px !important;
     /* Stadium */
     font-weight: 500 !important;
@@ -242,12 +245,13 @@
 
     .reports-header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
         gap: 15px;
     }
 
     .report-controls {
         flex-direction: column;
         width: 100%;
+        align-items: stretch;
     }
 }

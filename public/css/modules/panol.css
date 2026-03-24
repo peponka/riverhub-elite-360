@@ -36,8 +36,8 @@
 }
 
 .icon-box-cyan {
-    color: #06b6d4;
-    filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.5));
+    color: #00E5FF;
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.5));
 }
 
 .title-group-cyan span {
@@ -164,14 +164,14 @@
 
 /* Brain Card */
 .brain-analysis-card {
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(15, 22, 33, 1) 100%);
-    border: 1px solid rgba(6, 182, 212, 0.3);
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(15, 22, 33, 1) 100%);
+    border: 1px solid rgba(0, 229, 255, 0.3);
     border-radius: 20px;
     padding: 20px;
 }
 
 .brain-header {
-    color: #06b6d4;
+    color: #00E5FF;
     font-weight: 700;
     font-size: 0.8rem;
     display: flex;
@@ -226,8 +226,8 @@
 
 .search-bar-panol input:focus {
     outline: none;
-    border-color: #06b6d4;
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+    border-color: #00E5FF;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
 }
 
 /* Product Card */
@@ -245,7 +245,7 @@
 }
 
 .product-card:hover {
-    border-color: #06b6d4;
+    border-color: #00E5FF;
     transform: translateX(5px);
 }
 
@@ -253,7 +253,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    background: #06b6d4;
+    background: #00E5FF;
     color: #000;
     font-weight: 800;
     font-size: 0.7rem;
@@ -263,7 +263,7 @@
 
 .category-tag {
     background: #1e293b;
-    color: #06b6d4;
+    color: #00E5FF;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.65rem;
@@ -327,7 +327,7 @@
 }
 
 .btn-out:hover {
-    background: rgba(6, 182, 212, 0.08);
+    background: rgba(0, 229, 255, 0.08);
     /* State layer */
     border-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-primary);

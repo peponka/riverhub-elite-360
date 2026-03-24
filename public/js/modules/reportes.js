@@ -1,7 +1,8 @@
 const ReportesModule = (() => {
     let charts = {}; // Store chart instances
+    let supabaseData = null; // Cached Supabase data
 
-    const init = () => {
+    const init = async () => {
         console.log("ReportesModule: Initializing BI Dashboard...");
 
         // Ensure Chart.js is loaded
@@ -10,18 +11,61 @@ const ReportesModule = (() => {
             return;
         }
 
-        renderPnlChart();
-        renderFuelChart();
-        renderOpsChart();
-        console.log("ReportesModule: Charts rendered.");
+        // Try to fetch real data from Supabase
+        await fetchSupabaseData();
+
+        // Small delay to let the view become visible before rendering charts
+        setTimeout(() => {
+            renderPnlChart();
+            renderFuelChart();
+            renderOpsChart();
+            console.log("ReportesModule: Charts rendered.");
+        }, 150);
+    };
+
+    const fetchSupabaseData = async () => {
+        if (!window.sb) {
+            console.warn("ReportesModule: Supabase not ready, using demo data");
+            return;
+        }
+        try {
+            // Fetch real fleet assets for Ops Chart
+            let { data: vessels } = await window.sb.from('fleet_assets').select('id, name, status');
+            
+            // Try fetchMine for quotations
+            let { data: quotes } = await window.sb.fetchMine('quotations', '*');
+            if (!quotes) {
+                // fallback normal
+                const qRes = await window.sb.from('quotations').select('*');
+                quotes = qRes.data;
+            }
+
+            supabaseData = { vessels: vessels || [], quotations: quotes || [] };
+            console.log("ReportesModule: Supabase BI data loaded ✅", supabaseData);
+        } catch (e) {
+            console.warn("ReportesModule: Supabase fetch error, using demo:", e.message);
+            supabaseData = null;
+        }
     };
 
     // 1. P&L Chart (Bar & Line Combo)
     const renderPnlChart = () => {
-        // SIMULATED DATA FALLBACK if empty
+        // NO SIMULATED DATA
         const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-        const revenue = [120, 150, 180, 220, 260, 300, 310, 350, 400, 450, 480, 520];
-        const costs = [80, 90, 100, 110, 130, 140, 150, 160, 180, 190, 200, 210];
+        let revenue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let costs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        // INJECT REAL DATA FROM QUOTATIONS
+        if (supabaseData && supabaseData.quotations && supabaseData.quotations.length > 0) {
+            supabaseData.quotations.forEach(q => {
+                const rate = parseFloat(q.freight_rate) || 0;
+                const weight = parseFloat(q.estimated_weight) || 15000;
+                const date = q.created_at ? new Date(q.created_at) : new Date();
+                const monthIndex = date.getMonth();
+                revenue[monthIndex] += (rate * weight) / 1000; // in thousands
+                costs[monthIndex] += ((rate * weight) * 0.45) / 1000;
+            });
+        }
 
         const ctx = document.getElementById('chartPnl');
         if (!ctx) return;
@@ -39,7 +83,7 @@ const ReportesModule = (() => {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Ingresos (USD)',
+                        label: 'Ingresos Hist+Proy (kUSD)',
                         data: revenue,
                         borderColor: '#10b981', // Green
                         backgroundColor: gradientProfit,
@@ -49,7 +93,7 @@ const ReportesModule = (() => {
                         yAxisID: 'y'
                     },
                     {
-                        label: 'Costos Operativos',
+                        label: 'Costos Operativos (kUSD)',
                         type: 'bar',
                         data: costs,
                         backgroundColor: 'rgba(59, 130, 246, 0.6)', // Blue
@@ -101,9 +145,9 @@ const ReportesModule = (() => {
 
     // 2. Fuel Efficiency (Line)
     const renderFuelChart = () => {
-        // SIMULATED DATA
+        // NO SIMULATED DATA
         const labels = ['S1', 'S2', 'S3', 'S4'];
-        const data = [4.2, 4.0, 3.8, 3.5];
+        const data = [0, 0, 0, 0];
 
         const ctx = document.getElementById('chartFuel');
         if (!ctx) return;
@@ -147,8 +191,22 @@ const ReportesModule = (() => {
 
     // 3. Operational Status (Doughnut)
     const renderOpsChart = () => {
-        // SIMULATED DATA
-        const data = [65, 25, 10];
+        let opCount = 65;
+        let puCount = 25;
+        let mtCount = 10;
+
+        // INJECT REAL DATA FROM FLEET ASSETS
+        if (supabaseData && supabaseData.vessels && supabaseData.vessels.length > 0) {
+            opCount = 0; puCount = 0; mtCount = 0;
+            supabaseData.vessels.forEach(v => {
+                const s = (v.status || '').toUpperCase();
+                if (s.includes('OPERATIVO') || s.includes('TRANSITO')) opCount++;
+                else if (s.includes('MANTENIMIENTO')) mtCount++;
+                else puCount++; // Puerto/Fondeado
+            });
+        }
+
+        const data = [opCount, puCount, mtCount];
 
         const ctx = document.getElementById('chartOps');
         if (!ctx) return;
@@ -158,7 +216,7 @@ const ReportesModule = (() => {
         charts.ops = new Chart(ctx.getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: ['Navegando', 'En Puerto', 'Mantenimiento'],
+                labels: ['En Operación', 'Fondeado/Pto', 'Mantenimiento'],
                 datasets: [{
                     data: data,
                     backgroundColor: [
@@ -186,7 +244,7 @@ const ReportesModule = (() => {
 
     const printReport = () => {
         if (!window.jspdf) {
-            alert("⚠️ Error: El motor PDF no ha cargado aún. Verifique su conexión.");
+            RiverToast.error('El motor PDF no ha cargado aún. Verifique su conexión.', 'Error PDF');
             return;
         }
 
@@ -226,7 +284,6 @@ const ReportesModule = (() => {
         let yPos = 70;
 
         // 3. Capturing Charts
-        // Helper to add chart
         const addChartToPdf = (chartId, title, y) => {
             const canvas = document.getElementById(chartId);
             if (canvas) {
@@ -235,13 +292,6 @@ const ReportesModule = (() => {
                 doc.setTextColor(50, 50, 50);
                 doc.text(title, 15, y);
 
-                // Add Image
-                // NOTE: Canvas must have white background for PDF usually, but dark looks weird on white paper.
-                // WE will draw a dark rect behind it to preserve styling or filter?
-                // Actually the canvas is transparent mostly. Let's just put it.
-                // Ideally we'd invert colors for print but let's keep "Dark Mode" screenshot look for now.
-
-                // Add background for Dark Mode charts
                 doc.setFillColor(30, 41, 59); // Slate 800
                 doc.rect(15, y + 5, 180, 90, 'F');
 
@@ -260,10 +310,7 @@ const ReportesModule = (() => {
 
         // Chart 2: Combustible
         yPos += 110;
-        // Check page break mechanism roughly (A4 is ~297mm)
-        // 70 + 100 = 170. 170 + 110 = 280. It fits barely.
 
-        // We might want to put smaller charts side by side
         doc.setFontSize(11);
         doc.setFont("helvetica", "bold");
         doc.text("2. INDICADORES OPERATIVOS", 15, yPos);

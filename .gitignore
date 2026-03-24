@@ -27,3 +27,11 @@ Thumbs.db
 *.bak
 *.tmp
 temp_*
+
+# Firebase Credentials
+firebase-service-account.json
+# Build folders
+riverhub_mobile/build/
+aquafleet/
+aquafleet2/
+__pycache__/

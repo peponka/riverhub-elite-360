@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RiverHub Elite - Detalle de Incidente</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1281e2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111a22", // Matching the provided component background
+                        "card-dark": "#1a2632", // Slightly lighter for cards
+                        "input-dark": "#233748", // Matching provided inputs
+                        "text-secondary": "#92afc9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans", "sans-serif"],
+                        "body": ["Inter", "Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for industrial feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111a22; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #233748; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #344c61; 
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- SIDEBAR (Fixed width) -->
+<aside class="w-[280px] h-full flex-shrink-0 border-r border-[#233748] bg-[#111a22] flex flex-col overflow-y-auto">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<!-- Brand -->
+<div class="flex gap-3 mb-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-primary" data-alt="RiverHub Logo Abstract" style="background-image: linear-gradient(135deg, #1281e2 0%, #0b4e8a 100%);"></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">RiverHub Elite</h1>
+<p class="text-[#92afc9] text-sm font-normal leading-normal">Global Fleet Ops</p>
+</div>
+</div>
+<!-- Menu -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#233748] cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-[#92afc9] group-hover:text-white">dashboard</span>
+<p class="text-[#92afc9] group-hover:text-white text-sm font-medium leading-normal">Tablero</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#233748] cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-[#92afc9] group-hover:text-white">directions_boat</span>
+<p class="text-[#92afc9] group-hover:text-white text-sm font-medium leading-normal">Flota</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#233748] border-l-4 border-primary">
+<span class="material-symbols-outlined text-white fill">warning</span>
+<p class="text-white text-sm font-medium leading-normal">Incidentes</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#233748] cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-[#92afc9] group-hover:text-white">build</span>
+<p class="text-[#92afc9] group-hover:text-white text-sm font-medium leading-normal">Mantenimiento</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#233748] cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-[#92afc9] group-hover:text-white">analytics</span>
+<p class="text-[#92afc9] group-hover:text-white text-sm font-medium leading-normal">Reportes</p>
+</div>
+</div>
+</div>
+<!-- User Profile Bottom -->
+<div class="flex items-center gap-3 px-3 py-2 mt-auto border-t border-[#233748] pt-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBEp6pKINH_AvgGHroNL2Tq5VVSGviyOZv91umT89Cs1ENKlDVEwhVfrT4mBSRbgxe9KHdq2TGr07FiQmHAsXsaGxW7JBy4RQTTAdmw_ncJ0fpL-xo8QfJRZYYt3AZoB9xxdZxo1iCWvnuOTQ8Nbg7oxUrxSitt4Q4ty4jW7hzF91AfkDrnd0o7bjep8CsCpLoGUTHQ7bYYSVrgOfI3zl9kdplM7AeAwKpK5yaXkwVgk4h_HqvYF7CRyuWcPlJm4fPOG_ci80VIKFs");'></div>
+<div class="flex flex-col">
+<p class="text-white text-sm font-medium">Carlos M.</p>
+<p class="text-[#92afc9] text-xs">Jefe de Seguridad</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- MAIN CONTENT AREA -->
+<main class="flex-1 flex flex-col h-full min-w-0 overflow-y-auto bg-background-dark scroll-smooth">
+<!-- TOP NAVBAR -->
+<header class="sticky top-0 z-20 flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#233748] bg-[#111a22] px-8 py-3">
+<div class="flex items-center gap-4 text-white">
+<button class="text-[#92afc9] hover:text-white lg:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] hidden sm:block">Detalle de Incidente</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<div class="hidden md:flex w-full max-w-md items-center h-10 bg-[#233748] rounded-lg border border-transparent focus-within:border-primary transition-colors">
+<div class="pl-3 text-[#92afc9] flex items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full bg-transparent border-none text-white placeholder:text-[#92afc9] focus:ring-0 text-sm" placeholder="Buscar incidente, barco o reporte..."/>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center size-10 rounded-lg hover:bg-[#233748] text-[#92afc9] hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-[#111a22]"></span>
+</button>
+<button class="flex items-center justify-center size-10 rounded-lg hover:bg-[#233748] text-[#92afc9] hover:text-white transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="flex items-center justify-center size-10 rounded-lg hover:bg-[#233748] text-[#92afc9] hover:text-white transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+</header>
+<div class="layout-content-container flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-8 gap-6">
+<!-- Breadcrumbs -->
+<nav class="flex flex-wrap items-center gap-2 text-sm">
+<a class="text-[#92afc9] hover:text-primary transition-colors" href="#">Inicio</a>
+<span class="text-[#92afc9]">/</span>
+<a class="text-[#92afc9] hover:text-primary transition-colors" href="#">Gestión de Incidentes</a>
+<span class="text-[#92afc9]">/</span>
+<span class="text-white font-medium">INC-2023-894</span>
+</nav>
+<!-- Page Heading & Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#233748] pb-6">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<h1 class="text-white text-3xl md:text-4xl font-black tracking-tight">Incidente #INC-2023-894</h1>
+<span class="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold border border-red-500/30">CRITICO</span>
+</div>
+<p class="text-[#92afc9] text-base">Colisión menor en muelle de carga - Puerto Rosario</p>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+<div class="flex flex-col gap-1 min-w-[180px]">
+<label class="text-xs text-[#92afc9] font-medium uppercase tracking-wider">Estado Actual</label>
+<div class="relative">
+<select class="w-full h-10 pl-3 pr-10 bg-[#233748] border border-[#344c61] text-white text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-primary appearance-none cursor-pointer">
+<option>Bajo Investigación</option>
+<option>Acción Correctiva</option>
+<option>Revisión Final</option>
+<option>Cerrado</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-[#92afc9] pointer-events-none text-lg">expand_more</span>
+</div>
+</div>
+<button class="h-10 px-4 bg-[#233748] hover:bg-[#344c61] text-white text-sm font-bold rounded-lg border border-[#344c61] flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+<span>Exportar</span>
+</button>
+<button class="h-10 px-6 bg-primary hover:bg-blue-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-900/20 flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-lg">save</span>
+<span>Guardar Cambios</span>
+</button>
+</div>
+</div>
+<!-- DASHBOARD GRID LAYOUT -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+<!-- LEFT COLUMN: Context (4 cols) -->
+<div class="xl:col-span-4 flex flex-col gap-6">
+<!-- Location/Map Card -->
+<div class="bg-[#1a2632] rounded-xl overflow-hidden border border-[#233748] shadow-sm">
+<div class="p-4 border-b border-[#233748] flex justify-between items-center">
+<h3 class="text-white font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">location_on</span>
+                                    Ubicación del Evento
+                                </h3>
+<button class="text-[#92afc9] hover:text-white text-xs font-medium flex items-center gap-1">
+                                    Expandir <span class="material-symbols-outlined text-sm">open_in_full</span>
+</button>
+</div>
+<!-- Map Placeholder -->
+<div class="relative w-full h-64 bg-slate-700">
+<img class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity cursor-pointer" data-alt="Satellite map view of river bend" data-location="Parana River" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU7sv2p-bku3iTEl_mW243s3QKBNCdDP9PKW2F_pKOl3ChWiS36Q8mIYATf4k0YyL9vPM6tntXPxbA0f87AC8fw8Dfj_gdr_nTV39jxqLqFfNdezDOiICCcWzyY8yn8AmqODxYvaDJ1gDU4EqjpiVi2kzNxKVz8vftcg9xIUoRgmCf7J8vVFZX8ZurdJS4EdkIn12qiKHjZ75tHBc02wHGK9kJHcenNHS2mblRDBi0ytSw0FBhqQP70en6YQeg24KfhllSSDzhmRo"/>
+<!-- Map Marker Overlay -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<span class="material-symbols-outlined text-red-500 text-4xl drop-shadow-lg fill">location_on</span>
+<div class="bg-[#111a22] text-white text-xs px-2 py-1 rounded shadow mt-1">INC-894</div>
+</div>
+</div>
+<div class="p-4 grid grid-cols-2 gap-4 bg-[#16202a]">
+<div>
+<p class="text-[#92afc9] text-xs uppercase tracking-wider mb-1">Coordenadas</p>
+<p class="text-white font-mono text-sm">-32.956, -60.655</p>
+</div>
+<div>
+<p class="text-[#92afc9] text-xs uppercase tracking-wider mb-1">Zona</p>
+<p class="text-white text-sm">Km 415 - Río Paraná</p>
+</div>
+</div>
+</div>
+<!-- Vessel & Context Info -->
+<div class="bg-[#1a2632] rounded-xl border border-[#233748] shadow-sm p-5">
+<h3 class="text-white font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">directions_boat</span>
+                                Detalles de la Nave
+                            </h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center border-b border-[#233748] pb-3">
+<span class="text-[#92afc9] text-sm">Embarcación</span>
+<span class="text-white font-medium">Remolcador "Titan III"</span>
+</div>
+<div class="flex justify-between items-center border-b border-[#233748] pb-3">
+<span class="text-[#92afc9] text-sm">Capitán a cargo</span>
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-gray-600 bg-cover" data-alt="Captain Photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCPyTQnno4ZS54Jzho1gfRgkjMIjJVakKc3k8Eym12rPszcwYKNG11Yh8ac2xr_arF30boP-ZPRncJbRWvXUNXmrQL2ARyAfkIu_EkurTO0rtQK7Z9VjWJmMyhVRd2Vr1OHMIVbzhnKY5OZ-YgnkeJ_ZuLtt2dF188Nn12bnsxOzj3PdWSgY1XlME_plKZjhYz_usYA3qTzngOetqyBIEHQ0Laoye1pNL1Tqi36wHKOGVtwBIj8HXQ9a_A2nhtpa-OKzWyZ-qpKg-c')"></div>
+<span class="text-white font-medium">Roberto Díaz</span>
+</div>
+</div>
+<div class="flex justify-between items-center border-b border-[#233748] pb-3">
+<span class="text-[#92afc9] text-sm">Tipo de Carga</span>
+<span class="text-white font-medium">Granel (Soja)</span>
+</div>
+<div class="flex justify-between items-center pt-1">
+<span class="text-[#92afc9] text-sm">Condición Climática</span>
+<div class="flex items-center gap-2 text-white font-medium">
+<span class="material-symbols-outlined text-yellow-500 text-sm">rainy</span>
+                                        Lluvia Fuerte
+                                    </div>
+</div>
+</div>
+</div>
+<!-- Evidence Gallery -->
+<div class="bg-[#1a2632] rounded-xl border border-[#233748] shadow-sm p-5 flex-1">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-white font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">attach_file</span>
+                                    Evidencia Adjunta
+                                </h3>
+<button class="size-8 rounded hover:bg-[#233748] text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div class="aspect-square rounded bg-[#233748] overflow-hidden group relative cursor-pointer">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="Damaged hull close up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9DovEiFo4kbK752heC3DwNo5_rC6vkHdjJUIt62hnso2P_V4nIXz-f4oVN8sTLm9DBR-UUrP3LIVlQ9eoHL2DvK7SvbG6Sv1SjXuss-mijmdzno4I05xOXG6swqjilV5hK9ZDKsHPrzF0VsvnZk9RDh5I44YY_ijjf3_zAoFqf5KWkGHPVmWExlK7FV8fZHvwod-lEydhs-VjkHRBcaOmHkqI_aynOXFHdxo8_5ScvV1Onjq60csbleIWXF9or-Eutw3APHX9DwE"/>
+</div>
+<div class="aspect-square rounded bg-[#233748] overflow-hidden group relative cursor-pointer">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="Wide shot of dock" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7WBaHigl2LjYt53ynBtl9EPFDkRjMrcLyDOmhQylDpS77wj90wQDpiKejd5732xL_6H8gnLza1aqG7kVpxUJNwwcas2e5hSOHOGUjr1AC9yoToW8PNkOZ2ZYP9cGIYGq6VfG7rvpml4ey5SRPz-rm6gaA1395Nl24AegGtxKcH35m9WisGf9iAY_57SY38eewNqEF3THBSiKZQxjRjU9sp918ank833YJZwS6tgzGJ48MhNr-KxPU65SFZY84KnlG1HRN0X0XOdk"/>
+</div>
+<div class="aspect-square rounded bg-[#233748] border border-[#344c61] flex flex-col items-center justify-center text-center p-1 cursor-pointer hover:bg-[#2a4055] transition-colors group">
+<span class="material-symbols-outlined text-red-400 group-hover:text-red-300 mb-1">description</span>
+<span class="text-[10px] text-[#92afc9] leading-tight">Reporte Policial.pdf</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Work/Process (8 cols) -->
+<div class="xl:col-span-8 flex flex-col gap-6">
+<!-- Incident Description -->
+<div class="bg-[#1a2632] rounded-xl border border-[#233748] p-6 shadow-sm">
+<h3 class="text-white text-lg font-bold mb-3">Descripción del Evento</h3>
+<p class="text-[#92afc9] leading-relaxed">
+                                A las 08:30 horas del 14 de Octubre de 2023, durante la maniobra de aproximación al muelle norte del Puerto Rosario, el remolcador "Titan III" experimentó una pérdida momentánea de propulsión en el motor de estribor. Debido a la fuerte corriente y viento cruzado (Ráfagas de 45km/h), la barcaza líder impactó contra la defensa elástica del muelle nº4. Se reportan daños materiales en la estructura de defensa y abolladuras menores en la barcaza. No hubo heridos ni derrames de carga al río. Se activó el protocolo de emergencia nivel 1 inmediatamente.
+                            </p>
+</div>
+<!-- Root Cause Analysis (RCA) -->
+<div class="bg-[#1a2632] rounded-xl border border-[#233748] p-6 shadow-sm">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-white text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">psychology</span>
+                                    Análisis de Causa Raíz (RCA)
+                                </h3>
+<span class="text-xs bg-[#233748] text-[#92afc9] px-2 py-1 rounded border border-[#344c61]">Metodología: 5 Porqués</span>
+</div>
+<div class="grid gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-white">Causa Inmediata</label>
+<input class="w-full bg-[#233748] border border-[#344c61] text-white rounded-lg p-3 focus:ring-1 focus:ring-primary focus:border-primary text-sm" type="text" value="Pérdida de propulsión motor estribor durante maniobra crítica."/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-white">Análisis Detallado</label>
+<textarea class="w-full bg-[#233748] border border-[#344c61] text-white rounded-lg p-3 focus:ring-1 focus:ring-primary focus:border-primary text-sm resize-none placeholder:text-[#58748f]" placeholder="Documente aquí la investigación técnica..." rows="4">La inspección posterior reveló una obstrucción en el filtro de combustible primario causada por sedimentos en el tanque de servicio diario. Esto provocó una caída de presión de inyección y el apagado automático del motor por seguridad. El mantenimiento programado de limpieza de tanques estaba retrasado 2 semanas.</textarea>
+</div>
+<div class="flex items-center gap-4 mt-2">
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="form-checkbox bg-[#233748] border-[#344c61] rounded text-primary focus:ring-0" type="checkbox"/>
+<span class="text-white text-sm">Falla Humana</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="form-checkbox bg-[#233748] border-[#344c61] rounded text-primary focus:ring-0" type="checkbox"/>
+<span class="text-white text-sm">Falla Mecánica</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="form-checkbox bg-[#233748] border-[#344c61] rounded text-primary focus:ring-0" type="checkbox"/>
+<span class="text-white text-sm">Procedimiento</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Corrective Actions Table -->
+<div class="bg-[#1a2632] rounded-xl border border-[#233748] shadow-sm flex flex-col overflow-hidden">
+<div class="p-5 border-b border-[#233748] flex flex-wrap justify-between items-center gap-3">
+<h3 class="text-white text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">playlist_add_check</span>
+                                    Plan de Acción Correctiva
+                                </h3>
+<button class="px-3 py-2 bg-primary/20 hover:bg-primary/30 text-primary text-sm font-bold rounded-lg border border-primary/30 flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-lg">add</span>
+                                    Nueva Acción
+                                </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#233748] text-[#92afc9] text-xs uppercase tracking-wider font-semibold">
+<th class="p-4 rounded-tl-lg">ID</th>
+<th class="p-4 w-1/3">Acción Requerida</th>
+<th class="p-4">Responsable</th>
+<th class="p-4">Vencimiento</th>
+<th class="p-4 text-center">Estado</th>
+<th class="p-4 rounded-tr-lg"></th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-[#233748]">
+<!-- Row 1 -->
+<tr class="hover:bg-[#233748]/50 transition-colors group">
+<td class="p-4 text-[#92afc9]">ACT-01</td>
+<td class="p-4 text-white font-medium">Limpieza integral de tanques de combustible</td>
+<td class="p-4 text-[#92afc9]">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-purple-500 flex items-center justify-center text-[10px] text-white font-bold">MT</div>
+                                                    Mtto. Técnico
+                                                </div>
+</td>
+<td class="p-4 text-white">16 Oct 2023</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+<span class="size-1.5 rounded-full bg-green-400"></span>
+                                                    Completado
+                                                </span>
+</td>
+<td class="p-4 text-right">
+<button class="text-[#92afc9] hover:text-white"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-[#233748]/50 transition-colors group">
+<td class="p-4 text-[#92afc9]">ACT-02</td>
+<td class="p-4 text-white font-medium">Revisión de defensas muelle norte</td>
+<td class="p-4 text-[#92afc9]">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-orange-500 flex items-center justify-center text-[10px] text-white font-bold">OP</div>
+                                                    Operaciones
+                                                </div>
+</td>
+<td class="p-4 text-white">20 Oct 2023</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+<span class="size-1.5 rounded-full bg-yellow-400"></span>
+                                                    En Proceso
+                                                </span>
+</td>
+<td class="p-4 text-right">
+<button class="text-[#92afc9] hover:text-white"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-[#233748]/50 transition-colors group">
+<td class="p-4 text-[#92afc9]">ACT-03</td>
+<td class="p-4 text-white font-medium">Capacitación sobre maniobras con viento cruzado</td>
+<td class="p-4 text-[#92afc9]">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-blue-500 flex items-center justify-center text-[10px] text-white font-bold">HR</div>
+                                                    RRHH
+                                                </div>
+</td>
+<td class="p-4 text-white">30 Oct 2023</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#344c61] text-gray-300 border border-[#4a5f72]">
+<span class="size-1.5 rounded-full bg-gray-400"></span>
+                                                    Pendiente
+                                                </span>
+</td>
+<td class="p-4 text-right">
+<button class="text-[#92afc9] hover:text-white"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer spacer -->
+<div class="h-8"></div>
+</div>
+</main>
+</div>
+</body></html>

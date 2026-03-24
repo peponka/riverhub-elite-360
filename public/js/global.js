@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'nav-calado': 'view-calado',
         'nav-tracking': 'view-tracking',
         'nav-admin-console': 'view-admin', // REVERT TO STANDARD ID
-        'nav-backoffice': 'view-admin-panel', // SEPARATED SUPER ADMIN VIEW
+        'nav-backoffice': 'view-backoffice', // SUPERADMIN BACKOFFICE MODULE
         'nav-billing': 'view-billing',
         'nav-auditoria': 'view-auditoria',
         'nav-loadmaster': 'view-loadmaster'
@@ -121,12 +121,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         window.dispatchEvent(new Event('resize'));
                     }
+                    if (window.dashboardLogic && window.dashboardLogic.dashMap) {
+                        setTimeout(() => window.dashboardLogic.dashMap.updateSize(), 150);
+                        setTimeout(() => window.dashboardLogic.dashMap.updateSize(), 500); // extra safety
+                    }
                 } else if (viewId === 'view-bitacora') {
                     if (window.BitacoraModule) window.BitacoraModule.init();
                 } else if (viewId === 'view-calado') {
                     if (CaladoModule) CaladoModule.init();
                 } else if (viewId === 'view-admin') {
-                    // if (window.AdminModule) window.AdminModule.init(); // DISABLED TO PREVENT OVERWRITE
+                    if (window.AdminCliente) window.AdminCliente.init();
                 } else if (viewId === 'view-tripulacion') {
                     if (window.CrewModule) window.CrewModule.init();
                 } else if (viewId === 'view-comunicaciones') {
@@ -153,6 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (window.apiLogic) window.apiLogic.init();
                 } else if (viewId === 'view-admin-panel') {
                     if (window.AdminDashboard) window.AdminDashboard.init();
+                } else if (viewId === 'view-backoffice') {
+                    if (window.BackofficeModule) window.BackofficeModule.init();
                 } else if (viewId === 'view-billing') {
                     if (window.BillingModule) window.BillingModule.init();
                 } else if (viewId === 'view-tracking') {

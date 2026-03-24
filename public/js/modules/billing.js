@@ -1,194 +1,387 @@
+// ============================================
+// BILLING MODULE — Suscripción Premium + Checkout
+// RiverHub Elite 360 — Pasarela Simulada
+// ============================================
+
 const BillingModule = (() => {
+    const plans = [
+        { id: 'solist', name: 'SOLIST', price: 150, color: '#64748b', icon: 'fa-anchor', vessels: 1, users: 1, features: ['1 Embarcación', '1 Usuario', 'Dashboard Básico', 'Tracking AIS', 'Soporte Email'] },
+        { id: 'squad', name: 'SQUAD', price: 450, color: '#10b981', icon: 'fa-ship', vessels: 3, users: 3, popular: true, features: ['3 Embarcaciones', '3 Usuarios', 'Reportes Avanzados', 'Armador de Convoy', 'Soporte Prioritario', 'Bitácora Digital'] },
+        { id: 'expansion', name: 'EXPANSIÓN', price: 1200, color: '#00e5ff', icon: 'fa-rocket', vessels: 10, users: 5, features: ['10 Embarcaciones', '5 Usuarios', 'IA Cotizador', 'API Integraciones', 'Load Master', 'Soporte 24/7', 'n8n Automations'] },
+        { id: 'admiral', name: 'ADMIRAL', price: 1800, color: '#a855f7', icon: 'fa-crown', vessels: '∞', users: '∞', features: ['Embarcaciones Ilimitadas', 'Usuarios Ilimitados', 'White-Label', 'Gerente de Cuenta', 'SLA Garantizado', 'Deploy Dedicado', 'Todo incluido'] }
+    ];
+
+    let selectedPlan = null;
 
     const init = () => {
-        console.log("💳 Inicializando Módulo de Facturación (Precios v2)...");
-        const container = document.getElementById('view-billing');
-        if (!container) {
-            console.error("Critical: #view-billing container not found!");
-            return;
+        console.log("💳 BillingModule: Initializing...");
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentStatus = urlParams.get('payment');
+        if (paymentStatus) {
+            if (paymentStatus === 'success_mock') {
+                if (window.RiverToast) RiverToast.success('¡Suscripción de prueba activada exitosamente!', 'Pago Aprobado (Simulado)');
+            } else if (paymentStatus === 'success') {
+                if (window.RiverToast) RiverToast.success('¡El pago se completó exitosamente. Bienvenido a la flota Premium!', 'Suscripción Activa');
+            } else if (paymentStatus === 'cancel') {
+                if (window.RiverToast) RiverToast.warning('El proceso de pago fue cancelado.', 'Pago Cancelado');
+            }
+            
+            const url = new URL(window.location);
+            url.searchParams.delete('payment');
+            window.history.replaceState({}, '', url.toString());
         }
-        renderView(container);
+
+        let container = document.getElementById('view-billing');
+        const contentArea = document.getElementById('content-area');
+        if (!container && contentArea) {
+            container = document.createElement('div');
+            container.id = 'view-billing';
+            container.className = 'view-section';
+            container.style.display = 'block';
+            contentArea.appendChild(container);
+        } else if (container && contentArea && !contentArea.contains(container)) {
+            container.style.display = 'block';
+            contentArea.appendChild(container);
+        }
+        if (container) container.style.display = 'block';
+        if (!container) return;
+
+        renderPlans(container);
     };
 
-    const renderView = (container) => {
+    const renderPlans = (container) => {
         container.innerHTML = `
-            <div class="billing-container" style="display:block; text-align:center; padding: 0; width: 100%; max-width: 100%; height: auto; overflow: visible; background: transparent; border: none; box-shadow: none;">
-                
-                <div style="text-align: left; margin-bottom: 20px;">
-                     <a href="/" class="btn-ghost-blue" style="text-decoration: none; font-size: 0.9rem;">
-                        <i class="fas fa-arrow-left"></i> Volver al Inicio (Landing)
-                     </a>
-                </div>
-
-                <h2 style="font-family:'Rajdhani'; font-size:2.5rem; color:#fff; margin-bottom:10px;">
-                    Elige el Potencial de tu Flota
-                </h2>
-                <p style="color:#94a3b8; font-size:1.1rem; max-width:600px; margin:0 auto 40px auto;">
-                    Tecnología de punta escalada a tu operación. Paga solo por lo que usas.
-                </p>
-
-                <div class="pricing-grid" style="display:flex; justify-content:center; gap:25px; flex-wrap:wrap; padding-bottom:50px;">
-                    
-                    <!-- PLAN 1: SOLIST (UNITARIO) -->
-                    <div class="pricing-card" style="background:#0f172a; border:1px solid #334155; border-radius:15px; padding:30px; width:300px; position:relative; min-width:280px;">
-                        <div style="font-size:1.2rem; color:#94a3b8; font-weight:bold; letter-spacing:2px;">SOLIST</div>
-                        
-                        <!-- Price Display -->
-                        <div id="price-display-flex" style="font-size:3rem; color:#fff; font-weight:bold; margin:15px 0;">$150<span style="font-size:1rem; color:#64748b">/mes</span></div>
-                        
-                        <!-- Quantity Selector -->
-                        <div style="background:#1e293b; border-radius:8px; padding:10px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; border:1px solid #334;">
-                            <span style="color:#cbd5e1; font-size:0.9rem;">Embarcaciones:</span>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <button onclick="BillingModule.updateFlexPrice(-1)" style="background:#334155; border:none; color:#fff; width:30px; height:30px; border-radius:50%; cursor:pointer; font-weight:bold;">-</button>
-                                <span id="vessel-count-flex" style="color:#00e5ff; font-weight:bold; font-size:1.2rem;">1</span>
-                                <button onclick="BillingModule.updateFlexPrice(1)" style="background:#00e5ff; border:none; color:#000; width:30px; height:30px; border-radius:50%; cursor:pointer; font-weight:bold;">+</button>
-                            </div>
+            <div class="bill-container">
+                <div class="bill-hero">
+                    <div class="bill-hero-glow"></div>
+                    <i class="fas fa-crown bill-hero-icon"></i>
+                    <h1 class="bill-hero-title">ELIGE TU PLAN</h1>
+                    <p class="bill-hero-sub">Potenciá tu operación fluvial con la tecnología más avanzada</p>
+                    <div class="bill-toggle">
+                        <span class="bill-toggle-label active" data-period="monthly">Mensual</span>
+                        <div class="bill-toggle-switch" onclick="BillingModule.togglePeriod()">
+                            <div class="bill-toggle-knob" id="bill-knob"></div>
                         </div>
-
-                        <p style="color:#cbd5e1; font-size:0.9rem; margin-bottom:25px;">Ideal para propietarios independientes.</p>
-                        
-                        <ul style="text-align:left; color:#cbd5e1; list-style:none; padding:0; margin-bottom:30px; line-height:2;">
-                            <li><i class="fas fa-check" style="color:#34d399; margin-right:10px;"></i> Tracking GPS en vivo</li>
-                            <li><i class="fas fa-check" style="color:#34d399; margin-right:10px;"></i> Bitácora Digital</li>
-                            <li><i class="fas fa-check" style="color:#34d399; margin-right:10px;"></i> 1 Usuario Admin</li>
-                        </ul>
-
-                        <button onclick="BillingModule.selectPlan('flex')" class="btn-price" style="width:100%; padding:15px; background:transparent; border:1px solid #3b82f6; color:#3b82f6; border-radius:8px; font-weight:bold; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
-                            COMENZAR AHORA
-                        </button>
+                        <span class="bill-toggle-label" data-period="annual">Anual <span class="bill-save">-20%</span></span>
                     </div>
-
-                    <!-- PLAN 2: SQUAD (PACK 3) -->
-                    <div class="pricing-card" style="background:#0f172a; border:1px solid #334; border-radius:15px; padding:30px; width:300px; position:relative; min-width:280px;">
-                        <div style="font-size:1.2rem; color:#94a3b8; font-weight:bold; letter-spacing:2px;">SQUAD</div>
-                        <div style="font-size:3rem; color:#fff; font-weight:bold; margin:15px 0;">$450<span style="font-size:1rem; color:#64748b">/mes</span></div>
-                        <p style="color:#cbd5e1; font-size:0.9rem; margin-bottom:25px;">Tu pequeña flota 100% digitalizada.</p>
-                        
-                        <ul style="text-align:left; color:#cbd5e1; list-style:none; padding:0; margin-bottom:30px; line-height:2;">
-                            <li><i class="fas fa-check" style="color:#34d399; margin-right:10px;"></i> Hasta <b>3 Embarcaciones</b></li>
-                            <li><i class="fas fa-check" style="color:#34d399; margin-right:10px;"></i> Todo lo del Plan Individual</li>
-                            <li><i class="fas fa-plus" style="color:#00e5ff; margin-right:10px;"></i> <b>Gestión Tripulación Basic</b></li>
-                        </ul>
-
-                        <button onclick="BillingModule.selectPlan('start')" class="btn-price" style="width:100%; padding:15px; background:transparent; border:1px solid #34d399; color:#34d399; border-radius:8px; font-weight:bold; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.background='rgba(52, 211, 153, 0.1)'" onmouseout="this.style.background='transparent'">
-                            CONTRATAR PACK
-                        </button>
-                    </div>
-
-                    <!-- PLAN 3: EXPANSION (RECOMMENDED) -->
-                    <div class="pricing-card recommended" style="background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border:1px solid #00e5ff; border-radius:15px; padding:30px; width:320px; position:relative; transform:scale(1.05); box-shadow:0 0 30px rgba(0,229,255,0.15); min-width:300px; z-index:10;">
-                        <div style="position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:#00e5ff; color:#000; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:bold;">MÁS ELEGIDO</div>
-                        <div style="font-size:1.2rem; color:#00e5ff; font-weight:bold; letter-spacing:2px;">PACK EXPANSIÓN</div>
-                        <div style="font-size:3rem; color:#fff; font-weight:bold; margin:15px 0;">$1,200<span style="font-size:1rem; color:#64748b">/mes</span></div>
-                        <p style="color:#cbd5e1; font-size:0.9rem; margin-bottom:25px;">Control total para flotas en crecimiento.</p>
-                        
-                        <ul style="text-align:left; color:#fff; list-style:none; padding:0; margin-bottom:30px; line-height:2;">
-                            <li><i class="fas fa-check" style="color:#00e5ff; margin-right:10px;"></i> Hasta <b>10 Embarcaciones</b></li>
-                            <li><i class="fas fa-check" style="color:#00e5ff; margin-right:10px;"></i> <b>Gestión FULL Tripulación</b></li>
-                            <li><i class="fas fa-check" style="color:#00e5ff; margin-right:10px;"></i> Alertas de Mantenimiento</li>
-                            <li><i class="fas fa-check" style="color:#00e5ff; margin-right:10px;"></i> Reportes PDF Automáticos</li>
-                            <li><i class="fas fa-check" style="color:#00e5ff; margin-right:10px;"></i> 5 Usuarios Admin</li>
-                        </ul>
-
-                        <button onclick="BillingModule.selectPlan('expansion')" class="btn-price-main" style="width:100%; padding:15px; background:#00e5ff; border:none; color:#000; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow:0 0 15px rgba(0,229,255,0.4);" onmouseover="this.style.boxShadow='0 0 25px rgba(0,229,255,0.6)'" onmouseout="this.style.boxShadow='0 0 15px rgba(0,229,255,0.4)'">
-                            CONTRATAR PACK
-                        </button>
-                    </div>
-
-                    <!-- PLAN 4: ADMIRAL -->
-                    <div class="pricing-card" style="background:#0f172a; border:1px solid #a855f7; border-radius:15px; padding:30px; width:300px; position:relative; min-width:280px;">
-                        <div style="font-size:1.2rem; color:#a855f7; font-weight:bold; letter-spacing:2px;">ADMIRAL</div>
-                        <div style="font-size:3rem; color:#fff; font-weight:bold; margin:15px 0;">$1800<span style="font-size:1rem; color:#64748b">/mes</span></div>
-                        <p style="color:#cbd5e1; font-size:0.9rem; margin-bottom:25px;">Infraestructura dedicada para grandes operadores.</p>
-                        
-                        <ul style="text-align:left; color:#cbd5e1; list-style:none; padding:0; margin-bottom:30px; line-height:2;">
-                            <li><i class="fas fa-check" style="color:#a855f7; margin-right:10px;"></i> <b>Flota Ilimitada</b></li>
-                            <li><i class="fas fa-check" style="color:#a855f7; margin-right:10px;"></i> <b>Usuarios Ilimitados</b></li>
-                            <li><i class="fas fa-check" style="color:#a855f7; margin-right:10px;"></i> Soporte 24/7 Prioritario</li>
-                        </ul>
-
-                        <button onclick="BillingModule.selectPlan('admiral')" class="btn-price" style="width:100%; padding:15px; background:transparent; border:1px solid #a855f7; color:#a855f7; border-radius:8px; font-weight:bold; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.background='rgba(168,85,247,0.1)'" onmouseout="this.style.background='transparent'">
-                            CONTRATAR ADMIRAL
-                        </button>
-                    </div>
-
                 </div>
-                
-                <div style="margin-top:40px; color:#64748b; font-size:0.8rem; padding-bottom:20px;">
-                    <i class="fas fa-lock"></i> Pagos procesados de forma segura vía <b>dLocal Go</b> (Redirección Externa). Cancelación flexible.
+
+                <div class="bill-plans-grid" id="bill-plans">
+                    ${plans.map(p => `
+                        <div class="bill-plan-card ${p.popular ? 'popular' : ''}" style="--plan-c:${p.color};">
+                            ${p.popular ? '<div class="bill-popular-tag"><i class="fas fa-fire"></i> MÁS POPULAR</div>' : ''}
+                            <div class="bill-plan-icon" style="background:${p.color}15; color:${p.color};"><i class="fas ${p.icon}"></i></div>
+                            <h3 class="bill-plan-name">${p.name}</h3>
+                            <div class="bill-plan-price">
+                                <span class="bill-currency">$</span>
+                                <span class="bill-amount" data-monthly="${p.price}" data-annual="${Math.round(p.price * 0.8)}">${p.price}</span>
+                                <span class="bill-period">/mes</span>
+                            </div>
+                            <div class="bill-plan-limits">
+                                <span><i class="fas fa-ship"></i> ${p.vessels} embarcaciones</span>
+                                <span><i class="fas fa-users"></i> ${p.users} usuarios</span>
+                            </div>
+                            <ul class="bill-features">
+                                ${p.features.map(f => `<li><i class="fas fa-check" style="color:${p.color};"></i> ${f}</li>`).join('')}
+                            </ul>
+                            <button class="bill-select-btn" style="--btn-c:${p.color};" onclick="BillingModule.selectPlan('${p.id}')">
+                                SELECCIONAR ${p.name}
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="bill-trust">
+                    <div class="bill-trust-item"><i class="fas fa-shield-alt"></i><span>Pago Seguro SSL</span></div>
+                    <div class="bill-trust-item"><i class="fas fa-sync-alt"></i><span>Cancelá cuando quieras</span></div>
+                    <div class="bill-trust-item"><i class="fas fa-headset"></i><span>Soporte 24/7</span></div>
+                    <div class="bill-trust-item"><i class="fas fa-undo"></i><span>30 días de garantía</span></div>
                 </div>
             </div>
         `;
     };
 
-    // --- Dynamic Logic ---
-    let flexCount = 1;
-
-    const updateFlexPrice = (delta) => {
-        const newCount = flexCount + delta;
-        if (newCount < 1) return; // Min 1
-
-        // Removed the up-sell check for simplicity as requested, 
-        // user can now add more to Solist freely if they want.
-
-        flexCount = newCount;
-        const total = flexCount * 150;
-
-        // Update DOM
-        const countDisplay = document.getElementById('vessel-count-flex');
-        const priceDisplay = document.getElementById('price-display-flex');
-
-        if (countDisplay) countDisplay.innerText = flexCount;
-        if (priceDisplay) priceDisplay.innerHTML = `$${total}<span style="font-size:1rem; color:#64748b">/mes</span>`;
+    const togglePeriod = () => {
+        const knob = document.getElementById('bill-knob');
+        const isAnnual = knob.classList.toggle('annual');
+        document.querySelectorAll('.bill-toggle-label').forEach(l => l.classList.remove('active'));
+        document.querySelector(`.bill-toggle-label[data-period="${isAnnual ? 'annual' : 'monthly'}"]`).classList.add('active');
+        document.querySelectorAll('.bill-amount').forEach(el => {
+            el.textContent = isAnnual ? el.dataset.annual : el.dataset.monthly;
+        });
     };
 
-    const selectPlan = (planId) => {
-        let url = '';
-        let planName = '';
-
-        // CONFIGURACIÓN DE LINKS DE PAGO (dLocal Go)
-        switch (planId) {
-            case 'flex':
-                planName = `Plan Individual (${flexCount} Embarcación${flexCount > 1 ? 'es' : ''})`;
-                // if (flexCount === 1) url = 'LINK_DLOCAL_150';
-                // if (flexCount === 2) url = 'LINK_DLOCAL_300';
-                break;
-            case 'start':
-                planName = 'Pack Inicio ($450)';
-                // url = 'LINK_DLOCAL_450';
-                break;
-            case 'expansion':
-                planName = 'Pack Expansión ($1,200)';
-                // url = 'LINK_DLOCAL_1200';
-                break;
-            case 'admiral':
-                planName = 'Plan Admiral ($1800)';
-                // Direct link logic
-                break;
+    const selectPlan = async (planId) => {
+        selectedPlan = plans.find(p => p.id === planId);
+        if (!selectedPlan) return;
+        
+        const btnEvent = window.event;
+        let originalText = "";
+        let btn = null;
+        if (btnEvent && btnEvent.target) {
+            btn = btnEvent.target.closest('button');
+            if (btn) {
+                originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> CONECTANDO...';
+                btn.disabled = true;
+            }
         }
 
-        const btn = event.target || event.currentTarget;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> REDIRIGIENDO...';
+        try {
+            const user = AuthModule.getCurrentUser();
+            const { data: profile } = await window.sb.from('profiles').select('company_id').eq('id', user.id).single();
+            const cid = profile?.company_id || 'demo-company';
+
+            const res = await fetch('/api/create-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    planId,
+                    companyId: cid,
+                    email: user.email
+                })
+            });
+
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
+            const { url } = await res.json();
+            
+            // Si es la ruta MOCK, evitamos la recarga completa para no matar la sesión del simulador
+            if (url.includes('success_mock')) {
+                if (window.RiverToast) RiverToast.success('¡Suscripción de prueba activada exitosamente!', 'Pago Aprobado (Simulado)');
+                if (btn) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+                return;
+            }
+
+            window.location.href = url; // Redirige a la pasarela real de Stripe Checkout
+        } catch (err) {
+            console.error(err);
+            if (window.RiverToast) RiverToast.error('Falló la conexión con la pasarela de pago segura.', 'Error de Pago');
+            if (btn) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+    };
+
+    const showCheckout = () => {
+        let modal = document.getElementById('bill-checkout-modal');
+        if (!modal) { modal = document.createElement('div'); modal.id = 'bill-checkout-modal'; document.body.appendChild(modal); }
+
+        const isAnnual = document.getElementById('bill-knob')?.classList.contains('annual');
+        const price = isAnnual ? Math.round(selectedPlan.price * 0.8) : selectedPlan.price;
+
+        modal.innerHTML = `
+            <div class="bill-overlay" onclick="if(event.target===this) BillingModule.closeCheckout()">
+                <div class="bill-checkout">
+                    <div class="bill-checkout-header" style="border-color:${selectedPlan.color};">
+                        <button class="bill-close" onclick="BillingModule.closeCheckout()"><i class="fas fa-times"></i></button>
+                        <i class="fas ${selectedPlan.icon}" style="color:${selectedPlan.color}; font-size:2rem;"></i>
+                        <h2>Plan ${selectedPlan.name}</h2>
+                        <div class="bill-checkout-price">$${price}<span>/mes</span></div>
+                    </div>
+
+                    <div class="bill-checkout-body">
+                        <div class="bill-step">
+                            <h3><span class="bill-step-num">1</span> Datos de Facturación</h3>
+                            <div class="bill-form-grid">
+                                <div class="bill-field full">
+                                    <label>Razón Social / Nombre</label>
+                                    <input type="text" id="bill-name" placeholder="Mi Empresa S.A.">
+                                </div>
+                                <div class="bill-field">
+                                    <label>RUC / CUIT / NIT</label>
+                                    <input type="text" id="bill-ruc" placeholder="80012345-6">
+                                </div>
+                                <div class="bill-field">
+                                    <label>Email de Facturación</label>
+                                    <input type="email" id="bill-email" placeholder="admin@empresa.com">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bill-step">
+                            <h3><span class="bill-step-num">2</span> Método de Pago</h3>
+                            <div class="bill-payment-methods">
+                                <label class="bill-method active" onclick="BillingModule.selectMethod(this, 'card')">
+                                    <input type="radio" name="method" value="card" checked>
+                                    <i class="fas fa-credit-card"></i><span>Tarjeta</span>
+                                </label>
+                                <label class="bill-method" onclick="BillingModule.selectMethod(this, 'transfer')">
+                                    <input type="radio" name="method" value="transfer">
+                                    <i class="fas fa-university"></i><span>Transferencia</span>
+                                </label>
+                            </div>
+
+                            <div id="bill-card-form" class="bill-card-form">
+                                <div class="bill-card-visual">
+                                    <div class="bill-card-chip"></div>
+                                    <div class="bill-card-number" id="bill-card-display">•••• •••• •••• ••••</div>
+                                    <div class="bill-card-bottom">
+                                        <div><span class="bill-card-label">TITULAR</span><span class="bill-card-holder" id="bill-holder-display">NOMBRE APELLIDO</span></div>
+                                        <div><span class="bill-card-label">EXPIRA</span><span class="bill-card-exp" id="bill-exp-display">MM/AA</span></div>
+                                    </div>
+                                </div>
+                                <div class="bill-form-grid">
+                                    <div class="bill-field full">
+                                        <label>Número de Tarjeta</label>
+                                        <input type="text" id="bill-card-num" placeholder="4242 4242 4242 4242" maxlength="19" oninput="BillingModule.formatCard(this)">
+                                    </div>
+                                    <div class="bill-field full">
+                                        <label>Titular</label>
+                                        <input type="text" id="bill-card-holder" placeholder="NOMBRE APELLIDO" oninput="BillingModule.updateHolder(this)">
+                                    </div>
+                                    <div class="bill-field">
+                                        <label>Vencimiento</label>
+                                        <input type="text" id="bill-card-exp" placeholder="MM/AA" maxlength="5" oninput="BillingModule.formatExp(this)">
+                                    </div>
+                                    <div class="bill-field">
+                                        <label>CVV</label>
+                                        <input type="text" id="bill-card-cvv" placeholder="123" maxlength="4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="bill-transfer-form" style="display:none;">
+                                <div class="bill-transfer-info">
+                                    <h4><i class="fas fa-university" style="color:#3b82f6;"></i> Datos para Transferencia</h4>
+                                    <div class="bill-transfer-row"><span>Banco</span><strong>Banco Nacional de Fomento</strong></div>
+                                    <div class="bill-transfer-row"><span>Cuenta</span><strong>123-456789-001</strong></div>
+                                    <div class="bill-transfer-row"><span>Titular</span><strong>RiverHub Technologies S.A.</strong></div>
+                                    <div class="bill-transfer-row"><span>Monto</span><strong style="color:#10b981;">$${price} USD</strong></div>
+                                    <div class="bill-transfer-row"><span>Ref.</span><strong>RH-${Date.now().toString(36).toUpperCase()}</strong></div>
+                                    <p style="color:#f59e0b; font-size:0.8rem; margin-top:12px;"><i class="fas fa-info-circle"></i> Enviá el comprobante a pagos@riverhub.com</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bill-summary">
+                            <div class="bill-summary-row"><span>Plan ${selectedPlan.name}</span><span>$${price}/mes</span></div>
+                            <div class="bill-summary-total"><span>TOTAL</span><span>$${price} USD</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bill-checkout-footer">
+                        <div class="bill-secure"><i class="fas fa-lock"></i> Pago seguro encriptado</div>
+                        <button class="bill-pay-btn" id="bill-pay-btn" onclick="BillingModule.processPayment()" style="--btn-c:${selectedPlan.color};">
+                            <i class="fas fa-lock"></i> PAGAR $${price} USD
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        setTimeout(() => document.querySelector('.bill-overlay')?.classList.add('show'), 50);
+    };
+
+    const selectMethod = (el, method) => {
+        document.querySelectorAll('.bill-method').forEach(m => m.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('bill-card-form').style.display = method === 'card' ? 'block' : 'none';
+        document.getElementById('bill-transfer-form').style.display = method === 'transfer' ? 'block' : 'none';
+    };
+
+    const formatCard = (input) => {
+        let val = input.value.replace(/\D/g, '').substring(0, 16);
+        val = val.replace(/(.{4})/g, '$1 ').trim();
+        input.value = val;
+        document.getElementById('bill-card-display').textContent = val || '•••• •••• •••• ••••';
+    };
+
+    const formatExp = (input) => {
+        let val = input.value.replace(/\D/g, '').substring(0, 4);
+        if (val.length > 2) val = val.substring(0, 2) + '/' + val.substring(2);
+        input.value = val;
+        document.getElementById('bill-exp-display').textContent = val || 'MM/AA';
+    };
+
+    const updateHolder = (input) => {
+        document.getElementById('bill-holder-display').textContent = input.value.toUpperCase() || 'NOMBRE APELLIDO';
+    };
+
+    const processPayment = async () => {
+        const btn = document.getElementById('bill-pay-btn');
+        const name = document.getElementById('bill-name')?.value.trim();
+        const email = document.getElementById('bill-email')?.value.trim();
+        const cardNum = document.getElementById('bill-card-num')?.value.trim();
+        const method = document.querySelector('input[name="method"]:checked')?.value;
+
+        if (!name) { if (window.RiverToast) RiverToast.warning('Ingresá la razón social.', 'Billing'); return; }
+        if (!email) { if (window.RiverToast) RiverToast.warning('Ingresá el email.', 'Billing'); return; }
+        if (method === 'card' && (!cardNum || cardNum.length < 16)) { if (window.RiverToast) RiverToast.warning('Tarjeta inválida.', 'Billing'); return; }
+
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESANDO...';
         btn.disabled = true;
 
-        setTimeout(() => {
-            if (url) {
-                window.open(url, '_blank');
-            } else {
-                alert(`🚀 Redirigiendo al checkout seguro de dLocal Go para: ${planName}\n\n(Valor a pagar: $${planId === 'flex' ? flexCount * 150 : '---'})`);
-            }
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }, 1200);
+        await new Promise(r => setTimeout(r, 2000));
+
+        if (window.sb) {
+            try {
+                await window.sb.from('payments').insert([{
+                    amount: selectedPlan.price, currency: 'USD', payment_method: method,
+                    gateway: 'SIMULADO', status: 'completed',
+                    invoice_number: 'INV-' + Date.now().toString(36).toUpperCase(),
+                    metadata: { plan: selectedPlan.id, name, email }
+                }]);
+            } catch (e) { console.warn("Payment save:", e); }
+        }
+
+        // --- ENVIAR WEBHOOK AL Cerebro n8n PARA EMAIL DE PAGO Y RECIBO ---
+        try {
+            await fetch('/api/n8n/webhook', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-api-key': 'riverhub_n8n_2026' },
+                body: JSON.stringify({
+                    event: 'PAYMENT_COMPLETED',
+                    company: name,
+                    email: email,
+                    amount: selectedPlan.price,
+                    plan: selectedPlan.name,
+                    timestamp: new Date().toISOString()
+                })
+            });
+            console.log("n8n Webhook Sent: PAYMENT_COMPLETED");
+        } catch (webhookErr) {
+            console.warn("Fallo el envío del recibo vía n8n:", webhookErr);
+        }
+
+        showSuccess();
     };
 
-    return {
-        init,
-        updateFlexPrice,
-        selectPlan
+    const showSuccess = () => {
+        const modal = document.getElementById('bill-checkout-modal');
+        if (!modal) return;
+
+        modal.innerHTML = `
+            <div class="bill-overlay show">
+                <div class="bill-success">
+                    <div class="bill-success-check">
+                        <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none" stroke="${selectedPlan.color}" stroke-width="2"/><path fill="none" stroke="${selectedPlan.color}" stroke-width="3" stroke-linecap="round" d="M14 27l7 7 16-16"/></svg>
+                    </div>
+                    <h2>¡Pago Exitoso!</h2>
+                    <p>Plan <strong style="color:${selectedPlan.color};">${selectedPlan.name}</strong> activado.</p>
+                    <div class="bill-success-details">
+                        <div><span>Monto</span><strong>$${selectedPlan.price} USD/mes</strong></div>
+                        <div><span>Ref.</span><strong>RH-${Date.now().toString(36).toUpperCase()}</strong></div>
+                        <div><span>Estado</span><strong style="color:#10b981;">CONFIRMADO ✓</strong></div>
+                    </div>
+                    <button class="bill-success-btn" style="--btn-c:${selectedPlan.color};" onclick="BillingModule.closeCheckout();">
+                        <i class="fas fa-rocket"></i> EMPEZAR
+                    </button>
+                </div>
+            </div>
+        `;
     };
+
+    const closeCheckout = () => {
+        const modal = document.getElementById('bill-checkout-modal');
+        if (modal) modal.innerHTML = '';
+    };
+
+    return { init, selectPlan, togglePeriod, selectMethod, formatCard, formatExp, updateHolder, processPayment, closeCheckout };
 })();
 
 window.BillingModule = BillingModule;

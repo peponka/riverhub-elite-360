@@ -1,7 +1,7 @@
--- ============================================================
+-- 
 -- RIVERHUB ELITE 360 — SUPABASE FINAL (SCHEMA + SECURITY)
 -- ============================================================
--- Version: 3.0 FINAL
+-- Version: 3.0 FINAL============================================================
 -- Fecha: 14/02/2026
 -- 
 -- INSTRUCCIONES:
@@ -326,6 +326,204 @@ CREATE TABLE IF NOT EXISTS audit_log (
 );
 
 -- ============================================================
+-- PASO 1B: TABLAS QUE USAN LOS MÓDULOS JS (faltaban en schema)
+-- ============================================================
+
+-- LOGS (usado por bitacora.js y calado.js)
+CREATE TABLE IF NOT EXISTS logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id VARCHAR(255) NOT NULL DEFAULT 'DEMO_TENANT',
+    description TEXT NOT NULL,
+    action_type VARCHAR(50) DEFAULT 'info',
+    vessel_id UUID REFERENCES vessels(id) ON DELETE SET NULL,
+    voyage_id UUID REFERENCES voyages(id) ON DELETE SET NULL,
+    user_id UUID,
+    position_lat DECIMAL(10,8),
+    position_lng DECIMAL(11,8),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- INVENTORY_ITEMS (usado por panol.js — reemplaza spare_parts para el frontend)
+CREATE TABLE IF NOT EXISTS inventory_items (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id VARCHAR(255) NOT NULL DEFAULT 'DEMO_TENANT',
+    name VARCHAR(255) NOT NULL,
+    sku VARCHAR(100),
+    category VARCHAR(100) DEFAULT 'General',
+    unit_price DECIMAL(12,2) DEFAULT 0,
+    stock_current INTEGER DEFAULT 0,
+    stock_min_alert INTEGER DEFAULT 5,
+    vessel_id UUID REFERENCES vessels(id) ON DELETE SET NULL,
+    supplier VARCHAR(255),
+    location VARCHAR(255),
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- INVENTORY_MOVEMENTS (usado por panol.js para registrar entradas/salidas)
+CREATE TABLE IF NOT EXISTS inventory_movements (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id VARCHAR(255) NOT NULL DEFAULT 'DEMO_TENANT',
+    item_id UUID REFERENCES inventory_items(id) ON DELETE CASCADE,
+    type VARCHAR(50) NOT NULL DEFAULT 'BAJA',
+    quantity INTEGER NOT NULL DEFAULT 1,
+    user_id UUID,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- SERVICE_ORDERS (usado por commercial.js — órdenes de servicio/contratos)
+CREATE TABLE IF NOT EXISTS service_orders (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id VARCHAR(255) NOT NULL DEFAULT 'DEMO_TENANT',
+    order_number VARCHAR(50) NOT NULL,
+    client_id UUID REFERENCES clients(id) ON DELETE SET NULL,
+    origin_port VARCHAR(255),
+    destination_port VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'BORRADOR',
+    agreed_rate DECIMAL(15,2) DEFAULT 0,
+    currency VARCHAR(10) DEFAULT 'USD',
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- CARGO_MANIFESTS (usado por commercial.js — asignación de carga a barcazas)
+CREATE TABLE IF NOT EXISTS cargo_manifests (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id VARCHAR(255) NOT NULL DEFAULT 'DEMO_TENANT',
+    service_order_id UUID REFERENCES service_orders(id) ON DELETE CASCADE,
+    barge_id UUID REFERENCES vessels(id) ON DELETE SET NULL,
+    product_type VARCHAR(255),
+    quantity DECIMAL(12,2) DEFAULT 0,
+    unit VARCHAR(20) DEFAULT 'TN',
+    bl_number VARCHAR(100),
+    status VARCHAR(50) DEFAULT 'CARGANDO',
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- GEOFENCES (usado por monitoring.js — zonas geográficas de control)
+CREATE TABLE IF NOT EXISTS geofences (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id VARCHAR(255) NOT NULL DEFAULT 'DEMO_TENANT',
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    geom_type VARCHAR(50) DEFAULT 'polygon',
+    coordinates JSONB,
+    min_depth_required DECIMAL(6,2),
+    max_speed_knots DECIMAL(6,2),
+    alert_on_enter BOOLEAN DEFAULT true,
+    alert_on_exit BOOLEAN DEFAULT false,
+    is_active BOOLEAN DEFAULT true,
+    color VARCHAR(20) DEFAULT '#ff4444',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- SAFETY_RULES (usado por monitoring.js — reglas de navegación segura)
+CREATE TABLE IF NOT EXISTS safety_rules (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id VARCHAR(255) NOT NULL DEFAULT 'DEMO_TENANT',
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    rule_type VARCHAR(50) DEFAULT 'UKC',
+    value DECIMAL(10,2),
+    unit VARCHAR(50),
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ALERTS (usado por monitoring.js — alertas del sistema)
+CREATE TABLE IF NOT EXISTS alerts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id VARCHAR(255) NOT NULL DEFAULT 'DEMO_TENANT',
+    alert_type VARCHAR(100) NOT NULL,
+    title VARCHAR(255),
+    description TEXT,
+    severity VARCHAR(50) DEFAULT 'WARNING',
+    vessel_id UUID REFERENCES vessels(id) ON DELETE SET NULL,
+    geofence_id UUID REFERENCES geofences(id) ON DELETE SET NULL,
+    is_read BOOLEAN DEFAULT false,
+    resolved_at TIMESTAMP WITH TIME ZONE,
+    resolved_by UUID,
+    metadata JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================
+-- PASO 1C: MIGRACIÓN SEGURA — Agregar columnas faltantes a tablas
+-- que ya existan (por si se crearon parcialmente antes)
+-- ============================================================
+DO $$
+DECLARE
+    col_rec RECORD;
+BEGIN
+    -- Definir lista de (tabla, columna, tipo, default)
+    FOR col_rec IN SELECT * FROM (VALUES
+        -- geofences
+        ('geofences', 'is_active', 'BOOLEAN', 'true'),
+        ('geofences', 'alert_on_enter', 'BOOLEAN', 'true'),
+        ('geofences', 'alert_on_exit', 'BOOLEAN', 'false'),
+        ('geofences', 'min_depth_required', 'DECIMAL(6,2)', NULL),
+        ('geofences', 'max_speed_knots', 'DECIMAL(6,2)', NULL),
+        ('geofences', 'geom_type', 'VARCHAR(50)', '''polygon'''),
+        ('geofences', 'coordinates', 'JSONB', NULL),
+        ('geofences', 'color', 'VARCHAR(20)', '''#ff4444'''),
+        -- safety_rules
+        ('safety_rules', 'description', 'TEXT', NULL),
+        ('safety_rules', 'is_active', 'BOOLEAN', 'true'),
+        ('safety_rules', 'rule_type', 'VARCHAR(50)', '''UKC'''),
+        ('safety_rules', 'value', 'DECIMAL(10,2)', NULL),
+        ('safety_rules', 'unit', 'VARCHAR(50)', NULL),
+        -- alerts
+        ('alerts', 'is_read', 'BOOLEAN', 'false'),
+        ('alerts', 'alert_type', 'VARCHAR(100)', '''SYSTEM'''),
+        ('alerts', 'severity', 'VARCHAR(50)', '''WARNING'''),
+        ('alerts', 'geofence_id', 'UUID', NULL),
+        ('alerts', 'resolved_at', 'TIMESTAMP WITH TIME ZONE', NULL),
+        ('alerts', 'resolved_by', 'UUID', NULL),
+        ('alerts', 'metadata', 'JSONB', NULL),
+        -- inventory_items
+        ('inventory_items', 'sku', 'VARCHAR(100)', NULL),
+        ('inventory_items', 'category', 'VARCHAR(100)', '''General'''),
+        ('inventory_items', 'unit_price', 'DECIMAL(12,2)', '0'),
+        ('inventory_items', 'stock_current', 'INTEGER', '0'),
+        ('inventory_items', 'stock_min_alert', 'INTEGER', '5'),
+        -- inventory_movements
+        ('inventory_movements', 'type', 'VARCHAR(50)', '''BAJA'''),
+        ('inventory_movements', 'quantity', 'INTEGER', '1'),
+        -- service_orders
+        ('service_orders', 'agreed_rate', 'DECIMAL(15,2)', '0'),
+        ('service_orders', 'order_number', 'VARCHAR(50)', '''SIN-NUMERO'''),
+        -- cargo_manifests
+        ('cargo_manifests', 'product_type', 'VARCHAR(255)', NULL),
+        ('cargo_manifests', 'quantity', 'DECIMAL(12,2)', '0'),
+        ('cargo_manifests', 'bl_number', 'VARCHAR(100)', NULL),
+        -- logs
+        ('logs', 'action_type', 'VARCHAR(50)', '''info'''),
+        ('logs', 'description', 'TEXT', NULL)
+    ) AS t(tbl, col, col_type, col_default)
+    LOOP
+        IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = col_rec.tbl AND table_schema = 'public') THEN
+            IF NOT EXISTS (
+                SELECT 1 FROM information_schema.columns 
+                WHERE table_name = col_rec.tbl AND column_name = col_rec.col AND table_schema = 'public'
+            ) THEN
+                IF col_rec.col_default IS NOT NULL THEN
+                    EXECUTE format('ALTER TABLE %I ADD COLUMN %I %s DEFAULT %s', col_rec.tbl, col_rec.col, col_rec.col_type, col_rec.col_default);
+                ELSE
+                    EXECUTE format('ALTER TABLE %I ADD COLUMN %I %s', col_rec.tbl, col_rec.col, col_rec.col_type);
+                END IF;
+                RAISE NOTICE '➕ Columna %.% agregada', col_rec.tbl, col_rec.col;
+            END IF;
+        END IF;
+    END LOOP;
+    RAISE NOTICE '✅ Migración de columnas completada';
+END $$;
+
+-- ============================================================
 -- PASO 2: AGREGAR company_id DONDE FALTE (Migración segura)
 -- ============================================================
 DO $$
@@ -336,7 +534,10 @@ BEGIN
         'vessels', 'crew_members', 'clients', 'voyages', 'convoys',
         'fuel_logs', 'maintenance_tasks', 'spare_parts', 
         'logbook_entries', 'quotations', 'comms', 'incidents', 
-        'documents', 'daily_reports'
+        'documents', 'daily_reports',
+        'logs', 'inventory_items', 'inventory_movements',
+        'service_orders', 'cargo_manifests',
+        'geofences', 'safety_rules', 'alerts'
     ]) LOOP
         IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = tbl AND table_schema = 'public') THEN
             IF NOT EXISTS (
@@ -392,7 +593,10 @@ BEGIN
         'profiles', 'vessels', 'crew_members', 'clients', 'voyages', 'convoys',
         'fuel_logs', 'maintenance_tasks', 'spare_parts', 
         'logbook_entries', 'quotations', 'comms', 'incidents',
-        'documents', 'daily_reports', 'audit_log'
+        'documents', 'daily_reports', 'audit_log',
+        'logs', 'inventory_items', 'inventory_movements',
+        'service_orders', 'cargo_manifests',
+        'geofences', 'safety_rules', 'alerts'
     ]) LOOP
         IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = tbl AND table_schema = 'public') THEN
             EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', tbl);
@@ -418,7 +622,7 @@ CREATE POLICY "profiles_insert_self" ON profiles FOR INSERT WITH CHECK (id = aut
 CREATE POLICY "profiles_update_own" ON profiles FOR UPDATE USING (id = auth.uid()) WITH CHECK (id = auth.uid());
 CREATE POLICY "profiles_update_superadmin" ON profiles FOR UPDATE USING (is_superadmin());
 
--- TABLAS DE DATOS (Tenant Isolation)
+-- TABLAS DE DATOS (Tenant Isolation) — INCLUYE TODAS LAS TABLAS NUEVAS
 DO $$ 
 DECLARE
     tbl TEXT;
@@ -427,7 +631,10 @@ BEGIN
         'vessels', 'crew_members', 'clients', 'voyages', 'convoys',
         'fuel_logs', 'maintenance_tasks', 'spare_parts', 
         'logbook_entries', 'quotations', 'incidents',
-        'documents', 'daily_reports'
+        'documents', 'daily_reports',
+        'logs', 'inventory_items', 'inventory_movements',
+        'service_orders', 'cargo_manifests',
+        'geofences', 'safety_rules', 'alerts'
     ]) LOOP
         IF EXISTS (
             SELECT 1 FROM information_schema.columns 
@@ -509,7 +716,10 @@ BEGIN
         'vessels', 'crew_members', 'clients', 'voyages', 'convoys',
         'fuel_logs', 'maintenance_tasks', 'spare_parts', 
         'logbook_entries', 'quotations', 'comms', 'incidents',
-        'documents', 'daily_reports'
+        'documents', 'daily_reports',
+        'logs', 'inventory_items', 'inventory_movements',
+        'service_orders', 'cargo_manifests',
+        'geofences', 'safety_rules', 'alerts'
     ]) LOOP
         IF EXISTS (
             SELECT 1 FROM information_schema.columns 
@@ -523,37 +733,78 @@ BEGIN
     END LOOP;
 END $$;
 
+-- Índices adicionales de performance
 CREATE INDEX IF NOT EXISTS idx_profiles_role ON profiles(role);
 CREATE INDEX IF NOT EXISTS idx_profiles_company ON profiles(company_id);
 CREATE INDEX IF NOT EXISTS idx_comms_channel ON comms(channel);
 CREATE INDEX IF NOT EXISTS idx_incidents_status ON incidents(status);
 CREATE INDEX IF NOT EXISTS idx_documents_status ON documents(status);
 CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_logs_created ON logs(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_logs_vessel ON logs(vessel_id);
+CREATE INDEX IF NOT EXISTS idx_inventory_items_sku ON inventory_items(sku);
+CREATE INDEX IF NOT EXISTS idx_inventory_movements_item ON inventory_movements(item_id);
+CREATE INDEX IF NOT EXISTS idx_service_orders_status ON service_orders(status);
+CREATE INDEX IF NOT EXISTS idx_service_orders_client ON service_orders(client_id);
+CREATE INDEX IF NOT EXISTS idx_cargo_manifests_order ON cargo_manifests(service_order_id);
+CREATE INDEX IF NOT EXISTS idx_geofences_active ON geofences(is_active);
+CREATE INDEX IF NOT EXISTS idx_alerts_unread ON alerts(is_read) WHERE is_read = false;
+CREATE INDEX IF NOT EXISTS idx_alerts_vessel ON alerts(vessel_id);
 
 -- ============================================================
--- PASO 8: HABILITAR REALTIME (para comunicaciones.js)
+-- PASO 8: HABILITAR REALTIME (para comunicaciones.js y alertas)
 -- ============================================================
 -- Esto se hace desde Supabase Dashboard > Database > Replication
--- Tabla 'comms' debe tener Realtime activado
--- O ejecutar:
-ALTER PUBLICATION supabase_realtime ADD TABLE comms;
+-- Tablas 'comms' y 'alerts' deben tener Realtime activado
+DO $$
+BEGIN
+    BEGIN
+        ALTER PUBLICATION supabase_realtime ADD TABLE comms;
+    EXCEPTION WHEN duplicate_object THEN
+        RAISE NOTICE 'comms ya está en supabase_realtime, OK';
+    END;
+    BEGIN
+        ALTER PUBLICATION supabase_realtime ADD TABLE alerts;
+    EXCEPTION WHEN duplicate_object THEN
+        RAISE NOTICE 'alerts ya está en supabase_realtime, OK';
+    END;
+END $$;
+
+-- ============================================================
+-- PASO 9: DATOS INICIALES DE SAFETY RULES (monitoring.js los necesita)
+-- ============================================================
+INSERT INTO safety_rules (name, description, rule_type, value, unit, is_active)
+VALUES 
+    ('UKC Mínimo', 'Under Keel Clearance mínimo requerido', 'UKC', 0.50, 'metros', true),
+    ('Velocidad Máxima Puerto', 'Velocidad máxima en zona portuaria', 'SPEED', 5.00, 'nudos', true),
+    ('Velocidad Máxima Canal', 'Velocidad máxima en canal de navegación', 'SPEED', 8.00, 'nudos', true),
+    ('Calado Máximo Paraná', 'Calado máximo permitido en Río Paraná tramo medio', 'DRAFT', 10.50, 'pies', true)
+ON CONFLICT DO NOTHING;
 
 -- ============================================================
 -- VERIFICACIÓN FINAL
 -- ============================================================
 DO $$ 
 BEGIN 
-    RAISE NOTICE '════════════════════════════════════════';
-    RAISE NOTICE '✅ RIVERHUB v3.0 SUPABASE SETUP COMPLETADO';
-    RAISE NOTICE '════════════════════════════════════════';
-    RAISE NOTICE '📦 17 tablas verificadas/creadas';
-    RAISE NOTICE '🔒 RLS con tenant isolation activado';
+    RAISE NOTICE '════════════════════════════════════════════';
+    RAISE NOTICE '✅ RIVERHUB v4.0 SUPABASE SETUP COMPLETADO';
+    RAISE NOTICE '════════════════════════════════════════════';
+    RAISE NOTICE '📦 25 tablas verificadas/creadas:';
+    RAISE NOTICE '   Core: profiles, vessels, crew_members, clients';
+    RAISE NOTICE '   Ops:  voyages, convoys, fuel_logs, maintenance_tasks';
+    RAISE NOTICE '   Inv:  spare_parts, inventory_items, inventory_movements';
+    RAISE NOTICE '   Nav:  logbook_entries, logs, comms';
+    RAISE NOTICE '   Com:  quotations, service_orders, cargo_manifests';
+    RAISE NOTICE '   Doc:  documents, daily_reports';
+    RAISE NOTICE '   Mon:  geofences, safety_rules, alerts, incidents';
+    RAISE NOTICE '   Sys:  audit_log';
+    RAISE NOTICE '� RLS con tenant isolation en TODAS las tablas';
     RAISE NOTICE '👤 Trigger auto-perfil configurado';
-    RAISE NOTICE '📝 Tabla de auditoría lista';
-    RAISE NOTICE '⚡ Índices de performance creados';
-    RAISE NOTICE '📡 Realtime habilitado para comms';
-    RAISE NOTICE '════════════════════════════════════════';
+    RAISE NOTICE '⚡ Índices de performance creados (25+)';
+    RAISE NOTICE '📡 Realtime habilitado para comms y alerts';
+    RAISE NOTICE '🛡️ Safety rules iniciales insertadas';
+    RAISE NOTICE '════════════════════════════════════════════';
     RAISE NOTICE 'PRÓXIMO PASO: Verificar en Dashboard que';
-    RAISE NOTICE 'las tablas aparezcan en Database > Tables';
-    RAISE NOTICE '════════════════════════════════════════';
+    RAISE NOTICE 'las 25 tablas aparezcan en Database > Tables';
+    RAISE NOTICE '════════════════════════════════════════════';
 END $$;

@@ -1,0 +1,137 @@
+/* ============================================
+   ADMIN CLIENTE — Panel por Empresa
+   RiverHub Elite 360 — Blue Accent Theme
+   ============================================ */
+
+.ac-container { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+/* Header */
+.ac-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 24px; background: linear-gradient(135deg, #0c1420 0%, #0a1628 100%);
+    border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; margin-bottom: 20px;
+    position: relative; overflow: hidden;
+}
+.ac-header::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent); }
+.ac-header-left { display:flex; align-items:center; gap:16px; }
+.ac-logo { width:48px; height:48px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#3b82f6; font-size:1.3rem; }
+.ac-title { margin:0; font-size:1.3rem; font-weight:700; color:#fff; font-family:'Rajdhani',sans-serif; letter-spacing:2px; }
+.ac-subtitle { font-size:0.7rem; color:#64748b; letter-spacing:2px; }
+.ac-header-actions { display:flex; gap:10px; }
+.ac-btn-icon { background:rgba(255,255,255,0.05); border:1px solid #1e293b; color:#94a3b8; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; }
+.ac-btn-icon:hover { color:#fff; border-color:#3b82f6; }
+
+/* Nav */
+.ac-nav { display:flex; gap:6px; padding:8px; background:#0c1420; border:1px solid #1e293b; border-radius:12px; margin-bottom:24px; overflow-x:auto; }
+.ac-nav-tab { background:transparent; border:1px solid transparent; color:#94a3b8; padding:10px 18px; border-radius:8px; cursor:pointer; font-size:0.85rem; font-weight:600; display:flex; align-items:center; gap:8px; transition:all 0.25s; white-space:nowrap; }
+.ac-nav-tab:hover { color:#fff; background:rgba(255,255,255,0.05); }
+.ac-nav-tab.active { background:rgba(59,130,246,0.1); color:#3b82f6; border-color:rgba(59,130,246,0.2); }
+
+/* Content */
+.ac-content { min-height: 400px; }
+.ac-loading { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px; padding:80px; color:#94a3b8; }
+
+/* KPIs */
+.ac-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.ac-kpi { background:#0c1420; border:1px solid #1e293b; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; transition:all 0.3s; border-left:3px solid var(--ac); }
+.ac-kpi:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+.ac-kpi i { font-size:1.3rem; color: var(--ac); }
+.ac-kpi-data { display:flex; flex-direction:column; }
+.ac-kpi-val { font-size:1.6rem; font-weight:700; color:#f1f5f9; font-family:'Rajdhani',sans-serif; line-height:1; }
+.ac-kpi-lbl { font-size:0.6rem; color:#475569; letter-spacing:1.5px; margin-top:4px; font-weight:600; }
+
+/* Split View */
+.ac-split { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.ac-panel { background:#0c1420; border:1px solid #1e293b; border-radius:12px; padding:20px; }
+.ac-panel h3 { margin:0 0 16px; font-size:1rem; color:#f1f5f9; display:flex; align-items:center; gap:10px; }
+.ac-panel-header { display:flex; justify-content:space-between; align-items:center; background:#0c1420; border:1px solid #1e293b; border-radius:12px; padding:20px; margin-bottom:20px; }
+.ac-panel-header h3 { margin:0; font-size:1rem; color:#f1f5f9; display:flex; align-items:center; gap:10px; }
+
+/* Info */
+.ac-info-list { display:flex; flex-direction:column; gap:12px; }
+.ac-info-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(30,41,59,0.5); font-size:0.9rem; }
+.ac-info-row span { color:#64748b; }
+.ac-info-row strong { color:#f1f5f9; }
+
+/* Team */
+.ac-team-list { display:flex; flex-direction:column; gap:8px; }
+.ac-team-item { display:flex; align-items:center; gap:12px; padding:8px; border-radius:8px; transition:background 0.2s; }
+.ac-team-item:hover { background:rgba(255,255,255,0.03); }
+.ac-team-avatar { width:36px; height:36px; border-radius:10px; background:rgba(139,92,246,0.12); display:flex; align-items:center; justify-content:center; color:#8b5cf6; font-weight:700; font-size:0.85rem; flex-shrink:0; }
+.ac-team-name { display:block; color:#f1f5f9; font-weight:600; font-size:0.9rem; }
+.ac-team-role { display:block; color:#475569; font-size:0.7rem; letter-spacing:1px; }
+
+/* Subscription */
+.ac-sub-current { margin-bottom:16px; }
+.ac-sub-badge { display:flex; align-items:center; gap:20px; padding:24px; border-radius:12px; flex-wrap:wrap; }
+.ac-sub-plan { display:block; font-size:0.7rem; font-weight:700; letter-spacing:3px; }
+.ac-sub-price { display:block; font-size:2rem; font-weight:700; color:#f1f5f9; font-family:'Rajdhani',sans-serif; }
+.ac-sub-price small { font-size:0.9rem; color:#64748b; }
+.ac-sub-meta { display:flex; flex-direction:column; gap:6px; margin-left:auto; font-size:0.8rem; color:#94a3b8; }
+.ac-sub-meta i { margin-right:6px; }
+.ac-sub-status { font-size:0.65rem; font-weight:700; letter-spacing:1px; padding:4px 12px; border-radius:20px; width:fit-content; }
+.ac-sub-status.active { background:rgba(16,185,129,0.12); color:#10b981; }
+.ac-sub-status.past_due { background:rgba(239,68,68,0.12); color:#ef4444; }
+
+/* Plans Grid */
+.ac-plans-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.ac-plan-card { background:#0c1420; border:1px solid #1e293b; border-radius:12px; padding:24px; text-align:center; position:relative; overflow:hidden; transition:all 0.3s; }
+.ac-plan-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--pc); }
+.ac-plan-card:hover { border-color:var(--pc); transform:translateY(-3px); }
+.ac-plan-card.current { border-color:var(--pc); box-shadow:0 0 30px color-mix(in srgb, var(--pc) 15%, transparent); }
+.ac-plan-current-tag { position:absolute; top:12px; right:12px; background:var(--pc); color:#000; font-size:0.6rem; font-weight:700; padding:3px 8px; border-radius:4px; letter-spacing:1px; }
+.ac-plan-name { font-size:0.9rem; font-weight:700; letter-spacing:2px; margin-bottom:10px; }
+.ac-plan-price { font-size:1.8rem; font-weight:700; color:#f1f5f9; font-family:'Rajdhani',sans-serif; margin-bottom:16px; }
+.ac-plan-price span { font-size:0.8rem; color:#64748b; }
+.ac-plan-features { list-style:none; padding:0; margin:0 0 20px; text-align:left; display:flex; flex-direction:column; gap:6px; }
+.ac-plan-features li { font-size:0.8rem; color:#94a3b8; display:flex; align-items:center; gap:8px; }
+.ac-btn-plan { width:100%; padding:10px; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer; border:none; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:6px; letter-spacing:0.5px; }
+.ac-btn-plan.current { background:#1e293b; color:#64748b; cursor:default; }
+.ac-btn-plan.upgrade { background:linear-gradient(135deg, #3b82f6, #8b5cf6); color:#fff; box-shadow:0 4px 15px rgba(59,130,246,0.3); }
+.ac-btn-plan.upgrade:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(59,130,246,0.4); }
+.ac-btn-plan.downgrade { background:transparent; border:1px solid #334155; color:#94a3b8; }
+.ac-btn-plan.downgrade:hover { border-color:#64748b; color:#fff; }
+
+/* Users */
+.ac-users-list { background:#0c1420; border:1px solid #1e293b; border-radius:12px; overflow:hidden; }
+.ac-user-row { display:flex; align-items:center; gap:16px; padding:16px 20px; border-bottom:1px solid rgba(30,41,59,0.5); transition:background 0.2s; }
+.ac-user-row:hover { background:rgba(255,255,255,0.02); }
+.ac-user-row:last-child { border-bottom:none; }
+.ac-user-info { display:flex; align-items:center; gap:12px; flex:1; }
+.ac-user-avatar { width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,0.05); border:1.5px solid; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-weight:700; font-size:0.85rem; flex-shrink:0; }
+.ac-user-name { display:block; color:#f1f5f9; font-weight:600; font-size:0.9rem; }
+.ac-user-email { display:block; color:#475569; font-size:0.75rem; }
+.ac-role-tag { font-size:0.6rem; font-weight:700; padding:4px 10px; border-radius:4px; border:1px solid; letter-spacing:1px; }
+.ac-user-status { font-size:0.7rem; font-weight:600; }
+.ac-user-status.on { color:#10b981; }
+.ac-user-status.off { color:#ef4444; }
+.ac-user-actions { display:flex; gap:6px; }
+.ac-btn-sm { background:transparent; border:1px solid #1e293b; color:#64748b; width:30px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; font-size:0.8rem; }
+.ac-btn-sm:hover { color:#fff; border-color:#fff; }
+.ac-btn-primary { background:linear-gradient(135deg, #3b82f6, #2563eb); border:none; color:#fff; padding:10px 20px; border-radius:8px; font-weight:600; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.3s; box-shadow:0 4px 15px rgba(59,130,246,0.25); }
+.ac-btn-primary:hover { transform:translateY(-2px); }
+
+/* Fleet */
+.ac-fleet-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; }
+.ac-fleet-card { background:#0c1420; border:1px solid #1e293b; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; transition:all 0.3s; }
+.ac-fleet-card:hover { border-color:#334155; transform:translateY(-3px); }
+.ac-fleet-icon { font-size:1.5rem; }
+.ac-fleet-info { flex:1; }
+.ac-fleet-name { display:block; color:#f1f5f9; font-weight:700; font-size:1rem; }
+.ac-fleet-type { display:block; color:#64748b; font-size:0.75rem; letter-spacing:1px; }
+.ac-fleet-status { font-size:0.65rem; font-weight:700; padding:4px 10px; border-radius:4px; border:1px solid; letter-spacing:0.5px; }
+
+/* Invoices */
+.ac-invoices-list { background:#0c1420; border:1px solid #1e293b; border-radius:12px; overflow:hidden; }
+.ac-invoice-row { display:flex; align-items:center; gap:16px; padding:16px 20px; border-bottom:1px solid rgba(30,41,59,0.5); transition:background 0.2s; }
+.ac-invoice-row:last-child { border-bottom:none; }
+.ac-invoice-row:hover { background:rgba(255,255,255,0.02); }
+.ac-invoice-left { display:flex; align-items:center; gap:12px; flex:1; }
+.ac-invoice-id { display:block; color:#f1f5f9; font-weight:600; font-size:0.9rem; }
+.ac-invoice-date { display:block; color:#475569; font-size:0.75rem; }
+.ac-invoice-amount { font-size:1.1rem; font-weight:700; color:#10b981; font-family:'Rajdhani',sans-serif; }
+.ac-invoice-status { font-size:0.7rem; font-weight:700; letter-spacing:0.5px; }
+
+/* Responsive */
+@media (max-width:1200px) { .ac-kpi-grid { grid-template-columns:repeat(2,1fr); } .ac-plans-grid { grid-template-columns:repeat(2,1fr); } .ac-split { grid-template-columns:1fr; } }
+@media (max-width:768px) { .ac-kpi-grid { grid-template-columns:1fr; } .ac-plans-grid { grid-template-columns:1fr; } .ac-container { padding:12px; } .ac-header { flex-direction:column; gap:15px; align-items:flex-start; } }

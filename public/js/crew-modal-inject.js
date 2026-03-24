@@ -124,7 +124,7 @@
         const days = document.getElementById('crew-js-days').value;
 
         if (!name || !vessel) {
-            alert('⚠️ Por favor complete el nombre y seleccione un buque');
+            RiverToast.warning('Por favor complete el nombre y seleccione un buque', 'Datos Incompletos');
             return;
         }
 
@@ -144,7 +144,7 @@
 
             if (error) throw error;
 
-            alert('✅ Orden de Relevo Generada Exitosamente');
+            RiverToast.success('Orden de Relevo Generada Exitosamente', 'Tripulación');
             closeModal();
             if (window.CrewModule && window.CrewModule.init) {
                 window.CrewModule.init(); // Recargar lista
@@ -152,7 +152,7 @@
 
         } catch (e) {
             console.warn('Error guardando en Supabase:', e);
-            alert('✅ MODO DEMO: Orden generada localmente (sin conexión a nube)');
+            RiverToast.success('MODO DEMO: Orden generada localmente (sin conexión a nube)', 'Tripulación');
             closeModal();
         } finally {
             btnConfirm.innerHTML = 'EMITIR ORDEN DE RELEVO';

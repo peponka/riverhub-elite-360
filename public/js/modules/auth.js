@@ -121,7 +121,7 @@ var AuthModule = (() => {
             errorMsg.style.display = 'block';
 
             // Explicit Alert for User visibility
-            // alert(`Error de Inicio de Sesión:\n${err.message}`);
+            RiverToast.error(`Error de Inicio de Sesión:\\n${err.message}`, "Fallo Auth");
 
             let friendlyMsg = `Error: ${err.message || 'Desconocido'}`;
             if (err.message && err.message.includes("Failed to fetch")) {
@@ -237,27 +237,47 @@ var AuthModule = (() => {
     };
 
     const applyRolePermissions = (role) => {
+        // 1. Mostrar todo por defecto
         const allNavs = document.querySelectorAll('.menu a');
         allNavs.forEach(el => {
-            // Default display flex, EXCEPT explicit hidden ones
-            if (el.id !== 'nav-backoffice') el.style.display = 'flex';
+            el.style.display = 'flex';
         });
 
         // HIDE GLOBAL BACKOFFICE FOR EVERYONE EXCEPT SUPERADMIN
-        // Logic handled in updateUserProfile above, but enforced here too
         if (role !== 'superadmin') {
             hideNav(['nav-backoffice']);
         }
 
-        if (role === 'crew') {
-            hideNav(['nav-dashboard', 'nav-mapa', 'nav-comunicaciones', 'nav-cotizador', 'nav-docs', 'nav-integraciones', 'nav-backoffice']);
+        // 2. Reglas por Rol
+        if (role === 'superadmin') {
+            // Ve todo absoluto
+        } else if (role === 'admin') {
+            // Admin de Empresa: Ve todo menos el backoffice global de RiverHub
+            hideNav(['nav-backoffice']);
+        } else if (role === 'operator') {
+            // Personal Operativo (Capitanes, Armadores): NO ven facturación ni consolas admin
+            hideNav(['nav-backoffice', 'nav-admin-console', 'nav-billing', 'nav-auditoria', 'nav-integraciones']);
+        } else if (role === 'viewer' || role === 'user') {
+            // Invitado/Visor: Solo dashboards y tracking. Nada operativo ni administrativo.
+            hideNav([
+                'nav-backoffice', 'nav-admin-console', 'nav-billing', 'nav-auditoria', 'nav-integraciones',
+                'nav-convoys', 'nav-mantenimiento', 'nav-incidentes', 'nav-bitacora', 'nav-comunicaciones',
+                'nav-loadmaster'
+            ]);
+        } else if (role === 'crew') { // Legacy role
+            hideNav(['nav-dashboard', 'nav-mapa', 'nav-comunicaciones', 'nav-cotizador', 'nav-docs', 'nav-integraciones', 'nav-backoffice', 'nav-admin-console', 'nav-billing']);
+        }
+
+        // Apply Flutter sidebar icon colors after permissions are set
+        if (window._applyFlutterSidebarColors) {
+            setTimeout(window._applyFlutterSidebarColors, 100);
         }
     };
 
     const hideNav = (ids) => {
         ids.forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.style.display = 'none';
+            if (el) el.style.setProperty('display', 'none', 'important');
         });
     };
 
@@ -313,7 +333,7 @@ var AuthModule = (() => {
         const phone = document.getElementById('reg-phone').value;
 
         if (!name || !email || !pass || !company || !phone) {
-            alert("Por favor completa todos los campos profesionales (Empresa, Teléfono, etc).");
+            RiverToast.warning("Por favor completa todos los campos profesionales (Empresa, Teléfono, etc).", "Registro Incompleto");
             return;
         }
 
@@ -355,12 +375,12 @@ var AuthModule = (() => {
                     // Continue anyway, auth is done
                 }
 
-                alert(`¡Solicitud recibida!\n\nBienvenido, ${name}.\nTu cuenta está en proceso de revisión.\nPuedes ingresar, pero algunas funciones pueden estar limitadas hasta la aprobación.`);
+                RiverToast.success(`Tu cuenta está en proceso de revisión.\\nPuedes ingresar, pero algunas funciones pueden estar limitadas hasta la aprobación.`, `¡Bienvenido, ${name}!`);
                 switchTab('login');
             }
 
         } catch (e) {
-            alert("Error en registro: " + e.message);
+            RiverToast.error("Error en registro: " + e.message, "Fallo al Registrar");
         } finally {
             btn.innerText = originalText;
             btn.disabled = false;
@@ -374,7 +394,7 @@ var AuthModule = (() => {
 
     const sendPasswordReset = async () => {
         const email = document.getElementById('forgot-email').value;
-        if (!email) return alert("Ingresa tu email.");
+        if (!email) return RiverToast.warning("Por favor ingresa tu email para la recuperación.", "Email Requerido");
 
         const btn = document.querySelector('#modal-forgot-pass .btn-primary');
         const oldText = btn.innerText;
@@ -386,10 +406,10 @@ var AuthModule = (() => {
                 redirectTo: window.location.origin, // Just send them to root, listener will pick up event
             });
             if (error) throw error;
-            alert("¡Enlace enviado! Revisa tu correo (y spam).");
+            RiverToast.success("¡Enlace de recuperación enviado! Revisa tu bandeja de correo (y spam).", "Recuperación Iniciada");
             document.getElementById('modal-forgot-pass').style.display = 'none';
         } catch (e) {
-            alert("Error: " + e.message);
+            RiverToast.error("Error al enviar enlace: " + e.message, "Fallo de Sistema");
         } finally {
             btn.innerText = oldText;
             btn.disabled = false;
@@ -398,7 +418,7 @@ var AuthModule = (() => {
 
     const confirmPasswordChange = async () => {
         const newPass = document.getElementById('new-password-final').value;
-        if (!newPass || newPass.length < 6) return alert("La contraseña debe tener al menos 6 caracteres.");
+        if (!newPass || newPass.length < 6) return RiverToast.warning("La contraseña debe tener al menos 6 caracteres por seguridad.", "Contraseña Insegura");
 
         const btn = document.querySelector('#modal-change-pass .btn-primary');
         const oldText = btn.innerText;
@@ -409,7 +429,7 @@ var AuthModule = (() => {
             const { data, error } = await window.sb.auth.updateUser({ password: newPass });
             if (error) throw error;
 
-            alert("✅ ¡Contraseña actualizada con éxito!\nYa tienes acceso completo.");
+            RiverToast.success("¡Contraseña actualizada con éxito! Ya tienes acceso completo.", "Seguridad Restablecida");
             document.getElementById('modal-change-pass').style.display = 'none';
 
             // Refresh valid session
@@ -418,14 +438,24 @@ var AuthModule = (() => {
             }
 
         } catch (e) {
-            alert("Error al actualizar: " + e.message);
+            RiverToast.error("Error al actualizar contraseña: " + e.message, "Fallo en Cambio");
             btn.innerText = oldText;
             btn.disabled = false;
         }
     };
 
-    // SECURITY: bypassLogin REMOVED. All access must go through Supabase Auth.
-    // If you need emergency access, use Supabase Dashboard directly.
+    // OFFLINE SIMULATOR MODE: Bypass login for local development/demo
+    const bypassLogin = () => {
+        console.log("🔓 MODO SIMULADOR ACTIVADO");
+        const simulatedUser = {
+            id: 'sim-user-001',
+            email: 'simulador@riverhub.local',
+            full_name: 'Capitán Simulador',
+            role: 'superadmin',
+            company: 'RiverHub Demo'
+        };
+        login(simulatedUser);
+    };
 
     return {
         init,
@@ -433,6 +463,7 @@ var AuthModule = (() => {
         toggleUserMenu,
         switchTab,
         attemptLogin,
+        bypassLogin,
         submitRegistration,
         showForgotPassword,
         sendPasswordReset,

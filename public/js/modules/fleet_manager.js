@@ -87,7 +87,7 @@ const FleetManager = (() => {
                     
                     <div style="margin-top:15px; padding-top:15px; border-top:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
                         <span style="color:#94a3b8; font-size:0.8rem;"><i class="fas fa-map-marker-alt"></i> ${v.zone || 'N/A'}</span>
-                        <button onclick="alert('Detalle no disponible en demo')" style="background:transparent; border:none; color:#fff; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
+                        <button onclick="if(window.RiverToast) RiverToast.info('Detalle completo del activo ${v.name} — Zona: ${v.zone || 'N/A'}', 'Ficha de Activo')" style="background:transparent; border:none; color:#fff; cursor:pointer;" data-tooltip="Ver Detalle"><i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
             `;
@@ -96,7 +96,7 @@ const FleetManager = (() => {
         content.innerHTML = `
             <div style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
                 <h2 style="color:#fff; margin:0;">Flota Activa <span style="font-size:1rem; color:#64748b; font-weight:normal;">(${vessels.length})</span></h2>
-                <button onclick="FleetManager.loadData()" style="background:#334155; border:none; color:#fff; padding:8px 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-sync"></i></button>
+                <button onclick="FleetManager.loadData()" style="background:#334155; border:none; color:#fff; padding:8px 15px; border-radius:6px; cursor:pointer;" data-tooltip="Recargar Flota"><i class="fas fa-sync"></i> Actualizar</button>
             </div>
             <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px;">
                 ${grid}

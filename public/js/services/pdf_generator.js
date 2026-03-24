@@ -7,7 +7,11 @@ function descargarPDF() {
 
     // Verificar si la librería cargó
     if (typeof jsPDF === 'undefined') {
-        alert("Error: La librería PDF no se cargó correctamente. Intenta recargar la página.");
+        if (window.RiverToast) {
+            RiverToast.error("Error: La librería PDF no se cargó correctamente. Intenta recargar la página.", "Error de Generación");
+        } else {
+            console.error("Error: La librería PDF no se cargó correctamente.");
+        }
         return;
     }
 
@@ -89,7 +93,11 @@ function descargarPDF() {
 
     } catch (e) {
         console.error(e);
-        alert("Error al generar PDF: " + e.message);
+        if (window.RiverToast) {
+            RiverToast.error("Error al generar PDF: " + e.message, "Fallo en PDF");
+        } else {
+            console.error("Error al generar PDF:", e);
+        }
     }
 }
 

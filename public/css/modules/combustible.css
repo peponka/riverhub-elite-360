@@ -28,7 +28,7 @@
 .header-icon-box {
     width: 40px;
     height: 40px;
-    background: rgba(6, 182, 212, 0.1);
+    background: rgba(0, 229, 255, 0.1);
     border: 1px solid var(--neon-cyan);
     border-radius: 8px;
     display: flex;
@@ -36,7 +36,7 @@
     justify-content: center;
     color: var(--neon-cyan);
     font-size: 1.2rem;
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
 }
 
 .header-titles h2 {
@@ -388,7 +388,7 @@
 }
 
 .h-tag.info {
-    background: rgba(6, 182, 212, 0.2);
+    background: rgba(0, 229, 255, 0.2);
     color: #00e5ff;
 }
 

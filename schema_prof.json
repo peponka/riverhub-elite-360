@@ -1,0 +1,49 @@
+{
+  "required": [
+    "id",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "description": "Note:\nThis is a Primary Key.<pk/>",
+      "format": "uuid",
+      "type": "string"
+    },
+    "email": {
+      "format": "text",
+      "type": "string"
+    },
+    "full_name": {
+      "format": "text",
+      "type": "string"
+    },
+    "role": {
+      "default": "crew",
+      "format": "text",
+      "type": "string"
+    },
+    "company_id": {
+      "description": "Note:\nThis is a Foreign Key to `companies.id`.<fk table='companies' column='id'/>",
+      "format": "uuid",
+      "type": "string"
+    },
+    "created_at": {
+      "default": "timezone('utc'::text, now())",
+      "format": "timestamp with time zone",
+      "type": "string"
+    },
+    "company": {
+      "format": "text",
+      "type": "string"
+    },
+    "job_title": {
+      "format": "text",
+      "type": "string"
+    },
+    "fcm_token": {
+      "format": "text",
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

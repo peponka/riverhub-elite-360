@@ -9,7 +9,7 @@
     justify-content: center;
     background: var(--bg-dark);
     background-image:
-        radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(0, 229, 255, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
     padding: 20px;
     font-family: var(--font-body);
@@ -35,7 +35,7 @@
     font-size: 3rem;
     color: var(--neon-cyan);
     margin-bottom: 20px;
-    text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+    text-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
 }
 
 .login-header h1 {
@@ -85,7 +85,7 @@
 .form-group input:focus {
     outline: none;
     border-color: var(--neon-cyan);
-    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15);
 }
 
 .form-group input::placeholder {
@@ -145,7 +145,7 @@
 
 .btn-login:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
 }
 
 .btn-login:disabled {

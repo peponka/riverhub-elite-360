@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestión de Certificaciones - RiverHub Elite 360</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Noto+Sans:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1281e2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white font-display overflow-x-hidden">
+<div class="relative flex h-full min-h-screen w-full flex-col group/design-root">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7eef4] dark:border-b-[#233748] px-10 py-3 bg-white dark:bg-[#111a22]">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4">
+<div class="size-8 text-[#111418] dark:text-white">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">RiverHub Elite 360</h2>
+</div>
+<label class="flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-[#637588] dark:text-[#92afc9] flex border-none bg-[#f0f4f8] dark:bg-[#233748] items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-0 border-none bg-[#f0f4f8] dark:bg-[#233748] focus:border-none h-full placeholder:text-[#637588] dark:placeholder:text-[#92afc9] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Buscar..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden xl:flex items-center gap-9">
+<a class="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Tablero</a>
+<a class="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Flota</a>
+<a class="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Tripulación</a>
+<a class="text-[#111418] dark:text-white text-sm font-medium leading-normal border-b-2 border-primary" href="#">Certificaciones</a>
+<a class="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Mantenimiento</a>
+</div>
+<div class="flex gap-2">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f4f8] dark:bg-[#233748] text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 hover:bg-gray-200 dark:hover:bg-[#324e67] transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f4f8] dark:bg-[#233748] text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 hover:bg-gray-200 dark:hover:bg-[#324e67] transition-colors">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-white dark:ring-[#233748]" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAbr-f_LOEwbtEquWdMY3zyUnhpJkJWQakF17ylV7d5VkDshdO24us2-JJmnx_SBZcWgb0xqleXYH3kTnOedNh8Ogt36TYGD5k0_BEUwZKc0YseKWELZf5llPtdaw-DjtFOFwBrV7gYJhu0W74V53H1DcufjTFu9-B79MZyZwYjdT3BN0i9BcQDeiLcPZT7SEtX4UktVGGc7yyBQ2Hye6ROYlhLC4ni5eVdFyEUN8U3FJIMzHBXrAqvwwq3yLby5BfXBCRylNDxapU");'></div>
+</div>
+</div>
+</header>
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 px-4 py-2">
+<a class="text-[#637588] dark:text-[#92afc9] text-sm font-medium leading-normal hover:underline" href="#">Inicio</a>
+<span class="text-[#637588] dark:text-[#92afc9] text-sm font-medium leading-normal">/</span>
+<a class="text-[#637588] dark:text-[#92afc9] text-sm font-medium leading-normal hover:underline" href="#">Tripulación</a>
+<span class="text-[#637588] dark:text-[#92afc9] text-sm font-medium leading-normal">/</span>
+<span class="text-[#111418] dark:text-white text-sm font-medium leading-normal">Gestión de Certificaciones</span>
+</div>
+<!-- Page Heading & Actions -->
+<div class="flex flex-wrap justify-between items-end gap-6 px-4 py-6">
+<div class="flex min-w-72 flex-col gap-2">
+<h1 class="text-[#111418] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Gestión de Certificaciones</h1>
+<p class="text-[#637588] dark:text-[#92afc9] text-base font-normal leading-normal max-w-2xl">Administre y supervise el cumplimiento de certificaciones de la tripulación en tiempo real.</p>
+</div>
+<div class="flex gap-3 flex-wrap">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f4f8] dark:bg-[#233748] text-[#111418] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] border border-transparent hover:border-[#637588] dark:hover:border-[#92afc9] transition-all">
+<span class="material-symbols-outlined text-[20px] mr-2">upload_file</span>
+<span class="truncate">Carga Masiva</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#0f6bba] transition-colors shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px] mr-2">add</span>
+<span class="truncate">Nueva Certificación</span>
+</button>
+</div>
+</div>
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4 pb-6">
+<div class="flex flex-col gap-1 rounded-xl p-5 border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733] shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-[#637588] dark:text-[#92afc9] text-sm font-medium">Total Certificados</p>
+<span class="material-symbols-outlined text-[#1281e2] text-[24px]">folder_shared</span>
+</div>
+<p class="text-[#111418] dark:text-white tracking-tight text-3xl font-bold">1,245</p>
+<p class="text-[#0bda5b] text-xs font-medium flex items-center mt-1">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_up</span> +12% vs mes anterior
+                            </p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733] shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-[#637588] dark:text-[#92afc9] text-sm font-medium">Vigentes</p>
+<span class="material-symbols-outlined text-[#0bda5b] text-[24px]">verified</span>
+</div>
+<p class="text-[#111418] dark:text-white tracking-tight text-3xl font-bold">1,180</p>
+<div class="w-full bg-[#e7eef4] dark:bg-[#233748] rounded-full h-1.5 mt-2">
+<div class="bg-[#0bda5b] h-1.5 rounded-full" style="width: 95%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733] shadow-sm relative overflow-hidden">
+<!-- Highlight Indicator -->
+<div class="absolute top-0 right-0 w-16 h-16 bg-[#fa6238]/10 rounded-bl-full -mr-8 -mt-8"></div>
+<div class="flex justify-between items-start relative z-10">
+<p class="text-[#637588] dark:text-[#92afc9] text-sm font-medium">Por Vencer (30 días)</p>
+<span class="material-symbols-outlined text-[#fa6238] text-[24px]">warning</span>
+</div>
+<p class="text-[#111418] dark:text-white tracking-tight text-3xl font-bold relative z-10">45</p>
+<p class="text-[#fa6238] text-xs font-medium flex items-center mt-1">Requiere atención</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733] shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-[#637588] dark:text-[#92afc9] text-sm font-medium">Vencidos</p>
+<span class="material-symbols-outlined text-[#ef4444] text-[24px]">error</span>
+</div>
+<p class="text-[#111418] dark:text-white tracking-tight text-3xl font-bold">20</p>
+<p class="text-[#ef4444] text-xs font-medium flex items-center mt-1">Acción inmediata</p>
+</div>
+</div>
+<!-- Filters & Controls -->
+<div class="px-4 py-4 flex flex-col md:flex-row gap-4 items-end bg-white dark:bg-[#111a22] sticky top-0 z-10">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+<label class="flex flex-col gap-1.5">
+<span class="text-[#111418] dark:text-white text-sm font-medium">Buscar</span>
+<div class="relative">
+<input class="w-full bg-[#f0f4f8] dark:bg-[#192733] text-[#111418] dark:text-white border border-[#e7eef4] dark:border-[#324e67] rounded-lg h-10 px-3 pl-10 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-[#637588] dark:placeholder:text-[#92afc9]" placeholder="Tripulante, ID o Certificado"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[#637588] dark:text-[#92afc9] text-[20px]">search</span>
+</div>
+</label>
+<label class="flex flex-col gap-1.5">
+<span class="text-[#111418] dark:text-white text-sm font-medium">Tipo de Certificado</span>
+<div class="relative">
+<select class="w-full bg-[#f0f4f8] dark:bg-[#192733] text-[#111418] dark:text-white border border-[#e7eef4] dark:border-[#324e67] rounded-lg h-10 px-3 pr-10 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none appearance-none cursor-pointer">
+<option>Todos los tipos</option>
+<option>Patrón de Cabotaje</option>
+<option>STCW Básico</option>
+<option>Examen Médico</option>
+<option>Libreta de Embarque</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-[#637588] dark:text-[#92afc9] text-[20px] pointer-events-none">expand_more</span>
+</div>
+</label>
+<label class="flex flex-col gap-1.5">
+<span class="text-[#111418] dark:text-white text-sm font-medium">Estado</span>
+<div class="relative">
+<select class="w-full bg-[#f0f4f8] dark:bg-[#192733] text-[#111418] dark:text-white border border-[#e7eef4] dark:border-[#324e67] rounded-lg h-10 px-3 pr-10 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none appearance-none cursor-pointer">
+<option>Todos los estados</option>
+<option>Vigente</option>
+<option>Por Vencer</option>
+<option>Vencido</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-[#637588] dark:text-[#92afc9] text-[20px] pointer-events-none">filter_list</span>
+</div>
+</label>
+</div>
+<div class="flex items-end pb-1">
+<button class="text-primary text-sm font-medium hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+                                 Limpiar
+                             </button>
+</div>
+</div>
+<!-- Main Data Table -->
+<div class="flex flex-col px-4 pb-10">
+<div class="overflow-x-auto rounded-xl border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733]">
+<table class="w-full text-left border-collapse">
+<thead class="bg-[#f0f4f8] dark:bg-[#233748] text-[#637588] dark:text-[#92afc9]">
+<tr>
+<th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider w-[40px]">
+<input class="rounded border-[#637588] dark:border-[#92afc9] bg-transparent text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+</th>
+<th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Tripulante</th>
+<th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Certificado</th>
+<th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider hidden md:table-cell">Autoridad</th>
+<th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider hidden sm:table-cell cursor-pointer hover:text-primary group">
+                                            Vencimiento <span class="material-symbols-outlined text-[14px] align-middle opacity-0 group-hover:opacity-100">arrow_downward</span>
+</th>
+<th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Estado</th>
+<th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#e7eef4] dark:divide-[#324e67]">
+<!-- Row 1: Vencido (Expired) -->
+<tr class="hover:bg-[#f8fafc] dark:hover:bg-[#1e2d3b] transition-colors border-l-4 border-l-[#ef4444]">
+<td class="py-3 px-4">
+<input class="rounded border-[#637588] dark:border-[#92afc9] bg-transparent text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Portrait of Carlos Ruiz" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDzoJAG9_BnaoY9XKDPzHtyHKLpx2GhDKI9Mi4VqKwYSAfUlWk4coUWzNv2_H0DtrGScBy4hkoqm3IZeN7npu5vdAvHwFo92D47azG8KH6J3KYW1dGNbR0KXKGvuSxYjvnkMKSK_DJ8Xy9FLpmDR3L3ZRTB1NYqSbu-jp65cONF317QLBmCG0f8GolzR05HcTNcv01Iy_sISgQO-WtMJt55c_sFN316jDEv9DAoFCfU7m305qK_CDKKYLMIZ98rGb8UJARESBZJ7oY");'></div>
+<div>
+<p class="text-[#111418] dark:text-white text-sm font-medium">Carlos Ruiz</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">Marinero</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<p class="text-[#111418] dark:text-white text-sm font-medium">Examen Médico</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">ID: MED-2938</p>
+</td>
+<td class="py-3 px-4 hidden md:table-cell">
+<span class="text-[#111418] dark:text-white text-sm">Salud Pública</span>
+</td>
+<td class="py-3 px-4 hidden sm:table-cell">
+<span class="text-[#ef4444] font-semibold text-sm">10 Ene 2024</span>
+<p class="text-[#ef4444] text-xs italic">Hace 15 días</p>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-[#ef4444]/10 px-2 py-1 text-xs font-semibold text-[#ef4444]">
+<span class="material-symbols-outlined text-[14px]">cancel</span>
+                                                Vencido
+                                            </span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-[#637588] dark:text-[#92afc9] hover:text-[#111418] dark:hover:text-white p-1 rounded hover:bg-white/10">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Por Vencer (Expiring Soon) -->
+<tr class="hover:bg-[#f8fafc] dark:hover:bg-[#1e2d3b] transition-colors border-l-4 border-l-[#fa6238]">
+<td class="py-3 px-4">
+<input class="rounded border-[#637588] dark:border-[#92afc9] bg-transparent text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Portrait of Juan Pérez" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDdlXKfYrPZjJE2giNSnFyrBIM9tPydgKICCr7UQ7aDpomYPokK2uQno0QAEllxTTeFymSGvplfjMONHK6XbdGOFfdNx1wsiINvnBSZQoWXrqBkEsfJkwaPFgjmwiH1ai7S5CYV8ffq2d8OlIQxDMYJ-xkbodyE8RvLY7Zgc9fVW-nsBPYLgZIshAz3jvRUZm9G4pNR9MdAbfof5V9jyqgszkEFFgwbR0Rf56n5O8NhAUhsty93MqsnVJgjmTiTvr4Nej0dbNrn6rk");'></div>
+<div>
+<p class="text-[#111418] dark:text-white text-sm font-medium">Juan Pérez</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">Capitán</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<p class="text-[#111418] dark:text-white text-sm font-medium">Patrón de Cabotaje</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">ID: PC-9921</p>
+</td>
+<td class="py-3 px-4 hidden md:table-cell">
+<span class="text-[#111418] dark:text-white text-sm">Prefectura Naval</span>
+</td>
+<td class="py-3 px-4 hidden sm:table-cell">
+<span class="text-[#fa6238] font-semibold text-sm">15 Feb 2024</span>
+<p class="text-[#fa6238] text-xs italic">En 20 días</p>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-[#fa6238]/10 px-2 py-1 text-xs font-semibold text-[#fa6238]">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                                Por Vencer
+                                            </span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-[#637588] dark:text-[#92afc9] hover:text-[#111418] dark:hover:text-white p-1 rounded hover:bg-white/10">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Vigente -->
+<tr class="hover:bg-[#f8fafc] dark:hover:bg-[#1e2d3b] transition-colors border-l-4 border-l-transparent">
+<td class="py-3 px-4">
+<input class="rounded border-[#637588] dark:border-[#92afc9] bg-transparent text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Portrait of Maria Gonzalez" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_j401THrjH9RBGaVuycu0eCZB4qcUr3CfpJCHfKacscgbf76HUtFrZLlrULOrRc1e7rXN5N-FW2pp5IWcEw2-btDKr-41O8kVyq7rv8oED_zP-ZrGDbjQBvNdYBYCJ9E3N42TByApBBQTEFAil-xdXjR5Qk_mPASis5NueIuVnnPz-qsl8DZ9lEs7kvAt5QWZ252DzLeSucCHnThVi_fHiHQxHk3v2Eqkv1JpTpkHWOMy-xthgPdqLKzywHF1lMhNvE_ihZ6ou1s");'></div>
+<div>
+<p class="text-[#111418] dark:text-white text-sm font-medium">Maria Gonzalez</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">Maquinista</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<p class="text-[#111418] dark:text-white text-sm font-medium">STCW Básico</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">ID: STCW-4451</p>
+</td>
+<td class="py-3 px-4 hidden md:table-cell">
+<span class="text-[#111418] dark:text-white text-sm">OMI</span>
+</td>
+<td class="py-3 px-4 hidden sm:table-cell">
+<span class="text-[#111418] dark:text-white text-sm">01 May 2026</span>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">700+ días</p>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-[#0bda5b]/10 px-2 py-1 text-xs font-semibold text-[#0bda5b]">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                                Vigente
+                                            </span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-[#637588] dark:text-[#92afc9] hover:text-[#111418] dark:hover:text-white p-1 rounded hover:bg-white/10">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Vigente -->
+<tr class="hover:bg-[#f8fafc] dark:hover:bg-[#1e2d3b] transition-colors border-l-4 border-l-transparent">
+<td class="py-3 px-4">
+<input class="rounded border-[#637588] dark:border-[#92afc9] bg-transparent text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Portrait of Alejandro Rossi" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB_goFycVp4ZpGhlDxKMQ8DmAFRFPkbfUaISz8dAhSeJgImUC_NJ0ejQ0i_r3Bkm7skR0BaG92KmUfjwXmbeRbPpa390lHNNSASVYpZthadAfAnlQNVOkSWX_pAW08F7SqQqJLHXlr_E3y-MnRRlOR45YKj0eeuw7_92knKlGmmMlbtD68qyrSVpGc5KUXBT5Gx2QevFauNyM_oXq5OMgybn7GUfOYSYkC_tDgy_ohsRrc3czZilmbrFnOvIo8Is03i3For_8mKMJk");'></div>
+<div>
+<p class="text-[#111418] dark:text-white text-sm font-medium">Alejandro Rossi</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">Contramaestre</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<p class="text-[#111418] dark:text-white text-sm font-medium">Seguridad a Bordo</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">ID: SAB-1200</p>
+</td>
+<td class="py-3 px-4 hidden md:table-cell">
+<span class="text-[#111418] dark:text-white text-sm">Prefectura Naval</span>
+</td>
+<td class="py-3 px-4 hidden sm:table-cell">
+<span class="text-[#111418] dark:text-white text-sm">22 Nov 2025</span>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">300+ días</p>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-[#0bda5b]/10 px-2 py-1 text-xs font-semibold text-[#0bda5b]">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                                Vigente
+                                            </span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-[#637588] dark:text-[#92afc9] hover:text-[#111418] dark:hover:text-white p-1 rounded hover:bg-white/10">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Por Vencer -->
+<tr class="hover:bg-[#f8fafc] dark:hover:bg-[#1e2d3b] transition-colors border-l-4 border-l-[#fa6238]">
+<td class="py-3 px-4">
+<input class="rounded border-[#637588] dark:border-[#92afc9] bg-transparent text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Portrait of Sofia Mendez" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDcD9KGvLbV078Z0PpQlgNvm-ewfvH-h1lUfWn5CZDhRkKSvQw72UVCqbzG15cZHZwnaQ9HCurNUqsN7R5iuu8F0vzeTaXUH3pRI0Ip6PQ2H5G9CxkA9Aj5UnMT9f5vboZmAb8RadE9Fid_muBY4pe0zIELBv6M51kSW24NX1jIzwZMowWH1mSKX6DnhZbJ2QGbW9C8UNR63GxbEAP9kVnagXJ1ZQrnR0tNcaFOqTCseUOWkwrb_F4QEfAP7M2U-cfkKw3pTjOvQbc");'></div>
+<div>
+<p class="text-[#111418] dark:text-white text-sm font-medium">Sofia Mendez</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">Cocinera</p>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<p class="text-[#111418] dark:text-white text-sm font-medium">Libreta Sanitaria</p>
+<p class="text-[#637588] dark:text-[#92afc9] text-xs">ID: LIB-3030</p>
+</td>
+<td class="py-3 px-4 hidden md:table-cell">
+<span class="text-[#111418] dark:text-white text-sm">Ministerio Salud</span>
+</td>
+<td class="py-3 px-4 hidden sm:table-cell">
+<span class="text-[#fa6238] font-semibold text-sm">05 Feb 2024</span>
+<p class="text-[#fa6238] text-xs italic">En 10 días</p>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-[#fa6238]/10 px-2 py-1 text-xs font-semibold text-[#fa6238]">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                                Por Vencer
+                                            </span>
+</td>
+<td class="py-3 px-4 text-right">
+<button class="text-[#637588] dark:text-[#92afc9] hover:text-[#111418] dark:hover:text-white p-1 rounded hover:bg-white/10">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between py-4 px-2">
+<p class="text-[#637588] dark:text-[#92afc9] text-sm">Mostrando <span class="font-bold text-[#111418] dark:text-white">1-5</span> de <span class="font-bold text-[#111418] dark:text-white">1,245</span> resultados</p>
+<div class="flex gap-2">
+<button class="flex items-center justify-center size-8 rounded-lg border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733] text-[#111418] dark:text-white hover:bg-[#f0f4f8] dark:hover:bg-[#233748] disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="flex items-center justify-center size-8 rounded-lg bg-primary text-white font-medium text-sm">1</button>
+<button class="flex items-center justify-center size-8 rounded-lg border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733] text-[#111418] dark:text-white hover:bg-[#f0f4f8] dark:hover:bg-[#233748] font-medium text-sm">2</button>
+<button class="flex items-center justify-center size-8 rounded-lg border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733] text-[#111418] dark:text-white hover:bg-[#f0f4f8] dark:hover:bg-[#233748] font-medium text-sm">3</button>
+<span class="flex items-center justify-center size-8 text-[#637588] dark:text-[#92afc9]">...</span>
+<button class="flex items-center justify-center size-8 rounded-lg border border-[#e7eef4] dark:border-[#324e67] bg-white dark:bg-[#192733] text-[#111418] dark:text-white hover:bg-[#f0f4f8] dark:hover:bg-[#233748]">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

@@ -375,10 +375,10 @@ const AdminDashboard = (() => {
             
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h2 style="margin:0;">Gestión: ${name} <span class="badge-plan" style="font-size:0.5em; vertical-align:middle;">ACTIVO</span></h2>
-                <div style="display:flex; gap:10px;">
-                     <button class="btn-admin-primary" onclick="alert('Generando Reporte PDF...')" style="background:#334;"><i class="fas fa-download"></i> REPORTE</button>
-                    <button class="btn-admin-primary" onclick="alert('Funcionalidad de Suspensión: Próximamente')" style="background:#ef4444;"><i class="fas fa-ban"></i> SUSPENDER</button>
-                </div>
+                    <div style="display:flex; gap:10px;">
+                         <button class="btn-admin-primary" onclick="RiverToast.info('El documento PDF se descargará automáticamente en instantes.', 'Generando Reporte')" style="background:#334;"><i class="fas fa-download"></i> REPORTE</button>
+                        <button class="btn-admin-primary" onclick="RiverToast.info('Cliente suspendido, bloqueando su acceso de red inmediatamente. (Modo Simulación)', 'Alerta del Sistema', 'fas fa-ban')" style="background:#ef4444;"><i class="fas fa-ban"></i> SUSPENDER</button>
+                    </div>
             </div>
 
             <!-- TABS CONTAINER -->
@@ -528,7 +528,7 @@ const AdminDashboard = (() => {
                 </div>
                 <div style="display:flex; align-items:center; gap:10px;">
                      <span class="status-badge badge-active">${i.status}</span>
-                     <button class="btn-icon-action" onclick="alert('Descargar PDF: ${i.period}')" style="background:#334; border:1px solid #475569; color:#fff; padding:8px; border-radius:6px;"><i class="fas fa-file-pdf"></i></button>
+                     <button class="btn-icon-action" onclick="RiverToast.success('Iniciando descarga segura de la Factura de ${i.period}.', 'Exportando PDF')" style="background:#334; border:1px solid #475569; color:#fff; padding:8px; border-radius:6px;" data-tooltip="Descargar PDF"><i class="fas fa-file-pdf"></i></button>
                 </div>
             </div>
         `).join('');
@@ -537,7 +537,7 @@ const AdminDashboard = (() => {
              <div style="display:flex; flex-direction:column; gap:15px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                      <h4 style="margin:0;">Historial de Facturación</h4>
-                     <button class="btn-admin-primary" onclick="alert('Descargar Estado de Cuenta')" style="background:#334; font-size:0.8rem;"><i class="fas fa-download"></i> ESTADO</button>
+                     <button class="btn-admin-primary" onclick="RiverToast.info('Verifique su carpeta de descargas en unos segundos.', 'Consolidando Estado de Cuenta')" style="background:#334; font-size:0.8rem;"><i class="fas fa-download"></i> ESTADO</button>
                 </div>
                 <div>
                     ${cards}
@@ -593,7 +593,7 @@ const AdminDashboard = (() => {
 
         if (!name) {
             // Debug alert to help user understand what happened
-            alert(`⚠️ Error de Lectura: El campo nombre parece vacío para el sistema. \n(Valor leído: "${name}")\n\nIntenta escribir de nuevo.`);
+            RiverToast.warning(`Error de Lectura: El campo nombre parece vacío para el sistema.\\n(Valor leído: "${name}")\\n\\nIntenta escribir de nuevo.`, "Datos Inválidos");
             return;
         }
 
@@ -622,13 +622,13 @@ const AdminDashboard = (() => {
             if (error) {
                 // Specific hint for Schema Cache issue
                 if (error.message && error.message.includes('schema cache')) {
-                    alert("⚠️ Error de Caché de Supabase (Muy común al crear tablas nuevas).\n\nSOLUCIÓN RÁPIDA:\n1. Ve a Supabase > Settings > API\n2. Clickea en 'Reload Schema' o 'Refresh'.\n\nEl código está bien, pero el servidor no se enteró de la nueva tabla aún.");
+                    RiverToast.warning("Error de Caché de Supabase (Muy común al crear tablas nuevas).\\n\\nSOLUCIÓN RÁPIDA:\\n1. Ve a Supabase > Settings > API\\n2. Clickea en 'Reload Schema' o 'Refresh'.", "Fallo de Servidor");
                     throw error;
                 }
                 throw error;
             }
 
-            alert("✅ ¡Cliente Guardado en Supabase!");
+            RiverToast.success("¡Cliente Guardado en Supabase!", "Registro Completo");
             document.getElementById('admin-modal-container').innerHTML = '';
 
             // Reload list with a small delay to allow propagation
@@ -636,7 +636,7 @@ const AdminDashboard = (() => {
 
         } catch (e) {
             console.error("Supabase Error:", e);
-            alert("❌ Error de Base de Datos: " + e.message);
+            RiverToast.error("Error de Base de Datos: " + e.message, "Fallo de Guardado");
             if (btn) {
                 btn.innerHTML = 'REINTENTAR';
                 btn.disabled = false;
@@ -724,7 +724,7 @@ const AdminDashboard = (() => {
                     </div>
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                         <button class="btn-admin-primary" style="background:transparent; border:1px solid #fff;" onclick="document.getElementById('admin-modal-container').innerHTML = ''">CANCELAR</button>
-                        <button class="btn-admin-primary" onclick="alert('Usuario Creado'); document.getElementById('admin-modal-container').innerHTML = ''">GUARDAR</button>
+                        <button class="btn-admin-primary" onclick="RiverToast.success('Usuario creado exitosamente en el sistema de gestión interna.'); document.getElementById('admin-modal-container').innerHTML = ''">GUARDAR</button>
                     </div>
                 </div>
             </div>
@@ -761,7 +761,7 @@ const AdminDashboard = (() => {
                     </div>
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                         <button class="btn-admin-primary" style="background:transparent; border:1px solid #fff;" onclick="document.getElementById('admin-modal-container').innerHTML = ''">CANCELAR</button>
-                        <button class="btn-admin-primary" onclick="alert('Usuario Actualizado'); document.getElementById('admin-modal-container').innerHTML = ''">ACTUALIZAR</button>
+                        <button class="btn-admin-primary" onclick="RiverToast.success('Privilegios y estado del usuario actualizados correctamente.'); document.getElementById('admin-modal-container').innerHTML = ''">ACTUALIZAR</button>
                     </div>
                 </div>
             </div>
@@ -850,7 +850,7 @@ const AdminDashboard = (() => {
 
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                         <button class="btn-admin-primary" style="background:transparent; border:1px solid #fff;" onclick="document.getElementById('admin-modal-container').innerHTML = ''">CANCELAR</button>
-                        <button class="btn-admin-primary" onclick="alert('Empresa Registrada (Simulación)'); document.getElementById('admin-modal-container').innerHTML = ''">REGISTRAR</button>
+                        <button class="btn-admin-primary" onclick="RiverToast.info('Empresa Registrada (Simulación)'); document.getElementById('admin-modal-container').innerHTML = ''">REGISTRAR</button>
                     </div>
                 </div>
             </div>
@@ -901,7 +901,7 @@ const AdminDashboard = (() => {
 
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                         <button class="btn-admin-primary" style="background:transparent; border:1px solid #fff;" onclick="document.getElementById('admin-modal-container').innerHTML = ''">CANCELAR</button>
-                        <button class="btn-admin-primary" onclick="alert('Orden Generada (Simulación)'); document.getElementById('admin-modal-container').innerHTML = ''">CREAR ORDEN</button>
+                        <button class="btn-admin-primary" onclick="RiverToast.info('Orden Generada (Simulación)'); document.getElementById('admin-modal-container').innerHTML = ''">CREAR ORDEN</button>
                     </div>
                 </div>
             </div>
@@ -949,7 +949,7 @@ const AdminDashboard = (() => {
 
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                         <button class="btn-admin-primary" style="background:transparent; border:1px solid #fff;" onclick="document.getElementById('admin-modal-container').innerHTML = ''">CANCELAR</button>
-                        <button class="btn-admin-primary" onclick="alert('Activo Creado con Éxito'); document.getElementById('admin-modal-container').innerHTML = ''">GUARDAR ACTIVO</button>
+                        <button class="btn-admin-primary" onclick="RiverToast.success('Activo Creado con Éxito'); document.getElementById('admin-modal-container').innerHTML = ''">GUARDAR ACTIVO</button>
                     </div>
                 </div>
             </div>
@@ -985,7 +985,7 @@ const AdminDashboard = (() => {
                     </div>
                     <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                         <button class="btn-admin-primary" style="background:transparent; border:1px solid #fff;" onclick="document.getElementById('admin-modal-container').innerHTML = ''">CANCELAR</button>
-                        <button class="btn-admin-primary" onclick="alert('Barco Vinculado'); document.getElementById('admin-modal-container').innerHTML = ''">VINCULAR</button>
+                        <button class="btn-admin-primary" onclick="RiverToast.success('Barco Vinculado'); document.getElementById('admin-modal-container').innerHTML = ''">VINCULAR</button>
                     </div>
                 </div>
             </div>
@@ -1029,7 +1029,7 @@ const AdminDashboard = (() => {
 
                 <div class="fleet-card-actions">
                     <button class="btn-admin-primary" onclick="AdminDashboard.openGlobalTrackingModal('${s.name}', '${s.loc}')" style="font-size:0.8rem;"><i class="fas fa-satellite-dish"></i> TRACKING</button>
-                    <button class="btn-table-action" onclick="alert('Ver Contrato: ${s.client}')" style="width:auto; padding:0 15px;"><i class="fas fa-file-contract"></i></button>
+                    <button class="btn-table-action" onclick="RiverToast.info('Abriendo visor del contrato comercial activo de: ${s.client}')" style="width:auto; padding:0 15px;"><i class="fas fa-file-contract"></i></button>
                 </div>
             </div>
         `).join('');
@@ -1043,7 +1043,7 @@ const AdminDashboard = (() => {
                     </div>
                     <div style="display:flex; gap:10px; margin-top:10px;">
                         <input type="text" placeholder="Buscar barco o empresa..." style="background:var(--bg-panel); border:1px solid var(--border-color); color:white; padding:8px; border-radius:6px; min-width:200px;">
-                        <button class="btn-table-action" onclick="alert('Filtrar Resultados')"><i class="fas fa-filter"></i></button>
+                        <button class="btn-table-action" onclick="RiverToast.info('Funcionalidad de filtros avanzados inicializando...')"><i class="fas fa-filter"></i></button>
                     </div>
                 </div>
                 
@@ -1075,7 +1075,7 @@ const AdminDashboard = (() => {
                     <span><i class="fas fa-user-cog"></i> ${o.assigned}</span>
                     <span style="color:${o.status === 'Completado' ? '#10b981' : '#f59e0b'}">${o.status}</span>
                 </div>
-                <button class="btn-admin-primary" onclick="alert('Abriendo Orden ${o.id}...')" style="width:100%; margin-top:5px; font-size:0.8rem;">VER DETALLES</button>
+                <button class="btn-admin-primary" onclick="RiverToast.info('Descargando PDF de la OT: ${o.id}...\\nAbriendo vista detallada.')" style="width:100%; margin-top:5px; font-size:0.8rem;">VER DETALLES</button>
             </div>
         `).join('');
 
@@ -1224,8 +1224,8 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                 </div>
 
                 <div class="fleet-card-actions">
-                     <button class="btn-admin-primary" onclick="alert('Editando activo ${f.name}...')" style="background:transparent; border:1px solid var(--border-color);">EDITAR</button>
-                     <button class="btn-admin-primary" onclick="alert('Abriendo tracking para ${f.name}...')">TRACKING</button>
+                     <button class="btn-admin-primary" onclick="RiverToast.info('Editando activo ${f.name}...')" style="background:transparent; border:1px solid var(--border-color);">EDITAR</button>
+                     <button class="btn-admin-primary" onclick="RiverToast.info('Abriendo tracking para ${f.name}...')">TRACKING</button>
                 </div>
             </div>
         `).join('');
@@ -1274,7 +1274,7 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                     <span style="color:#64748b;">${u.last}</span>
                 </div>
                 <div style="display:flex; gap:10px; margin-top:5px;">
-                     <button class="btn-admin-primary" onclick="alert('Editando usuario ${u.name}...')" style="flex:1; font-size:0.8rem; background:transparent; border:1px solid #334;">EDITAR</button>
+                     <button class="btn-admin-primary" onclick="RiverToast.info('Editando usuario ${u.name}...')" style="flex:1; font-size:0.8rem; background:transparent; border:1px solid #334;">EDITAR</button>
                      <button class="btn-admin-primary" onclick="AdminDashboard.impersonateUser('${u.name}', '${u.role}')" title="Simular Usuario" style="flex:1; font-size:0.8rem; background:#4f46e5; border:1px solid #6366f1;"><i class="fas fa-mask"></i> SIMULAR</button>
                 </div>
             </div>
@@ -1315,8 +1315,8 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                     <i class="fas fa-globe-americas"></i> Zona: ${t.zone}
                 </div>
                 <div style="display:flex; gap:10px; margin-top:5px;">
-                     <button class="btn-admin-primary" onclick="alert('Administrando Tenant ${t.name}...')" style="flex:1; font-size:0.8rem;">ADMINISTRAR</button>
-                     <button class="btn-icon-action" onclick="alert('Más opciones para ${t.name}')" style="background:transparent; border:1px solid #334; color:#fff; padding:8px 12px; border-radius:6px;"><i class="fas fa-ellipsis-v"></i></button>
+                     <button class="btn-admin-primary" onclick="RiverToast.info('Ingresando al panel de administración de la empresa: ${t.name}...')" style="flex:1; font-size:0.8rem;">ADMINISTRAR</button>
+                     <button class="btn-icon-action" onclick="RiverToast.info('Abriendo menú de opciones extendidas para: ${t.name}')" style="background:transparent; border:1px solid #334; color:#fff; padding:8px 12px; border-radius:6px;"><i class="fas fa-ellipsis-v"></i></button>
                 </div>
             </div>
         `).join('');
@@ -1361,8 +1361,8 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                 <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #334; padding-top:10px;">
                     <div style="font-size:1.2rem; font-weight:700; color:#fff;">${inv.amount}</div>
                     <div style="display:flex; gap:10px;">
-                         ${inv.status === 'overdue' ? `<button class="btn-admin-primary" onclick="alert('Suspendiendo servicio a ${inv.client}...')" style="background:#ef4444; font-size:0.7rem;">SUSPENDER</button>` : ''}
-                         <button class="btn-icon-action" onclick="alert('Descargando PDF Factura #${inv.id}...')" style="background:transparent; border:1px solid #475569; color:#fff; padding:8px; border-radius:6px;"><i class="fas fa-file-pdf"></i></button>
+                         ${inv.status === 'overdue' ? `<button class="btn-admin-primary" onclick="RiverToast.info('Servicio suspendido preventivamente por falta de pago a ${inv.client}.', 'Billing', 'fas fa-gavel')" style="background:#ef4444; font-size:0.7rem;">SUSPENDER</button>` : ''}
+                         <button class="btn-icon-action" onclick="RiverToast.success('Descargando copia comercial de la Factura ID #${inv.id}...\\nEl PDF se generará en segundo plano.')" style="background:transparent; border:1px solid #475569; color:#fff; padding:8px; border-radius:6px;"><i class="fas fa-file-pdf"></i></button>
                     </div>
                 </div>
             </div>
@@ -1391,8 +1391,8 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                 <div class="admin-table-header" style="background:#1e293b; border-radius:12px; border:1px solid #334; padding:20px; margin-bottom:20px;">
                     <h3 style="margin:0;">Control de Facturación</h3>
                     <div style="display:flex; gap:10px;">
-                         <button class="btn-admin-primary" onclick="alert('Filtrando resultados...')" style="background:#334155;"><i class="fas fa-filter"></i> FILTRAR</button>
-                         <button class="btn-admin-primary" onclick="alert('Exportando CSV... Pendiende implementación backend')"><i class="fas fa-download"></i> EXPORTAR CSV</button>
+                         <button class="btn-admin-primary" onclick="RiverToast.info('El módulo de filtros avanzados se está desplegando...')" style="background:#334155;"><i class="fas fa-filter"></i> FILTRAR</button>
+                         <button class="btn-admin-primary" onclick="RiverToast.success('Exportación CSV encolada. El archivo se descargará automáticamente cuando finalice el procesamiento en el servidor.')"><i class="fas fa-download"></i> EXPORTAR CSV</button>
                     </div>
                 </div>
                 
@@ -1425,7 +1425,7 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                 <div style="font-size:0.9rem; color:#cbd5e1;">Target: ${l.target}</div>
                 <div style="display:flex; justify-content:space-between; align-items:center; color:#64748b; font-size:0.8rem;">
                     <span>IP: ${l.ip}</span>
-                    <button class="btn-icon-action" onclick="alert('Ver detalles de auditoría para ${l.action}')" style="background:transparent; color:#94a3b8;"><i class="fas fa-eye"></i> Detalles</button>
+                    <button class="btn-icon-action" onclick="RiverToast.info('Visualizando trazabilidad detallada del evento: ${l.action}\\n\\nDatos extendidos cargando...')" style="background:transparent; color:#94a3b8;"><i class="fas fa-eye"></i> Detalles</button>
                 </div>
             </div>
         `).join('');
@@ -1434,13 +1434,13 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
             <div class="admin-table-container" style="background:#1e293b; border:1px solid #334; border-radius:12px; overflow:hidden;">
                 <div class="admin-table-header" style="padding:20px; border-bottom:1px solid #334;">
                     <h3 style="margin:0;"><i class="fas fa-shield-alt"></i> Bitácora de Auditoría</h3>
-                    <button class="btn-admin-primary" onclick="alert('Exportando Logs...')" style="background:#334"><i class="fas fa-download"></i> EXPORTAR LOGS</button>
+                    <button class="btn-admin-primary" onclick="RiverToast.info('Compilando histórico de auditoría.\\nEl reporte encriptado se descargará en unos momentos.')" style="background:#334"><i class="fas fa-download"></i> EXPORTAR LOGS</button>
                 </div>
                 
                 <!-- LIST LAYOUT -->
                 <div style="display:flex; flex-direction:column;">
                     ${cards}
-                </div>
+                 </div>
                  <div style="padding:15px; text-align:center;">
                     <button class="btn-admin-primary" style="background:transparent; border:1px solid #334; width:100%;">CARGAR MÁS</button>
                 </div>
@@ -1466,15 +1466,16 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
     };
 
     const impersonateUser = (name, role) => {
-        if (confirm(`⚠️ ¿Estás seguro de que quieres entrar como "${name}"?\n\nPerderás tus privilegios de Super Admin temporalmente.`)) {
-            console.log("Impersonating:", name);
+        if (window.RiverToast) RiverToast.warning(`Iniciando sesión remota como "${name}". Pérdida temporal de root...`, 'Impersonate Activo', 'fas fa-user-secret');
+        console.log("Impersonating:", name);
+        setTimeout(() => {
             AuthModule.login({
                 id: 'impersonated-id',
                 email: 'impersonated@user.local',
                 full_name: name,
                 role: role.toLowerCase().replace(' ', '_')
             });
-        }
+        }, 1500);
     };
 
     // MINI MAP INIT

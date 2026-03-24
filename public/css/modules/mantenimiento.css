@@ -34,7 +34,7 @@
 .nexus-logo {
     width: 48px;
     height: 48px;
-    background: rgba(6, 182, 212, 0.1);
+    background: rgba(0, 229, 255, 0.1);
     border: 1px solid var(--neon-cyan);
     border-radius: var(--radius-lg);
     display: flex;
@@ -42,7 +42,7 @@
     justify-content: center;
     font-size: 1.5rem;
     color: var(--neon-cyan);
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
 }
 
 .nexus-text h2 {
@@ -86,7 +86,7 @@
 .btn-fleet-select:hover {
     border-color: var(--neon-cyan);
     color: var(--text-main);
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
 }
 
 .btn-apertura {
@@ -309,8 +309,8 @@
 .sys-row:hover .sys-icon {
     color: var(--neon-cyan);
     border-color: var(--neon-cyan);
-    background: rgba(6, 182, 212, 0.1);
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+    background: rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
 }
 
 .sys-info {

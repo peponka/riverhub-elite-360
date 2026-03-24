@@ -1,582 +1,211 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RiverHub | Gestión Inteligente de Flotas en la Hidrovía</title>
-    <meta name="description"
-        content="Plataforma líder de gestión de flotas fluviales para la Hidrovía Paraguay-Paraná. Monitoreo AIS en tiempo real, convoyes inteligentes y control total de tu operación.">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <link rel="stylesheet" href="css/landing-new.css">
+    <title>RiverHub Elite 360 | Sistema de Gestión Fluvial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/landing.css">
+    <!-- Supabase Core -->
+    <link rel="stylesheet" href="css/toast.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/services/toast.js"></script>
+    <script src="js/services/supabase.js"></script>
 </head>
-
 <body>
 
-    <!-- ============ NAVBAR ============ -->
-    <nav class="nav" id="navbar">
-        <div class="nav-container">
-            <a href="#" class="nav-logo">
-                <div class="logo-icon">
-                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                        <path d="M4 18C4 18 7 14 14 14C21 14 24 18 24 18" stroke="currentColor" stroke-width="2.5"
-                            stroke-linecap="round" />
-                        <path d="M4 22C4 22 7 18 14 18C21 18 24 22 24 22" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" opacity="0.5" />
-                        <circle cx="14" cy="9" r="3" stroke="currentColor" stroke-width="2" />
-                        <line x1="14" y1="6" x2="14" y2="3" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" />
-                    </svg>
-                </div>
-                <span>RiverHub</span>
-            </a>
-
-            <div class="nav-links">
-                <a href="#funciones">Funciones</a>
-                <a href="#como-funciona">Cómo Funciona</a>
-                <a href="#modulos">Módulos</a>
-                <a href="#precios">Precios</a>
-            </div>
-
-            <div class="nav-actions">
-                <a href="app.html?mode=login" class="btn-ghost">Iniciar Sesión</a>
-                <a href="app.html?mode=register" class="btn-primary-sm">Prueba Gratis</a>
-            </div>
-
-            <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
-                <i class="fas fa-bars"></i>
-            </button>
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="logo"><i class="fas fa-anchor"></i> RiverHub <span>ELITE</span></a>
+        <div class="nav-links">
+            <a href="#features">Características</a>
+            <a href="#soluciones">Módulos</a>
+            <a href="app.html?mode=login" class="btn-login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+            <button class="btn-primary" onclick="openOnboarding()"><i class="fas fa-rocket"></i> Solicitar Demo</button>
         </div>
     </nav>
 
-    <!-- ============ HERO ============ -->
-    <section class="hero">
-        <div class="hero-bg">
-            <div class="hero-gradient"></div>
-            <div class="hero-grid"></div>
-            <div class="hero-wave">
-                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-                    <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,60 1440,60 L1440,120 L0,120Z" fill="white" />
-                </svg>
-            </div>
-        </div>
-
-        <div class="container hero-content">
-            <div class="hero-badge">
-                <i class="fas fa-satellite-dish"></i>
-                <span>Monitoreo AIS en tiempo real</span>
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="badge"><i class="fas fa-satellite"></i> Ahora con Monitoreo Satelital en Tiempo Real</div>
+            <h1>El Futuro de la <span>Gestión Fluvial</span> Integrada</h1>
+            <p>RiverHub Elite 360 es la plataforma definitiva para armadores y capitanes. Desafía la fricción de la hidrovía con inteligencia artificial, tracking AIS y automatización inteligente.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="openOnboarding()" style="padding: 14px 32px; font-size: 1.1rem;"><i class="fas fa-bolt"></i> Registrar Mi Empresa</button>
+                <a href="app.html?mode=login" class="btn-login" style="padding: 14px 32px; font-size: 1.1rem; border-color: rgba(6,182,212,0.5);"><i class="fas fa-chart-line"></i> Ingresar al Sistema</a>
             </div>
 
-            <h1>Gestión inteligente<br>de tu flota en la <span class="text-gradient">Hidrovía</span></h1>
-
-            <p class="hero-subtitle">
-                Controlá tus <strong>remolcadores, barcazas y convoyes</strong> en la Hidrovía Paraguay-Paraná.
-                Desde el armado del convoy hasta la entrega de carga, todo en una sola plataforma.
-            </p>
-
-            <div class="hero-ctas">
-                <a href="app.html?mode=register" class="btn-primary">
-                    <i class="fas fa-rocket"></i>
-                    Empezar — 15 días gratis
-                </a>
-                <a href="#como-funciona" class="btn-outline">
-                    <i class="fas fa-play-circle"></i>
-                    Ver cómo funciona
-                </a>
-            </div>
-
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <span class="hero-stat-number">32</span>
-                    <span class="hero-stat-label">Módulos integrados</span>
+            <!-- FAKE MOCKUP PREVIEW -->
+            <div class="hero-mockup">
+                <div class="mockup-header">
+                    <div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-dot"></div>
                 </div>
-                <div class="hero-stat-divider"></div>
-                <div class="hero-stat">
-                    <span class="hero-stat-number">24/7</span>
-                    <span class="hero-stat-label">Tracking satelital</span>
-                </div>
-                <div class="hero-stat-divider"></div>
-                <div class="hero-stat">
-                    <span class="hero-stat-number">100%</span>
-                    <span class="hero-stat-label">Cloud & Mobile</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Hero Visual: Dashboard Preview -->
-        <div class="hero-visual">
-            <div class="dashboard-preview">
-                <div class="preview-bar">
-                    <div class="preview-dots">
-                        <span></span><span></span><span></span>
-                    </div>
-                    <span class="preview-title">RiverHub Elite 360 — Panel de Control</span>
-                </div>
-                <div class="preview-body">
-                    <div class="preview-sidebar">
-                        <div class="ps-item active"><i class="fas fa-tachometer-alt"></i></div>
-                        <div class="ps-item"><i class="fas fa-map-marked-alt"></i></div>
-                        <div class="ps-item"><i class="fas fa-ship"></i></div>
-                        <div class="ps-item"><i class="fas fa-route"></i></div>
-                        <div class="ps-item"><i class="fas fa-gas-pump"></i></div>
-                        <div class="ps-item"><i class="fas fa-users"></i></div>
-                    </div>
-                    <div class="preview-main">
-                        <div class="pm-cards">
-                            <div class="pm-card">
-                                <span class="pm-card-label">Barcazas Activas</span>
-                                <span class="pm-card-value">12</span>
-                                <div class="pm-card-bar">
-                                    <div style="width:85%"></div>
-                                </div>
-                            </div>
-                            <div class="pm-card accent">
-                                <span class="pm-card-label">Convoyes en Ruta</span>
-                                <span class="pm-card-value">3</span>
-                                <div class="pm-card-bar">
-                                    <div style="width:60%"></div>
-                                </div>
-                            </div>
-                            <div class="pm-card">
-                                <span class="pm-card-label">Tripulación</span>
-                                <span class="pm-card-value">48</span>
-                                <div class="pm-card-bar">
-                                    <div style="width:92%"></div>
-                                </div>
-                            </div>
+                <!-- We simulate a dashboard wireframe -->
+                <div style="padding: 20px; text-align: left; display: grid; grid-template-columns: 200px 1fr; gap: 20px; height: 100%;">
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 8px;"></div>
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; height: 80px;">
+                            <div style="background: rgba(6,182,212,0.1); border-radius: 8px;"></div>
+                            <div style="background: rgba(255,255,255,0.05); border-radius: 8px;"></div>
+                            <div style="background: rgba(255,255,255,0.05); border-radius: 8px;"></div>
+                            <div style="background: rgba(255,255,255,0.05); border-radius: 8px;"></div>
                         </div>
-                        <div class="pm-map">
-                            <div class="pm-map-bg">
-                                <div class="map-dot dot-1">
-                                    <div class="map-pulse"></div>
-                                </div>
-                                <div class="map-dot dot-2">
-                                    <div class="map-pulse"></div>
-                                </div>
-                                <div class="map-dot dot-3">
-                                    <div class="map-pulse"></div>
-                                </div>
-                                <div class="map-route"></div>
-                            </div>
-                            <span class="pm-map-label">Hidrovía Paraguay-Paraná</span>
-                        </div>
+                        <div style="background: rgba(255,255,255,0.03); border-radius: 8px; flex: 1; border: 1px solid rgba(255,255,255,0.05);"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- FEATURES -->
+    <section id="features" class="features">
+        <h2 class="section-title">Tecnología de Punta para el Río</h2>
+        <p class="section-sub">Reemplazamos el papel y WhatsApp por un ecosistema digital conectado al instante.</p>
+        
+        <div class="grid-features">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-ship"></i></div>
+                <h3>Armador de Convoy 3D</h3>
+                <p>Armá tus convoyes de barcazas visualmente. Calculá peso, calado y dimensiones exactas antes de zarpar.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h3>Gemini AI Analytics</h3>
+                <p>Inteligencia artificial que analiza tu flota en tiempo real para predecir retrasos y recomendar acciones de ahorro de combustible.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-tint"></i></div>
+                <h3>Hidrología en Tiempo Real</h3>
+                <p>Niveles del río Paraná y Paraguay conectados a la base de datos hidroviaria para un calado seguro y alertas de estiaje.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-satellite-dish"></i></div>
+                <h3>Torre de Control</h3>
+                <p>Monitoreá todos los viajes, alarmas, posiciones y proyecciones de ETA en una pantalla global para tus supervisores.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-clipboard-list"></i></div>
+                <h3>Bitácora Digital (Offline)</h3>
+                <p>La app móvil para Capitanes permite cargar partes diarios sin internet, sincronizando al recuperar señal vía Starlink.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                <h3>n8n Automations</h3>
+                <p>Recibí notificaciones Push en tu celular cuando un barco carga combustible, zarpó o reporta un incidente crítico.</p>
             </div>
         </div>
     </section>
 
-    <!-- ============ LOGOS/TRUST BAR ============ -->
-    <section class="trust-bar">
-        <div class="container">
-            <p class="trust-label">Tecnologías que impulsan RiverHub</p>
-            <div class="trust-logos">
-                <div class="trust-item"><i class="fas fa-satellite"></i> AIS Stream</div>
-                <div class="trust-item"><i class="fas fa-database"></i> Supabase</div>
-                <div class="trust-item"><i class="fas fa-map"></i> Leaflet</div>
-                <div class="trust-item"><i class="fas fa-cloud"></i> Open-Meteo</div>
-                <div class="trust-item"><i class="fas fa-robot"></i> Gemini AI</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ FUNCIONES PRINCIPALES ============ -->
-    <section id="funciones" class="section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">¿Qué hace RiverHub?</span>
-                <h2>Todo lo que necesitás para<br><span class="text-gradient">dominar la Hidrovía</span></h2>
-                <p>Una plataforma completa que cubre cada aspecto de la operación fluvial, desde el puente de mando
-                    hasta la oficina comercial.</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card featured">
-                    <div class="fc-icon blue"><i class="fas fa-satellite-dish"></i></div>
-                    <h3>Tracking Satelital AIS</h3>
-                    <p>Seguimiento en tiempo real de cada embarcación en la Hidrovía. Datos AIS en vivo fusionados con
-                        tu flota privada.</p>
-                    <ul class="fc-list">
-                        <li><i class="fas fa-check"></i> Posición en tiempo real</li>
-                        <li><i class="fas fa-check"></i> Historial de rutas</li>
-                        <li><i class="fas fa-check"></i> Mapa dark mode estilo radar</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <div class="fc-icon teal"><i class="fas fa-th"></i></div>
-                    <h3>Armado de Convoyes</h3>
-                    <p>Configurá la formación óptima de tu convoy. Arrastrá barcazas, asigná remolcadores y calculá
-                        carga total.</p>
-                    <ul class="fc-list">
-                        <li><i class="fas fa-check"></i> Drag & drop de barcazas</li>
-                        <li><i class="fas fa-check"></i> Cálculo de carga y calado</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <div class="fc-icon amber"><i class="fas fa-gas-pump"></i></div>
-                    <h3>Control de Combustible</h3>
-                    <p>Tu mayor costo operativo, controlado. Registro de cargas, consumo por viaje y detección de
-                        anomalías.</p>
-                    <ul class="fc-list">
-                        <li><i class="fas fa-check"></i> Registro de bunker</li>
-                        <li><i class="fas fa-check"></i> Consumo por milla</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <div class="fc-icon green"><i class="fas fa-wrench"></i></div>
-                    <h3>Mantenimiento Preventivo</h3>
-                    <p>Programá tareas de mantenimiento, recibí alertas antes de que falle algo y llevá el historial
-                        completo.</p>
-                    <ul class="fc-list">
-                        <li><i class="fas fa-check"></i> Alertas automáticas</li>
-                        <li><i class="fas fa-check"></i> Historial por equipo</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <div class="fc-icon purple"><i class="fas fa-users"></i></div>
-                    <h3>Gestión de Tripulación</h3>
-                    <p>Controlá embarques, certificados, vencimientos médicos y rotación de personal desde una sola
-                        pantalla.</p>
-                    <ul class="fc-list">
-                        <li><i class="fas fa-check"></i> Certificados y vencimientos</li>
-                        <li><i class="fas fa-check"></i> Rotación automática</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <div class="fc-icon red"><i class="fas fa-brain"></i></div>
-                    <h3>Cotizador con IA</h3>
-                    <p>Calculá fletes al instante con inteligencia artificial. Genera cotizaciones profesionales con
-                        argumentación comercial.</p>
-                    <ul class="fc-list">
-                        <li><i class="fas fa-check"></i> Precio por tonelada/km</li>
-                        <li><i class="fas fa-check"></i> PDF profesional</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ CÓMO FUNCIONA ============ -->
-    <section id="como-funciona" class="section section-alt">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Simple y poderoso</span>
-                <h2>Cómo funciona <span class="text-gradient">RiverHub</span></h2>
-                <p>En 3 pasos ya estás operando con visibilidad total sobre tu flota.</p>
-            </div>
-
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">01</div>
-                    <div class="step-content">
-                        <h3>Registrá tu flota</h3>
-                        <p>Cargá tus remolcadores, barcazas y empujadores. Cada activo con su ficha técnica, matrícula y
-                            historial.</p>
-                    </div>
-                    <div class="step-visual">
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-plus"></i>
-                    </div>
-                </div>
-
-                <div class="step-connector"><i class="fas fa-arrow-right"></i></div>
-
-                <div class="step-card">
-                    <div class="step-number">02</div>
-                    <div class="step-content">
-                        <h3>Armá convoyes y viajes</h3>
-                        <p>Configurá la formación, asigná carga, ruta y tripulación. Todo queda registrado y trazable.
-                        </p>
-                    </div>
-                    <div class="step-visual">
-                        <i class="fas fa-route"></i>
-                        <i class="fas fa-anchor"></i>
-                    </div>
-                </div>
-
-                <div class="step-connector"><i class="fas fa-arrow-right"></i></div>
-
-                <div class="step-card">
-                    <div class="step-number">03</div>
-                    <div class="step-content">
-                        <h3>Monitoreá en tiempo real</h3>
-                        <p>Seguí la posición de cada barco, controlá combustible, mantenimiento y recibí alertas al
-                            instante.</p>
-                    </div>
-                    <div class="step-visual">
-                        <i class="fas fa-chart-line"></i>
-                        <i class="fas fa-bell"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ MÓDULOS ============ -->
-    <section id="modulos" class="section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Ecosistema completo</span>
-                <h2>32 módulos, <span class="text-gradient">una sola plataforma</span></h2>
-                <p>Todo lo que una naviera necesita para operar de forma profesional en la Hidrovía.</p>
-            </div>
-
-            <div class="modules-grid">
-                <div class="module-chip"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
-                <div class="module-chip"><i class="fas fa-map-marked-alt"></i> Mapa AIS</div>
-                <div class="module-chip"><i class="fas fa-ship"></i> Flota</div>
-                <div class="module-chip"><i class="fas fa-th"></i> Convoyes</div>
-                <div class="module-chip"><i class="fas fa-route"></i> Viajes</div>
-                <div class="module-chip"><i class="fas fa-location-arrow"></i> Tracking</div>
-                <div class="module-chip"><i class="fas fa-gas-pump"></i> Combustible</div>
-                <div class="module-chip"><i class="fas fa-wrench"></i> Mantenimiento</div>
-                <div class="module-chip"><i class="fas fa-users"></i> Tripulación</div>
-                <div class="module-chip"><i class="fas fa-warehouse"></i> Pañol</div>
-                <div class="module-chip"><i class="fas fa-water"></i> Calado</div>
-                <div class="module-chip"><i class="fas fa-cloud-rain"></i> Hidrología</div>
-                <div class="module-chip"><i class="fas fa-book"></i> Bitácora</div>
-                <div class="module-chip"><i class="fas fa-file-alt"></i> Reportes</div>
-                <div class="module-chip"><i class="fas fa-calculator"></i> Cotizador IA</div>
-                <div class="module-chip"><i class="fas fa-file-invoice-dollar"></i> Facturación</div>
-                <div class="module-chip"><i class="fas fa-handshake"></i> Comercial</div>
-                <div class="module-chip"><i class="fas fa-broadcast-tower"></i> Comunicaciones</div>
-                <div class="module-chip"><i class="fas fa-exclamation-triangle"></i> Incidentes</div>
-                <div class="module-chip"><i class="fas fa-clipboard-check"></i> Auditoría</div>
-                <div class="module-chip"><i class="fas fa-weight-hanging"></i> Loadmaster</div>
-                <div class="module-chip"><i class="fas fa-file-contract"></i> Documentos</div>
-                <div class="module-chip"><i class="fas fa-bell"></i> Notificaciones</div>
-                <div class="module-chip"><i class="fas fa-plug"></i> Integraciones</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ PRECIOS ============ -->
-    <section id="precios" class="section section-alt">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Precios transparentes</span>
-                <h2>Planes que escalan <span class="text-gradient">con tu flota</span></h2>
-                <p>Sin sorpresas. Pagás por embarcación y tenés acceso a todos los módulos.</p>
-            </div>
-
-            <div class="pricing-grid">
-                <!-- SOLIST -->
-                <div class="price-card">
-                    <div class="pc-header">
-                        <h3>Solist</h3>
-                        <p class="pc-desc">Para operadores independientes</p>
-                        <div class="pc-price">
-                            <span class="pc-currency">USD</span>
-                            <span class="pc-amount">150</span>
-                            <span class="pc-period">/mes</span>
-                        </div>
-                    </div>
-                    <ul class="pc-features">
-                        <li><i class="fas fa-check"></i> 1 embarcación</li>
-                        <li><i class="fas fa-check"></i> 1 usuario</li>
-                        <li><i class="fas fa-check"></i> Tracking básico</li>
-                        <li><i class="fas fa-check"></i> Bitácora digital</li>
-                        <li><i class="fas fa-check"></i> Soporte email</li>
-                    </ul>
-                    <a href="app.html?mode=register" class="btn-price">Comenzar</a>
-                </div>
-
-                <!-- SQUAD -->
-                <div class="price-card popular">
-                    <div class="popular-badge">Más elegido</div>
-                    <div class="pc-header">
-                        <h3>Squad</h3>
-                        <p class="pc-desc">Para flotas pequeñas</p>
-                        <div class="pc-price">
-                            <span class="pc-currency">USD</span>
-                            <span class="pc-amount">450</span>
-                            <span class="pc-period">/mes</span>
-                        </div>
-                    </div>
-                    <ul class="pc-features">
-                        <li><i class="fas fa-check"></i> Hasta 3 embarcaciones</li>
-                        <li><i class="fas fa-check"></i> 5 usuarios</li>
-                        <li><i class="fas fa-check"></i> Tracking avanzado + AIS</li>
-                        <li><i class="fas fa-check"></i> Convoyes y combustible</li>
-                        <li><i class="fas fa-check"></i> Cotizador IA</li>
-                        <li><i class="fas fa-check"></i> Soporte prioritario</li>
-                    </ul>
-                    <a href="app.html?mode=register" class="btn-price primary">Probar Gratis</a>
-                </div>
-
-                <!-- EXPANSION -->
-                <div class="price-card">
-                    <div class="pc-header">
-                        <h3>Expansion</h3>
-                        <p class="pc-desc">Para navieras en crecimiento</p>
-                        <div class="pc-price">
-                            <span class="pc-currency">USD</span>
-                            <span class="pc-amount">1.200</span>
-                            <span class="pc-period">/mes</span>
-                        </div>
-                    </div>
-                    <ul class="pc-features">
-                        <li><i class="fas fa-check"></i> Hasta 10 embarcaciones</li>
-                        <li><i class="fas fa-check"></i> 15 usuarios</li>
-                        <li><i class="fas fa-check"></i> Todos los módulos</li>
-                        <li><i class="fas fa-check"></i> Reportes avanzados</li>
-                        <li><i class="fas fa-check"></i> API & integraciones</li>
-                        <li><i class="fas fa-check"></i> Soporte 24/7</li>
-                    </ul>
-                    <a href="app.html?mode=register" class="btn-price">Escalar</a>
-                </div>
-
-                <!-- ADMIRAL -->
-                <div class="price-card">
-                    <div class="pc-header">
-                        <h3>Admiral</h3>
-                        <p class="pc-desc">Para grandes operadores</p>
-                        <div class="pc-price">
-                            <span class="pc-currency">USD</span>
-                            <span class="pc-amount">1.800</span>
-                            <span class="pc-period">/mes</span>
-                        </div>
-                    </div>
-                    <ul class="pc-features">
-                        <li><i class="fas fa-check"></i> Embarcaciones ilimitadas</li>
-                        <li><i class="fas fa-check"></i> Usuarios ilimitados</li>
-                        <li><i class="fas fa-check"></i> Multi-empresa (SaaS)</li>
-                        <li><i class="fas fa-check"></i> Dashboard Super Admin</li>
-                        <li><i class="fas fa-check"></i> Onboarding dedicado</li>
-                        <li><i class="fas fa-check"></i> SLA garantizado</li>
-                    </ul>
-                    <a href="app.html?mode=register" class="btn-price">Contactar</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ CTA FINAL ============ -->
-    <section class="section-cta">
-        <div class="container">
-            <div class="cta-box">
-                <div class="cta-content">
-                    <h2>Tu flota merece tecnología de primer nivel</h2>
-                    <p>Dejá de operar a ciegas. Empezá hoy con 15 días gratis, sin tarjeta de crédito.</p>
-                    <a href="app.html?mode=register" class="btn-primary btn-lg">
-                        <i class="fas fa-rocket"></i>
-                        Empezar ahora — Es gratis
-                    </a>
-                </div>
-                <div class="cta-visual">
-                    <div class="cta-icon-grid">
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-satellite-dish"></i>
-                        <i class="fas fa-chart-line"></i>
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ FOOTER ============ -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <div class="footer-logo">
-                        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-                            <path d="M4 18C4 18 7 14 14 14C21 14 24 18 24 18" stroke="currentColor" stroke-width="2.5"
-                                stroke-linecap="round" />
-                            <path d="M4 22C4 22 7 18 14 18C21 18 24 22 24 22" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" opacity="0.5" />
-                            <circle cx="14" cy="9" r="3" stroke="currentColor" stroke-width="2" />
-                            <line x1="14" y1="6" x2="14" y2="3" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                        </svg>
-                        <span>RiverHub</span>
-                    </div>
-                    <p>La plataforma de gestión fluvial más completa para la Hidrovía Paraguay-Paraná.</p>
-                </div>
-
-                <div class="footer-col">
-                    <h4>Producto</h4>
-                    <a href="#funciones">Funciones</a>
-                    <a href="#modulos">Módulos</a>
-                    <a href="#precios">Precios</a>
-                    <a href="#">Roadmap</a>
-                </div>
-
-                <div class="footer-col">
-                    <h4>Empresa</h4>
-                    <a href="#">Sobre Nosotros</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Contacto</a>
-                </div>
-
-                <div class="footer-col">
-                    <h4>Legal</h4>
-                    <a href="#">Términos de Servicio</a>
-                    <a href="#">Política de Privacidad</a>
-                    <a href="#">SLA</a>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2026 RiverHub. Todos los derechos reservados.</p>
-                <div class="footer-socials">
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 RiverHub Technologies. Software Elite para Logística Fluvial.</p>
     </footer>
 
-    <!-- ============ SCRIPTS ============ -->
+    <!-- ONBOARDING MODAL -->
+    <div class="modal-overlay" id="onboard-modal">
+        <div class="onboard-modal">
+            <button class="close-modal" onclick="closeOnboarding()"><i class="fas fa-times"></i></button>
+            <h2 class="onboard-title">Comenzá con RiverHub</h2>
+            <p class="onboard-sub">Creá tu cuenta de empresa y accedé al panel de control en segundos.</p>
+            
+            <form id="register-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Nombre de la Empresa</label>
+                    <input type="text" id="reg-company" placeholder="Naviera Delta S.A." required>
+                </div>
+                <div class="form-group">
+                    <label>Email Corporativo del Administrador</label>
+                    <input type="email" id="reg-email" placeholder="admin@navieradelta.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="reg-pass" placeholder="••••••••" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <button type="submit" class="btn-submit" id="btn-submit"><i class="fas fa-check-circle"></i> Crear Cuenta y Proceder</button>
+                </div>
+            </form>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 20px;">
+                Al registrarte, aceptás nuestros <a href="#" style="color: var(--cyan);">Términos y Condiciones</a>.
+            </p>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
     <script>
-        // Navbar scroll effect
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 50);
-        });
+        function openOnboarding() { document.getElementById('onboard-modal').classList.add('active'); }
+        function closeOnboarding() { document.getElementById('onboard-modal').classList.remove('active'); }
 
-        // Scroll reveal animation
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+        async function handleRegister(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO ENTORNO...';
+            btn.disabled = true;
+
+            const companyName = document.getElementById('reg-company').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value.trim();
+
+            try {
+                if (!window.sb) throw new Error("Aún conectando al servidor. Por favor, reintenta en unos segundos.");
+
+                // 1. Crear Cuenta en la Autenticación de Supabase
+                const { data: authData, error: authError } = await window.sb.auth.signUp({
+                    email: email,
+                    password: pass,
+                    options: { data: { role: 'admin' } } // Metadata
+                });
+
+                if (authError) {
+                    // Si el usuario ya existe pero no confirmó email, Auth de Supabase tira error de credenciales
+                    if(authError.message.includes('already registered')) throw new Error("Este correo ya está registrado.");
+                    throw authError;
                 }
-            });
-        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.feature-card, .step-card, .price-card, .module-chip, .hero-stat, .cta-box').forEach(el => {
-            observer.observe(el);
-        });
+                // 2. Insertar/Actualizar Perfil con el Rol ADMIN y la Empresa
+                if (authData.user) {
+                    const { error: profileError } = await window.sb.from('profiles').upsert({
+                        id: authData.user.id,
+                        email: email,
+                        full_name: 'Admin ' + companyName,
+                        role: 'admin',
+                        company: companyName
+                    });
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    document.querySelector('.nav-links')?.classList.remove('open');
+                    if (profileError) console.warn("Aviso al guardar perfil (puede estar restringido temporalmente):", profileError);
                 }
-            });
-        });
+
+                // 3. Disparar Webhook de n8n para Enviar Email de Bienvenida
+                try {
+                    await fetch('/api/n8n/webhook', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'x-api-key': 'riverhub_n8n_2026' },
+                        body: JSON.stringify({
+                            event: 'NEW_COMPANY_REGISTRATION',
+                            company: companyName,
+                            email: email,
+                            timestamp: new Date().toISOString()
+                        })
+                    });
+                } catch (webhookErr) {
+                    console.warn("Fallo el envío del webhook a n8n:", webhookErr);
+                    // No detenemos el onboarding si falla el email
+                }
+
+                // 4. Redirigir directamente al panel de Facturación/Suscripción
+                window.location.href = 'app.html?mode=login&show=billing&company=' + encodeURIComponent(companyName);
+
+            } catch (error) {
+                if (window.RiverToast) {
+                    RiverToast.error("Hubo un problema: " + error.message);
+                } else {
+                    alert("Hubo un problema: " + error.message);
+                }
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Crear Cuenta y Proceder';
+                btn.disabled = false;
+            }
+        }
     </script>
 </body>
-
 </html>

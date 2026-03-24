@@ -54,6 +54,8 @@ const commercialLogic = (() => {
             renderContractsList();
         } finally {
             clearTimeout(safetyTimer);
+            // Always populate barges dropdown on init
+            loadBarges();
         }
     };
 
@@ -61,22 +63,29 @@ const commercialLogic = (() => {
     const loadClients = async () => {
         if (!window.sb) { useMockClients(); return; }
 
-        const { data, error } = await window.sb.from('clients').select('*');
+        const { data, error } = await window.sb.from('clients').select('id, name').order('name');
         if (error) {
             console.warn("Error loading clients (using mock):", error);
             useMockClients();
         } else {
-            state.clients = data || [];
-            if (state.clients.length === 0) useMockClients();
+            if (!data || data.length === 0) {
+                // AUTO-SEED DB if empty
+                console.log("Creando clientes por defecto en Supabase...");
+                const defaultClients = [
+                    { name: 'ADM PARAGUAY', type: 'Agro', country: 'Paraguay' },
+                    { name: 'CARGILL S.A.', type: 'Agro', country: 'Argentina' },
+                    { name: 'BUNGE CONOSUR', type: 'Agro', country: 'Uruguay' }
+                ];
+                const { data: newClients, err } = await window.sb.from('clients').insert(defaultClients).select();
+                state.clients = newClients || [];
+            } else {
+                state.clients = data;
+            }
         }
     };
 
     const useMockClients = () => {
-        state.clients = [
-            { id: '1', name: 'ADM PARAGUAY', company_id: 'mock' },
-            { id: '2', name: 'CARGILL S.A.', company_id: 'mock' },
-            { id: '3', name: 'BUNGE CONOSUR', company_id: 'mock' }
-        ];
+        state.clients = [];
     };
 
     const loadContracts = async () => {
@@ -87,8 +96,13 @@ const commercialLogic = (() => {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            state.contracts = data || [];
-            if (state.contracts.length === 0) useMockContracts();
+            
+            if (!data || data.length === 0) {
+                 console.log("No hay contratos, pero la base está online. Dejando vacío, espera interacción del usuario.");
+                 state.contracts = [];
+            } else {
+                 state.contracts = data;
+            }
             renderContractsList();
         } catch (err) {
             console.error("Error loading contracts (using mock):", err);
@@ -98,41 +112,20 @@ const commercialLogic = (() => {
             const container = document.getElementById('contract-list');
             if (container) {
                 const notice = document.createElement('div');
-                notice.innerHTML = '<small style="color:#f59e0b; display:block; text-align:center; padding:5px;">⚠️ Modo Demo (Sin conexión DB)</small>';
+                notice.innerHTML = '<small style="color:#f59e0b; display:block; text-align:center; padding:5px;">⚠️ Modo Local (Sin conexión DB)</small>';
                 container.prepend(notice);
             }
         }
     };
 
     const useMockContracts = () => {
-        state.contracts = [
-            {
-                id: '101',
-                order_number: 'OS-2026-001',
-                client_id: '1',
-                origin_port: 'Puerto Corumbá',
-                destination_port: 'Puerto Rosario',
-                status: 'ACTIVO',
-                agreed_rate: 28.50,
-                created_at: new Date().toISOString()
-            },
-            {
-                id: '102',
-                order_number: 'OS-2026-004',
-                client_id: '2',
-                origin_port: 'Asunción',
-                destination_port: 'Nueva Palmira',
-                status: 'BORRADOR',
-                agreed_rate: 22.00,
-                created_at: new Date().toISOString()
-            }
-        ];
+        state.contracts = [];
     };
 
     const loadManifests = async (contractId) => {
         if (!window.sb) return;
         const { data, error } = await window.sb.from('cargo_manifests')
-            .select('*, barge:vessels(name, vessel_type)')
+            .select('*, barge:fleet_assets(name, type)')
             .eq('service_order_id', contractId);
 
         if (error) {
@@ -173,27 +166,8 @@ const commercialLogic = (() => {
         const dest = document.getElementById('new-contract-dest').value;
         const rate = parseFloat(document.getElementById('new-contract-rate').value) || 0;
 
-        // --- LOGIC (Mock vs Real) ---
-        // DEMO MODE / NO DB FALLBACK
-        if (!window.sb || state.contracts.some(c => c.id.toString().startsWith('mock'))) {
-            const mock = {
-                id: 'mock-' + Date.now(),
-                order_number: 'OS-DEMO-' + Math.floor(Math.random() * 1000),
-                client_id: clientId,
-                origin_port: origin,
-                destination_port: dest,
-                status: 'BORRADOR',
-                agreed_rate: rate,
-                created_at: new Date().toISOString()
-            };
-            state.contracts.unshift(mock);
-            renderContractsList();
-            selectContract(mock);
-            if (modal) modal.style.display = 'none';
-            return;
-        }
+        if (!window.sb) { RiverToast.error('Sin conexión a base de datos. No se puede crear la orden.'); return; }
 
-        // REAL MODE
         const btn = document.querySelector('button[onclick="CommercialModule.confirmCreateContract()"]');
         if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO...';
 
@@ -217,33 +191,8 @@ const commercialLogic = (() => {
             if (modal) modal.style.display = 'none';
 
         } catch (err) {
-            console.warn("Fallo crear contrato en DB, usando MOCK Local:", err);
-            // Fallback Seamless
-            const mock = {
-                id: 'mock-' + Date.now(),
-                order_number: 'OS-OFFLINE-' + Math.floor(Math.random() * 1000),
-                client_id: clientId,
-                origin_port: origin + ' (Offline)',
-                destination_port: dest,
-                status: 'BORRADOR',
-                agreed_rate: rate,
-                created_at: new Date().toISOString()
-            };
-            state.contracts.unshift(mock);
-            renderContractsList();
-            selectContract(mock);
-            if (modal) modal.style.display = 'none';
-
-            // Toast
-            const container = document.getElementById('contract-list');
-            if (container) {
-                const toast = document.createElement('div');
-                toast.style.cssText = "background:#f59e0b; color:#000; padding:10px; border-radius:5px; text-align:center; margin-bottom:10px; font-size:0.8rem; animation:fadeIn 0.5s;";
-                toast.innerHTML = "<i class='fas fa-wifi-slash'></i> Conexión inestable: Guardado localmente.";
-                container.prepend(toast);
-                setTimeout(() => toast.remove(), 4000);
-            }
-
+            console.error("Fallo crear contrato en DB:", err);
+            RiverToast.error('Error guardando la orden de servicio en la BD.', 'Error de Datos');
         } finally {
             if (btn) btn.innerHTML = 'CREAR ORDEN';
         }
@@ -256,32 +205,37 @@ const commercialLogic = (() => {
         const select = document.getElementById('cargo-barge-select');
         if (!select) return;
 
+        const mockBarges = '<option value="b-mock-1">B-001 GRANEL</option><option value="b-mock-2">B-002 TANQUE</option><option value="b-mock-3">B-003 GRANEL</option>';
+
         // Default Mock if no DB
         if (!window.sb) {
-            select.innerHTML = '<option value="b-mock-1">B-001 GRANEL (Mock)</option><option value="b-mock-2">B-002 GRANEL (Mock)</option>';
+            select.innerHTML = mockBarges;
             return;
         }
 
-        const { data, error } = await window.sb.from('vessels')
-            .select('id, name')
-            .eq('vessel_type', 'Barcaza'); // Assuming 'vessel_type' exists and categorizes barges
+        try {
+            const { data, error } = await window.sb.fetchMine('fleet_assets', 'id, name');
 
-        if (error || !data || data.length === 0) {
-            // Fallback to all vessels if filter fails or empty
-            const allVessels = await window.sb.from('vessels').select('id, name');
-            if (allVessels.data) {
-                populateBargeSelect(allVessels.data);
+            if (error || !data || data.length === 0) {
+                console.warn("No vessels found, using mock barges");
+                select.innerHTML = mockBarges;
             } else {
-                select.innerHTML = '<option value="">Sin Activos Disponibles</option>';
+                populateBargeSelect(data);
             }
-        } else {
-            populateBargeSelect(data);
+        } catch (e) {
+            console.warn("loadBarges error, using mock:", e);
+            select.innerHTML = mockBarges;
         }
     };
 
     const populateBargeSelect = (vessels) => {
         const select = document.getElementById('cargo-barge-select');
+        if (!select) return;
         select.innerHTML = '';
+        if (vessels.length === 0) {
+            select.innerHTML = '<option value="">Sin Activos Disponibles</option>';
+            return;
+        }
         vessels.forEach(v => {
             const opt = document.createElement('option');
             opt.value = v.id;
@@ -292,7 +246,7 @@ const commercialLogic = (() => {
 
     // 2. Assign Cargo Action
     const assignCargoAction = () => {
-        if (!state.activeContract) return alert("Selecciona una orden primero.");
+        if (!state.activeContract) { RiverToast.warning('Selecciona una orden primero.', 'Atención'); return; }
 
         const bargeId = document.getElementById('cargo-barge-select').value;
         // Use placeholders if inputs missing (simplified for now)
@@ -302,7 +256,7 @@ const commercialLogic = (() => {
         const product = productInput ? productInput.value : 'S/D';
         const qty = qtyInput ? parseFloat(qtyInput.value) : 0;
 
-        if (qty <= 0) return alert("Ingresa una cantidad válida.");
+        if (qty <= 0) { RiverToast.warning('Ingresa una cantidad válida.', 'Validación'); return; }
 
         const btn = document.querySelector('#cargo-editor-panel button.btn-new-contract');
         if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
@@ -311,24 +265,8 @@ const commercialLogic = (() => {
     };
 
     const addCargoToManifest = async (contractId, bargeId, product, qty, btnElement) => {
-        // MOCK / FALLBACK
-        if (!window.sb || contractId.toString().startsWith('mock')) {
-            const mockManifest = {
-                id: 'm-mock-' + Date.now(),
-                service_order_id: contractId,
-                barge_id: bargeId,
-                barge: { name: document.getElementById('cargo-barge-select').options[document.getElementById('cargo-barge-select').selectedIndex].text },
-                product_type: product,
-                quantity: qty,
-                created_at: new Date().toISOString()
-            };
-            state.manifests.push(mockManifest);
-            renderManifests();
-            if (btnElement) btnElement.innerHTML = 'Asignar';
-            return;
-        }
+        if (!window.sb) { RiverToast.error('Sin conexión a base de datos.'); return; }
 
-        // REAL DB
         try {
             const payload = {
                 service_order_id: contractId,
@@ -337,7 +275,7 @@ const commercialLogic = (() => {
                 quantity: qty
             };
 
-            const { data, error } = await window.sb.from('cargo_manifests').insert(payload).select('*, barge:vessels(name)').single();
+            const { data, error } = await window.sb.from('cargo_manifests').insert(payload).select('*, barge:fleet_assets(name)').single();
 
             if (error) throw error;
 
@@ -345,18 +283,8 @@ const commercialLogic = (() => {
             renderManifests();
 
         } catch (err) {
-            console.warn("Fallo asignar carga, usando local:", err);
-            const mockManifest = {
-                id: 'm-offline-' + Date.now(),
-                service_order_id: contractId,
-                barge_id: bargeId,
-                barge: { name: "B-OFFLINE (Local)" },
-                product_type: product,
-                quantity: qty,
-                created_at: new Date().toISOString()
-            };
-            state.manifests.push(mockManifest);
-            renderManifests();
+            console.error("Fallo asignar carga:", err);
+            RiverToast.error('Hubo un error asignando la carga en la BD.', 'Error de Datos');
         } finally {
             if (btnElement) btnElement.innerHTML = 'Asignar';
         }
@@ -398,8 +326,8 @@ const commercialLogic = (() => {
                 <div style="font-size:0.8rem; color:#666; margin-top:5px; display:flex; justify-content:space-between; align-items:center;">
                     <span>${c.order_number}</span>
                     <div style="display:flex; gap:10px;">
-                        <button class="btn-icon-sm" onclick="event.stopPropagation(); CommercialModule.deleteContract('${c.id}')" title="Eliminar" style="color:#ef4444; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                        <button class="btn-icon-sm" onclick="event.stopPropagation(); CommercialModule.selectContractId('${c.id}')" title="Abrir" style="color:#00e5ff; background:none; border:none; cursor:pointer;"><i class="fas fa-chevron-right"></i></button>
+                        <button class="btn-icon-sm" onclick="event.stopPropagation(); CommercialModule.deleteContract('${c.id}')" data-tooltip="Eliminar" style="color:#ef4444; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                        <button class="btn-icon-sm" onclick="event.stopPropagation(); CommercialModule.selectContractId('${c.id}')" data-tooltip="Abrir Orden" style="color:#00e5ff; background:none; border:none; cursor:pointer;"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             `;
@@ -484,7 +412,7 @@ const commercialLogic = (() => {
     };
 
     const deleteContract = async (id) => {
-        if (!confirm("¿Eliminar esta orden de servicio?")) return;
+        if (window.RiverToast) RiverToast.info("Orden de servicio eliminada permanentemente.", "Servicio Eliminado", "fas fa-trash");
 
         state.contracts = state.contracts.filter(c => c.id !== id);
         if (state.activeContract && state.activeContract.id === id) {

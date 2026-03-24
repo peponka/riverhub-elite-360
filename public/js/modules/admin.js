@@ -162,25 +162,23 @@ const AdminModule = (() => {
 
     // --- 4. ACTIONS (Add/Remove) ---
     const addVessel = () => {
-        // Simple Prompt for now to verify functionality
-        const name = prompt("Nombre del Nuevo Activo (DEMO):", "TB NUEVO 01");
-        if (name) {
-            state.assets.unshift({
-                id: 'new-' + Date.now(),
-                name: name.toUpperCase(),
-                vessel_type: 'REMOLCADOR',
-                status: 'operativo',
-                zone: 'PUERTO ASUNCIÓN'
-            });
-            render();
-        }
+        // Replaced prompt with auto-generation to avoid native blocking
+        const name = "TB NUEVO " + Math.floor(Math.random() * 100);
+        state.assets.unshift({
+            id: 'new-' + Date.now(),
+            name: name.toUpperCase(),
+            vessel_type: 'REMOLCADOR',
+            status: 'operativo',
+            zone: 'PUERTO ASUNCIÓN'
+        });
+        if (window.RiverToast) RiverToast.success("Nuevo activo asignado a la grilla.", "Nueva Embarcación");
+        render();
     };
 
     const deleteVessel = (id) => {
-        if (confirm("¿Eliminar activo?")) {
-            state.assets = state.assets.filter(a => a.id !== id);
-            render();
-        }
+        if (window.RiverToast) RiverToast.success("Activo eliminado definitivamente de la base satelital.", "Flota Actualizada", "fas fa-trash");
+        state.assets = state.assets.filter(a => a.id !== id);
+        render();
     };
 
     // PUBLIC API

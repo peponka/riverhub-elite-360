@@ -1,0 +1,1131 @@
+/* ============================================================
+   RIVERHUB WEB — FLUTTER CUPERTINO STYLE OVERRIDE
+   Transforms the dark web theme to match the light Flutter app
+   ============================================================ */
+
+/* ===== ELITE 360 DARK MINIMALIST VARIABLES (MATCHING SIDEBAR) ===== */
+:root {
+    --flutter-bg: #0A0E1A; /* Matches the sidebar exactly */
+    --flutter-card: #131A2B; /* Slightly lighter than BG, sleek */
+    --flutter-card-border: rgba(255, 255, 255, 0.05);
+    --flutter-text: #F8FAFC; /* Crisp white */
+    --flutter-text-secondary: #94A3B8; /* Slate gray */
+    --flutter-text-muted: #64748B;
+    --flutter-blue: #00E5FF; /* Neon Cyan */
+    --flutter-green: #10B981; /* Emerald */
+    --flutter-orange: #F59E0B; /* Amber */
+    --flutter-red: #EF4444; /* Rose */
+    --flutter-indigo: #6366F1;
+    --flutter-teal: #14B8A6;
+    --flutter-yellow: #EAB308;
+    --flutter-separator: rgba(255, 255, 255, 0.05); /* Very subtle line */
+    --flutter-nav-bg: rgba(10, 14, 26, 0.85); /* Glassmorphism dark */
+    --flutter-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --flutter-radius: 20px;
+    --flutter-radius-sm: 14px;
+    --flutter-radius-xs: 10px;
+
+    /* FORCE INJECT AZURE BLUE OVERRIDING OLD CSS VARIABLES FROM ALL MODULES */
+    --md-sys-color-primary: #0A84FF !important;
+    --neon-cyan: #0A84FF !important;
+    --cyan: #0A84FF !important;
+    --md-sys-color-on-primary: #FFFFFF !important;
+}
+
+/* ===== BODY & GLOBAL (Minimalist Base) ===== */
+* {
+    box-sizing: border-box !important; /* CRITICAL: Prevents widths from pushing buttons off-screen */
+}
+
+html, body {
+    overflow-x: hidden !important; /* Prevent horizontal scrolling/spilling */
+    background: var(--flutter-bg) !important;
+    color: var(--flutter-text) !important;
+    font-family: -apple-system, 'SF Pro Display', 'Inter', BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Prevent bottom cutoff so elements are always reachable */
+.view-section {
+    padding-bottom: 100px !important; 
+    animation: fadeInView 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== UNIVERSAL MINIMALIST UI ELEMENTS ===== */
+
+/* 1. CARDS & PANELS: Clean white, soft shadows */
+.card, .panel, .module-container > div, .white-panel, .form-container {
+    background: var(--flutter-card) !important;
+    border: 1px solid var(--flutter-card-border) !important;
+    border-radius: var(--flutter-radius-sm) !important;
+    box-shadow: var(--flutter-shadow) !important;
+    padding: 24px !important;
+    margin-bottom: 20px !important;
+}
+
+/* 2. FORMS & INPUTS: Clean grey fills, deep focus rings */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], select, textarea {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    color: var(--flutter-text) !important;
+    font-size: 14px !important;
+    font-family: inherit !important;
+    outline: none !important;
+    transition: all 0.2s ease !important;
+    width: 100%;
+}
+
+input:focus, select:focus, textarea:focus {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--flutter-blue) !important;
+    box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.1) !important;
+}
+
+/* 3. BUTTONS: Floating pill shapes */
+button, .btn, .btn-primary, .btn-secondary, .btn-action {
+    border-radius: 100px !important; /* Apple Pill */
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.2px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+button:active, .btn:active {
+    transform: scale(0.96) !important;
+}
+
+/* Dominant Action Button: Absolute Readability (Apple Dark Mode Blue) */
+/* VITAL FIX: Brutal wildcard catch-all for ALL buttons */
+button:not(.btn-cancel):not(.btn-danger):not(.btn-close):not(#btn-ptt):not(.btn-clear-radar):not(.nav-item), 
+.btn:not(.btn-cancel):not(.btn-danger):not(.btn-close):not(.btn-clear-radar), 
+[class*="btn-"]:not(.btn-cancel):not(.btn-danger):not(.btn-close):not(.btn-clear-radar) {
+    background: #0A84FF !important; 
+    background-color: #0A84FF !important;
+    color: #FFFFFF !important; 
+    font-weight: 700 !important;
+    letter-spacing: 0.3px !important;
+    text-shadow: none !important;
+    box-shadow: 0 4px 14px rgba(10, 132, 255, 0.3) !important;
+    border: none !important;
+}
+
+button:not(.btn-cancel):not(.btn-danger):not(.btn-close):not(#btn-ptt):not(.btn-clear-radar):not(.nav-item):hover, 
+.btn:not(.btn-cancel):not(.btn-danger):not(.btn-close):not(.btn-clear-radar):hover, 
+[class*="btn-"]:not(.btn-cancel):not(.btn-danger):not(.btn-close):not(.btn-clear-radar):hover {
+    background: #409CFF !important; 
+    background-color: #409CFF !important;
+    box-shadow: 0 6px 20px rgba(10, 132, 255, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* 4. TABLES: Minimalist Data Grid */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 10px !important;
+}
+
+th {
+    background: rgba(255, 255, 255, 0.02) !important;
+    color: var(--flutter-blue) !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid var(--flutter-separator) !important;
+    text-align: left !important;
+}
+
+td {
+    padding: 16px !important;
+    border-bottom: 1px solid var(--flutter-separator) !important;
+    color: var(--flutter-text) !important;
+    font-size: 14px !important;
+    vertical-align: middle !important;
+}
+
+tr:hover td {
+    background: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* ===== APP CONTAINER ===== */
+.app-container {
+    background: var(--flutter-bg) !important;
+}
+
+/* ===== SIDEBAR — EXACT Flutter AppDrawer Replica ===== */
+/* Flutter: Drawer(backgroundColor: Color(0xFF0A0E1A)) */
+.sidebar {
+    background: #0A0E1A !important;
+    border-right: none !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Header: gradient avatar + white text */
+.sidebar .brand-section {
+    border-bottom: 1px solid #1E293B !important;
+    padding: 20px !important;
+}
+
+.sidebar .brand-section .brand-logo {
+    background: linear-gradient(135deg, #00E5FF, #3B82F6) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 48px !important;
+    height: 48px !important;
+}
+
+.sidebar .brand-section .brand-name {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+}
+
+.sidebar .brand-section .brand-tag {
+    background: rgba(0, 229, 255, 0.15) !important;
+    color: #00E5FF !important;
+    border: none !important;
+    font-size: 9px !important;
+    letter-spacing: 1px !important;
+}
+
+/* Section headers: Flutter _sectionHeader style */
+/* fontSize: 10, fontWeight: w700, color: Color(0xFF475569), letterSpacing: 1.2 */
+.sidebar .section-label {
+    color: #475569 !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.2px !important;
+    text-transform: uppercase !important;
+    padding: 16px 20px 6px !important;
+}
+
+/* Menu items: Flutter _buildDrawerItem style */
+/* ListTile with leading icon container + white text + chevron trailing */
+.menu a {
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    padding: 8px 20px !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    transition: background 0.2s ease !important;
+    position: relative !important;
+}
+
+.menu a::after {
+    content: '›' !important;
+    position: absolute !important;
+    right: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #475569 !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+}
+
+.menu a:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #FFFFFF !important;
+}
+
+.menu a.active {
+    background: rgba(0, 229, 255, 0.08) !important;
+    color: #00E5FF !important;
+    font-weight: 700 !important;
+    border: none !important;
+}
+
+.menu a.active::after {
+    color: #00E5FF !important;
+}
+
+/* Icon styling: colored rounded squares like Flutter */
+/* container(padding: 6, borderRadius: 8, color: iconColor.withOpacity(0.15)) */
+/* COLORS are applied by JS inline (flutter-sidebar-colors) to bypass specificity */
+.menu a i {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    margin-right: 12px !important;
+    text-shadow: none !important;
+    flex-shrink: 0 !important;
+}
+
+/* Flutter AppDrawer icon colors — NO !important so JS inline can override */
+/* OPERACIONES */
+#nav-dashboard i {
+    color: #3B82F6;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+#nav-mapa i {
+    color: #00E5FF;
+    background: rgba(0, 229, 255, 0.15);
+}
+
+#nav-flota i,
+#nav-fleet-reboot i {
+    color: #00E5FF;
+    background: rgba(0, 229, 255, 0.15);
+}
+
+#nav-combustible i {
+    color: #8B5CF6;
+    background: rgba(139, 92, 246, 0.15);
+}
+
+#nav-calado i {
+    color: #3B82F6;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+#nav-hidrologia i {
+    color: #06B6D4;
+    background: rgba(6, 182, 212, 0.15);
+}
+
+#nav-convoys i {
+    color: #10B981;
+    background: rgba(16, 185, 129, 0.15);
+}
+
+#nav-loadmaster i {
+    color: #F59E0B;
+    background: rgba(245, 158, 11, 0.15);
+}
+
+#nav-tracking i {
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.15);
+}
+
+/* LOGÍSTICA */
+#nav-viajes i {
+    color: #F97316;
+    background: rgba(249, 115, 22, 0.15);
+}
+
+#nav-cotizador i {
+    color: #10B981;
+    background: rgba(16, 185, 129, 0.15);
+}
+
+#nav-commercial i {
+    color: #8B5CF6;
+    background: rgba(139, 92, 246, 0.15);
+}
+
+#nav-docs i {
+    color: #3B82F6;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+/* MANTENIMIENTO */
+#nav-mantenimiento i {
+    color: #F59E0B;
+    background: rgba(245, 158, 11, 0.15);
+}
+
+#nav-panol i {
+    color: #06B6D4;
+    background: rgba(6, 182, 212, 0.15);
+}
+
+#nav-incidentes i {
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.15);
+}
+
+/* TRIPULACIÓN */
+#nav-tripulacion i {
+    color: #10B981;
+    background: rgba(16, 185, 129, 0.15);
+}
+
+#nav-comunicaciones i {
+    color: #00E5FF;
+    background: rgba(0, 229, 255, 0.15);
+}
+
+#nav-bitacora i {
+    color: #F97316;
+    background: rgba(249, 115, 22, 0.15);
+}
+
+/* INTELIGENCIA */
+#nav-reportes i {
+    color: #F97316;
+    background: rgba(249, 115, 22, 0.15);
+}
+
+#nav-integraciones i {
+    color: #10B981;
+    background: rgba(16, 185, 129, 0.15);
+}
+
+/* SISTEMA */
+#nav-billing i {
+    color: #3B82F6;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+#nav-auditoria i {
+    color: #64748B;
+    background: rgba(100, 116, 139, 0.15);
+}
+
+#nav-admin-console i {
+    color: #8B5CF6;
+    background: rgba(139, 92, 246, 0.15);
+}
+
+#nav-backoffice i {
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.15);
+}
+
+/* Active state */
+.menu a.active i {
+    filter: brightness(1.2);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+}
+
+/* ===== MODULE PAGES — Flutter CupertinoPageScaffold Style ===== */
+.view-section {
+    background: var(--flutter-bg) !important;
+    padding: 20px !important;
+}
+
+/* Module headers */
+.view-section h2,
+.view-section h3 {
+    color: var(--flutter-text) !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+}
+
+/* Module containers */
+.view-section>div {
+    color: var(--flutter-text) !important;
+}
+
+/* All module cards/panels to white */
+.view-section .card,
+.view-section .panel,
+.view-section .section-card,
+.view-section .module-card,
+.view-section .container-card {
+    background: var(--flutter-card) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius) !important;
+    box-shadow: var(--flutter-shadow) !important;
+    color: var(--flutter-text) !important;
+}
+
+/* Form containers in modules */
+.view-section form,
+.view-section .form-group {
+    background: var(--flutter-card) !important;
+    border-radius: var(--flutter-radius-xs) !important;
+    color: var(--flutter-text) !important;
+}
+
+.view-section label {
+    color: var(--flutter-text-secondary) !important;
+}
+
+/* Status badges in modules */
+.view-section .status-badge,
+.view-section .badge {
+    border-radius: 20px !important;
+}
+
+/* Buttons in modules — iOS style */
+.view-section .btn-primary,
+.view-section button[class*="btn"] {
+    background: var(--flutter-blue) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: var(--flutter-radius-sm) !important;
+    font-weight: 600 !important;
+}
+
+.view-section .btn-primary:hover,
+.view-section button[class*="btn"]:hover {
+    filter: brightness(1.05) !important;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25) !important;
+}
+
+/* User profile at bottom of sidebar */
+.user-profile {
+    border-top: 1px solid #1E293B !important;
+    background: transparent !important;
+}
+
+.avatar-circle {
+    background: linear-gradient(135deg, #00E5FF, #3B82F6) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+.user-info strong {
+    color: #FFFFFF !important;
+}
+
+.user-info span {
+    color: #64748B !important;
+}
+
+/* ===== TOP BAR — CupertinoNavigationBar ===== */
+.top-bar {
+    background: var(--flutter-nav-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1) !important;
+    color: var(--flutter-text) !important;
+}
+
+.top-bar h1 {
+    color: var(--flutter-text) !important;
+    font-weight: 700 !important;
+}
+
+.top-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+}
+
+.status-badge {
+    background: rgba(0, 122, 255, 0.1) !important;
+    color: var(--flutter-blue) !important;
+    border: none !important;
+}
+
+.btn-icon {
+    color: var(--flutter-text-secondary) !important;
+}
+
+.btn-icon:hover {
+    background: rgba(0, 0, 0, 0.04) !important;
+    color: var(--flutter-text) !important;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    background: var(--flutter-bg) !important;
+}
+
+.view-section {
+    background: var(--flutter-bg) !important;
+}
+
+/* ===== DASHBOARD — Flutter Style ===== */
+.dashboard-container {
+    background: var(--flutter-bg) !important;
+    color: var(--flutter-text) !important;
+}
+
+.dash-header {
+    border-bottom: none !important;
+    border-image: none !important;
+}
+
+.welcome-msg h2 {
+    color: var(--flutter-text) !important;
+    font-weight: 800 !important;
+    font-family: -apple-system, 'Inter', sans-serif !important;
+}
+
+.welcome-sub {
+    color: var(--flutter-text-secondary) !important;
+}
+
+.system-status {
+    background: rgba(52, 199, 89, 0.1) !important;
+    border: 1px solid rgba(52, 199, 89, 0.2) !important;
+    color: var(--flutter-green) !important;
+    box-shadow: none !important;
+}
+
+/* ===== KPI CARDS — Flutter _buildMetricCard Style ===== */
+.kpi-card-v3 {
+    background: var(--flutter-card) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius) !important;
+    box-shadow: var(--flutter-shadow) !important;
+    padding: 20px !important;
+}
+
+.kpi-card-v3::before {
+    display: none !important;
+    /* Remove top gradient line */
+}
+
+.kpi-card-v3:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+    border-color: transparent !important;
+}
+
+.kpi-icon-wrapper {
+    border-radius: var(--flutter-radius-xs) !important;
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 20px !important;
+}
+
+/* iOS-style colored icon backgrounds for dark mode */
+.cyan-glow {
+    color: var(--flutter-blue) !important;
+    background: rgba(0, 229, 255, 0.1) !important;
+}
+
+.red-glow {
+    color: var(--flutter-red) !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.amber-glow {
+    color: var(--flutter-orange) !important;
+    background: rgba(245, 158, 11, 0.1) !important;
+}
+
+.emerald-glow {
+    color: var(--flutter-green) !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+}
+
+.kpi-label {
+    color: var(--flutter-text-secondary) !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    font-size: 14px !important;
+    letter-spacing: 0 !important;
+}
+
+.kpi-value {
+    color: var(--flutter-text) !important;
+    font-weight: 800 !important;
+    font-size: 32px !important;
+}
+
+.kpi-unit {
+    color: var(--flutter-text-muted) !important;
+}
+
+.kpi-trend.positive {
+    color: var(--flutter-green) !important;
+    background: rgba(52, 199, 89, 0.1) !important;
+    border-radius: 20px !important;
+}
+
+.kpi-trend.negative {
+    color: var(--flutter-red) !important;
+    background: rgba(255, 59, 48, 0.1) !important;
+    border-radius: 20px !important;
+}
+
+/* ===== PANELS — Flutter White Cards ===== */
+.map-panel-v3,
+.feed-panel-v3,
+.chart-panel-v3 {
+    background: var(--flutter-card) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius) !important;
+    box-shadow: var(--flutter-shadow) !important;
+}
+
+.chart-panel-v3:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+    border-color: transparent !important;
+}
+
+.panel-header-v3 {
+    background: var(--flutter-card) !important;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.panel-header-v3 h3 {
+    color: var(--flutter-text) !important;
+}
+
+.panel-footer-v3 {
+    background: var(--flutter-card) !important;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.panel-header-sm {
+    color: var(--flutter-text-secondary) !important;
+}
+
+.live-indicator {
+    color: var(--flutter-green) !important;
+    background: rgba(52, 199, 89, 0.08) !important;
+    border: 1px solid rgba(52, 199, 89, 0.2) !important;
+}
+
+/* ===== BUTTONS ===== */
+.btn-view-all {
+    border: 1px solid var(--flutter-card-border) !important;
+    color: var(--flutter-text-secondary) !important;
+    border-radius: var(--flutter-radius-sm) !important;
+    background: transparent !important;
+}
+
+.btn-view-all:hover {
+    background: rgba(0, 122, 255, 0.06) !important;
+    color: var(--flutter-blue) !important;
+    border-color: rgba(0, 122, 255, 0.2) !important;
+}
+
+/* ===== SCROLLBAR — Subtle iOS Style ===== */
+::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15) !important;
+    border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* ===== MODAL SYSTEM — iOS Style ===== */
+.modal-overlay {
+    background: rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.modal-card,
+.modal-premium {
+    background: var(--flutter-card) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius) !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2) !important;
+    color: var(--flutter-text) !important;
+}
+
+/* ===== BADGES — iOS Rounded Pill ===== */
+.badge {
+    border-radius: 20px !important;
+}
+
+.badge.success {
+    background: rgba(52, 199, 89, 0.1) !important;
+    color: var(--flutter-green) !important;
+    border: none !important;
+}
+
+.badge.warning {
+    background: rgba(255, 149, 0, 0.1) !important;
+    color: var(--flutter-orange) !important;
+    border: none !important;
+}
+
+.badge.error {
+    background: rgba(255, 59, 48, 0.1) !important;
+    color: var(--flutter-red) !important;
+    border: none !important;
+}
+
+.badge.info {
+    background: rgba(0, 122, 255, 0.1) !important;
+    color: var(--flutter-blue) !important;
+    border: none !important;
+}
+
+/* ===== INPUTS — iOS CupertinoTextField ===== */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    background: #F2F2F7 !important; /* systemGray6 for contrast over white cards */
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    border-radius: var(--flutter-radius-xs) !important;
+    color: var(--flutter-text) !important;
+    font-family: -apple-system, 'Inter', sans-serif !important;
+    padding: 12px 16px !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2) !important;
+    border-color: rgba(0, 122, 255, 0.5) !important;
+    background: #FFFFFF !important;
+}
+
+input::placeholder {
+    color: var(--flutter-text-muted) !important;
+}
+
+/* ===== TOAST — iOS Push Notification Style ===== */
+.toast {
+    background: var(--flutter-card) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius-sm) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+    color: var(--flutter-text) !important;
+}
+
+/* ===== PULSING DOT — Keep Animations ===== */
+.pulsing-dot {
+    background: var(--flutter-green) !important;
+    box-shadow: 0 0 12px var(--flutter-green) !important;
+}
+
+/* ===== MAP CANVAS — Keep Dark For Elite 360 ===== */
+.map-canvas-v3 {
+    background: #0A0E1A !important;
+    border-radius: var(--flutter-radius-xs) !important;
+}
+
+/* ===== PROGRESS BARS ===== */
+.progress-fill {
+    background: linear-gradient(90deg, var(--flutter-blue), var(--flutter-teal)) !important;
+}
+
+/* ===== LOGIN SCREEN — iOS Light Style Override ===== */
+.login-screen {
+    background: var(--flutter-bg) !important;
+    background-image: none !important;
+}
+
+.login-overlay {
+    background: transparent !important;
+    backdrop-filter: none !important;
+}
+
+.login-card {
+    background: var(--flutter-card) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: none !important;
+}
+
+.login-logo i {
+    color: var(--flutter-blue) !important;
+    text-shadow: none !important;
+}
+
+.login-tabs .tab {
+    color: var(--flutter-text-secondary) !important;
+}
+
+.login-tabs .tab.active {
+    color: var(--flutter-blue) !important;
+    border-bottom-color: var(--flutter-blue) !important;
+    background: transparent !important;
+}
+
+.input-login-premium {
+    background: var(--flutter-bg) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius-xs) !important;
+    color: var(--flutter-text) !important;
+}
+
+.input-login-premium:focus {
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15) !important;
+    border: none !important;
+    background: var(--flutter-bg) !important;
+}
+
+.input-login-group i {
+    color: var(--flutter-text-muted) !important;
+}
+
+.btn-login {
+    background: var(--flutter-blue) !important;
+    border-radius: var(--flutter-radius-sm) !important;
+    box-shadow: none !important;
+    color: white !important;
+}
+
+.btn-login:hover {
+    filter: brightness(1.05) !important;
+    box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3) !important;
+}
+
+.login-footer {
+    color: var(--flutter-text-muted) !important;
+}
+
+.login-header h1 {
+    color: var(--flutter-text) !important;
+}
+
+.login-header p {
+    color: var(--flutter-text-secondary) !important;
+}
+
+/* ===== SPLASH — Match Flutter ===== */
+#splash-screen {
+    background: var(--flutter-bg) !important;
+}
+
+.splash-logo {
+    color: var(--flutter-blue) !important;
+    filter: none !important;
+}
+
+.splash-title {
+    color: var(--flutter-text) !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--flutter-text) !important;
+}
+
+.splash-subtitle {
+    color: var(--flutter-text-secondary) !important;
+}
+
+.splash-loader::after {
+    background: var(--flutter-blue) !important;
+    box-shadow: 0 0 10px rgba(0, 122, 255, 0.3) !important;
+}
+
+.splash-bg-decor {
+    display: none !important;
+}
+
+/* ===== GENERAL MODULE VIEWS ===== */
+.module-container,
+[class*="-container"] {
+    color: var(--flutter-text) !important;
+}
+
+/* ===== TABLE STYLES ===== */
+table {
+    background: var(--flutter-card) !important;
+    border-radius: var(--flutter-radius-xs) !important;
+    overflow: hidden;
+}
+
+th {
+    background: var(--flutter-bg) !important;
+    color: var(--flutter-text-secondary) !important;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+td {
+    color: var(--flutter-text) !important;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+tr:hover td {
+    background: rgba(0, 122, 255, 0.03) !important;
+}
+
+/* ============================================================
+   POLISH & FINAL REFINEMENTS
+   ============================================================ */
+
+/* Remove ALL neon/glow effects from light theme */
+*[class*="glow"],
+*[class*="neon"] {
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+/* Chart cards — remove cyan borders */
+.chart-panel-v3,
+.map-panel-v3,
+.feed-panel-v3 {
+    border: none !important;
+    border-left: none !important;
+    border-top: none !important;
+}
+
+/* KPI cards — remove any colored top borders */
+.kpi-card-v3 {
+    border-top: none !important;
+    border-left: none !important;
+}
+
+/* Top bar status badge — cleaner */
+.top-bar .system-status,
+.top-bar .status-badge {
+    background: rgba(52, 199, 89, 0.1) !important;
+    color: #34C759 !important;
+    border: none !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    border-radius: 20px !important;
+    padding: 4px 12px !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+/* Notification bell */
+.notification-badge {
+    background: var(--flutter-red) !important;
+    color: white !important;
+}
+
+/* "LIVE MONITORING" button — iOS style */
+.system-status {
+    animation: none !important;
+}
+
+/* Dashboard welcome subtitle */
+.welcome-sub {
+    color: var(--flutter-text-secondary) !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 14px !important;
+}
+
+/* Fix dark background sections in modules */
+.cotizador-container,
+.commercial-container,
+.viajes-container,
+.tracking-container,
+.combustible-container,
+.mantenimiento-container,
+.tripulacion-container,
+.panol-container,
+.incidentes-container,
+.comunicaciones-container,
+.bitacora-container,
+.reportes-container,
+.integraciones-container,
+.billing-container,
+.hidrologia-container,
+.calado-container,
+.audit-container,
+.docs-container,
+.admin-container {
+    background: var(--flutter-bg) !important;
+    color: var(--flutter-text) !important;
+}
+
+/* Module inner cards */
+.cotizador-container .card,
+.commercial-container .card,
+.commercial-container .orders-panel,
+.commercial-container .detail-panel,
+.viajes-container .card,
+.tracking-container .card,
+.tracking-card {
+    background: var(--flutter-card) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius) !important;
+    box-shadow: var(--flutter-shadow) !important;
+    color: var(--flutter-text) !important;
+}
+
+/* Fix module panel headers */
+.orders-panel,
+.detail-panel,
+.quote-panel,
+.result-panel {
+    background: var(--flutter-card) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius) !important;
+    box-shadow: var(--flutter-shadow) !important;
+}
+
+/* Fix order items in commercial module */
+.order-item {
+    background: var(--flutter-bg) !important;
+    border: none !important;
+    border-radius: var(--flutter-radius-xs) !important;
+    color: var(--flutter-text) !important;
+}
+
+.order-item:hover {
+    background: rgba(0, 122, 255, 0.04) !important;
+}
+
+/* Fix status badges - active/borrador */
+.order-status.active,
+.status-active {
+    background: rgba(52, 199, 89, 0.1) !important;
+    color: #34C759 !important;
+    border: none !important;
+    border-radius: 20px !important;
+}
+
+.order-status.draft,
+.status-draft {
+    background: rgba(142, 142, 147, 0.12) !important;
+    color: #8E8E93 !important;
+    border: none !important;
+    border-radius: 20px !important;
+}
+
+/* Fix select/dropdown in modules */
+select {
+    background: var(--flutter-bg) !important;
+    color: var(--flutter-text) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: var(--flutter-radius-xs) !important;
+    padding: 10px 14px !important;
+    appearance: auto !important;
+}
+
+/* Fix any remaining dark text-on-dark-bg */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--flutter-text) !important;
+}
+
+p {
+    color: var(--flutter-text) !important;
+}
+
+/* Smooth transitions on all interactive elements */
+.menu a,
+.kpi-card-v3,
+.chart-panel-v3,
+button {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Remove grid pattern splash background */
+#splash-screen .splash-bg-decor {
+    display: none !important;
+}
+
+/* Loader bar in splash */
+.splash-loader {
+    background: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* BETA badge — subtle iOS style */
+.module-badge,
+.badge-beta {
+    background: rgba(0, 122, 255, 0.1) !important;
+    color: var(--flutter-blue) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    padding: 2px 6px !important;
+}

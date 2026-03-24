@@ -38,14 +38,32 @@ const AgentChatModule = (() => {
         addMessage(USER_NAME, text, 'user');
         input.value = '';
 
-        // 2. Simulate AI Thinking
+        // 2. Show typing indicator
         showTypingIndicator(true);
 
-        // 3. AI Response (Mocked for now)
-        // In a real scenario, this would call an API Endpoint
-        await new Promise(r => setTimeout(r, 1500)); // Delay
+        let response;
+        try {
+            // 3. Try REAL Gemini AI via backend
+            const res = await fetch('/api/ai/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text, context: 'Chat de operador de flota' })
+            });
 
-        const response = generateMockResponse(text);
+            if (res.ok) {
+                const data = await res.json();
+                response = data.response;
+                console.log("🤖 NexoBot: Gemini AI response");
+            } else {
+                // AI not available, use mock
+                response = await generateMockResponse(text);
+                console.log("🤖 NexoBot: Mock response (AI unavailable)");
+            }
+        } catch (e) {
+            // Offline or server down, use mock
+            response = await generateMockResponse(text);
+            console.log("🤖 NexoBot: Mock response (offline)");
+        }
 
         showTypingIndicator(false);
         addMessage(AGENT_NAME, response, 'agent');

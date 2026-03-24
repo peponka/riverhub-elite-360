@@ -4,25 +4,25 @@
    ==================================== */
 
 :root {
-    /* === OCEANIC DARK PALETTE === */
-    --ocean-deepest: #0a1628;
-    /* Abismo marino - fondo principal */
-    --ocean-deep: #0f1d30;
-    /* Profundidad - cards/panels */
-    --ocean-mid: #1a2942;
-    /* Nivel medio - elementos hover */
-    --ocean-surface: #253654;
-    /* Superficie - bordes sutiles */
+    /* === OCEANIC DARK PALETTE (Flutter-Matched) === */
+    --ocean-deepest: #0A0E1A;
+    /* Flutter background - Color(0xFF0A0E1A) */
+    --ocean-deep: #0F172A;
+    /* Flutter surface */
+    --ocean-mid: #1E293B;
+    /* Flutter surface-variant */
+    --ocean-surface: #334155;
+    /* Flutter outline-variant */
 
-    /* === ACCENT COLORS PREMIUM === */
-    --cyan-primary: #00d9ff;
-    /* Cyan brillante principal */
-    --cyan-glow: #00f0ff;
-    /* Resplandor cyan */
-    --blue-ice: #5eb3ff;
-    /* Azul hielo */
-    --teal-deep: #00a8b5;
-    /* Teal profundo */
+    /* === ACCENT COLORS (Flutter-Matched) === */
+    --cyan-primary: #00E5FF;
+    /* Flutter Color(0xFF00E5FF) */
+    --cyan-glow: #00E5FF;
+    /* Same as primary for consistency */
+    --blue-ice: #3B82F6;
+    /* Flutter blue */
+    --teal-deep: #10B981;
+    /* Flutter green */
 
     /* === STATUS INDICATORS === */
     --status-active: #00ff9f;

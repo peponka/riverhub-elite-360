@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crear Orden de Trabajo - RiverHub Elite 360</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1281e2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111a22",
+                        "surface-dark": "#192733",
+                        "border-dark": "#233748",
+                        "text-secondary": "#92afc9"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better integration with dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111a22;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #324e67;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a6b8a;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-gray-900 dark:text-white antialiased overflow-x-hidden">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-border-dark px-10 py-3 bg-background-dark z-20 shrink-0">
+<div class="flex items-center gap-4 text-white">
+<div class="size-6 text-primary">
+<svg class="size-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">RiverHub Elite 360</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<nav class="flex items-center gap-9 hidden lg:flex">
+<a class="text-text-secondary hover:text-white transition-colors text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-text-secondary hover:text-white transition-colors text-sm font-medium leading-normal" href="#">Flota</a>
+<a class="text-white text-sm font-medium leading-normal border-b-2 border-primary pb-1" href="#">Mantenimiento</a>
+<a class="text-text-secondary hover:text-white transition-colors text-sm font-medium leading-normal" href="#">Inventario</a>
+<a class="text-text-secondary hover:text-white transition-colors text-sm font-medium leading-normal" href="#">Reportes</a>
+</nav>
+<div class="flex gap-2">
+<button class="flex items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-surface-dark text-white hover:bg-border-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="flex items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-surface-dark text-white hover:bg-border-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-border-dark" data-alt="User profile picture showing a professional headshot" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAnRMvsC2R0341k7b7q7Fdyq0ZwhuDa2U9B12mDI9a-GPKgvezfL75fZT35UqswVB-En848wJYhHoLoitQAsu3Rvow3_CdMW1D651dh5Y6RHR-9DJNuaed73zOAqWGgamgQzTmMYin6EKD_tVaueNYn-X0cx1CJSKObj6v0GW2EBvxQd2WXKALvW9M1fVSCp4Mjc-bV1lNb9e7Le4RBjgDhj4Rvp2J64bZ-g3tN0JD5Z_X_xAEjjywhAJ6ME3aGVfeYPcRzn3MRMpc");'></div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex flex-1 overflow-hidden h-full">
+<!-- Sidebar / Context info (Optional for wider screens) -->
+<aside class="hidden xl:flex w-64 flex-col border-r border-border-dark bg-surface-dark/50 p-4 gap-4 overflow-y-auto">
+<div class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Resumen Reciente</div>
+<div class="bg-background-dark p-3 rounded-lg border border-border-dark">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-yellow-500 text-sm">warning</span>
+<span class="text-sm font-medium text-white">OT-2023-88</span>
+</div>
+<p class="text-xs text-text-secondary mb-1">Fuga de Aceite - Motor #2</p>
+<div class="text-[10px] text-text-secondary bg-surface-dark px-1.5 py-0.5 rounded inline-block">Remolcador "Hercules"</div>
+</div>
+<div class="bg-background-dark p-3 rounded-lg border border-border-dark">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+<span class="text-sm font-medium text-white">OT-2023-85</span>
+</div>
+<p class="text-xs text-text-secondary mb-1">Inspección de Casco</p>
+<div class="text-[10px] text-text-secondary bg-surface-dark px-1.5 py-0.5 rounded inline-block">Barcaza B-402</div>
+</div>
+</aside>
+<!-- Scrollable Form Container -->
+<div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<div class="flex justify-center py-8 px-4 sm:px-8">
+<div class="flex flex-col max-w-[1024px] flex-1 gap-6">
+<!-- Page Header -->
+<div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-border-dark">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h1 class="text-white text-3xl font-bold tracking-tight">Nueva Orden de Trabajo</h1>
+<span class="px-2.5 py-0.5 rounded-full bg-border-dark text-xs font-semibold text-text-secondary uppercase tracking-wide">Borrador</span>
+</div>
+<p class="text-text-secondary text-base">Complete el formulario para registrar una tarea de mantenimiento o reparación.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-transparent border border-border-dark text-white hover:bg-surface-dark transition-colors text-sm font-bold">
+                                    Cancelar
+                                </button>
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/20 text-sm font-bold gap-2">
+<span class="material-symbols-outlined text-lg">save</span>
+<span>Guardar Orden</span>
+</button>
+</div>
+</div>
+<!-- Main Form Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Details (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Asset & Basic Info Card -->
+<section class="bg-surface-dark rounded-xl border border-border-dark p-6 shadow-sm">
+<h3 class="text-white text-lg font-semibold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">directions_boat</span>
+                                        Información del Activo
+                                    </h3>
+<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-secondary">Seleccionar Embarcación (Remolcador / Barcaza)</label>
+<div class="relative">
+<select class="w-full h-12 rounded-lg bg-background-dark border border-border-dark text-white px-4 focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer">
+<option disabled="" selected="" value="">Buscar por nombre o ID de activo...</option>
+<option value="TUG-01">Remolcador "El Conquistador" (ID: TUG-01)</option>
+<option value="BAR-202">Barcaza Granelera B-202 (ID: BAR-202)</option>
+<option value="BAR-205">Barcaza Tanquera T-205 (ID: BAR-205)</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-secondary">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-secondary">Título de la Orden</label>
+<input class="w-full h-12 rounded-lg bg-background-dark border border-border-dark text-white px-4 placeholder:text-gray-600 focus:ring-1 focus:ring-primary focus:border-primary" placeholder="Ej: Fuga en sistema hidráulico" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-secondary">Tipo de Mantenimiento</label>
+<div class="grid grid-cols-2 bg-background-dark p-1 rounded-lg border border-border-dark h-12">
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="maint_type" type="radio"/>
+<div class="flex items-center justify-center h-full rounded w-full text-sm font-medium text-text-secondary peer-checked:bg-primary peer-checked:text-white transition-all">
+                                                            Correctivo
+                                                        </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="maint_type" type="radio"/>
+<div class="flex items-center justify-center h-full rounded w-full text-sm font-medium text-text-secondary peer-checked:bg-primary peer-checked:text-white transition-all">
+                                                            Preventivo
+                                                        </div>
+</label>
+</div>
+</div>
+</div>
+<!-- Conditional Field (Visible logic would be JS, here just shown) -->
+<div class="flex flex-col gap-2 hidden">
+<label class="text-sm font-medium text-text-secondary">Plan de Mantenimiento Vinculado</label>
+<div class="relative">
+<select class="w-full h-12 rounded-lg bg-background-dark border border-border-dark text-white px-4 focus:ring-1 focus:ring-primary focus:border-primary appearance-none">
+<option value="">Seleccione un plan...</option>
+<option value="PM-ENG-500">Mantenimiento Motor 500 horas</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-secondary">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-secondary">Descripción Detallada</label>
+<textarea class="w-full min-h-[140px] rounded-lg bg-background-dark border border-border-dark text-white p-4 placeholder:text-gray-600 focus:ring-1 focus:ring-primary focus:border-primary resize-y" placeholder="Describa el problema, síntomas observados, y cualquier instrucción específica para el técnico..."></textarea>
+</div>
+</div>
+</section>
+<!-- Attachments Card -->
+<section class="bg-surface-dark rounded-xl border border-border-dark p-6 shadow-sm">
+<h3 class="text-white text-lg font-semibold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">image</span>
+                                        Evidencia y Documentación
+                                    </h3>
+<div class="border-2 border-dashed border-border-dark rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-background-dark hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="bg-background-dark p-3 rounded-full mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">cloud_upload</span>
+</div>
+<p class="text-white font-medium">Haga clic o arrastre archivos aquí</p>
+<p class="text-sm text-text-secondary mt-1">Soporta: JPG, PNG, PDF (Max 10MB)</p>
+</div>
+<div class="mt-4 flex flex-wrap gap-3">
+<!-- Preview Item -->
+<div class="relative group flex items-center gap-3 bg-background-dark p-2 pr-4 rounded-lg border border-border-dark">
+<div class="size-10 rounded bg-cover bg-center" data-alt="Preview thumbnail of a damaged engine part" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCOEOZr-s2CAtTODWw-Ij5fQRsagBxshQSDL8fuxxKAZYb3rCItzfvoLxzVtBIJTMmPAdgjMoME4zYcTnJ_8xLTJcPW0plZ-ORDKk7VbDauyJv1ewLtAG8-2a8LwMBFxrFi3QXA4kZTj3EgonmRJPJ6MTsjS-FO9YmxlAaN7wUn-KQZl5LUo47fQTOGl1ocCXebd6kD4F7TO2Bid7xBXTvogykmmypeF_2Wwoh7KgABiXAf-FQ6QWyGzKsQx3Xq_EwliRobDBwLIB4');"></div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-white truncate max-w-[120px]">Fuga_Motor_01.jpg</span>
+<span class="text-[10px] text-text-secondary">2.4 MB</span>
+</div>
+<button class="ml-2 text-text-secondary hover:text-red-400">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Metadata & Settings (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Assignments Card -->
+<section class="bg-surface-dark rounded-xl border border-border-dark p-6 shadow-sm h-fit">
+<h3 class="text-white text-lg font-semibold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">assignment_ind</span>
+                                        Asignación
+                                    </h3>
+<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-secondary">Responsable</label>
+<div class="relative">
+<select class="w-full h-12 rounded-lg bg-background-dark border border-border-dark text-white pl-10 pr-4 focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer">
+<option value="">Sin asignar</option>
+<option selected="" value="tech1">Juan Pérez (Jefe Máquinas)</option>
+<option value="tech2">Maria Gonzalez (Electromecánica)</option>
+</select>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none text-[20px]">person</span>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-secondary">Prioridad</label>
+<div class="flex gap-2">
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="priority" type="radio"/>
+<div class="h-10 flex items-center justify-center rounded border border-border-dark bg-background-dark text-text-secondary peer-checked:bg-green-500/20 peer-checked:border-green-500 peer-checked:text-green-500 text-xs font-bold uppercase transition-all hover:bg-surface-dark">
+                                                        Baja
+                                                    </div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input checked="" class="peer sr-only" name="priority" type="radio"/>
+<div class="h-10 flex items-center justify-center rounded border border-border-dark bg-background-dark text-text-secondary peer-checked:bg-yellow-500/20 peer-checked:border-yellow-500 peer-checked:text-yellow-500 text-xs font-bold uppercase transition-all hover:bg-surface-dark">
+                                                        Media
+                                                    </div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="priority" type="radio"/>
+<div class="h-10 flex items-center justify-center rounded border border-border-dark bg-background-dark text-text-secondary peer-checked:bg-red-500/20 peer-checked:border-red-500 peer-checked:text-red-500 text-xs font-bold uppercase transition-all hover:bg-surface-dark">
+                                                        Alta
+                                                    </div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Planning Card -->
+<section class="bg-surface-dark rounded-xl border border-border-dark p-6 shadow-sm h-fit">
+<h3 class="text-white text-lg font-semibold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">calendar_clock</span>
+                                        Planificación
+                                    </h3>
+<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-secondary">Inicio Estimado</label>
+<div class="relative">
+<input class="w-full h-12 rounded-lg bg-background-dark border border-border-dark text-white px-4 placeholder:text-gray-600 focus:ring-1 focus:ring-primary focus:border-primary [color-scheme:dark]" type="datetime-local"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-secondary">Fin Estimado</label>
+<div class="relative">
+<input class="w-full h-12 rounded-lg bg-background-dark border border-border-dark text-white px-4 placeholder:text-gray-600 focus:ring-1 focus:ring-primary focus:border-primary [color-scheme:dark]" type="datetime-local"/>
+</div>
+</div>
+<div class="mt-2 p-3 bg-primary/10 border border-primary/20 rounded-lg flex gap-3 items-start">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">info</span>
+<p class="text-xs text-primary font-medium leading-relaxed">
+                                                Esta embarcación tiene una ruta programada para el 15 Oct. Considere ventanas de inactividad.
+                                            </p>
+</div>
+</div>
+</section>
+</div>
+</div>
+<div class="h-20"></div> <!-- Spacer -->
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

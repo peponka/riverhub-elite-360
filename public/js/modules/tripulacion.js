@@ -47,24 +47,24 @@ const CrewModule = (() => {
         if (container) container.innerHTML = '<div style="color:#00e5ff; text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Conectando con Base de Datos...</div>';
 
         try {
-            // 2. Fetch Logic - Robust Fetch
-            // We use direct select to ensure data visibility during development
-
             // Fetch crew
-            let cRes = await window.sb
-                .from('crew_members')
-                .select('*, vessels(name)');
+            let cRes = await window.sb.fetchMine('crew_members', '*');
+            if (cRes.error) {
+                console.warn("fetchMine failed on crew_members, falling back...", cRes.error);
+                cRes = await window.sb.from('crew_members').select('*');
+                if (cRes.error) throw cRes.error;
+            }
 
-            // Fetch vessels
-            let vRes = await window.sb
-                .from('vessels')
-                .select('id, name');
-
-            if (cRes.error) throw cRes.error;
+            // Fetch fleet_assets (vessels)
+            let vRes = await window.sb.fetchMine('fleet_assets', 'id, name');
+            if (vRes.error) {
+                console.warn("fetchMine failed on fleet_assets, falling back...", vRes.error);
+                vRes = await window.sb.from('fleet_assets').select('id, name');
+            }
 
             // 3. Set State
             state.crew = cRes.data || [];
-            state.vessels = (vRes.data || []);
+            state.vessels = vRes.data || [];
 
             // 4. Render
             renderCrewList();
@@ -97,8 +97,13 @@ const CrewModule = (() => {
         }
 
         const resolveVesselName = (c) => {
-            if (c.vessels && c.vessels.name) return c.vessels.name;
             const vid = c.vessel_id || '';
+            if (!vid) return 'Sin Asignar';
+            
+            // Map locally from state.vessels manually fetched
+            const found = state.vessels.find(v => v.id === vid);
+            if (found) return found.name;
+
             if (vid.includes('AIS')) return 'AIS TGT ' + vid.substr(4, 4);
             return 'Sin Asignar';
         };
@@ -120,10 +125,10 @@ const CrewModule = (() => {
                 <div class="card-body-elite">
                     <div class="profile-row">
                         <div class="avatar-elite">
-                            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(c.full_name)}&background=random&color=fff&bold=true" alt="Crew">
+                            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(c.full_name || 'NN')}&background=random&color=fff&bold=true" alt="Crew">
                         </div>
                         <div class="profile-info">
-                            <h3>${c.full_name}</h3>
+                            <h3>${c.full_name || 'Desconocido'}</h3>
                             <span class="profile-role">${c.role ? c.role.toUpperCase() : 'SIN ROL'}</span>
                             <span class="doc-id"><i class="fas fa-id-card"></i> ${c.doc_id || 'N/A'}</span>
                         </div>
@@ -150,8 +155,8 @@ const CrewModule = (() => {
                 </div>
                 
                 <div class="card-actions-elite">
-                    <button class="btn-card-action"><i class="fas fa-file-contract"></i> DOCS</button>
-                    <button class="btn-card-action primary"><i class="fas fa-exchange-alt"></i> RELEVAR</button>
+                    <button class="btn-card-action" onclick="RiverToast.info('Abriendo gestor documental de tripulante...', 'Expediente', 'fas fa-copy')"><i class="fas fa-file-contract"></i> DOCS</button>
+                    <button class="btn-card-action primary" onclick="RiverToast.info('Activando proceso de relevo para ${c.full_name}. Refiriendo a Capitanía...', 'Solicitud de Relevo', 'fas fa-exchange-alt')"><i class="fas fa-exchange-alt"></i> RELEVAR</button>
                 </div>
             `;
             container.appendChild(card);
@@ -203,13 +208,13 @@ const CrewModule = (() => {
         const roleInput = document.getElementById('crew-v2-role');
         const vesselSelect = document.getElementById('crew-v2-vessel');
 
-        if (!nameInput || !vesselSelect) return alert("Error interno: V2 Inputs no encontrados");
+        if (!nameInput || !vesselSelect) return RiverToast.error("Error interno: V2 Inputs no encontrados", "Fallo UI");
 
         const name = nameInput.value;
         const role = roleInput.value;
         const vesselId = vesselSelect.value; // Can be null if not selected, handle gracefully
 
-        if (!name) return alert("Por favor ingrese el nombre.");
+        if (!name) return RiverToast.warning("Por favor ingrese el nombre del tripulante.", "Datos Faltantes");
 
         const btn = document.querySelector('#modal-nuevo-relevo-v2 button[onclick*="submitV2"]');
         if (btn) btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> PROCESANDO...';
@@ -232,13 +237,13 @@ const CrewModule = (() => {
 
             if (error) throw error;
 
-            alert("Orden de Relevo (V2) Exitosa.");
+            RiverToast.success("Orden de Relevo (V2) Registrada con Éxito.", "Relevo Ejecutado");
             document.getElementById('modal-nuevo-relevo-v2').style.display = 'none';
             loadData(); // Refresh list
 
         } catch (e) {
             console.warn("V2 Error:", e);
-            alert("Error al guardar: " + e.message);
+            RiverToast.error("Error al guardar relevo: " + e.message, "Fallo Operativo");
         }
     };
 

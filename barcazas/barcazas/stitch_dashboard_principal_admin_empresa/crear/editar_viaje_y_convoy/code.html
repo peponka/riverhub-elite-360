@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RiverHub Elite 360 - Create Trip</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1281e2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                        "surface-dark": "#1c2b36",
+                        "surface-highlight": "#233748",
+                        "text-muted": "#92afc9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for industrial feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101a22; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #233748; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155; 
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-hidden h-screen flex">
+<!-- Sidebar -->
+<aside class="hidden lg:flex w-72 flex-col bg-background-dark border-r border-surface-highlight flex-shrink-0">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined fill">anchor</span>
+</div>
+<div>
+<h1 class="text-white text-base font-bold leading-tight">RiverHub Elite</h1>
+<p class="text-text-muted text-xs">Logistics Admin</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-2 flex flex-col gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:text-white hover:bg-surface-highlight transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:text-white hover:bg-surface-highlight transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-sm font-medium">Live Map</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary border border-primary/20" href="#">
+<span class="material-symbols-outlined fill">directions_boat</span>
+<span class="text-sm font-medium">Trips Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:text-white hover:bg-surface-highlight transition-colors" href="#">
+<span class="material-symbols-outlined">handyman</span>
+<span class="text-sm font-medium">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:text-white hover:bg-surface-highlight transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Cargo &amp; Assets</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:text-white hover:bg-surface-highlight transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+</nav>
+<div class="p-4 border-t border-surface-highlight">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:text-white hover:bg-surface-highlight transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<div class="mt-4 flex items-center gap-3 px-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="User profile picture of logistics manager" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBtGyo5aN1L4Vz_VO5-H_Uv0iPU34vG5orWYO9HwBbmqGW9skwcmL9Jt0_MmCvc3I0_KuB2LTGqC4LxCSMVzlu9yuqMGsn1_3R0iW9OhzWTFD0RR_rZkbTuzTvsrselatnCo8X7By4KhuJvrGqOuba-p_uwRU_Qp1B3kLuLWdpENE_fFPWAgMMlf2HhqaKOonTX71G5fn8Nuy5ONQ0xRR2fAJAWbE7YlHn7UrCkWLOcDp8NdKLyXU35EsjG8VvF2HDh0C_76VFtFBw');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-white">Alex Morgan</span>
+<span class="text-xs text-text-muted">Fleet Manager</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<div class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Top Navigation -->
+<header class="h-16 border-b border-surface-highlight bg-background-dark/95 backdrop-blur flex items-center justify-between px-6 lg:px-8 flex-shrink-0 z-10">
+<!-- Mobile Menu Button -->
+<button class="lg:hidden text-text-muted mr-4">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Search -->
+<div class="flex-1 max-w-xl">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 bg-surface-highlight border-none rounded-lg text-sm text-white placeholder-text-muted focus:ring-1 focus:ring-primary focus:bg-surface-dark transition-all" placeholder="Search trips, vessels, or cargo..." type="text"/>
+</div>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-4 ml-6">
+<button class="text-text-muted hover:text-white relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 size-2 bg-red-500 rounded-full border border-background-dark"></span>
+</button>
+<div class="h-6 w-px bg-surface-highlight mx-1"></div>
+<button class="text-sm font-medium text-text-muted hover:text-white">Help</button>
+</div>
+</header>
+<!-- Scrollable Page Area -->
+<main class="flex-1 overflow-y-auto p-6 lg:p-8 scroll-smooth">
+<div class="max-w-[1400px] mx-auto space-y-6">
+<!-- Breadcrumbs & Header -->
+<div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+<div class="space-y-1">
+<nav class="flex items-center gap-2 text-sm font-medium text-text-muted">
+<a class="hover:text-white transition-colors" href="#">Trips</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-white">Create New Trip</span>
+</nav>
+<h2 class="text-3xl font-bold text-white tracking-tight">Trip Configuration</h2>
+<p class="text-text-muted max-w-2xl">Set up route details, assign tugboat resources, and configure the barge convoy manifest.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 rounded-lg border border-surface-highlight bg-surface-dark text-white text-sm font-medium hover:bg-surface-highlight transition-colors">
+                            Save Draft
+                        </button>
+<button class="px-4 py-2 rounded-lg bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                            Save &amp; Schedule
+                        </button>
+</div>
+</div>
+<!-- Main Grid Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+<!-- Left Column: Trip Details & Tug (4 cols) -->
+<div class="xl:col-span-4 space-y-6">
+<!-- Trip Details Card -->
+<div class="bg-surface-dark border border-surface-highlight rounded-xl p-5 shadow-sm">
+<div class="flex items-center gap-2 mb-5 pb-3 border-b border-surface-highlight">
+<span class="material-symbols-outlined text-primary">edit_location_alt</span>
+<h3 class="font-semibold text-lg text-white">Trip Details</h3>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1.5">Trip Name / Reference</label>
+<input class="w-full bg-surface-highlight border-none rounded-lg text-white placeholder-gray-500 focus:ring-1 focus:ring-primary text-sm px-3 py-2.5" type="text" value="TR-2023-OCT-ALPHA"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1.5">Origin Port</label>
+<div class="relative">
+<select class="w-full bg-surface-highlight border-none rounded-lg text-white focus:ring-1 focus:ring-primary text-sm px-3 py-2.5 appearance-none">
+<option>Rosario, ARG</option>
+<option>Asunción, PRY</option>
+<option>Montevideo, URY</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-lg">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1.5">Destination</label>
+<div class="relative">
+<select class="w-full bg-surface-highlight border-none rounded-lg text-white focus:ring-1 focus:ring-primary text-sm px-3 py-2.5 appearance-none">
+<option>Nueva Palmira, URY</option>
+<option>Buenos Aires, ARG</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-lg">expand_more</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1.5">Est. Departure</label>
+<input class="w-full bg-surface-highlight border-none rounded-lg text-white/80 focus:ring-1 focus:ring-primary text-sm px-3 py-2.5 [color-scheme:dark]" type="datetime-local"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1.5">Est. Arrival</label>
+<input class="w-full bg-surface-highlight border-none rounded-lg text-white/80 focus:ring-1 focus:ring-primary text-sm px-3 py-2.5 [color-scheme:dark]" type="datetime-local"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1.5">Operational Notes</label>
+<textarea class="w-full bg-surface-highlight border-none rounded-lg text-white placeholder-gray-500 focus:ring-1 focus:ring-primary text-sm px-3 py-2.5 resize-none" placeholder="Enter special instructions, restrictions or remarks..." rows="3"></textarea>
+</div>
+</div>
+</div>
+<!-- Tugboat Selection Card -->
+<div class="bg-surface-dark border border-surface-highlight rounded-xl p-5 shadow-sm">
+<div class="flex items-center justify-between mb-5 pb-3 border-b border-surface-highlight">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">anchor</span>
+<h3 class="font-semibold text-lg text-white">Primary Tug</h3>
+</div>
+<button class="text-xs text-primary font-medium hover:text-blue-400">Change Asset</button>
+</div>
+<div class="bg-surface-highlight rounded-lg p-3 flex gap-4 items-start ring-1 ring-white/5">
+<div class="size-20 rounded-md bg-cover bg-center flex-shrink-0 relative overflow-hidden group" data-alt="Industrial tugboat on river" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAj_yXML-5es0vEeRZ_TVZbEwUeyqHPKzFy9vLIoPkCsHZiriFOveKmRCapBnLkRleIScsImmjpRol1mwh6wXpPgTHLjx7Qgpzj_kn_lzJMAhP_CoauHe372CrUBgM8dZitIewT4r4l1nBLtiZjHo-F6-HyBNqVF8_S1qbFzjwx_uBPvswqeb8OYXNUaBqqaWhsXCJtm4aGIj9rcjaJBBZ7asDXNsBxlhsaDyX2HqHyH5V_8-7-AqC66VlFQDJXHdbn2zsDdrFLip0');">
+<div class="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center">
+<span class="material-symbols-outlined text-white">visibility</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-white font-bold text-base truncate">TB Titan IV</h4>
+<p class="text-text-muted text-xs mb-2">IMO: 9876543 • Flag: PRY</p>
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-green-500/10 text-green-400 border border-green-500/20">Active</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-surface-dark text-text-muted border border-white/10">3200 HP</span>
+</div>
+</div>
+</div>
+<!-- Captain Select -->
+<div class="mt-4">
+<label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1.5">Assigned Captain</label>
+<div class="flex items-center gap-2 bg-surface-highlight rounded-lg px-3 py-2">
+<div class="size-6 rounded-full bg-gray-600 bg-cover bg-center" data-alt="Captain profile picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAX2uHLdqZakFlZnMJl1XHkHCZIehjMvEWVd9Jj-TVoqlE97GrmjnOYyZvcdB4T5MMbXNpeqHmndyphx1rlChtDapB8F1luiCB4yUC3qKvGgPie7dHMMhIRUHorI91QexyUxDSoSuQ6XBmnMVLJa1d0uYWeaXHdGYGU2Iz9mmyP-asmSiahvUmG0xCer6pY1axo0ESK4iHLR-NGeQHJ0DpfAKHtCNijrQ1rqsZekSWt2cLejI5Rqwsuvw5U-oQxN5HMHDKRAkN4T7s');"></div>
+<span class="text-sm text-white flex-1">Capt. Ricardo Mendez</span>
+<span class="material-symbols-outlined text-text-muted text-sm cursor-pointer hover:text-white">swap_horiz</span>
+</div>
+</div>
+</div>
+<!-- Trip Stats/Summary Mini -->
+<div class="bg-gradient-to-br from-primary/20 to-surface-highlight border border-primary/20 rounded-xl p-5">
+<h4 class="text-white text-sm font-bold mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">data_usage</span>
+                                Capacity Utilization
+                            </h4>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-text-muted">Total Tonnage</span>
+<span class="text-white font-mono">12,450 / 15,000 MT</span>
+</div>
+<div class="w-full bg-surface-dark rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 83%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-text-muted">Avg Draft</span>
+<span class="text-white font-mono">9.8 ft</span>
+</div>
+<div class="w-full bg-surface-dark rounded-full h-1.5">
+<div class="bg-green-500 h-1.5 rounded-full" style="width: 65%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Convoy & Cargo (8 cols) -->
+<div class="xl:col-span-8 flex flex-col gap-6">
+<!-- Header Action Bar -->
+<div class="flex flex-wrap items-center justify-between gap-4 bg-surface-dark border border-surface-highlight p-4 rounded-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-white">view_module</span>
+<h3 class="text-white font-bold">Convoy Manifest</h3>
+<span class="bg-surface-highlight text-text-muted text-xs px-2 py-0.5 rounded-full border border-white/5">5 Barges</span>
+</div>
+<div class="flex gap-3">
+<button class="btn-secondary flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text-muted hover:text-white hover:bg-surface-highlight transition-colors border border-transparent hover:border-surface-highlight">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+                                    Import CSV
+                                </button>
+<button class="btn-primary flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-blue-600 text-white text-sm font-semibold shadow-lg shadow-blue-500/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                                    Add Barge
+                                </button>
+</div>
+</div>
+<!-- Convoy Table -->
+<div class="bg-surface-dark border border-surface-highlight rounded-xl overflow-hidden flex-1 shadow-sm flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-surface-highlight bg-surface-highlight/30 text-xs text-text-muted uppercase tracking-wider">
+<th class="p-4 font-medium w-12 text-center">#</th>
+<th class="p-4 font-medium min-w-[180px]">Barge ID</th>
+<th class="p-4 font-medium min-w-[140px]">Cargo Type</th>
+<th class="p-4 font-medium w-[120px] text-right">Tonnage (MT)</th>
+<th class="p-4 font-medium w-[120px] text-right">Volume (m³)</th>
+<th class="p-4 font-medium w-[100px] text-right">Draft (ft)</th>
+<th class="p-4 font-medium w-16 text-center"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-highlight text-sm">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-highlight/50 transition-colors">
+<td class="p-4 text-center text-text-muted">1</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-surface-highlight flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[18px]">directions_boat</span>
+</div>
+<div>
+<p class="font-medium text-white">BRG-405-A</p>
+<p class="text-xs text-text-muted">Hopper Barge</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<select class="w-full bg-background-dark border border-surface-highlight rounded px-2 py-1.5 text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary">
+<option>Soybeans</option>
+<option>Iron Ore</option>
+<option>Fuel Oil</option>
+</select>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="2500"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="3100"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-16 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="9.5"/>
+</td>
+<td class="p-4 text-center">
+<button class="text-text-muted hover:text-red-400 p-1 rounded hover:bg-surface-highlight transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-highlight/50 transition-colors">
+<td class="p-4 text-center text-text-muted">2</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-surface-highlight flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[18px]">directions_boat</span>
+</div>
+<div>
+<p class="font-medium text-white">BRG-408-B</p>
+<p class="text-xs text-text-muted">Hopper Barge</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<select class="w-full bg-background-dark border border-surface-highlight rounded px-2 py-1.5 text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary">
+<option>Soybeans</option>
+<option>Iron Ore</option>
+<option>Fuel Oil</option>
+</select>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="2450"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="3050"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-16 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="9.4"/>
+</td>
+<td class="p-4 text-center">
+<button class="text-text-muted hover:text-red-400 p-1 rounded hover:bg-surface-highlight transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-highlight/50 transition-colors">
+<td class="p-4 text-center text-text-muted">3</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-surface-highlight flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[18px]">water_drop</span>
+</div>
+<div>
+<p class="font-medium text-white">TNK-101-X</p>
+<p class="text-xs text-text-muted">Tanker Barge</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<select class="w-full bg-background-dark border border-surface-highlight rounded px-2 py-1.5 text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary">
+<option selected="">Fuel Oil</option>
+<option>Soybeans</option>
+<option>Iron Ore</option>
+</select>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="2500"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="2900"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-16 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="10.1"/>
+</td>
+<td class="p-4 text-center">
+<button class="text-text-muted hover:text-red-400 p-1 rounded hover:bg-surface-highlight transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-surface-highlight/50 transition-colors">
+<td class="p-4 text-center text-text-muted">4</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-surface-highlight flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[18px]">directions_boat</span>
+</div>
+<div>
+<p class="font-medium text-white">BRG-500-Z</p>
+<p class="text-xs text-text-muted">Hopper Barge</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<select class="w-full bg-background-dark border border-surface-highlight rounded px-2 py-1.5 text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary">
+<option selected="">Iron Ore</option>
+<option>Soybeans</option>
+<option>Fuel Oil</option>
+</select>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="2500"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="1800"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-16 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="9.8"/>
+</td>
+<td class="p-4 text-center">
+<button class="text-text-muted hover:text-red-400 p-1 rounded hover:bg-surface-highlight transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-surface-highlight/50 transition-colors">
+<td class="p-4 text-center text-text-muted">5</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-surface-highlight flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[18px]">directions_boat</span>
+</div>
+<div>
+<p class="font-medium text-white">BRG-501-Z</p>
+<p class="text-xs text-text-muted">Hopper Barge</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<select class="w-full bg-background-dark border border-surface-highlight rounded px-2 py-1.5 text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary">
+<option selected="">Iron Ore</option>
+<option>Soybeans</option>
+<option>Fuel Oil</option>
+</select>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="2500"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-24 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="1800"/>
+</td>
+<td class="p-4 text-right">
+<input class="w-16 bg-transparent border-b border-surface-highlight hover:border-text-muted focus:border-primary text-right text-white focus:ring-0 p-1 font-mono transition-colors" type="number" value="9.8"/>
+</td>
+<td class="p-4 text-center">
+<button class="text-text-muted hover:text-red-400 p-1 rounded hover:bg-surface-highlight transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="bg-surface-highlight/10 border-t border-surface-highlight font-medium">
+<td class="p-4 text-right text-text-muted uppercase text-xs tracking-wider" colspan="3">Total Convoy</td>
+<td class="p-4 text-right text-white font-mono">12,450</td>
+<td class="p-4 text-right text-white font-mono">12,650</td>
+<td class="p-4 text-right text-text-muted text-xs italic">Avg: 9.72</td>
+<td></td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<!-- Alerts/Validation Area -->
+<div class="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-yellow-500 mt-0.5">warning</span>
+<div>
+<h4 class="text-yellow-500 text-sm font-bold">Draft Warning</h4>
+<p class="text-yellow-200/80 text-xs mt-1">Barge <span class="font-mono text-white">TNK-101-X</span> exceeds the recommended draft limit (10.0 ft) for the current river level at 'Paso de la Patria'.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacer for bottom scroll -->
+<div class="h-20"></div>
+</main>
+</div>
+</body></html>

@@ -277,6 +277,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/toast.css">
+    <script src="js/services/toast.js"></script>
     <script>
         // Configuración de Supabase (igual que en la app principal)
         const SUPABASE_URL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
@@ -339,7 +341,7 @@
             const days = document.getElementById('days').value;
 
             if (!name || name.trim() === '' || !vessel) {
-                alert('⚠️ Por favor complete el nombre y seleccione un buque');
+                if (window.RiverToast) RiverToast.warning('Por favor complete el nombre y seleccione un buque', 'Faltan datos');
                 return;
             }
 
@@ -372,8 +374,8 @@
 
                     // Simular delay de red
                     await new Promise(r => setTimeout(r, 800));
-                    alert('✅ Orden de Relevo (AIS) Generada Correctamente');
-                    window.history.back();
+                    if (window.RiverToast) RiverToast.success('Orden de Relevo (AIS) Generada Correctamente', 'Completado');
+                    setTimeout(() => window.history.back(), 1500);
                     return;
                 }
 
@@ -409,8 +411,8 @@
 
                 if (error) throw error;
 
-                alert('✅ Orden de Relevo Generada Exitosamente');
-                window.history.back();
+                if (window.RiverToast) RiverToast.success('Orden de Relevo Generada Exitosamente', 'Completado');
+                setTimeout(() => window.history.back(), 1500);
 
             } catch (error) {
                 console.warn('Error guardando en Supabase:', error);
@@ -429,12 +431,12 @@
                 saveToLocalStorage(localCrew);
 
                 // Mensaje amigable
-                let msg = '✅ MODO OFFLINE: Orden guardada en dispositivo local.';
+                let msg = 'MODO OFFLINE: Orden guardada en dispositivo local.';
                 if (error.message && error.message.includes("violates row-level security")) {
-                    msg = '⚠️ Permisos insuficientes en DB. Se guardó localmente.';
+                    msg = 'Permisos insuficientes en DB. Se guardó localmente.';
                 }
-                alert(msg);
-                window.history.back();
+                if (window.RiverToast) RiverToast.info(msg, 'Atención');
+                setTimeout(() => window.history.back(), 1500);
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;

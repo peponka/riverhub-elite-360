@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RiverHub Elite 360 - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1281e2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                        "surface-dark": "#1c2a36", 
+                        "border-dark": "#2a3e50"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for data tables/lists */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #101a22; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2a3e50; 
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #3b556d; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-border-dark bg-white dark:bg-background-dark px-6 py-3 shadow-sm">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-slate-900 dark:text-white">
+<div class="size-8 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">anchor</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight">RiverHub Elite 360</h2>
+</div>
+<!-- Global Search -->
+<label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full ring-1 ring-slate-200 dark:ring-border-dark bg-slate-50 dark:bg-surface-dark">
+<div class="text-slate-400 flex items-center justify-center pl-3">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg bg-transparent border-none text-sm focus:ring-0 placeholder:text-slate-400 text-slate-900 dark:text-white px-3" placeholder="Buscar barco, puerto..."/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-primary text-sm font-bold leading-normal border-b-2 border-primary pb-0.5" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Flota</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Viajes</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Mantenimiento</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Tripulación</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Pañol</a>
+</nav>
+<!-- Actions -->
+<div class="flex gap-2 items-center border-l border-slate-200 dark:border-border-dark pl-6">
+<button class="flex items-center justify-center rounded-lg size-10 hover:bg-slate-100 dark:hover:bg-surface-dark transition-colors text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg size-10 hover:bg-slate-100 dark:hover:bg-surface-dark transition-colors text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-9 ml-2 ring-2 ring-slate-200 dark:ring-border-dark" data-alt="Portrait of the fleet manager user" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHtHZJo9VFAqQrplMoKEVUkS_lulOWnxGq2MUFWJxorZ0YiFCU--tMwQwqad8xgOg2hiSx0SkYxUZRYO4F1XbZzCnjSh5Gu8kQIwTNKQe7uMMTTBXq685bohKDZVZKz6BPBwp9k0WCK0ysK1LwxZVB8njeki3uGzx-D9lIH4-dMu95yxwU03yArQ6hRVKdtVF6vqE8DZhwHu9VgSuVl2dL0p_YsrmgbfFZioLNh-HQBi1keYbPkTlvMVpb5SdyTSppufbWaWRs2iM");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-background-dark p-4 md:p-8">
+<div class="mx-auto max-w-[1400px] flex flex-col gap-6">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard de Operaciones</h1>
+<p class="text-slate-500 dark:text-slate-400 mt-1 text-sm">Visión general en tiempo real de la flota activa.</p>
+</div>
+<div class="flex gap-3">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark">
+<span class="material-symbols-outlined text-slate-400 text-sm">calendar_today</span>
+<span class="text-sm font-medium text-slate-700 dark:text-slate-200">Hoy, 24 Oct</span>
+</div>
+<button class="flex items-center justify-center gap-2 rounded-lg bg-primary hover:bg-blue-600 transition-colors px-4 py-2 text-white text-sm font-medium shadow-sm shadow-blue-500/20">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+                        Personalizar
+                    </button>
+</div>
+</div>
+<!-- KPI Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- KPI 1 -->
+<div class="flex flex-col gap-1 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark p-5 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Embarcaciones Activas</p>
+<span class="material-symbols-outlined text-primary">directions_boat</span>
+</div>
+<div class="flex items-end gap-3 mt-2">
+<p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">12<span class="text-lg text-slate-400 font-normal">/15</span></p>
+<span class="text-emerald-500 dark:text-emerald-400 text-xs font-bold mb-1.5 bg-emerald-500/10 px-1.5 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +2
+                        </span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-background-dark rounded-full h-1.5 mt-3 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 80%"></div>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="flex flex-col gap-1 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark p-5 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Viajes en Curso</p>
+<span class="material-symbols-outlined text-blue-400">route</span>
+</div>
+<div class="flex items-end gap-3 mt-2">
+<p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">8</p>
+<span class="text-slate-400 text-xs font-medium mb-1.5 px-1.5 py-0.5 rounded">
+                            Estable
+                        </span>
+</div>
+<div class="flex text-xs text-slate-400 mt-3 gap-2">
+<span class="text-slate-900 dark:text-white font-medium">3</span> río arriba • <span class="text-slate-900 dark:text-white font-medium">5</span> río abajo
+                    </div>
+</div>
+<!-- KPI 3 -->
+<div class="flex flex-col gap-1 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark p-5 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Alertas Críticas</p>
+<span class="material-symbols-outlined text-rose-500">warning</span>
+</div>
+<div class="flex items-end gap-3 mt-2">
+<p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">3</p>
+<span class="text-rose-500 text-xs font-bold mb-1.5 bg-rose-500/10 px-1.5 py-0.5 rounded flex items-center gap-1">
+                            +1 Nueva
+                        </span>
+</div>
+<p class="text-xs text-slate-400 mt-3 truncate">Mantenimiento urgente en Remolcador A-4</p>
+</div>
+<!-- KPI 4 -->
+<div class="flex flex-col gap-1 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark p-5 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Eficiencia Combustible</p>
+<span class="material-symbols-outlined text-orange-400">local_gas_station</span>
+</div>
+<div class="flex items-end gap-3 mt-2">
+<p class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">94%</p>
+<span class="text-orange-500 text-xs font-bold mb-1.5 bg-orange-500/10 px-1.5 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_down</span> -2%
+                        </span>
+</div>
+<p class="text-xs text-slate-400 mt-3">Consumo promedio: 145 L/h</p>
+</div>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Map Section (Spans 2 columns) -->
+<div class="lg:col-span-2 flex flex-col rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark shadow-sm overflow-hidden h-[500px]">
+<div class="p-4 border-b border-slate-200 dark:border-border-dark flex justify-between items-center">
+<h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400">map</span>
+                            Posición de Flota
+                        </h3>
+<div class="flex gap-2">
+<button class="text-xs font-medium px-2 py-1 bg-slate-100 dark:bg-background-dark rounded text-slate-600 dark:text-slate-300 hover:text-primary">Satélite</button>
+<button class="text-xs font-medium px-2 py-1 bg-primary text-white rounded">Mapa</button>
+</div>
+</div>
+<div class="relative w-full h-full bg-slate-800">
+<!-- Map Image Placeholder -->
+<div class="absolute inset-0 bg-cover bg-center opacity-80" data-alt="Dark map style showing a river delta region with fleet positions" data-location="Parana River Region" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCfnk5dRQYwCrCKQ0I0xCdbJqJMEL_841tzZwV984jCzebahoz_Psz3NkGh8ZoPZnCtddcDegMFakDFdD3NxVpGwHL3b3k9iZBupeCQbczQlMsN15lktqmTEfKM9b-nZhjm57DHDY7beoGwtRCWJQlOAeFQ5cA6k9n6yzMZsAEKSfVzBpzfh0RqrBM5t7Ca3E4gM20zV9wdDORDppR2KLiK3PcRb9uT-UZqA8Tf-t86QaV1B2qwI_h0a0eaRr2eWqDRuvb0josYbh8"); filter: grayscale(20%) contrast(120%) brightness(60%);'></div>
+<!-- Simulated Markers -->
+<div class="absolute top-[30%] left-[40%] flex flex-col items-center group cursor-pointer">
+<div class="relative">
+<span class="material-symbols-outlined text-primary text-4xl drop-shadow-md z-10 relative">location_on</span>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-3 h-1 bg-black/50 blur-[2px] rounded-full"></div>
+</div>
+<div class="bg-surface-dark/90 backdrop-blur-sm text-white text-xs px-2 py-1 rounded shadow-lg mt-1 border border-border-dark">
+<span class="font-bold text-primary">Tug Alpha</span>
+<span class="block text-[10px] text-slate-300">8.2 kts • Upriver</span>
+</div>
+</div>
+<div class="absolute top-[55%] left-[65%] flex flex-col items-center group cursor-pointer">
+<div class="relative">
+<span class="material-symbols-outlined text-emerald-500 text-4xl drop-shadow-md z-10 relative">location_on</span>
+</div>
+<div class="bg-surface-dark/90 backdrop-blur-sm text-white text-xs px-2 py-1 rounded shadow-lg mt-1 border border-border-dark">
+<span class="font-bold text-emerald-400">Tug Beta</span>
+<span class="block text-[10px] text-slate-300">Moored</span>
+</div>
+</div>
+<div class="absolute top-[25%] left-[20%] flex flex-col items-center group cursor-pointer">
+<div class="relative">
+<span class="material-symbols-outlined text-rose-500 text-4xl drop-shadow-md z-10 relative">location_on</span>
+</div>
+<div class="bg-surface-dark/90 backdrop-blur-sm text-white text-xs px-2 py-1 rounded shadow-lg mt-1 border border-border-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-rose-500">warning</span>
+<span class="font-bold text-rose-400">Barge 104</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Alerts & Lists Panel -->
+<div class="flex flex-col gap-4 h-[500px]">
+<!-- Pending Work Orders -->
+<div class="flex-1 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark shadow-sm flex flex-col overflow-hidden">
+<div class="p-4 border-b border-slate-200 dark:border-border-dark flex justify-between items-center bg-slate-50 dark:bg-surface-dark">
+<h3 class="font-bold text-slate-900 dark:text-white text-sm">Órdenes de Trabajo</h3>
+<span class="bg-primary/20 text-primary text-xs font-bold px-2 py-0.5 rounded-full">5 Pendientes</span>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-2">
+<div class="flex flex-col gap-2">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 dark:bg-background-dark/50 dark:hover:bg-background-dark transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-border-dark">
+<div class="p-2 rounded bg-rose-500/10 text-rose-500">
+<span class="material-symbols-outlined text-lg">engineering</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold text-slate-900 dark:text-white truncate">Revisión Bomba Hidráulica</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Remolcador Titan • Alta Prioridad</p>
+</div>
+<span class="text-xs font-medium text-rose-500 whitespace-nowrap">Hace 2h</span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 dark:bg-background-dark/50 dark:hover:bg-background-dark transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-border-dark">
+<div class="p-2 rounded bg-orange-500/10 text-orange-500">
+<span class="material-symbols-outlined text-lg">build</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold text-slate-900 dark:text-white truncate">Cambio de Filtros</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Barcaza 202 • Preventivo</p>
+</div>
+<span class="text-xs font-medium text-slate-400 whitespace-nowrap">Ayer</span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 dark:bg-background-dark/50 dark:hover:bg-background-dark transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-border-dark">
+<div class="p-2 rounded bg-blue-500/10 text-blue-500">
+<span class="material-symbols-outlined text-lg">electrical_services</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold text-slate-900 dark:text-white truncate">Inspección Panel Eléctrico</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Tug Bravo • Rutina</p>
+</div>
+<span class="text-xs font-medium text-slate-400 whitespace-nowrap">2d</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Compliance & Stock -->
+<div class="flex-1 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark shadow-sm flex flex-col overflow-hidden">
+<div class="flex border-b border-slate-200 dark:border-border-dark">
+<button class="flex-1 py-3 text-sm font-bold text-primary border-b-2 border-primary bg-slate-50 dark:bg-surface-dark">
+                                Certificados (2)
+                            </button>
+<button class="flex-1 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white dark:bg-background-dark/30">
+                                Pañol / Stock
+                            </button>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-2">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3 p-3 rounded-lg border border-rose-200 dark:border-rose-900/30 bg-rose-50 dark:bg-rose-900/10">
+<span class="material-symbols-outlined text-rose-500">verified_user</span>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold text-slate-900 dark:text-white truncate">Matrícula Mercante</p>
+<p class="text-xs text-slate-600 dark:text-slate-400">Cap. Gonzalez • Vence mañana</p>
+</div>
+<button class="text-xs bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark px-2 py-1 rounded text-slate-700 dark:text-slate-300 font-medium">Renovar</button>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg border border-orange-200 dark:border-orange-900/30 bg-orange-50 dark:bg-orange-900/10">
+<span class="material-symbols-outlined text-orange-500">health_and_safety</span>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold text-slate-900 dark:text-white truncate">Inspección Extintores</p>
+<p class="text-xs text-slate-600 dark:text-slate-400">Flota B • Vence en 5 días</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Charts & Analytics Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+<!-- Fuel Trend -->
+<div class="rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark shadow-sm p-5">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white">Tendencia de Combustible</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">Últimos 30 días</p>
+</div>
+<select class="bg-slate-50 dark:bg-background-dark border-none text-xs rounded text-slate-600 dark:text-slate-300 focus:ring-0 py-1 pl-2 pr-6">
+<option>Toda la flota</option>
+<option>Remolcadores</option>
+</select>
+</div>
+<!-- CSS Chart Placeholder -->
+<div class="w-full h-48 flex items-end justify-between gap-2 px-2">
+<!-- Bars simulating trend -->
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[40%] hover:bg-primary transition-all relative group">
+<div class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded">40k</div>
+</div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[55%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[45%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[70%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[60%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[75%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[50%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[65%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[80%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[60%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/10 rounded-t-sm h-[45%] hover:bg-primary transition-all relative group"></div>
+<div class="w-full bg-primary rounded-t-sm h-[35%] relative shadow-[0_0_10px_rgba(18,129,226,0.5)]"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-slate-400 px-1">
+<span>01 Oct</span>
+<span>15 Oct</span>
+<span>Hoy</span>
+</div>
+</div>
+<!-- Incidents / Maintenance Breakdown -->
+<div class="rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark shadow-sm p-5">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white">Resumen de Mantenimiento</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">Por categoría</p>
+</div>
+<button class="text-primary text-xs font-bold hover:underline">Ver Reporte</button>
+</div>
+<div class="flex flex-row items-center gap-8 h-48">
+<!-- Donut Chart Representation -->
+<div class="relative size-32 rounded-full border-[12px] border-slate-100 dark:border-background-dark flex items-center justify-center shrink-0">
+<!-- Using conic-gradient for donut chart effect -->
+<div class="absolute inset-0 rounded-full" style="background: conic-gradient(#1281e2 0% 60%, #f43f5e 60% 75%, #fb923c 75% 100%); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 12px), #fff calc(100% - 12px)); mask: radial-gradient(farthest-side, transparent calc(100% - 12px), #fff calc(100% - 12px));"></div>
+<div class="flex flex-col items-center">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">24</span>
+<span class="text-[10px] text-slate-500 uppercase font-bold">Total</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex flex-col gap-3 w-full">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-primary"></div>
+<span class="text-sm text-slate-600 dark:text-slate-300">Preventivo</span>
+</div>
+<span class="text-sm font-bold text-slate-900 dark:text-white">60%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-rose-500"></div>
+<span class="text-sm text-slate-600 dark:text-slate-300">Correctivo</span>
+</div>
+<span class="text-sm font-bold text-slate-900 dark:text-white">15%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-orange-400"></div>
+<span class="text-sm text-slate-600 dark:text-slate-300">Predictivo</span>
+</div>
+<span class="text-sm font-bold text-slate-900 dark:text-white">25%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

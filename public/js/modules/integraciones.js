@@ -20,7 +20,7 @@ const apiLogic = {
                 const input = card.querySelector('.api-key-input');
 
                 if (input.value.length < 5) {
-                    alert("Por favor ingrese una API KEY válida.");
+                    RiverToast.warning('Por favor ingrese una API KEY válida.', 'Validación');
                     return;
                 }
 
@@ -87,7 +87,7 @@ const apiLogic = {
         }
         document.getElementById('my-api-key').value = key;
         this.addLog("KEYGEN", "Nueva API Key generada con éxito.");
-        alert("Nueva API Key generada. Recuerda guardarla en un lugar seguro.");
+        RiverToast.success('Nueva API Key generada. Recuerda guardarla en un lugar seguro.', 'API Key');
     },
 
     toggleVisibility: function () {

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Perfil de Tripulante - RiverHub Elite 360</title>
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#1281e2",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101a22", // Matching the dark tone of provided components roughly
+              "surface-dark": "#1a2632", // Slightly lighter for cards
+              "border-dark": "#233748",
+              "text-secondary": "#92afc9",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-x-hidden min-h-screen flex flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">RiverHub Elite 360</h2>
+</div>
+<label class="flex flex-col min-w-40 !h-10 max-w-64 hidden md:flex">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-text-secondary flex border-none bg-surface-dark items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-surface-dark focus:border-none h-full placeholder:text-text-secondary px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal" placeholder="Buscar tripulante, barco..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden lg:flex items-center gap-9">
+<a class="text-text-secondary hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Dashboard</a>
+<a class="text-text-secondary hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Flota</a>
+<a class="text-white text-sm font-medium leading-normal" href="#">Tripulación</a>
+<a class="text-text-secondary hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Mantenimiento</a>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center overflow-hidden rounded-lg size-10 bg-surface-dark text-white hover:bg-border-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+<button class="flex items-center justify-center overflow-hidden rounded-lg size-10 bg-surface-dark text-white hover:bg-border-dark transition-colors relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 size-2 bg-red-500 rounded-full border border-surface-dark"></span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-border-dark" data-alt="Avatar de usuario administrador" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHC3GjitQwAx4aBxRkr1xoBIAhxH1WGVWv3uPs_Li39qv6aVoJpxkvy3qiAlySHFFrq6t3r_HDSij4Um-qiCWTRwK3ki9HqAF_-vZaKOhOfk1JQK__N8gKy7vLVyv3KdT7GG0vfVfSyl3b_uwPIxK1MQ3JzkOXNQpJrwt-JDTIX0z6QuAwn9WmxTI6lkzT5PZcu8xtzMfBK0Ap0THl6gHXxWhwb3IoOt2XtJLkwqPzIgNT-qbUhe8uIEQJ5NSaNZwiqfygNolqAGk");'></div>
+</div>
+</header>
+<!-- Main Content Layout -->
+<main class="flex-1 px-4 md:px-10 py-6 max-w-[1400px] mx-auto w-full">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 pb-6 items-center">
+<a class="text-text-secondary hover:text-primary text-sm font-medium leading-normal transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[18px]">home</span> Inicio
+            </a>
+<span class="text-text-secondary text-sm font-medium leading-normal">/</span>
+<a class="text-text-secondary hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Gestión de Tripulación</a>
+<span class="text-text-secondary text-sm font-medium leading-normal">/</span>
+<span class="text-white text-sm font-medium leading-normal">Perfil de Juan Pérez</span>
+</div>
+<!-- Header Profile Card -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 mb-6 shadow-sm">
+<div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+<div class="flex gap-5 items-center">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-24 border-2 border-primary/50" data-alt="Foto de perfil del capitán Juan Pérez" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAvRDNsHYkY_Hyp5Oj3u7m-8p3P6LXVKpfHbT4Kj8-cP5x0I6fFqcrAZojzHka2QzMTJNnoi_zwr54Rhye8380H4Wqc15AQ2ot8OeLgH8Rl7zNNH8xhl_kQxJw5C0RxsiH-EO0mbIsxC5p_CPMI5aUpKw4DiMoIQVUlnueWSUOULRsx5DINKpFmdc80JwQNuiCHbc-8zb7fy1r25SSc6MpcCgsxLElu_MwB5wylKaUbyjjww8CpRPEYhcK-CymfMqNx4NSCq8E2kmY");'></div>
+<div class="absolute bottom-0 right-0 bg-green-500 size-5 rounded-full border-4 border-surface-dark" title="Activo"></div>
+</div>
+<div class="flex flex-col justify-center">
+<div class="flex items-center gap-3 mb-1">
+<h1 class="text-white text-2xl font-bold leading-tight">Juan Pérez</h1>
+<span class="px-2 py-0.5 rounded text-xs font-bold bg-green-500/20 text-green-400 border border-green-500/30">ACTIVO</span>
+</div>
+<p class="text-text-secondary text-base font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">anchor</span> Capitán de Remolcador
+                        </p>
+<p class="text-text-secondary text-sm mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">location_on</span> A Bordo - <span class="text-white font-medium">RMB 204 Elite</span>
+</p>
+</div>
+</div>
+<div class="flex w-full md:w-auto gap-3 flex-wrap sm:flex-nowrap">
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-transparent border border-border-dark text-white hover:bg-border-dark text-sm font-bold transition-all gap-2 flex-1 md:flex-none">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Ficha</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-transparent border border-border-dark text-white hover:bg-border-dark text-sm font-bold transition-all gap-2 flex-1 md:flex-none">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Editar</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all gap-2 flex-1 md:flex-none shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+<span>Nueva Asignación</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+<!-- Left Column: Personal Info -->
+<div class="xl:col-span-4 flex flex-col gap-6">
+<!-- Personal Data Card -->
+<div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden">
+<div class="px-5 py-4 border-b border-border-dark flex justify-between items-center bg-surface-dark/50">
+<h3 class="text-white text-base font-bold">Información Personal</h3>
+<span class="material-symbols-outlined text-text-secondary">person</span>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div class="grid grid-cols-2 gap-y-1">
+<p class="text-text-secondary text-xs uppercase tracking-wider font-semibold">Nacionalidad</p>
+<p class="text-white text-sm text-right">Argentina</p>
+</div>
+<div class="h-px bg-border-dark"></div>
+<div class="grid grid-cols-2 gap-y-1">
+<p class="text-text-secondary text-xs uppercase tracking-wider font-semibold">Fecha Nac.</p>
+<p class="text-white text-sm text-right">15 Mayo, 1980</p>
+</div>
+<div class="h-px bg-border-dark"></div>
+<div class="grid grid-cols-2 gap-y-1">
+<p class="text-text-secondary text-xs uppercase tracking-wider font-semibold">Identificación</p>
+<p class="text-white text-sm text-right font-mono">20-12345678-9</p>
+</div>
+<div class="h-px bg-border-dark"></div>
+<div class="grid grid-cols-2 gap-y-1">
+<p class="text-text-secondary text-xs uppercase tracking-wider font-semibold">Libreta Emb.</p>
+<p class="text-white text-sm text-right font-mono">987654</p>
+</div>
+<div class="h-px bg-border-dark"></div>
+<div class="grid grid-cols-2 gap-y-1">
+<p class="text-text-secondary text-xs uppercase tracking-wider font-semibold">Teléfono</p>
+<p class="text-primary text-sm text-right hover:underline cursor-pointer">+54 9 11 1234 5678</p>
+</div>
+<div class="h-px bg-border-dark"></div>
+<div class="grid grid-cols-2 gap-y-1">
+<p class="text-text-secondary text-xs uppercase tracking-wider font-semibold">Email</p>
+<p class="text-white text-sm text-right truncate" title="juan.perez@riverhub.com">juan.perez@riverhub.com</p>
+</div>
+</div>
+</div>
+<!-- Emergency Contact Card -->
+<div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden">
+<div class="px-5 py-4 border-b border-border-dark flex justify-between items-center bg-surface-dark/50">
+<h3 class="text-white text-base font-bold">Contacto Emergencia</h3>
+<span class="material-symbols-outlined text-text-secondary">emergency_home</span>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<div class="bg-border-dark rounded-full p-2 text-text-secondary">
+<span class="material-symbols-outlined text-[20px]">person_alert</span>
+</div>
+<div>
+<p class="text-white text-sm font-bold">Maria Pérez</p>
+<p class="text-text-secondary text-xs">Esposa</p>
+<p class="text-white text-sm mt-1 font-mono">+54 9 11 8765 4321</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Notes / Tags -->
+<div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden p-5">
+<h3 class="text-text-secondary text-xs uppercase tracking-wider font-semibold mb-3">Etiquetas</h3>
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">Experiencia +10 años</span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Instructor Certificado</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Dynamic Info -->
+<div class="xl:col-span-8 flex flex-col gap-6">
+<!-- Certifications Section -->
+<div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden flex flex-col">
+<div class="px-6 py-4 border-b border-border-dark flex justify-between items-center bg-surface-dark/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">verified</span>
+<h3 class="text-white text-lg font-bold">Certificaciones y Licencias</h3>
+</div>
+<button class="flex items-center gap-2 text-xs font-bold bg-primary/20 text-primary hover:bg-primary/30 px-3 py-1.5 rounded transition-colors border border-primary/20">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>Añadir</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-background-dark text-text-secondary font-medium border-b border-border-dark">
+<tr>
+<th class="px-6 py-3 font-semibold">Certificado</th>
+<th class="px-6 py-3 font-semibold">Número</th>
+<th class="px-6 py-3 font-semibold">Emisión / Vencimiento</th>
+<th class="px-6 py-3 font-semibold text-center">Estado</th>
+<th class="px-6 py-3 font-semibold text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-dark text-white">
+<!-- Row 1 -->
+<tr class="hover:bg-border-dark/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="font-medium">Patrón de Cabotaje</div>
+<div class="text-xs text-text-secondary">Autoridad Marítima Nacional</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary">LIC-2023-8891</td>
+<td class="px-6 py-4">
+<div class="text-xs text-text-secondary">Emitido: 10 Ene 2020</div>
+<div class="font-medium mt-0.5">Vence: 10 Ene 2025</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-400 border border-green-500/20">
+                                            Vigente
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-secondary hover:text-white p-2 rounded hover:bg-border-dark transition-colors" title="Ver Archivo">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Warning -->
+<tr class="hover:bg-border-dark/30 transition-colors group bg-yellow-900/10">
+<td class="px-6 py-4">
+<div class="font-medium">STCW - Seguridad Básica</div>
+<div class="text-xs text-text-secondary">OMI Model 1.19</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary">OMI-99210-X</td>
+<td class="px-6 py-4">
+<div class="text-xs text-text-secondary">Emitido: 15 Mar 2021</div>
+<div class="font-medium mt-0.5 text-yellow-400">Vence: 30 Jun 2023</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> Por Vencer
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-secondary hover:text-white p-2 rounded hover:bg-border-dark transition-colors" title="Ver Archivo">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-border-dark/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="font-medium">Primeros Auxilios Avanzados</div>
+<div class="text-xs text-text-secondary">Cruz Roja</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary">MED-112-AR</td>
+<td class="px-6 py-4">
+<div class="text-xs text-text-secondary">Emitido: 01 Feb 2022</div>
+<div class="font-medium mt-0.5">Vence: 01 Feb 2026</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-400 border border-green-500/20">
+                                            Vigente
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-secondary hover:text-white p-2 rounded hover:bg-border-dark transition-colors" title="Ver Archivo">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Expired -->
+<tr class="hover:bg-border-dark/30 transition-colors group bg-red-900/5 opacity-70">
+<td class="px-6 py-4">
+<div class="font-medium line-through decoration-red-500">Curso Mercancías Peligrosas</div>
+<div class="text-xs text-text-secondary">HAZMAT Lvl 1</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary">HZ-2020-001</td>
+<td class="px-6 py-4">
+<div class="text-xs text-text-secondary">Emitido: 2018</div>
+<div class="font-medium mt-0.5 text-red-400">Venció: 2022</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20">
+                                            Vencido
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-secondary hover:text-white p-2 rounded hover:bg-border-dark transition-colors" title="Ver Archivo">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-3 border-t border-border-dark bg-background-dark text-center">
+<button class="text-sm text-primary hover:text-white font-medium transition-colors">Ver historial completo de certificaciones</button>
+</div>
+</div>
+<!-- Assignments History -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6">
+<div class="flex justify-between items-center mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+<h3 class="text-white text-lg font-bold">Historial de Embarques</h3>
+</div>
+<div class="flex gap-2">
+<select class="bg-background-dark border border-border-dark rounded text-xs text-white px-2 py-1 focus:border-primary focus:ring-0">
+<option>2023</option>
+<option>2022</option>
+</select>
+</div>
+</div>
+<!-- Timeline Item: Current -->
+<div class="relative pl-8 pb-8 border-l border-border-dark last:pb-0 last:border-0">
+<div class="absolute -left-[13px] top-0 size-6 bg-primary rounded-full border-4 border-surface-dark flex items-center justify-center">
+<div class="size-1.5 bg-white rounded-full"></div>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg bg-background-dark border border-primary/30 shadow-md">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-surface-dark rounded flex items-center justify-center border border-border-dark text-text-secondary">
+<span class="material-symbols-outlined">directions_boat</span>
+</div>
+<div>
+<h4 class="text-white font-bold text-base">RMB 204 Elite</h4>
+<p class="text-primary text-sm font-medium">Capitán</p>
+</div>
+</div>
+<div class="flex flex-col sm:items-end">
+<p class="text-white font-mono text-sm">Ene 2023 - Presente</p>
+<span class="text-xs text-green-400 font-medium bg-green-900/20 px-2 py-0.5 rounded mt-1 border border-green-500/20">En curso</span>
+</div>
+</div>
+</div>
+<!-- Timeline Item: Past -->
+<div class="relative pl-8 pb-8 border-l border-border-dark last:pb-0">
+<div class="absolute -left-[9px] top-2 size-4 bg-border-dark rounded-full border-2 border-surface-dark"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg hover:bg-background-dark/50 transition-colors border border-transparent hover:border-border-dark">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-surface-dark rounded flex items-center justify-center border border-border-dark text-text-secondary opacity-50">
+<span class="material-symbols-outlined">directions_boat</span>
+</div>
+<div>
+<h4 class="text-text-secondary font-bold text-base">RMB 101 Alpha</h4>
+<p class="text-text-secondary text-sm font-medium">Primer Oficial</p>
+</div>
+</div>
+<div class="flex flex-col sm:items-end">
+<p class="text-text-secondary font-mono text-sm">Jun 2022 - Dic 2022</p>
+<span class="text-xs text-text-secondary font-medium mt-1">6 meses</span>
+</div>
+</div>
+</div>
+<!-- Timeline Item: Past -->
+<div class="relative pl-8 pb-0 border-l border-transparent">
+<div class="absolute -left-[9px] top-2 size-4 bg-border-dark rounded-full border-2 border-surface-dark"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg hover:bg-background-dark/50 transition-colors border border-transparent hover:border-border-dark">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-surface-dark rounded flex items-center justify-center border border-border-dark text-text-secondary opacity-50">
+<span class="material-symbols-outlined">directions_boat</span>
+</div>
+<div>
+<h4 class="text-text-secondary font-bold text-base">RMB 105 Charlie</h4>
+<p class="text-text-secondary text-sm font-medium">Primer Oficial</p>
+</div>
+</div>
+<div class="flex flex-col sm:items-end">
+<p class="text-text-secondary font-mono text-sm">Ene 2021 - May 2022</p>
+<span class="text-xs text-text-secondary font-medium mt-1">1 año, 5 meses</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

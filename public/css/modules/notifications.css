@@ -37,7 +37,7 @@
 
 /* Header */
 .notif-header {
-    background: #020617;
+    background: #0A0E1A;
     padding: 15px;
     border-bottom: 1px solid #1e293b;
     display: flex;
@@ -187,7 +187,7 @@
 
 /* Footer */
 .notif-footer {
-    background: #020617;
+    background: #0A0E1A;
     padding: 10px;
     text-align: center;
     border-top: 1px solid #1e293b;

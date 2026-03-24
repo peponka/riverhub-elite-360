@@ -66,17 +66,46 @@ const DocsModule = (() => {
                         date: new Date(doc.created_at).toLocaleDateString('es-ES'),
                         size: doc.file_size || '1.0 MB',
                         status: doc.status || 'BORRADOR',
-                        barge: '-', prod: doc.cargo_type || '-', qty: doc.cargo_qty || '-', dest: doc.destination || '-'
+                        barge: doc.cargo_type || '-', prod: doc.cargo_type || '-', qty: doc.cargo_qty || '-', dest: doc.destination || '-'
                     }));
                     console.log(`DocsModule: ${data.length} documentos cargados de Supabase`);
                     return;
+                } else {
+                     console.log("Creando documentos por defecto en Supabase...");
+                     const mockDocs = [
+                         { doc_number: 'RH-8829', title: 'MANIFIESTO DE CARGA', doc_type: 'PDF', file_size: '2.4 MB', status: 'FIRMADO', cargo_type: 'Soja', cargo_qty: '1500 TN', destination: 'Rosario' },
+                         { doc_number: 'RH-7731', title: 'BILL OF LADING T-55', doc_type: 'PDF', file_size: '1.1 MB', status: 'ENVIADO', cargo_type: 'Hierro', cargo_qty: '2200 TN', destination: 'San Nicolas' },
+                         { doc_number: 'RH-5521', title: 'CERTIFICADO MATRÍCULA', doc_type: 'PDF', file_size: '4.8 MB', status: 'ARCHIVADO', cargo_type: 'Maíz', cargo_qty: '1800 TN', destination: 'Asunción' }
+                     ];
+                     
+                     // We use insert one by one because insertMine handles tenant isolation via supabase.insertMine wrapper
+                     for (let doc of mockDocs) {
+                         await window.sb.insertMine('documents', doc);
+                     }
+                     
+                     // Fetch again after inserting
+                     const { data: newDocs } = await window.sb.fetchMine('documents', '*');
+                     if (newDocs && newDocs.length > 0) {
+                          documents = newDocs;
+                          grid.innerHTML = '';
+                          newDocs.forEach(d => renderDocCard(grid, {
+                                id: d.doc_number || d.id.substring(0, 8),
+                                title: d.title,
+                                type: d.doc_type || 'PDF',
+                                date: new Date(d.created_at).toLocaleDateString('es-ES'),
+                                size: d.file_size || '1.0 MB',
+                                status: d.status || 'BORRADOR',
+                                barge: d.cargo_type || '-', prod: d.cargo_type || '-', qty: d.cargo_qty || '-', dest: d.destination || '-'
+                          }));
+                          return;
+                     }
                 }
             } catch (e) {
-                console.warn("DocsModule: Supabase no disponible, usando demo:", e.message);
+                console.warn("DocsModule: Supabase no disponible o error, usando demo local:", e.message);
             }
         }
 
-        // Fallback mock data
+        // Fallback mock data if DB completely fails
         renderMockDocs(grid);
     };
 
@@ -176,7 +205,7 @@ const DocsModule = (() => {
                     badge.innerText = 'CARGADO';
                 }
             }
-            alert("✅ Archivo cargado correctamente al repositorio.");
+            RiverToast.success("Archivo subido correctamente al repositorio.", "DOCUMENTO ANEXADO");
         }, 1500);
     };
 
@@ -194,7 +223,7 @@ const DocsModule = (() => {
         } else if (window.trackingLogic) {
             window.trackingLogic.quickDownload(barge, prod, qty, dest);
         } else {
-            alert("Error: El motor de PDF no está listo. Visita 'Tracking' primero.");
+            RiverToast.warning("El motor de PDF no está listo. Visita 'Tracking' o inicializa las librerías base.", "Motor No Disponible");
         }
     };
 

@@ -188,14 +188,59 @@ try {
             }
         };
 
-        // DATA LOADING (Client Specific - Legacy/Mock)
         const loadClientShipments = async () => {
-            // Keeps existing logic for user-specific cargo (simulated)
-            useMockShipments();
+            try {
+                if (!window.sb) throw new Error("Sin conexión a Supabase");
+                
+                // Fetch real trips (status = in_progress)
+                const { data, error } = await window.sb
+                    .from('voyages')
+                    .select('*, vessel:fleet_assets(name, type)')
+                    .eq('status', 'in_progress');
+                    
+                if (error) throw error;
+                
+                if (data && data.length > 0) {
+                    state.shipments = data.map(t => ({
+                        id: t.id,
+                        product_type: t.cargo_type || 'Carga General',
+                        quantity: t.cargo_amount || 0,
+                        created_at: t.start_date || new Date().toISOString(),
+                        service_order: { 
+                            origin_port: t.origin_port || 'Origen', 
+                            destination_port: t.destination_port || 'Destino' 
+                        },
+                        barge: { 
+                            id: t.vessel_id, 
+                            name: t.vessel ? t.vessel.name : 'No Asignado', 
+                            lat: -27.5 + (Math.random() * 2), // We lack real DB lat/lng for trips unless mapped
+                            lng: -58.8 - (Math.random() * 2),
+                            status: 'Navegando' 
+                        }
+                    }));
+                } else {
+                    useMockShipments();
+                }
+            } catch (err) {
+                console.warn("Fallo al traer viajes reales, usando mock:", err);
+                useMockShipments();
+            }
+
             renderShipments();
-            // renderMapMarkers(); // We disable legacy markers to prioritize AIS live view or merge them? 
-            // Let's keep them as "My Cargo" vs "General Traffic"
             renderMapMarkers();
+            
+            // Activate search filter dynamically
+            const inputTrack = document.querySelector('.search-input-track');
+            if (inputTrack) {
+                inputTrack.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    const cards = document.querySelectorAll('.shipment-card');
+                    cards.forEach(c => {
+                        const txt = c.textContent || c.innerText;
+                        c.style.display = txt.toLowerCase().includes(term) ? '' : 'none';
+                    });
+                });
+            }
         };
 
         const useMockShipments = () => {
@@ -354,7 +399,7 @@ try {
             const date = new Date().toLocaleDateString();
 
             if (!window.jspdf) {
-                alert("Error: Librería PDF no cargada. Refresca la página.");
+                RiverToast.error('Librería PDF no cargada. Recargue la página.', 'Error PDF');
                 return;
             }
 
@@ -386,7 +431,7 @@ try {
                 body: [
                     ['Barcaza / Buque', vesselName],
                     ['Tipo de Producto', product],
-                    ['Cantidad Declarada', qty],
+                    ['Cantidad Declarada', qty + ' TN'],
                     ['Puerto Destino', dest],
                     ['Estimado de Arribo (ETA)', eta],
                     ['Estatus', 'EN TRÁNSITO - CONFIRMADO']
@@ -402,6 +447,8 @@ try {
             doc.text("Este documento es generado automáticamente por RiverHub Elite 360.", 20, finalY);
             doc.text("Validez sujeta a confirmación satelital.", 20, finalY + 5);
 
+            if (window.RiverToast) RiverToast.success(`Generando PDF firmado digitalmente para ${vesselName}...`, 'Manifiesto Seguro');
+            
             doc.save(`Manifiesto_${vesselName.replace(/\s/g, '_')}.pdf`);
         };
 

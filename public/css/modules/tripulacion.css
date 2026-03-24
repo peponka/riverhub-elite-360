@@ -95,7 +95,7 @@
     top: -8px;
     left: 12px;
     font-size: 0.7rem;
-    color: #06b6d4;
+    color: #00E5FF;
     background: #0f172a;
     padding: 0 5px;
     font-weight: 700;
@@ -116,7 +116,7 @@
 
 .input-filter-dark:focus {
     outline: none;
-    border-color: #06b6d4;
+    border-color: #00E5FF;
 }
 
 .btn-clear-radar {
@@ -222,7 +222,7 @@
 }
 
 .profile-role {
-    color: #06b6d4;
+    color: #00E5FF;
     font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -329,7 +329,7 @@
 }
 
 .btn-card-action:hover {
-    background: rgba(6, 182, 212, 0.08);
+    background: rgba(0, 229, 255, 0.08);
     /* Primary Opacity */
     border-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-primary);

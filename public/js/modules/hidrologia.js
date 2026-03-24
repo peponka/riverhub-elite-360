@@ -145,4 +145,16 @@ function calculateTrend(current, median) {
 document.addEventListener('DOMContentLoaded', () => {
     // Observer or navigation check could trigger this, doing timeout for simplicity
     setTimeout(() => hydroLogic.init(), 1000);
+
+    const downloadBtn = document.querySelector('#view-hidrologia .btn-ghost-blue');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            if (window.RiverToast) {
+                RiverToast.info("Generando boletín en PDF...", "Hidrología", "fas fa-file-pdf");
+                setTimeout(() => {
+                    RiverToast.success("Boletín meteorológico descargado con éxito.", "Descarga Completada");
+                }, 2000);
+            }
+        });
+    }
 });

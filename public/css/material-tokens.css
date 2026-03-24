@@ -8,45 +8,45 @@
        1. COLOR PALETTE (Dark Mode optimized for RiverHub Elite)
        ====================================================================== */
 
-    /* Primary (Cyan/Neon Blue variants) */
-    --md-sys-color-primary: #06b6d4;
-    /* Neon Cyan */
+    /* Primary (Cyan - Matching Flutter Mobile App) */
+    --md-sys-color-primary: #00E5FF;
+    /* Vivid Cyan (matches CupertinoColors-like accent) */
     --md-sys-color-on-primary: #000000;
     --md-sys-color-primary-container: #083344;
-    --md-sys-color-on-primary-container: #a5f3fc;
+    --md-sys-color-on-primary-container: #B2F5EA;
 
     /* Secondary (Blue variants) */
-    --md-sys-color-secondary: #3b82f6;
+    --md-sys-color-secondary: #3B82F6;
     /* Neon Blue */
     --md-sys-color-on-secondary: #000000;
     --md-sys-color-secondary-container: #172554;
-    --md-sys-color-on-secondary-container: #dbeafe;
+    --md-sys-color-on-secondary-container: #DBEAFE;
 
     /* Tertiary (Purple variants) */
-    --md-sys-color-tertiary: #8b5cf6;
+    --md-sys-color-tertiary: #8B5CF6;
     /* Neon Purple */
     --md-sys-color-on-tertiary: #000000;
-    --md-sys-color-tertiary-container: #2e1065;
-    --md-sys-color-on-tertiary-container: #f3e8ff;
+    --md-sys-color-tertiary-container: #2E1065;
+    --md-sys-color-on-tertiary-container: #F3E8FF;
 
     /* Error */
-    --md-sys-color-error: #ef4444;
+    --md-sys-color-error: #EF4444;
     --md-sys-color-on-error: #000000;
-    --md-sys-color-error-container: #450a0a;
-    --md-sys-color-on-error-container: #fee2e2;
+    --md-sys-color-error-container: #450A0A;
+    --md-sys-color-on-error-container: #FEE2E2;
 
-    /* Backgrounds & Surfaces (Neutral / Gunmetal) */
-    --md-sys-color-background: #020617;
-    /* Deepest Dark */
-    --md-sys-color-on-background: #e2e8f0;
+    /* Backgrounds & Surfaces (Matching Flutter: Color(0xFF0A0E1A)) */
+    --md-sys-color-background: #0A0E1A;
+    /* Flutter main background */
+    --md-sys-color-on-background: #F8FAFC;
 
-    --md-sys-color-surface: #0f172a;
-    /* Panel BG */
-    --md-sys-color-on-surface: #e2e8f0;
+    --md-sys-color-surface: #0F172A;
+    /* Flutter panel/card bg */
+    --md-sys-color-on-surface: #F8FAFC;
 
-    --md-sys-color-surface-variant: #1e293b;
-    /* Card BG */
-    --md-sys-color-on-surface-variant: #cbd5e1;
+    --md-sys-color-surface-variant: #1E293B;
+    /* Flutter elevated card bg */
+    --md-sys-color-on-surface-variant: #CBD5E1;
 
     --md-sys-color-outline: #475569;
     --md-sys-color-outline-variant: #334155;
@@ -271,7 +271,7 @@
 }
 
 .md-btn-outlined:hover {
-    background-color: rgba(6, 182, 212, 0.08);
+    background-color: rgba(0, 229, 255, 0.08);
     /* Primary w/ opacity */
     border-color: var(--md-sys-color-primary);
 }
@@ -283,7 +283,7 @@
 }
 
 .md-btn-text:hover {
-    background-color: rgba(6, 182, 212, 0.08);
+    background-color: rgba(0, 229, 255, 0.08);
 }
 
 /* Elevated Button */

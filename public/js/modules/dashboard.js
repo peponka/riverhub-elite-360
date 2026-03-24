@@ -16,7 +16,8 @@ const dashboardLogic = {
         }
 
         if (window.sb) {
-            await this.startRadar();
+            // ALWAYS defer to onShow to prevent Leaflet zero-dimension bug
+            this.radarInitDeferred = true;
             this.checkOnboarding();
         } else {
             console.warn("Dashboard: Supabase not ready.");
@@ -26,8 +27,23 @@ const dashboardLogic = {
 
     checkOnboarding: async function () {
         try {
+            // GUARD: Only show onboarding popup AFTER user is logged in
+            const loginView = document.getElementById('login-view');
+            if (loginView && loginView.style.display !== 'none' && loginView.offsetParent !== null) {
+                console.log("Dashboard: Skipping onboarding — login screen active.");
+                return;
+            }
+            // Also check if AuthModule says user is not authenticated
+            if (window.AuthModule && typeof window.AuthModule.getCurrentUser === 'function') {
+                const user = window.AuthModule.getCurrentUser();
+                if (!user) {
+                    console.log("Dashboard: Skipping onboarding — no user session.");
+                    return;
+                }
+            }
+
             const { count, error } = await window.sb
-                .from('vessels')
+                .from('fleet_assets')
                 .select('*', { count: 'exact', head: true });
 
             if (!error && count === 0) {
@@ -64,7 +80,7 @@ const dashboardLogic = {
             // SAAS METRICS: Fetch counts for THIS tenant only using fetchMine
             const [vesselsRes, crewRes, alertsRes] = await Promise.all([
                 // 1. My Active Vessels
-                window.sb.fetchMine('vessels', 'id, status'),
+                window.sb.fetchMine('fleet_assets', 'id, status'),
                 // 2. My Active Crew
                 window.sb.fetchMine('crew_members', 'id'),
                 // 3. My Open Incidents/Maintenance
@@ -130,35 +146,57 @@ const dashboardLogic = {
         }
     },
 
+    vectorSource: null,
+
     startRadar: async function () {
         const mapId = 'map-dashboard-new';
         const mapContainer = document.getElementById(mapId);
         if (!mapContainer) return;
 
         if (this.dashMap) {
-            this.dashMap.remove();
+            this.dashMap.setTarget(null);
             this.dashMap = null;
         }
 
-        this.dashMap = L.map(mapId, {
-            zoomControl: true,
-            attributionControl: false,
-            background: '#0b1116'
-        }).setView([-30.0, -58.5], 6); // Hidrovía completa: Paraguay → Río de la Plata
+        mapContainer.innerHTML = '';
+        this.aisMarkers = {};
+        this.vectorSource = new ol.source.Vector();
 
-        // CARTO Dark Matter - Estilo igual al Mapa de Flota
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(this.dashMap);
+        const vectorLayer = new ol.layer.Vector({
+            source: this.vectorSource,
+            style: new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({ color: '#00e5ff' }), // Neon Cyan for dark map
+                    stroke: new ol.style.Stroke({ color: '#fff', width: 2 })
+                })
+            })
+        });
+
+        this.dashMap = new ol.Map({
+            target: mapId,
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.XYZ({
+                        url: 'https://{a-d}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+                        crossOrigin: 'anonymous'
+                    })
+                }),
+                vectorLayer
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([-58.5, -30.0]),
+                zoom: 5,
+                minZoom: 2,
+                maxZoom: 18
+            }),
+            controls: ol.control.defaults.defaults({ zoom: true, attribution: false })
+        });
 
         await this.loadShips();
-
-        // Subscribe to AIS live updates
         this.subscribeToAIS();
 
-        setTimeout(() => { if (this.dashMap) this.dashMap.invalidateSize(); }, 600);
+        setTimeout(() => { if (this.dashMap) this.dashMap.updateSize(); }, 300);
     },
 
     // AIS Live markers storage
@@ -168,84 +206,72 @@ const dashboardLogic = {
         if (!this.dashMap) return;
         try {
             // SAAS UPGRADE: Load only MY active ships
-            const { data } = await window.sb.fetchMine('vessels', '*');
+            const { data } = await window.sb.fetchMine('fleet_assets', '*');
 
             if (data && data.length > 0) {
                 this.ships = data;
-                const shipIcon = L.divIcon({
-                    className: 'custom-ship-marker',
-                    html: `<div class="marker-pulse" style="border-color:#00e5ff; color:#fff; text-shadow:0 0 5px #00e5ff;"><i class="fas fa-ship"></i></div>`,
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 12]
-                });
 
-                // Fit bounds if multiple ships
-                const markers = [];
-
+                const features = [];
                 this.ships.forEach(v => {
-                    // Logic: Use real lat/long if available, else fallback to random in region (Demo for empty location)
                     const hasLoc = v.current_location && v.current_location.lat;
                     let lat = hasLoc ? v.current_location.lat : -27.1 + (Math.random() - 0.5);
                     let lng = hasLoc ? v.current_location.lng : -58.55 + (Math.random() - 0.5);
 
-                    if (v.status !== 'active') return; // Only show active on radar
+                    if (v.status !== 'active') return;
 
-                    const m = L.marker([lat, lng], { icon: shipIcon })
-                        .addTo(this.dashMap)
-                        .bindPopup(`<b>${v.name}</b><br>Estado: ${v.status}<br>Carga: ${v.cargo_percent || 0}%`);
-                    markers.push(m);
+                    const feature = new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat])),
+                        name: v.name,
+                        status: v.status
+                    });
+                    features.push(feature);
                 });
 
-                if (markers.length > 0) {
-                    const group = new L.featureGroup(markers);
-                    this.dashMap.fitBounds(group.getBounds().pad(0.1));
+                if (features.length > 0) {
+                    this.vectorSource.addFeatures(features);
                 }
-            } else {
-                console.log("Dashboard: No active vessels found for this tenant.");
             }
         } catch (e) {
-            console.error(e);
+            console.error("Dashboard Map Load Error:", e);
         }
     },
 
     // Subscribe to AISStream for live vessel updates
     subscribeToAIS: function () {
-        if (!window.AisStreamService) {
-            console.warn("Dashboard: AisStreamService not available");
-            return;
-        }
+        if (!window.AisStreamService || !window.AisStreamService.subscribe) return;
 
-        console.log("📡 Dashboard: Subscribing to AIS live updates...");
+        console.log("📡 Dashboard: Subscribing to AIS live updates (ol)...");
 
         window.AisStreamService.subscribe((vessel) => {
-            if (!this.dashMap) return;
+            if (!this.dashMap || !this.vectorSource) return;
 
             const mmsi = vessel.mmsi;
             const lat = vessel.lat;
             const lon = vessel.lon;
-
             if (!lat || !lon) return;
 
-            // Create icon for AIS vessels (green color to differentiate)
-            const aisIcon = L.divIcon({
-                className: 'custom-ship-marker ais-live',
-                html: `<div class="marker-pulse" style="border-color:#10b981; color:#10b981;"><i class="fas fa-ship"></i></div>`,
-                iconSize: [20, 20],
-                iconAnchor: [10, 10]
-            });
+            const coords = ol.proj.fromLonLat([lon, lat]);
 
-            // Update existing marker or create new one
             if (this.aisMarkers[mmsi]) {
-                // Update position
-                this.aisMarkers[mmsi].setLatLng([lat, lon]);
+                this.aisMarkers[mmsi].getGeometry().setCoordinates(coords);
             } else {
-                // Create new marker
-                const marker = L.marker([lat, lon], { icon: aisIcon })
-                    .addTo(this.dashMap)
-                    .bindPopup(`<b>${vessel.name}</b><br>MMSI: ${mmsi}<br>Velocidad: ${vessel.speed?.toFixed(1) || 0} kn`);
+                const feature = new ol.Feature({
+                    geometry: new ol.geom.Point(coords),
+                    name: vessel.name,
+                    mmsi: mmsi
+                });
+                
+                // Active green style for AIS
+                feature.setStyle(new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 6,
+                        fill: new ol.style.Fill({ color: '#10b981' }),
+                        stroke: new ol.style.Stroke({ color: '#064e3b', width: 2 })
+                    })
+                }));
 
-                this.aisMarkers[mmsi] = marker;
-                console.log(`🚢 Dashboard: New AIS vessel - ${vessel.name}`);
+                this.vectorSource.addFeature(feature);
+                this.aisMarkers[mmsi] = feature;
             }
         });
     },
@@ -255,8 +281,15 @@ const dashboardLogic = {
     },
 
     onShow: function () {
-        if (this.dashMap) {
-            setTimeout(() => this.dashMap.invalidateSize(), 100);
+        if (this.radarInitDeferred) {
+            this.radarInitDeferred = false;
+            setTimeout(() => {
+                this.startRadar();
+            }, 300);
+        } else if (this.dashMap) {
+            setTimeout(() => {
+                this.dashMap.updateSize();
+            }, 200);
         }
         ['scada-chart-1', 'scada-chart-2', 'scada-chart-4', 'doughnut-chart-tech'].forEach(id => {
             const ctx = document.getElementById(id);

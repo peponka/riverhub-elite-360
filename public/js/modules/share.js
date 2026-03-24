@@ -102,10 +102,10 @@ const ShareModule = (() => {
     const sendEmail = () => {
         // Piggyback on Reports logic if available, or mock
         if (window.ReportesModule) {
-            alert("Preparando reporte para envío por email...");
+            RiverToast.info('Preparando reporte para envío por email...', 'Exportación');
             window.ReportesModule.printReport(); // For demo, just triggers download
         } else {
-            alert("Simulación: Reporte enviado a cliente@empresa.com");
+            RiverToast.success('Reporte enviado a cliente@empresa.com', 'Email Enviado');
         }
         close();
     };

@@ -31,7 +31,11 @@ var FuelModule = (() => {
         if (!window.sb) { loadFallbackData(); return; }
 
         try {
-            const { data, error } = await window.sb.fetchMine('vessels', 'id, name, type, fuel_capacity, status');
+            let res = await window.sb.fetchMine('fleet_assets', 'id, name, type, fuel_capacity, status');
+            if (res.error) res = await window.sb.from('fleet_assets').select('id, name, type, fuel_capacity, status');
+            
+            const { data, error } = res;
+            if (error) throw error;
             if (error) throw error;
 
             if (data && data.length > 0) {
@@ -89,15 +93,10 @@ var FuelModule = (() => {
     };
 
     const loadFallbackData = () => {
-        state.vessels = [
-            { id: 'demo-1', name: 'TB PARAGUAY 01', type: 'TB', level: 69, capacity: 45000, autonomy: 182, efficiency: 94 },
-            { id: 'demo-2', name: 'R/M HERCULES', type: 'RM', level: 45, capacity: 55000, autonomy: 110, efficiency: 88 },
-            { id: 'demo-3', name: 'R/M CENTAURO', type: 'RM', level: 82, capacity: 32000, autonomy: 210, efficiency: 97 },
-            { id: 'demo-4', name: 'R/M ORION STAR', type: 'RM', level: 20, capacity: 40000, autonomy: 48, efficiency: 76 }
-        ];
-        state.activeVesselId = state.vessels[0].id;
+        state.vessels = [];
+        state.activeVesselId = null;
         renderVesselList();
-        updateDashboard(state.vessels[0]);
+        updateDashboard(null);
     };
 
     const setupEventListeners = () => {
@@ -157,7 +156,7 @@ var FuelModule = (() => {
         const notes = document.getElementById('fuel-notes')?.value || '';
 
         if (!amount || !loc) {
-            alert("Por favor complete todos los campos requeridos.");
+            RiverToast.warning("Por favor complete todos los campos requeridos.", "Faltan Datos");
             return;
         }
 
@@ -173,13 +172,13 @@ var FuelModule = (() => {
                     logged_at: new Date().toISOString()
                 });
                 if (error) throw error;
-                alert("✅ Carga registrada exitosamente en Supabase.");
+                RiverToast.success("Carga de combustible registrada exitosamente en Supabase.", "Carga Terminada");
             } catch (e) {
                 console.warn("⚠️ Supabase insert failed, registering locally:", e.message);
-                alert("✅ Carga registrada localmente (sin persistencia en nube).");
+                RiverToast.warning("Carga registrada localmente (sin persistencia en nube).", "Modo Offline");
             }
         } else {
-            alert("✅ Carga registrada (Modo Demo).");
+            RiverToast.info("Carga de combustible registrada (Modo Demo).", "Simulación");
         }
 
         document.getElementById('modal-fuel-load').remove();
@@ -295,14 +294,7 @@ var FuelModule = (() => {
             }
         }
 
-        // Fallback demo data
-        if (historyData.length === 0) {
-            historyData = [
-                { type: 'CARGA', loc: 'ROSARIO', val: '+8000L', date: '05 Nov, 10:30', isAnomaly: false },
-                { type: 'CARGA', loc: 'VILLETA', val: '+5000L', date: '06 Nov, 14:15', isAnomaly: false },
-                { type: 'ANOMALÍA', loc: 'KM 1445', val: '-450L', date: '07 Nov, 03:00', isAnomaly: true },
-            ];
-        }
+        // Fallback demo data removed
 
         historyList.innerHTML = '';
         historyData.forEach(item => {
