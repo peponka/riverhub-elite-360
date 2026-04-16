@@ -38,10 +38,10 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _fetchAisPositions() async {
     try {
+      const String apiBase = String.fromEnvironment('API_BASE_URL', defaultValue: 'https://riverhub-api.onrender.com');
       final response = await http.get(
-        // 10.0.2.2 es la IP mágica que hace que el Emulador de Android se conecte al `localhost` de tu Windows.
-        Uri.parse('http://10.0.2.2:4001/api/n8n/ais-live'), 
-        headers: {'x-api-key': 'riverhub_n8n_2026'},
+        Uri.parse('$apiBase/api/n8n/ais-live'), 
+        headers: {'x-api-key': 'RH_Secure_n8n_X9fL!2026'},
       ).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
@@ -61,9 +61,11 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  StreamSubscription<List<Map<String, dynamic>>>? _vesselSubscription;
+
   void _subscribeToFleetRealtime() {
     try {
-      Supabase.instance.client
+      _vesselSubscription = Supabase.instance.client
           .from('vessels')
           .stream(primaryKey: ['id'])
           .listen((List<Map<String, dynamic>> data) {
@@ -82,6 +84,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void dispose() {
     _aisTimer?.cancel();
+    _vesselSubscription?.cancel();
     super.dispose();
   }
 
@@ -373,3 +376,4 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
+

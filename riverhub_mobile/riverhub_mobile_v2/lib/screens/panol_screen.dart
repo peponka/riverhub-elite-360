@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class PanolScreen extends StatefulWidget {
   const PanolScreen({super.key});
@@ -71,10 +72,10 @@ class _PanolScreenState extends State<PanolScreen> {
           'Pañol (Inventario)',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CupertinoButton(
@@ -82,14 +83,14 @@ class _PanolScreenState extends State<PanolScreen> {
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
             children: const [
-              Text('Añadir ', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 14, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.add_circled, color: Color(0xFF00E5FF), size: 22),
+              Text('Añadir ', style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
+              Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
             ],
           ),
           onPressed: _showAddItemModal,
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -100,12 +101,12 @@ class _PanolScreenState extends State<PanolScreen> {
                 _kpi(
                   'Total Ítems',
                   '${_items.length}',
-                  const Color(0xFF3B82F6),
+                  AppColors.blue,
                 ),
                 const SizedBox(width: 10),
-                _kpi('Stock Bajo', '$_lowStockCount', const Color(0xFFEF4444)),
+                _kpi('Stock Bajo', '$_lowStockCount', AppColors.error),
                 const SizedBox(width: 10),
-                _kpi('Categorías', '5', const Color(0xFF10B981)),
+                _kpi('Categorías', '5', AppColors.success),
               ],
             ),
             const SizedBox(height: 14),
@@ -116,14 +117,14 @@ class _PanolScreenState extends State<PanolScreen> {
                 padding: EdgeInsets.only(left: 10),
                 child: Icon(
                   CupertinoIcons.search,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSecondary,
                   size: 18,
                 ),
               ),
-              style: const TextStyle(color: material.Colors.white),
-              placeholderStyle: const TextStyle(color: Color(0xFF64748B)),
+              style: const TextStyle(color: AppColors.textPrimary),
+              placeholderStyle: const TextStyle(color: AppColors.textSecondary),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E293B),
+                color: AppColors.separator,
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: const EdgeInsets.all(12),
@@ -150,7 +151,7 @@ class _PanolScreenState extends State<PanolScreen> {
         height: MediaQuery.of(context).size.height * 0.85,
         padding: const EdgeInsets.only(top: 16),
         decoration: const BoxDecoration(
-          color: Color(0xFF0F172A),
+          color: AppColors.backgroundSecondary,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -160,12 +161,12 @@ class _PanolScreenState extends State<PanolScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Nuevo Ítem', style: TextStyle(color: material.Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                  CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.xmark_circle_fill, color: Color(0xFF64748B)), onPressed: () => Navigator.pop(ctx)),
+                  const Text('Nuevo Ítem', style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+                  CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textSecondary), onPressed: () => Navigator.pop(ctx)),
                 ],
               ),
             ),
-            const material.Divider(color: Color(0xFF1E293B)),
+            const material.Divider(color: AppColors.separator),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(16),
@@ -224,14 +225,14 @@ class _PanolScreenState extends State<PanolScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+        Text(label, style: const TextStyle(color: AppColors.textTertiary, fontSize: 12)),
         const SizedBox(height: 6),
         CupertinoTextField(
           controller: controller,
           keyboardType: isNumeric ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-          style: const TextStyle(color: material.Colors.white),
-          placeholderStyle: const TextStyle(color: Color(0xFF64748B)),
-          decoration: BoxDecoration(color: const Color(0xFF1E293B), borderRadius: BorderRadius.circular(10)),
+          style: const TextStyle(color: AppColors.textPrimary),
+          placeholderStyle: const TextStyle(color: AppColors.textSecondary),
+          decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(10)),
           padding: const EdgeInsets.all(12),
         ),
       ],
@@ -260,7 +261,7 @@ class _PanolScreenState extends State<PanolScreen> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
             ),
           ],
         ),
@@ -271,19 +272,19 @@ class _PanolScreenState extends State<PanolScreen> {
   Widget _itemCard(Map<String, dynamic> item) {
     final isLow = item['stock'] <= item['minAlert'];
     final stockColor = isLow
-        ? const Color(0xFFEF4444)
-        : const Color(0xFF10B981);
+        ? AppColors.error
+        : AppColors.success;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isLow
-              ? const Color(0xFFEF4444).withValues(alpha: 0.3)
-              : const Color(0xFF1E293B),
+              ? AppColors.error.withValues(alpha: 0.3)
+              : AppColors.separator,
         ),
       ),
       child: Column(
@@ -296,7 +297,7 @@ class _PanolScreenState extends State<PanolScreen> {
                 child: Text(
                   item['name'],
                   style: const TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -309,13 +310,13 @@ class _PanolScreenState extends State<PanolScreen> {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEF4444).withValues(alpha: 0.2),
+                    color: AppColors.error.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
                     'STOCK BAJO',
                     style: TextStyle(
-                      color: Color(0xFFEF4444),
+                      color: AppColors.error,
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
                     ),
@@ -329,13 +330,13 @@ class _PanolScreenState extends State<PanolScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E293B),
+                  color: AppColors.separator,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   item['category'],
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textTertiary,
                     fontSize: 11,
                   ),
                 ),
@@ -343,13 +344,13 @@ class _PanolScreenState extends State<PanolScreen> {
               const SizedBox(width: 8),
               const Icon(
                 CupertinoIcons.location_solid,
-                color: Color(0xFF64748B),
+                color: AppColors.textSecondary,
                 size: 12,
               ),
               const SizedBox(width: 4),
               Text(
                 item['location'],
-                style: const TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
               ),
               const Spacer(),
               Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class LoadMasterScreen extends StatefulWidget {
   const LoadMasterScreen({super.key});
@@ -26,9 +27,9 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
   }
 
   Color get trimColor {
-    if (trimValue > 0.5) return const Color(0xFF10B981);
-    if (trimValue < -0.5) return const Color(0xFFEF4444);
-    return const Color(0xFFF59E0B);
+    if (trimValue > 0.5) return AppColors.success;
+    if (trimValue < -0.5) return AppColors.error;
+    return AppColors.warning;
   }
 
   @override
@@ -39,10 +40,10 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
           'Load Master',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CupertinoButton(
@@ -50,8 +51,8 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Calcular ', style: const TextStyle(color: Color(0xFF00E5FF), fontSize: 13, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.refresh, color: Color(0xFF00E5FF), size: 20),
+              Text('Calcular ', style: const TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.bold)),
+              Icon(CupertinoIcons.refresh, color: AppColors.accent, size: 20),
             ],
           ),
           onPressed: () => setState(() {
@@ -63,7 +64,7 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
           }),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -74,13 +75,13 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
                 _kpiBox(
                   'CARGA TOTAL',
                   '${totalLoad.toStringAsFixed(0)} TN',
-                  const Color(0xFF3B82F6),
+                  AppColors.blue,
                 ),
                 const SizedBox(width: 10),
                 _kpiBox(
                   'CALADO',
                   '${draftValue.toStringAsFixed(2)} PIES',
-                  const Color(0xFF00E5FF),
+                  AppColors.accent,
                 ),
                 const SizedBox(width: 10),
                 _kpiBox('TRIM', trimStatus, trimColor),
@@ -91,16 +92,16 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F172A),
+                color: AppColors.backgroundSecondary,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF1E293B)),
+                border: Border.all(color: AppColors.separator),
               ),
               child: Column(
                 children: [
                   const Text(
                     'VISUALIZACIÓN DE BODEGAS',
                     style: TextStyle(
-                      color: Color(0xFF94A3B8),
+                      color: AppColors.textTertiary,
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
                     ),
@@ -109,22 +110,22 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _holdVisual('PROA', hold1, const Color(0xFFEF4444)),
-                      _holdVisual('CENTRO', hold2, const Color(0xFF3B82F6)),
-                      _holdVisual('POPA', hold3, const Color(0xFF10B981)),
+                      _holdVisual('PROA', hold1, AppColors.error),
+                      _holdVisual('CENTRO', hold2, AppColors.blue),
+                      _holdVisual('POPA', hold3, AppColors.success),
                     ],
                   ),
                   const SizedBox(height: 16),
                   // Stability bar
                   const Text(
                     'ESTABILIDAD',
-                    style: TextStyle(color: Color(0xFF64748B), fontSize: 10),
+                    style: TextStyle(color: AppColors.textSecondary, fontSize: 10),
                   ),
                   const SizedBox(height: 8),
                   Container(
                     height: 8,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1E293B),
+                      color: AppColors.separator,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: LayoutBuilder(
@@ -132,8 +133,8 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
                         double pct = 50 + (trimValue * 5);
                         pct = pct.clamp(10, 90);
                         final barColor = (pct < 40 || pct > 60)
-                            ? const Color(0xFFEF4444)
-                            : const Color(0xFF10B981);
+                            ? AppColors.error
+                            : AppColors.success;
                         return Stack(
                           children: [
                             Positioned(
@@ -161,33 +162,33 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
               'Bodega 1 (Proa)',
               hold1,
               (v) => setState(() => hold1 = v),
-              const Color(0xFFEF4444),
+              AppColors.error,
             ),
             _sliderSection(
               'Bodega 2 (Centro)',
               hold2,
               (v) => setState(() => hold2 = v),
-              const Color(0xFF3B82F6),
+              AppColors.blue,
             ),
             _sliderSection(
               'Bodega 3 (Popa)',
               hold3,
               (v) => setState(() => hold3 = v),
-              const Color(0xFF10B981),
+              AppColors.success,
             ),
             const SizedBox(height: 10),
             _sliderSection(
               'Combustible (%)',
               fuel,
               (v) => setState(() => fuel = v),
-              const Color(0xFFF59E0B),
+              AppColors.warning,
               max: 100,
             ),
             _sliderSection(
               'Lastre (%)',
               ballast,
               (v) => setState(() => ballast = v),
-              const Color(0xFF8B5CF6),
+              AppColors.purple,
               max: 100,
             ),
           ],
@@ -219,7 +220,7 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 9),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 9),
             ),
           ],
         ),
@@ -233,7 +234,7 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+          style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
         ),
         const SizedBox(height: 6),
         Container(
@@ -286,7 +287,7 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
             children: [
               Text(
                 label,
-                style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                style: const TextStyle(color: AppColors.textTertiary, fontSize: 13),
               ),
               Text(
                 max == 100

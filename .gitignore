@@ -30,6 +30,12 @@ temp_*
 
 # Firebase Credentials
 firebase-service-account.json
+
+# Security blocks
+test_*.js
+*_backup.css
+*_new.css
+
 # Build folders
 riverhub_mobile/build/
 aquafleet/

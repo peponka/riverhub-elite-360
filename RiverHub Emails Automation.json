@@ -1,0 +1,175 @@
+{
+  "name": "RiverHub Emails Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "riverhub-events",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "0aa0450d-cea3-4657-b21f-4e07be853ee1",
+      "name": "Webhook RiverHub",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -480,
+        112
+      ],
+      "webhookId": "riverhub-events-uuid"
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json[\"body\"][\"event\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "NEW_COMPANY_REGISTRATION"
+            },
+            {
+              "value2": "PAYMENT_COMPLETED",
+              "output": 1
+            }
+          ]
+        }
+      },
+      "id": "bd2f45e4-f2b6-448e-be4a-0a5ea06eae77",
+      "name": "Switch Evento",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "no-reply@riverhub.com",
+        "toEmail": "={{$json[\"body\"][\"email\"]}}",
+        "subject": "¡Bienvenido a RiverHub Elite 360, {{$json[\"body\"][\"company\"]}}!",
+        "options": {}
+      },
+      "id": "5bda11a6-1f48-46b6-97ec-af693e169763",
+      "name": "Email Bienvenida",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "3a0edf19-a798-45eb-8673-8f030980c4b1",
+      "credentials": {
+        "smtp": {
+          "id": "VqlVcjfh4umLKCpJ",
+          "name": "SMTP account"
+        }
+      },
+      "notes": "Requiere configurar Credenciales SMTP"
+    },
+    {
+      "parameters": {
+        "fromEmail": "pepeq68@gmail.com",
+        "toEmail": "={{$json[\"body\"][\"email\"]}}",
+        "subject": "Factura RiverHub: Plan {{$json[\"body\"][\"plan\"]}} Activado",
+        "options": {}
+      },
+      "id": "5615b113-ae5b-4d02-84c3-025af9099c32",
+      "name": "Email Recibo Pago",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        0,
+        208
+      ],
+      "webhookId": "f267a5b4-3caf-45ca-9f54-f369fbb00f7d",
+      "credentials": {
+        "smtp": {
+          "id": "VqlVcjfh4umLKCpJ",
+          "name": "SMTP account"
+        }
+      },
+      "notes": "Requiere configurar Credenciales SMTP"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c7352951-fc47-44c3-9e06-59223c454a2e",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        112
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook RiverHub": {
+      "main": [
+        [
+          {
+            "node": "Switch Evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Evento": {
+      "main": [
+        [
+          {
+            "node": "Email Bienvenida",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Recibo Pago",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Bienvenida": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Recibo Pago": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b4c6ad70-551b-4d99-a38b-2a0b505fc6c5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d17c9227f34d30987c2565548d324fdc840d9928d97be77725aa845334da785"
+  },
+  "id": "MihB5iovuYyv0Oti",
+  "tags": []
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'theme/app_colors.dart';
 import 'screens/map_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/login_screen.dart';
@@ -76,7 +77,7 @@ Future<void> main() async {
     await Supabase.initialize(
       url: 'https://nfybnnpdrvyxucgpqmmo.supabase.co',
       anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc',
+          'REDACTED_SUPABASE_ANON_KEY',
     );
   } catch (e) {
     debugPrint('Supabase init error: $e');
@@ -94,10 +95,28 @@ class RiverHubMobileApp extends StatelessWidget {
       title: 'RiverHub Elite 360',
       debugShowCheckedModeBanner: false,
       locale: const material.Locale('en', 'US'), // 🔥 FIX PANTALLA BLANCA: Fuerza que los widgets Material encuentren su localización.
-      theme: const CupertinoThemeData(
+      theme: CupertinoThemeData(
         brightness: Brightness.light,
-        primaryColor: CupertinoColors.activeBlue,
-        scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
+        primaryColor: AppColors.accent,
+        scaffoldBackgroundColor: AppColors.backgroundPrimary,
+        barBackgroundColor: AppColors.backgroundSecondary,
+        textTheme: CupertinoTextThemeData(
+          primaryColor: AppColors.accent,
+          textStyle: const TextStyle(
+            color: AppColors.textPrimary,
+            fontFamily: 'SF Pro Text',
+          ),
+          navLargeTitleTextStyle: const TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.bold,
+            fontSize: 34,
+          ),
+          navTitleTextStyle: const TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+            fontSize: 17,
+          ),
+        ),
       ),
       localizationsDelegates: const [
         material.DefaultMaterialLocalizations.delegate,
@@ -145,9 +164,9 @@ class MainTabScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        backgroundColor: CupertinoColors.white.withValues(alpha: 0.85),
-        activeColor: CupertinoColors.activeBlue,
-        inactiveColor: CupertinoColors.systemGrey,
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.92),
+        activeColor: AppColors.accent,
+        inactiveColor: AppColors.textSecondary,
         iconSize: 26,
         items: const [
           BottomNavigationBarItem(

@@ -1,95 +1,61 @@
 /* ====================================
-   RIVERHUB MARITIME ELITE - THEME
-   Paleta de Colores Premium Oceánica
+   RIVERHUB MARITIME ELITE - CUPERTINO LIGHT
+   Paleta de Colores Premium — Cupertino Edition
    ==================================== */
 
 :root {
-    /* === OCEANIC DARK PALETTE (Flutter-Matched) === */
-    --ocean-deepest: #0A0E1A;
-    /* Flutter background - Color(0xFF0A0E1A) */
-    --ocean-deep: #0F172A;
-    /* Flutter surface */
-    --ocean-mid: #1E293B;
-    /* Flutter surface-variant */
-    --ocean-surface: #334155;
-    /* Flutter outline-variant */
+    /* === CUPERTINO LIGHT PALETTE === */
+    --ocean-deepest: #F9F9FE;
+    --ocean-deep: #F3F3F8;
+    --ocean-mid: #EDEDF2;
+    --ocean-surface: #C1C6D7;
 
-    /* === ACCENT COLORS (Flutter-Matched) === */
-    --cyan-primary: #00E5FF;
-    /* Flutter Color(0xFF00E5FF) */
-    --cyan-glow: #00E5FF;
-    /* Same as primary for consistency */
-    --blue-ice: #3B82F6;
-    /* Flutter blue */
-    --teal-deep: #10B981;
-    /* Flutter green */
+    /* === ACCENT COLORS (iOS Standard) === */
+    --cyan-primary: #0058BC;
+    --cyan-glow: #0058BC;
+    --blue-ice: #0070EB;
+    --teal-deep: #34C759;
 
     /* === STATUS INDICATORS === */
-    --status-active: #00ff9f;
-    /* Verde esmeralda activo */
-    --status-warning: #ffd60a;
-    /* Amarillo ámbar */
-    --status-alert: #ff006e;
-    /* Rosa alerta */
-    --status-offline: #6c757d;
-    /* Gris neutro */
+    --status-active: #34C759;
+    --status-warning: #FF9500;
+    --status-alert: #FF3B30;
+    --status-offline: #8E8E93;
 
-    /* === TEXT HIERARCHY === */
-    --text-primary: #ffffff;
-    /* Texto principal */
-    --text-secondary: #b8c5d6;
-    /* Texto secundario */
-    --text-muted: #6e7a8a;
-    /* Texto atenuado */
-    --text-emphasis: #00d9ff;
-    /* Texto enfatizado */
+    /* === TEXT HIERARCHY (Light Mode) === */
+    --text-primary: #1A1C1F;
+    --text-secondary: #414755;
+    --text-muted: #717786;
+    --text-emphasis: #0058BC;
 
-    /* === GLASSMORPHISM === */
-    --glass-bg: rgba(26, 41, 66, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    /* === GLASSMORPHISM (Light Mode) === */
+    --glass-bg: rgba(255, 255, 255, 0.72);
+    --glass-border: rgba(193, 198, 215, 0.25);
+    --glass-shadow: 0 4px 16px rgba(0, 88, 188, 0.06);
 
-    /* === GRADIENTS === */
+    /* === GRADIENTS (Light Mode) === */
     --gradient-ocean: linear-gradient(135deg,
-            rgba(0, 217, 255, 0.1) 0%,
-            rgba(0, 168, 181, 0.05) 100%);
+            rgba(0, 88, 188, 0.04) 0%,
+            rgba(88, 86, 214, 0.02) 100%);
 
     --gradient-card: linear-gradient(135deg,
-            rgba(26, 41, 66, 0.95) 0%,
-            rgba(15, 29, 48, 0.98) 100%);
+            rgba(255, 255, 255, 1) 0%,
+            rgba(249, 249, 254, 1) 100%);
 
     --gradient-active: linear-gradient(135deg,
-            rgba(0, 217, 255, 0.2) 0%,
-            rgba(0, 255, 159, 0.1) 100%);
+            rgba(0, 88, 188, 0.08) 0%,
+            rgba(52, 199, 89, 0.04) 100%);
 
-    /* === SHADOWS === */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-    --shadow-glow-cyan: 0 0 20px rgba(0, 217, 255, 0.3);
-    --shadow-glow-green: 0 0 20px rgba(0, 255, 159, 0.3);
-
-    /* === SPACING === */
-    --space-xs: 8px;
-    --space-sm: 12px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 32px;
-
-    /* === BORDER RADIUS === */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
-
-    /* === TRANSITIONS === */
-    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    /* === SHADOWS (Light) === */
+    --shadow-sm: 0 1px 3px rgba(0, 88, 188, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 88, 188, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 12px 40px rgba(0, 88, 188, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04);
+    --shadow-glow-cyan: 0 0 0 4px rgba(0, 88, 188, 0.08);
+    --shadow-glow-green: 0 0 0 4px rgba(52, 199, 89, 0.08);
 }
 
 /* ====================================
-   GLOBAL STYLES REDEFINITION
+   GLOBAL STYLES
    ==================================== */
 
 body {
@@ -103,33 +69,29 @@ body {
 }
 
 /* ====================================
-   MARITIME COMPONENTS
+   MARITIME COMPONENTS (Cupertino Light)
    ==================================== */
 
-/* Glass Card Premium */
 .maritime-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    transition: all var(--transition-normal);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1.0);
 }
 
 .maritime-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(0, 217, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-/* Panel con efecto profundidad */
 .depth-panel {
     background: var(--gradient-card);
-    border: 1px solid var(--ocean-surface);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
 }
 
 /* Badge náutico */
@@ -142,130 +104,237 @@ body {
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    backdrop-filter: blur(10px);
+    letter-spacing: 0.04em;
 }
 
 .nautical-badge.active {
-    background: rgba(0, 255, 159, 0.15);
+    background: rgba(52, 199, 89, 0.08);
     color: var(--status-active);
-    border: 1px solid var(--status-active);
-    box-shadow: 0 0 12px rgba(0, 255, 159, 0.2);
+    border: 1px solid rgba(52, 199, 89, 0.2);
+    box-shadow: none;
 }
 
 .nautical-badge.warning {
-    background: rgba(255, 214, 10, 0.15);
-    color: var(--status-warning);
-    border: 1px solid var(--status-warning);
+    background: rgba(255, 149, 0, 0.08);
+    color: #CC7A00;
+    border: 1px solid rgba(255, 149, 0, 0.2);
 }
 
 .nautical-badge.alert {
-    background: rgba(255, 0, 110, 0.15);
+    background: rgba(255, 59, 48, 0.08);
     color: var(--status-alert);
-    border: 1px solid var(--status-alert);
+    border: 1px solid rgba(255, 59, 48, 0.2);
     animation: pulseAlert 2s infinite;
 }
 
-/* Divider oceánico */
 .ocean-divider {
     height: 1px;
     background: linear-gradient(90deg,
             transparent 0%,
-            var(--cyan-primary) 50%,
+            rgba(193, 198, 215, 0.25) 50%,
             transparent 100%);
-    opacity: 0.3;
-    margin: var(--space-md) 0;
-}
-
-/* Wave pattern (decorativo) */
-.wave-pattern {
-    position: relative;
-    overflow: hidden;
+    opacity: 1;
+    margin: 16px 0;
 }
 
 .wave-pattern::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 200%;
-    height: 100px;
     background: linear-gradient(to right,
             transparent 0%,
-            rgba(0, 217, 255, 0.05) 50%,
+            rgba(0, 88, 188, 0.02) 50%,
             transparent 100%);
-    animation: waveMove 8s linear infinite;
 }
 
 /* ====================================
-   UTILITY CLASSES MARÍTIMAS
+   TYPOGRAPHY
    ==================================== */
 
-.glow-cyan {
-    box-shadow: var(--shadow-glow-cyan);
+.maritime-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin: 0;
+    background: linear-gradient(135deg, #1A1C1F, #0058BC);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.glow-green {
-    box-shadow: var(--shadow-glow-green);
+.maritime-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
-.ocean-gradient {
-    background: var(--gradient-ocean);
-}
-
-.text-cyan {
+.maritime-metric {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
     color: var(--cyan-primary);
-}
-
-.text-ice {
-    color: var(--blue-ice);
-}
-
-.text-teal {
-    color: var(--teal-deep);
+    text-shadow: none;
 }
 
 /* ====================================
-   ANIMATIONS
+   SCROLLBAR
    ==================================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+}
+
+/* ====================================
+   SPLASH SCREEN (Cupertino Light)
+   ==================================== */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #F9F9FE;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease-out, visibility 0.6s;
+}
+
+.splash-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    background: #F9F9FE;
+}
+
+.splash-logo {
+    font-size: 4rem;
+    color: #0058BC;
+    margin-bottom: 20px;
+    animation: splashLogoEnter 0.8s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
+    filter: none;
+    text-shadow: none;
+}
+
+.splash-title {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1A1C1F;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: splashTextEnter 0.6s ease-out 0.3s forwards;
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: #1A1C1F;
+}
+
+.splash-subtitle {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 0.85rem;
+    color: #717786;
+    letter-spacing: 0.1em;
+    margin-top: 8px;
+    opacity: 0;
+    animation: splashTextEnter 0.6s ease-out 0.5s forwards;
+    text-transform: uppercase;
+    text-shadow: none;
+}
+
+.splash-loader {
+    width: 160px;
+    height: 2px;
+    background: #EDEDF2;
+    margin: 32px auto 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out 0.6s forwards;
+}
+
+.splash-loader::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40%;
+    background: #0058BC;
+    box-shadow: none;
+    animation: loaderMove 1.2s infinite ease-in-out;
+}
+
+.splash-bg-decor {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: none;
+    opacity: 0;
+    z-index: 1;
+}
+
+@keyframes splashLogoEnter {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes splashPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+@keyframes splashTextEnter {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes loaderMove {
+    0% { left: -50%; }
+    100% { left: 150%; }
+}
 
 @keyframes pulseAlert {
-
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.7;
-        transform: scale(1.05);
-    }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.02); }
 }
 
 @keyframes waveMove {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 @keyframes ripple {
-    0% {
-        transform: scale(0);
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(4);
-        opacity: 0;
-    }
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(4); opacity: 0; }
 }
 
-/* Ripple effect para botones */
 .ripple-effect {
     position: relative;
     overflow: hidden;
@@ -278,208 +347,11 @@ body {
     height: 100%;
     top: 50%;
     left: 50%;
-    background: radial-gradient(circle, rgba(0, 217, 255, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 88, 188, 0.15) 0%, transparent 70%);
     transform: translate(-50%, -50%) scale(0);
     pointer-events: none;
 }
 
 .ripple-effect:active::after {
-    animation: ripple 0.6s ease-out;
-}
-
-/* ====================================
-   TYPOGRAPHY PREMIUM
-   ==================================== */
-
-.maritime-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.5px;
-    margin: 0;
-    background: linear-gradient(135deg, var(--text-primary), var(--cyan-primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.maritime-subtitle {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.maritime-metric {
-    font-family: 'Rajdhani', 'Roboto Mono', monospace;
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--cyan-primary);
-    text-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
-}
-
-/* ====================================
-   SCROLLBAR OCEÁNICA
-   ==================================== */
-
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--ocean-deep);
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--cyan-primary), var(--teal-deep));
-    border-radius: 5px;
-    border: 2px solid var(--ocean-deep);
-}
-
-
-/* ====================================
-   SPLASH SCREEN (PRESENTATION)
-   ==================================== */
-#splash-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: radial-gradient(circle at center, var(--ocean-deep) 0%, #000000 100%);
-    z-index: 99999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.8s ease-out, visibility 0.8s;
-}
-
-.splash-content {
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-
-.splash-logo {
-    font-size: 5rem;
-    color: var(--cyan-primary);
-    margin-bottom: 20px;
-    animation: splashLogoEnter 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
-        splashPulse 2s infinite ease-in-out 1.2s;
-    filter: drop-shadow(0 0 30px rgba(0, 217, 255, 0.4));
-}
-
-.splash-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 4px;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: splashTextEnter 1s ease-out 0.5s forwards;
-    background: linear-gradient(to right, #fff, var(--cyan-primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.splash-subtitle {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    letter-spacing: 2px;
-    margin-top: 10px;
-    opacity: 0;
-    animation: splashTextEnter 1s ease-out 0.8s forwards;
-    text-transform: uppercase;
-}
-
-.splash-loader {
-    width: 200px;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.1);
-    margin-top: 40px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 2px;
-    opacity: 0;
-    animation: fadeIn 0.5s ease-out 1s forwards;
-}
-
-.splash-loader::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 40%;
-    background: var(--cyan-primary);
-    box-shadow: 0 0 10px var(--cyan-primary);
-    animation: loaderMove 1.5s infinite ease-in-out;
-}
-
-.splash-bg-decor {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-image:
-        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.5;
-    z-index: 1;
-}
-
-@keyframes splashLogoEnter {
-    0% {
-        transform: scale(0) rotate(-15deg);
-        opacity: 0;
-    }
-
-    100% {
-        transform: scale(1) rotate(0);
-        opacity: 1;
-    }
-}
-
-@keyframes splashPulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 30px rgba(0, 217, 255, 0.4));
-    }
-
-    50% {
-        transform: scale(1.05);
-        filter: drop-shadow(0 0 50px rgba(0, 217, 255, 0.6));
-    }
-}
-
-@keyframes splashTextEnter {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes loaderMove {
-    0% {
-        left: -50%;
-    }
-
-    100% {
-        left: 150%;
-    }
+    animation: ripple 0.4s ease-out;
 }

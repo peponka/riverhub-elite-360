@@ -10,8 +10,8 @@
     height: auto;
     min-height: 100%;
     display: block;
-    background: #0A0E1A;
-    color: #F8FAFC;
+    background: var(--md-sys-color-surface-container-low, #F3F3F8);
+    color: var(--md-sys-color-on-surface, #1A1C1F);
 }
 
 .dashboard-container>* {
@@ -24,9 +24,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 0 20px 0;
-    border-bottom: 2px solid;
-    border-image: linear-gradient(90deg, transparent, var(--neon-cyan), transparent) 1;
+    padding: 0 0 24px 0;
+    border-bottom: none;
+    border-image: none;
 }
 
 .welcome-msg h2 {
@@ -48,9 +48,9 @@
 }
 
 .system-status {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
-    border: 1.5px solid var(--neon-green);
-    color: var(--neon-green);
+    background: rgba(52, 199, 89, 0.08);
+    border: 1.5px solid rgba(52, 199, 89, 0.3);
+    color: #28A745;
     padding: 10px 20px;
     border-radius: var(--radius-full);
     font-family: var(--font-body);
@@ -59,15 +59,15 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+    box-shadow: none;
 }
 
 .pulsing-dot {
-    width: 10px;
-    height: 10px;
-    background: var(--neon-green);
+    width: 8px;
+    height: 8px;
+    background: #34C759;
     border-radius: 50%;
-    box-shadow: 0 0 16px var(--neon-green);
+    box-shadow: none;
     animation: pulseDot 2s ease-in-out infinite;
 }
 
@@ -158,7 +158,7 @@
 
 .cyan-glow {
     color: var(--neon-cyan);
-    background: rgba(0, 229, 255, 0.1) !important;
+    background: rgba(0, 88, 188, 0.08) !important;
 }
 
 .red-glow {

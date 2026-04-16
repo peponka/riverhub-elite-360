@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; connect-src 'self' https://nfybnnpdrvyxucgpqmmo.supabase.co wss://realtime.supabase.io wss://stream.aisstream.io https://aisstream.io; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;">
     <title>RiverHub Elite 360</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -98,7 +98,7 @@
     </script>
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <!-- OpenLayers - Canvas 2D rendering (no DPR tile gaps, no WebGL needed) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@8.2.0/ol.css" />
@@ -107,46 +107,11 @@
     <!-- jsPDF for PDF export in Reports module -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <link rel="stylesheet" href="css/global.css?v=ELITE_DARK_100">
-    <link rel="stylesheet" href="css/modules/dashboard.css?v=999">
-    <link rel="stylesheet" href="css/modules/mapa.css?v=999">
-    <link rel="stylesheet" href="css/modules/cotizador.css">
-    <link rel="stylesheet" href="css/modules/docs.css">
-    <link rel="stylesheet" href="css/modules/reportes.css">
-    <link rel="stylesheet" href="css/modules/viajes.css">
-    <link rel="stylesheet" href="css/modules/commercial.css">
-    <link rel="stylesheet" href="css/modules/tracking.css">
-    <!-- REVERTED MOBILE OVERRIDES DUE TO BLACK SCREEN -->
+    <link rel="stylesheet" href="css/elite-bundle.css?v=ELITE_PROX_GEN">
+                                    <!-- REVERTED MOBILE OVERRIDES DUE TO BLACK SCREEN -->
 
     <!-- External Libs -->
-    <link rel="stylesheet" href="css/modules/mantenimiento.css?v=ELITE_MOBILE_V2">
-    <link rel="stylesheet" href="css/modules/comunicaciones.css?v=ELITE_MOBILE_V2">
-    <link rel="stylesheet" href="css/modules/agent-chat.css">
-    <link rel="stylesheet" href="css/modules/tripulacion.css">
-    <link rel="stylesheet" href="css/modules/bitacora.css?v=ELITE_MOBILE_V2">
-    <link rel="stylesheet" href="css/modules/incidentes.css">
-    <link rel="stylesheet" href="css/modules/billing.css?v=ELITE_MOBILE_V2"> <!-- BILLING STYLES -->
-    <link rel="stylesheet" href="css/modules/login.css?v=ELITE_MOBILE_V2"> <!-- RESTORED -->
-    <link rel="stylesheet" href="css/modules/panol.css">
-    <link rel="stylesheet" href="css/modules/combustible.css?v=ELITE_MOBILE_V2">
-    <link rel="stylesheet" href="css/modules/hidrologia.css">
-    <link rel="stylesheet" href="css/modules/integraciones.css">
-    <link rel="stylesheet" href="css/modules/calado.css?v=ELITE_MOBILE_V2">
-    <link rel="stylesheet" href="css/modules/convoys.css">
-    <link rel="stylesheet" href="css/modules/admin.css">
-    <link rel="stylesheet" href="css/modules/auditoria.css?v=ELITE_MOBILE_V2"> <!-- AUDITORIA MODULE -->
-    <link rel="stylesheet" href="css/modules/admin-dashboard.css"> <!-- NEW ADMIN BACKOFFICE -->
-    <link rel="stylesheet" href="css/modules/backoffice.css"> <!-- SUPERADMIN BACKOFFICE -->
-    <link rel="stylesheet" href="css/modules/admin-cliente.css"> <!-- ADMIN CLIENTE -->
-    <link rel="stylesheet" href="css/modules/billing.css"> <!-- BILLING / SUSCRIPCIÓN -->
-    <link rel="stylesheet" href="css/modules/monitoring.css"> <!-- TORRE DE CONTROL -->
-    <link rel="stylesheet" href="css/modules/fleet_manager.css"> <!-- FLEET MANAGER -->
-    <link rel="stylesheet" href="css/modules/financial_risk.css"> <!-- FINANCIAL RISK -->
-    <link rel="stylesheet" href="css/maritime-elite.css"> <!-- MARITIME ELITE THEME -->
-    <link rel="stylesheet" href="css/mejoras-ui.css?v=ELITE_DARK_300"> <!-- UI IMPROVEMENTS -->
-    <link rel="stylesheet" href="css/login.css?v=ELITE_DARK_300"> <!-- RESTORED MAIN LOGIN CSS -->
-    <link rel="stylesheet" href="css/flutter-override.css?v=ELITE_DARK_300"> <!-- FLUTTER CUPERTINO STYLE -->
-
+                                                                                                            
     <!-- APP CONFIGURATION (MUST BE LOADED FIRST) -->
     <script src="js/services/toast.js"></script> <!-- TOAST SYSTEM (intercepts alert) -->
     <script src="js/config.js"></script>
@@ -342,31 +307,28 @@
     </style>
     <!-- CRITICAL SCROLLBAR OVERRIDE (FINAL FIX) -->
     <style>
-        /* Force Scrollbar Visibility for Desktop */
+        /* Force Scrollbar Visibility for Desktop — Cupertino Light */
         @media (min-width: 769px) {
             ::-webkit-scrollbar {
-                width: 10px !important;
-                height: 10px !important;
+                width: 8px !important;
+                height: 8px !important;
                 display: block !important;
-                background: #09090b !important;
+                background: transparent !important;
             }
 
             ::-webkit-scrollbar-track {
-                background: #1e293b !important;
-                /* Visible Track */
-                border-left: 1px solid #334155 !important;
+                background: transparent !important;
             }
 
             ::-webkit-scrollbar-thumb {
-                background-color: #475569 !important;
-                /* Visible Thumb */
-                border-radius: 4px !important;
-                border: 2px solid #09090b !important;
+                background-color: rgba(0, 0, 0, 0.12) !important;
+                border-radius: 10px !important;
+                border: 2px solid transparent !important;
+                background-clip: padding-box !important;
             }
 
             ::-webkit-scrollbar-thumb:hover {
-                background-color: #00e5ff !important;
-                /* Cyan Hover */
+                background-color: rgba(0, 0, 0, 0.22) !important;
             }
 
             /* Ensure Containers Allow Scroll */
@@ -374,22 +336,21 @@
             .main-content,
             .sidebar nav.menu {
                 scrollbar-width: thin !important;
-                scrollbar-color: #475569 #1e293b !important;
+                scrollbar-color: rgba(0,0,0,0.12) transparent !important;
             }
         }
     </style>
-    <link rel="stylesheet" href="css/modules/auditoria.css">
-</head>
+    </head>
 
 <body>
     <!-- SPLASH SCREEN (PRESENTATION) -->
     <div id="splash-screen">
         <div class="splash-bg-decor"></div>
-        <div class="splash-content">
-            <i class="fas fa-anchor splash-logo"></i>
-            <div class="splash-title">RIVERHUB</div>
-            <div class="splash-subtitle">ELITE OPERATING SYSTEM</div>
-            <div class="splash-loader"></div>
+        <div class="splash-content" style="background:#F9F9FE;">
+            <i class="fas fa-anchor splash-logo" style="color:#0058BC; text-shadow:none;"></i>
+            <div class="splash-title" style="color:#1A1C1F; text-shadow:none;">RIVERHUB</div>
+            <div class="splash-subtitle" style="color:#717786; text-shadow:none;">FLEET OPERATIONS</div>
+            <div class="splash-loader" style="border-color:#EDEDF2; border-top-color:#0058BC;"></div>
         </div>
     </div>
 
@@ -437,11 +398,9 @@
             <!-- LOGIN FORM -->
             <div id="form-login" class="auth-form-container">
                 <div class="input-login-group">
-                    <i class="fas fa-envelope"></i>
                     <input type="text" id="login-user" class="input-login-premium" placeholder="Email">
                 </div>
                 <div class="input-login-group">
-                    <i class="fas fa-lock"></i>
                     <input type="password" id="login-pass" class="input-login-premium" placeholder="Contraseña">
                 </div>
                 <!-- Forgot Password Link inside Login Form -->
@@ -464,27 +423,21 @@
             <!-- REGISTER FORM (Hidden by default) -->
             <div id="form-register" class="auth-form-container" style="display:none;">
                 <div class="input-login-group">
-                    <i class="fas fa-user"></i>
                     <input type="text" id="reg-name" class="input-login-premium" placeholder="Nombre Completo">
                 </div>
                 <div class="input-login-group">
-                    <i class="fas fa-building"></i>
                     <input type="text" id="reg-company" class="input-login-premium" placeholder="Empresa / Buque">
                 </div>
                 <div class="input-login-group">
-                    <i class="fas fa-id-badge"></i>
                     <input type="text" id="reg-role" class="input-login-premium" placeholder="Cargo / Rol">
                 </div>
                 <div class="input-login-group">
-                    <i class="fas fa-phone"></i>
                     <input type="tel" id="reg-phone" class="input-login-premium" placeholder="Teléfono / WhatsApp">
                 </div>
                 <div class="input-login-group">
-                    <i class="fas fa-envelope"></i>
                     <input type="email" id="reg-email" class="input-login-premium" placeholder="Email Corporativo">
                 </div>
                 <div class="input-login-group">
-                    <i class="fas fa-lock"></i>
                     <input type="password" id="reg-pass" class="input-login-premium" placeholder="Contraseña">
                 </div>
                 <button class="btn-login ripple-effect" onclick="AuthModule.submitRegistration()">REGISTRARME</button>
@@ -4569,8 +4522,8 @@
     </script>
     < !-- MAIN MODULES JS IMPORTS -->
         < !-- Services (Load First) -->
-            < !-- SOCKET.IO (Realtime) -->
-                <script src="/socket.io/socket.io.js"></script>
+            <!-- SOCKET.IO (Disabled - using native WebSocket via AISStream) -->
+                <!-- <script src="/socket.io/socket.io.js"></script> -->
                 <script src="js/services/supabase.js"></script>
                 <script src="js/services/aisstream.js"></script>
                 < !-- Modules -->
@@ -4680,15 +4633,14 @@
                                 < !-- <script src="js/modules/fleet_manager.js">
                                     </script>-->< !-- < !-- <script src="js/modules/admin.js">
                                         </script>-->< !-- DISABLED FOR REBOOT -->REMOVED/DEPRECATED -->
-                                            <script src="js/modules/admin-clients.js"></script>
+                                            <script src="js/modules/admin-cliente.js"></script>
                                             <script src="js/modules/admin-dashboard.js"></script>
                                             <script src="js/modules/backoffice.js"></script>
                                             <script src="js/modules/admin-cliente.js"></script>
                                             <script src="js/modules/billing.js?v=3.1"></script>
                                             <script src="js/modules/bitacora.js"></script>
                                             <script src="js/modules/calado.js"></script>
-                                            <link rel="stylesheet" href="css/modules/agent-chat.css">
-                                            <script src="js/modules/integraciones.js"></script>
+                                                                                        <script src="js/modules/integraciones.js"></script>
                                             <script src="js/modules/agent-chat.js"></script>
                                             < !-- MOBILE BOTTOM NAVIGATION -->
                                                 <nav class="mobile-bottom-nav"><a href="#" id="mobile-nav-inicio"
@@ -4935,13 +4887,9 @@
                                                                             </script>
                                                                             <script
                                                                                 src="js/modules/auditoria.js"></script>
-                                                                            <link rel="stylesheet"
-                                                                                href="css/modules/loadmaster.css">
-                                                                            <script
+                                                                                                                                                        <script
                                                                                 src="js/modules/loadmaster.js"></script>
-                                                                            <link rel="stylesheet"
-                                                                                href="css/modules/notifications.css">
-                                                                            <script
+                                                                                                                                                        <script
                                                                                 src="js/modules/notifications.js"></script>
                                                                             <script
                                                                                 src="js/modules/backoffice.js"></script>

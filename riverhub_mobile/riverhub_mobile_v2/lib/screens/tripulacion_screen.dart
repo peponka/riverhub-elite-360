@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class TripulacionScreen extends StatefulWidget {
   const TripulacionScreen({super.key});
@@ -56,10 +57,10 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
           'Tripulación',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CupertinoButton(
@@ -68,24 +69,24 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
             children: const [
-              Text('Nuevo ', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 13, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.person_add, color: Color(0xFF00E5FF), size: 22),
+              Text('Nuevo ', style: TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.bold)),
+              Icon(CupertinoIcons.person_add, color: AppColors.accent, size: 22),
             ],
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             Row(
               children: [
-                _kpi('Embarcados', '$active', const Color(0xFF10B981)),
+                _kpi('Embarcados', '$active', AppColors.success),
                 const SizedBox(width: 10),
-                _kpi('De Franco', '$onLeave', const Color(0xFFF59E0B)),
+                _kpi('De Franco', '$onLeave', AppColors.warning),
                 const SizedBox(width: 10),
-                _kpi('Total', '${_crew.length}', const Color(0xFF3B82F6)),
+                _kpi('Total', '${_crew.length}', AppColors.blue),
               ],
             ),
             const SizedBox(height: 14),
@@ -131,7 +132,7 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
             ),
           ],
         ),
@@ -148,7 +149,7 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: sel ? const Color(0xFF00E5FF) : const Color(0xFF1E293B),
+            color: sel ? AppColors.accent : AppColors.separator,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
@@ -169,15 +170,15 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
     String statusText;
     switch (c['status']) {
       case 'active':
-        statusColor = const Color(0xFF10B981);
+        statusColor = AppColors.success;
         statusText = 'EMBARCADO';
         break;
       case 'leave':
-        statusColor = const Color(0xFFF59E0B);
+        statusColor = AppColors.warning;
         statusText = 'FRANCO';
         break;
       default:
-        statusColor = const Color(0xFF64748B);
+        statusColor = AppColors.textSecondary;
         statusText = 'INACTIVO';
     }
 
@@ -185,9 +186,9 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Row(
         children: [
@@ -195,14 +196,14 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: const Color(0xFF1E293B),
+              color: AppColors.separator,
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 c['name'].toString().substring(0, 1),
                 style: const TextStyle(
-                  color: Color(0xFF00E5FF),
+                  color: AppColors.accent,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -217,7 +218,7 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
                 Text(
                   c['name'],
                   style: const TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -227,18 +228,18 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
                     Text(
                       c['role'],
                       style: const TextStyle(
-                        color: Color(0xFF94A3B8),
+                        color: AppColors.textTertiary,
                         fontSize: 12,
                       ),
                     ),
                     const Text(
                       ' • ',
-                      style: TextStyle(color: Color(0xFF475569)),
+                      style: TextStyle(color: AppColors.systemGray2),
                     ),
                     Text(
                       c['vessel'],
                       style: const TextStyle(
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                         fontSize: 12,
                       ),
                     ),

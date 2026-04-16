@@ -1,111 +1,121 @@
 /* ==========================================================================
-   RIVERHUB MATERIAL DESIGN 3 - DESIGN TOKENS
-   Based on Material Design 3 (Material You) Specifications
+   RIVERHUB MATERIAL DESIGN 3 - CUPERTINO LIGHT DESIGN TOKENS
+   "Crest & Tide" Design System — Maritime Precision Framework
+   Inspired by Apple's Cupertino Light Aesthetic
    ========================================================================== */
 
 :root {
     /* ======================================================================
-       1. COLOR PALETTE (Dark Mode optimized for RiverHub Elite)
+       1. COLOR PALETTE (Cupertino Light — "The Nautical Horizon")
        ====================================================================== */
 
-    /* Primary (Cyan - Matching Flutter Mobile App) */
-    --md-sys-color-primary: #00E5FF;
-    /* Vivid Cyan (matches CupertinoColors-like accent) */
-    --md-sys-color-on-primary: #000000;
-    --md-sys-color-primary-container: #083344;
-    --md-sys-color-on-primary-container: #B2F5EA;
+    /* Primary (iOS Blue) */
+    --md-sys-color-primary: #0058BC;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #0070EB;
+    --md-sys-color-on-primary-container: #FEFCFF;
 
     /* Secondary (Blue variants) */
-    --md-sys-color-secondary: #3B82F6;
-    /* Neon Blue */
-    --md-sys-color-on-secondary: #000000;
-    --md-sys-color-secondary-container: #172554;
-    --md-sys-color-on-secondary-container: #DBEAFE;
+    --md-sys-color-secondary: #405E96;
+    --md-sys-color-on-secondary: #FFFFFF;
+    --md-sys-color-secondary-container: #A1BEFD;
+    --md-sys-color-on-secondary-container: #2D4C83;
 
-    /* Tertiary (Purple variants) */
-    --md-sys-color-tertiary: #8B5CF6;
-    /* Neon Purple */
-    --md-sys-color-on-tertiary: #000000;
-    --md-sys-color-tertiary-container: #2E1065;
-    --md-sys-color-on-tertiary-container: #F3E8FF;
+    /* Tertiary (Orange/Warning) */
+    --md-sys-color-tertiary: #9E3D00;
+    --md-sys-color-on-tertiary: #FFFFFF;
+    --md-sys-color-tertiary-container: #C64F00;
+    --md-sys-color-on-tertiary-container: #FFFBFF;
 
     /* Error */
-    --md-sys-color-error: #EF4444;
-    --md-sys-color-on-error: #000000;
-    --md-sys-color-error-container: #450A0A;
-    --md-sys-color-on-error-container: #FEE2E2;
+    --md-sys-color-error: #BA1A1A;
+    --md-sys-color-on-error: #FFFFFF;
+    --md-sys-color-error-container: #FFDAD6;
+    --md-sys-color-on-error-container: #93000A;
 
-    /* Backgrounds & Surfaces (Matching Flutter: Color(0xFF0A0E1A)) */
-    --md-sys-color-background: #0A0E1A;
-    /* Flutter main background */
-    --md-sys-color-on-background: #F8FAFC;
+    /* Backgrounds & Surfaces (Cupertino Light Layering) */
+    --md-sys-color-background: #F9F9FE;
+    --md-sys-color-on-background: #1A1C1F;
 
-    --md-sys-color-surface: #0F172A;
-    /* Flutter panel/card bg */
-    --md-sys-color-on-surface: #F8FAFC;
+    --md-sys-color-surface: #F9F9FE;
+    --md-sys-color-on-surface: #1A1C1F;
 
-    --md-sys-color-surface-variant: #1E293B;
-    /* Flutter elevated card bg */
-    --md-sys-color-on-surface-variant: #CBD5E1;
+    --md-sys-color-surface-variant: #FFFFFF;
+    --md-sys-color-on-surface-variant: #414755;
 
-    --md-sys-color-outline: #475569;
-    --md-sys-color-outline-variant: #334155;
+    /* Surface Containers (Tonal Layering System) */
+    --md-sys-color-surface-container-lowest: #FFFFFF;
+    --md-sys-color-surface-container-low: #F3F3F8;
+    --md-sys-color-surface-container: #EDEDF2;
+    --md-sys-color-surface-container-high: #E8E8ED;
+    --md-sys-color-surface-container-highest: #E2E2E7;
+
+    /* Outline & Borders */
+    --md-sys-color-outline: #717786;
+    --md-sys-color-outline-variant: #C1C6D7;
+
+    /* Inverse (for snackbars, tooltips) */
+    --md-sys-color-inverse-surface: #2E3034;
+    --md-sys-color-inverse-on-surface: #F0F0F5;
+    --md-sys-color-inverse-primary: #ADC6FF;
+
+    /* Surface Tint */
+    --md-sys-color-surface-tint: #005BC1;
 
     /* ======================================================================
-       2. TYPOGRAPHY (Material Scale)
-       Using Inter (Sans) and JetBrains Mono (Code) as per brand
+       2. TYPOGRAPHY (Inter — Editorial Authority)
        ====================================================================== */
-    --md-ref-typeface-brand: 'Inter', sans-serif;
-    --md-ref-typeface-plain: 'Inter', sans-serif;
-    --md-ref-typeface-code: 'JetBrains Mono', monospace;
+    --md-ref-typeface-brand: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --md-ref-typeface-plain: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --md-ref-typeface-code: 'SF Mono', 'JetBrains Mono', 'Roboto Mono', monospace;
 
-    /* Display Large - 57px/64px */
-    --md-sys-typescale-display-large: 400 3.5625rem/1.12 var(--md-ref-typeface-brand);
-    /* Display Medium - 45px/52px */
-    --md-sys-typescale-display-medium: 400 2.8125rem/1.16 var(--md-ref-typeface-brand);
-    /* Display Small - 36px/44px */
-    --md-sys-typescale-display-small: 400 2.25rem/1.22 var(--md-ref-typeface-brand);
+    /* Display Large */
+    --md-sys-typescale-display-large: 800 3.5rem/1.12 var(--md-ref-typeface-brand);
+    /* Display Medium */
+    --md-sys-typescale-display-medium: 700 2.75rem/1.16 var(--md-ref-typeface-brand);
+    /* Display Small */
+    --md-sys-typescale-display-small: 600 2.25rem/1.22 var(--md-ref-typeface-brand);
 
-    /* Headline Large - 32px/40px */
-    --md-sys-typescale-headline-large: 400 2rem/1.25 var(--md-ref-typeface-brand);
-    /* Headline Medium - 28px/36px */
-    --md-sys-typescale-headline-medium: 400 1.75rem/1.29 var(--md-ref-typeface-brand);
-    /* Headline Small - 24px/32px */
-    --md-sys-typescale-headline-small: 400 1.5rem/1.33 var(--md-ref-typeface-brand);
+    /* Headline Large */
+    --md-sys-typescale-headline-large: 700 2rem/1.25 var(--md-ref-typeface-brand);
+    /* Headline Medium */
+    --md-sys-typescale-headline-medium: 600 1.75rem/1.29 var(--md-ref-typeface-brand);
+    /* Headline Small */
+    --md-sys-typescale-headline-small: 600 1.5rem/1.33 var(--md-ref-typeface-brand);
 
-    /* Title Large - 22px/28px */
-    --md-sys-typescale-title-large: 400 1.375rem/1.27 var(--md-ref-typeface-brand);
-    /* Title Medium - 16px/24px */
-    --md-sys-typescale-title-medium: 500 1rem/1.5 var(--md-ref-typeface-brand);
-    /* Title Small - 14px/20px */
-    --md-sys-typescale-title-small: 500 0.875rem/1.43 var(--md-ref-typeface-brand);
+    /* Title Large */
+    --md-sys-typescale-title-large: 600 1.375rem/1.27 var(--md-ref-typeface-brand);
+    /* Title Medium */
+    --md-sys-typescale-title-medium: 600 1.125rem/1.5 var(--md-ref-typeface-brand);
+    /* Title Small */
+    --md-sys-typescale-title-small: 600 0.875rem/1.43 var(--md-ref-typeface-brand);
 
-    /* Label Large (Button) - 14px/20px */
-    --md-sys-typescale-label-large: 500 0.875rem/1.43 var(--md-ref-typeface-brand);
-    /* Label Medium - 12px/16px */
-    --md-sys-typescale-label-medium: 500 0.75rem/1.33 var(--md-ref-typeface-brand);
-    /* Label Small - 11px/16px */
-    --md-sys-typescale-label-small: 500 0.6875rem/1.45 var(--md-ref-typeface-brand);
+    /* Label Large (Button) */
+    --md-sys-typescale-label-large: 600 0.875rem/1.43 var(--md-ref-typeface-brand);
+    /* Label Medium */
+    --md-sys-typescale-label-medium: 600 0.75rem/1.33 var(--md-ref-typeface-brand);
+    /* Label Small */
+    --md-sys-typescale-label-small: 600 0.6875rem/1.45 var(--md-ref-typeface-brand);
 
-    /* Body Large - 16px/24px */
+    /* Body Large */
     --md-sys-typescale-body-large: 400 1rem/1.5 var(--md-ref-typeface-brand);
-    /* Body Medium - 14px/20px */
+    /* Body Medium */
     --md-sys-typescale-body-medium: 400 0.875rem/1.43 var(--md-ref-typeface-brand);
-    /* Body Small - 12px/16px */
+    /* Body Small */
     --md-sys-typescale-body-small: 400 0.75rem/1.33 var(--md-ref-typeface-brand);
 
     /* ======================================================================
-       3. ELEVATION (Shadows)
+       3. ELEVATION (Ambient Blue-Tinted Shadows — Light Mode)
        ====================================================================== */
     --md-sys-elevation-level-0: none;
-    --md-sys-elevation-level-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-    --md-sys-elevation-level-2: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
-    --md-sys-elevation-level-3: 0px 1px 3px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
-    --md-sys-elevation-level-4: 0px 2px 3px rgba(0, 0, 0, 0.3), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
-    --md-sys-elevation-level-5: 0px 4px 4px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+    --md-sys-elevation-level-1: 0px 1px 3px rgba(0, 88, 188, 0.04), 0px 1px 2px rgba(0, 0, 0, 0.06);
+    --md-sys-elevation-level-2: 0px 2px 6px rgba(0, 88, 188, 0.06), 0px 2px 4px rgba(0, 0, 0, 0.04);
+    --md-sys-elevation-level-3: 0px 4px 12px rgba(0, 88, 188, 0.06), 0px 4px 8px rgba(0, 0, 0, 0.04);
+    --md-sys-elevation-level-4: 0px 8px 24px rgba(0, 88, 188, 0.08), 0px 6px 12px rgba(0, 0, 0, 0.04);
+    --md-sys-elevation-level-5: 0px 12px 40px rgba(0, 88, 188, 0.10), 0px 8px 16px rgba(0, 0, 0, 0.04);
 
     /* ======================================================================
-       4. SHAPE (Corner Radius)
+       4. SHAPE (Cupertino Roundness — 12px as Law)
        ====================================================================== */
     --md-sys-shape-corner-none: 0px;
     --md-sys-shape-corner-extra-small: 4px;
@@ -116,9 +126,9 @@
     --md-sys-shape-corner-full: 9999px;
 
     /* ======================================================================
-       5. MOTION (Easing & Duration)
+       5. MOTION (Smooth Cupertino Transitions)
        ====================================================================== */
-    --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0);
+    --md-sys-motion-easing-standard: cubic-bezier(0.25, 0.1, 0.25, 1.0);
     --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0);
     --md-sys-motion-easing-decelerated: cubic-bezier(0.0, 0.0, 0.2, 1);
     --md-sys-motion-easing-accelerated: cubic-bezier(0.4, 0.0, 1, 1);
@@ -126,92 +136,40 @@
     --md-sys-motion-duration-short-1: 50ms;
     --md-sys-motion-duration-short-2: 100ms;
     --md-sys-motion-duration-medium-1: 200ms;
-    --md-sys-motion-duration-medium-2: 250ms;
-    --md-sys-motion-duration-long-1: 300ms;
-    --md-sys-motion-duration-long-2: 400ms;
+    --md-sys-motion-duration-medium-2: 300ms;
+    --md-sys-motion-duration-long-1: 350ms;
+    --md-sys-motion-duration-long-2: 500ms;
 }
 
 /* ==========================================================================
-   UTILITY CLASSES (Helpers)
+   UTILITY CLASSES
    ========================================================================== */
 
-.md-typescale-display-large {
-    font: var(--md-sys-typescale-display-large);
-}
+.md-typescale-display-large { font: var(--md-sys-typescale-display-large); letter-spacing: -0.04em; color: var(--md-sys-color-on-surface); }
+.md-typescale-display-medium { font: var(--md-sys-typescale-display-medium); letter-spacing: -0.02em; color: var(--md-sys-color-on-surface); }
+.md-typescale-display-small { font: var(--md-sys-typescale-display-small); color: var(--md-sys-color-on-surface); }
+.md-typescale-headline-large { font: var(--md-sys-typescale-headline-large); letter-spacing: -0.02em; color: var(--md-sys-color-on-surface); }
+.md-typescale-headline-medium { font: var(--md-sys-typescale-headline-medium); color: var(--md-sys-color-on-surface); }
+.md-typescale-headline-small { font: var(--md-sys-typescale-headline-small); color: var(--md-sys-color-on-surface); }
+.md-typescale-title-large { font: var(--md-sys-typescale-title-large); color: var(--md-sys-color-on-surface); }
+.md-typescale-title-medium { font: var(--md-sys-typescale-title-medium); color: var(--md-sys-color-on-surface); }
+.md-typescale-title-small { font: var(--md-sys-typescale-title-small); color: var(--md-sys-color-on-surface); }
+.md-typescale-body-large { font: var(--md-sys-typescale-body-large); color: var(--md-sys-color-on-surface); }
+.md-typescale-body-medium { font: var(--md-sys-typescale-body-medium); color: var(--md-sys-color-on-surface-variant); }
+.md-typescale-body-small { font: var(--md-sys-typescale-body-small); color: var(--md-sys-color-on-surface-variant); }
+.md-typescale-label-large { font: var(--md-sys-typescale-label-large); letter-spacing: 0.02em; color: var(--md-sys-color-on-surface); }
+.md-typescale-label-medium { font: var(--md-sys-typescale-label-medium); letter-spacing: 0.04em; color: var(--md-sys-color-on-surface-variant); }
+.md-typescale-label-small { font: var(--md-sys-typescale-label-small); letter-spacing: 0.05em; color: var(--md-sys-color-on-surface-variant); }
 
-.md-typescale-display-medium {
-    font: var(--md-sys-typescale-display-medium);
-}
-
-.md-typescale-display-small {
-    font: var(--md-sys-typescale-display-small);
-}
-
-.md-typescale-headline-large {
-    font: var(--md-sys-typescale-headline-large);
-}
-
-.md-typescale-headline-medium {
-    font: var(--md-sys-typescale-headline-medium);
-}
-
-.md-typescale-headline-small {
-    font: var(--md-sys-typescale-headline-small);
-}
-
-.md-typescale-title-large {
-    font: var(--md-sys-typescale-title-large);
-}
-
-.md-typescale-title-medium {
-    font: var(--md-sys-typescale-title-medium);
-}
-
-.md-typescale-title-small {
-    font: var(--md-sys-typescale-title-small);
-}
-
-.md-typescale-body-large {
-    font: var(--md-sys-typescale-body-large);
-}
-
-.md-typescale-body-medium {
-    font: var(--md-sys-typescale-body-medium);
-}
-
-.md-typescale-body-small {
-    font: var(--md-sys-typescale-body-small);
-}
-
-.md-typescale-label-large {
-    font: var(--md-sys-typescale-label-large);
-}
-
-.md-typescale-label-medium {
-    font: var(--md-sys-typescale-label-medium);
-}
-
-.md-typescale-label-small {
-    font: var(--md-sys-typescale-label-small);
-}
-
-.md-elevation-1 {
-    box-shadow: var(--md-sys-elevation-level-1);
-}
-
-.md-elevation-2 {
-    box-shadow: var(--md-sys-elevation-level-2);
-}
-
-.md-elevation-3 {
-    box-shadow: var(--md-sys-elevation-level-3);
-}
+.md-elevation-1 { box-shadow: var(--md-sys-elevation-level-1); }
+.md-elevation-2 { box-shadow: var(--md-sys-elevation-level-2); }
+.md-elevation-3 { box-shadow: var(--md-sys-elevation-level-3); }
 
 /* ==========================================================================
-   COMPONENT BASE STYLES
+   COMPONENT BASE STYLES — CUPERTINO LIGHT
    ========================================================================== */
 
-/* 1. BUTTONS (Material 3) */
+/* 1. BUTTONS (Cupertino Filled) */
 .md-btn {
     position: relative;
     display: inline-flex;
@@ -228,101 +186,85 @@
     gap: 8px;
     padding: 0 24px;
     height: 40px;
-    border-radius: var(--md-sys-shape-corner-full);
-    /* Stadium shape */
+    border-radius: var(--md-sys-shape-corner-medium);
     cursor: pointer;
-    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+    transition: all 0.2s var(--md-sys-motion-easing-standard);
     overflow: hidden;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Filled Button (Primary) */
+/* Filled Button (Primary — Gradient CTA) */
 .md-btn-filled {
-    background-color: var(--md-sys-color-primary);
+    background: linear-gradient(135deg, var(--md-sys-color-primary), var(--md-sys-color-primary-container));
     color: var(--md-sys-color-on-primary);
     box-shadow: var(--md-sys-elevation-level-1);
 }
-
 .md-btn-filled:hover {
-    box-shadow: var(--md-sys-elevation-level-2);
+    box-shadow: var(--md-sys-elevation-level-3);
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+}
+.md-btn-filled:active {
+    transform: scale(0.98);
+    box-shadow: var(--md-sys-elevation-level-1);
 }
 
-.md-btn-filled::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: var(--md-sys-color-on-primary);
-    opacity: 0;
-    transition: opacity 0.2s linear;
-}
-
-.md-btn-filled:hover::before {
-    opacity: 0.08;
-    /* Lightening layer */
-}
-
-/* Outlined Button (Secondary) */
+/* Outlined Button */
 .md-btn-outlined {
-    border: 1px solid var(--md-sys-color-outline);
+    border: 1.5px solid var(--md-sys-color-outline-variant);
     color: var(--md-sys-color-primary);
-    padding: 0 24px;
-    /* Adjust for border */
+    background: transparent;
 }
-
 .md-btn-outlined:hover {
-    background-color: rgba(0, 229, 255, 0.08);
-    /* Primary w/ opacity */
+    background-color: rgba(0, 88, 188, 0.06);
     border-color: var(--md-sys-color-primary);
 }
 
-/* Text Button (Tertiary) */
+/* Text Button */
 .md-btn-text {
     padding: 0 12px;
     color: var(--md-sys-color-primary);
 }
-
 .md-btn-text:hover {
-    background-color: rgba(0, 229, 255, 0.08);
+    background-color: rgba(0, 88, 188, 0.06);
+    border-radius: var(--md-sys-shape-corner-small);
 }
 
 /* Elevated Button */
 .md-btn-elevated {
-    background-color: var(--md-sys-color-surface-variant);
+    background-color: var(--md-sys-color-surface-container-lowest);
     color: var(--md-sys-color-primary);
     box-shadow: var(--md-sys-elevation-level-1);
 }
-
 .md-btn-elevated:hover {
     box-shadow: var(--md-sys-elevation-level-2);
-    background-color: rgba(30, 41, 59, 0.8);
-    /* Slight darken */
 }
 
-/* 2. CARDS (Material 3) */
+/* 2. CARDS (Cupertino Tonal Layering) */
 .md-card {
-    background-color: var(--md-sys-color-surface-variant);
-    border-radius: var(--md-sys-shape-corner-medium);
-    padding: 16px;
-    color: var(--md-sys-color-on-surface-variant);
-    transition: box-shadow 0.2s ease;
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 20px;
+    color: var(--md-sys-color-on-surface);
+    transition: box-shadow 0.25s var(--md-sys-motion-easing-standard);
+    border: none;
 }
 
 .md-card-outlined {
-    background-color: var(--md-sys-color-surface);
-    border: 1px solid var(--md-sys-color-outline-variant);
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid rgba(193, 198, 215, 0.15);
 }
 
 .md-card-elevated {
-    background-color: var(--md-sys-color-surface-variant);
+    background-color: var(--md-sys-color-surface-container-lowest);
     box-shadow: var(--md-sys-elevation-level-1);
 }
-
 .md-card-elevated:hover {
-    box-shadow: var(--md-sys-elevation-level-2);
+    box-shadow: var(--md-sys-elevation-level-3);
 }
 
-/* 3. TEXT FIELDS (Material 3 Outlined) */
+/* 3. TEXT FIELDS (Cupertino Inputs) */
 .md-text-field {
     position: relative;
     display: inline-flex;
@@ -332,14 +274,14 @@
 }
 
 .md-text-field input {
-    background: transparent !important;
-    border: 1px solid var(--md-sys-color-outline) !important;
-    border-radius: var(--md-sys-shape-corner-extra-small) !important;
+    background: var(--md-sys-color-surface-container-lowest) !important;
+    border: 1.5px solid var(--md-sys-color-outline-variant) !important;
+    border-radius: var(--md-sys-shape-corner-medium) !important;
     padding: 16px 16px !important;
     color: var(--md-sys-color-on-surface) !important;
     font: var(--md-sys-typescale-body-large) !important;
     transition: all 0.2s ease;
-    height: 56px;
+    height: 52px;
     box-sizing: border-box;
 }
 
@@ -347,18 +289,17 @@
     border-color: var(--md-sys-color-primary) !important;
     border-width: 2px !important;
     padding: 15px 15px !important;
-    /* Compensate for border width */
-    box-shadow: none !important;
+    box-shadow: 0 0 0 4px rgba(0, 88, 188, 0.08) !important;
+    outline: none !important;
 }
 
-.md-text-field input:focus~.md-label,
-.md-text-field input:not(:placeholder-shown)~.md-label {
+.md-text-field input:focus ~ .md-label,
+.md-text-field input:not(:placeholder-shown) ~ .md-label {
     top: -10px;
     left: 12px;
     font-size: 0.75rem;
     color: var(--md-sys-color-primary);
-    background-color: var(--md-sys-color-background);
-    /* Mask line */
+    background-color: var(--md-sys-color-surface-container-lowest);
     padding: 0 4px;
 }
 

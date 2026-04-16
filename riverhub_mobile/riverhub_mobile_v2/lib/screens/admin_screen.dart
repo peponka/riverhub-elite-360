@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -12,14 +13,14 @@ class AdminScreen extends StatelessWidget {
           'Panel Admin',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -31,21 +32,21 @@ class AdminScreen extends StatelessWidget {
                   'Clientes',
                   '12',
                   CupertinoIcons.building_2_fill,
-                  const Color(0xFF3B82F6),
+                  AppColors.blue,
                 ),
                 const SizedBox(width: 10),
                 _kpi(
                   'Usuarios',
                   '48',
                   CupertinoIcons.person_2_fill,
-                  const Color(0xFF8B5CF6),
+                  AppColors.purple,
                 ),
                 const SizedBox(width: 10),
                 _kpi(
                   'Flota Total',
                   '32',
                   CupertinoIcons.helm,
-                  const Color(0xFF10B981),
+                  AppColors.success,
                 ),
               ],
             ),
@@ -54,7 +55,7 @@ class AdminScreen extends StatelessWidget {
             const Text(
               'Administración',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -63,43 +64,43 @@ class AdminScreen extends StatelessWidget {
             _menuItem(
               'Gestión de Clientes',
               CupertinoIcons.building_2_fill,
-              const Color(0xFF3B82F6),
+              AppColors.blue,
               '12 empresas registradas',
             ),
             _menuItem(
               'Usuarios del Sistema',
               CupertinoIcons.person_2_fill,
-              const Color(0xFF8B5CF6),
+              AppColors.purple,
               '48 usuarios activos',
             ),
             _menuItem(
               'Flota Global',
               CupertinoIcons.helm,
-              const Color(0xFF10B981),
+              AppColors.success,
               '32 embarcaciones',
             ),
             _menuItem(
               'Tenants (Multi-org)',
               CupertinoIcons.square_stack_3d_up_fill,
-              const Color(0xFFF59E0B),
+              AppColors.warning,
               '3 organizaciones',
             ),
             _menuItem(
               'Órdenes de Servicio',
               CupertinoIcons.doc_text_fill,
-              const Color(0xFF00E5FF),
+              AppColors.accent,
               '156 este mes',
             ),
             _menuItem(
               'Facturación Global',
               CupertinoIcons.creditcard_fill,
-              const Color(0xFFEF4444),
+              AppColors.error,
               '\$45,200 facturado',
             ),
             _menuItem(
               'Logs de Auditoría',
               CupertinoIcons.shield_fill,
-              const Color(0xFF64748B),
+              AppColors.textSecondary,
               '2,340 eventos',
             ),
             const SizedBox(height: 20),
@@ -107,9 +108,9 @@ class AdminScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F172A),
+                color: AppColors.backgroundSecondary,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF1E293B)),
+                border: Border.all(color: AppColors.separator),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +118,7 @@ class AdminScreen extends StatelessWidget {
                   Text(
                     'Sistema',
                     style: TextStyle(
-                      color: Color(0xFF00E5FF),
+                      color: AppColors.accent,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -162,7 +163,7 @@ class AdminScreen extends StatelessWidget {
             ),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
             ),
           ],
         ),
@@ -175,9 +176,9 @@ class AdminScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Row(
         children: [
@@ -197,7 +198,7 @@ class AdminScreen extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -205,7 +206,7 @@ class AdminScreen extends StatelessWidget {
                 Text(
                   subtitle,
                   style: const TextStyle(
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -214,7 +215,7 @@ class AdminScreen extends StatelessWidget {
           ),
           const Icon(
             CupertinoIcons.chevron_right,
-            color: Color(0xFF475569),
+            color: AppColors.systemGray2,
             size: 16,
           ),
         ],
@@ -237,11 +238,11 @@ class _InfoRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
           ),
           Text(
             value,
-            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+            style: const TextStyle(color: AppColors.textTertiary, fontSize: 12),
           ),
         ],
       ),

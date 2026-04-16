@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class DailyReportScreen extends StatefulWidget {
   const DailyReportScreen({super.key});
@@ -44,7 +45,7 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
               'status': o['status'] ?? 'En Curso',
               'cargo': '-', // Not always available directly here
               'dest': o['destination_port'] ?? 'En ruta',
-              'color': const Color(0xFF10B981)
+              'color': AppColors.success
             }).toList().cast<Map<String, dynamic>>();
           } else {
              _movements = [];
@@ -71,14 +72,14 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
           'Briefing Diario',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: _isLoading 
         ? const Center(child: CupertinoActivityIndicator())
@@ -90,10 +91,10 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
+                  colors: [AppColors.separator, AppColors.backgroundSecondary],
                 ),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF334155)),
+                border: Border.all(color: AppColors.separatorLight),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,7 +105,7 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
                       Text(
                         'RiverHub',
                         style: TextStyle(
-                          color: Color(0xFF00E5FF),
+                          color: AppColors.accent,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -112,7 +113,7 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
                       Text(
                         'EXECUTIVE DAILY BRIEFING',
                         style: TextStyle(
-                          color: Color(0xFF64748B),
+                          color: AppColors.textSecondary,
                           fontSize: 10,
                         ),
                       ),
@@ -124,14 +125,14 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
                       Text(
                         'FECHA: \$dateStr',
                         style: const TextStyle(
-                          color: Color(0xFF94A3B8),
+                          color: AppColors.textTertiary,
                           fontSize: 11,
                         ),
                       ),
                       Text(
                         'ID: \$reportId',
                         style: const TextStyle(
-                          color: Color(0xFF94A3B8),
+                          color: AppColors.textTertiary,
                           fontSize: 11,
                         ),
                       ),
@@ -144,7 +145,7 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
             const Text(
               'Resumen de Operaciones',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -152,18 +153,18 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
             const SizedBox(height: 12),
             Row(
               children: [
-                _metricCard('\$_activeVessels', 'Activos (Misión)', const Color(0xFF10B981)),
+                _metricCard('\$_activeVessels', 'Activos (Misión)', AppColors.success),
                 const SizedBox(width: 10),
-                _metricCard('\$_criticalAlerts', 'Alertas Críticas', const Color(0xFFEF4444)),
+                _metricCard('\$_criticalAlerts', 'Alertas Críticas', AppColors.error),
                 const SizedBox(width: 10),
-                _metricCard('98%', 'Eficiencia Flota', const Color(0xFF3B82F6)),
+                _metricCard('98%', 'Eficiencia Flota', AppColors.blue),
               ],
             ),
             const SizedBox(height: 20),
             const Text(
               'Movimientos Recientes',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -195,7 +196,7 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
           children: [
             Text(value, style: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            Text(label, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10), textAlign: TextAlign.center),
+            Text(label, style: const TextStyle(color: AppColors.textTertiary, fontSize: 10), textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -207,18 +208,18 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Row(
         children: [
           Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: 10),
-          Expanded(child: Text(vessel, style: const TextStyle(color: material.Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+          Expanded(child: Text(vessel, style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 13))),
           Expanded(child: Text(status, style: TextStyle(color: color, fontSize: 12))),
-          Expanded(child: Text(cargo, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12))),
-          Text(dest, style: const TextStyle(color: Color(0xFF64748B), fontSize: 11)),
+          Expanded(child: Text(cargo, style: const TextStyle(color: AppColors.textTertiary, fontSize: 12))),
+          Text(dest, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
         ],
       ),
     );

@@ -290,7 +290,7 @@ const panolLogic = (() => {
             // Also notify N8N about stock update logic inside brain (Optional but good)
             fetch('/api/n8n/webhook', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-api-key': 'riverhub_n8n_2026' },
+                headers: { 'Content-Type': 'application/json', 'x-api-key': 'RH_Secure_n8n_X9fL!2026' },
                 body: JSON.stringify({ action: 'stock_update', payload: { item_id: itemId, left: newStock } })
             }).catch(()=>{});
 
@@ -302,3 +302,4 @@ const panolLogic = (() => {
 })();
 
 window.PanolModule = panolLogic;
+

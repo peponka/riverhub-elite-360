@@ -3,6 +3,7 @@ import 'package:flutter/material.dart'
     show DragTarget, Divider, Material, MaterialType, LongPressDraggable;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class ConvoysScreen extends StatefulWidget {
   const ConvoysScreen({super.key});
@@ -192,11 +193,11 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
   Color _typeColor(String type) {
     switch (type) {
       case 'REMOLCADOR':
-        return const Color(0xFFF97316);
+        return AppColors.orange;
       case 'TANQUE':
-        return const Color(0xFFEF4444);
+        return AppColors.error;
       default:
-        return const Color(0xFF3B82F6);
+        return AppColors.blue;
     }
   }
 
@@ -243,16 +244,16 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
     final assignedCount = _formation.where((f) => f != null).length;
 
     return CupertinoPageScaffold(
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         middle: Text(
           'Armador de Convoyes',
           style: GoogleFonts.inter(fontWeight: FontWeight.bold),
         ),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: Row(
@@ -264,7 +265,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                 onPressed: _clearFormation,
                 child: const Icon(
                   CupertinoIcons.trash,
-                  color: Color(0xFFEF4444),
+                  color: AppColors.error,
                   size: 20,
                 ),
               ),
@@ -275,7 +276,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                 'Guardar',
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.accent,
                 ),
               ),
             ),
@@ -294,20 +295,20 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                   controller: _nameController,
                   placeholder: 'Nombre del Convoy',
                   style: const TextStyle(color: CupertinoColors.white),
-                  placeholderStyle: const TextStyle(color: Color(0xFF64748B)),
+                  placeholderStyle: const TextStyle(color: AppColors.textSecondary),
                   padding: const EdgeInsets.all(14),
                   prefix: const Padding(
                     padding: EdgeInsets.only(left: 12),
                     child: Icon(
                       CupertinoIcons.link,
-                      color: Color(0xFF64748B),
+                      color: AppColors.textSecondary,
                       size: 18,
                     ),
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0F172A),
+                    color: AppColors.backgroundSecondary,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFF1E293B)),
+                    border: Border.all(color: AppColors.separator),
                   ),
                 ),
               ),
@@ -323,7 +324,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF475569),
+                        color: AppColors.systemGray2,
                         letterSpacing: 1.2,
                       ),
                     ),
@@ -334,14 +335,14 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                          color: AppColors.success.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           'Toque un slot para asignar',
                           style: GoogleFonts.inter(
                             fontSize: 11,
-                            color: const Color(0xFF10B981),
+                            color: AppColors.success,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -358,9 +359,9 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0F172A),
+                      color: AppColors.backgroundSecondary,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFF1E293B)),
+                      border: Border.all(color: AppColors.separator),
                     ),
                     padding: const EdgeInsets.all(12),
                     child: Column(
@@ -372,7 +373,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                         Row(
                           children: [
                             const Expanded(
-                              child: Divider(color: Color(0xFF1E293B)),
+                              child: Divider(color: AppColors.separator),
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -382,13 +383,13 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                                 'BARCAZAS',
                                 style: GoogleFonts.inter(
                                   fontSize: 9,
-                                  color: const Color(0xFF475569),
+                                  color: AppColors.systemGray2,
                                   letterSpacing: 1,
                                 ),
                               ),
                             ),
                             const Expanded(
-                              child: Divider(color: Color(0xFF1E293B)),
+                              child: Divider(color: AppColors.separator),
                             ),
                           ],
                         ),
@@ -416,7 +417,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                         Row(
                           children: [
                             const Expanded(
-                              child: Divider(color: Color(0xFF1E293B)),
+                              child: Divider(color: AppColors.separator),
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -426,13 +427,13 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                                 '▼ POPA',
                                 style: GoogleFonts.inter(
                                   fontSize: 9,
-                                  color: const Color(0xFF475569),
+                                  color: AppColors.systemGray2,
                                   letterSpacing: 1,
                                 ),
                               ),
                             ),
                             const Expanded(
-                              child: Divider(color: Color(0xFF1E293B)),
+                              child: Divider(color: AppColors.separator),
                             ),
                           ],
                         ),
@@ -451,8 +452,8 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
               Container(
                 height: 150,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF0F172A),
-                  border: Border(top: BorderSide(color: Color(0xFF1E293B))),
+                  color: AppColors.backgroundSecondary,
+                  border: Border(top: BorderSide(color: AppColors.separator)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -464,7 +465,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: const Color(0xFF475569),
+                          color: AppColors.systemGray2,
                           letterSpacing: 1.2,
                         ),
                       ),
@@ -478,7 +479,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                                 'Toda la flota está asignada',
                                 style: GoogleFonts.inter(
                                   fontSize: 12,
-                                  color: const Color(0xFF475569),
+                                  color: AppColors.systemGray2,
                                 ),
                               ),
                             )
@@ -578,7 +579,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
       decoration: BoxDecoration(
         color: selected
             ? color.withValues(alpha: 0.2)
-            : const Color(0xFF1E293B),
+            : AppColors.separator,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: selected ? color : color.withValues(alpha: 0.3),
@@ -643,25 +644,25 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
             height: fullWidth ? 60 : null,
             decoration: BoxDecoration(
               color: isHighlighted
-                  ? const Color(0xFF10B981).withValues(alpha: 0.2)
+                  ? AppColors.success.withValues(alpha: 0.2)
                   : hasAsset
                   ? _typeColor(
                       asset['mapped_type'] ?? 'BARCAZA',
                     ).withValues(alpha: 0.1)
                   : isTarget
-                  ? const Color(0xFF10B981).withValues(alpha: 0.05)
-                  : const Color(0xFF1E293B).withValues(alpha: 0.5),
+                  ? AppColors.success.withValues(alpha: 0.05)
+                  : AppColors.separator.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: isHighlighted
-                    ? const Color(0xFF10B981)
+                    ? AppColors.success
                     : hasAsset
                     ? _typeColor(
                         asset['mapped_type'] ?? 'BARCAZA',
                       ).withValues(alpha: 0.6)
                     : isTarget
-                    ? const Color(0xFF10B981).withValues(alpha: 0.4)
-                    : const Color(0xFF1E293B),
+                    ? AppColors.success.withValues(alpha: 0.4)
+                    : AppColors.separator,
                 width: isHighlighted || hasAsset ? 2 : 1,
               ),
             ),
@@ -689,7 +690,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                           'Toque para quitar',
                           style: GoogleFonts.inter(
                             fontSize: 7,
-                            color: const Color(0xFF64748B),
+                            color: AppColors.textSecondary,
                           ),
                         ),
                       ],
@@ -704,8 +705,8 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                               ? CupertinoIcons.plus_circle
                               : CupertinoIcons.square_on_square,
                           color: isTarget
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFF475569),
+                              ? AppColors.success
+                              : AppColors.systemGray2,
                           size: 16,
                         ),
                         const SizedBox(height: 2),
@@ -713,7 +714,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                           label,
                           style: GoogleFonts.inter(
                             fontSize: 8,
-                            color: const Color(0xFF475569),
+                            color: AppColors.systemGray2,
                           ),
                         ),
                       ],

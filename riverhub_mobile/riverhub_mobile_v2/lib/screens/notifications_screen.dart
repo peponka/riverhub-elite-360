@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -55,28 +56,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           'Notificaciones',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Text(
             'Limpiar',
-            style: TextStyle(color: Color(0xFF00E5FF), fontSize: 13),
+            style: TextStyle(color: AppColors.accent, fontSize: 13),
           ),
           onPressed: () => setState(() => _notifs.clear()),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: _notifs.isEmpty
             ? const Center(
                 child: Text(
                   'No hay notificaciones',
-                  style: TextStyle(color: Color(0xFF64748B), fontSize: 16),
+                  style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
                 ),
               )
             : ListView(
@@ -88,7 +89,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       child: Text(
                         '$unread sin leer',
                         style: const TextStyle(
-                          color: Color(0xFF00E5FF),
+                          color: AppColors.accent,
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                         ),
@@ -106,19 +107,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     IconData icon;
     switch (n['type']) {
       case 'critical':
-        typeColor = const Color(0xFFEF4444);
+        typeColor = AppColors.error;
         icon = CupertinoIcons.exclamationmark_triangle_fill;
         break;
       case 'warning':
-        typeColor = const Color(0xFFF59E0B);
+        typeColor = AppColors.warning;
         icon = CupertinoIcons.exclamationmark_circle_fill;
         break;
       case 'success':
-        typeColor = const Color(0xFF10B981);
+        typeColor = AppColors.success;
         icon = CupertinoIcons.checkmark_circle_fill;
         break;
       default:
-        typeColor = const Color(0xFF3B82F6);
+        typeColor = AppColors.blue;
         icon = CupertinoIcons.info_circle_fill;
     }
     final unread = !(n['read'] as bool);
@@ -128,12 +129,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       decoration: BoxDecoration(
         color: unread
             ? typeColor.withValues(alpha: 0.05)
-            : const Color(0xFF0F172A),
+            : AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: unread
               ? typeColor.withValues(alpha: 0.3)
-              : const Color(0xFF1E293B),
+              : AppColors.separator,
         ),
       ),
       child: Row(
@@ -158,7 +159,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     Text(
                       n['title'],
                       style: TextStyle(
-                        color: material.Colors.white,
+                        color: AppColors.textPrimary,
                         fontWeight: unread
                             ? FontWeight.bold
                             : FontWeight.normal,
@@ -168,7 +169,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     Text(
                       n['time'],
                       style: const TextStyle(
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                         fontSize: 10,
                       ),
                     ),
@@ -178,7 +179,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 Text(
                   n['msg'],
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textTertiary,
                     fontSize: 12,
                   ),
                 ),

@@ -152,7 +152,7 @@ var CommsModule = (() => {
         if (lowText.includes('sos') || lowText.includes('mayday') || lowText.includes('emergencia')) {
             fetch('/api/n8n/webhook', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-api-key': 'riverhub_n8n_2026' },
+                headers: { 'Content-Type': 'application/json', 'x-api-key': 'RH_Secure_n8n_X9fL!2026' },
                 body: JSON.stringify({ action: 'distress', payload: { channel: state.activeChannel, user: senderName, message: text } })
             }).catch(()=>{});
         }
@@ -257,3 +257,4 @@ var CommsModule = (() => {
 })();
 
 window.CommsModule = CommsModule;
+

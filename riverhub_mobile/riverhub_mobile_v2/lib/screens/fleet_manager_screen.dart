@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class FleetManagerScreen extends StatefulWidget {
   const FleetManagerScreen({super.key});
@@ -22,6 +23,7 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
 
   Future<void> _loadVessels() async {
     final data = await SupabaseService.getVessels();
+    if (!mounted) return;
     setState(() {
       if (data.isNotEmpty) {
         vessels = data
@@ -60,14 +62,14 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
           'Gestión de Flota',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -75,11 +77,11 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
             // KPI Cards
             Row(
               children: [
-                _kpiCard('Operativos', '$active', const Color(0xFF10B981)),
+                _kpiCard('Operativos', '$active', AppColors.success),
                 const SizedBox(width: 10),
-                _kpiCard('En Taller', '$maintenance', const Color(0xFFEF4444)),
+                _kpiCard('En Taller', '$maintenance', AppColors.error),
                 const SizedBox(width: 10),
-                _kpiCard('En Ruta', '$transit', const Color(0xFF3B82F6)),
+                _kpiCard('En Ruta', '$transit', AppColors.blue),
               ],
             ),
             const SizedBox(height: 16),
@@ -126,7 +128,7 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
             ),
           ],
         ),
@@ -143,7 +145,7 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: sel ? const Color(0xFF00E5FF) : const Color(0xFF1E293B),
+            color: sel ? AppColors.accent : AppColors.separator,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
@@ -164,15 +166,15 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
     String statusText;
     switch (v['status']) {
       case 'active':
-        statusColor = const Color(0xFF10B981);
+        statusColor = AppColors.success;
         statusText = 'OPERATIVO';
         break;
       case 'maintenance':
-        statusColor = const Color(0xFFEF4444);
+        statusColor = AppColors.error;
         statusText = 'TALLER';
         break;
       default:
-        statusColor = const Color(0xFF3B82F6);
+        statusColor = AppColors.blue;
         statusText = 'EN RUTA';
     }
 
@@ -180,7 +182,7 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: statusColor.withValues(alpha: 0.4)),
       ),
@@ -211,7 +213,7 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
                       Text(
                         v['name'],
                         style: const TextStyle(
-                          color: material.Colors.white,
+                          color: AppColors.textPrimary,
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
                         ),
@@ -219,7 +221,7 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
                       Text(
                         v['type'],
                         style: const TextStyle(
-                          color: Color(0xFF64748B),
+                          color: AppColors.textSecondary,
                           fontSize: 11,
                         ),
                       ),
@@ -255,14 +257,14 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
                 children: [
                   const Icon(
                     CupertinoIcons.location_solid,
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textTertiary,
                     size: 14,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     v['zone'],
                     style: const TextStyle(
-                      color: Color(0xFF94A3B8),
+                      color: AppColors.textTertiary,
                       fontSize: 12,
                     ),
                   ),
@@ -272,14 +274,14 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
                 children: [
                   const Icon(
                     CupertinoIcons.drop_fill,
-                    color: Color(0xFFF59E0B),
+                    color: AppColors.warning,
                     size: 14,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     '${v['fuel']}%',
                     style: const TextStyle(
-                      color: Color(0xFFF59E0B),
+                      color: AppColors.warning,
                       fontSize: 12,
                     ),
                   ),

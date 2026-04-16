@@ -31,6 +31,7 @@ import '../screens/integraciones_screen.dart';
 import '../screens/billing_screen.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/admin_screen.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -41,7 +42,7 @@ class AppDrawer extends StatelessWidget {
         Supabase.instance.client.auth.currentUser?.email ?? 'Usuario';
 
     return material.Drawer(
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: Column(
           children: [
@@ -49,7 +50,7 @@ class AppDrawer extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Color(0xFF1E293B))),
+                border: Border(bottom: BorderSide(color: AppColors.separator)),
               ),
               child: Row(
                 children: [
@@ -58,13 +59,13 @@ class AppDrawer extends StatelessWidget {
                     height: 48,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFF00E5FF), Color(0xFF3B82F6)],
+                        colors: [AppColors.accent, AppColors.blue],
                       ),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       CupertinoIcons.person_solid,
-                      color: material.Colors.white,
+                      color: AppColors.textPrimary,
                       size: 24,
                     ),
                   ),
@@ -78,15 +79,15 @@ class AppDrawer extends StatelessWidget {
                           style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: material.Colors.white,
+                            color: AppColors.textPrimary,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          'Elite 360 • Capitán',
+                          'Elite 360',
                           style: GoogleFonts.inter(
                             fontSize: 11,
-                            color: const Color(0xFF64748B),
+                            color: AppColors.textSecondary,
                           ),
                         ),
                       ],
@@ -104,56 +105,56 @@ class AppDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.map_fill,
-                    iconColor: const Color(0xFF10B981),
+                    iconColor: AppColors.success,
                     title: 'Mapa de Flota',
                     destination: const MapScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.helm,
-                    iconColor: const Color(0xFF00E5FF),
+                    iconColor: AppColors.accent,
                     title: 'Gestión de Flota',
                     destination: const FleetManagerScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.drop_fill,
-                    iconColor: const Color(0xFF8B5CF6),
+                    iconColor: AppColors.purple,
                     title: 'Combustible',
                     destination: const FuelScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.arrow_up_down_square_fill,
-                    iconColor: const Color(0xFF3B82F6),
+                    iconColor: AppColors.blue,
                     title: 'Calados e Hidrometría',
                     destination: const DraftScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.waveform_path,
-                    iconColor: const Color(0xFF06B6D4),
+                    iconColor: AppColors.accentTeal,
                     title: 'Hidrología',
                     destination: const HidrologiaScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.link,
-                    iconColor: const Color(0xFF10B981),
+                    iconColor: AppColors.success,
                     title: 'Convoyes',
                     destination: const ConvoysScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.cube_box_fill,
-                    iconColor: const Color(0xFFF59E0B),
+                    iconColor: AppColors.warning,
                     title: 'Load Master',
                     destination: const LoadMasterScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.location_fill,
-                    iconColor: const Color(0xFFEF4444),
+                    iconColor: AppColors.error,
                     title: 'Tracking de Cargas',
                     destination: const TrackingScreen(),
                   ),
@@ -162,28 +163,28 @@ class AppDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.doc_text_fill,
-                    iconColor: const Color(0xFFF97316),
+                    iconColor: AppColors.orange,
                     title: 'Manifiestos y Viajes',
                     destination: const TripsScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.money_dollar_circle_fill,
-                    iconColor: const Color(0xFF10B981),
+                    iconColor: AppColors.success,
                     title: 'Cotizador Logístico',
                     destination: const QuoteScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.briefcase_fill,
-                    iconColor: const Color(0xFF8B5CF6),
+                    iconColor: AppColors.purple,
                     title: 'Módulo Comercial',
                     destination: const CommercialScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.doc_on_clipboard_fill,
-                    iconColor: const Color(0xFF3B82F6),
+                    iconColor: AppColors.blue,
                     title: 'Documentación',
                     destination: const DocsScreen(),
                   ),
@@ -192,21 +193,21 @@ class AppDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.wrench_fill,
-                    iconColor: const Color(0xFFF59E0B),
+                    iconColor: AppColors.warning,
                     title: 'Mantenimiento',
                     destination: const MantenimientoScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.archivebox_fill,
-                    iconColor: const Color(0xFF06B6D4),
+                    iconColor: AppColors.accentTeal,
                     title: 'Pañol (Inventario)',
                     destination: const PanolScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.exclamationmark_triangle_fill,
-                    iconColor: const Color(0xFFEF4444),
+                    iconColor: AppColors.error,
                     title: 'Incidentes & Forense',
                     destination: const IncidentesScreen(),
                   ),
@@ -215,14 +216,14 @@ class AppDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.person_3_fill,
-                    iconColor: const Color(0xFF10B981),
+                    iconColor: AppColors.success,
                     title: 'Tripulación',
                     destination: const TripulacionScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.radiowaves_right,
-                    iconColor: const Color(0xFF00E5FF),
+                    iconColor: AppColors.accent,
                     title: 'Comunicaciones VHF',
                     destination: const ComunicacionesScreen(),
                   ),
@@ -231,35 +232,35 @@ class AppDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.chat_bubble_2_fill,
-                    iconColor: const Color(0xFF8B5CF6),
+                    iconColor: AppColors.purple,
                     title: 'NexoBot IA / Chat',
                     destination: const NexoBotScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.eye_fill,
-                    iconColor: const Color(0xFF3B82F6),
+                    iconColor: AppColors.blue,
                     title: 'Torre de Control',
                     destination: const MonitoringScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.chart_pie_fill,
-                    iconColor: const Color(0xFFF97316),
+                    iconColor: AppColors.orange,
                     title: 'Reportes & Analytics',
                     destination: const ReportesScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.news_solid,
-                    iconColor: const Color(0xFF06B6D4),
+                    iconColor: AppColors.accentTeal,
                     title: 'Briefing Diario',
                     destination: const DailyReportScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.graph_circle_fill,
-                    iconColor: const Color(0xFFEF4444),
+                    iconColor: AppColors.error,
                     title: 'Riesgo Financiero',
                     destination: const FinancialRiskScreen(),
                   ),
@@ -268,38 +269,39 @@ class AppDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.bell_fill,
-                    iconColor: const Color(0xFFF59E0B),
+                    iconColor: AppColors.warning,
                     title: 'Notificaciones',
                     destination: const NotificationsScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.arrow_right_arrow_left,
-                    iconColor: const Color(0xFF10B981),
+                    iconColor: AppColors.success,
                     title: 'Integraciones API',
                     destination: const IntegracionesScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.creditcard_fill,
-                    iconColor: const Color(0xFF3B82F6),
+                    iconColor: AppColors.blue,
                     title: 'Facturación',
                     destination: const BillingScreen(),
                   ),
                   _buildDrawerItem(
                     context,
                     icon: CupertinoIcons.shield_fill,
-                    iconColor: const Color(0xFF64748B),
+                    iconColor: AppColors.textSecondary,
                     title: 'Auditoría',
                     destination: const AuditoriaScreen(),
                   ),
-                  _buildDrawerItem(
-                    context,
-                    icon: CupertinoIcons.gear_alt_fill,
-                    iconColor: const Color(0xFF8B5CF6),
-                    title: 'Panel Admin',
-                    destination: const AdminScreen(),
-                  ),
+                  // TODO: Envolver con chequeo de rol SuperAdmin
+                  // _buildDrawerItem(
+                  //   context,
+                  //   icon: CupertinoIcons.gear_alt_fill,
+                  //   iconColor: AppColors.purple,
+                  //   title: 'Panel Admin',
+                  //   destination: const AdminScreen(),
+                  // ),
 
                   const SizedBox(height: 20),
                 ],
@@ -319,7 +321,7 @@ class AppDrawer extends StatelessWidget {
         style: GoogleFonts.inter(
           fontSize: 10,
           fontWeight: FontWeight.w700,
-          color: const Color(0xFF475569),
+          color: AppColors.systemGray2,
           letterSpacing: 1.2,
         ),
       ),
@@ -349,13 +351,13 @@ class AppDrawer extends StatelessWidget {
         style: GoogleFonts.inter(
           fontSize: 13,
           fontWeight: FontWeight.w600,
-          color: material.Colors.white,
+          color: AppColors.textPrimary,
         ),
       ),
       trailing: const Icon(
         CupertinoIcons.chevron_right,
         size: 14,
-        color: Color(0xFF475569),
+        color: AppColors.systemGray2,
       ),
       onTap: () {
         material.Scaffold.of(context).closeDrawer();

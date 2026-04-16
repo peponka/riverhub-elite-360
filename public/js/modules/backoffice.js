@@ -130,8 +130,11 @@ const BackofficeModule = (() => {
                     window.sb.from('clients').select('*'),
                     window.sb.from('profiles').select('*')
                 ]);
-                if (compRes.data) realCompanies = compRes.data;
-                if (userRes.data) realUsers = userRes.data;
+                if (compRes.error) console.error("BO clients fetch error:", compRes.error);
+                else if (compRes.data) realCompanies = compRes.data;
+
+                if (userRes.error) console.error("BO profiles fetch error:", userRes.error);
+                else if (userRes.data) realUsers = userRes.data;
             } catch (e) { console.warn("BO: Supabase fallback", e); }
         }
 
@@ -914,7 +917,7 @@ const BackofficeModule = (() => {
                 if (error) console.warn('Supabase User Provisioning Warning:', error.message);
             }
 
-            RiverToast.success(\`Credencia digital de \${name} insertada. Enlace mágico enviado al correo.\`, 'Seguridad Base');
+            RiverToast.success(`Credencial digital de ${name} insertada. Enlace mágico enviado al correo.`, 'Seguridad Base');
             closeModal();
             loadUsers();
         } catch (e) {
@@ -960,7 +963,8 @@ const BackofficeModule = (() => {
         openUserModal,
         editUser,
         resetPassword,
-        updateChartPeriod
+        updateChartPeriod,
+        submitNewUser
     };
 })();
 
