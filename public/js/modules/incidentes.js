@@ -213,7 +213,7 @@ const incidentsLogic = (() => {
                     // Alert N8N Webhook in background (fire and forget)
                     fetch('/api/n8n/webhook', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'x-api-key': 'riverhub_n8n_2026' },
+                        headers: { 'Content-Type': 'application/json', 'x-api-key': 'RH_Secure_n8n_X9fL!2026' },
                         body: JSON.stringify({
                             action: 'emergency',
                             payload: { message: `Nuevo Incidente: ${category.toUpperCase()} en KM ${location}` }
@@ -270,3 +270,4 @@ const incidentsLogic = (() => {
 })();
 
 window.IncidentsModule = incidentsLogic;
+

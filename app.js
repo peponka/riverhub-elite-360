@@ -23,10 +23,19 @@ const cors = require('cors');
 app.use(cors());
 
 const server = http.createServer(app);
+const ALLOWED_ORIGINS = [
+    process.env.FRONTEND_URL || 'https://riverhub.vercel.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+];
 const io = new Server(server, {
     cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
+        origin: (origin, callback) => {
+            if (!origin || ALLOWED_ORIGINS.includes(origin)) callback(null, true);
+            else callback(new Error('Not allowed by CORS'));
+        },
+        methods: ["GET", "POST"],
+        credentials: true
     }
 });
 

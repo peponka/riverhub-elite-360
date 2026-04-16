@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class TrackingScreen extends StatelessWidget {
   const TrackingScreen({super.key});
@@ -55,14 +56,14 @@ class TrackingScreen extends StatelessWidget {
           'Tracking de Cargas',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -70,11 +71,11 @@ class TrackingScreen extends StatelessWidget {
             // Summary
             Row(
               children: [
-                _kpi('En Tránsito', '2', const Color(0xFF3B82F6)),
+                _kpi('En Tránsito', '2', AppColors.blue),
                 const SizedBox(width: 10),
-                _kpi('En Puerto', '1', const Color(0xFFF59E0B)),
+                _kpi('En Puerto', '1', AppColors.warning),
                 const SizedBox(width: 10),
-                _kpi('Cargando', '1', const Color(0xFF10B981)),
+                _kpi('Cargando', '1', AppColors.success),
               ],
             ),
             const SizedBox(height: 16),
@@ -107,7 +108,7 @@ class TrackingScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
             ),
           ],
         ),
@@ -119,13 +120,13 @@ class TrackingScreen extends StatelessWidget {
     Color statusColor;
     switch (s['status']) {
       case 'En Tránsito':
-        statusColor = const Color(0xFF3B82F6);
+        statusColor = AppColors.blue;
         break;
       case 'En Puerto':
-        statusColor = const Color(0xFFF59E0B);
+        statusColor = AppColors.warning;
         break;
       default:
-        statusColor = const Color(0xFF10B981);
+        statusColor = AppColors.success;
     }
 
     return GestureDetector(
@@ -134,9 +135,9 @@ class TrackingScreen extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF0F172A),
+          color: AppColors.backgroundSecondary,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF1E293B)),
+          border: Border.all(color: AppColors.separator),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +166,7 @@ class TrackingScreen extends StatelessWidget {
                         Text(
                           s['vessel'],
                           style: const TextStyle(
-                            color: material.Colors.white,
+                            color: AppColors.textPrimary,
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),
@@ -173,7 +174,7 @@ class TrackingScreen extends StatelessWidget {
                         Text(
                           '${s['product']} • ${s['qty']}',
                           style: const TextStyle(
-                            color: Color(0xFF94A3B8),
+                            color: AppColors.textTertiary,
                             fontSize: 12,
                           ),
                         ),
@@ -207,14 +208,14 @@ class TrackingScreen extends StatelessWidget {
               children: [
                 const Icon(
                   CupertinoIcons.location_solid,
-                  color: Color(0xFF10B981),
+                  color: AppColors.success,
                   size: 14,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   s['origin'],
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textTertiary,
                     fontSize: 12,
                   ),
                 ),
@@ -222,20 +223,20 @@ class TrackingScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Icon(
                     CupertinoIcons.arrow_right,
-                    color: Color(0xFF475569),
+                    color: AppColors.systemGray2,
                     size: 14,
                   ),
                 ),
                 const Icon(
                   CupertinoIcons.location_solid,
-                  color: Color(0xFFEF4444),
+                  color: AppColors.error,
                   size: 14,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   s['dest'],
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textTertiary,
                     fontSize: 12,
                   ),
                 ),
@@ -243,7 +244,7 @@ class TrackingScreen extends StatelessWidget {
                 Text(
                   'ETA: ${s['eta']}',
                   style: const TextStyle(
-                    color: Color(0xFF00E5FF),
+                    color: AppColors.accent,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
@@ -258,7 +259,7 @@ class TrackingScreen extends StatelessWidget {
                 height: 6,
                 child: material.LinearProgressIndicator(
                   value: s['progress'] as double,
-                  backgroundColor: const Color(0xFF1E293B),
+                  backgroundColor: AppColors.separator,
                   valueColor: AlwaysStoppedAnimation<Color>(statusColor),
                 ),
               ),
@@ -276,7 +277,7 @@ class TrackingScreen extends StatelessWidget {
         height: 320,
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
-          color: Color(0xFF0F172A),
+          color: AppColors.backgroundSecondary,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -288,7 +289,7 @@ class TrackingScreen extends StatelessWidget {
                 Text(
                   s['vessel'],
                   style: const TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -297,7 +298,7 @@ class TrackingScreen extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   child: const Icon(
                     CupertinoIcons.xmark_circle_fill,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                   ),
                   onPressed: () => Navigator.pop(ctx),
                 ),
@@ -349,12 +350,12 @@ class TrackingScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(color: Color(0xFF64748B), fontSize: 13),
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
           ),
           Text(
             value,
             style: const TextStyle(
-              color: material.Colors.white,
+              color: AppColors.textPrimary,
               fontWeight: FontWeight.w600,
               fontSize: 13,
             ),

@@ -31,7 +31,8 @@ if (!admin.apps.length) {
     }
 }
 
-const N8N_API_KEY = process.env.N8N_API_KEY || 'riverhub_n8n_2026';
+const N8N_API_KEY = process.env.N8N_API_KEY;
+if (!N8N_API_KEY) throw new Error('N8N_API_KEY environment variable is required');
 
 const authenticateN8N = (req, res, next) => {
     const apiKey = req.headers['x-api-key'] || req.query.apikey;

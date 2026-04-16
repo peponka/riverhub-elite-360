@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class DocsScreen extends StatelessWidget {
   const DocsScreen({super.key});
@@ -57,10 +58,10 @@ class DocsScreen extends StatelessWidget {
           'Documentación',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CupertinoButton(
@@ -69,22 +70,22 @@ class DocsScreen extends StatelessWidget {
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
             children: const [
-              Text('Subir ', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 13, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.cloud_upload, color: Color(0xFF00E5FF), size: 22),
+              Text('Subir ', style: TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.bold)),
+              Icon(CupertinoIcons.cloud_upload, color: AppColors.accent, size: 22),
             ],
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             Row(
               children: [
-                _kpi('Documentos', '${_docs.length}', const Color(0xFF3B82F6)),
+                _kpi('Documentos', '${_docs.length}', AppColors.blue),
                 const SizedBox(width: 10),
-                _kpi('Espacio', '22.2 MB', const Color(0xFF8B5CF6)),
+                _kpi('Espacio', '22.2 MB', AppColors.purple),
               ],
             ),
             const SizedBox(height: 16),
@@ -117,7 +118,7 @@ class DocsScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
             ),
           ],
         ),
@@ -130,21 +131,21 @@ class DocsScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF3B82F6).withValues(alpha: 0.15),
+              color: AppColors.blue.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               d['icon'] as IconData,
-              color: const Color(0xFF3B82F6),
+              color: AppColors.blue,
               size: 22,
             ),
           ),
@@ -156,7 +157,7 @@ class DocsScreen extends StatelessWidget {
                 Text(
                   d['name'],
                   style: const TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -166,30 +167,30 @@ class DocsScreen extends StatelessWidget {
                     Text(
                       d['type'],
                       style: const TextStyle(
-                        color: Color(0xFF00E5FF),
+                        color: AppColors.accent,
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const Text(
                       ' • ',
-                      style: TextStyle(color: Color(0xFF475569)),
+                      style: TextStyle(color: AppColors.systemGray2),
                     ),
                     Text(
                       d['size'],
                       style: const TextStyle(
-                        color: Color(0xFF94A3B8),
+                        color: AppColors.textTertiary,
                         fontSize: 11,
                       ),
                     ),
                     const Text(
                       ' • ',
-                      style: TextStyle(color: Color(0xFF475569)),
+                      style: TextStyle(color: AppColors.systemGray2),
                     ),
                     Text(
                       d['date'],
                       style: const TextStyle(
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                         fontSize: 11,
                       ),
                     ),
@@ -200,7 +201,7 @@ class DocsScreen extends StatelessWidget {
           ),
           const Icon(
             CupertinoIcons.cloud_download,
-            color: Color(0xFF64748B),
+            color: AppColors.textSecondary,
             size: 20,
           ),
         ],

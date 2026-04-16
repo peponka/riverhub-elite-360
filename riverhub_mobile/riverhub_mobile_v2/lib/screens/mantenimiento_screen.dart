@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class MantenimientoScreen extends StatefulWidget {
   const MantenimientoScreen({super.key});
@@ -60,10 +61,10 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
           'Mantenimiento',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: Row(
@@ -75,7 +76,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                 _viewMode == 'list'
                     ? CupertinoIcons.square_grid_2x2
                     : CupertinoIcons.list_bullet,
-                color: const Color(0xFF00E5FF),
+                color: AppColors.accent,
                 size: 20,
               ),
               onPressed: () => setState(
@@ -88,15 +89,15 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
               child: Row(
                 mainAxisSize: material.MainAxisSize.min,
                 children: const [
-                  Text('Nuevo ', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 13, fontWeight: FontWeight.bold)),
-                  Icon(CupertinoIcons.add_circled, color: Color(0xFF00E5FF), size: 20),
+                  Text('Nuevo ', style: TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.bold)),
+                  Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 20),
                 ],
               ),
             ),
           ],
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: _viewMode == 'list'
             ? ListView(
@@ -108,19 +109,19 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                       _kpi(
                         'Pendientes',
                         '${pending.length}',
-                        const Color(0xFFF59E0B),
+                        AppColors.warning,
                       ),
                       const SizedBox(width: 10),
                       _kpi(
                         'En Progreso',
                         '${inProgress.length}',
-                        const Color(0xFF3B82F6),
+                        AppColors.blue,
                       ),
                       const SizedBox(width: 10),
                       _kpi(
                         'Completados',
                         '${completed.length}',
-                        const Color(0xFF10B981),
+                        AppColors.success,
                       ),
                     ],
                   ),
@@ -144,11 +145,11 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _boardColumn('PENDIENTE', pending, const Color(0xFFF59E0B)),
+          _boardColumn('PENDIENTE', pending, AppColors.warning),
           const SizedBox(width: 12),
-          _boardColumn('EN PROGRESO', inProgress, const Color(0xFF3B82F6)),
+          _boardColumn('EN PROGRESO', inProgress, AppColors.blue),
           const SizedBox(width: 12),
-          _boardColumn('COMPLETADO', completed, const Color(0xFF10B981)),
+          _boardColumn('COMPLETADO', completed, AppColors.success),
         ],
       ),
     );
@@ -162,7 +163,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
     return Container(
       width: 260,
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
@@ -216,7 +217,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
               child: Center(
                 child: Text(
                   'Sin tareas',
-                  style: TextStyle(color: Color(0xFF475569), fontSize: 12),
+                  style: TextStyle(color: AppColors.systemGray2, fontSize: 12),
                 ),
               ),
             ),
@@ -235,7 +236,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
         height: 350,
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
-          color: Color(0xFF0F172A),
+          color: AppColors.backgroundSecondary,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -247,7 +248,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                 const Text(
                   'Nueva Orden de Trabajo',
                   style: TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -256,7 +257,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                   padding: EdgeInsets.zero,
                   child: const Icon(
                     CupertinoIcons.xmark_circle_fill,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                   ),
                   onPressed: () => Navigator.pop(ctx),
                 ),
@@ -266,10 +267,10 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
             CupertinoTextField(
               controller: titleController,
               placeholder: 'Título de la tarea',
-              style: const TextStyle(color: material.Colors.white),
-              placeholderStyle: const TextStyle(color: Color(0xFF64748B)),
+              style: const TextStyle(color: AppColors.textPrimary),
+              placeholderStyle: const TextStyle(color: AppColors.textSecondary),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E293B),
+                color: AppColors.separator,
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: const EdgeInsets.all(12),
@@ -279,19 +280,19 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
               builder: (ctx, setModalState) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E293B),
+                  color: AppColors.separator,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: material.DropdownButton<String>(
                   value: selectedVesselId,
                   hint: const Text(
                     'Seleccione buque asignado...',
-                    style: TextStyle(color: Color(0xFF64748B)),
+                    style: TextStyle(color: AppColors.textSecondary),
                   ),
-                  dropdownColor: const Color(0xFF1E293B),
+                  dropdownColor: AppColors.separator,
                   isExpanded: true,
                   underline: const SizedBox(),
-                  style: const TextStyle(color: material.Colors.white),
+                  style: const TextStyle(color: AppColors.textPrimary),
                   items: _vesselsData
                       .map(
                         (v) => material.DropdownMenuItem(
@@ -357,7 +358,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
             ),
           ],
         ),
@@ -369,23 +370,23 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
     Color prioColor;
     switch (t['priority']) {
       case 'critical':
-        prioColor = const Color(0xFFEF4444);
+        prioColor = AppColors.error;
         break;
       case 'high':
-        prioColor = const Color(0xFFF59E0B);
+        prioColor = AppColors.warning;
         break;
       case 'medium':
-        prioColor = const Color(0xFF3B82F6);
+        prioColor = AppColors.blue;
         break;
       default:
-        prioColor = const Color(0xFF10B981);
+        prioColor = AppColors.success;
     }
 
     return Container(
       margin: compact ? EdgeInsets.zero : const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: compact ? const Color(0xFF1E293B) : const Color(0xFF0F172A),
+        color: compact ? AppColors.separator : AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(10),
         border: Border(left: BorderSide(color: prioColor, width: 3)),
       ),
@@ -395,7 +396,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
           Text(
             t['title'],
             style: const TextStyle(
-              color: material.Colors.white,
+              color: AppColors.textPrimary,
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
@@ -405,18 +406,18 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
             children: [
               const Icon(
                 CupertinoIcons.helm,
-                color: Color(0xFF64748B),
+                color: AppColors.textSecondary,
                 size: 13,
               ),
               const SizedBox(width: 4),
               Text(
                 t['vessel'],
-                style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                style: const TextStyle(color: AppColors.textTertiary, fontSize: 12),
               ),
               const Spacer(),
               Text(
                 t['dueDate'],
-                style: const TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
               ),
             ],
           ),

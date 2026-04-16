@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class BillingScreen extends StatelessWidget {
   const BillingScreen({super.key});
@@ -12,14 +13,14 @@ class BillingScreen extends StatelessWidget {
           'Facturación',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -29,11 +30,11 @@ class BillingScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF1E3A5F), Color(0xFF0F172A)],
+                  colors: [AppColors.gradientStart, AppColors.backgroundSecondary],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFF00E5FF).withValues(alpha: 0.3),
+                  color: AppColors.accent.withValues(alpha: 0.3),
                 ),
               ),
               child: Column(
@@ -45,7 +46,7 @@ class BillingScreen extends StatelessWidget {
                       const Text(
                         'Plan Actual',
                         style: TextStyle(
-                          color: Color(0xFF94A3B8),
+                          color: AppColors.textTertiary,
                           fontSize: 12,
                         ),
                       ),
@@ -55,13 +56,13 @@ class BillingScreen extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                          color: AppColors.success.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Text(
                           'ACTIVO',
                           style: TextStyle(
-                            color: Color(0xFF10B981),
+                            color: AppColors.success,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),
@@ -73,7 +74,7 @@ class BillingScreen extends StatelessWidget {
                   const Text(
                     'Enterprise Fleet',
                     style: TextStyle(
-                      color: material.Colors.white,
+                      color: AppColors.textPrimary,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -82,7 +83,7 @@ class BillingScreen extends StatelessWidget {
                   const Text(
                     '\$2,499/mes',
                     style: TextStyle(
-                      color: Color(0xFF00E5FF),
+                      color: AppColors.accent,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -92,28 +93,28 @@ class BillingScreen extends StatelessWidget {
                     children: const [
                       Icon(
                         CupertinoIcons.checkmark_circle_fill,
-                        color: Color(0xFF10B981),
+                        color: AppColors.success,
                         size: 16,
                       ),
                       SizedBox(width: 6),
                       Text(
                         'Flota ilimitada',
                         style: TextStyle(
-                          color: Color(0xFF94A3B8),
+                          color: AppColors.textTertiary,
                           fontSize: 12,
                         ),
                       ),
                       SizedBox(width: 16),
                       Icon(
                         CupertinoIcons.checkmark_circle_fill,
-                        color: Color(0xFF10B981),
+                        color: AppColors.success,
                         size: 16,
                       ),
                       SizedBox(width: 6),
                       Text(
                         'IA incluida',
                         style: TextStyle(
-                          color: Color(0xFF94A3B8),
+                          color: AppColors.textTertiary,
                           fontSize: 12,
                         ),
                       ),
@@ -126,7 +127,7 @@ class BillingScreen extends StatelessWidget {
             const Text(
               'Historial de Pagos',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -136,31 +137,31 @@ class BillingScreen extends StatelessWidget {
               'Marzo 2026',
               '\$2,499',
               'Pagado',
-              const Color(0xFF10B981),
+              AppColors.success,
             ),
             _paymentRow(
               'Febrero 2026',
               '\$2,499',
               'Pagado',
-              const Color(0xFF10B981),
+              AppColors.success,
             ),
             _paymentRow(
               'Enero 2026',
               '\$2,499',
               'Pagado',
-              const Color(0xFF10B981),
+              AppColors.success,
             ),
             _paymentRow(
               'Diciembre 2025',
               '\$1,999',
               'Pagado',
-              const Color(0xFF10B981),
+              AppColors.success,
             ),
             const SizedBox(height: 20),
             const Text(
               'Uso del Mes',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -181,22 +182,22 @@ class BillingScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Row(
         children: [
           Expanded(
             child: Text(
               month,
-              style: const TextStyle(color: material.Colors.white, fontSize: 14),
+              style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
             ),
           ),
           Text(
             amount,
             style: const TextStyle(
-              color: material.Colors.white,
+              color: AppColors.textPrimary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -229,12 +230,12 @@ class BillingScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+            style: const TextStyle(color: AppColors.textTertiary, fontSize: 13),
           ),
           Text(
             value,
             style: const TextStyle(
-              color: Color(0xFF00E5FF),
+              color: AppColors.accent,
               fontWeight: FontWeight.bold,
               fontSize: 13,
             ),

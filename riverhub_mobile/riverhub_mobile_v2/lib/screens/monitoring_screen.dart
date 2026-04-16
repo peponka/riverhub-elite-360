@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class MonitoringScreen extends StatefulWidget {
   const MonitoringScreen({super.key});
@@ -22,6 +23,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
   Future<void> _loadData() async {
     final alertsData = await SupabaseService.getAlerts();
     final geoData = await SupabaseService.getGeofences();
+    if (!mounted) return;
     setState(() {
       _alerts = alertsData.isNotEmpty
           ? alertsData
@@ -61,14 +63,14 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
           'Torre de Control',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -80,21 +82,21 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
                   'Alertas',
                   '${_alerts.length}',
                   CupertinoIcons.exclamationmark_triangle_fill,
-                  const Color(0xFFEF4444),
+                  AppColors.error,
                 ),
                 const SizedBox(width: 10),
                 _statusCard(
                   'Geofences',
                   '${_geofences.where((g) => g['status'] == 'active').length}',
                   CupertinoIcons.map_pin_ellipse,
-                  const Color(0xFF10B981),
+                  AppColors.success,
                 ),
                 const SizedBox(width: 10),
                 _statusCard(
                   'Polling',
                   '30s',
                   CupertinoIcons.antenna_radiowaves_left_right,
-                  const Color(0xFF3B82F6),
+                  AppColors.blue,
                 ),
               ],
             ),
@@ -103,7 +105,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             const Text(
               'Alertas Activas',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -115,7 +117,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             const Text(
               'Zonas Geofence',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -127,9 +129,9 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F172A),
+                color: AppColors.backgroundSecondary,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF1E293B)),
+                border: Border.all(color: AppColors.separator),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +139,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
                   const Text(
                     'Verificador UKC Rápido',
                     style: TextStyle(
-                      color: Color(0xFF00E5FF),
+                      color: AppColors.accent,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -155,7 +157,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                      color: AppColors.warning.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Row(
@@ -163,14 +165,14 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
                       children: [
                         Icon(
                           CupertinoIcons.exclamationmark_triangle_fill,
-                          color: Color(0xFFF59E0B),
+                          color: AppColors.warning,
                           size: 18,
                         ),
                         SizedBox(width: 8),
                         Text(
                           'PELIGRO: BAJO UKC (0.3m)',
                           style: TextStyle(
-                            color: Color(0xFFF59E0B),
+                            color: AppColors.warning,
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                           ),
@@ -210,7 +212,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             ),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
             ),
           ],
         ),
@@ -223,15 +225,15 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
     IconData icon;
     switch (a['severity']) {
       case 'critical':
-        sevColor = const Color(0xFFEF4444);
+        sevColor = AppColors.error;
         icon = CupertinoIcons.exclamationmark_triangle_fill;
         break;
       case 'warning':
-        sevColor = const Color(0xFFF59E0B);
+        sevColor = AppColors.warning;
         icon = CupertinoIcons.exclamationmark_circle_fill;
         break;
       default:
-        sevColor = const Color(0xFF3B82F6);
+        sevColor = AppColors.blue;
         icon = CupertinoIcons.info_circle_fill;
     }
 
@@ -239,7 +241,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: sevColor.withValues(alpha: 0.3)),
       ),
@@ -269,7 +271,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
                 Text(
                   a['vessel'],
                   style: const TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -277,7 +279,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
                 Text(
                   a['loc'],
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textTertiary,
                     fontSize: 12,
                   ),
                 ),
@@ -286,7 +288,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
           ),
           Text(
             a['time'],
-            style: const TextStyle(color: Color(0xFF64748B), fontSize: 10),
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
           ),
         ],
       ),
@@ -299,9 +301,9 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Row(
         children: [
@@ -309,7 +311,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: active ? const Color(0xFF10B981) : const Color(0xFF64748B),
+              color: active ? AppColors.success : AppColors.textSecondary,
               shape: BoxShape.circle,
             ),
           ),
@@ -318,14 +320,14 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             child: Text(
               g['name'],
               style: const TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 13,
               ),
             ),
           ),
           Text(
             'Min: ${g['minDepth']}m',
-            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+            style: const TextStyle(color: AppColors.textTertiary, fontSize: 12),
           ),
         ],
       ),
@@ -336,20 +338,20 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
+        color: AppColors.separator,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         children: [
           Text(
             label,
-            style: const TextStyle(color: Color(0xFF64748B), fontSize: 10),
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
           ),
           const SizedBox(height: 4),
           Text(
             value,
             style: const TextStyle(
-              color: material.Colors.white,
+              color: AppColors.textPrimary,
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),

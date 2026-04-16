@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class FinancialRiskScreen extends StatefulWidget {
   const FinancialRiskScreen({super.key});
@@ -26,10 +27,10 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
   }
 
   Color get _scoreColor => _riskScore >= 80
-      ? const Color(0xFF10B981)
+      ? AppColors.success
       : _riskScore >= 60
-      ? const Color(0xFFF59E0B)
-      : const Color(0xFFEF4444);
+      ? AppColors.warning
+      : AppColors.error;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +40,14 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
           'Riesgo Financiero',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -73,7 +74,7 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0F172A),
+                  color: AppColors.backgroundSecondary,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: _scoreColor.withValues(alpha: 0.5)),
                 ),
@@ -89,7 +90,7 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
                     ),
                     const Text(
                       '/ 100',
-                      style: TextStyle(color: Color(0xFF64748B)),
+                      style: TextStyle(color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 8),
                     Container(
@@ -123,7 +124,7 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
                         child: Text(
                           f,
                           style: const TextStyle(
-                            color: Color(0xFF94A3B8),
+                            color: AppColors.textTertiary,
                             fontSize: 13,
                           ),
                         ),
@@ -146,10 +147,10 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
         placeholder: label,
         controller: TextEditingController(text: val),
         keyboardType: TextInputType.number,
-        style: const TextStyle(color: material.Colors.white),
-        placeholderStyle: const TextStyle(color: Color(0xFF64748B)),
+        style: const TextStyle(color: AppColors.textPrimary),
+        placeholderStyle: const TextStyle(color: AppColors.textSecondary),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E293B),
+          color: AppColors.separator,
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(12),

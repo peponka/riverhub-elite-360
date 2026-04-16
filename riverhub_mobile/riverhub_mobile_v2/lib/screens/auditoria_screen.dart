@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class AuditoriaScreen extends StatefulWidget {
   const AuditoriaScreen({super.key});
@@ -49,14 +50,14 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
           'Auditoría del Sistema',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -75,11 +76,11 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
             // Metrics
             Row(
               children: [
-                _metricBox('Memoria', '185.2 MB', const Color(0xFF3B82F6)),
+                _metricBox('Memoria', '185.2 MB', AppColors.blue),
                 const SizedBox(width: 10),
-                _metricBox('Storage', '124.5 KB', const Color(0xFF8B5CF6)),
+                _metricBox('Storage', '124.5 KB', AppColors.purple),
                 const SizedBox(width: 10),
-                _metricBox('Uptime', '12h 34m', const Color(0xFF10B981)),
+                _metricBox('Uptime', '12h 34m', AppColors.success),
               ],
             ),
             const SizedBox(height: 16),
@@ -150,9 +151,9 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF0A0E1A),
+                color: AppColors.backgroundPrimary,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF1E293B)),
+                border: Border.all(color: AppColors.separator),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +164,7 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
                       const Text(
                         'TERMINAL',
                         style: TextStyle(
-                          color: Color(0xFF00E5FF),
+                          color: AppColors.accent,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -171,7 +172,7 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
                       Text(
                         '${_logs.length} entries',
                         style: const TextStyle(
-                          color: Color(0xFF64748B),
+                          color: AppColors.textSecondary,
                           fontSize: 10,
                         ),
                       ),
@@ -184,7 +185,7 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
                       child: Text(
                         'Consola vacía',
                         style: TextStyle(
-                          color: Color(0xFF475569),
+                          color: AppColors.systemGray2,
                           fontSize: 12,
                         ),
                       ),
@@ -203,11 +204,11 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: (ok ? const Color(0xFF10B981) : const Color(0xFFEF4444))
+          color: (ok ? AppColors.success : AppColors.error)
               .withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: (ok ? const Color(0xFF10B981) : const Color(0xFFEF4444))
+            color: (ok ? AppColors.success : AppColors.error)
                 .withValues(alpha: 0.3),
           ),
         ),
@@ -215,21 +216,21 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
           children: [
             Icon(
               icon,
-              color: ok ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+              color: ok ? AppColors.success : AppColors.error,
               size: 22,
             ),
             const SizedBox(height: 6),
             Text(
               ok ? 'ONLINE' : 'ERROR',
               style: TextStyle(
-                color: ok ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                color: ok ? AppColors.success : AppColors.error,
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
             ),
           ],
         ),
@@ -242,9 +243,9 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: const Color(0xFF0F172A),
+          color: AppColors.backgroundSecondary,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: const Color(0xFF1E293B)),
+          border: Border.all(color: AppColors.separator),
         ),
         child: Column(
           children: [
@@ -259,7 +260,7 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
             const SizedBox(height: 2),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF64748B), fontSize: 10),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
             ),
           ],
         ),
@@ -273,17 +274,17 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E293B),
+          color: AppColors.separator,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           children: [
-            Icon(icon, color: const Color(0xFF00E5FF), size: 20),
+            Icon(icon, color: AppColors.accent, size: 20),
             const SizedBox(height: 4),
             Text(
               label,
               style: const TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 10,
               ),
               textAlign: TextAlign.center,
@@ -298,16 +299,16 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
     Color typeColor;
     switch (l['type']) {
       case 'SUCCESS':
-        typeColor = const Color(0xFF10B981);
+        typeColor = AppColors.success;
         break;
       case 'WARN':
-        typeColor = const Color(0xFFF59E0B);
+        typeColor = AppColors.warning;
         break;
       case 'ERROR':
-        typeColor = const Color(0xFFEF4444);
+        typeColor = AppColors.error;
         break;
       default:
-        typeColor = const Color(0xFF3B82F6);
+        typeColor = AppColors.blue;
     }
 
     return Padding(
@@ -318,7 +319,7 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
           Text(
             '[${l['time']}] ',
             style: const TextStyle(
-              color: Color(0xFF475569),
+              color: AppColors.systemGray2,
               fontSize: 11,
               fontFamily: 'monospace',
             ),
@@ -336,7 +337,7 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
             child: Text(
               l['msg'],
               style: const TextStyle(
-                color: Color(0xFF94A3B8),
+                color: AppColors.textTertiary,
                 fontSize: 11,
                 fontFamily: 'monospace',
               ),

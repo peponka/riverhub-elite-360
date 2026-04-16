@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class ComunicacionesScreen extends StatefulWidget {
   const ComunicacionesScreen({super.key});
@@ -97,14 +98,14 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
           'Comunicaciones $_activeChannel',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: Column(
           children: [
@@ -124,12 +125,12 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                           color: sel
-                              ? const Color(0xFF00E5FF)
-                              : const Color(0xFF1E293B),
+                              ? AppColors.accent
+                              : AppColors.separator,
                           borderRadius: BorderRadius.circular(20),
                           border: sel
                               ? null
-                              : Border.all(color: const Color(0xFF334155)),
+                              : Border.all(color: AppColors.separatorLight),
                         ),
                         alignment: Alignment.center,
                         child: Text(
@@ -161,8 +162,8 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
             Container(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
               decoration: const BoxDecoration(
-                color: Color(0xFF0F172A),
-                border: Border(top: BorderSide(color: Color(0xFF1E293B))),
+                color: AppColors.backgroundSecondary,
+                border: Border(top: BorderSide(color: AppColors.separator)),
               ),
               child: Row(
                 children: [
@@ -171,15 +172,15 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                       controller: _msgController,
                       placeholder: 'Transmitir mensaje...',
                       style: const TextStyle(
-                        color: material.Colors.white,
+                        color: AppColors.textPrimary,
                         fontSize: 14,
                       ),
                       placeholderStyle: const TextStyle(
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                         fontSize: 14,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E293B),
+                        color: AppColors.separator,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -195,7 +196,7 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.accent,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(
@@ -226,13 +227,13 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
         ),
         decoration: BoxDecoration(
           color: isMe
-              ? const Color(0xFF06B6D4).withValues(alpha: 0.15)
-              : const Color(0xFF1E293B),
+              ? AppColors.accentTeal.withValues(alpha: 0.15)
+              : AppColors.separator,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isMe
-                ? const Color(0xFF06B6D4).withValues(alpha: 0.3)
-                : const Color(0xFF334155),
+                ? AppColors.accentTeal.withValues(alpha: 0.3)
+                : AppColors.separatorLight,
           ),
         ),
         child: Column(
@@ -245,8 +246,8 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                   '● ${msg['sender']}',
                   style: TextStyle(
                     color: isMe
-                        ? const Color(0xFF06B6D4)
-                        : const Color(0xFFEF4444),
+                        ? AppColors.accentTeal
+                        : AppColors.error,
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                   ),
@@ -255,7 +256,7 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                 Text(
                   '[${msg['time']}]',
                   style: const TextStyle(
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                     fontSize: 10,
                   ),
                 ),
@@ -266,13 +267,13 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                     vertical: 1,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF334155),
+                    color: AppColors.separatorLight,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     msg['type'],
                     style: const TextStyle(
-                      color: Color(0xFF94A3B8),
+                      color: AppColors.textTertiary,
                       fontSize: 9,
                     ),
                   ),
@@ -283,7 +284,7 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
             Text(
               msg['content'],
               style: const TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 14,
               ),
             ),

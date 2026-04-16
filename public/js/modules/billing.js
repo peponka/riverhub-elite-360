@@ -302,6 +302,30 @@ const BillingModule = (() => {
         document.getElementById('bill-holder-display').textContent = input.value.toUpperCase() || 'NOMBRE APELLIDO';
     };
 
+    const sendWebhookWithRetry = async (url, payload, maxRetries = 2) => {
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'x-api-key': 'RH_Secure_n8n_X9fL!2026' },
+                    body: JSON.stringify(payload),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                if (attempt === maxRetries) {
+                    if (window.RiverToast) RiverToast.warning('Retraso en envío de recibo.', 'Red Inestable');
+                    throw err;
+                }
+                await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+            }
+        }
+    };
+
     const processPayment = async () => {
         const btn = document.getElementById('bill-pay-btn');
         const name = document.getElementById('bill-name')?.value.trim();
@@ -313,42 +337,47 @@ const BillingModule = (() => {
         if (!email) { if (window.RiverToast) RiverToast.warning('Ingresá el email.', 'Billing'); return; }
         if (method === 'card' && (!cardNum || cardNum.length < 16)) { if (window.RiverToast) RiverToast.warning('Tarjeta inválida.', 'Billing'); return; }
 
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESANDO...';
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> PROCESANDO...';
         btn.disabled = true;
 
-        await new Promise(r => setTimeout(r, 2000));
+        try {
+            await new Promise(r => setTimeout(r, 2000));
 
-        if (window.sb) {
-            try {
-                await window.sb.from('payments').insert([{
+            if (window.sb) {
+                const { error } = await window.sb.from('payments').insert([{
                     amount: selectedPlan.price, currency: 'USD', payment_method: method,
                     gateway: 'SIMULADO', status: 'completed',
                     invoice_number: 'INV-' + Date.now().toString(36).toUpperCase(),
                     metadata: { plan: selectedPlan.id, name, email }
                 }]);
-            } catch (e) { console.warn("Payment save:", e); }
-        }
+                if (error) {
+                    console.warn("Payment save error:", error);
+                    throw new Error("No se pudo registrar en la base de datos.");
+                }
+            }
 
-        // --- ENVIAR WEBHOOK AL Cerebro n8n PARA EMAIL DE PAGO Y RECIBO ---
-        try {
-            await fetch('/api/n8n/webhook', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-api-key': 'riverhub_n8n_2026' },
-                body: JSON.stringify({
+            try {
+                await sendWebhookWithRetry('/api/n8n/webhook', {
                     event: 'PAYMENT_COMPLETED',
                     company: name,
                     email: email,
                     amount: selectedPlan.price,
                     plan: selectedPlan.name,
                     timestamp: new Date().toISOString()
-                })
-            });
-            console.log("n8n Webhook Sent: PAYMENT_COMPLETED");
-        } catch (webhookErr) {
-            console.warn("Fallo el envío del recibo vía n8n:", webhookErr);
-        }
+                });
+                console.log("n8n Webhook Sent: PAYMENT_COMPLETED");
+            } catch (webhookErr) {
+                console.warn("Fallo el envío del recibo vía n8n, pero el pago se procesó:", webhookErr);
+            }
 
-        showSuccess();
+            showSuccess();
+        } catch (err) {
+            console.error(err);
+            if (window.RiverToast) RiverToast.error('Corte de conexión detectado. Reintenta el pago.', 'Fallo de Red');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     };
 
     const showSuccess = () => {
@@ -385,3 +414,4 @@ const BillingModule = (() => {
 })();
 
 window.BillingModule = BillingModule;
+

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class IntegracionesScreen extends StatelessWidget {
   const IntegracionesScreen({super.key});
@@ -45,30 +46,30 @@ class IntegracionesScreen extends StatelessWidget {
           'Integraciones API',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             Row(
               children: [
-                _kpi('APIs Activas', '4', const Color(0xFF10B981)),
+                _kpi('APIs Activas', '4', AppColors.success),
                 const SizedBox(width: 10),
-                _kpi('Offline', '1', const Color(0xFFEF4444)),
+                _kpi('Offline', '1', AppColors.error),
               ],
             ),
             const SizedBox(height: 16),
             const Text(
               'Servicios Conectados',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -79,7 +80,7 @@ class IntegracionesScreen extends StatelessWidget {
             const Text(
               'Mi API Key',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -88,9 +89,9 @@ class IntegracionesScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F172A),
+                color: AppColors.backgroundSecondary,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF1E293B)),
+                border: Border.all(color: AppColors.separator),
               ),
               child: Column(
                 children: [
@@ -100,7 +101,7 @@ class IntegracionesScreen extends StatelessWidget {
                         child: Text(
                           'sk_live_••••••••••••••••',
                           style: TextStyle(
-                            color: Color(0xFF94A3B8),
+                            color: AppColors.textTertiary,
                             fontSize: 13,
                             fontFamily: 'monospace',
                           ),
@@ -108,7 +109,7 @@ class IntegracionesScreen extends StatelessWidget {
                       ),
                       const Icon(
                         CupertinoIcons.eye_fill,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                         size: 18,
                       ),
                     ],
@@ -117,11 +118,11 @@ class IntegracionesScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: CupertinoButton(
-                      color: const Color(0xFF1E293B),
+                      color: AppColors.separator,
                       child: const Text(
                         'Generar Nueva Key',
                         style: TextStyle(
-                          color: Color(0xFF00E5FF),
+                          color: AppColors.accent,
                           fontSize: 13,
                         ),
                       ),
@@ -158,7 +159,7 @@ class IntegracionesScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             l,
-            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+            style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
           ),
         ],
       ),
@@ -171,9 +172,9 @@ class IntegracionesScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Row(
         children: [
@@ -181,7 +182,7 @@ class IntegracionesScreen extends StatelessWidget {
             width: 10,
             height: 10,
             decoration: BoxDecoration(
-              color: online ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+              color: online ? AppColors.success : AppColors.error,
               shape: BoxShape.circle,
             ),
           ),
@@ -193,7 +194,7 @@ class IntegracionesScreen extends StatelessWidget {
                 Text(
                   a['name'],
                   style: const TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -201,7 +202,7 @@ class IntegracionesScreen extends StatelessWidget {
                 Text(
                   a['desc'],
                   style: const TextStyle(
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -215,15 +216,15 @@ class IntegracionesScreen extends StatelessWidget {
                 online ? 'ONLINE' : 'OFFLINE',
                 style: TextStyle(
                   color: online
-                      ? const Color(0xFF10B981)
-                      : const Color(0xFFEF4444),
+                      ? AppColors.success
+                      : AppColors.error,
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 a['latency'],
-                style: const TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
               ),
             ],
           ),

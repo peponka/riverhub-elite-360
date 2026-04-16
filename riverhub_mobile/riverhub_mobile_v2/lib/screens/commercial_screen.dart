@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class CommercialScreen extends StatefulWidget {
   const CommercialScreen({super.key});
@@ -54,10 +55,10 @@ class _CommercialScreenState extends State<CommercialScreen> {
           'Módulo Comercial',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CupertinoButton(
@@ -65,32 +66,32 @@ class _CommercialScreenState extends State<CommercialScreen> {
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
             children: const [
-              Text('Nuevo ', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 14, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.add_circled, color: Color(0xFF00E5FF), size: 22),
+              Text('Nuevo ', style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
+              Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
             ],
           ),
           onPressed: _showCreateOrderModal,
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             Row(
               children: [
-                _kpi('Contratos Activos', '$active', const Color(0xFF10B981)),
+                _kpi('Contratos Activos', '$active', AppColors.success),
                 const SizedBox(width: 10),
-                _kpi('Valor Total', totalValue, const Color(0xFF3B82F6)),
+                _kpi('Valor Total', totalValue, AppColors.blue),
                 const SizedBox(width: 10),
-                _kpi('Clientes', '4', const Color(0xFF8B5CF6)),
+                _kpi('Clientes', '4', AppColors.purple),
               ],
             ),
             const SizedBox(height: 16),
             const Text(
               'Órdenes de Servicio',
               style: TextStyle(
-                color: material.Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -119,7 +120,7 @@ class _CommercialScreenState extends State<CommercialScreen> {
         height: MediaQuery.of(context).size.height * 0.85,
         padding: const EdgeInsets.only(top: 16),
         decoration: const BoxDecoration(
-          color: Color(0xFF0F172A),
+          color: AppColors.backgroundSecondary,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -129,12 +130,12 @@ class _CommercialScreenState extends State<CommercialScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Nuevo Contrato', style: TextStyle(color: material.Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                  CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.xmark_circle_fill, color: Color(0xFF64748B)), onPressed: () => Navigator.pop(ctx)),
+                  const Text('Nuevo Contrato', style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+                  CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textSecondary), onPressed: () => Navigator.pop(ctx)),
                 ],
               ),
             ),
-            const material.Divider(color: Color(0xFF1E293B)),
+            const material.Divider(color: AppColors.separator),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(16),
@@ -193,14 +194,14 @@ class _CommercialScreenState extends State<CommercialScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+        Text(label, style: const TextStyle(color: AppColors.textTertiary, fontSize: 12)),
         const SizedBox(height: 6),
         CupertinoTextField(
           controller: controller,
           keyboardType: isNumeric ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-          style: const TextStyle(color: material.Colors.white),
-          placeholderStyle: const TextStyle(color: Color(0xFF64748B)),
-          decoration: BoxDecoration(color: const Color(0xFF1E293B), borderRadius: BorderRadius.circular(10)),
+          style: const TextStyle(color: AppColors.textPrimary),
+          placeholderStyle: const TextStyle(color: AppColors.textSecondary),
+          decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(10)),
           padding: const EdgeInsets.all(12),
         ),
       ],
@@ -229,7 +230,7 @@ class _CommercialScreenState extends State<CommercialScreen> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
               textAlign: TextAlign.center,
             ),
           ],
@@ -243,15 +244,15 @@ class _CommercialScreenState extends State<CommercialScreen> {
     String statusText;
     switch (c['status']) {
       case 'active':
-        statusColor = const Color(0xFF10B981);
+        statusColor = AppColors.success;
         statusText = 'ACTIVO';
         break;
       case 'pending':
-        statusColor = const Color(0xFFF59E0B);
+        statusColor = AppColors.warning;
         statusText = 'PENDIENTE';
         break;
       default:
-        statusColor = const Color(0xFF64748B);
+        statusColor = AppColors.textSecondary;
         statusText = 'COMPLETADO';
     }
     final isSelected = _selectedIndex == idx;
@@ -263,12 +264,12 @@ class _CommercialScreenState extends State<CommercialScreen> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF0F172A),
+          color: AppColors.backgroundSecondary,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF00E5FF)
-                : const Color(0xFF1E293B),
+                ? AppColors.accent
+                : AppColors.separator,
           ),
         ),
         child: Column(
@@ -281,7 +282,7 @@ class _CommercialScreenState extends State<CommercialScreen> {
                   child: Text(
                     c['client'],
                     style: const TextStyle(
-                      color: material.Colors.white,
+                      color: AppColors.textPrimary,
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                     ),
@@ -316,13 +317,13 @@ class _CommercialScreenState extends State<CommercialScreen> {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E293B),
+                    color: AppColors.separator,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     c['type'],
                     style: const TextStyle(
-                      color: Color(0xFF00E5FF),
+                      color: AppColors.accent,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),
@@ -332,7 +333,7 @@ class _CommercialScreenState extends State<CommercialScreen> {
                 Text(
                   '${c['commodity']} • ${c['qty']}',
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textTertiary,
                     fontSize: 12,
                   ),
                 ),
@@ -345,14 +346,14 @@ class _CommercialScreenState extends State<CommercialScreen> {
                 Text(
                   c['route'],
                   style: const TextStyle(
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
                 Text(
                   c['value'],
                   style: const TextStyle(
-                    color: Color(0xFF10B981),
+                    color: AppColors.success,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -361,18 +362,18 @@ class _CommercialScreenState extends State<CommercialScreen> {
             ),
             if (isSelected) ...[
               const SizedBox(height: 12),
-              const material.Divider(color: Color(0xFF1E293B)),
+              const material.Divider(color: AppColors.separator),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     child: CupertinoButton(
                       padding: const EdgeInsets.all(8),
-                      color: const Color(0xFF1E293B),
+                      color: AppColors.separator,
                       child: const Text(
                         'Ver Manifiestos',
                         style: TextStyle(
-                          color: Color(0xFF00E5FF),
+                          color: AppColors.accent,
                           fontSize: 12,
                         ),
                       ),
@@ -397,11 +398,11 @@ class _CommercialScreenState extends State<CommercialScreen> {
                   Expanded(
                     child: CupertinoButton(
                       padding: const EdgeInsets.all(8),
-                      color: const Color(0xFF1E293B),
+                      color: AppColors.separator,
                       child: const Text(
                         'Asignar Carga',
                         style: TextStyle(
-                          color: Color(0xFF10B981),
+                          color: AppColors.success,
                           fontSize: 12,
                         ),
                       ),

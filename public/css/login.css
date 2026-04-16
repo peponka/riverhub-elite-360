@@ -1,4 +1,4 @@
-/* css/login.css */
+/* css/login.css — CUPERTINO LIGHT */
 
 .login-screen {
     position: fixed;
@@ -6,7 +6,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #0A0E1A url('https://w.wallhaven.cc/full/wq/wallhaven-wq9r7r.jpg') center/cover no-repeat;
+    background: #F9F9FE;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,139 +16,129 @@
 .login-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(10, 14, 26, 0.88);
-    backdrop-filter: blur(12px);
+    background: linear-gradient(135deg, rgba(0, 88, 188, 0.03) 0%, rgba(88, 86, 214, 0.03) 100%);
 }
 
 .login-card {
     position: relative;
-    width: 400px;
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(0, 229, 255, 0.15);
-    border-radius: 24px;
-    padding: 40px;
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 229, 255, 0.08);
+    width: 420px;
+    background: #FFFFFF;
+    backdrop-filter: none;
+    border: none;
+    border-radius: 20px;
+    padding: 44px;
+    box-shadow: 0 12px 48px rgba(0, 88, 188, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
     text-align: center;
     transform: translateY(20px);
-    animation: slideUpLogin 0.8s ease forwards;
+    animation: slideUpLogin 0.6s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
 }
 
 .login-logo {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .login-logo i {
-    font-size: 3rem;
-    color: var(--md-sys-color-primary);
-    text-shadow: 0 0 20px var(--md-sys-color-primary);
+    font-size: 2.8rem;
+    color: #0058BC;
+    text-shadow: none;
 }
 
-/* TABS STYLING (ADDED FIX) */
+/* TABS STYLING */
 .login-tabs {
     display: flex;
     justify-content: center;
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 28px;
+    border-bottom: 1px solid rgba(193, 198, 215, 0.25);
 }
 
 .login-tabs .tab {
     flex: 1;
     padding: 12px;
     cursor: pointer;
-    color: var(--md-sys-color-on-surface-variant);
+    color: #717786;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    font-size: 0.85rem;
     border-bottom: 2px solid transparent;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .login-tabs .tab:hover {
-    color: var(--md-sys-color-on-surface);
-    background: rgba(255, 255, 255, 0.02);
+    color: #1A1C1F;
+    background: rgba(0, 88, 188, 0.03);
 }
 
 .login-tabs .tab.active {
-    color: var(--md-sys-color-primary);
-    border-bottom-color: var(--md-sys-color-primary);
-    background: linear-gradient(to top, rgba(0, 229, 255, 0.1), transparent);
+    color: #0058BC;
+    border-bottom-color: #0058BC;
+    background: transparent;
 }
 
 .input-login-group {
     position: relative;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 .input-login-group i {
     position: absolute;
-    left: 15px;
+    left: 16px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 1rem;
+    color: #717786;
+    font-size: 0.95rem;
     pointer-events: none;
-    transition: 0.3s;
+    transition: 0.25s;
 }
 
 .input-login-premium {
     width: 100%;
     box-sizing: border-box;
-    /* Material 3 Surface */
-    background: var(--md-sys-color-surface);
-    border: 1px solid var(--md-sys-color-outline);
-    padding: 16px 16px 16px 45px;
-    /* keep padding for icon */
-    border-radius: 4px;
-    /* Material text field radius is usually small */
-    color: var(--md-sys-color-on-surface);
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
+    background: #FFFFFF !important;
+    border: 1.5px solid #C1C6D7 !important;
+    padding: 16px 16px 16px 46px;
+    border-radius: 12px !important;
+    color: #1A1C1F !important;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 0.95rem;
     outline: none;
     transition: all 0.2s ease;
-    height: 56px;
+    height: 52px;
 }
 
 .input-login-premium::placeholder {
-    color: var(--md-sys-color-on-surface-variant);
+    color: #717786 !important;
 }
 
 .input-login-premium:focus {
-    border-color: var(--md-sys-color-primary);
-    border-width: 2px;
-    padding-left: 44px;
-    /* Adjust for border width change */
+    border-color: #0058BC !important;
+    border-width: 2px !important;
+    padding-left: 45px;
     padding-top: 15px;
     padding-bottom: 15px;
-    background: var(--md-sys-color-surface);
-    box-shadow: none;
-    /* Material 3 uses border color */
+    background: #FFFFFF !important;
+    box-shadow: 0 0 0 4px rgba(0, 88, 188, 0.08) !important;
 }
 
-.input-login-premium:focus+i {
-    color: var(--md-sys-color-primary);
+.input-login-premium:focus + i {
+    color: #0058BC;
 }
 
 .btn-login {
     width: 100%;
-    /* Material 3 Filled Button */
-    background: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-    font-weight: 500;
-    text-transform: capitalize;
-    /* More modern than UPPERCASE */
+    background: linear-gradient(135deg, #0058BC, #0070EB);
+    color: #FFFFFF;
+    font-weight: 600;
+    text-transform: none;
     font-size: 1rem;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.01em;
     border: none;
     padding: 0 24px;
-    height: 48px;
-    /* Slightly taller for login */
-    border-radius: 100px;
-    /* Stadium */
+    height: 50px;
+    border-radius: 12px;
     cursor: pointer;
-    box-shadow: var(--md-sys-elevation-level-1);
-    transition: 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 88, 188, 0.2);
+    transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1.0);
     margin-top: 10px;
     display: flex;
     align-items: center;
@@ -156,38 +146,35 @@
 }
 
 .btn-login:hover {
-    box-shadow: var(--md-sys-elevation-level-2);
+    box-shadow: 0 6px 20px rgba(0, 88, 188, 0.3);
     filter: brightness(1.05);
-    /* State layer */
     transform: translateY(-1px);
 }
 
 .login-footer {
-    margin-top: 25px;
-    font-size: 0.7rem;
-    color: var(--text-disabled);
-    letter-spacing: 1px;
+    margin-top: 28px;
+    font-size: 0.72rem;
+    color: #C1C6D7;
+    letter-spacing: 0.06em;
 }
 
 /* ERROR MSG */
 .login-error {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid var(--md-sys-color-error);
-    color: var(--md-sys-color-error);
+    background: rgba(255, 59, 48, 0.08);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    color: #FF3B30;
     padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 20px;
+    border-radius: 10px;
+    margin-bottom: 16px;
     font-size: 0.85rem;
     display: none;
-    /* JS toggles */
 }
 
 @keyframes slideUpLogin {
     from {
-        transform: translateY(30px);
+        transform: translateY(24px);
         opacity: 0;
     }
-
     to {
         transform: translateY(0);
         opacity: 1;

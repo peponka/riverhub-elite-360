@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class ReportesScreen extends StatelessWidget {
   const ReportesScreen({super.key});
@@ -12,23 +13,23 @@ class ReportesScreen extends StatelessWidget {
           'Reportes & Analytics',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Icon(
             CupertinoIcons.printer,
-            color: Color(0xFF00E5FF),
+            color: AppColors.accent,
             size: 20,
           ),
           onPressed: () {},
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -41,21 +42,21 @@ class ReportesScreen extends StatelessWidget {
                 _metricCard(
                   'Ingresos',
                   '\$2.4M',
-                  const Color(0xFF10B981),
+                  AppColors.success,
                   CupertinoIcons.arrow_up_right,
                 ),
                 const SizedBox(width: 10),
                 _metricCard(
                   'Gastos',
                   '\$1.8M',
-                  const Color(0xFFEF4444),
+                  AppColors.error,
                   CupertinoIcons.arrow_down_right,
                 ),
                 const SizedBox(width: 10),
                 _metricCard(
                   'Margen',
                   '25%',
-                  const Color(0xFF3B82F6),
+                  AppColors.blue,
                   CupertinoIcons.chart_bar_fill,
                 ),
               ],
@@ -75,17 +76,17 @@ class ReportesScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F172A),
+                color: AppColors.backgroundSecondary,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF1E293B)),
+                border: Border.all(color: AppColors.separator),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _pieSlice('Navegando', '60%', const Color(0xFF10B981)),
-                  _pieSlice('En Puerto', '25%', const Color(0xFFF59E0B)),
-                  _pieSlice('Taller', '10%', const Color(0xFFEF4444)),
-                  _pieSlice('Dique', '5%', const Color(0xFF64748B)),
+                  _pieSlice('Navegando', '60%', AppColors.success),
+                  _pieSlice('En Puerto', '25%', AppColors.warning),
+                  _pieSlice('Taller', '10%', AppColors.error),
+                  _pieSlice('Dique', '5%', AppColors.textSecondary),
                 ],
               ),
             ),
@@ -96,22 +97,22 @@ class ReportesScreen extends StatelessWidget {
             _reportButton(
               'Reporte Operacional Mensual',
               CupertinoIcons.doc_chart_fill,
-              const Color(0xFF3B82F6),
+              AppColors.blue,
             ),
             _reportButton(
               'Informe de Combustible',
               CupertinoIcons.drop_fill,
-              const Color(0xFFF59E0B),
+              AppColors.warning,
             ),
             _reportButton(
               'Estado de Flota PDF',
               CupertinoIcons.helm,
-              const Color(0xFF10B981),
+              AppColors.success,
             ),
             _reportButton(
               'Balance Financiero',
               CupertinoIcons.money_dollar_circle_fill,
-              const Color(0xFF8B5CF6),
+              AppColors.purple,
             ),
           ],
         ),
@@ -123,7 +124,7 @@ class ReportesScreen extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(
-        color: material.Colors.white,
+        color: AppColors.textPrimary,
         fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
@@ -153,7 +154,7 @@ class ReportesScreen extends StatelessWidget {
             ),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
             ),
           ],
         ),
@@ -165,16 +166,16 @@ class ReportesScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+            style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
           ),
           const SizedBox(height: 12),
           chart,
@@ -209,7 +210,7 @@ class ReportesScreen extends StatelessWidget {
                         width: 10,
                         height: 100 * incPct,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF10B981),
+                          color: AppColors.success,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -218,7 +219,7 @@ class ReportesScreen extends StatelessWidget {
                         width: 10,
                         height: 100 * expPct,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEF4444).withValues(alpha: 0.6),
+                          color: AppColors.error.withValues(alpha: 0.6),
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -228,7 +229,7 @@ class ReportesScreen extends StatelessWidget {
                   Text(
                     months[i],
                     style: const TextStyle(
-                      color: Color(0xFF64748B),
+                      color: AppColors.textSecondary,
                       fontSize: 9,
                     ),
                   ),
@@ -249,10 +250,10 @@ class ReportesScreen extends StatelessWidget {
       children: List.generate(vessels.length, (i) {
         final pct = values[i] / 8;
         final color = values[i] > 5.5
-            ? const Color(0xFFEF4444)
+            ? AppColors.error
             : values[i] > 4.5
-            ? const Color(0xFFF59E0B)
-            : const Color(0xFF10B981);
+            ? AppColors.warning
+            : AppColors.success;
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Row(
@@ -262,7 +263,7 @@ class ReportesScreen extends StatelessWidget {
                 child: Text(
                   vessels[i],
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textTertiary,
                     fontSize: 11,
                   ),
                 ),
@@ -271,7 +272,7 @@ class ReportesScreen extends StatelessWidget {
                 child: Container(
                   height: 14,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E293B),
+                    color: AppColors.separator,
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: FractionallySizedBox(
@@ -327,7 +328,7 @@ class ReportesScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10),
+          style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
         ),
       ],
     );
@@ -338,9 +339,9 @@ class ReportesScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.separator),
       ),
       child: Row(
         children: [
@@ -356,12 +357,12 @@ class ReportesScreen extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(color: material.Colors.white, fontSize: 14),
+              style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
             ),
           ),
           const Icon(
             CupertinoIcons.arrow_right,
-            color: Color(0xFF64748B),
+            color: AppColors.textSecondary,
             size: 16,
           ),
         ],

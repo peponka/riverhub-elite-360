@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 class IncidentesScreen extends StatefulWidget {
   const IncidentesScreen({super.key});
 
@@ -61,7 +62,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
         builder: (ctx, setModalState) => Container(
           height: MediaQuery.of(context).size.height * 0.85,
           decoration: const BoxDecoration(
-            color: Color(0xFF0F172A),
+            color: AppColors.backgroundSecondary,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
@@ -69,7 +70,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Color(0xFF1E293B))),
+                  border: Border(bottom: BorderSide(color: AppColors.separator)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,7 +78,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                     const Text(
                       'Nuevo Expediente',
                       style: TextStyle(
-                        color: material.Colors.white,
+                        color: AppColors.textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -86,7 +87,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                       padding: EdgeInsets.zero,
                       child: const Icon(
                         CupertinoIcons.xmark_circle_fill,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                       onPressed: () => Navigator.pop(ctx),
                     ),
@@ -99,25 +100,25 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                   children: [
                     const Text(
                       'Buque Involucrado',
-                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                      style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E293B),
+                        color: AppColors.separator,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: material.DropdownButton<String>(
                         value: selectedVesselId,
                         hint: const Text(
                           'Seleccione buque...',
-                          style: TextStyle(color: Color(0xFF64748B)),
+                          style: TextStyle(color: AppColors.textSecondary),
                         ),
-                        dropdownColor: const Color(0xFF1E293B),
+                        dropdownColor: AppColors.separator,
                         isExpanded: true,
                         underline: const SizedBox(),
-                        style: const TextStyle(color: material.Colors.white),
+                        style: const TextStyle(color: AppColors.textPrimary),
                         items: _vesselsData
                             .map(
                               (v) => material.DropdownMenuItem(
@@ -133,18 +134,18 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                     const SizedBox(height: 14),
                     const Text(
                       'Ubicación (Km)',
-                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                      style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
                     CupertinoTextField(
                       controller: locController,
                       placeholder: 'Ej: KM 1285',
-                      style: const TextStyle(color: material.Colors.white),
+                      style: const TextStyle(color: AppColors.textPrimary),
                       placeholderStyle: const TextStyle(
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E293B),
+                        color: AppColors.separator,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.all(12),
@@ -152,19 +153,19 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                     const SizedBox(height: 14),
                     const Text(
                       'Descripción',
-                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                      style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
                     CupertinoTextField(
                       controller: descController,
                       placeholder: 'Describa el incidente...',
                       maxLines: 4,
-                      style: const TextStyle(color: material.Colors.white),
+                      style: const TextStyle(color: AppColors.textPrimary),
                       placeholderStyle: const TextStyle(
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSecondary,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E293B),
+                        color: AppColors.separator,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.all(12),
@@ -172,7 +173,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                     const SizedBox(height: 14),
                     const Text(
                       'Evidencia Fotográfica',
-                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                      style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
                     GestureDetector(
@@ -234,7 +235,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                         height: 100,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1E293B),
+                          color: AppColors.separator,
                           borderRadius: BorderRadius.circular(10),
                           image: _attachedImagePath != null
                               ? DecorationImage(
@@ -253,14 +254,14 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                             children: [
                               Icon(
                                   _attachedImagePath != null ? CupertinoIcons.checkmark_alt_circle : CupertinoIcons.camera_fill,
-                                  color: _attachedImagePath != null ? const Color(0xFF10B981) : const Color(0xFF64748B),
+                                  color: _attachedImagePath != null ? AppColors.success : AppColors.textSecondary,
                                   size: 32,
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 _attachedImagePath != null ? 'Foto Adjunta' : 'Presionar para Adjuntar Imagen',
                                 style: TextStyle(
-                                  color: _attachedImagePath != null ? material.Colors.white : const Color(0xFF64748B),
+                                  color: _attachedImagePath != null ? material.Colors.white : AppColors.textSecondary,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -289,13 +290,13 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: aiAnalyzed
-                              ? const Color(0xFF10B981).withValues(alpha: 0.2)
-                              : const Color(0xFF1E293B),
+                              ? AppColors.success.withValues(alpha: 0.2)
+                              : AppColors.separator,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: aiAnalyzed
-                                ? const Color(0xFF10B981)
-                                : const Color(0xFF00E5FF),
+                                ? AppColors.success
+                                : AppColors.accent,
                           ),
                         ),
                         child: Row(
@@ -306,8 +307,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                                   ? CupertinoIcons.checkmark_alt_circle_fill
                                   : CupertinoIcons.bolt_fill,
                               color: aiAnalyzed
-                                  ? const Color(0xFF10B981)
-                                  : const Color(0xFF00E5FF),
+                                  ? AppColors.success
+                                  : AppColors.accent,
                               size: 18,
                             ),
                             const SizedBox(width: 8),
@@ -317,8 +318,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                                   : 'ANALIZAR CON IA',
                               style: TextStyle(
                                 color: aiAnalyzed
-                                    ? const Color(0xFF10B981)
-                                    : const Color(0xFF00E5FF),
+                                    ? AppColors.success
+                                    : AppColors.accent,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -420,10 +421,10 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
           'Siniestralidad & Forense',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF0A0E1A).withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: Color(0xFF00E5FF)),
+          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         trailing: CupertinoButton(
@@ -432,13 +433,13 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
             children: const [
-              Text('Reportar ', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 14, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.add_circled, color: Color(0xFF00E5FF), size: 22),
+              Text('Reportar ', style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
+              Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
             ],
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF0A0E1A),
+      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -446,18 +447,18 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
             // KPIs
             Row(
               children: [
-                _kpi('Total', '${_incidents.length}', const Color(0xFF3B82F6)),
+                _kpi('Total', '${_incidents.length}', AppColors.blue),
                 const SizedBox(width: 10),
                 _kpi(
                   'Abiertos',
                   '${_incidents.where((i) => i['status'] == 'ABIERTO').length}',
-                  const Color(0xFFEF4444),
+                  AppColors.error,
                 ),
                 const SizedBox(width: 10),
                 _kpi(
                   'Cerrados',
                   '${_incidents.where((i) => i['status'] == 'CERRADO').length}',
-                  const Color(0xFF10B981),
+                  AppColors.success,
                 ),
               ],
             ),
@@ -491,7 +492,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+              style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
             ),
           ],
         ),
@@ -503,20 +504,20 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
     Color sevColor;
     switch (inc['severity']) {
       case 'ALTA':
-        sevColor = const Color(0xFFEF4444);
+        sevColor = AppColors.error;
         break;
       case 'MEDIA':
-        sevColor = const Color(0xFFF59E0B);
+        sevColor = AppColors.warning;
         break;
       default:
-        sevColor = const Color(0xFF10B981);
+        sevColor = AppColors.success;
     }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: sevColor.withValues(alpha: 0.3)),
       ),
@@ -530,7 +531,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                 child: Text(
                   inc['title'],
                   style: const TextStyle(
-                    color: material.Colors.white,
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -558,21 +559,21 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
             children: [
               const Icon(
                 CupertinoIcons.helm,
-                color: Color(0xFF64748B),
+                color: AppColors.textSecondary,
                 size: 14,
               ),
               const SizedBox(width: 6),
               Text(
                 inc['vessel'],
-                style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                style: const TextStyle(color: AppColors.textTertiary, fontSize: 12),
               ),
               const Spacer(),
               Text(
                 inc['status'],
                 style: TextStyle(
                   color: inc['status'] == 'CERRADO'
-                      ? const Color(0xFF10B981)
-                      : const Color(0xFFF59E0B),
+                      ? AppColors.success
+                      : AppColors.warning,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
@@ -582,7 +583,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
           const SizedBox(height: 4),
           Text(
             inc['date'],
-            style: const TextStyle(color: Color(0xFF475569), fontSize: 11),
+            style: const TextStyle(color: AppColors.systemGray2, fontSize: 11),
           ),
         ],
       ),

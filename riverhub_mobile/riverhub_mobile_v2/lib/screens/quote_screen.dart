@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class QuoteScreen extends StatefulWidget {
   const QuoteScreen({super.key});
@@ -297,7 +298,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
                 gradient: const LinearGradient(
                   colors: [
                     CupertinoColors.darkBackgroundGray,
-                    Color(0xFF1c1c1e),
+                    AppColors.backgroundPrimary,
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -325,7 +326,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
                       fontSize: 36,
                       fontWeight: FontWeight.w900,
                       color: _finalPrice != null
-                          ? const Color(0xFF00e5ff)
+                          ? AppColors.accent
                           : CupertinoColors.systemGrey,
                     ),
                   ),
@@ -337,7 +338,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
                       color: CupertinoColors.black.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: const Color(0xFF00e5ff).withValues(alpha: 0.3),
+                        color: AppColors.accent.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
@@ -345,7 +346,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
                       children: [
                         const Icon(
                           CupertinoIcons.sparkles,
-                          color: Color(0xFF00e5ff),
+                          color: AppColors.accent,
                           size: 20,
                         ),
                         const SizedBox(width: 12),
