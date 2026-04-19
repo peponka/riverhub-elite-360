@@ -253,7 +253,6 @@ function renderAISMarkers(data){
     });
     var legend=document.querySelector('.map-legend');
     if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=data.length+' activos';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=data.length+' activos AIS';legend.appendChild(d);}}
-    }catch(e){console.log('AIS:',e);}
 }
 
 // MODAL
