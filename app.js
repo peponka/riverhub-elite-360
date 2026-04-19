@@ -58,6 +58,9 @@ app.use((req, res, next) => {
     next();
 });
 
+// --- ROOT REDIRECT TO FLUVIA ---
+app.get('/', (req, res) => res.redirect('/fluvia.html'));
+
 // --- REQUEST LOGGING ---
 app.use((req, res, next) => {
     const start = Date.now();
