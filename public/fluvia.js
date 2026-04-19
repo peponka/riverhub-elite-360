@@ -219,7 +219,7 @@ async function loadAISTraffic(){
         }
         // Fallback: fetch from API endpoint
         try{
-            var api=await fetch('/api/n8n/ais-live',{headers:{'x-api-key':'RH_Secure_n8n_X9fL!2026'}});
+            var api=await fetch('/api/ais-positions');
             var json=await api.json();
             if(json.vessels&&json.vessels.length>0){
                 json.vessels.forEach(function(v){

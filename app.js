@@ -87,6 +87,22 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+// --- PUBLIC AIS POSITIONS (for frontend map) ---
+app.get('/api/ais-positions', (req, res) => {
+    const aisPositions = req.app.locals.aisPositions || {};
+    const vessels = Object.values(aisPositions);
+    res.json({
+        total: vessels.length,
+        connected: aisConnected,
+        vessels: vessels.map(v => ({
+            mmsi: v.mmsi, name: v.name,
+            lat: v.lat, lon: v.lon,
+            speed: v.speed, course: v.course,
+            heading: v.heading
+        }))
+    });
+});
+
 // --- GEMINI AI CHAT ---
 app.post('/api/ai/chat', async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
