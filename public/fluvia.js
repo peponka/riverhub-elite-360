@@ -210,32 +210,32 @@ function loadFleetMarkers(){
 }
 async function loadAISTraffic(){
     try{
-        // Try Supabase first (all AIS records)
-        var r=await sb.from('ais_traffic').select('*').limit(200);
-        var data=r.data;
-        if(data&&data.length>0){
-            renderAISMarkers(data);
+        // Primary: fetch from public API (server memory - no auth needed)
+        var api=await fetch('/api/ais-positions');
+        var json=await api.json();
+        if(json.vessels&&json.vessels.length>0){
+            json.vessels.forEach(function(v){
+                var key=v.mmsi;
+                if(!v.lat||!v.lon)return;
+                if(aisMarkers[key]){
+                    aisMarkers[key].setLatLng([v.lat,v.lon]);
+                }else{
+                    var m=L.circleMarker([v.lat,v.lon],{radius:5,fillColor:'#94A3B8',color:'#fff',weight:1.5,fillOpacity:0.8}).addTo(map);
+                    m.bindPopup('<strong>'+(v.name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'°<br><small>AIS Satelital</small>');
+                    aisMarkers[key]=m;
+                }
+            });
+            // Update legend
+            var legend=document.querySelector('.map-legend');
+            if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=json.total+' activos';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=json.total+' activos AIS';legend.appendChild(d);}}
             return;
         }
-        // Fallback: fetch from API endpoint
-        try{
-            var api=await fetch('/api/ais-positions');
-            var json=await api.json();
-            if(json.vessels&&json.vessels.length>0){
-                json.vessels.forEach(function(v){
-                    var key=v.mmsi;
-                    if(!v.lat||!v.lon)return;
-                    if(aisMarkers[key]){
-                        aisMarkers[key].setLatLng([v.lat,v.lon]);
-                    }else{
-                        var m=L.circleMarker([v.lat,v.lon],{radius:5,fillColor:'#94A3B8',color:'#fff',weight:1.5,fillOpacity:0.8}).addTo(map);
-                        m.bindPopup('<strong>'+(v.name||v.mmsi)+'</strong><br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS Live</small>');
-                        aisMarkers[key]=m;
-                    }
-                });
-            }
-        }catch(e2){}
-    }catch(e){console.log('AIS:',e);}
+    }catch(e){console.log('AIS API:',e);}
+    // Fallback: Supabase
+    try{
+        var r=await sb.from('ais_traffic').select('*').limit(200);
+        if(r.data&&r.data.length>0)renderAISMarkers(r.data);
+    }catch(e){}
 }
 function renderAISMarkers(data){
     data.forEach(function(v){
