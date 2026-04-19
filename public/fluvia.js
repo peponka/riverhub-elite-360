@@ -210,23 +210,49 @@ function loadFleetMarkers(){
 }
 async function loadAISTraffic(){
     try{
-        var r=await sb.from('ais_traffic').select('*').gte('updated_at',new Date(Date.now()-600000).toISOString());
-        var data=r.data;if(!data||data.length===0)return;
-        // Update or create markers
-        data.forEach(function(v){
-            var key=v.mmsi;
-            if(aisMarkers[key]){
-                aisMarkers[key].setLatLng([v.latitude,v.longitude]);
-                aisMarkers[key].setPopupContent('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Trafico terceros</small>');
-            }else{
-                var m=L.circleMarker([v.latitude,v.longitude],{radius:5,fillColor:'#94A3B8',color:'#fff',weight:1.5,fillOpacity:0.8}).addTo(map);
-                m.bindPopup('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Trafico terceros</small>');
-                aisMarkers[key]=m;
+        // Try Supabase first (all AIS records)
+        var r=await sb.from('ais_traffic').select('*').limit(200);
+        var data=r.data;
+        if(data&&data.length>0){
+            renderAISMarkers(data);
+            return;
+        }
+        // Fallback: fetch from API endpoint
+        try{
+            var api=await fetch('/api/n8n/ais-live',{headers:{'x-api-key':'RH_Secure_n8n_X9fL!2026'}});
+            var json=await api.json();
+            if(json.vessels&&json.vessels.length>0){
+                json.vessels.forEach(function(v){
+                    var key=v.mmsi;
+                    if(!v.lat||!v.lon)return;
+                    if(aisMarkers[key]){
+                        aisMarkers[key].setLatLng([v.lat,v.lon]);
+                    }else{
+                        var m=L.circleMarker([v.lat,v.lon],{radius:5,fillColor:'#94A3B8',color:'#fff',weight:1.5,fillOpacity:0.8}).addTo(map);
+                        m.bindPopup('<strong>'+(v.name||v.mmsi)+'</strong><br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS Live</small>');
+                        aisMarkers[key]=m;
+                    }
+                });
             }
-        });
-        // Update legend count
-        var legend=document.querySelector('.map-legend');
-        if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=data.length+' activos';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=data.length+' activos AIS';legend.appendChild(d);}}
+        }catch(e2){}
+    }catch(e){console.log('AIS:',e);}
+}
+function renderAISMarkers(data){
+    data.forEach(function(v){
+        var key=v.mmsi;
+        var lat=v.latitude||v.lat;var lng=v.longitude||v.lon||v.lng;
+        if(!lat||!lng)return;
+        if(aisMarkers[key]){
+            aisMarkers[key].setLatLng([lat,lng]);
+            aisMarkers[key].setPopupContent('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Trafico terceros</small>');
+        }else{
+            var m=L.circleMarker([lat,lng],{radius:5,fillColor:'#94A3B8',color:'#fff',weight:1.5,fillOpacity:0.8}).addTo(map);
+            m.bindPopup('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Trafico terceros</small>');
+            aisMarkers[key]=m;
+        }
+    });
+    var legend=document.querySelector('.map-legend');
+    if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=data.length+' activos';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=data.length+' activos AIS';legend.appendChild(d);}}
     }catch(e){console.log('AIS:',e);}
 }
 
