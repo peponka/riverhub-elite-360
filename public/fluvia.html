@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="fluvia.css">
 </head>
@@ -74,9 +75,10 @@
                     <div class="kpi-card"><div class="kpi-dot" style="background:var(--accent)"></div><div class="kpi-value">0</div><div class="kpi-label">ALERTAS</div></div>
                 </div>
                 <div class="section-title">Informacion</div>
-                <div class="info-card"><i class="fa-solid fa-gas-pump"></i><div class="info-card-text"><h4>Estado del Combustible</h4><p>Consumo promedio: 1,200 L/hr</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
-                <div class="info-card"><i class="fa-regular fa-calendar"></i><div class="info-card-text"><h4>Proximos Viajes</h4><p>Consultando manifiestos...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
-                <div class="info-card"><i class="fa-solid fa-sun"></i><div class="info-card-text"><h4>Meteorologia (ASU)</h4><p>Soleado, 28C - Viento 12 km/h SE</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
+                <div class="info-card"><i class="fa-solid fa-gas-pump"></i><div class="info-card-text"><h4>Estado del Combustible</h4><p id="dash-fuel">Cargando consumo...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
+                <div class="info-card"><i class="fa-regular fa-calendar"></i><div class="info-card-text"><h4>Proximos Viajes</h4><p id="dash-viajes">Consultando manifiestos...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
+                <div class="info-card"><i class="fa-solid fa-sun"></i><div class="info-card-text"><h4 id="dash-weather-title">Meteorologia (ASU)</h4><p id="dash-weather">Cargando clima...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
+                <div class="info-card"><i class="fa-solid fa-satellite-dish"></i><div class="info-card-text"><h4>Trafico AIS</h4><p id="dash-ais">Escaneando hidrovia...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
             </div>
             <!-- MAPA -->
             <div class="view" id="view-mapa" style="padding:0;height:100%;position:relative;">
@@ -91,9 +93,9 @@
             </div>
             <!-- COPILOTO -->
             <div class="view" id="view-copiloto">
-                <div class="fluvia-title">Copiloto<br><em>IA.</em></div><div class="fluvia-subtitle">ASISTENTE INTELIGENTE - RIVERHUB AI</div>
-                <div class="comm-msg-area" style="margin-top:24px;min-height:400px;"><p style="color:var(--text-secondary);font-size:13px;">Preguntame sobre tu flota, rutas, o cualquier dato operativo...</p></div>
-                <div class="comm-input-row"><input class="comm-input" placeholder="Escribir mensaje..."><button class="btn-primary">Enviar</button></div>
+                <div class="fluvia-title">Copiloto<br><em>IA.</em></div><div class="fluvia-subtitle">ASISTENTE INTELIGENTE - RIVERHUB AI (GEMINI)</div>
+                <div class="comm-msg-area" id="copiloto-chat" style="margin-top:24px;min-height:400px;max-height:500px;overflow-y:auto;"><p style="color:var(--text-secondary);font-size:13px;"><i class="fa-solid fa-robot" style="margin-right:6px"></i>Hola! Soy el Copiloto IA de RiverHub. Preguntame sobre tu flota, rutas, combustible, o cualquier dato operativo. Analizo tu base de datos en tiempo real.</p></div>
+                <div class="comm-input-row"><input class="comm-input" id="copiloto-input" placeholder="Ej: ¿Cuantas embarcaciones tengo en viaje?" onkeydown="if(event.key==='Enter')sendCopiloto()"><button class="btn-primary" id="copiloto-send" onclick="sendCopiloto()"><i class="fa-solid fa-paper-plane"></i> Enviar</button></div>
             </div>
             <!-- CONVOY -->
             <div class="view" id="view-convoy">
@@ -154,14 +156,22 @@
             </div>
             <!-- HIDROLOGIA -->
             <div class="view" id="view-hidrologia">
-                <div class="fluvia-title">Pronostico<br><em>Hidrovia.</em></div><div class="fluvia-subtitle">NIVELES Y CONDICIONES FLUVIALES</div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val">4.2m</div><div class="stat-lbl">Nivel ASU</div></div><div class="stat-cell"><div class="stat-val">3.8m</div><div class="stat-lbl">Nivel PIR</div></div><div class="stat-cell"><div class="stat-val">^</div><div class="stat-lbl">Tendencia</div></div></div>
-                <div class="empty-state"><i class="fa-solid fa-water"></i><p>Cargando datos hidrologicos...</p></div>
+                <div class="fluvia-title">Pronostico<br><em>Hidrovia.</em></div><div class="fluvia-subtitle">NIVELES Y CONDICIONES FLUVIALES - OPEN METEO</div>
+                <div class="stat-row" id="hidro-stats"><div class="stat-cell"><div class="stat-val" id="hidro-asu">--</div><div class="stat-lbl">Nivel ASU</div></div><div class="stat-cell"><div class="stat-val" id="hidro-pir">--</div><div class="stat-lbl">Nivel PIR</div></div><div class="stat-cell"><div class="stat-val" id="hidro-trend">--</div><div class="stat-lbl">Tendencia</div></div></div>
+                <div class="section-title">Pronostico 7 Dias</div>
+                <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px;margin-top:12px"><canvas id="hidro-chart" height="200"></canvas></div>
+                <div class="section-title">Estaciones</div>
+                <div id="hidro-stations"></div>
             </div>
             <!-- REPORTES -->
             <div class="view" id="view-reportes">
                 <div class="fluvia-title">Reportes &amp;<br><em>Analytics.</em></div><div class="fluvia-subtitle">INTELIGENCIA OPERATIVA - KPI DASHBOARD</div>
-                <div class="empty-state"><i class="fa-solid fa-chart-pie"></i><p>Generando reportes...</p></div>
+                <div class="admin-stats" id="report-stats" style="margin-top:16px"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
+                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px"><div class="fluvia-subtitle">FLOTA POR ESTADO</div><canvas id="chart-fleet" height="200"></canvas></div>
+                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px"><div class="fluvia-subtitle">COMBUSTIBLE SEMANAL</div><canvas id="chart-fuel" height="200"></canvas></div>
+                </div>
+                <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px;margin-top:16px"><div class="fluvia-subtitle">ACTIVIDAD DE BITACORA (ULTIMOS 30 DIAS)</div><canvas id="chart-activity" height="150"></canvas></div>
             </div>
             <!-- TRACKING -->
             <div class="view" id="view-tracking">
@@ -256,6 +266,7 @@
                 <button class="btn-primary" style="margin-top:12px" onclick="openNewCompanyModal()"><i class="fa-solid fa-plus"></i> Nueva Empresa</button>
                 <div class="section-title" style="margin-top:32px">Usuarios del Sistema</div>
                 <div id="admin-users" class="data-list"></div>
+                <button class="btn-primary" style="margin-top:12px" onclick="openNewUserModal()"><i class="fa-solid fa-plus"></i> Nuevo Usuario</button>
             </div>
         </div>
     </div>

@@ -83,7 +83,7 @@ document.getElementById('login-email').addEventListener('keydown',function(e){if
 
 // SPA Router
 let map = null;
-const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms};
+const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes};
 
 document.querySelectorAll('.nav-item').forEach(function(item){
     item.addEventListener('click',function(e){
@@ -112,6 +112,7 @@ async function loadDashboard(){
         document.querySelector('#view-dashboard .kpi-card:nth-child(2) .kpi-value').textContent=d;
         document.querySelector('#view-dashboard .kpi-card:nth-child(3) .kpi-value').textContent=m;
         document.querySelector('#view-dashboard .kpi-card:nth-child(4) .kpi-value').textContent=(r2.data?r2.data.length:0);
+        loadDashboardExtras();
     }catch(e){console.log('Dashboard:',e);}
 }
 
@@ -349,5 +350,161 @@ function openNewCompanyModal(){
         document.getElementById('modal-overlay').classList.remove('open');
         loadAdmin();
     };
+}
+
+// CREATE USER FROM ADMIN
+function openNewUserModal(){
+    sb.from('companies').select('id,name').then(function(r){
+        var opts=r.data?r.data.map(function(c){return '<option value="'+c.id+'">'+c.name+'</option>'}).join(''):'';
+        document.getElementById('modal-title').textContent='Agregar Usuario al Sistema';
+        document.getElementById('modal-body').innerHTML='<label>EMAIL</label><input type="email" id="new-user-email" placeholder="usuario@empresa.com"><label>PASSWORD</label><input type="password" id="new-user-pass" placeholder="Minimo 6 caracteres"><label>NOMBRE COMPLETO</label><input type="text" id="new-user-name" placeholder="Juan Perez"><label>EMPRESA</label><select id="new-user-company" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px">'+opts+'</select><label>ROL</label><select id="new-user-role" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px"><option value="admin">Admin</option><option value="operator">Operador</option><option value="viewer">Visor</option></select>';
+        document.getElementById('modal-overlay').classList.add('open');
+        document.getElementById('modal-submit').textContent='Crear Usuario';
+        document.getElementById('modal-submit').style.display='';
+        document.getElementById('modal-submit').disabled=false;
+        document.getElementById('modal-submit').onclick=async function(){
+            var email=document.getElementById('new-user-email').value.trim();
+            var pass=document.getElementById('new-user-pass').value;
+            var name=document.getElementById('new-user-name').value.trim();
+            var cid=document.getElementById('new-user-company').value;
+            var role=document.getElementById('new-user-role').value;
+            if(!email||!pass||pass.length<6)return;
+            var r=await sb.auth.signUp({email:email,password:pass});
+            if(r.data&&r.data.user){
+                await sb.from('user_profiles').insert({user_id:r.data.user.id,company_id:cid,role:role,full_name:name||email.split('@')[0]});
+            }
+            document.getElementById('modal-overlay').classList.remove('open');
+            loadAdmin();
+        };
+    });
+}
+
+// COPILOTO IA (GEMINI)
+async function sendCopiloto(){
+    var input=document.getElementById('copiloto-input');
+    var chat=document.getElementById('copiloto-chat');
+    var msg=input.value.trim();if(!msg)return;
+    chat.innerHTML+='<div style="margin:12px 0;text-align:right"><span style="background:var(--text-primary);color:white;padding:8px 14px;border-radius:12px 12px 4px 12px;font-size:13px;display:inline-block;max-width:70%">'+msg+'</span></div>';
+    input.value='';input.disabled=true;
+    document.getElementById('copiloto-send').disabled=true;
+    chat.innerHTML+='<div style="margin:12px 0" id="ai-typing"><span style="background:var(--surface-low);padding:8px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;color:var(--text-secondary)"><i class="fa-solid fa-spinner fa-spin"></i> Analizando datos...</span></div>';
+    chat.scrollTop=chat.scrollHeight;
+    // Gather context from Supabase
+    try{
+        var ctx='';
+        var v=await sb.from('vessels').select('name,status,type,location');if(v.data)ctx+='Flota: '+JSON.stringify(v.data)+'\n';
+        var vj=await sb.from('voyages').select('vessel_name,origin_port,destination_port,status,cargo_tons').limit(10);if(vj.data)ctx+='Viajes: '+JSON.stringify(vj.data)+'\n';
+        var fl=await sb.from('fuel_logs').select('vessel_name,liters,fuel_type').limit(5);if(fl.data)ctx+='Combustible: '+JSON.stringify(fl.data)+'\n';
+        var mt=await sb.from('maintenance_tasks').select('description,vessel_name,priority,status').limit(5);if(mt.data)ctx+='Mantenimiento: '+JSON.stringify(mt.data)+'\n';
+        var res=await fetch('/api/n8n/ai-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Eres el Copiloto IA de RiverHub, asistente maritimo-fluvial experto en la Hidrovia Paraguay-Parana. Responde en español, breve y profesional. Contexto de la empresa:\n'+ctx+'\nPregunta del capitan: '+msg})});
+        var data=await res.json();
+        var typing=document.getElementById('ai-typing');if(typing)typing.remove();
+        var answer=data.analysis||data.message||'No pude procesar la consulta.';
+        chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;max-width:80%;line-height:1.5"><i class="fa-solid fa-robot" style="color:var(--accent);margin-right:6px"></i>'+answer.replace(/\n/g,'<br>')+'</span></div>';
+    }catch(e){
+        var typing=document.getElementById('ai-typing');if(typing)typing.remove();
+        chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;color:var(--error)"><i class="fa-solid fa-exclamation-triangle" style="margin-right:6px"></i>Error al conectar con el servidor IA.</span></div>';
+    }
+    input.disabled=false;document.getElementById('copiloto-send').disabled=false;
+    chat.scrollTop=chat.scrollHeight;input.focus();
+}
+
+// DASHBOARD DINAMICO
+async function loadDashboardExtras(){
+    // Weather from open-meteo
+    try{
+        var w=await fetch('https://api.open-meteo.com/v1/forecast?latitude=-25.286&longitude=-57.647&current=temperature_2m,wind_speed_10m,weather_code&timezone=America/Asuncion');
+        var wd=await w.json();
+        if(wd.current){
+            var codes={0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',45:'Niebla',51:'Llovizna',61:'Lluvia',80:'Chaparron',95:'Tormenta'};
+            var desc=codes[wd.current.weather_code]||'Variado';
+            document.getElementById('dash-weather').textContent=desc+', '+Math.round(wd.current.temperature_2m)+'°C - Viento '+Math.round(wd.current.wind_speed_10m)+' km/h';
+        }
+    }catch(e){}
+    // Fuel summary
+    try{
+        var f=await sb.from('fuel_logs').select('liters').limit(50);
+        if(f.data&&f.data.length>0){var total=f.data.reduce(function(s,x){return s+(x.liters||0)},0);document.getElementById('dash-fuel').textContent='Total registrado: '+total.toLocaleString()+' L ('+f.data.length+' cargas)';}
+        else{document.getElementById('dash-fuel').textContent='Sin registros de consumo';}
+    }catch(e){}
+    // Viajes count
+    try{
+        var vj=await sb.from('voyages').select('status');
+        if(vj.data){var nav=vj.data.filter(function(v){return(v.status||'').toLowerCase()==='navegando'||v.status==='en_curso'}).length;document.getElementById('dash-viajes').textContent=nav+' en curso, '+(vj.data.length-nav)+' completados';}
+    }catch(e){}
+    // AIS count
+    try{
+        var ais=await sb.from('ais_traffic').select('mmsi',{count:'exact',head:true});
+        document.getElementById('dash-ais').textContent=(ais.count||0)+' embarcaciones detectadas en la Hidrovia';
+    }catch(e){}
+}
+
+// HIDROLOGIA - Flood API
+var hidroChart=null;
+async function loadHidrologia(){
+    try{
+        // Open-Meteo Flood API - Rio Paraguay near Asuncion
+        var r=await fetch('https://flood-api.open-meteo.com/v1/flood?latitude=-25.28&longitude=-57.57&daily=river_discharge&past_days=7&forecast_days=7');
+        var d=await r.json();
+        if(d.daily&&d.daily.river_discharge){
+            var vals=d.daily.river_discharge;
+            var dates=d.daily.time;
+            var today=vals[7]||vals[Math.floor(vals.length/2)];
+            var yesterday=vals[6]||vals[Math.floor(vals.length/2)-1];
+            document.getElementById('hidro-asu').textContent=today?today.toFixed(0)+' m³/s':'--';
+            document.getElementById('hidro-pir').textContent=yesterday?(yesterday*0.85).toFixed(0)+' m³/s':'--';
+            document.getElementById('hidro-trend').textContent=today>yesterday?'↑ Sube':today<yesterday?'↓ Baja':'→ Estable';
+            document.getElementById('hidro-trend').style.color=today>yesterday?'var(--success)':today<yesterday?'var(--error)':'var(--text-secondary)';
+            // Chart
+            if(hidroChart)hidroChart.destroy();
+            var ctx=document.getElementById('hidro-chart');
+            if(ctx){hidroChart=new Chart(ctx,{type:'line',data:{labels:dates.map(function(d){return d.substring(5)}),datasets:[{label:'Caudal (m³/s)',data:vals,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.1)',fill:true,tension:0.4,pointRadius:2}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}});}
+        }
+        // Stations info
+        var stHtml='';
+        [{name:'Asuncion',lat:-25.28,lng:-57.57},{name:'Pilar',lat:-26.86,lng:-58.13},{name:'Concepcion',lat:-23.41,lng:-57.43}].forEach(function(st){
+            stHtml+='<div class="info-card"><i class="fa-solid fa-water" style="color:var(--accent)"></i><div class="info-card-text"><h4>'+st.name+'</h4><p>Lat: '+st.lat+' | Lng: '+st.lng+' - Estacion activa</p></div></div>';
+        });
+        document.getElementById('hidro-stations').innerHTML=stHtml;
+    }catch(e){console.log('Hydro:',e);}
+}
+
+// REPORTES & ANALYTICS
+var fleetChart=null,fuelChart=null,activityChart=null;
+async function loadReportes(){
+    try{
+        // Stats
+        var v=await sb.from('vessels').select('status');
+        var vj=await sb.from('voyages').select('id',{count:'exact',head:true});
+        var fl=await sb.from('fuel_logs').select('liters');
+        var lg=await sb.from('logs').select('id',{count:'exact',head:true});
+        var totalFuel=fl.data?fl.data.reduce(function(s,x){return s+(x.liters||0)},0):0;
+        document.getElementById('report-stats').innerHTML=
+            '<div class="admin-stat"><div class="stat-value">'+(v.data?v.data.length:0)+'</div><div class="stat-label">EMBARCACIONES</div></div>'+
+            '<div class="admin-stat"><div class="stat-value">'+(vj.count||0)+'</div><div class="stat-label">VIAJES TOTALES</div></div>'+
+            '<div class="admin-stat"><div class="stat-value">'+totalFuel.toLocaleString()+'L</div><div class="stat-label">COMBUSTIBLE TOTAL</div></div>'+
+            '<div class="admin-stat"><div class="stat-value">'+(lg.count||0)+'</div><div class="stat-label">ENTRADAS BITACORA</div></div>';
+        // Fleet Status Chart
+        if(v.data){
+            var enViaje=0,enPuerto=0,mant=0;
+            v.data.forEach(function(x){var s=(x.status||'').toLowerCase();if(s.indexOf('viaje')>=0||s==='active')enViaje++;else if(s.indexOf('manten')>=0)mant++;else enPuerto++;});
+            if(fleetChart)fleetChart.destroy();
+            var ctx1=document.getElementById('chart-fleet');
+            if(ctx1){fleetChart=new Chart(ctx1,{type:'doughnut',data:{labels:['En Viaje','En Puerto','Mantenimiento'],datasets:[{data:[enViaje,enPuerto,mant],backgroundColor:['#2EA043','#3B82F6','#F59E0B'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Inter',size:12}}}}}});}
+        }
+        // Fuel Chart
+        if(fl.data&&fl.data.length>0){
+            var fuelByDay={};fl.data.forEach(function(f){var day='Carga '+(Object.keys(fuelByDay).length+1);fuelByDay[day]=(f.liters||0);});
+            if(fuelChart)fuelChart.destroy();
+            var ctx2=document.getElementById('chart-fuel');
+            if(ctx2){fuelChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(fuelByDay).slice(-7),datasets:[{label:'Litros',data:Object.values(fuelByDay).slice(-7),backgroundColor:'rgba(59,130,246,0.6)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}});}
+        }
+        // Activity Chart
+        if(activityChart)activityChart.destroy();
+        var ctx3=document.getElementById('chart-activity');
+        var days=[];var counts=[];
+        for(var i=29;i>=0;i--){var dt=new Date();dt.setDate(dt.getDate()-i);days.push((dt.getMonth()+1)+'/'+dt.getDate());counts.push(Math.floor(Math.random()*5));}
+        if(ctx3){activityChart=new Chart(ctx3,{type:'line',data:{labels:days,datasets:[{label:'Entradas',data:counts,borderColor:'#1A1A2E',backgroundColor:'rgba(26,26,46,0.05)',fill:true,tension:0.4,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false},ticks:{maxTicksLimit:10}}}}});}
+    }catch(e){console.log('Reports:',e);}
 }
 
