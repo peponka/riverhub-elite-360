@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RiverHub Elite 360 - Tripulación y Safety (Fluvia)</title>
+  <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
+  <link rel="stylesheet" href="./css/modules/admin-tripulacion-fluvia.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-water"></i> Fluvia <span>v4.2</span>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-title">Principal</div>
+      <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Panel de Control <span class="badge">1</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Mapa de Flota <span class="badge">2</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> Copiloto IA <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Operativa</div>
+      <a href="admin-convoys-fluvia.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Armador de Convoy</a>
+      <a href="admin-viajes-fluvia.html" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
+      <a href="admin-bitacora-fluvia.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+      <a href="admin-comunicaciones-fluvia.html" class="nav-item"><i class="fa-regular fa-comment-dots"></i> Comunicaciones</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Gestión</div>
+      <a href="admin-flota-fluvia.html" class="nav-item"><i class="fa-solid fa-ship"></i> Flota (Activos)</a>
+      <a href="#" class="nav-item active"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Combustible</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimiento</a>
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info">
+        <span class="user-name">Pepe Orué</span>
+        <span class="user-role">SUPERADMIN - ASU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area" id="view-tripulacion">
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar tripulante, cargo o documento...">
+      </div>
+      <div class="topbar-right">
+        <div class="settings">
+          <i class="fa-solid fa-circle" style="color:var(--status-warn); font-size:8px;"></i> AVISOS MÉDICOS PENDIENTES
+        </div>
+        <div>CREW · V2.0</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content tripulacion-container-fluvia">
+      
+      <div class="header-section" style="margin-bottom: 24px;">
+        <div class="greeting">
+          <p>RECURSOS HUMANOS</p>
+          <h1>Tripulación & Safety</h1>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">GESTIÓN DE ROL · APTITUDES MÉDICAS · RELEVOS</p>
+        </div>
+        <div class="header-actions">
+           <button class="btn-outline"><i class="fa-solid fa-file-export"></i> Nómina</button>
+           <button class="btn-primary" id="btn-new-crew"><i class="fa-solid fa-plus"></i> Ingresar Personal</button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-row-fluvia">
+          <select class="input-filter-light">
+              <option value="">TODOS LOS ESTADOS</option>
+              <option value="active">OPERATIVO</option>
+              <option value="leave">FRANCO</option>
+              <option value="medical">MÉDICO</option>
+          </select>
+          <select class="input-filter-light" id="crew-v2-vessel">
+              <option value="">TODA LA FLOTA</option>
+              <!-- Populated by JS theoretically -->
+          </select>
+      </div>
+
+      <!-- Grid -->
+      <div class="crew-grid-fluvia" id="crew-grid-container">
+          <!-- Injected by tripulacion-fluvia.js -->
+      </div>
+      
+    </div>
+  </div>
+
+  <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    // Empty dummy so error doesn't pop before our pure Fluvia wrapper handles it.
+  </script>
+  <script>
+    window.RiverToast = {
+      success: (msg) => alert(`ÉXITO: ${msg}`),
+      error: (msg) => alert(`ERROR: ${msg}`),
+      warning: (msg) => alert(`ATENCIÓN: ${msg}`),
+      info: (msg) => alert(`ACCIÓN: ${msg}`)
+    };
+  </script>
+
+  <script src="./js/modules/tripulacion-fluvia.js"></script>
+  <script>
+     document.addEventListener('DOMContentLoaded', () => {
+         if(window.CrewModule) window.CrewModule.init();
+     });
+  </script>
+</body>
+</html>

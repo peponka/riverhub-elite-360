@@ -1,46 +1,45 @@
-/* css/modules/share.css */
+/* ============================================
+   SHARE MODULE — FLUVIA DESIGN SYSTEM
+   ============================================ */
 
 /* Share Button in Header */
 .btn-share-trigger {
-    background: rgba(0, 229, 255, 0.1);
-    border: 1px solid #00e5ff;
-    color: #00e5ff;
+    background: transparent;
+    border: 0.5px solid var(--separator, #E5E5E5);
+    color: var(--text-secondary, #6B6B6B);
     width: 35px;
     height: 35px;
-    border-radius: 50%;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    margin-right: 15px;
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    transition: all 0.2s;
+    margin-right: 10px;
 }
 
 .btn-share-trigger:hover {
-    background: #00e5ff;
-    color: #000;
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
-    transform: scale(1.1);
+    background: var(--text-primary, #1A1A1A);
+    color: #FFFFFF;
+    border-color: var(--text-primary, #1A1A1A);
+    box-shadow: none;
+    transform: none;
 }
 
 /* Modal Overlay */
 .share-modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(15, 23, 42, 0.9);
-    /* Dark Navy Backdrop */
-    backdrop-filter: blur(8px);
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
     z-index: 20000;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
 }
 
 .share-modal-overlay.active {
@@ -50,17 +49,16 @@
 
 /* Modal Card */
 .share-modal {
-    background: rgba(30, 41, 59, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    border-radius: 24px;
-    padding: 30px;
+    background: #FFFFFF;
+    border: 0.5px solid var(--separator, #E5E5E5);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border-radius: var(--radius, 14px);
+    padding: 28px;
     width: 100%;
-    max-width: 500px;
+    max-width: 460px;
     text-align: center;
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
+    transform: translateY(10px);
+    transition: transform 0.2s ease;
     position: relative;
     overflow: hidden;
 }
@@ -69,203 +67,169 @@
     transform: translateY(0);
 }
 
-/* Modal Decoration */
+/* Modal Top Accent */
 .share-modal::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #00e5ff, #7000ff);
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--text-primary, #1A1A1A);
 }
 
 /* Header */
 .share-title {
-    font-size: 1.5rem;
-    color: #fff;
-    margin-bottom: 5px;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--text-primary, #1A1A1A);
+    margin-bottom: 4px;
+    font-family: var(--font-serif, 'Newsreader', Georgia, serif);
+    font-weight: 600;
 }
 
 .share-subtitle {
-    color: #94a3b8;
-    font-size: 0.9rem;
-    margin-bottom: 30px;
+    color: var(--text-secondary, #6B6B6B);
+    font-size: 0.8rem;
+    margin-bottom: 24px;
 }
 
 /* Grid of Actions */
 .share-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 25px;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
 .share-option {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 20px 10px;
+    background: var(--bg-secondary, #FAFAFA);
+    border: 0.5px solid var(--separator, #E5E5E5);
+    border-radius: 10px;
+    padding: 18px 10px;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .share-option:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+    background: var(--surface-low, #F5F5F5);
+    border-color: var(--text-primary, #1A1A1A);
+    transform: none;
 }
 
 .share-option.premium-option {
-    border-color: rgba(0, 229, 255, 0.3);
-    background: rgba(0, 229, 255, 0.05);
+    border-color: var(--text-primary, #1A1A1A);
+    background: #FFFFFF;
 }
 
 .share-option.premium-option:hover {
-    background: rgba(0, 229, 255, 0.15);
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    background: var(--surface-low, #F5F5F5);
+    box-shadow: none;
 }
 
 .option-icon {
-    font-size: 1.8rem;
-    color: #cbd5e1;
+    font-size: 1.5rem;
+    color: var(--text-secondary, #6B6B6B);
 }
 
 .premium-option .option-icon {
-    color: #00e5ff;
+    color: var(--text-primary, #1A1A1A);
 }
 
 .option-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: #e2e8f0;
+    color: var(--text-primary, #1A1A1A);
 }
 
 /* Link Input */
 .share-link-container {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 10px;
-    border-radius: 12px;
+    background: var(--bg-secondary, #FAFAFA);
+    padding: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 8px;
+    margin-bottom: 16px;
+    border: 0.5px solid var(--separator, #E5E5E5);
 }
 
 .share-link-input {
     background: transparent;
     border: none;
-    color: #64748b;
+    color: var(--text-secondary, #6B6B6B);
     flex: 1;
-    font-family: monospace;
-    font-size: 0.9rem;
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    font-size: 0.8rem;
     outline: none;
 }
 
 .btn-copy {
-    background: #334155;
-    color: #fff;
+    background: var(--text-primary, #1A1A1A);
+    color: #FFFFFF;
     border: none;
-    padding: 5px 12px;
+    padding: 6px 12px;
     border-radius: 6px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     cursor: pointer;
     font-weight: 600;
+    transition: opacity 0.2s;
 }
 
-.btn-copy:hover {
-    background: #475569;
-}
+.btn-copy:hover { opacity: 0.85; }
 
 /* AI Visualizer */
 .ai-visualizer {
     display: none;
-    /* Hidden by default */
-    margin-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 20px;
+    margin-top: 16px;
+    border-top: 0.5px solid var(--separator, #E5E5E5);
+    padding-top: 16px;
 }
 
 .ai-wave {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4px;
-    height: 40px;
-    margin-bottom: 15px;
+    gap: 3px;
+    height: 30px;
+    margin-bottom: 12px;
 }
 
 .wave-bar {
-    width: 4px;
-    background: #00e5ff;
+    width: 3px;
+    background: var(--text-primary, #1A1A1A);
     border-radius: 2px;
     animation: wave 1s infinite ease-in-out;
 }
 
-.wave-bar:nth-child(1) {
-    height: 10px;
-    animation-delay: 0.1s;
-}
-
-.wave-bar:nth-child(2) {
-    height: 20px;
-    animation-delay: 0.2s;
-}
-
-.wave-bar:nth-child(3) {
-    height: 30px;
-    animation-delay: 0.3s;
-}
-
-.wave-bar:nth-child(4) {
-    height: 20px;
-    animation-delay: 0.4s;
-}
-
-.wave-bar:nth-child(5) {
-    height: 10px;
-    animation-delay: 0.5s;
-}
+.wave-bar:nth-child(1) { height: 8px;  animation-delay: 0.1s; }
+.wave-bar:nth-child(2) { height: 16px; animation-delay: 0.2s; }
+.wave-bar:nth-child(3) { height: 24px; animation-delay: 0.3s; }
+.wave-bar:nth-child(4) { height: 16px; animation-delay: 0.4s; }
+.wave-bar:nth-child(5) { height: 8px;  animation-delay: 0.5s; }
 
 @keyframes wave {
-
-    0%,
-    100% {
-        transform: scaleY(1);
-        opacity: 0.5;
-    }
-
-    50% {
-        transform: scaleY(2);
-        opacity: 1;
-        background: #fff;
-    }
+    0%, 100% { transform: scaleY(1); opacity: 0.4; }
+    50% { transform: scaleY(1.8); opacity: 1; background: var(--text-primary, #1A1A1A); }
 }
 
 .ai-text {
-    color: #00e5ff;
-    font-size: 0.9rem;
-    font-family: monospace;
+    color: var(--text-secondary, #6B6B6B);
+    font-size: 0.8rem;
+    font-family: var(--font-sans, 'Inter', sans-serif);
 }
 
 .close-modal {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    color: #64748b;
+    top: 16px; right: 16px;
+    color: var(--text-secondary, #6B6B6B);
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: color 0.2s;
+    background: none;
+    border: none;
 }
 
-.close-modal:hover {
-    color: #fff;
-}
+.close-modal:hover { color: var(--text-primary, #1A1A1A); }

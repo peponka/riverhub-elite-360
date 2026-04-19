@@ -242,7 +242,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                                   image: FileImage(File(_attachedImagePath!)),
                                   fit: BoxFit.cover,
                                   colorFilter: ColorFilter.mode(
-                                    material.Colors.black.withValues(alpha: 0.3),
+                                    AppColors.textPrimary.withValues(alpha: 0.3),
                                     BlendMode.darken,
                                   ),
                                 )
@@ -261,7 +261,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                               Text(
                                 _attachedImagePath != null ? 'Foto Adjunta' : 'Presionar para Adjuntar Imagen',
                                 style: TextStyle(
-                                  color: _attachedImagePath != null ? material.Colors.white : AppColors.textSecondary,
+                                  color: _attachedImagePath != null ? AppColors.textOnAccent : AppColors.textSecondary,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -390,7 +390,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                         };
 
                         if (uploadedImageUrl != null) {
-                           payload['attachments'] = {'image_url': uploadedImageUrl};
+                           payload['photo_url'] = uploadedImageUrl;
                         }
 
                         try {

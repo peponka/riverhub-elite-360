@@ -155,7 +155,7 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
           child: Text(
             label,
             style: TextStyle(
-              color: sel ? material.Colors.black : material.Colors.white,
+              color: sel ? AppColors.textPrimary : AppColors.textOnAccent,
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),

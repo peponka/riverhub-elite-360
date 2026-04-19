@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RiverHub Elite 360 - Comunicaciones (Fluvia)</title>
+  <!-- Base Fluvia Styles -->
+  <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
+  <!-- Comms Styles -->
+  <link rel="stylesheet" href="./css/modules/admin-comunicaciones-fluvia.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-water"></i> Fluvia <span>v4.2</span>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-title">Principal</div>
+      <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Panel de Control <span class="badge">1</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Mapa de Flota <span class="badge">2</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> Copiloto IA <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Operativa</div>
+      <a href="admin-convoys-fluvia.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Armador de Convoy</a>
+      <a href="admin-viajes-fluvia.html" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
+      <a href="admin-bitacora-fluvia.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+      <a href="#" class="nav-item active"><i class="fa-regular fa-comment-dots"></i> Comunicaciones</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Gestión</div>
+      <a href="#" class="nav-item"><i class="fa-solid fa-ship"></i> Flota (Activos)</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Combustible</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimiento</a>
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info">
+        <span class="user-name">Pepe Orué</span>
+        <span class="user-role">SUPERADMIN - ASU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area" id="view-comunicaciones">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar tripulante, mensaje o canal...">
+      </div>
+      <div class="topbar-right">
+         <div class="settings" style="color: var(--status-ok);">
+          <i class="fa-solid fa-wave-square"></i> UHF/VHF ENCRYPTED
+        </div>
+        <div>RADIO · V2.0</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <div class="header-section" style="margin-bottom: 24px;">
+        <div class="greeting">
+          <p>CONSOLA DE RADIO</p>
+          <h1>Comunicaciones (VHF/SAT)</h1>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">SISTEMA MULTICANAL · ASISTENTE COPILOTO ACTIVO</p>
+        </div>
+      </div>
+
+      <div class="comms-container-fluvia">
+        <!-- MATRIZ DE CANALES (LEFT) -->
+        <div class="channels-panel">
+          <div class="channels-header">
+            <span style="font-family: var(--font-data); font-weight: 700; font-size: 0.8rem; color: var(--text-sec);">FRECUENCIAS</span>
+          </div>
+          <div class="channels-list">
+            
+            <div class="channel-card active">
+                <div class="ch-info">
+                    <span class="ch-number">CH-16</span>
+                    <span class="ch-desc">Llamada y Socorro</span>
+                </div>
+                <div class="ch-status"></div>
+            </div>
+
+            <div class="channel-card">
+                <div class="ch-info">
+                    <span class="ch-number">CH-72</span>
+                    <span class="ch-desc">Ship to Ship</span>
+                </div>
+                <div class="ch-status"></div>
+            </div>
+
+            <div class="channel-card">
+                <div class="ch-info">
+                    <span class="ch-number">CH-13</span>
+                    <span class="ch-desc">Navegación</span>
+                </div>
+                <div class="ch-status"></div>
+            </div>
+            
+            <div class="channel-card">
+                <div class="ch-info">
+                    <span class="ch-number">PORT-1</span>
+                    <span class="ch-desc">Puerto Villeta</span>
+                </div>
+                <div class="ch-status"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CHAT AREA (RIGHT) -->
+        <div class="chat-panel">
+          
+          <div class="chat-header">
+             <h2 id="active-ch-title">CONSOLA DE DESPACHO CH-16</h2>
+             <div style="font-family: var(--font-data); font-size: 0.7rem; color: var(--status-ok); font-weight:600; display:flex; align-items:center; gap:6px;">
+               <i class="fa-solid fa-microphone"></i> RX/TX ACTIVO
+             </div>
+          </div>
+
+          <div id="comm-chat-area">
+              <!-- Mensajes injectados por comunicaciones.js -->
+          </div>
+
+          <div class="chat-input-area">
+             <input type="text" id="comm-input" placeholder="Transmita mensaje en frecuencia abierta..." autocomplete="off">
+             <button id="btn-ptt" title="Push To Talk (ENTER)"><i class="fa-solid fa-microphone-lines"></i></button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+  <!-- LOAD SCRIPTS (Mock DB for Demo) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    if (!window.sb) {
+      let commsDB = [
+          { channel: 'CH-16', user_id: '1', sender: 'CAPITAN TB-101', content: 'Central, aquí remolcador 101 informando demoras por visibilidad baja. ETA ajustado.', type: 'VHF', created_at: new Date(Date.now() - 600000).toISOString() },
+          { channel: 'CH-16', user_id: 'me', sender: 'DESPACHO CENTRAL', content: 'Copiado 101. Tomamos nota del ETA. Reduzca velocidad y reporte cada hora.', type: 'VHF', created_at: new Date(Date.now() - 500000).toISOString() },
+          { channel: 'CH-72', user_id: '2', sender: 'HERCULES-P', content: 'Solicito autorización de paso. Conboy subiendo, paso estrecho km 40.', type: 'VHF', created_at: new Date(Date.now() - 300000).toISOString() }
+      ];
+
+      window.sb = {
+        from: (table) => {
+            return {
+                select: () => ({
+                    eq: (col, val) => ({
+                        order: () => ({
+                            limit: async () => {
+                                let filtered = commsDB.filter(m => m[col] === val);
+                                return { data: filtered, error: null };
+                            }
+                        })
+                    })
+                }),
+                insert: async (arr) => {
+                     let newMsg = { ...arr[0], created_at: new Date().toISOString() };
+                     commsDB.push(newMsg);
+                     if(window._mockSub) window._mockSub(newMsg);
+                     return { data: [newMsg], error: null };
+                }
+            }
+        },
+        insertMine: async (table, data) => {
+             let newMsg = { ...data, created_at: new Date().toISOString() };
+             commsDB.push(newMsg);
+             if(window._mockSub) window._mockSub(newMsg);
+             return { data: [newMsg], error: null };
+         },
+         channel: (ch) => ({
+             on: (a, b, callback) => {
+                 window._mockSub = (msg) => {
+                     if(msg.channel === window.CommsModule.activeChannel) {
+                          callback({ new: msg });
+                     } else {
+                          // Allow callback if we didn't filter by active channel
+                          callback({new: msg}); 
+                     }
+                 };
+                 return { subscribe: () => {} };
+             }
+         }),
+         removeChannel: () => {}
+      };
+
+      // Mock Auth for current user so "isMe" works
+      window.AuthModule = {
+          getCurrentUser: () => ({ id: 'me', email: 'pepeorue@riverhub.com' })
+      };
+    }
+  </script>
+
+  <script src="./js/modules/comunicaciones.js"></script>
+  <script>
+     document.addEventListener('DOMContentLoaded', () => {
+         if(window.CommsModule) window.CommsModule.init();
+     });
+  </script>
+</body>
+</html>

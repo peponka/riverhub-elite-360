@@ -294,7 +294,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                 child: CupertinoTextField(
                   controller: _nameController,
                   placeholder: 'Nombre del Convoy',
-                  style: const TextStyle(color: CupertinoColors.white),
+                  style: const TextStyle(color: AppColors.textPrimary),
                   placeholderStyle: const TextStyle(color: AppColors.textSecondary),
                   padding: const EdgeInsets.all(14),
                   prefix: const Padding(
@@ -530,7 +530,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                                               asset['name'],
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
-                                                color: CupertinoColors.white,
+                                                color: AppColors.textOnAccent,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 11,
                                               ),
@@ -601,7 +601,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
             style: GoogleFonts.inter(
               fontSize: 9,
               fontWeight: FontWeight.bold,
-              color: CupertinoColors.white,
+              color: AppColors.textPrimary,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -683,7 +683,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                           style: GoogleFonts.inter(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
-                            color: CupertinoColors.white,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         Text(

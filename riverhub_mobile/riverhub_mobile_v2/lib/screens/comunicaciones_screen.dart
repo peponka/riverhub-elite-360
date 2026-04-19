@@ -137,8 +137,8 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                           ch,
                           style: TextStyle(
                             color: sel
-                                ? material.Colors.black
-                                : material.Colors.white,
+                                ? AppColors.textPrimary
+                                : AppColors.textOnAccent,
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                           ),
@@ -201,7 +201,7 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                       ),
                       child: const Icon(
                         CupertinoIcons.paperplane_fill,
-                        color: material.Colors.black,
+                        color: AppColors.textPrimary,
                         size: 20,
                       ),
                     ),

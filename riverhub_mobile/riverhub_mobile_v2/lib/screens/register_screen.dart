@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../theme/app_colors.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -24,7 +25,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _showErrorDialog('Por favor, completa todos los campos.');
       return;
     }
-
     if (password != confirm) {
       _showErrorDialog('Las contraseñas no coinciden.');
       return;
@@ -32,57 +32,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     setState(() => _isLoading = true);
     try {
-      final supabase = Supabase.instance.client;
-      await supabase.auth.signUp(email: email, password: password);
-
-      // Muestra éxito y regresa al Login
+      await Supabase.instance.client.auth.signUp(email: email, password: password);
       if (mounted) {
         showCupertinoDialog(
           context: context,
-          builder: (context) => CupertinoAlertDialog(
+          builder: (ctx) => CupertinoAlertDialog(
             title: const Text('Registro Exitoso'),
-            content: const Text(
-              'Tu cuenta ha sido creada. Verifica tu correo electrónico o inicia sesión para continuar.',
-            ),
+            content: const Text('Tu cuenta ha sido creada. Verifica tu correo electrónico.'),
             actions: [
-              CupertinoDialogAction(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Cierra Modal
-                  Navigator.of(context).pop(); // Vuelve al login
-                },
-              ),
+              CupertinoDialogAction(child: const Text('OK'), onPressed: () { Navigator.pop(ctx); Navigator.pop(ctx); }),
             ],
           ),
         );
       }
-    } on AuthException catch (error) {
-      if (mounted) {
-        _showErrorDialog(error.message);
-      }
+    } on AuthException catch (e) {
+      if (mounted) _showErrorDialog(e.message);
     } catch (e) {
-      if (mounted) {
-        _showErrorDialog('Error al registrar usuario. Intente nuevamente.');
-      }
+      if (mounted) _showErrorDialog('Error al registrar usuario.');
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   void _showErrorDialog(String message) {
     showCupertinoDialog(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: const Text('Error de registro'),
-        content: Text(message),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('Error'), content: Text(message),
+        actions: [CupertinoDialogAction(child: const Text('OK'), onPressed: () => Navigator.pop(ctx))],
+      ),
+    );
+  }
+
+  Widget _field(TextEditingController ctrl, String placeholder, IconData icon, {bool obscure = false}) {
+    return CupertinoTextField(
+      controller: ctrl,
+      placeholder: placeholder,
+      obscureText: obscure,
+      keyboardType: obscure ? TextInputType.visiblePassword : TextInputType.emailAddress,
+      padding: const EdgeInsets.all(16),
+      placeholderStyle: GoogleFonts.inter(color: AppColors.textTertiary, fontSize: 14),
+      style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
+      prefix: Padding(
+        padding: const EdgeInsets.only(left: 14),
+        child: Icon(icon, color: AppColors.textSecondary, size: 18),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.separator, width: 0.5),
       ),
     );
   }
@@ -90,148 +88,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Nuevo Usuario'),
+      backgroundColor: AppColors.backgroundPrimary,
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        middle: Text('Registro', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         previousPageTitle: 'Volver',
       ),
-      backgroundColor: CupertinoColors.systemGroupedBackground,
       child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Icon
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: CupertinoColors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: CupertinoColors.systemGrey.withValues(
-                          alpha: 0.2,
-                        ),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    CupertinoIcons.person_add_solid,
-                    size: 48,
-                    color: CupertinoColors.activeBlue,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Crea tu cuenta',
-                  style: GoogleFonts.inter(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: CupertinoColors.black,
-                  ),
-                ),
-                const SizedBox(height: 48),
-
-                // Form
+                // Logo
+                Text('RiverHub', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                Text('Meridian.', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary)),
+                const SizedBox(height: 8),
+                Text('CREAR CUENTA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                const SizedBox(height: 40),
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: CupertinoColors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: CupertinoColors.systemGrey.withValues(
-                          alpha: 0.1,
-                        ),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+                    color: AppColors.backgroundSecondary,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.separator, width: 0.5),
                   ),
-                  child: Column(
-                    children: [
-                      CupertinoTextField(
-                        controller: _emailController,
-                        placeholder: 'Correo electrónico',
-                        keyboardType: TextInputType.emailAddress,
-                        padding: const EdgeInsets.all(16),
-                        prefix: const Padding(
-                          padding: EdgeInsets.only(left: 12.0),
-                          child: Icon(
-                            CupertinoIcons.mail,
-                            color: CupertinoColors.systemGrey2,
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: CupertinoColors.systemGroupedBackground,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                  child: Column(children: [
+                    _field(_emailController, 'Correo electrónico', CupertinoIcons.mail),
+                    const SizedBox(height: 14),
+                    _field(_passwordController, 'Contraseña', CupertinoIcons.lock, obscure: true),
+                    const SizedBox(height: 14),
+                    _field(_confirmController, 'Confirmar Contraseña', CupertinoIcons.lock_shield, obscure: true),
+                    const SizedBox(height: 28),
+                    SizedBox(
+                      width: double.infinity,
+                      child: CupertinoButton(
+                        color: AppColors.textPrimary,
+                        borderRadius: BorderRadius.circular(12),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        onPressed: _isLoading ? null : _signUp,
+                        child: _isLoading
+                            ? const CupertinoActivityIndicator(color: AppColors.textOnAccent)
+                            : Text('Registrarme', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.textOnAccent)),
                       ),
-                      const SizedBox(height: 16),
-                      CupertinoTextField(
-                        controller: _passwordController,
-                        placeholder: 'Contraseña',
-                        obscureText: true,
-                        padding: const EdgeInsets.all(16),
-                        prefix: const Padding(
-                          padding: EdgeInsets.only(left: 12.0),
-                          child: Icon(
-                            CupertinoIcons.lock,
-                            color: CupertinoColors.systemGrey2,
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: CupertinoColors.systemGroupedBackground,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      CupertinoTextField(
-                        controller: _confirmController,
-                        placeholder: 'Confirmar Contraseña',
-                        obscureText: true,
-                        padding: const EdgeInsets.all(16),
-                        prefix: const Padding(
-                          padding: EdgeInsets.only(left: 12.0),
-                          child: Icon(
-                            CupertinoIcons.lock_shield,
-                            color: CupertinoColors.systemGrey2,
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: CupertinoColors.systemGroupedBackground,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Register Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: CupertinoButton(
-                          color: CupertinoColors.activeBlue,
-                          borderRadius: BorderRadius.circular(16),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          onPressed: _isLoading ? null : _signUp,
-                          child: _isLoading
-                              ? const CupertinoActivityIndicator(
-                                  color: CupertinoColors.white,
-                                )
-                              : Text(
-                                  'Registrarme',
-                                  style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                    color: CupertinoColors.white,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ]),
                 ),
               ],
             ),

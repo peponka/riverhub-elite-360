@@ -1,29 +1,25 @@
-/* Leaflet Popup Overrides for Dark Mode */
+/* Leaflet Popup Overrides — Fluvia */
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
-    background: #0f172a !important;
-    /* var(--bg-card) fallback */
-    color: #f1f5f9 !important;
-    /* var(--text-main) */
-    border: 1px solid #334155;
-    /* var(--border) */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    border-radius: 6px;
+    background: #FFFFFF !important;
+    color: var(--text-primary, #1A1A1A) !important;
+    border: 0.5px solid var(--separator, #E5E5E5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
 }
 
 .leaflet-popup-content {
     margin: 12px;
     line-height: 1.5;
+    font-family: var(--font-sans, 'Inter', sans-serif);
 }
 
 .leaflet-container a.leaflet-popup-close-button {
-    color: #94a3b8 !important;
-    /* var(--text-muted) */
+    color: var(--text-secondary, #6B6B6B) !important;
     padding: 8px;
     font-size: 16px;
 }
 
 .leaflet-container a.leaflet-popup-close-button:hover {
-    color: #00e5ff !important;
-    /* var(--cyan) */
+    color: var(--text-primary, #1A1A1A) !important;
 }
