@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'dart:async';
 import '../theme/app_colors.dart';
 import '../main.dart';
+import '../services/gps_tracker_service.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -21,6 +22,8 @@ class _MapScreenState extends State<MapScreen> {
   List<Map<String, dynamic>> _fleetAssets = [];
   Map<String, dynamic> _aisShips = {};
   Timer? _aisTimer;
+  final GpsTrackerService _gpsTracker = GpsTrackerService();
+  bool _tracking = false;
 
   @override
   void initState() {
@@ -75,10 +78,94 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  // GPS Tracking toggle
+  void _toggleTracking() async {
+    if (_tracking) {
+      _gpsTracker.stopTracking();
+      setState(() => _tracking = false);
+      return;
+    }
+
+    // Fetch vessels and show selector
+    final vessels = await GpsTrackerService.getMyVessels();
+    if (vessels.isEmpty) {
+      if (mounted) {
+        showCupertinoDialog(
+          context: context,
+          builder: (_) => CupertinoAlertDialog(
+            title: const Text('Sin embarcaciones'),
+            content: const Text('Agrega una embarcación primero desde la web.'),
+            actions: [CupertinoDialogAction(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
+          ),
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+    showCupertinoModalPopup(
+      context: context,
+      builder: (ctx) => Container(
+        height: 320,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundSecondary,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 16),
+            Text('Seleccionar Embarcación', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+            Text('GPS EN VIVO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: vessels.length,
+                itemBuilder: (_, i) {
+                  final v = vessels[i];
+                  return GestureDetector(
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      final ok = await _gpsTracker.startTracking(v['id']);
+                      if (ok && mounted) setState(() => _tracking = true);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.separator, width: 0.5),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(children: [
+                        Icon(CupertinoIcons.helm, color: AppColors.textPrimary, size: 20),
+                        const SizedBox(width: 12),
+                        Expanded(child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(v['name'] ?? 'Sin nombre', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                            Text('${v['type'] ?? 'Embarcación'} • ${v['status'] ?? 'Operativo'}', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+                          ],
+                        )),
+                        Icon(CupertinoIcons.chevron_right, color: AppColors.textSecondary, size: 16),
+                      ]),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _aisTimer?.cancel();
     _vesselSubscription?.cancel();
+    _gpsTracker.stopTracking();
     super.dispose();
   }
 
@@ -248,6 +335,54 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
+
+          // GPS Tracking button
+          Positioned(
+            bottom: 24, right: 72,
+            child: CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: _toggleTracking,
+              child: Container(
+                width: 44, height: 44,
+                decoration: BoxDecoration(
+                  color: _tracking ? AppColors.success : AppColors.backgroundSecondary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: _tracking ? AppColors.success : AppColors.separator, width: 0.5),
+                ),
+                child: Icon(
+                  _tracking ? CupertinoIcons.radiowaves_right : CupertinoIcons.antenna_radiowaves_left_right,
+                  color: _tracking ? CupertinoColors.white : AppColors.textPrimary,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+
+          // Tracking status pill
+          if (_tracking)
+            Positioned(
+              top: 8, left: 16, right: 16,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.success.withValues(alpha: 0.95),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(children: [
+                  const Icon(CupertinoIcons.antenna_radiowaves_left_right, color: CupertinoColors.white, size: 16),
+                  const SizedBox(width: 8),
+                  Text(
+                    'GPS ACTIVO — Enviando cada 15s',
+                    style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.white),
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: _toggleTracking,
+                    child: Text('DETENER', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: CupertinoColors.white)),
+                  ),
+                ]),
+              ),
+            ),
         ],
       ),
     );
