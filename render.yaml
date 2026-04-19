@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: riverhub-elite
+    runtime: node
+    buildCommand: npm install
+    startCommand: node app.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: SUPABASE_URL
+        value: https://nfybnnpdrvyxucgpqmmo.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: REDACTED_SUPABASE_ANON_KEY
+      - key: AIS_API_KEY
+        value: REDACTED_AIS_KEY_1

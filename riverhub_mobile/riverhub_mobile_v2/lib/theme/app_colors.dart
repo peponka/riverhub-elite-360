@@ -1,88 +1,78 @@
 import 'package:flutter/cupertino.dart';
 
-/// RiverHub — Paleta de colores Cupertino (Light Mode)
+/// RiverHub Meridian — Paleta "Fluvia" (Editorial Light Mode)
 ///
-/// Todos los colores del proyecto deben referenciarse desde aquí.
-/// Nunca usar hex hardcodeados en los widgets.
+/// Diseño editorial No-Line: separación por capas tonales,
+/// tipografía dual Newsreader (títulos) + Inter (datos).
 abstract class AppColors {
-  // ─── Fondos ────────────────────────────────────────────────────────────────
-  /// Fondo principal de la app (equivalente a systemGroupedBackground de iOS)
-  static const Color backgroundPrimary = Color(0xFFF2F2F7);
+  // ─── Fondos (Capas Tonales) ─────────────────────────────────────────────
+  /// Fondo principal de la app (superficie base)
+  static const Color backgroundPrimary = Color(0xFFF8F9FA);
 
-  /// Fondo de tarjetas / superficies secundarias
+  /// Fondo de tarjetas / superficies elevadas
   static const Color backgroundSecondary = Color(0xFFFFFFFF);
 
-  /// Inicio de gradiente sutil (azul muy claro)
-  static const Color gradientStart = Color(0xFFEBF4FF);
+  /// Surface container low (sidebar, áreas secundarias)
+  static const Color surfaceContainerLow = Color(0xFFF1F5F9);
 
-  /// Fin de gradiente sutil (blanco)
+  /// Gradiente sutil
+  static const Color gradientStart = Color(0xFFF8F9FA);
   static const Color gradientEnd = Color(0xFFFFFFFF);
 
   // ─── Texto ─────────────────────────────────────────────────────────────────
-  /// Texto principal (label primario de iOS — negro en light)
-  static const Color textPrimary = Color(0xFF000000);
+  /// Texto principal (casi negro editorial)
+  static const Color textPrimary = Color(0xFF1A1A2E);
 
-  /// Texto secundario (label secundario de iOS — gris medio)
-  static const Color textSecondary = Color(0xFF8E8E93);
+  /// Texto secundario (gris medio editorial)
+  static const Color textSecondary = Color(0xFF94A3B8);
 
   /// Texto terciario / placeholder
-  static const Color textTertiary = Color(0xFFAEAEB2);
+  static const Color textTertiary = Color(0xFFCBD5E1);
 
-  /// Texto sobre fondos de color / botones de acento (siempre blanco)
+  /// Texto sobre fondos de color / botones de acento
   static const Color textOnAccent = Color(0xFFFFFFFF);
 
   // ─── Separadores y bordes ──────────────────────────────────────────────────
-  /// Separador principal (líneas entre celdas, bordes de tarjeta)
-  static const Color separator = Color(0xFFC6C6C8);
+  /// Borde principal Fluvia (muy sutil)
+  static const Color separator = Color(0xFFE2E8F0);
 
-  /// Separador más claro
-  static const Color separatorLight = Color(0xFFD1D1D6);
+  /// Borde más claro
+  static const Color separatorLight = Color(0xFFF1F5F9);
 
-  /// Relleno de celdas de formulario (systemFill de iOS)
-  static const Color cellFill = Color(0xFFE5E5EA);
+  /// Relleno de celdas de formulario
+  static const Color cellFill = Color(0xFFF1F5F9);
 
   // ─── Acento principal ──────────────────────────────────────────────────────
-  /// Azul iOS — reemplaza el cyan eléctrico anterior (activeBlue)
-  static const Color accent = Color(0xFF007AFF);
+  /// Azul editorial Fluvia
+  static const Color accent = Color(0xFF3B82F6);
 
-  /// Azul iOS más claro (systemTeal / link)
-  static const Color accentTeal = Color(0xFF32ADE6);
+  /// Azul teal (links, secundario)
+  static const Color accentTeal = Color(0xFF0EA5E9);
 
-  /// Azul iOS puro (alias de accent, para gradientes / variantes)
-  static const Color blue = Color(0xFF007AFF);
+  /// Azul alias
+  static const Color blue = Color(0xFF3B82F6);
 
   // ─── Semánticos ────────────────────────────────────────────────────────────
-  /// Verde éxito (systemGreen iOS)
-  static const Color success = Color(0xFF34C759);
+  /// Verde éxito (status-ok Fluvia)
+  static const Color success = Color(0xFF2EA043);
 
-  /// Rojo error / peligro (systemRed iOS)
-  static const Color error = Color(0xFFFF3B30);
+  /// Rojo error / peligro
+  static const Color error = Color(0xFFDC2626);
 
-  /// Amarillo advertencia (systemYellow iOS)
-  static const Color warning = Color(0xFFFF9F0A);
+  /// Amarillo advertencia
+  static const Color warning = Color(0xFFF59E0B);
 
-  /// Naranja (systemOrange iOS)
-  static const Color orange = Color(0xFFFF9500);
+  /// Naranja
+  static const Color orange = Color(0xFFF97316);
 
-  /// Púrpura (systemPurple iOS)
-  static const Color purple = Color(0xFFAF52DE);
+  /// Púrpura
+  static const Color purple = Color(0xFF8B5CF6);
 
-  // ─── Grises del sistema ────────────────────────────────────────────────────
-  /// Gris 1 — systemGrey iOS
-  static const Color systemGray1 = Color(0xFF8E8E93);
-
-  /// Gris 2 — systemGrey2 iOS
-  static const Color systemGray2 = Color(0xFFAEAEB2);
-
-  /// Gris 3 — systemGrey3 iOS
-  static const Color systemGray3 = Color(0xFFC7C7CC);
-
-  /// Gris 4 — systemGrey4 iOS
-  static const Color systemGray4 = Color(0xFFD1D1D6);
-
-  /// Gris 5 — systemGrey5 iOS (fondos de input)
-  static const Color systemGray5 = Color(0xFFE5E5EA);
-
-  /// Gris 6 — systemGrey6 iOS (fondos muy claros)
-  static const Color systemGray6 = Color(0xFFF2F2F7);
+  // ─── Grises del sistema (escala Fluvia) ────────────────────────────────────
+  static const Color systemGray1 = Color(0xFF94A3B8);
+  static const Color systemGray2 = Color(0xFFCBD5E1);
+  static const Color systemGray3 = Color(0xFFE2E8F0);
+  static const Color systemGray4 = Color(0xFFF1F5F9);
+  static const Color systemGray5 = Color(0xFFF8FAFC);
+  static const Color systemGray6 = Color(0xFFF8F9FA);
 }

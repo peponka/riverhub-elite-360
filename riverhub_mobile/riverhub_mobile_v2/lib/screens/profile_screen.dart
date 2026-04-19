@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../theme/app_colors.dart';
 import 'login_screen.dart';
 import '../main.dart';
 
@@ -27,6 +28,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  String _initials(String email) {
+    final parts = email.split('@').first.split('.');
+    if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    return email.substring(0, 2).toUpperCase();
+  }
+
   Future<void> _signOut(BuildContext context) async {
     await Supabase.instance.client.auth.signOut();
     if (context.mounted) {
@@ -39,129 +46,150 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.systemGroupedBackground,
+      backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: CupertinoColors.white.withValues(alpha: 0.85),
-        border: null,
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.bars, size: 28),
-          onPressed: () {
-            rootScaffoldKey.currentState?.openDrawer();
-          },
+          child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary),
+          onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
         ),
         middle: Text(
           'Perfil',
-          style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+          style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
         ),
       ),
       child: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
           children: [
-            // User Meta Info
-            Center(
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: CupertinoColors.activeBlue.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  CupertinoIcons.person_solid,
-                  size: 50,
-                  color: CupertinoColors.activeBlue,
-                ),
+            // ─── Fluvia Title ────────────────────────
+            Text(
+              'Mi',
+              style: GoogleFonts.newsreader(
+                fontSize: 36, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1,
               ),
             ),
-            const SizedBox(height: 16),
-            Center(
-              child: Text(
-                _userEmail,
-                style: GoogleFonts.inter(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: CupertinoColors.black,
-                ),
-              ),
-            ),
-            Center(
-              child: Text(
-                'Tripulante Elite 360',
-                style: GoogleFonts.inter(
-                  fontSize: 15,
-                  color: CupertinoColors.systemGrey,
-                ),
+            Text(
+              'Perfil.',
+              style: GoogleFonts.newsreader(
+                fontSize: 36, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1,
               ),
             ),
             const SizedBox(height: 32),
 
-            // Settings Group
-            _buildSettingsGroup([
-              _buildSettingRow(
-                icon: CupertinoIcons.bell_fill,
-                iconColor: CupertinoColors.systemRed,
-                title: 'Notificaciones',
-                trailing: const CupertinoSwitch(value: true, onChanged: null),
+            // ─── User Card ──────────────────────────
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: AppColors.backgroundSecondary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.separator, width: 0.5),
               ),
-              _buildSettingRow(
-                icon: CupertinoIcons.lock_fill,
-                iconColor: CupertinoColors.systemOrange,
-                title: 'Privacidad y Seguridad',
-                trailing: const Icon(
-                  CupertinoIcons.chevron_right,
-                  color: CupertinoColors.systemGrey3,
-                ),
-              ),
-              _buildSettingRow(
-                icon: CupertinoIcons.globe,
-                iconColor: CupertinoColors.activeGreen,
-                title: 'Idioma / Región',
-                trailing: Row(
-                  children: [
-                    Text(
-                      'Español',
-                      style: GoogleFonts.inter(
-                        color: CupertinoColors.systemGrey,
+              child: Row(
+                children: [
+                  Container(
+                    width: 56, height: 56,
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Center(
+                      child: Text(
+                        _initials(_userEmail),
+                        style: GoogleFonts.inter(
+                          fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.textPrimary,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    const Icon(
-                      CupertinoIcons.chevron_right,
-                      color: CupertinoColors.systemGrey3,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _userEmail.split('@').first,
+                          style: GoogleFonts.inter(
+                            fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _userEmail,
+                          style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'SUPERADMIN',
+                          style: GoogleFonts.inter(
+                            fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.success, letterSpacing: 1,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 28),
+
+            // ─── Settings Section ───────────────────
+            Text(
+              'CONFIGURACIÓN',
+              style: GoogleFonts.inter(
+                fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            _settingsGroup([
+              _settingRow(
+                icon: CupertinoIcons.bell,
+                title: 'Notificaciones',
+                trailing: CupertinoSwitch(
+                  value: true, onChanged: (v) {},
+                  activeTrackColor: AppColors.textPrimary,
                 ),
+              ),
+              _settingRow(
+                icon: CupertinoIcons.lock,
+                title: 'Privacidad y Seguridad',
+              ),
+              _settingRow(
+                icon: CupertinoIcons.globe,
+                title: 'Idioma / Región',
+                subtitle: 'Español',
                 isLast: true,
               ),
             ]),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
 
-            // Logout Group
-            _buildSettingsGroup([
+            Text(
+              'CUENTA',
+              style: GoogleFonts.inter(
+                fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            _settingsGroup([
               CupertinoButton(
                 padding: EdgeInsets.zero,
                 onPressed: () => _signOut(context),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 16,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
                   child: Row(
                     children: [
-                      const Icon(
-                        CupertinoIcons.square_arrow_right,
-                        color: CupertinoColors.destructiveRed,
-                      ),
-                      const SizedBox(width: 16),
+                      Icon(CupertinoIcons.square_arrow_right, color: AppColors.error, size: 20),
+                      const SizedBox(width: 14),
                       Text(
                         'Cerrar Sesión',
                         style: GoogleFonts.inter(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: CupertinoColors.destructiveRed,
+                          fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.error,
                         ),
                       ),
                     ],
@@ -169,69 +197,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ]),
+
+            const SizedBox(height: 40),
+
+            Center(
+              child: Text(
+                'FLUVIA v4.2 · RIVERHUB ELITE 360',
+                style: GoogleFonts.inter(
+                  fontSize: 9, color: AppColors.textTertiary, fontWeight: FontWeight.w600, letterSpacing: 1,
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSettingsGroup(List<Widget> children) {
+  Widget _settingsGroup(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: CupertinoColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: CupertinoColors.systemGrey.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.separator, width: 0.5),
       ),
       child: Column(children: children),
     );
   }
 
-  Widget _buildSettingRow({
+  Widget _settingRow({
     required IconData icon,
-    required Color iconColor,
     required String title,
-    required Widget trailing,
+    String? subtitle,
+    Widget? trailing,
     bool isLast = false,
   }) {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 18),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: iconColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, color: CupertinoColors.white, size: 20),
-              ),
-              const SizedBox(width: 16),
+              Icon(icon, color: AppColors.textSecondary, size: 20),
+              const SizedBox(width: 14),
               Expanded(
                 child: Text(
                   title,
                   style: GoogleFonts.inter(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: CupertinoColors.black,
+                    fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary,
                   ),
                 ),
               ),
-              trailing,
+              if (subtitle != null)
+                Text(subtitle, style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
+              if (trailing != null) trailing!,
+              if (trailing == null)
+                Icon(CupertinoIcons.chevron_right, size: 14, color: AppColors.separator),
             ],
           ),
         ),
         if (!isLast)
           Padding(
-            padding: const EdgeInsets.only(left: 60),
-            child: Container(height: 1, color: CupertinoColors.systemGrey5),
+            padding: const EdgeInsets.only(left: 52),
+            child: Container(height: 0.5, color: AppColors.separator),
           ),
       ],
     );

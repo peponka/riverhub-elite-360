@@ -1,0 +1,389 @@
+/* ============================================
+   VIAJES MODULE - FLUVIA "RIVERHUB MERIDIAN" SYSTEM
+   ============================================ */
+
+.viajes-container-fluvia {
+  padding: 0;
+}
+
+/* TABS OVERRIDE FOR FLUVIA */
+.dispatch-tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.tab-link {
+  font-family: var(--font-data);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-sec);
+  padding-bottom: 12px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tab-link:hover {
+  color: var(--text-main);
+}
+
+.tab-link.active {
+  color: var(--text-main);
+  border-bottom: 2px solid var(--text-main);
+  font-weight: 700;
+}
+
+/* STATS ROW (FLUVIA STYLE) */
+.stats-dispatch-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+}
+
+.stat-dispatch-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.stat-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface-container-low);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--text-main);
+}
+
+.stat-info span {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-sec);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.stat-info h3 {
+  margin: 4px 0 0 0;
+  font-size: 1.5rem;
+  color: var(--text-main);
+  font-family: var(--font-brand);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* GRID LAYOUT */
+.trips-grid-new {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+/* ELITE TRIP CARD (FLUVIA) */
+.trip-card-pro {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.trip-card-pro:hover {
+  transform: translateY(-2px);
+  border-color: var(--text-sec);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.trip-card-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--surface-container-low);
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.vessel-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vessel-icon {
+  width: 36px;
+  height: 36px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+.vessel-meta h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.vessel-meta span {
+  color: var(--text-sec);
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-family: var(--font-data);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-data);
+}
+.status-live {
+  background: rgba(46, 160, 67, 0.1);
+  color: var(--status-ok);
+  border: 1px solid rgba(46, 160, 67, 0.2);
+}
+.status-pending {
+  background: rgba(212, 101, 42, 0.1);
+  color: var(--accent-orange);
+  border: 1px solid rgba(212, 101, 42, 0.2);
+}
+
+.trip-body {
+  padding: 20px;
+}
+
+/* Route Info */
+.trip-route {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.route-point {
+  display: flex;
+  flex-direction: column;
+}
+.route-label {
+  font-size: 0.65rem;
+  color: var(--text-sec);
+  margin-bottom: 2px;
+  font-weight: 600;
+  font-family: var(--font-data);
+}
+.route-val {
+  font-size: 1rem;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.route-arrow {
+  flex: 1;
+  position: relative;
+  height: 1px;
+  background: dashed 1px var(--border-color);
+  margin: 20px;
+  align-self: flex-start;
+}
+.route-arrow::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 100%;
+  border-top: 1px dashed var(--border-color);
+}
+.route-arrow::before {
+  content: '\f138'; /* Right caret */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  right: -5px;
+  top: -15px;
+  color: var(--text-sec);
+  font-size: 0.8rem;
+}
+
+/* Progress */
+.trip-progress {
+  margin-bottom: 20px;
+}
+.progress-track {
+  height: 4px;
+  background: var(--surface-container-low);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--text-main);
+  border-radius: 2px;
+}
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-sec);
+  font-weight: 600;
+  font-family: var(--font-data);
+}
+
+/* Meta details */
+.trip-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: #fdfdfd;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.tm-item span {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-sec);
+  margin-bottom: 4px;
+  font-family: var(--font-data);
+}
+.tm-item div {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.cargo-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.8rem;
+  font-family: var(--font-data);
+}
+
+/* Footer / Actions */
+.trip-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: var(--surface-container-low);
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+.btn-trip-action {
+  flex: 1;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0;
+  height: 36px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: var(--font-data);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-trip-action:hover {
+  background: #f1f5f9;
+  border-color: var(--text-sec);
+}
+
+.btn-trip-action.primary {
+  background: var(--text-main);
+  color: #FFFFFF;
+  border: none;
+}
+.btn-trip-action.primary:hover {
+  background: #2a2a40;
+}
+
+/* New Trip Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+.modal-content h3 {
+  margin: 0 0 20px 0;
+  font-family: var(--font-brand);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 1.5rem;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 10px;
+}
+.modal-content select, 
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: var(--font-data);
+  font-size: 0.9rem;
+}
+.modal-content label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-sec);
+  margin-bottom: 4px;
+  font-weight: 600;
+}

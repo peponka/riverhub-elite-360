@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RiverHub Elite 360 - Búnker y Combustible (Fluvia)</title>
+  <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
+  <link rel="stylesheet" href="./css/modules/admin-combustible-fluvia.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-water"></i> Fluvia <span>v4.2</span>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-title">Principal</div>
+      <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Panel de Control <span class="badge">1</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Mapa de Flota <span class="badge">2</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> Copiloto IA <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Operativa</div>
+      <a href="admin-convoys-fluvia.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Armador de Convoy</a>
+      <a href="admin-viajes-fluvia.html" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
+      <a href="admin-bitacora-fluvia.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+      <a href="admin-comunicaciones-fluvia.html" class="nav-item"><i class="fa-regular fa-comment-dots"></i> Comunicaciones</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Gestión</div>
+      <a href="admin-flota-fluvia.html" class="nav-item"><i class="fa-solid fa-ship"></i> Flota (Activos)</a>
+      <a href="admin-tripulacion-fluvia.html" class="nav-item"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="#" class="nav-item active"><i class="fa-solid fa-gas-pump"></i> Combustible</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimiento</a>
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info">
+        <span class="user-name">Pepe Orué</span>
+        <span class="user-role">SUPERADMIN - ASU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area" id="view-bunker">
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar remolcador, despacho o puerto...">
+      </div>
+      <div class="topbar-right">
+        <div class="settings">
+          <i class="fa-solid fa-circle" style="color:var(--status-warn); font-size:8px;"></i> ALERTA DE CONSUMO
+        </div>
+        <div>BÚNKER · V2.0</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      
+      <div class="header-section" style="margin-bottom: 24px;">
+        <div class="greeting">
+          <p>LOGÍSTICA</p>
+          <h1>Gestión de Combustible</h1>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">TELEMETRÍA DE TANQUES · DESPACHOS · ALERTAS DE CONSUMO</p>
+        </div>
+        <div class="header-actions">
+           <button class="btn-primary" onclick="window.CombustibleModuleFluvia.openFuelModal()"><i class="fa-solid fa-plus"></i> Registrar Carga</button>
+        </div>
+      </div>
+
+      <div class="combustible-container-fluvia">
+         <!-- Left Fleet Panel -->
+         <div class="bunker-fleet-panel">
+            <div class="bp-header">
+                Flota Operativa
+            </div>
+            <div class="fleet-list-bunker">
+                <!-- JS Inject -->
+            </div>
+         </div>
+
+         <!-- Center Dashboard Gauge -->
+         <div class="bunker-main-panel">
+             <div class="bunker-gauge-card">
+                 <div class="bgc-header">
+                     <h2 id="shipName">TB PARAGUAY 01</h2>
+                     <span>VOLUMEN COMPENSADO EN TIEMPO REAL</span>
+                 </div>
+                 
+                 <div class="tank-visual">
+                     <div id="liquid"></div>
+                     <div class="tank-overlay">
+                         <div id="percentageText">0%</div>
+                     </div>
+                 </div>
+
+                 <div class="bunker-stats-row">
+                     <div class="stat-val-bunker-box">
+                         <span>AUTONOMÍA ESTIMADA</span>
+                         <div class="stat-val-bunker">0 <small>HRS</small></div>
+                     </div>
+                     <div class="stat-val-bunker-box">
+                         <span>EFICIENCIA TÉRMICA</span>
+                         <div class="stat-val-bunker">0 <small>%</small></div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+
+         <!-- Right History Panel -->
+         <div class="bunker-history-panel">
+             <div class="bhp-header">
+                 Últimos Movimientos
+             </div>
+             <div class="history-list">
+                 <!-- JS Inject -->
+             </div>
+         </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    window.RiverToast = {
+      success: (msg) => alert(`ÉXITO: ${msg}`),
+      error: (msg) => alert(`ERROR: ${msg}`),
+      warning: (msg) => alert(`ATENCIÓN: ${msg}`),
+      info: (msg) => alert(`INFO: ${msg}`)
+    };
+  </script>
+
+  <script src="./js/modules/combustible-fluvia.js"></script>
+  <script>
+     document.addEventListener('DOMContentLoaded', () => {
+         if(window.CombustibleModuleFluvia) window.CombustibleModuleFluvia.init();
+     });
+  </script>
+</body>
+</html>

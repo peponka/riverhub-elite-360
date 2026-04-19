@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:google_fonts/google_fonts.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -10,91 +10,40 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   final List<Map<String, dynamic>> _notifs = [
-    {
-      'title': 'Alerta Hidrológica',
-      'msg': 'Nivel del río en baja en Puerto Rosario (-0.5m en 24hs).',
-      'type': 'warning',
-      'time': 'Hace 10 min',
-      'read': false,
-    },
-    {
-      'title': 'Mantenimiento Vencido',
-      'msg': 'Motor Auxiliar #2 (R/M HERCULES) requiere service inmediato.',
-      'type': 'critical',
-      'time': 'Hace 2 horas',
-      'read': false,
-    },
-    {
-      'title': 'Carga Completada',
-      'msg': 'B/M TITAN finalizó operación de carga de Soja (1,500 TN).',
-      'type': 'success',
-      'time': 'Hace 4 horas',
-      'read': true,
-    },
-    {
-      'title': 'Nuevo Tripulante',
-      'msg': 'Juan Acosta fue asignado a TQ ENERGY.',
-      'type': 'info',
-      'time': 'Hace 6 horas',
-      'read': true,
-    },
-    {
-      'title': 'Geofence Alert',
-      'msg': 'B/G SOJA KING ingresó a zona restringida Km 1285.',
-      'type': 'critical',
-      'time': 'Ayer',
-      'read': true,
-    },
+    {'title': 'Alerta Hidrológica', 'msg': 'Nivel del río en baja en Puerto Rosario (-0.5m en 24hs).', 'type': 'warning', 'time': 'Hace 10 min', 'read': false},
+    {'title': 'Mantenimiento Vencido', 'msg': 'Motor Auxiliar #2 (R/M HERCULES) requiere service inmediato.', 'type': 'critical', 'time': 'Hace 2 horas', 'read': false},
+    {'title': 'Carga Completada', 'msg': 'B/M TITAN finalizó operación de carga de Soja (1,500 TN).', 'type': 'success', 'time': 'Hace 4 horas', 'read': true},
+    {'title': 'Nuevo Tripulante', 'msg': 'Juan Acosta fue asignado a TQ ENERGY.', 'type': 'info', 'time': 'Hace 6 horas', 'read': true},
+    {'title': 'Geofence Alert', 'msg': 'B/G SOJA KING ingresó a zona restringida Km 1285.', 'type': 'critical', 'time': 'Ayer', 'read': true},
   ];
 
   @override
   Widget build(BuildContext context) {
     final unread = _notifs.where((n) => !(n['read'] as bool)).length;
     return CupertinoPageScaffold(
+      backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
-        middle: const Text(
-          'Notificaciones',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
-          onPressed: () => Navigator.pop(context),
-        ),
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        leading: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
+        middle: Text('Notificaciones', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Text(
-            'Limpiar',
-            style: TextStyle(color: AppColors.accent, fontSize: 13),
-          ),
+          child: Text('Limpiar', style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
           onPressed: () => setState(() => _notifs.clear()),
         ),
       ),
-      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: _notifs.isEmpty
-            ? const Center(
-                child: Text(
-                  'No hay notificaciones',
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
-                ),
-              )
+            ? Center(child: Text('No hay notificaciones', style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 15)))
             : ListView(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 children: [
+                  Text('Notificaciones.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+                  const SizedBox(height: 6),
                   if (unread > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Text(
-                        '$unread sin leer',
-                        style: const TextStyle(
-                          color: AppColors.accent,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    Text('$unread sin leer', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                  const SizedBox(height: 20),
                   ..._notifs.map((n) => _notifCard(n)),
                 ],
               ),
@@ -103,91 +52,35 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Widget _notifCard(Map<String, dynamic> n) {
-    Color typeColor;
     IconData icon;
     switch (n['type']) {
-      case 'critical':
-        typeColor = AppColors.error;
-        icon = CupertinoIcons.exclamationmark_triangle_fill;
-        break;
-      case 'warning':
-        typeColor = AppColors.warning;
-        icon = CupertinoIcons.exclamationmark_circle_fill;
-        break;
-      case 'success':
-        typeColor = AppColors.success;
-        icon = CupertinoIcons.checkmark_circle_fill;
-        break;
-      default:
-        typeColor = AppColors.blue;
-        icon = CupertinoIcons.info_circle_fill;
+      case 'critical': icon = CupertinoIcons.exclamationmark_triangle; break;
+      case 'warning': icon = CupertinoIcons.exclamationmark_circle; break;
+      case 'success': icon = CupertinoIcons.checkmark_circle; break;
+      default: icon = CupertinoIcons.info_circle;
     }
     final unread = !(n['read'] as bool);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: unread
-            ? typeColor.withValues(alpha: 0.05)
-            : AppColors.backgroundSecondary,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: unread
-              ? typeColor.withValues(alpha: 0.3)
-              : AppColors.separator,
-        ),
+        color: unread ? AppColors.surfaceContainerLow : AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.separator, width: 0.5),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: typeColor.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: typeColor, size: 18),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      n['title'],
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontWeight: unread
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      n['time'],
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  n['msg'],
-                  style: const TextStyle(
-                    color: AppColors.textTertiary,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Icon(icon, color: AppColors.textSecondary, size: 20),
+        const SizedBox(width: 14),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(child: Text(n['title'], style: GoogleFonts.inter(fontWeight: unread ? FontWeight.w700 : FontWeight.w500, fontSize: 14, color: AppColors.textPrimary))),
+            Text(n['time'], style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
+          ]),
+          const SizedBox(height: 4),
+          Text(n['msg'], style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary, height: 1.4)),
+        ])),
+      ]),
     );
   }
 }

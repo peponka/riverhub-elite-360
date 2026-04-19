@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../theme/app_colors.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,8 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  // Removed _updateFcmToken per Phase 1
-
   Future<void> _signIn() async {
     setState(() => _isLoading = true);
     try {
@@ -24,20 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-
-      // Removed _updateFcmToken and explicit router pushing per Phase 1/Phase 2
     } on AuthException catch (error) {
-      if (mounted) {
-        _showErrorDialog(error.message);
-      }
+      if (mounted) _showErrorDialog(error.message);
     } catch (e) {
-      if (mounted) {
-        _showErrorDialog('Error de conexión. Intente nuevamente.');
-      }
+      if (mounted) _showErrorDialog('Error de conexión. Intente nuevamente.');
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -60,24 +52,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _signInWithGoogle() async {
     setState(() => _isLoading = true);
     try {
-      final supabase = Supabase.instance.client;
-      await supabase.auth.signInWithOAuth(OAuthProvider.google);
-      // Removed _updateFcmToken as part of Phase 1
+      await Supabase.instance.client.auth.signInWithOAuth(OAuthProvider.google);
     } catch (e) {
-      if (mounted) {
-        _showErrorDialog('Error con Google Sign In.');
-      }
+      if (mounted) _showErrorDialog('Error con Google Sign In.');
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   void _showForgotPasswordDialog() {
-    final emailForgotController = TextEditingController(
-      text: _emailController.text,
-    );
+    final emailForgotController = TextEditingController(text: _emailController.text);
     showCupertinoDialog(
       context: context,
       builder: (dialogContext) => CupertinoAlertDialog(
@@ -86,9 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.only(top: 8.0),
           child: Column(
             children: [
-              const Text(
-                'Ingresa tu correo para enviarte un enlace de recuperación.',
-              ),
+              const Text('Ingresa tu correo para enviarte un enlace de recuperación.'),
               const SizedBox(height: 16),
               CupertinoTextField(
                 controller: emailForgotController,
@@ -96,8 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: CupertinoColors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
             ],
@@ -105,10 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         actions: [
           CupertinoDialogAction(
-            child: const Text(
-              'Cancelar',
-              style: TextStyle(color: CupertinoColors.destructiveRed),
-            ),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.error)),
             onPressed: () => Navigator.of(dialogContext).pop(),
           ),
           CupertinoDialogAction(
@@ -118,27 +97,14 @@ class _LoginScreenState extends State<LoginScreen> {
               final email = emailForgotController.text.trim();
               if (email.isEmpty) return;
               Navigator.of(dialogContext).pop();
-
               setState(() => _isLoading = true);
               try {
-                final supabase = Supabase.instance.client;
-                await supabase.auth.resetPasswordForEmail(email);
-                if (mounted) {
-                  _showErrorDialog(
-                    'Se ha enviado un enlace a $email',
-                    title: 'Éxito',
-                  );
-                }
+                await Supabase.instance.client.auth.resetPasswordForEmail(email);
+                if (mounted) _showErrorDialog('Se ha enviado un enlace a $email', title: 'Éxito');
               } catch (e) {
-                if (mounted) {
-                  _showErrorDialog(
-                    'Error al enviar el correo. Intente nuevamente.',
-                  );
-                }
+                if (mounted) _showErrorDialog('Error al enviar el correo.');
               } finally {
-                if (mounted) {
-                  setState(() => _isLoading = false);
-                }
+                if (mounted) setState(() => _isLoading = false);
               }
             },
           ),
@@ -150,212 +116,193 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.systemGroupedBackground,
+      backgroundColor: AppColors.backgroundSecondary,
       child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo or Icon
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: CupertinoColors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: CupertinoColors.systemGrey.withValues(
-                          alpha: 0.2,
-                        ),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    CupertinoIcons.location_solid,
-                    size: 64,
-                    color: CupertinoColors.activeBlue,
+                const SizedBox(height: 40),
+
+                // ─── Fluvia Logo ─────────────────────────
+                Icon(CupertinoIcons.drop_fill, size: 32, color: AppColors.textPrimary),
+                const SizedBox(height: 16),
+                Text(
+                  'Fluvia',
+                  style: GoogleFonts.newsreader(
+                    fontSize: 42,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                    color: AppColors.textPrimary,
+                    letterSpacing: -1,
                   ),
                 ),
-                const SizedBox(height: 32),
-
-                // Welcome Text
-                const Text(
-                  'Bienvenido a RiverHub',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: CupertinoColors.black,
+                const SizedBox(height: 6),
+                Text(
+                  'RIVERHUB ELITE 360',
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textSecondary,
+                    letterSpacing: 3,
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Gestión Fluvial Elite 360',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: CupertinoColors.systemGrey,
-                  ),
-                ),
-                const SizedBox(height: 48),
 
-                // Login Form (Glassmorphism inspired container)
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: CupertinoColors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: CupertinoColors.systemGrey.withValues(
-                          alpha: 0.1,
-                        ),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      CupertinoTextField(
-                        controller: _emailController,
-                        placeholder: 'Correo corporativo',
-                        keyboardType: TextInputType.emailAddress,
-                        padding: const EdgeInsets.all(16),
-                        prefix: const Padding(
-                          padding: EdgeInsets.only(left: 12.0),
-                          child: Icon(
-                            CupertinoIcons.mail,
-                            color: CupertinoColors.systemGrey2,
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: CupertinoColors.systemGroupedBackground,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      CupertinoTextField(
-                        controller: _passwordController,
-                        placeholder: 'Contraseña',
-                        obscureText: true,
-                        padding: const EdgeInsets.all(16),
-                        prefix: const Padding(
-                          padding: EdgeInsets.only(left: 12.0),
-                          child: Icon(
-                            CupertinoIcons.lock,
-                            color: CupertinoColors.systemGrey2,
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: CupertinoColors.systemGroupedBackground,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
+                const SizedBox(height: 56),
 
-                      // Login Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: CupertinoButton(
-                          color: CupertinoColors.activeBlue,
-                          borderRadius: BorderRadius.circular(16),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          onPressed: _isLoading ? null : _signIn,
-                          child: _isLoading
-                              ? const CupertinoActivityIndicator(
-                                  color: CupertinoColors.white,
-                                )
-                              : const Text(
-                                  'Iniciar Sesión',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                    color: CupertinoColors.white,
-                                  ),
+                // ─── Form Container ─────────────────────
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'CORREO CORPORATIVO',
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textSecondary,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    CupertinoTextField(
+                      controller: _emailController,
+                      placeholder: 'usuario@empresa.com',
+                      keyboardType: TextInputType.emailAddress,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      placeholderStyle: GoogleFonts.inter(
+                        color: AppColors.textTertiary,
+                        fontSize: 14,
+                      ),
+                      style: GoogleFonts.inter(
+                        color: AppColors.textPrimary,
+                        fontSize: 14,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundPrimary,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.separator, width: 0.5),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    Text(
+                      'CONTRASEÑA',
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textSecondary,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    CupertinoTextField(
+                      controller: _passwordController,
+                      placeholder: '••••••••',
+                      obscureText: true,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      placeholderStyle: GoogleFonts.inter(
+                        color: AppColors.textTertiary,
+                        fontSize: 14,
+                      ),
+                      style: GoogleFonts.inter(
+                        color: AppColors.textPrimary,
+                        fontSize: 14,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundPrimary,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.separator, width: 0.5),
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // ─── Login Button ───────────────────
+                    SizedBox(
+                      width: double.infinity,
+                      child: CupertinoButton(
+                        color: AppColors.textPrimary,
+                        borderRadius: BorderRadius.circular(12),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        onPressed: _isLoading ? null : _signIn,
+                        child: _isLoading
+                            ? const CupertinoActivityIndicator(color: AppColors.textOnAccent)
+                            : Text(
+                                'Iniciar Sesión',
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: AppColors.textOnAccent,
                                 ),
-                        ),
+                              ),
                       ),
-                      const SizedBox(height: 16),
-                      // Forgot password
-                      CupertinoButton(
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Forgot password
+                    Center(
+                      child: CupertinoButton(
                         padding: EdgeInsets.zero,
                         onPressed: _showForgotPasswordDialog,
-                        child: const Text(
+                        child: Text(
                           '¿Olvidaste tu contraseña?',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: CupertinoColors.activeBlue,
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: AppColors.textSecondary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Divisor
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 1,
-                        color: CupertinoColors.systemGrey4,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const Text(
-                        'o continuar con',
-                        style: TextStyle(
-                          color: CupertinoColors.systemGrey,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 1,
-                        color: CupertinoColors.systemGrey4,
                       ),
                     ),
                   ],
                 ),
 
+                const SizedBox(height: 36),
+
+                // ─── Divider ─────────────────────────────
+                Row(
+                  children: [
+                    Expanded(child: Container(height: 0.5, color: AppColors.separator)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'o continuar con',
+                        style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
+                      ),
+                    ),
+                    Expanded(child: Container(height: 0.5, color: AppColors.separator)),
+                  ],
+                ),
+
                 const SizedBox(height: 24),
 
-                // Google Button
+                // ─── Google Button ───────────────────────
                 SizedBox(
                   width: double.infinity,
                   child: CupertinoButton(
-                    color: CupertinoColors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    borderRadius: BorderRadius.circular(12),
+                    color: AppColors.backgroundPrimary,
                     onPressed: _isLoading ? null : _signInWithGoogle,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.network(
                           'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png',
-                          height: 24,
-                          width: 24,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                                CupertinoIcons.circle_grid_hex_fill,
-                                color: CupertinoColors.black,
-                              ),
+                          height: 20, width: 20,
+                          errorBuilder: (c, e, s) => const Icon(CupertinoIcons.circle_grid_hex_fill, size: 20),
                         ),
-                        const SizedBox(width: 12),
-                        const Text(
+                        const SizedBox(width: 10),
+                        Text(
                           'Continuar con Google',
-                          style: TextStyle(
+                          style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: CupertinoColors.black,
+                            fontSize: 14,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                       ],
@@ -363,34 +310,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 40),
 
-                // Register link
+                // ─── Register link ───────────────────────
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       '¿No tienes cuenta? ',
-                      style: TextStyle(
-                        color: CupertinoColors.systemGrey,
-                        fontSize: 15,
-                      ),
+                      style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 13),
                     ),
                     CupertinoButton(
                       padding: EdgeInsets.zero,
                       onPressed: () {
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (_) => const RegisterScreen(),
-                          ),
-                        );
+                        Navigator.of(context).push(CupertinoPageRoute(builder: (_) => const RegisterScreen()));
                       },
-                      child: const Text(
+                      child: Text(
                         'Regístrate',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: CupertinoColors.activeBlue,
-                          fontSize: 15,
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                          fontSize: 13,
                         ),
                       ),
                     ),

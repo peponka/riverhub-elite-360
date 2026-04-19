@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
-import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../theme/app_colors.dart';
 
 class FleetManagerScreen extends StatefulWidget {
   const FleetManagerScreen({super.key});
@@ -12,7 +12,6 @@ class FleetManagerScreen extends StatefulWidget {
 
 class _FleetManagerScreenState extends State<FleetManagerScreen> {
   List<Map<String, dynamic>> vessels = [];
-
   String _filter = 'all';
 
   @override
@@ -26,17 +25,13 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
     if (!mounted) return;
     setState(() {
       if (data.isNotEmpty) {
-        vessels = data
-            .map(
-              (v) => {
-                'name': v['name'] ?? 'Sin nombre',
-                'type': v['type'] ?? 'DESCONOCIDO',
-                'status': v['status'] ?? 'active',
-                'zone': v['current_location'] ?? v['zone'] ?? '-',
-                'fuel': v['fuel_level'] ?? 0,
-              },
-            )
-            .toList();
+        vessels = data.map((v) => {
+          'name': v['name'] ?? 'Sin nombre',
+          'type': v['type'] ?? 'DESCONOCIDO',
+          'status': v['status'] ?? 'active',
+          'zone': v['current_location'] ?? v['zone'] ?? '-',
+          'fuel': v['fuel_level'] ?? 0,
+        }).toList();
       } else {
         vessels = [];
       }
@@ -51,54 +46,51 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
   @override
   Widget build(BuildContext context) {
     final active = vessels.where((v) => v['status'] == 'active').length;
-    final maintenance = vessels
-        .where((v) => v['status'] == 'maintenance')
-        .length;
+    final maintenance = vessels.where((v) => v['status'] == 'maintenance').length;
     final transit = vessels.where((v) => v['status'] == 'transito').length;
 
     return CupertinoPageScaffold(
+      backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
-        middle: const Text(
-          'Gestión de Flota',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        middle: Text('Flota', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
+          child: Icon(CupertinoIcons.back, color: AppColors.textPrimary, size: 22),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
-            // KPI Cards
+            Text('Gestión de', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text('Flota.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            const SizedBox(height: 20),
+
+            // KPI Row
             Row(
               children: [
-                _kpiCard('Operativos', '$active', AppColors.success),
+                Expanded(child: _kpi('Operativos', '$active', AppColors.success)),
                 const SizedBox(width: 10),
-                _kpiCard('En Taller', '$maintenance', AppColors.error),
+                Expanded(child: _kpi('En Taller', '$maintenance', AppColors.error)),
                 const SizedBox(width: 10),
-                _kpiCard('En Ruta', '$transit', AppColors.blue),
+                Expanded(child: _kpi('En Ruta', '$transit', AppColors.accent)),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
+
             // Filter chips
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _filterChip('Todos', 'all'),
-                  _filterChip('Activos', 'active'),
-                  _filterChip('Taller', 'maintenance'),
-                  _filterChip('En Ruta', 'transito'),
-                ],
-              ),
+              child: Row(children: [
+                _chip('Todos', 'all'), _chip('Activos', 'active'),
+                _chip('Taller', 'maintenance'), _chip('En Ruta', 'transito'),
+              ]),
             ),
-            const SizedBox(height: 16),
-            // Vessel cards
+            const SizedBox(height: 20),
+
             ..._filteredVessels.map((v) => _vesselCard(v)),
           ],
         ),
@@ -106,37 +98,27 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
     );
   }
 
-  Widget _kpiCard(String label, String value, Color color) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: TextStyle(
-                color: color,
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
-            ),
-          ],
-        ),
+  Widget _kpi(String label, String value, Color dot) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.separator, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(width: 8, height: 8, decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
+          const SizedBox(height: 10),
+          Text(value, style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+          Text(label.toUpperCase(), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+        ],
       ),
     );
   }
 
-  Widget _filterChip(String label, String value) {
+  Widget _chip(String label, String value) {
     final sel = _filter == value;
     return Padding(
       padding: const EdgeInsets.only(right: 8),
@@ -145,15 +127,15 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: sel ? AppColors.accent : AppColors.separator,
+            color: sel ? AppColors.textPrimary : AppColors.backgroundSecondary,
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: sel ? AppColors.textPrimary : AppColors.separator, width: 0.5),
           ),
           child: Text(
             label,
-            style: TextStyle(
-              color: sel ? material.Colors.black : material.Colors.white,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+            style: GoogleFonts.inter(
+              color: sel ? AppColors.textOnAccent : AppColors.textSecondary,
+              fontSize: 12, fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -162,29 +144,21 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
   }
 
   Widget _vesselCard(Map<String, dynamic> v) {
-    Color statusColor;
+    Color dotColor;
     String statusText;
     switch (v['status']) {
-      case 'active':
-        statusColor = AppColors.success;
-        statusText = 'OPERATIVO';
-        break;
-      case 'maintenance':
-        statusColor = AppColors.error;
-        statusText = 'TALLER';
-        break;
-      default:
-        statusColor = AppColors.blue;
-        statusText = 'EN RUTA';
+      case 'active': dotColor = AppColors.success; statusText = 'OPERATIVO'; break;
+      case 'maintenance': dotColor = AppColors.error; statusText = 'TALLER'; break;
+      default: dotColor = AppColors.accent; statusText = 'EN RUTA';
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.backgroundSecondary,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: statusColor.withValues(alpha: 0.4)),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.separator, width: 0.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,101 +166,33 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      CupertinoIcons.helm,
-                      color: statusColor,
-                      size: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        v['name'],
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                      Text(
-                        v['type'],
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
+                  Text(v['name'], style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                  const SizedBox(height: 2),
+                  Text(v['type'], style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: statusColor),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  statusText,
-                  style: TextStyle(
-                    color: statusColor,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              Row(
+                children: [
+                  Container(width: 6, height: 6, decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle)),
+                  const SizedBox(width: 6),
+                  Text(statusText, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                ],
               ),
             ],
           ),
           const SizedBox(height: 12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  const Icon(
-                    CupertinoIcons.location_solid,
-                    color: AppColors.textTertiary,
-                    size: 14,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    v['zone'],
-                    style: const TextStyle(
-                      color: AppColors.textTertiary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    CupertinoIcons.drop_fill,
-                    color: AppColors.warning,
-                    size: 14,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${v['fuel']}%',
-                    style: const TextStyle(
-                      color: AppColors.warning,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
+              Icon(CupertinoIcons.location, color: AppColors.textSecondary, size: 14),
+              const SizedBox(width: 4),
+              Text(v['zone'], style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
+              const Spacer(),
+              Icon(CupertinoIcons.drop, color: AppColors.textSecondary, size: 14),
+              const SizedBox(width: 4),
+              Text('${v['fuel']}%', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
             ],
           ),
         ],

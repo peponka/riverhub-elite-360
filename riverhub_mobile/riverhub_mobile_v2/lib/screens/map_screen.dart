@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import '../theme/app_colors.dart';
 import '../main.dart';
 
 class MapScreen extends StatefulWidget {
@@ -17,7 +18,6 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
-
   List<Map<String, dynamic>> _fleetAssets = [];
   Map<String, dynamic> _aisShips = {};
   Timer? _aisTimer;
@@ -25,9 +25,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    // Suscripción en tiempo real a Supabase (Silenciosa y eficiente)
     _subscribeToFleetRealtime();
-    // Polling ligero para barcos públicos AIS cada 5 segundos
     _startAisPolling();
   }
 
@@ -40,7 +38,7 @@ class _MapScreenState extends State<MapScreen> {
     try {
       const String apiBase = String.fromEnvironment('API_BASE_URL', defaultValue: 'https://riverhub-api.onrender.com');
       final response = await http.get(
-        Uri.parse('$apiBase/api/n8n/ais-live'), 
+        Uri.parse('$apiBase/api/n8n/ais-live'),
         headers: {'x-api-key': 'RH_Secure_n8n_X9fL!2026'},
       ).timeout(const Duration(seconds: 5));
 
@@ -57,7 +55,7 @@ class _MapScreenState extends State<MapScreen> {
         }
       }
     } catch (e) {
-      // Ignorar fallos de red silenciosamente para no molestar la UI
+      // Silently handle network failures
     }
   }
 
@@ -69,11 +67,7 @@ class _MapScreenState extends State<MapScreen> {
           .from('vessels')
           .stream(primaryKey: ['id'])
           .listen((List<Map<String, dynamic>> data) {
-        if (mounted) {
-          setState(() {
-            _fleetAssets = data;
-          });
-        }
+        if (mounted) setState(() => _fleetAssets = data);
       });
       debugPrint('✅ Flota conectada a Supabase Realtime');
     } catch (e) {
@@ -95,49 +89,23 @@ class _MapScreenState extends State<MapScreen> {
         height: 280,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: CupertinoColors.white.withValues(alpha: 0.95),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          color: AppColors.backgroundSecondary,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: CupertinoColors.systemGrey4,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              '${asset['name'] ?? 'Desconocido'}',
-              style: GoogleFonts.inter(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: CupertinoColors.black,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildRowDetail(
-              CupertinoIcons.location_solid,
-              'Coordenadas (SAT)',
+            Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 18),
+            Text('${asset['name'] ?? 'Desconocido'}', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+            const SizedBox(height: 14),
+            _detailRow(CupertinoIcons.location_solid, 'Coordenadas',
               asset['current_lat'] != null
                   ? '${(asset['current_lat'] as num).toStringAsFixed(4)}, ${(asset['current_lng'] as num).toStringAsFixed(4)}'
-                  : 'Sin señal🛰️',
-            ),
-            _buildRowDetail(
-              CupertinoIcons.tag,
-              'Tipo',
-              '${asset['type'] ?? 'Activo'}',
-            ),
-            _buildRowDetail(
-              CupertinoIcons.chart_bar_alt_fill,
-              'Estado',
-              '${asset['status'] ?? 'OPERATIVO'}',
-            ),
+                  : 'Sin señal 🛰️'),
+            _detailRow(CupertinoIcons.tag, 'Tipo', '${asset['type'] ?? 'Activo'}'),
+            _detailRow(CupertinoIcons.chart_bar_alt_fill, 'Estado', '${asset['status'] ?? 'OPERATIVO'}'),
           ],
         ),
       ),
@@ -151,78 +119,36 @@ class _MapScreenState extends State<MapScreen> {
         height: 250,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: CupertinoColors.white.withValues(alpha: 0.95),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          color: AppColors.backgroundSecondary,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: CupertinoColors.systemGrey4,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              '${ship['name'] ?? 'AIS Target'}',
-              style: GoogleFonts.inter(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: CupertinoColors.black,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildRowDetail(
-              CupertinoIcons.speedometer,
-              'Velocidad',
-              '${ship['speed'] ?? 0} nds',
-            ),
-            _buildRowDetail(
-              CupertinoIcons.compass,
-              'Rumbo (COG)',
-              '${ship['course'] ?? 0}°',
-            ),
-            _buildRowDetail(
-              CupertinoIcons.location_solid,
-              'Ubicación',
-              '${(ship['lat'] as num).toStringAsFixed(4)}, ${(ship['lon'] as num).toStringAsFixed(4)}',
-            ),
+            Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 18),
+            Text('${ship['name'] ?? 'AIS Target'}', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+            const SizedBox(height: 14),
+            _detailRow(CupertinoIcons.speedometer, 'Velocidad', '${ship['speed'] ?? 0} nds'),
+            _detailRow(CupertinoIcons.compass, 'Rumbo (COG)', '${ship['course'] ?? 0}°'),
+            _detailRow(CupertinoIcons.location_solid, 'Ubicación', '${(ship['lat'] as num).toStringAsFixed(4)}, ${(ship['lon'] as num).toStringAsFixed(4)}'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRowDetail(IconData icon, String label, String value) {
+  Widget _detailRow(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Icon(icon, color: CupertinoColors.systemBlue, size: 20),
-          const SizedBox(width: 12),
-          Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              color: CupertinoColors.systemGrey,
-            ),
-          ),
-          const Spacer(),
-          Text(
-            value,
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: CupertinoColors.black,
-            ),
-          ),
-        ],
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 7),
+      child: Row(children: [
+        Icon(icon, color: AppColors.textSecondary, size: 18),
+        const SizedBox(width: 12),
+        Text(label, style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
+        const Spacer(),
+        Text(value, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+      ]),
     );
   }
 
@@ -230,107 +156,72 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: CupertinoColors.white.withValues(alpha: 0.85),
-        border: null,
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: Navigator.of(context).canPop()
             ? CupertinoButton(
                 padding: EdgeInsets.zero,
-                child: const Icon(CupertinoIcons.back, size: 28),
+                child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary),
                 onPressed: () => Navigator.pop(context),
               )
             : CupertinoButton(
                 padding: EdgeInsets.zero,
-                child: const Icon(CupertinoIcons.bars, size: 28),
-                onPressed: () {
-                  rootScaffoldKey.currentState?.openDrawer();
-                },
+                child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary),
+                onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
               ),
-        middle: Text(
-          'Flota en Tiempo Real',
-          style: GoogleFonts.inter(fontWeight: FontWeight.bold),
-        ),
+        middle: Text('Mapa en Vivo', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
       ),
       child: Stack(
         children: [
           FlutterMap(
             mapController: _mapController,
-            options: const MapOptions(
-              // Centrado inicialmente en la Hidrovía Paraná-Paraguay (aprox. Rosario)
-              initialCenter: LatLng(-32.9468, -60.6393),
-              initialZoom: 8.0,
-            ),
+            options: const MapOptions(initialCenter: LatLng(-32.9468, -60.6393), initialZoom: 8.0),
             children: [
               TileLayer(
-                // Mapa claro estilo Apple Maps (CartoDB Positron)
-                urlTemplate:
-                    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+                urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
                 subdomains: const ['a', 'b', 'c', 'd'],
               ),
               MarkerLayer(
                 markers: [
-                  // Rendering Public AIS Traffic (Green Markers)
+                  // AIS Traffic (monochrome)
                   ..._aisShips.values.map((ship) {
                     double lat = (ship['lat'] as num).toDouble();
                     double lng = (ship['lon'] as num).toDouble();
                     double heading = (ship['heading'] as num?)?.toDouble() ?? 0.0;
-
                     return Marker(
-                      point: LatLng(lat, lng),
-                      width: 40,
-                      height: 40,
+                      point: LatLng(lat, lng), width: 36, height: 36,
                       child: GestureDetector(
                         onTap: () => _showAisDetails(ship),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: CupertinoColors.activeGreen.withValues(alpha: 0.15),
+                            color: AppColors.success.withValues(alpha: 0.12),
                             shape: BoxShape.circle,
                           ),
-                          child: Center(
-                            child: Transform.rotate(
-                              angle: heading * (3.14159265359 / 180),
-                              child: Icon(
-                                CupertinoIcons.location_north_fill,
-                                color: CupertinoColors.activeGreen,
-                                size: 20,
-                              ),
-                            ),
-                          ),
+                          child: Center(child: Transform.rotate(
+                            angle: heading * (3.14159265359 / 180),
+                            child: Icon(CupertinoIcons.location_north_fill, color: AppColors.success, size: 18),
+                          )),
                         ),
                       ),
                     );
                   }),
-                  // Rendering Private Fleet from Supabase (Neon Blue Markers)
+                  // Private Fleet (dark accent)
                   ..._fleetAssets.where((v) => v['current_lat'] != null && v['current_lng'] != null).map((asset) {
                     double lat = (asset['current_lat'] as num).toDouble();
                     double lng = (asset['current_lng'] as num).toDouble();
-
                     return Marker(
-                      point: LatLng(lat, lng),
-                      width: 50,
-                      height: 50,
+                      point: LatLng(lat, lng), width: 44, height: 44,
                       child: GestureDetector(
                         onTap: () => _showFleetDetails(asset),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: CupertinoColors.activeBlue.withValues(alpha: 0.25), // Azul Neón estilo Elite
+                            color: AppColors.textPrimary.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
-                          child: Center(
-                            child: Transform.rotate(
-                              angle: (asset['heading'] != null ? (asset['heading'] as num).toDouble() : 0.0) * (3.14159265359 / 180),
-                              child: Icon(
-                                CupertinoIcons.location_north_fill,
-                                color: CupertinoColors.activeBlue,
-                                size: 28,
-                                shadows: [
-                                  Shadow(
-                                    color: CupertinoColors.activeBlue.withValues(alpha: 0.9),
-                                    blurRadius: 15,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          child: Center(child: Transform.rotate(
+                            angle: (asset['heading'] != null ? (asset['heading'] as num).toDouble() : 0.0) * (3.14159265359 / 180),
+                            child: Icon(CupertinoIcons.location_north_fill, color: AppColors.textPrimary, size: 24),
+                          )),
                         ),
                       ),
                     );
@@ -340,34 +231,20 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
 
-          // Floating Button para centrar mapa
+          // Floating recenter button
           Positioned(
-            bottom: 24,
-            right: 16,
+            bottom: 24, right: 16,
             child: CupertinoButton(
               padding: EdgeInsets.zero,
-              onPressed: () {
-                _mapController.move(const LatLng(-32.9468, -60.6393), 8.0);
-              },
+              onPressed: () => _mapController.move(const LatLng(-32.9468, -60.6393), 8.0),
               child: Container(
-                width: 50,
-                height: 50,
+                width: 44, height: 44,
                 decoration: BoxDecoration(
-                  color: CupertinoColors.white.withValues(alpha: 0.9),
+                  color: AppColors.backgroundSecondary,
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: CupertinoColors.systemGrey.withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
+                  border: Border.all(color: AppColors.separator, width: 0.5),
                 ),
-                child: const Icon(
-                  CupertinoIcons.location_fill,
-                  color: CupertinoColors.activeBlue,
-                  size: 24,
-                ),
+                child: Icon(CupertinoIcons.location_fill, color: AppColors.textPrimary, size: 20),
               ),
             ),
           ),
@@ -376,4 +253,3 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
-

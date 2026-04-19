@@ -1,503 +1,178 @@
 /* ============================================
-   CALADO MODULE - ELITE 360 MONITOR
+   CALADO MODULE — FLUVIA DESIGN SYSTEM
    ============================================ */
 
 .calado-container {
-    padding: 24px;
+    padding: 28px;
     height: 100%;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: 350px 1fr;
-    /* Left Input, Right Table */
+    grid-template-columns: 320px 1fr;
     grid-template-rows: auto 1fr;
-    gap: 24px;
-    background: #090e14;
-    font-family: 'Rajdhani', sans-serif;
-    color: #e2e8f0;
+    gap: 20px;
+    background: var(--bg-primary, #FFFFFF);
+    font-family: var(--font-sans, 'Inter', -apple-system, sans-serif);
+    color: var(--text-primary, #1A1A1A);
     overflow-y: auto;
 }
 
-/* CARDS COMMON */
+/* CARDS */
 .calado-card {
-    background: #0f1621;
-    border: 1px solid #1f2937;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    background: #FFFFFF;
+    border: 0.5px solid var(--separator, #E5E5E5);
+    border-radius: var(--radius, 14px);
+    padding: 20px;
     display: flex;
     flex-direction: column;
 }
 
 .calado-card h3 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 20px 0;
-    font-size: 1.1rem;
-    color: #00e5ff;
-    /* Cyan */
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    display: flex; align-items: center; gap: 8px;
+    margin: 0 0 18px 0;
+    font-size: 1rem;
+    color: var(--text-primary, #1A1A1A);
+    font-family: var(--font-serif, 'Newsreader', Georgia, serif);
+    text-transform: none;
+    letter-spacing: -0.2px; font-weight: 600;
 }
 
-/* --- LEFT COLUMN: INPUT FORM --- */
-#form-calado {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.calado-form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.calado-form-group label {
-    font-size: 0.8rem;
-    color: #94a3b8;
-    font-weight: 600;
-}
+/* --- FORM --- */
+#form-calado { display: flex; flex-direction: column; gap: 14px; }
+.calado-form-group { display: flex; flex-direction: column; gap: 6px; }
+.calado-form-group label { font-size: 10px; color: var(--text-secondary, #6B6B6B); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
 .input-dark {
-    background: #0b1116 !important;
-    border: 1px solid #334155 !important;
+    background: var(--bg-secondary, #FAFAFA) !important;
+    border: 0.5px solid var(--separator, #E5E5E5) !important;
     padding: 12px;
     border-radius: 8px;
-    color: #fff !important;
-    font-family: inherit;
-    font-size: 0.95rem;
+    color: var(--text-primary, #1A1A1A) !important;
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    font-size: 0.9rem;
     width: 100%;
     box-sizing: border-box;
 }
 
-.input-dark:focus {
-    border-color: #00e5ff;
-    outline: none;
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
-}
+.input-dark:focus { border-color: var(--text-primary, #1A1A1A) !important; outline: none; box-shadow: none; }
 
 .btn-calado {
-    background: rgba(0, 229, 255, 0.1);
-    /* Ghost Style */
-    color: #00e5ff;
-    border: 1px solid #00e5ff;
+    background: var(--text-primary, #1A1A1A);
+    color: #FFFFFF;
+    border: none;
     font-weight: 600;
     padding: 12px;
-    border-radius: 50px;
-    /* Pill */
-    cursor: pointer;
-    font-size: 0.9rem;
-    margin-top: 10px;
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.btn-calado:hover {
-    background: #00e5ff;
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-}
-
-.input-row-group {
-    display: flex;
-    gap: 10px;
-}
-
-.btn-icon-add {
-    background: #1e293b;
-    border: 1px solid #334155;
-    color: #fff;
-    width: 44px;
     border-radius: 8px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--font-sans, 'Inter', sans-serif);
 }
 
-/* --- STATS CARD (Small) --- */
-.calado-stats-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
+.btn-calado:hover { opacity: 0.85; box-shadow: none; }
+
+.input-row-group { display: flex; gap: 8px; }
+
+.btn-icon-add {
+    background: var(--surface-low, #F5F5F5);
+    border: 0.5px solid var(--separator, #E5E5E5);
+    color: var(--text-secondary, #6B6B6B);
+    width: 42px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
 }
+
+/* --- STATS --- */
+.calado-stats-row { display: flex; justify-content: space-between; gap: 12px; }
 
 .stat-mini {
     flex: 1;
-    background: rgba(0, 229, 255, 0.05);
-    border: 1px solid rgba(0, 229, 255, 0.2);
-    border-radius: 12px;
-    padding: 15px;
+    background: var(--bg-secondary, #FAFAFA);
+    border: 0.5px solid var(--separator, #E5E5E5);
+    border-radius: 10px;
+    padding: 14px;
     text-align: center;
 }
 
-.stat-mini-value {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #fff;
-}
+.stat-mini-value { font-size: 1.5rem; font-weight: 600; color: var(--text-primary, #1A1A1A); font-family: var(--font-serif, 'Newsreader', Georgia, serif); }
+.stat-mini-label { font-size: 10px; color: var(--text-secondary, #6B6B6B); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
 
-.stat-mini-label {
-    font-size: 0.7rem;
-    color: #64748b;
-    text-transform: uppercase;
-}
+/* --- TABLE --- */
+.table-responsive { width: 100%; overflow-x: auto; }
 
-/* --- RIGHT COLUMN: TABLES --- */
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-}
-
-.calado-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-
+.calado-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
 .calado-table th {
-    text-align: left;
-    color: #94a3b8;
-    padding: 12px 15px;
-    border-bottom: 1px solid #334155;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-align: left; color: var(--text-secondary, #6B6B6B); padding: 10px 14px;
+    border-bottom: 0.5px solid var(--separator, #E5E5E5);
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
 }
+.calado-table td { padding: 14px; color: var(--text-primary, #1A1A1A); border-bottom: 0.5px solid var(--separator, #E5E5E5); vertical-align: middle; }
+.calado-table tbody tr:hover { background: var(--bg-secondary, #FAFAFA); }
 
-.calado-table td {
-    padding: 15px;
-    color: #cbd5e1;
-    border-bottom: 1px solid #1e293b;
-    vertical-align: middle;
-}
-
-.calado-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.02);
-}
-
-.calado-status {
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 800;
-}
-
-.status-normal {
-    background: rgba(0, 229, 255, 0.1);
-    color: #00e5ff;
-}
-
-.status-warning {
-    background: rgba(251, 191, 36, 0.1);
-    color: #fbbf24;
-}
-
-.status-critical {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-}
+.calado-status { padding: 3px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+.status-normal  { background: rgba(45,138,78,0.06); color: #2D8A4E; }
+.status-warning { background: rgba(146,112,12,0.06); color: #92700C; }
+.status-critical { background: rgba(197,48,48,0.06); color: #C53030; }
 
 .btn-calado-mini {
     background: transparent;
-    border: 1px solid #334155;
-    color: #94a3b8;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
+    border: 0.5px solid var(--separator, #E5E5E5);
+    color: var(--text-secondary, #6B6B6B);
+    width: 30px; height: 30px; border-radius: 6px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
 }
 
-.btn-calado-mini:hover {
-    border-color: #00e5ff;
-    color: #00e5ff;
-}
+.btn-calado-mini:hover { border-color: var(--text-primary, #1A1A1A); color: var(--text-primary, #1A1A1A); }
 
 /* --- MODAL --- */
 .calado-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex; align-items: center; justify-content: center; z-index: 9999;
 }
 
 .calado-modal {
-    background: #0f1621;
-    border: 1px solid #00e5ff;
-    padding: 30px;
-    border-radius: 20px;
+    background: #FFFFFF;
+    border: 0.5px solid var(--separator, #E5E5E5);
+    padding: 28px;
+    border-radius: var(--radius, 14px);
     width: 400px;
-    box-shadow: 0 0 50px rgba(0, 229, 255, 0.2);
 }
 
-.calado-modal h3 {
-    color: #fff;
-    margin-top: 0;
-}
+.calado-modal h3 { color: var(--text-primary, #1A1A1A); margin-top: 0; font-family: var(--font-serif, 'Newsreader', Georgia, serif); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.btn-cancel { background: transparent; border: 0.5px solid var(--separator, #E5E5E5); color: var(--text-secondary, #6B6B6B); padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+.btn-save { background: var(--text-primary, #1A1A1A); border: none; color: #FFFFFF; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.btn-cancel {
-    background: transparent;
-    border: 1px solid #334155;
-    color: #94a3b8;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.btn-save {
-    background: #00e5ff;
-    border: none;
-    color: #000;
-    padding: 8px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* ============================================
-   RESPONSIVE - MATERIAL DESIGN 3 MOBILE
-   ============================================ */
+/* RESPONSIVE */
 @media (max-width: 1024px) {
-    .calado-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        padding: 16px;
-        padding-top: 20px;
-        padding-bottom: 120px;
-        gap: 16px;
-    }
-
-    .calado-card {
-        padding: 20px 16px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(15, 22, 33, 0.95);
-        margin-bottom: 0;
-        border-radius: 16px;
-    }
-
-    .calado-card h3 {
-        font-size: 1rem;
-        border-left: 3px solid #00e5ff;
-        padding-left: 12px;
-        margin-left: -16px;
-        padding-bottom: 12px;
-        margin-bottom: 16px;
-        margin-top: 0;
-        border-bottom: none;
-    }
-
-    /* Form Group - M3 Style */
-    .calado-form-group {
-        margin-bottom: 20px;
-    }
-
-    .calado-form-group label {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-        font-weight: 600;
-    }
-
-    /* Input Row with + Button */
-    .input-row-group {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-    }
-
-    .input-row-group .input-dark {
-        flex: 1;
-    }
-
-    /* M3 Outlined Input */
-    .input-dark {
-        background: transparent !important;
-        border: 1px solid #334155 !important;
-        border-radius: 12px;
-        padding: 14px 16px;
-        font-size: 1rem;
-        color: #fff !important;
-        width: 100%;
-        box-sizing: border-box;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .input-dark:focus {
-        border-color: #00e5ff;
-        box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.15);
-        outline: none;
-    }
-
-    .input-dark::placeholder {
-        color: #64748b;
-    }
-
-    /* Select Styling */
-    select.input-dark {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        background-size: 18px;
-        padding-right: 40px;
-    }
-
-    /* Icon Add Button */
-    .btn-icon-add {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
-        background: rgba(0, 229, 255, 0.1);
-        border: 1px solid rgba(0, 229, 255, 0.3);
-        color: #00e5ff;
-        border-radius: 12px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        transition: all 0.2s;
-    }
-
-    .btn-icon-add:hover,
-    .btn-icon-add:active {
-        background: rgba(0, 229, 255, 0.2);
-        transform: scale(0.95);
-    }
-
-    /* ========================================
-       M3 FILLED BUTTON - GUARDAR (Primary)
-       ======================================== */
+    .calado-container { grid-template-columns: 1fr; grid-template-rows: auto; padding: 16px; padding-bottom: 120px; gap: 16px; }
+    .calado-card { padding: 18px 16px; }
+    .calado-card h3 { font-size: 0.95rem; }
+    .input-dark { border-radius: 10px; padding: 12px 14px; font-size: 0.95rem; }
     .btn-calado {
-        background: #00e5ff !important;
-        color: #003544 !important;
-        border: none !important;
-        border-radius: 100px !important;
-        height: 48px !important;
-        min-height: 48px !important;
-        width: 100% !important;
-        max-width: none !important;
-        padding: 0 24px !important;
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        font-family: 'Roboto', sans-serif !important;
-        letter-spacing: 0.5px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 10px !important;
-        cursor: pointer !important;
-        margin-top: 24px !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        box-shadow: 0 2px 8px rgba(0, 229, 255, 0.3) !important;
-        transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
-        text-transform: uppercase !important;
+        width: 100% !important; max-width: none !important;
+        height: 44px !important; min-height: 44px !important;
+        border-radius: 8px !important;
+        margin-top: 16px !important;
     }
-
-    .btn-calado:hover,
-    .btn-calado:active {
-        background: #22d3ee !important;
-        transform: scale(0.98) !important;
-        box-shadow: 0 4px 12px rgba(0, 229, 255, 0.4) !important;
-    }
-
-    .btn-calado:disabled {
-        opacity: 0.6 !important;
-        cursor: not-allowed !important;
-    }
-
-    .btn-calado i {
-        font-size: 16px !important;
-    }
-
-    /* Stats Row */
-    .calado-stats-row {
-        gap: 12px;
-    }
-
-    .stat-mini {
-        padding: 12px;
-        border-radius: 12px;
-    }
-
-    .stat-mini-value {
-        font-size: 1.5rem;
-    }
-
-    /* Hide tables on very small screens, show simplified */
-    .calado-table {
-        font-size: 0.8rem;
-    }
-
-    .calado-table th,
-    .calado-table td {
-        padding: 10px 8px;
-    }
-
-    /* Status badge */
-    .calado-status {
-        padding: 4px 8px;
-        font-size: 0.65rem;
-        border-radius: 6px;
-    }
+    .btn-icon-add { width: 44px; height: 44px; min-width: 44px; border-radius: 10px; }
+    .calado-stats-row { gap: 10px; }
+    .stat-mini { padding: 12px; border-radius: 10px; }
+    .stat-mini-value { font-size: 1.3rem; }
+    .calado-table { font-size: 0.8rem; }
+    .calado-table th, .calado-table td { padding: 10px 8px; }
 }
 
-/* ============================================
-   EXTRA SMALL DEVICES (< 480px)
-   ============================================ */
 @media (max-width: 480px) {
-    .calado-container {
-        padding: 12px;
-        padding-bottom: 130px;
-    }
-
-    .calado-card {
-        padding: 16px 12px;
-        border-radius: 12px;
-    }
-
-    .calado-card h3 {
-        font-size: 0.9rem;
-    }
-
-    /* Stack stats vertically on very small screens */
-    .calado-stats-row {
-        flex-direction: column;
-    }
-
-    /* Hide complex tables, show only key columns */
-    .calado-table th:nth-child(3),
-    .calado-table td:nth-child(3),
-    .calado-table th:nth-child(4),
-    .calado-table td:nth-child(4) {
-        display: none;
-    }
+    .calado-container { padding: 12px; padding-bottom: 130px; }
+    .calado-card { padding: 14px 12px; border-radius: 10px; }
+    .calado-stats-row { flex-direction: column; }
+    .calado-table th:nth-child(3), .calado-table td:nth-child(3),
+    .calado-table th:nth-child(4), .calado-table td:nth-child(4) { display: none; }
 }
