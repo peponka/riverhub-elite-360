@@ -100,6 +100,61 @@ document.querySelectorAll('.nav-item').forEach(function(item){
 });
 loadDashboard();
 
+// ─── MOBILE HAMBURGER ────────────────────────────────
+function toggleMobileSidebar(){
+    var sb2=document.querySelector('.sidebar');
+    var ov=document.getElementById('sidebar-overlay');
+    sb2.classList.toggle('mobile-open');
+    ov.classList.toggle('open');
+}
+// Close sidebar on mobile when nav-item clicked
+document.querySelectorAll('.nav-item').forEach(function(item){
+    item.addEventListener('click',function(){
+        if(window.innerWidth<=768){
+            document.querySelector('.sidebar').classList.remove('mobile-open');
+            document.getElementById('sidebar-overlay').classList.remove('open');
+        }
+    });
+});
+
+// ─── NOTIFICATIONS ───────────────────────────────────
+function toggleNotifPanel(){
+    document.getElementById('notif-panel').classList.toggle('open');
+}
+var notifData=[];
+async function loadNotifications(){
+    try{
+        var r=await sb.from('logs').select('*').order('created_at',{ascending:false}).limit(10);
+        notifData=r.data||[];
+        renderNotifs();
+    }catch(e){console.log('Notif:',e);}
+}
+function renderNotifs(){
+    var list=document.getElementById('notif-list');
+    var badge=document.getElementById('notif-badge');
+    if(!list)return;
+    if(notifData.length===0){
+        list.innerHTML='<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><p>Sin notificaciones nuevas</p></div>';
+        if(badge)badge.style.display='none';
+        return;
+    }
+    if(badge){badge.textContent=notifData.length;badge.style.display='flex';}
+    list.innerHTML=notifData.map(function(n,i){
+        var t=n.created_at?new Date(n.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+        var cls=i<3?'notif-item unread':'notif-item';
+        return '<div class="'+cls+'"><div class="notif-title">'+(n.title||n.action_type||'Actividad')+'</div><div class="notif-desc">'+(n.description||n.details||'')+'</div><div class="notif-time">'+t+'</div></div>';
+    }).join('');
+}
+loadNotifications();
+// Real-time subscription for new notifications
+try{
+    sb.channel('notif-logs').on('postgres_changes',{event:'INSERT',schema:'public',table:'logs'},function(payload){
+        notifData.unshift(payload.new);
+        if(notifData.length>15)notifData.pop();
+        renderNotifs();
+    }).subscribe();
+}catch(e){console.log('Realtime notif:',e);}
+
 // LOADERS
 async function loadDashboard(){
     try{
