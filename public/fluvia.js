@@ -143,8 +143,22 @@ async function loadViajes(){
 async function loadBitacora(){
     try{
         var r=await sb.from('logs').select('*').order('created_at',{ascending:false}).limit(30);
-        var data=r.data;var l=document.getElementById('bitacora-list');var em=document.getElementById('bitacora-empty');l.innerHTML='';
-        if(data&&data.length>0){em.style.display='none';data.forEach(function(row){var d=document.createElement('div');d.className='list-item';var t=row.created_at?new Date(row.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';d.innerHTML='<div><h4>'+(row.title||row.action_type||'Entrada')+'</h4><p>'+(row.vessel_name||'')+' - '+(row.description||row.details||'')+' - '+t+'</p></div><button class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('logs',row.id,(row.title||'Entrada'),loadBitacora);});l.appendChild(d);});}else{em.style.display='';}
+        var data=r.data;var l=document.getElementById('bitacora-list');var em=document.getElementById('bitacora-empty');
+        if(!l)return;
+        l.innerHTML='';
+        if(data&&data.length>0){
+            if(em)em.style.display='none';
+            data.forEach(function(row){
+                var d=document.createElement('div');d.className='list-item';
+                var t=row.created_at?new Date(row.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+                d.innerHTML='<div><h4>'+(row.title||row.action_type||'Entrada')+'</h4><p>'+(row.vessel_name||'')+' - '+(row.description||row.details||'')+' - '+t+'</p></div><button class="delete-btn" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>';
+                if(row.id){
+                    var btn=d.querySelector('.delete-btn');
+                    if(btn)btn.addEventListener('click',function(){confirmDelete('logs',row.id,(row.title||'Entrada'),loadBitacora);});
+                }
+                l.appendChild(d);
+            });
+        }else{if(em)em.style.display='';}
     }catch(e){console.log('Bitacora:',e);}
 }
 
