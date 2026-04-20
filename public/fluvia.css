@@ -157,5 +157,8 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg-prima
 .admin-stat .stat-value{font-family:'Newsreader',serif;font-size:32px;font-weight:400}
 .admin-stat .stat-label{font-size:11px;color:var(--text-secondary);font-weight:600;letter-spacing:0.5px;margin-top:4px}
 @media(max-width:800px){.admin-stats{grid-template-columns:repeat(2,1fr)}}
-
+/* DELETE BTN */
+.delete-btn{background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:6px;border-radius:8px;font-size:14px;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.delete-btn:hover{color:var(--error);background:rgba(220,38,38,0.08)}
+.data-table .delete-btn{padding:4px 8px}
 
