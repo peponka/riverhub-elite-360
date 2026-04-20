@@ -1,354 +1,397 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RiverHub | Gestión Logística Fluvial Inteligente</title>
-    <!-- Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
-        rel="stylesheet">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/landing.css">
-</head>
+    <title>Fluvia — Gestión Fluvial Inteligente | RiverHub Elite 360</title>
+    <meta name="description" content="Plataforma líder para la gestión inteligente de flotas fluviales. Tracking satelital, control de combustible, IA predictiva. Hidrovía Paraguay-Paraná.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,300;6..72,0,400;6..72,0,500;6..72,0,600;6..72,1,300;6..72,1,400;6..72,1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root{--bg:#F8F9FA;--white:#FFFFFF;--surface:#F1F5F9;--text:#1A1A2E;--text2:#94A3B8;--text3:#CBD5E1;--sep:#E2E8F0;--accent:#3B82F6;--success:#2EA043;--error:#DC2626;--warning:#F59E0B}
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
 
+        /* NAV */
+        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--sep);padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
+        .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text)}
+        .nav-brand i{font-size:18px}
+        .nav-brand span{font-family:'Newsreader',serif;font-size:22px;font-weight:500;font-style:italic}
+        .nav-brand small{font-size:10px;color:var(--text2);font-weight:600;margin-left:2px}
+        .nav-links{display:flex;gap:32px}
+        .nav-links a{text-decoration:none;color:var(--text2);font-size:13px;font-weight:500;transition:color 0.2s;letter-spacing:0.3px}
+        .nav-links a:hover{color:var(--text)}
+        .nav-actions{display:flex;gap:12px;align-items:center}
+        .btn-ghost{background:none;border:none;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;padding:8px 16px;font-family:'Inter',sans-serif}
+        .btn-solid{background:var(--text);color:white;border:none;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.2s}
+        .btn-solid:hover{opacity:0.85}
+
+        /* HERO */
+        .hero{padding:160px 48px 100px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+        .hero-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:16px}
+        .hero h1{font-family:'Newsreader',serif;font-size:64px;font-weight:400;line-height:1.05;color:var(--text);margin-bottom:8px}
+        .hero h1 em{font-weight:300;font-style:italic}
+        .hero-desc{font-size:16px;color:var(--text2);line-height:1.7;margin:24px 0 36px;max-width:460px}
+        .hero-cta{display:flex;gap:12px;align-items:center}
+        .btn-hero{background:var(--text);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-hero:hover{opacity:0.85;transform:translateY(-1px)}
+        .btn-outline{background:none;border:0.5px solid var(--sep);color:var(--text);padding:14px 32px;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-outline:hover{border-color:var(--text);background:var(--surface)}
+        .hero-features{display:flex;gap:24px;margin-top:40px}
+        .hero-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);font-weight:500}
+        .hero-feat i{color:var(--success);font-size:11px}
+        .hero-visual{position:relative}
+        .hero-card{background:var(--white);border:0.5px solid var(--sep);border-radius:20px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.06)}
+        .hero-card-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+        .hero-card-dot{width:10px;height:10px;border-radius:50%;background:var(--success)}
+        .hero-card-title{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1px}
+        .hero-card-big{font-family:'Newsreader',serif;font-size:48px;font-weight:400;color:var(--text)}
+        .hero-card-label{font-size:12px;color:var(--text2);margin-top:4px}
+        .hero-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;padding-top:20px;border-top:0.5px solid var(--sep)}
+        .hcg-item .hcg-val{font-family:'Newsreader',serif;font-size:24px;font-weight:400}
+        .hcg-item .hcg-lbl{font-size:10px;color:var(--text2);font-weight:600;letter-spacing:0.5px}
+        .float-card{position:absolute;background:var(--white);border:0.5px solid var(--sep);border-radius:14px;padding:16px 20px;box-shadow:0 8px 24px rgba(0,0,0,0.06);animation:float 3s ease-in-out infinite}
+        .float-card-1{top:-20px;right:-30px}
+        .float-card-2{bottom:40px;left:-40px;animation-delay:1.5s}
+        .float-card .fc-row{display:flex;align-items:center;gap:8px}
+        .float-card .fc-dot{width:8px;height:8px;border-radius:50%}
+        .float-card .fc-text{font-size:12px;font-weight:600}
+        .float-card .fc-sub{font-size:10px;color:var(--text2)}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+        /* HOW IT WORKS */
+        .section{padding:100px 48px;max-width:1200px;margin:0 auto}
+        .section-alt{background:var(--bg)}
+        .section-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
+        .section h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
+        .section h2 em{font-weight:300;font-style:italic}
+        .section-desc{font-size:15px;color:var(--text2);line-height:1.6;max-width:520px;margin-bottom:48px}
+
+        .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+        .step-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:32px;transition:all 0.2s}
+        .step-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.06)}
+        .step-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400;color:var(--text3);line-height:1}
+        .step-card h3{font-family:'Newsreader',serif;font-size:22px;font-weight:500;margin:16px 0 8px}
+        .step-card p{font-size:13px;color:var(--text2);line-height:1.6}
+        .step-icon{width:48px;height:48px;background:var(--surface);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-top:20px}
+        .step-icon i{font-size:20px;color:var(--text)}
+
+        /* FEATURES */
+        .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .feat-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:28px;display:flex;gap:16px;transition:all 0.2s}
+        .feat-card:hover{background:var(--surface)}
+        .feat-card i{font-size:20px;color:var(--text2);width:24px;flex-shrink:0;margin-top:2px}
+        .feat-card h4{font-size:15px;font-weight:600;margin-bottom:4px}
+        .feat-card p{font-size:12px;color:var(--text2);line-height:1.5}
+
+        /* STATS BANNER */
+        .stats-banner{background:var(--text);color:white;padding:80px 48px;text-align:center}
+        .stats-banner .section-tag{color:rgba(255,255,255,0.5)}
+        .stats-banner h2{color:white;font-family:'Newsreader',serif;font-size:42px;font-weight:400}
+        .stats-banner h2 em{font-weight:300;font-style:italic}
+        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;max-width:1000px;margin:48px auto 0}
+        .stat-item .stat-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400}
+        .stat-item .stat-lbl{font-size:11px;color:rgba(255,255,255,0.5);font-weight:600;letter-spacing:1px;margin-top:4px}
+
+        /* PRICING */
+        .pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .price-card{background:var(--white);border:0.5px solid var(--sep);border-radius:20px;padding:36px;position:relative;transition:all 0.2s}
+        .price-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.06)}
+        .price-card.featured{border-color:var(--text);border-width:2px}
+        .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:9px;font-weight:800;letter-spacing:1px;padding:5px 16px;border-radius:20px}
+        .price-card h3{font-family:'Newsreader',serif;font-size:24px;font-weight:500;margin-bottom:4px}
+        .price-card .price-desc{font-size:12px;color:var(--text2);margin-bottom:20px}
+        .price-amount{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text)}
+        .price-unit{font-size:13px;color:var(--text2)}
+        .price-list{list-style:none;margin:24px 0;padding:0}
+        .price-list li{font-size:13px;padding:6px 0;display:flex;align-items:center;gap:8px}
+        .price-list li i{font-size:11px;color:var(--success);width:16px}
+        .price-list li.disabled{color:var(--text3)}
+        .price-list li.disabled i{color:var(--text3)}
+        .price-btn{width:100%;padding:13px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;border:0.5px solid var(--sep);background:var(--surface);color:var(--text)}
+        .price-btn:hover{background:var(--sep)}
+        .price-btn.dark{background:var(--text);color:white;border-color:var(--text)}
+        .price-btn.dark:hover{opacity:0.85}
+
+        /* CTA FINAL */
+        .cta-section{text-align:center;padding:100px 48px;max-width:700px;margin:0 auto}
+        .cta-section h2{font-family:'Newsreader',serif;font-size:48px;font-weight:400;line-height:1.1;margin-bottom:16px}
+        .cta-section h2 em{font-weight:300;font-style:italic}
+        .cta-section p{font-size:15px;color:var(--text2);line-height:1.6;margin-bottom:36px}
+
+        /* FOOTER */
+        .footer{border-top:0.5px solid var(--sep);padding:60px 48px 32px}
+        .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto}
+        .footer-brand{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+        .footer-brand i{font-size:16px;color:var(--text)}
+        .footer-brand span{font-family:'Newsreader',serif;font-size:20px;font-weight:500;font-style:italic;color:var(--text)}
+        .footer-desc{font-size:12px;color:var(--text2);line-height:1.6;max-width:280px}
+        .footer h4{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1.5px;margin-bottom:16px}
+        .footer a{display:block;font-size:13px;color:var(--text);text-decoration:none;margin-bottom:10px;transition:color 0.2s}
+        .footer a:hover{color:var(--accent)}
+        .footer-copy{text-align:center;font-size:11px;color:var(--text3);margin-top:48px;padding-top:24px;border-top:0.5px solid var(--sep);max-width:1200px;margin-left:auto;margin-right:auto}
+        .footer-socials{display:flex;gap:12px;margin-top:12px}
+        .footer-socials a{font-size:16px;color:var(--text2);margin-bottom:0}
+        .footer-socials a:hover{color:var(--text)}
+
+        /* ANIMATIONS */
+        .reveal{opacity:0;transform:translateY(24px);transition:all 0.6s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .nav{padding:0 20px}
+            .nav-links{display:none}
+            .hero{grid-template-columns:1fr;padding:120px 24px 60px;gap:40px;text-align:center}
+            .hero h1{font-size:40px}
+            .hero-desc{margin:16px auto 28px}
+            .hero-cta{justify-content:center}
+            .hero-features{justify-content:center;flex-wrap:wrap}
+            .hero-visual{display:none}
+            .section{padding:60px 24px}
+            .steps-grid{grid-template-columns:1fr}
+            .feat-grid{grid-template-columns:1fr}
+            .stats-banner{padding:60px 24px}
+            .stats-row{grid-template-columns:1fr 1fr;gap:24px}
+            .pricing-cards{grid-template-columns:1fr}
+            .cta-section{padding:60px 24px}
+            .cta-section h2{font-size:36px}
+            .footer{padding:40px 24px 24px}
+            .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
+            .section h2{font-size:32px}
+        }
+    </style>
+</head>
 <body>
 
-    <!-- NAV -->
-    <nav class="navbar">
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-water"></i>
-            </div>
-            RiverHub
+<!-- NAV -->
+<nav class="nav">
+    <a class="nav-brand" href="#">
+        <i class="fa-solid fa-droplet"></i>
+        <span>Fluvia</span>
+        <small>v4.2</small>
+    </a>
+    <div class="nav-links">
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#modulos">Modulos</a>
+        <a href="#precios">Precios</a>
+        <a href="#nosotros">Nosotros</a>
+    </div>
+    <div class="nav-actions">
+        <a href="fluvia.html" class="btn-ghost">Iniciar Sesion</a>
+        <a href="fluvia.html" class="btn-solid">Probar Gratis</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div>
+        <div class="hero-tag">HIDROVIA PARAGUAY-PARANA</div>
+        <h1>Tu flota,<br><em>inteligente.</em></h1>
+        <p class="hero-desc">Visualiza y gestiona en tiempo real tus barcazas, remolcadores y embarcaciones. La plataforma que transforma datos en decisiones para la logistica fluvial.</p>
+        <div class="hero-cta">
+            <a href="fluvia.html" class="btn-hero">Comenzar Gratis</a>
+            <a href="#como-funciona" class="btn-outline">Ver Demo</a>
         </div>
-        <div class="nav-links">
-            <a href="#soluciones">Soluciones</a>
+        <div class="hero-features">
+            <div class="hero-feat"><i class="fa-solid fa-check"></i>Monitoreo 24/7</div>
+            <div class="hero-feat"><i class="fa-solid fa-check"></i>IA Predictiva</div>
+            <div class="hero-feat"><i class="fa-solid fa-check"></i>14 dias gratis</div>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="hero-card">
+            <div class="hero-card-row">
+                <div class="hero-card-dot"></div>
+                <div class="hero-card-title">FLOTA EN TIEMPO REAL</div>
+            </div>
+            <div class="hero-card-big">8</div>
+            <div class="hero-card-label">Embarcaciones activas en la hidrovia</div>
+            <div class="hero-card-grid">
+                <div class="hcg-item"><div class="hcg-val">23</div><div class="hcg-lbl">VIAJES ESTE MES</div></div>
+                <div class="hcg-item"><div class="hcg-val">1.2M</div><div class="hcg-lbl">TONELADAS</div></div>
+                <div class="hcg-item"><div class="hcg-val">99.8%</div><div class="hcg-lbl">UPTIME</div></div>
+                <div class="hcg-item"><div class="hcg-val">-12%</div><div class="hcg-lbl">COMBUSTIBLE</div></div>
+            </div>
+        </div>
+        <div class="float-card float-card-1">
+            <div class="fc-row"><div class="fc-dot" style="background:var(--success)"></div><div><div class="fc-text">RP Don Carlos</div><div class="fc-sub">En viaje · 12.4 kts</div></div></div>
+        </div>
+        <div class="float-card float-card-2">
+            <div class="fc-row"><div class="fc-dot" style="background:var(--warning)"></div><div><div class="fc-text">BZ-042 Parana</div><div class="fc-sub">Mantenimiento prog.</div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<div class="section-alt">
+<section class="section" id="como-funciona">
+    <div class="section-tag">COMO FUNCIONA</div>
+    <h2>Tres pasos para<br><em>digitalizar tu flota.</em></h2>
+    <p class="section-desc">Sin instalaciones complejas. Sin hardware caro. Empeza a operar tu flota de forma inteligente en minutos.</p>
+    <div class="steps-grid">
+        <div class="step-card reveal">
+            <div class="step-num">01</div>
+            <h3>Registra tu flota</h3>
+            <p>Carga tus embarcaciones, barcazas y remolcadores en minutos. El sistema detecta automaticamente datos AIS de tu flota en la hidrovia.</p>
+            <div class="step-icon"><i class="fa-solid fa-anchor"></i></div>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num">02</div>
+            <h3>Opera desde cualquier lugar</h3>
+            <p>Arma convoyes, registra combustible, gestiona tripulacion y bitacora. Todo desde la web o la app movil con sincronizacion en tiempo real.</p>
+            <div class="step-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num">03</div>
+            <h3>Toma decisiones con datos</h3>
+            <p>Reportes inteligentes, pronósticos de hidrovía, alertas automáticas y un Copiloto IA que analiza tu operación y sugiere optimizaciones.</p>
+            <div class="step-icon"><i class="fa-solid fa-robot"></i></div>
+        </div>
+    </div>
+</section>
+</div>
+
+<!-- MODULOS -->
+<section class="section" id="modulos">
+    <div class="section-tag">ECOSISTEMA COMPLETO</div>
+    <h2>Todo lo que necesitas<br><em>en una plataforma.</em></h2>
+    <p class="section-desc">15+ modulos integrados que cubren cada aspecto de la operacion fluvial, desde el despacho hasta la facturacion.</p>
+    <div class="feat-grid">
+        <div class="feat-card reveal"><i class="fa-solid fa-map"></i><div><h4>Mapa de Flota en Vivo</h4><p>Tracking AIS + GPS propio. Visualiza cada embarcacion en la hidrovia Paraguay-Parana en tiempo real.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-link"></i><div><h4>Armador de Convoyes</h4><p>Arma formaciones de hasta 18 barcazas con validacion de capacidad directamente desde tu flota registrada.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-gas-pump"></i><div><h4>Control de Combustible</h4><p>Registro de bunker, consumo por viaje y eficiencia por sector. Tu mayor costo, blindado.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-wrench"></i><div><h4>Mantenimiento Preventivo</h4><p>Ordenes de trabajo, historial por equipo y alertas de vencimiento para cada activo de tu flota.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-book"></i><div><h4>Bitacora Digital</h4><p>Registro operativo con fotos, clasificación automática y auditoría de novedades por embarcacion.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-robot"></i><div><h4>Copiloto IA</h4><p>Asistente inteligente con Gemini que analiza tu base de datos y responde preguntas sobre tu operacion.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-users"></i><div><h4>Tripulacion & Safety</h4><p>Gestion de dotaciones, certificaciones, guardias y cumplimiento normativo de cada tripulante.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-water"></i><div><h4>Pronostico Hidrovia</h4><p>Niveles hídricos, tendencias y condiciones meteorologicas de la hidrovia con datos de Open Meteo.</p></div></div>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-banner">
+    <div class="section-tag" style="color:rgba(255,255,255,0.4)">IMPACTO REAL</div>
+    <h2>Numeros que<br><em>hablan solos.</em></h2>
+    <div class="stats-row">
+        <div class="stat-item reveal"><div class="stat-num">+500</div><div class="stat-lbl">ACTIVOS MONITOREADOS</div></div>
+        <div class="stat-item reveal"><div class="stat-num">1.2M</div><div class="stat-lbl">TONELADAS GESTIONADAS</div></div>
+        <div class="stat-item reveal"><div class="stat-num">-18%</div><div class="stat-lbl">REDUCCION COMBUSTIBLE</div></div>
+        <div class="stat-item reveal"><div class="stat-num">99.9%</div><div class="stat-lbl">UPTIME DEL SISTEMA</div></div>
+    </div>
+</div>
+
+<!-- PRECIOS -->
+<section class="section" id="precios">
+    <div style="text-align:center;margin-bottom:48px">
+        <div class="section-tag">PLANES ESCALABLES</div>
+        <h2>Potencia para flotas<br><em>de todos los tamanhos.</em></h2>
+    </div>
+    <div class="pricing-cards">
+        <div class="price-card reveal">
+            <h3>Por Barcaza</h3>
+            <p class="price-desc">Control individual de cada activo</p>
+            <div><span class="price-amount">$149</span><span class="price-unit"> /barcaza/mes</span></div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Tracking GPS en tiempo real</li>
+                <li><i class="fa-solid fa-check"></i>Bitacora digital</li>
+                <li><i class="fa-solid fa-check"></i>Control de combustible</li>
+                <li><i class="fa-solid fa-check"></i>Mantenimiento preventivo</li>
+                <li class="disabled"><i class="fa-solid fa-xmark"></i>Copiloto IA</li>
+            </ul>
+            <a href="fluvia.html" class="price-btn">Seleccionar</a>
+        </div>
+        <div class="price-card featured reveal">
+            <div class="price-badge">MAS POPULAR</div>
+            <h3>Combo Flota</h3>
+            <p class="price-desc">Hasta 10 embarcaciones con descuento</p>
+            <div><span class="price-amount">$899</span><span class="price-unit"> /mes</span></div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Todo de Por Barcaza</li>
+                <li><i class="fa-solid fa-check"></i>Armador de convoyes</li>
+                <li><i class="fa-solid fa-check"></i>Gestion de tripulacion</li>
+                <li><i class="fa-solid fa-check"></i>Comunicaciones satelital</li>
+                <li><i class="fa-solid fa-check"></i>Copiloto IA basico</li>
+            </ul>
+            <a href="fluvia.html" class="price-btn dark">Comenzar Gratis</a>
+        </div>
+        <div class="price-card reveal">
+            <h3>Enterprise</h3>
+            <p class="price-desc">Solucion corporativa sin limites</p>
+            <div><span class="price-amount">$1,499</span><span class="price-unit"> /mes</span></div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Embarcaciones ilimitadas</li>
+                <li><i class="fa-solid fa-check"></i>Copiloto IA avanzado</li>
+                <li><i class="fa-solid fa-check"></i>API integraciones</li>
+                <li><i class="fa-solid fa-check"></i>Soporte prioritario 24/7</li>
+                <li><i class="fa-solid fa-check"></i>SLA 99.9%</li>
+            </ul>
+            <a href="fluvia.html" class="price-btn">Contactar Ventas</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="section-alt">
+<section class="cta-section" id="nosotros">
+    <div class="section-tag">LISTO PARA ZARPAR?</div>
+    <h2>Digitaliza tu flota<br><em>hoy mismo.</em></h2>
+    <p>Combinamos la experiencia de capitanes veteranos con tecnologia de punta. Nuestra mision es transformar la Hidrovia Paraguay-Parana en la via navegable mas eficiente de Sudamerica.</p>
+    <a href="fluvia.html" class="btn-hero">Prueba 14 Dias Gratis</a>
+</section>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div>
+            <div class="footer-brand"><i class="fa-solid fa-droplet"></i><span>Fluvia</span></div>
+            <p class="footer-desc">Gestion fluvial inteligente para la Hidrovia Paraguay-Parana. Tecnologia al servicio del transporte fluvial.</p>
+            <div class="footer-socials">
+                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
+        </div>
+        <div>
+            <h4>PRODUCTO</h4>
+            <a href="#modulos">Modulos</a>
             <a href="#precios">Precios</a>
+            <a href="#como-funciona">Como Funciona</a>
+            <a href="fluvia.html">App Movil</a>
+        </div>
+        <div>
+            <h4>EMPRESA</h4>
             <a href="#nosotros">Nosotros</a>
+            <a href="#">Careers</a>
+            <a href="#">Blog</a>
+            <a href="#">Prensa</a>
         </div>
-        <div class="nav-actions">
-            <a href="app.html?mode=login" class="btn-login">Iniciar Sesión</a>
-            <a href="app.html?mode=login" class="btn-trial">15 DÍAS GRATIS</a>
+        <div>
+            <h4>LEGAL</h4>
+            <a href="#">Terminos de Servicio</a>
+            <a href="#">Politica de Privacidad</a>
+            <a href="mailto:info@riverhub.com">info@riverhub.com</a>
         </div>
-    </nav>
+    </div>
+    <div class="footer-copy">&copy; 2026 RiverHub Elite 360. Todos los derechos reservados. Hecho con <i class="fa-solid fa-droplet" style="font-size:10px;color:var(--accent)"></i> para la Hidrovia.</div>
+</footer>
 
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <!-- Background Elements -->
-        <div class="hero-bg-glow"></div>
-        <div class="grid-overlay"></div>
-
-        <div class="hero-container">
-            <!-- Left Content -->
-            <div class="hero-content">
-                <h1 class="animate-text-reveal">
-                    TU FLOTA. <br>
-                    <span class="text-highlight">INTELIGENTE.</span>
-                </h1>
-
-                <p class="subheadline animate-fade-up">
-                    Visualiza y gestiona en tiempo real tus <strong>barcazas, remolcadores y embarcaciones</strong>.
-                    Optimiza cada milla de tu operación fluvial con datos precisos.
-                </p>
-
-                <div class="cta-wrapper animate-fade-up icon-delay">
-                    <a href="app.html?mode=login" class="btn-primary-glow">
-                        PRUEBA 15 DÍAS GRATIS
-                    </a>
-                </div>
-
-                <div class="hero-features animate-fade-up list-delay">
-                    <div class="h-feature">
-                        <i class="fas fa-satellite-dish"></i>
-                        <span>MONITOREO 24/7</span>
-                    </div>
-                    <div class="h-feature">
-                        <i class="fas fa-chart-line"></i>
-                        <span>ANÁLISIS DE RUTAS</span>
-                    </div>
-                    <div class="h-feature">
-                        <i class="fas fa-bolt"></i>
-                        <span>EFICIENCIA ENERGÉTICA</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Visual -->
-            <div class="hero-visual animate-visual">
-                <div class="visual-container">
-                    <img src="img/river-hero.png" alt="Mapa Fluvial Inteligente" class="main-hero-img">
-
-                    <!-- Floating Data Cards (Overlays) -->
-                    <div class="data-card card-1">
-                        <div class="card-header">
-                            <span class="d-label">CONVOY 1</span>
-                            <div class="status-dot active"></div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-row"><span>VEL:</span> <span class="val">12 KTS</span></div>
-                            <div class="d-row"><span>DEST:</span> <span class="val">PUERTO 7</span></div>
-                            <div class="d-row"><span>ETA:</span> <span class="val">14:30</span></div>
-                            <div class="d-row"><span>CARGA:</span> <span class="val">CONTENEDORES</span></div>
-                            <div class="progress-bar">
-                                <div class="fill" style="width: 85%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="data-card card-2">
-                        <div class="card-header">
-                            <span class="d-label">CONVOY 2</span>
-                            <div class="status-dot warning"></div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-row"><span>VEL:</span> <span class="val">10 KTS</span></div>
-                            <div class="d-row"><span>DEST:</span> <span class="val">TERMINAL N</span></div>
-                            <div class="d-row"><span>ALERTA:</span> <span class="val warning">MANTENIMIENTO</span></div>
-                        </div>
-                    </div>
-
-                    <div class="data-card card-3">
-                        <div class="card-header">
-                            <span class="d-label">CONVOY 3</span>
-                            <div class="status-dot active"></div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-row"><span>NO. UNITS:</span> <span class="val">12</span></div>
-                            <div class="d-row"><span>ESTADO:</span> <span class="val">OPTIMO</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 1. SOLUCIONES (GLASS PANELS) -->
-    <section id="soluciones" class="section-padding">
-        <div class="container">
-            <div class="section-header center">
-                <h2 class="section-title">ECOSISTEMA <span class="text-neon">ELITE 360</span></h2>
-                <p class="section-subtitle">No es solo software. Son módulos de inteligencia interconectados para
-                    dominar
-                    la hidrovía.</p>
-            </div>
-
-            <div class="solutions-grid">
-                <!-- Visual Left -->
-                <div class="sol-visual animate-slide-right">
-                    <div class="glass-frame">
-                        <img src="img/glass-panels.png" alt="RiverHub Modules Interface" class="img-fluid">
-                        <div class="glow-effect"></div>
-                    </div>
-                </div>
-
-                <!-- Content Right -->
-                <div class="sol-content animate-slide-left">
-                    <div class="feature-item">
-                        <div class="f-icon"><i class="fas fa-satellite"></i></div>
-                        <div class="f-text">
-                            <h3>Tracking Satelital 24/7</h3>
-                            <p>Visibilidad radical. Fusión de datos AIS y GPS propio. Sigue remolcadores y barcazas
-                                individuales con precisión milimétrica.</p>
-                        </div>
-                    </div>
-
-                    <div class="feature-item">
-                        <div class="f-icon"><i class="fas fa-th"></i></div>
-                        <div class="f-text">
-                            <h3>Convoy Inteligente</h3>
-                            <p>Maximiza la carga. Algoritmos que sugieren el armado óptimo según calado, potencia y tipo
-                                de carga.</p>
-                        </div>
-                    </div>
-
-                    <div class="feature-item">
-                        <div class="f-icon"><i class="fas fa-gas-pump"></i></div>
-                        <div class="f-text">
-                            <h3>Control de Combustible</h3>
-                            <p>Tu mayor costo, blindado. Auditoría de consumo en tiempo real, detección de drenajes y
-                                eficiencia de motores.</p>
-                        </div>
-                    </div>
-
-                    <div class="feature-item">
-                        <div class="f-icon"><i class="fas fa-chart-pie"></i></div>
-                        <div class="f-text">
-                            <h3>Business Intelligence</h3>
-                            <p>De datos a decisiones. Tableros gerenciales que transforman la operación diaria en
-                                rentabilidad estratégica.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 2. PRECIOS -->
-    <section id="precios" class="section-padding section-dark">
-        <div class="container">
-            <div class="section-header center">
-                <h2 class="section-title">PLANES <span class="text-blue">ESCALABLES</span></h2>
-                <p class="section-subtitle">Potencia para armadores de todos los tamaños.</p>
-            </div>
-
-            <div class="pricing-grid">
-                <!-- 1. SOLIST (1 Embarcación) -->
-                <div class="pricing-card scroll-animate">
-                    <div class="p-header">
-                        <h3>SOLIST</h3>
-                        <div class="price">USD 150<span>/mo</span></div>
-                        <p class="desc">Por Embarcación</p>
-                    </div>
-                    <ul class="p-features">
-                        <li><i class="fas fa-ship"></i> 1 Embarcación</li>
-                        <li><i class="fas fa-check"></i> Tracking Básico</li>
-                        <li><i class="fas fa-user"></i> 1 Usuario</li>
-                    </ul>
-                    <div style="display:flex; flex-direction:column; gap:10px;">
-                        <a href="app.html?mode=login" class="btn-price">1 UNIDAD ($150)</a>
-                        <a href="app.html?mode=login" class="btn-price"
-                            style="border-color:var(--primary); color:var(--primary);">2 UNIDADES ($300)</a>
-                    </div>
-                </div>
-
-                <!-- 2. SQUAD (3 Embarcaciones) -->
-                <div class="pricing-card featured scroll-animate">
-                    <div class="popular-tag">RECOMENDADO</div>
-                    <div class="p-header">
-                        <h3>SQUAD</h3>
-                        <div class="price">USD 450<span>/mo</span></div>
-                        <p class="desc">Pack de 3 Unidades</p>
-                    </div>
-                    <ul class="p-features">
-                        <li><i class="fas fa-check"></i> Hasta 3 Embarcaciones</li>
-                        <li><i class="fas fa-chart-line"></i> Tracking Avanzado</li>
-                        <li><i class="fas fa-gas-pump"></i> Control Combustible</li>
-                        <li><i class="fas fa-users"></i> 3 Usuarios</li>
-                    </ul>
-                    <a href="app.html?mode=login" class="btn-price primary">PRUEBA GRATIS</a>
-                </div>
-
-                <!-- 3. FLEET (10 Embarcaciones) -->
-                <div class="pricing-card scroll-animate">
-                    <div class="p-header">
-                        <h3>EXPANSION</h3>
-                        <div class="price">USD 1200<span>/mo</span></div>
-                        <p class="desc">Hasta 10 Unidades</p>
-                    </div>
-                    <ul class="p-features">
-                        <li><i class="fas fa-check"></i> 10 Embarcaciones</li>
-                        <li><i class="fas fa-ship"></i> Gestión de Convoy</li>
-                        <li><i class="fas fa-cogs"></i> Mantenimiento Full</li>
-                        <li><i class="fas fa-users"></i> 10 Usuarios</li>
-                    </ul>
-                    <a href="app.html?mode=login" class="btn-price">ESCALAR</a>
-                </div>
-
-                <!-- 4. ADMIRAL (Ilimitado) -->
-                <div class="pricing-card scroll-animate">
-                    <div class="p-header">
-                        <h3>ADMIRAL</h3>
-                        <div class="price">USD 1800<span>/mo</span></div>
-                        <p class="desc">Flota Ilimitada</p>
-                    </div>
-                    <ul class="p-features">
-                        <li><i class="fas fa-check"></i> Sin límite de activos</li>
-                        <li><i class="fas fa-infinity"></i> Usuarios Ilimitados</li>
-                        <li><i class="fas fa-headset"></i> Soporte 24/7</li>
-                    </ul>
-                    <a href="app.html?mode=login" class="btn-price">ILIMITADO</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. NOSOTROS -->
-    <section id="nosotros" class="section-padding">
-        <div class="container">
-            <div class="about-wrapper">
-                <div class="about-text">
-                    <h2>NAVEGANDO HACIA EL FUTURO</h2>
-                    <p>En <strong>RiverHub</strong>, combinamos la experiencia de capitanes veteranos con la tecnología
-                        de Silicon Valley. Nuestra misión es digitalizar la Hidrovía Paraná-Paraguay, convirtiendo cada
-                        viaje en una operación segura, eficiente y rentable.</p>
-                    <div class="stats-row scroll-animate">
-                        <div class="stat">
-                            <span class="num">+500</span>
-                            <span class="lbl">Activos Monitoreados</span>
-                        </div>
-                        <div class="stat">
-                            <span class="num">1.2M</span>
-                            <span class="lbl">Toneladas Gestionadas</span>
-                        </div>
-                        <div class="stat">
-                            <span class="num">99.9%</span>
-                            <span class="lbl">Uptime Del Sistema</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. FOOTER -->
-    <footer>
-        <div class="container footer-content">
-            <div class="footer-col">
-                <div class="f-logo">
-                    <i class="fas fa-water"></i> RiverHub
-                </div>
-                <p>La plataforma definitiva para la logística fluvial inteligente.</p>
-            </div>
-            <div class="footer-col">
-                <h4>PRODUCTO</h4>
-                <a href="#soluciones">Soluciones</a>
-                <a href="#precios">Precios</a>
-                <a href="#">Roadmap</a>
-            </div>
-            <div class="footer-col">
-                <h4>LEGAL</h4>
-                <a href="#">Términos de Servicio</a>
-                <a href="#">Privacidad</a>
-                <a href="#">Compliance</a>
-            </div>
-            <div class="footer-col">
-                <h4>CONTACTO</h4>
-                <a href="mailto:info@riverhub.com">info@riverhub.com</a>
-                <div class="socials">
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="copy-bar">
-            &copy; 2026 RiverHub Elite 360. Todos los derechos reservados.
-        </div>
-    </footer>
-
-    <!-- SCROLL ANIMATION SCRIPT -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const observerOptions = {
-                threshold: 0.1
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, observerOptions);
-
-            const scrollElements = document.querySelectorAll('.scroll-animate, .animate-slide-right, .animate-slide-left');
-            scrollElements.forEach(el => observer.observe(el));
-        });
-    </script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+    var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+    },{threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+    // Navbar scroll effect
+    window.addEventListener('scroll',function(){
+        var nav=document.querySelector('.nav');
+        if(window.scrollY>50)nav.style.borderBottomColor='var(--sep)';
+        else nav.style.borderBottomColor='transparent';
+    });
+});
+</script>
 </body>
-
 </html>
