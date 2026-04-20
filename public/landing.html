@@ -17,7 +17,7 @@
         /* NAV */
         .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--sep);padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
         .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text)}
-        .nav-brand i{font-size:18px}
+        .nav-brand img{width:32px;height:32px;border-radius:50%;object-fit:cover}
         .nav-brand span{font-family:'Newsreader',serif;font-size:22px;font-weight:500;font-style:italic}
         .nav-brand small{font-size:10px;color:var(--text2);font-weight:600;margin-left:2px}
         .nav-links{display:flex;gap:32px}
@@ -183,9 +183,8 @@
 <!-- NAV -->
 <nav class="nav">
     <a class="nav-brand" href="#">
-        <i class="fa-solid fa-droplet"></i>
+        <img src="img/fluvia-logo.jpg" alt="Fluvia Logo">
         <span>Fluvia</span>
-        <small>v4.2</small>
     </a>
     <div class="nav-links">
         <a href="#como-funciona">Como Funciona</a>
@@ -349,7 +348,7 @@
 <footer class="footer">
     <div class="footer-grid">
         <div>
-            <div class="footer-brand"><i class="fa-solid fa-droplet"></i><span>Fluvia</span></div>
+            <div class="footer-brand"><img src="img/fluvia-logo.jpg" alt="Fluvia" style="width:28px;height:28px;border-radius:50%;object-fit:cover"><span>Fluvia</span></div>
             <p class="footer-desc">Gestion fluvial inteligente para la Hidrovia Paraguay-Parana. Tecnologia al servicio del transporte fluvial.</p>
             <div class="footer-socials">
                 <a href="#"><i class="fa-brands fa-linkedin"></i></a>
@@ -378,7 +377,7 @@
             <a href="mailto:info@riverhub.com">info@riverhub.com</a>
         </div>
     </div>
-    <div class="footer-copy">&copy; 2026 RiverHub Elite 360. Todos los derechos reservados. Hecho con <i class="fa-solid fa-droplet" style="font-size:10px;color:var(--accent)"></i> para la Hidrovia.</div>
+    <div class="footer-copy">&copy; 2026 Fluvia by RiverHub. Todos los derechos reservados.</div>
 </footer>
 
 <script>
