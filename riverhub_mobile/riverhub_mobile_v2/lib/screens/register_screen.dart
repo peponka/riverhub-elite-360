@@ -103,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo
-                Text('RiverHub', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                Text('Fluvia', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
                 Text('Meridian.', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary)),
                 const SizedBox(height: 8),
                 Text('CREAR CUENTA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),

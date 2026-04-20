@@ -27,7 +27,7 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
     try {
       final response = await Supabase.instance.client
           .from('logs')
-          .select('*, profiles:user_id(full_name)')
+          .select('*')
           .order('created_at', ascending: false)
           .limit(20);
       if (mounted) setState(() { _logs = response; _isLoading = false; });
@@ -242,7 +242,7 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                     final log = _logs[i];
                     final date = DateTime.tryParse(log['created_at'] ?? '') ?? DateTime.now();
                     final timeStr = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-                    final author = log['profiles'] != null ? (log['profiles']['full_name'] ?? 'Usuario') : 'Sistema';
+                    final author = log['user_id'] != null ? 'Tripulante' : 'Sistema';
                     Color dotColor = AppColors.accent;
                     if (log['action_type'] == 'alert') dotColor = AppColors.warning;
                     if (log['action_type'] == 'success') dotColor = AppColors.success;

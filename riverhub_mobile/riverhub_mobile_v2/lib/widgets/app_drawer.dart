@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' as material;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../main.dart';
 // Existing screens
 import '../screens/fuel_screen.dart';
 import '../screens/draft_screen.dart';
@@ -31,6 +32,7 @@ import '../screens/integraciones_screen.dart';
 import '../screens/billing_screen.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/admin_screen.dart';
+import '../screens/bitacora_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -146,7 +148,7 @@ class AppDrawer extends StatelessWidget {
                   _sectionHeader('OPERATIVA'),
                   _drawerTile(context, CupertinoIcons.link, 'Armador de Convoy', const ConvoysScreen()),
                   _drawerTile(context, CupertinoIcons.doc_text_fill, 'Gestión de Viajes', const TripsScreen()),
-                  _drawerTile(context, CupertinoIcons.book_fill, 'Bitácora Digital', null),
+                  _drawerTile(context, CupertinoIcons.book_fill, 'Bitácora Digital', const BitacoraScreen()),
                   _drawerTile(context, CupertinoIcons.radiowaves_right, 'Comunicaciones', const ComunicacionesScreen()),
 
                   _sectionHeader('GESTIÓN'),
@@ -214,9 +216,13 @@ class AppDrawer extends StatelessWidget {
         ),
       ),
       onTap: () {
-        material.Scaffold.of(context).closeDrawer();
+        Navigator.of(context).pop(); // close drawer
         if (destination != null) {
-          Navigator.of(context).push(CupertinoPageRoute(builder: (context) => destination));
+          Navigator.of(context).push(CupertinoPageRoute(builder: (_) => destination)).then((_) {
+            Future.delayed(const Duration(milliseconds: 200), () {
+              rootScaffoldKey.currentState?.openDrawer();
+            });
+          });
         }
       },
     );

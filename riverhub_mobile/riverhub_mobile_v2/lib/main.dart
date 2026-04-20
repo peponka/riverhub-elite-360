@@ -56,7 +56,7 @@ class RiverHubMobileApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
-      title: 'RiverHub Elite 360',
+      title: 'Fluvia',
       debugShowCheckedModeBanner: false,
       locale: const material.Locale('en', 'US'),
       theme: CupertinoThemeData(

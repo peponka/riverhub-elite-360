@@ -39,10 +39,9 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _fetchAisPositions() async {
     try {
-      const String apiBase = String.fromEnvironment('API_BASE_URL', defaultValue: 'https://riverhub-api.onrender.com');
+      const String apiBase = String.fromEnvironment('API_BASE_URL', defaultValue: 'https://riverhub-elite-360.onrender.com');
       final response = await http.get(
-        Uri.parse('$apiBase/api/n8n/ais-live'),
-        headers: {'x-api-key': 'RH_Secure_n8n_X9fL!2026'},
+        Uri.parse('$apiBase/api/ais-positions'),
       ).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
