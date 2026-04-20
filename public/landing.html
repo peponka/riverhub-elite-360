@@ -29,19 +29,23 @@
         .btn-solid:hover{opacity:0.85}
 
         /* HERO */
-        .hero{padding:160px 48px 100px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-        .hero-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:16px}
-        .hero h1{font-family:'Newsreader',serif;font-size:64px;font-weight:400;line-height:1.05;color:var(--text);margin-bottom:8px}
+        .hero{position:relative;min-height:90vh;display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
+        .hero-bg{position:absolute;inset:0;z-index:0}
+        .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center}
+        .hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,15,30,0.85) 0%,rgba(10,15,30,0.4) 40%,rgba(10,15,30,0.15) 100%);z-index:1}
+        .hero-content{position:relative;z-index:2;padding:0 64px 80px;max-width:700px}
+        .hero-tag{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:2px;margin-bottom:16px}
+        .hero h1{font-family:'Newsreader',serif;font-size:64px;font-weight:400;line-height:1.05;color:white;margin-bottom:8px}
         .hero h1 em{font-weight:300;font-style:italic}
-        .hero-desc{font-size:16px;color:var(--text2);line-height:1.7;margin:24px 0 36px;max-width:460px}
+        .hero-desc{font-size:16px;color:rgba(255,255,255,0.7);line-height:1.7;margin:24px 0 36px;max-width:500px}
         .hero-cta{display:flex;gap:12px;align-items:center}
-        .btn-hero{background:var(--text);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
-        .btn-hero:hover{opacity:0.85;transform:translateY(-1px)}
-        .btn-outline{background:none;border:0.5px solid var(--sep);color:var(--text);padding:14px 32px;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
-        .btn-outline:hover{border-color:var(--text);background:var(--surface)}
+        .btn-hero{background:white;color:var(--text);border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-hero:hover{opacity:0.9;transform:translateY(-1px)}
+        .btn-outline{background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.25);color:white;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-outline:hover{background:rgba(255,255,255,0.2)}
         .hero-features{display:flex;gap:24px;margin-top:40px}
-        .hero-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);font-weight:500}
-        .hero-feat i{color:var(--success);font-size:11px}
+        .hero-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.6);font-weight:500}
+        .hero-feat i{color:rgba(147,197,253,1);font-size:11px}
         .hero-visual{position:relative}
         .hero-card{background:var(--white);border:0.5px solid var(--sep);border-radius:20px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.06)}
         .hero-card-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
@@ -155,12 +159,11 @@
         @media(max-width:768px){
             .nav{padding:0 20px}
             .nav-links{display:none}
-            .hero{grid-template-columns:1fr;padding:120px 24px 60px;gap:40px;text-align:center}
+            .hero{min-height:70vh}
+            .hero-content{padding:0 24px 48px}
             .hero h1{font-size:40px}
-            .hero-desc{margin:16px auto 28px}
-            .hero-cta{justify-content:center}
-            .hero-features{justify-content:center;flex-wrap:wrap}
-            .hero-visual{display:none}
+            .hero-desc{margin:16px 0 28px}
+            .hero-features{flex-wrap:wrap;gap:12px}
             .section{padding:60px 24px}
             .steps-grid{grid-template-columns:1fr}
             .feat-grid{grid-template-columns:1fr}
@@ -198,7 +201,9 @@
 
 <!-- HERO -->
 <section class="hero">
-    <div>
+    <div class="hero-bg"><img src="img/fluvia-convoy.jpg" alt="Convoy de barcazas en la Hidrovia Paraguay-Parana"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
         <div class="hero-tag">HIDROVIA PARAGUAY-PARANA</div>
         <h1>Tu flota,<br><em>inteligente.</em></h1>
         <p class="hero-desc">Visualiza y gestiona en tiempo real tus barcazas, remolcadores y embarcaciones. La plataforma que transforma datos en decisiones para la logistica fluvial.</p>
@@ -211,10 +216,6 @@
             <div class="hero-feat"><i class="fa-solid fa-check"></i>IA Predictiva</div>
             <div class="hero-feat"><i class="fa-solid fa-check"></i>14 dias gratis</div>
         </div>
-    </div>
-    <div class="hero-visual">
-        <div class="hero-glow"></div>
-        <img src="img/fluvia-convoy.jpg" alt="Convoy de barcazas en la Hidrovia Paraguay-Parana" class="hero-img">
     </div>
 </section>
 
