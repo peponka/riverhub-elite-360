@@ -60,6 +60,15 @@
         .float-card .fc-text{font-size:12px;font-weight:600}
         .float-card .fc-sub{font-size:10px;color:var(--text2)}
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        /* SHIP ILLUSTRATION */
+        .hero-ship-bg{position:absolute;bottom:-20px;right:-60px;width:320px;opacity:0.06;z-index:0;pointer-events:none}
+        .hero-visual{position:relative;z-index:1}
+        .hero-glow{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,0.08) 0%,transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none}
+        /* WAVE DIVIDER */
+        .wave-divider{position:relative;height:80px;overflow:hidden;background:var(--bg)}
+        .wave-divider svg{position:absolute;bottom:0;width:100%;height:80px}
+        .wave-path{animation:wave-move 4s ease-in-out infinite alternate}
+        @keyframes wave-move{0%{d:path('M0,40 Q250,10 500,40 T1000,40 L1000,80 L0,80 Z')}100%{d:path('M0,40 Q250,70 500,40 T1000,40 L1000,80 L0,80 Z')}}
 
         /* HOW IT WORKS */
         .section{padding:100px 48px;max-width:1200px;margin:0 auto}
@@ -202,7 +211,33 @@
         </div>
     </div>
     <div class="hero-visual">
-        <div class="hero-card">
+        <div class="hero-glow"></div>
+        <!-- SHIP SVG ILLUSTRATION -->
+        <svg class="hero-ship-bg" viewBox="0 0 512 300" fill="#1A1A2E" xmlns="http://www.w3.org/2000/svg">
+            <!-- Hull -->
+            <path d="M40,200 L60,250 L450,250 L470,200 L480,180 L490,200 L500,250 L510,260 L10,260 L20,250 L30,220 Z" fill="#3B82F6" opacity="0.9"/>
+            <!-- Deck -->
+            <rect x="80" y="170" width="340" height="30" rx="4" fill="#3B82F6" opacity="0.7"/>
+            <!-- Bridge -->
+            <rect x="370" y="110" width="60" height="60" rx="6" fill="#3B82F6" opacity="0.8"/>
+            <rect x="380" y="120" width="15" height="12" rx="2" fill="white" opacity="0.4"/>
+            <rect x="400" y="120" width="15" height="12" rx="2" fill="white" opacity="0.4"/>
+            <!-- Cargo holds -->
+            <rect x="100" y="145" width="50" height="25" rx="3" fill="#3B82F6" opacity="0.5"/>
+            <rect x="160" y="145" width="50" height="25" rx="3" fill="#3B82F6" opacity="0.6"/>
+            <rect x="220" y="145" width="50" height="25" rx="3" fill="#3B82F6" opacity="0.5"/>
+            <rect x="280" y="140" width="50" height="30" rx="3" fill="#3B82F6" opacity="0.6"/>
+            <!-- Antenna/mast -->
+            <line x1="400" y1="110" x2="400" y2="80" stroke="#3B82F6" stroke-width="2" opacity="0.6"/>
+            <circle cx="400" cy="78" r="3" fill="#3B82F6" opacity="0.6"/>
+            <!-- Smoke -->
+            <ellipse cx="395" cy="65" rx="8" ry="4" fill="#3B82F6" opacity="0.15"/>
+            <ellipse cx="405" cy="55" rx="12" ry="5" fill="#3B82F6" opacity="0.1"/>
+            <!-- Water line -->
+            <path d="M0,265 Q60,255 120,265 T240,265 T360,265 T480,265 L512,265 L512,300 L0,300 Z" fill="#93C5FD" opacity="0.15"/>
+            <path d="M0,275 Q80,268 160,275 T320,275 T480,275 L512,275 L512,300 L0,300 Z" fill="#93C5FD" opacity="0.1"/>
+        </svg>
+        <div class="hero-card" style="position:relative;z-index:2">
             <div class="hero-card-row">
                 <div class="hero-card-dot"></div>
                 <div class="hero-card-title">FLOTA EN TIEMPO REAL</div>
@@ -216,14 +251,22 @@
                 <div class="hcg-item"><div class="hcg-val">-12%</div><div class="hcg-lbl">COMBUSTIBLE</div></div>
             </div>
         </div>
-        <div class="float-card float-card-1">
+        <div class="float-card float-card-1" style="z-index:3">
             <div class="fc-row"><div class="fc-dot" style="background:var(--success)"></div><div><div class="fc-text">RP Don Carlos</div><div class="fc-sub">En viaje · 12.4 kts</div></div></div>
         </div>
-        <div class="float-card float-card-2">
+        <div class="float-card float-card-2" style="z-index:3">
             <div class="fc-row"><div class="fc-dot" style="background:var(--warning)"></div><div><div class="fc-text">BZ-042 Parana</div><div class="fc-sub">Mantenimiento prog.</div></div></div>
         </div>
     </div>
 </section>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+    <svg viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,50 C180,20 360,70 540,40 C720,10 900,60 1080,35 C1260,10 1350,45 1440,30 L1440,80 L0,80 Z" fill="#F1F5F9" opacity="0.7"/>
+        <path d="M0,55 C200,35 400,65 600,45 C800,25 1000,55 1200,40 C1350,28 1400,50 1440,42 L1440,80 L0,80 Z" fill="#F8F9FA"/>
+    </svg>
+</div>
 
 <!-- COMO FUNCIONA -->
 <div class="section-alt">
