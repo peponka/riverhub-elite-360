@@ -15,10 +15,10 @@
         body{font-family:'Inter',-apple-system,sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
 
         /* NAV */
-        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--sep);padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
-        .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--sep);padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
+        .nav-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text)}
         .nav-brand img.nav-logo{width:44px;height:44px;border-radius:50%;object-fit:cover}
-        .nav-brand img.nav-wordmark{height:70px;object-fit:contain}
+        .nav-brand .brand-text{font-family:'Newsreader',serif;font-size:32px;font-weight:500;color:#1A1A2E;letter-spacing:-0.5px}
         .nav-links{display:flex;gap:32px}
         .nav-links a{text-decoration:none;color:var(--text2);font-size:13px;font-weight:500;transition:color 0.2s;letter-spacing:0.3px}
         .nav-links a:hover{color:var(--text)}
@@ -183,7 +183,7 @@
 <nav class="nav">
     <a class="nav-brand" href="#">
         <img class="nav-logo" src="img/fluvia-logo.jpg" alt="Fluvia">
-        <img class="nav-wordmark" src="img/fluvia-wordmark.jpg" alt="Fluvia">
+        <span class="brand-text">Fluvia</span>
     </a>
     <div class="nav-links">
         <a href="#como-funciona">Como Funciona</a>
@@ -347,7 +347,7 @@
 <footer class="footer">
     <div class="footer-grid">
         <div>
-            <div class="footer-brand"><img src="img/fluvia-logo.jpg" alt="Fluvia" style="width:36px;height:36px;border-radius:50%;object-fit:cover"><img src="img/fluvia-wordmark.jpg" alt="Fluvia" style="height:40px;object-fit:contain"></div>
+            <div class="footer-brand"><img src="img/fluvia-logo.jpg" alt="Fluvia" style="width:40px;height:40px;border-radius:50%;object-fit:cover"><span style="font-family:'Newsreader',serif;font-size:28px;font-weight:500;color:#1A1A2E">Fluvia</span></div>
             <p class="footer-desc">Gestion fluvial inteligente para la Hidrovia Paraguay-Parana. Tecnologia al servicio del transporte fluvial.</p>
             <div class="footer-socials">
                 <a href="#"><i class="fa-brands fa-linkedin"></i></a>
