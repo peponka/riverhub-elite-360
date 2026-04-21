@@ -83,7 +83,7 @@ document.getElementById('login-email').addEventListener('keydown',function(e){if
 
 // SPA Router
 let map = null;
-const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){}};
+const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidentes,briefing:loadBriefing};
 
 document.querySelectorAll('.nav-item').forEach(function(item){
     item.addEventListener('click',function(e){
@@ -336,7 +336,9 @@ var modalForms={
     crew:{title:'Agregar Tripulante',fields:[{id:'crew-name',label:'NOMBRE',type:'text',placeholder:'Juan Perez'},{id:'crew-role',label:'ROL',type:'select',options:['Capitan','Timonel','Maquinista','Marinero','Cocinero']},{id:'crew-vessel',label:'EMBARCACION',type:'text',placeholder:'Asignar a...'},{id:'crew-doc',label:'DOCUMENTO',type:'text',placeholder:'Nro documento'}]},
     fuel:{title:'Registrar Combustible',fields:[{id:'fuel-vessel',label:'EMBARCACION',type:'text',placeholder:'Nombre'},{id:'fuel-liters',label:'LITROS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TIPO',type:'select',options:['Gasoil','IFO 380','MGO']},{id:'fuel-date',label:'FECHA',type:'date'}]},
     maint:{title:'Nueva Orden de Mantenimiento',fields:[{id:'maint-title',label:'DESCRIPCION',type:'text',placeholder:'Que reparar'},{id:'maint-vessel',label:'EMBARCACION',type:'text',placeholder:'Embarcacion'},{id:'maint-priority',label:'PRIORIDAD',type:'select',options:['Alta','Media','Baja']},{id:'maint-notes',label:'NOTAS',type:'textarea',placeholder:'Detalles...'}]},
-    panol:{title:'Agregar Item',fields:[{id:'panol-name',label:'REPUESTO',type:'text',placeholder:'Filtro de aceite'},{id:'panol-cat',label:'CATEGORIA',type:'select',options:['Motor','Electrico','Hidraulico','Casco','General']},{id:'panol-qty',label:'CANTIDAD',type:'text',placeholder:'10'},{id:'panol-min',label:'STOCK MINIMO',type:'text',placeholder:'2'}]}
+    panol:{title:'Agregar Item',fields:[{id:'panol-name',label:'REPUESTO',type:'text',placeholder:'Filtro de aceite'},{id:'panol-cat',label:'CATEGORIA',type:'select',options:['Motor','Electrico','Hidraulico','Casco','General']},{id:'panol-qty',label:'CANTIDAD',type:'text',placeholder:'10'},{id:'panol-min',label:'STOCK MINIMO',type:'text',placeholder:'2'}]},
+    calado:{title:'Registrar Lectura de Calado',fields:[{id:'calado-vessel',label:'EMBARCACION',type:'text',placeholder:'Nombre de la embarcacion'},{id:'calado-value',label:'CALADO (METROS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'CALADO MAXIMO (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVACIONES',type:'textarea',placeholder:'Condiciones, ubicacion...'}]},
+    incidente:{title:'Reportar Incidente',fields:[{id:'inc-title',label:'TITULO',type:'text',placeholder:'Descripcion breve del incidente'},{id:'inc-vessel',label:'EMBARCACION',type:'text',placeholder:'Embarcacion afectada'},{id:'inc-severity',label:'SEVERIDAD',type:'select',options:['Critico','Alto','Medio','Bajo']},{id:'inc-type',label:'TIPO',type:'select',options:['Colision','Encalladura','Derrame','Averia mecanica','Incendio','Medico','Otro']},{id:'inc-desc',label:'DESCRIPCION DETALLADA',type:'textarea',placeholder:'Que ocurrio, donde, cuando, medidas tomadas...'}]}
 };
 var currentModal=null;
 function openModal(type){
@@ -359,6 +361,8 @@ document.getElementById('modal-submit').addEventListener('click',async function(
         else if(t==='fuel'&&d['fuel-vessel']){await sb.from('fuel_logs').insert({vessel_name:d['fuel-vessel'],liters:parseInt(d['fuel-liters'])||0,fuel_type:d['fuel-type'],company_id:cid});loadFuel();}
         else if(t==='maint'&&d['maint-title']){await sb.from('maintenance_tasks').insert({description:d['maint-title'],vessel_name:d['maint-vessel'],priority:d['maint-priority'],status:'pendiente',notes:d['maint-notes'],company_id:cid});loadMaint();}
         else if(t==='panol'&&d['panol-name']){await sb.from('inventory_items').insert({name:d['panol-name'],category:d['panol-cat'],quantity:parseInt(d['panol-qty'])||0,min_stock:parseInt(d['panol-min'])||0,company_id:cid});loadPanol();}
+        else if(t==='calado'&&d['calado-vessel']){await sb.from('logs').insert({title:'Lectura de calado: '+d['calado-vessel'],vessel_name:d['calado-vessel'],action_type:'DRAFT_READING',description:d['calado-notes']||'Calado: '+d['calado-value']+'m / Max: '+d['calado-max']+'m',details:JSON.stringify({draft:parseFloat(d['calado-value'])||0,max_draft:parseFloat(d['calado-max'])||3.5}),company_id:cid});loadCalado();}
+        else if(t==='incidente'&&d['inc-title']){await sb.from('logs').insert({title:d['inc-title'],vessel_name:d['inc-vessel'],action_type:'INCIDENTE',description:d['inc-desc'],details:JSON.stringify({severity:d['inc-severity'],type:d['inc-type'],status:'Abierto'}),company_id:cid});loadIncidentes();}
     }catch(e){console.error('Save:',e);}
     document.getElementById('modal-overlay').classList.remove('open');
 });
@@ -689,3 +693,117 @@ function confirmDelete(table, id, itemName, reloadFn){
     };
 }
 
+
+// CALADO
+async function loadCalado(){
+    try{
+        var r=await sb.from('logs').select('*').eq('action_type','DRAFT_READING').order('created_at',{ascending:false}).limit(50);
+        var data=r.data;var l=document.getElementById('calado-list');var h=document.getElementById('calado-history');var em=document.getElementById('calado-empty');
+        if(!l)return;l.innerHTML='';h.innerHTML='';
+        var vessels={};
+        if(data&&data.length>0){
+            em.style.display='none';
+            data.forEach(function(d){
+                var det=typeof d.details==='string'?JSON.parse(d.details||'{}'):d.details||{};
+                var vn=d.vessel_name||d.title||'Desconocido';
+                if(!vessels[vn])vessels[vn]={name:vn,draft:det.draft||0,max:det.max_draft||3.5,date:d.created_at};
+            });
+            var vList=Object.values(vessels);var alerts=0;var totalDraft=0;
+            vList.forEach(function(v){
+                var pct=v.max>0?((v.draft/v.max)*100):0;
+                var color=pct>90?'var(--error)':pct>75?'var(--warning)':'var(--success)';
+                var status=pct>90?'CRITICO':pct>75?'ALERTA':'OPTIMO';
+                if(pct>75)alerts++;totalDraft+=v.draft;
+                l.innerHTML+='<div class="info-card" style="margin-bottom:10px"><i class="fa-solid fa-ruler-vertical" style="color:'+color+'"></i><div class="info-card-text"><h4>'+v.name+'</h4><p>Calado: <strong>'+v.draft.toFixed(2)+'m</strong> / Max: '+v.max.toFixed(2)+'m - '+status+'</p></div><div style="min-width:80px;text-align:right"><div style="font-family:Newsreader,serif;font-size:22px;font-weight:400">'+Math.round(pct)+'%</div><div style="height:4px;background:var(--surface-low);border-radius:2px;margin-top:4px"><div style="height:4px;background:'+color+';border-radius:2px;width:'+Math.min(pct,100)+'%"></div></div></div></div>';
+            });
+            document.getElementById('calado-total').textContent=vList.length;
+            document.getElementById('calado-alerts').textContent=alerts;
+            document.getElementById('calado-avg').textContent=vList.length>0?(totalDraft/vList.length).toFixed(2):'--';
+            data.slice(0,10).forEach(function(d){
+                var det=typeof d.details==='string'?JSON.parse(d.details||'{}'):d.details||{};
+                var t=d.created_at?new Date(d.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+                h.innerHTML+='<div class="list-item"><div><h4>'+(d.vessel_name||'--')+' - '+(det.draft||0).toFixed(2)+'m</h4><p>'+(d.description||'Lectura')+' - '+t+'</p></div><button class="delete-btn" data-id="'+d.id+'" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div>';
+            });
+            h.querySelectorAll('.delete-btn').forEach(function(btn){btn.addEventListener('click',function(){confirmDelete('logs',this.dataset.id,'Lectura',loadCalado);});});
+        }else{em.style.display='';}
+    }catch(e){console.log('Calado:',e);}
+}
+
+// INCIDENTES
+var incidentesData=[];
+async function loadIncidentes(){
+    try{
+        var r=await sb.from('logs').select('*').eq('action_type','INCIDENTE').order('created_at',{ascending:false}).limit(50);
+        incidentesData=r.data||[];renderIncidents();
+    }catch(e){console.log('Incidentes:',e);}
+}
+function renderIncidents(filter){
+    var data=incidentesData;var l=document.getElementById('inc-list');var em=document.getElementById('inc-empty');
+    if(!l)return;l.innerHTML='';
+    if(filter){data=data.filter(function(d){var s=JSON.stringify(d).toLowerCase();return s.indexOf(filter.toLowerCase())>=0;});}
+    if(data&&data.length>0){
+        em.style.display='none';var open=0;var crit=0;
+        data.forEach(function(d){
+            var det=typeof d.details==='string'?JSON.parse(d.details||'{}'):d.details||{};
+            var sev=det.severity||'Medio';var st=det.status||'Abierto';
+            if(st==='Abierto')open++;if(sev==='Critico')crit++;
+            var sevC=sev==='Critico'?'var(--error)':sev==='Alto'?'var(--warning)':sev==='Medio'?'var(--accent)':'var(--text-secondary)';
+            var t=d.created_at?new Date(d.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+            l.innerHTML+='<div class="list-item"><div><h4 style="display:flex;align-items:center;gap:8px"><span class="status-dot" style="background:'+sevC+'"></span>'+(d.title||'Incidente')+'</h4><p>'+(d.vessel_name||'')+' - '+(det.type||'')+' - '+t+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+sevC+'">'+sev.toUpperCase()+'</span><button class="delete-btn" data-id="'+d.id+'" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div></div>';
+        });
+        document.getElementById('inc-total').textContent=incidentesData.length;
+        document.getElementById('inc-open').textContent=open;
+        document.getElementById('inc-critical').textContent=crit;
+        l.querySelectorAll('.delete-btn').forEach(function(btn){btn.addEventListener('click',function(){confirmDelete('logs',this.dataset.id,'Incidente',loadIncidentes);});});
+    }else{em.style.display='';}
+}
+function filterIncidents(){
+    var q=document.getElementById('inc-search').value.trim();
+    renderIncidents(q||null);
+}
+
+// BRIEFING DIARIO
+async function loadBriefing(){
+    var today=new Date();
+    var dateStr=today.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    document.getElementById('briefing-date').textContent=dateStr.toUpperCase();
+    try{
+        var v=await sb.from('vessels').select('status');var total=v.data?v.data.length:0;
+        var active=v.data?v.data.filter(function(x){var s=(x.status||'').toLowerCase();return s.indexOf('viaje')>=0||s==='active'}).length:0;
+        document.getElementById('brief-vessels').textContent=active+'/'+total;
+        var vj=await sb.from('voyages').select('status');var trips=vj.data?vj.data.filter(function(x){var s=(x.status||'').toLowerCase();return s==='navegando'||s==='en_curso'}).length:0;
+        document.getElementById('brief-trips').textContent=trips;
+        var fl=await sb.from('fuel_logs').select('liters').limit(30);var totalFuel=fl.data?fl.data.reduce(function(s,x){return s+(x.liters||0)},0):0;
+        document.getElementById('brief-fuel').textContent=totalFuel>0?totalFuel.toLocaleString()+'L':'0L';
+        var cr=await sb.from('crew_members').select('status');var emb=cr.data?cr.data.filter(function(x){return(x.status||'').toLowerCase()==='embarcado'||x.status==='active'}).length:0;
+        document.getElementById('brief-crew').textContent=emb+'/'+(cr.data?cr.data.length:0);
+        var w=await fetch('https://api.open-meteo.com/v1/forecast?latitude=-25.286&longitude=-57.647&current=temperature_2m,wind_speed_10m,weather_code,relative_humidity_2m&timezone=America/Asuncion');
+        var wd=await w.json();
+        if(wd.current){
+            var codes={0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',45:'Niebla',51:'Llovizna',61:'Lluvia',80:'Chaparron',95:'Tormenta'};
+            var desc=codes[wd.current.weather_code]||'Variado';
+            document.getElementById('briefing-weather').innerHTML='<i class="fa-solid fa-cloud-sun"></i><div class="info-card-text"><h4>'+desc+' - '+Math.round(wd.current.temperature_2m)+'C</h4><p>Viento: '+Math.round(wd.current.wind_speed_10m)+' km/h | Humedad: '+(wd.current.relative_humidity_2m||'--')+'% | Asuncion, PY</p></div>';
+        }
+        var lg=await sb.from('logs').select('*').order('created_at',{ascending:false}).limit(5);
+        var act=document.getElementById('briefing-activity');act.innerHTML='';
+        if(lg.data&&lg.data.length>0){
+            lg.data.forEach(function(l){
+                var t=l.created_at?new Date(l.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+                var icon=l.action_type==='INCIDENTE'?'fa-triangle-exclamation':l.action_type==='DRAFT_READING'?'fa-ruler-vertical':'fa-bookmark';
+                var color=l.action_type==='INCIDENTE'?'var(--error)':'var(--text-primary)';
+                act.innerHTML+='<div class="info-card" style="margin-bottom:8px"><i class="fa-solid '+icon+'" style="color:'+color+'"></i><div class="info-card-text"><h4>'+(l.title||l.action_type||'Actividad')+'</h4><p>'+(l.vessel_name||'')+' - '+(l.description||'')+' - '+t+'</p></div></div>';
+            });
+        }else{act.innerHTML='<div class="empty-state"><i class="fa-regular fa-circle-check"></i><p>Sin actividad reciente</p></div>';}
+        var alertsDiv=document.getElementById('briefing-alerts');
+        var inc=await sb.from('logs').select('*').eq('action_type','INCIDENTE').order('created_at',{ascending:false}).limit(5);
+        if(inc.data&&inc.data.length>0){
+            alertsDiv.innerHTML='';
+            inc.data.forEach(function(i){
+                var det=typeof i.details==='string'?JSON.parse(i.details||'{}'):i.details||{};
+                var sev=det.severity||'Medio';
+                var sevC=sev==='Critico'?'var(--error)':sev==='Alto'?'var(--warning)':'var(--accent)';
+                alertsDiv.innerHTML+='<div class="info-card" style="margin-bottom:8px;border-left:3px solid '+sevC+'"><i class="fa-solid fa-triangle-exclamation" style="color:'+sevC+'"></i><div class="info-card-text"><h4>'+(i.title||'Incidente')+'</h4><p>'+(i.vessel_name||'')+' - '+sev+' - '+(det.type||'')+' '+(det.status||'')+'</p></div></div>';
+            });
+        }
+    }catch(e){console.log('Briefing:',e);}
+}
