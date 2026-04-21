@@ -513,31 +513,117 @@ async function sendCopiloto(){
 
 // DASHBOARD DINAMICO
 async function loadDashboardExtras(){
-    // Weather from open-meteo
+    // Greeting by time of day
+    var h=new Date().getHours();
+    var greet=h<12?'Buenos dias,':h<18?'Buenas tardes,':'Buenas noches,';
+    var userName=(sb.auth.currentUser&&sb.auth.currentUser.email)?sb.auth.currentUser.email.split('@')[0]:'Capitan';
+    userName=userName.charAt(0).toUpperCase()+userName.slice(1);
+    var el=document.getElementById('dash-greeting');
+    if(el)el.innerHTML=greet+'<br><em>'+userName+'.</em>';
+    // Week & date
+    var now=new Date();var oneJan=new Date(now.getFullYear(),0,1);var weekNum=Math.ceil((((now-oneJan)/86400000)+oneJan.getDay()+1)/7);
+    var de=document.getElementById('dash-week');if(de)de.textContent='SEMANA '+weekNum+' · '+now.getFullYear();
+    var dd=document.getElementById('dash-date');if(dd)dd.textContent=now.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'});
+    // Sync indicator
+    var sy=document.getElementById('dash-sync');if(sy)sy.textContent='FLOTA SINCRONIZADA · '+now.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+    // Weather
     try{
-        var w=await fetch('https://api.open-meteo.com/v1/forecast?latitude=-25.286&longitude=-57.647&current=temperature_2m,wind_speed_10m,weather_code&timezone=America/Asuncion');
+        var w=await fetch('https://api.open-meteo.com/v1/forecast?latitude=-25.286&longitude=-57.647&current=temperature_2m,wind_speed_10m,weather_code,relative_humidity_2m&timezone=America/Asuncion');
         var wd=await w.json();
         if(wd.current){
             var codes={0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',45:'Niebla',51:'Llovizna',61:'Lluvia',80:'Chaparron',95:'Tormenta'};
             var desc=codes[wd.current.weather_code]||'Variado';
-            document.getElementById('dash-weather').textContent=desc+', '+Math.round(wd.current.temperature_2m)+'°C - Viento '+Math.round(wd.current.wind_speed_10m)+' km/h';
+            var t2=document.getElementById('dash-weather2');if(t2)t2.textContent=desc;
+            var tt=document.getElementById('dash-temp');if(tt)tt.textContent=Math.round(wd.current.temperature_2m);
+            var tw=document.getElementById('dash-wind');if(tw)tw.textContent=Math.round(wd.current.wind_speed_10m);
+            var th=document.getElementById('dash-humidity');if(th)th.textContent=wd.current.relative_humidity_2m||'--';
         }
     }catch(e){}
-    // Fuel summary
+    // Hydro levels (3 stations)
     try{
-        var f=await sb.from('fuel_logs').select('liters').limit(50);
-        if(f.data&&f.data.length>0){var total=f.data.reduce(function(s,x){return s+(x.liters||0)},0);document.getElementById('dash-fuel').textContent='Total registrado: '+total.toLocaleString()+' L ('+f.data.length+' cargas)';}
-        else{document.getElementById('dash-fuel').textContent='Sin registros de consumo';}
+        var stations=[{id:'dash-h-asu',lat:-25.3,lon:-57.7},{id:'dash-h-pir',lat:-26.85,lon:-58.35},{id:'dash-h-ros',lat:-32.95,lon:-60.65}];
+        for(var i=0;i<stations.length;i++){
+            try{
+                var sr=await fetch('https://flood-api.open-meteo.com/v1/flood?latitude='+stations[i].lat+'&longitude='+stations[i].lon+'&daily=river_discharge&past_days=1&forecast_days=0');
+                var sd=await sr.json();
+                var val=sd.daily&&sd.daily.river_discharge?sd.daily.river_discharge[0]:0;
+                var el2=document.getElementById(stations[i].id);
+                if(el2)el2.textContent=val?Math.round(val).toLocaleString()+' m³/s':'--';
+                if(i===0){
+                    var kh=document.getElementById('dash-kpi-hidro');if(kh)kh.textContent=val?Math.round(val).toLocaleString():'--';
+                    var hs=document.getElementById('dash-hidro-status');if(hs)hs.textContent='Navegable — caudal '+( val>2000?'normal':'bajo');
+                }
+            }catch(e){}
+        }
     }catch(e){}
-    // Viajes count
+    // Fuel KPI
+    try{
+        var f=await sb.from('fuel_logs').select('liters').limit(200);
+        if(f.data&&f.data.length>0){
+            var total=f.data.reduce(function(s,x){return s+(x.liters||0)},0);
+            var kf=document.getElementById('dash-kpi-fuel');if(kf)kf.textContent=(total/1000).toFixed(1);
+            var kfs=document.getElementById('dash-kpi-fuel-sub');if(kfs)kfs.textContent=f.data.length+' cargas registradas';
+        }
+    }catch(e){}
+    // Crew KPI
+    try{
+        var cr=await sb.from('crew_members').select('status',{count:'exact'});
+        var kc=document.getElementById('dash-kpi-crew');if(kc)kc.textContent=cr.count||0;
+        var kcs=document.getElementById('dash-kpi-crew-sub');if(kcs)kcs.textContent='tripulantes activos';
+    }catch(e){}
+    // Vessels + KPIs
+    try{
+        var v=await sb.from('vessels').select('id,name,type,status,location').order('name').limit(6);
+        if(v.data){
+            var nav=v.data.filter(function(x){return(x.status||'').toLowerCase()==='navegando'||x.status==='en_viaje'}).length;
+            var port=v.data.filter(function(x){return(x.status||'').toLowerCase()==='en_puerto'}).length;
+            document.getElementById('dash-kpi-viaje').textContent=nav;
+            document.getElementById('dash-kpi-viaje-sub').textContent='+'+v.data.length+' disp. total';
+            document.getElementById('dash-kpi-puerto').textContent=port;
+            document.getElementById('dash-kpi-puerto-sub').textContent=v.data.length+' embarcaciones';
+            // Vessel cards
+            var vh='';
+            v.data.forEach(function(ves){
+                var stColor=ves.status==='navegando'||ves.status==='en_viaje'?'var(--success)':ves.status==='mantenimiento'?'var(--warning)':'var(--accent)';
+                var stLabel=(ves.status||'en_puerto').toUpperCase().replace('_',' ');
+                vh+='<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:14px;cursor:pointer" onclick="navigate(\'fleet\')">'+
+                    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'+
+                    '<span style="font-size:13px;font-weight:600">'+ves.name+'</span>'+
+                    '<span style="display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:'+stColor+'"></span><span style="font-size:9px;font-weight:700;color:var(--text-secondary);letter-spacing:0.3px">'+stLabel+'</span></span></div>'+
+                    '<div style="font-size:11px;color:var(--text-secondary)">'+(ves.type||'Embarcacion')+' · '+(ves.location||'ASU')+'</div></div>';
+            });
+            document.getElementById('dash-vessels').innerHTML=vh;
+        }
+    }catch(e){}
+    // Viajes alertas KPI
     try{
         var vj=await sb.from('voyages').select('status');
-        if(vj.data){var nav=vj.data.filter(function(v){return(v.status||'').toLowerCase()==='navegando'||v.status==='en_curso'}).length;document.getElementById('dash-viajes').textContent=nav+' en curso, '+(vj.data.length-nav)+' completados';}
+        if(vj.data){
+            var pending=vj.data.filter(function(x){return x.status==='pendiente'}).length;
+            document.getElementById('dash-kpi-alertas').textContent=pending;
+            document.getElementById('dash-kpi-alertas-sub').textContent=vj.data.length+' viajes total';
+        }
     }catch(e){}
-    // AIS count
+    // Activity feed (recent logs)
     try{
-        var ais=await sb.from('ais_traffic').select('mmsi',{count:'exact',head:true});
-        document.getElementById('dash-ais').textContent=(ais.count||0)+' embarcaciones detectadas en la Hidrovia';
+        var lg=await sb.from('logs').select('title,action_type,vessel_name,created_at').order('created_at',{ascending:false}).limit(5);
+        if(lg.data&&lg.data.length>0){
+            var ah='';
+            lg.data.forEach(function(l){
+                var date=new Date(l.created_at);
+                var diff=Math.round((Date.now()-date.getTime())/60000);
+                var ago=diff<60?diff+'min':diff<1440?Math.round(diff/60)+'h':Math.round(diff/1440)+'d';
+                var icon='fa-solid fa-circle-info';
+                if(l.action_type==='DRAFT_READING')icon='fa-solid fa-ruler-vertical';
+                else if(l.action_type==='INCIDENTE')icon='fa-solid fa-triangle-exclamation';
+                else if(l.action_type==='FUEL')icon='fa-solid fa-gas-pump';
+                ah+='<div class="info-card"><i class="'+icon+'"></i><div class="info-card-text"><h4>'+(l.title||l.action_type||'Actividad')+'</h4><p>'+(l.vessel_name||'')+' · hace '+ago+'</p></div></div>';
+            });
+            document.getElementById('dash-activity').innerHTML=ah;
+            document.getElementById('dash-activity-empty').style.display='none';
+        }else{
+            document.getElementById('dash-activity-empty').style.display='block';
+        }
     }catch(e){}
 }
 

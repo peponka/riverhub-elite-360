@@ -78,19 +78,53 @@
         <div class="content">
             <!-- DASHBOARD -->
             <div class="view active" id="view-dashboard">
-                <div class="fluvia-title">Panel de<br><em>Control.</em></div>
-                <div class="fluvia-subtitle">HIDROVIA PARAGUAY-PARANA - FLOTA ACTIVA</div>
-                <div class="kpi-grid">
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--success)"></div><div class="kpi-value">0</div><div class="kpi-label">EN VIAJE</div></div>
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--accent)"></div><div class="kpi-value">0</div><div class="kpi-label">EN PUERTO</div></div>
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--warning)"></div><div class="kpi-value">0</div><div class="kpi-label">MANTENIM.</div></div>
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--accent)"></div><div class="kpi-value">0</div><div class="kpi-label">ALERTAS</div></div>
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+                    <div>
+                        <div class="fluvia-title" id="dash-greeting">Buen dia,<br><em>Capitan.</em></div>
+                        <div class="fluvia-subtitle">CENTRO UNIFICADO · NIVEL DE SERVICIO OPTIMO · <span id="dash-sync">SINCRONIZANDO...</span></div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px" id="dash-week">SEMANA -- · 2026</div>
+                        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px" id="dash-date">--</div>
+                    </div>
                 </div>
-                <div class="section-title">Informacion</div>
-                <div class="info-card"><i class="fa-solid fa-gas-pump"></i><div class="info-card-text"><h4>Estado del Combustible</h4><p id="dash-fuel">Cargando consumo...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
-                <div class="info-card"><i class="fa-regular fa-calendar"></i><div class="info-card-text"><h4>Proximos Viajes</h4><p id="dash-viajes">Consultando manifiestos...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
-                <div class="info-card"><i class="fa-solid fa-sun"></i><div class="info-card-text"><h4 id="dash-weather-title">Meteorologia (ASU)</h4><p id="dash-weather">Cargando clima...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
-                <div class="info-card"><i class="fa-solid fa-satellite-dish"></i><div class="info-card-text"><h4>Trafico AIS</h4><p id="dash-ais">Escaneando hidrovia...</p></div><i class="fa-solid fa-chevron-right chevron"></i></div>
+                <!-- KPIs -->
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px">
+                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--success)"></div><div class="kpi-value" id="dash-kpi-viaje">0</div><div class="kpi-label">EN VIAJE</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-viaje-sub">--</div></div>
+                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--accent)"></div><div class="kpi-value" id="dash-kpi-puerto">0</div><div class="kpi-label">EN PUERTO</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-puerto-sub">--</div></div>
+                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--warning)"></div><div class="kpi-value" id="dash-kpi-alertas">0</div><div class="kpi-label">ALERTAS</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-alertas-sub">Atención requerida</div></div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
+                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--orange)"></div><div class="kpi-value" id="dash-kpi-fuel">--</div><div class="kpi-label">CONSUMO TOTAL</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-fuel-sub">kL registrados</div></div>
+                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--purple)"></div><div class="kpi-value" id="dash-kpi-hidro">--</div><div class="kpi-label">CAUDAL ASU</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-hidro-sub">m³/s · promedio</div></div>
+                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--accent-teal)"></div><div class="kpi-value" id="dash-kpi-crew">0</div><div class="kpi-label">TRIPULACION</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-crew-sub">embarcados activos</div></div>
+                </div>
+                <!-- Weather + Hydro bar -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px">
+                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-sun" style="font-size:24px;color:var(--warning)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">METEOROLOGIA · ASU</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-weather2">Cargando...</div></div></div>
+                        <div style="display:flex;gap:16px;margin-top:10px">
+                            <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-temperature-half" style="width:14px"></i> <span id="dash-temp">--</span>°C</div>
+                            <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-wind" style="width:14px"></i> <span id="dash-wind">--</span> km/h</div>
+                            <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-droplet" style="width:14px"></i> <span id="dash-humidity">--</span>%</div>
+                        </div>
+                    </div>
+                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-water" style="font-size:24px;color:var(--accent)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">HIDROVIA · NIVEL</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-hidro-status">Consultando...</div></div></div>
+                        <div style="display:flex;gap:16px;margin-top:10px">
+                            <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">ASU</span> <span id="dash-h-asu">--</span></div>
+                            <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">PIL</span> <span id="dash-h-pir">--</span></div>
+                            <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">ROS</span> <span id="dash-h-ros">--</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recent Vessels -->
+                <div class="section-title">Embarcaciones Recientes</div>
+                <div id="dash-vessels" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+                <!-- Activity feed -->
+                <div class="section-title">Actividad Reciente</div>
+                <div id="dash-activity"></div>
+                <div class="empty-state" id="dash-activity-empty" style="display:none"><i class="fa-solid fa-clock-rotate-left"></i><p>Sin actividad reciente</p></div>
             </div>
             <!-- MAPA -->
             <div class="view" id="view-mapa" style="padding:0;height:100%;position:relative;">
