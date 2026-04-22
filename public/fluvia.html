@@ -78,53 +78,132 @@
         <div class="content">
             <!-- DASHBOARD -->
             <div class="view active" id="view-dashboard">
-                <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+                <!-- Status Bar -->
+                <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:10px;padding:10px 16px;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+                    <div style="display:flex;align-items:center;gap:16px;font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">
+                        <span>CENTRO UNIFICADO</span>
+                        <span style="color:var(--success)">● NIVEL DE SERVICIO <strong>ÓPTIMO</strong></span>
+                        <span id="dash-sync">FLOTA SINCRONIZADA HACE <span id="dash-sync-time">--</span> S</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text-secondary)">
+                        <span id="dash-week">SEMANA -- · 2026</span>
+                        <button onclick="exportDashboardPDF()" style="background:none;border:1px solid var(--separator);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--text-secondary)"><i class="fa-solid fa-file-export"></i> Exportar</button>
+                    </div>
+                </div>
+
+                <!-- 5 KPI Cards Row -->
+                <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px" id="dash-kpi-grid">
+                    <div class="kpi-card" style="position:relative;overflow:hidden">
+                        <div style="display:flex;align-items:center;justify-content:space-between">
+                            <div class="kpi-label">FLOTA ACTIVA</div>
+                            <i class="fa-solid fa-ship" style="color:var(--accent);font-size:14px;opacity:0.5"></i>
+                        </div>
+                        <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px">
+                            <span class="kpi-value" id="dash-kpi-viaje" style="font-size:32px">0</span>
+                            <span style="font-size:14px;color:var(--text-secondary)">/ <span id="dash-kpi-total">0</span></span>
+                        </div>
+                        <div style="font-size:11px;color:var(--success);margin-top:6px" id="dash-kpi-viaje-sub"><i class="fa-solid fa-arrow-up"></i> -- disp.</div>
+                    </div>
+                    <div class="kpi-card" style="position:relative;overflow:hidden">
+                        <div style="display:flex;align-items:center;justify-content:space-between">
+                            <div class="kpi-label">ALARMAS CRÍTICAS</div>
+                            <i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);font-size:14px;opacity:0.5"></i>
+                        </div>
+                        <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px">
+                            <span class="kpi-value" id="dash-kpi-alertas" style="font-size:32px;color:var(--warning)">0</span>
+                        </div>
+                        <div style="font-size:11px;color:var(--warning);margin-top:6px" id="dash-kpi-alertas-sub">Atención requerida</div>
+                    </div>
+                    <div class="kpi-card" style="position:relative;overflow:hidden">
+                        <div style="display:flex;align-items:center;justify-content:space-between">
+                            <div class="kpi-label">CONSUMO TOTAL</div>
+                            <i class="fa-solid fa-gas-pump" style="color:var(--orange);font-size:14px;opacity:0.5"></i>
+                        </div>
+                        <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
+                            <span class="kpi-value" id="dash-kpi-fuel" style="font-size:32px">--</span>
+                            <span style="font-size:13px;color:var(--text-secondary)">kL</span>
+                        </div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:6px" id="dash-kpi-fuel-sub">kL/24h registrados</div>
+                    </div>
+                    <div class="kpi-card" style="position:relative;overflow:hidden">
+                        <div style="display:flex;align-items:center;justify-content:space-between">
+                            <div class="kpi-label">CALADO MÍNIMO</div>
+                            <i class="fa-solid fa-ruler-vertical" style="color:var(--accent);font-size:14px;opacity:0.5"></i>
+                        </div>
+                        <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
+                            <span class="kpi-value" id="dash-kpi-calado" style="font-size:32px">--</span>
+                            <span style="font-size:13px;color:var(--text-secondary)">pies</span>
+                        </div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:6px" id="dash-kpi-calado-sub">margen: --</div>
+                    </div>
+                    <div class="kpi-card" style="position:relative;overflow:hidden">
+                        <div style="display:flex;align-items:center;justify-content:space-between">
+                            <div class="kpi-label">EFICIENCIA RUTA</div>
+                            <i class="fa-solid fa-route" style="color:var(--success);font-size:14px;opacity:0.5"></i>
+                        </div>
+                        <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
+                            <span class="kpi-value" id="dash-kpi-efficiency" style="font-size:32px;color:var(--success)">--</span>
+                            <span style="font-size:13px;color:var(--text-secondary)">%</span>
+                        </div>
+                        <div style="font-size:11px;color:var(--success);margin-top:6px"><i class="fa-solid fa-arrow-up"></i> Mejor mes del Q</div>
+                    </div>
+                </div>
+
+                <!-- Two column layout: Weather/Hydro + Vessels Panel -->
+                <div style="display:grid;grid-template-columns:1fr 340px;gap:14px;margin-bottom:16px">
+                    <!-- LEFT: Weather + Hydro -->
                     <div>
-                        <div class="fluvia-title" id="dash-greeting">Buen dia,<br><em>Capitan.</em></div>
-                        <div class="fluvia-subtitle">CENTRO UNIFICADO · NIVEL DE SERVICIO OPTIMO · <span id="dash-sync">SINCRONIZANDO...</span></div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+                            <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px">
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-sun" style="font-size:24px;color:var(--warning)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">METEOROLOGÍA · ASU</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-weather2">Cargando...</div></div></div>
+                                <div style="display:flex;gap:16px;margin-top:10px">
+                                    <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-temperature-half" style="width:14px"></i> <span id="dash-temp">--</span>°C</div>
+                                    <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-wind" style="width:14px"></i> <span id="dash-wind">--</span> km/h</div>
+                                    <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-droplet" style="width:14px"></i> <span id="dash-humidity">--</span>%</div>
+                                </div>
+                            </div>
+                            <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px">
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-water" style="font-size:24px;color:var(--accent)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">HIDROVÍA · NIVEL</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-hidro-status">Consultando...</div></div></div>
+                                <div style="display:flex;gap:16px;margin-top:10px">
+                                    <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">ASU</span> <span id="dash-h-asu">--</span></div>
+                                    <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">PIL</span> <span id="dash-h-pir">--</span></div>
+                                    <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">ROS</span> <span id="dash-h-ros">--</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Vessel Cards Grid -->
+                        <div class="section-title" style="display:flex;align-items:center;justify-content:space-between"><span>Embarcaciones Recientes</span><span style="font-size:11px;color:var(--accent);cursor:pointer" onclick="navigate('fleet')">Ver todas →</span></div>
+                        <div id="dash-vessels" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+                        <!-- Activity feed -->
+                        <div class="section-title" style="margin-top:16px">Actividad Reciente</div>
+                        <div id="dash-activity"></div>
+                        <div class="empty-state" id="dash-activity-empty" style="display:none"><i class="fa-solid fa-clock-rotate-left"></i><p>Sin actividad reciente</p></div>
                     </div>
-                    <div style="text-align:right">
-                        <div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px" id="dash-week">SEMANA -- · 2026</div>
-                        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px" id="dash-date">--</div>
-                    </div>
-                </div>
-                <!-- KPIs -->
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px">
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--success)"></div><div class="kpi-value" id="dash-kpi-viaje">0</div><div class="kpi-label">EN VIAJE</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-viaje-sub">--</div></div>
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--accent)"></div><div class="kpi-value" id="dash-kpi-puerto">0</div><div class="kpi-label">EN PUERTO</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-puerto-sub">--</div></div>
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--warning)"></div><div class="kpi-value" id="dash-kpi-alertas">0</div><div class="kpi-label">ALERTAS</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-alertas-sub">Atención requerida</div></div>
-                </div>
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--orange)"></div><div class="kpi-value" id="dash-kpi-fuel">--</div><div class="kpi-label">CONSUMO TOTAL</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-fuel-sub">kL registrados</div></div>
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--purple)"></div><div class="kpi-value" id="dash-kpi-hidro">--</div><div class="kpi-label">CAUDAL ASU</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-hidro-sub">m³/s · promedio</div></div>
-                    <div class="kpi-card"><div class="kpi-dot" style="background:var(--accent-teal)"></div><div class="kpi-value" id="dash-kpi-crew">0</div><div class="kpi-label">TRIPULACION</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px" id="dash-kpi-crew-sub">embarcados activos</div></div>
-                </div>
-                <!-- Weather + Hydro bar -->
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px">
-                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px">
-                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-sun" style="font-size:24px;color:var(--warning)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">METEOROLOGIA · ASU</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-weather2">Cargando...</div></div></div>
-                        <div style="display:flex;gap:16px;margin-top:10px">
-                            <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-temperature-half" style="width:14px"></i> <span id="dash-temp">--</span>°C</div>
-                            <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-wind" style="width:14px"></i> <span id="dash-wind">--</span> km/h</div>
-                            <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-droplet" style="width:14px"></i> <span id="dash-humidity">--</span>%</div>
+                    <!-- RIGHT: Live Vessels Panel -->
+                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:16px;height:fit-content">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                            <div style="font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--text-primary)">Embarcaciones</div>
+                            <div style="font-size:11px;color:var(--text-secondary)" id="dash-fleet-count">-- bajo monitoreo</div>
+                        </div>
+                        <!-- Vessel status list -->
+                        <div id="dash-live-vessels" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto"></div>
+                        <!-- Selected vessel detail -->
+                        <div id="dash-vessel-detail" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--separator)">
+                            <div style="font-size:10px;font-weight:600;letter-spacing:0.5px;color:var(--text-secondary);margin-bottom:8px">SELECCIONADA · <span id="dash-sel-imo">--</span></div>
+                            <div style="font-size:18px;font-weight:700;color:var(--text-primary)" id="dash-sel-name">--</div>
+                            <div style="font-size:11px;color:var(--text-secondary);margin-top:2px" id="dash-sel-route">--</div>
+                            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
+                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">CONVOY</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-convoy">--</div></div>
+                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">COMBUSTIBLE</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-fuel">--%</div></div>
+                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">ETA</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-eta">--</div></div>
+                            </div>
+                            <div style="display:flex;gap:8px;margin-top:12px">
+                                <button onclick="navigate('bitacora')" style="flex:1;padding:8px;border:1px solid var(--separator);border-radius:8px;background:var(--bg-secondary);font-size:11px;font-weight:600;cursor:pointer;color:var(--text-primary)"><i class="fa-solid fa-book"></i> Abrir bitácora</button>
+                                <button onclick="navigate('comunicaciones')" style="flex:1;padding:8px;border:1px solid var(--separator);border-radius:8px;background:var(--bg-secondary);font-size:11px;font-weight:600;cursor:pointer;color:var(--text-primary)"><i class="fa-solid fa-message"></i> Contactar</button>
+                            </div>
                         </div>
                     </div>
-                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px">
-                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-water" style="font-size:24px;color:var(--accent)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">HIDROVIA · NIVEL</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-hidro-status">Consultando...</div></div></div>
-                        <div style="display:flex;gap:16px;margin-top:10px">
-                            <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">ASU</span> <span id="dash-h-asu">--</span></div>
-                            <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">PIL</span> <span id="dash-h-pir">--</span></div>
-                            <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">ROS</span> <span id="dash-h-ros">--</span></div>
-                        </div>
-                    </div>
                 </div>
-                <!-- Recent Vessels -->
-                <div class="section-title">Embarcaciones Recientes</div>
-                <div id="dash-vessels" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
-                <!-- Activity feed -->
-                <div class="section-title">Actividad Reciente</div>
-                <div id="dash-activity"></div>
-                <div class="empty-state" id="dash-activity-empty" style="display:none"><i class="fa-solid fa-clock-rotate-left"></i><p>Sin actividad reciente</p></div>
             </div>
             <!-- MAPA -->
             <div class="view" id="view-mapa" style="padding:0;height:100%;position:relative;">
