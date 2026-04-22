@@ -54,64 +54,41 @@
         </div>
     </nav>
 
-    <!-- ============ HERO ============ -->
-    <section class="hero">
-        <div class="hero-bg">
-            <div class="hero-gradient"></div>
-            <div class="hero-grid"></div>
-            <div class="hero-wave">
-                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-                    <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,60 1440,60 L1440,120 L0,120Z" fill="white" />
-                </svg>
-            </div>
-        </div>
-
-        <div class="container hero-content">
-            <div class="hero-badge">
-                <i class="fas fa-satellite-dish"></i>
-                <span>Monitoreo AIS en tiempo real</span>
-            </div>
-
-            <h1>Gestión inteligente<br>de tu flota en la <span class="text-gradient">Hidrovía</span></h1>
-
-            <p class="hero-subtitle">
-                Controlá tus <strong>remolcadores, barcazas y convoyes</strong> en la Hidrovía Paraguay-Paraná.
-                Desde el armado del convoy hasta la entrega de carga, todo en una sola plataforma.
-            </p>
-
-            <div class="hero-ctas">
-                <a href="fluvia.html" class="btn-primary">
-                    <i class="fas fa-rocket"></i>
-                    Empezar — 15 días gratis
-                </a>
-                <a href="#como-funciona" class="btn-outline">
-                    <i class="fas fa-play-circle"></i>
-                    Ver cómo funciona
-                </a>
-            </div>
-
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <span class="hero-stat-number">32</span>
-                    <span class="hero-stat-label">Módulos integrados</span>
+    <!-- ============ HERO SLIDER ============ -->
+    <section class="hero" style="padding:0;min-height:auto;overflow:visible">
+        <!-- Fixed convoy banner -->
+        <div style="position:relative;width:100%;height:520px;overflow:hidden">
+            <img src="img/fluvia-convoy.jpg" alt="Convoy fluvial" style="width:100%;height:100%;object-fit:cover;display:block">
+            <!-- Gradient overlay -->
+            <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(15,23,42,0.55) 0%, rgba(15,23,42,0.75) 60%, rgba(15,23,42,0.92) 100%)"></div>
+            <!-- Content overlay -->
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:100px 24px 40px;text-align:center;z-index:2">
+                <div class="hero-badge" style="background:rgba(255,255,255,0.15);color:white;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2);animation:fadeUp 0.6s ease both">
+                    <i class="fas fa-satellite-dish"></i>
+                    <span>Monitoreo AIS en tiempo real</span>
                 </div>
-                <div class="hero-stat-divider"></div>
-                <div class="hero-stat">
-                    <span class="hero-stat-number">24/7</span>
-                    <span class="hero-stat-label">Tracking satelital</span>
-                </div>
-                <div class="hero-stat-divider"></div>
-                <div class="hero-stat">
-                    <span class="hero-stat-number">100%</span>
-                    <span class="hero-stat-label">Cloud & Mobile</span>
+                <h1 style="color:white;font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:800;line-height:1.15;letter-spacing:-0.03em;margin-bottom:20px;animation:fadeUp 0.6s ease 0.1s both;text-shadow:0 2px 20px rgba(0,0,0,0.3)">Gestión inteligente<br>de tu flota en la <span style="background:linear-gradient(135deg,#60a5fa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Hidrovía</span></h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:1.1rem;max-width:580px;line-height:1.7;margin-bottom:32px;animation:fadeUp 0.6s ease 0.2s both">
+                    Controlá tus <strong style="color:white">remolcadores, barcazas y convoyes</strong> en la Hidrovía Paraguay-Paraná. Todo en una sola plataforma.
+                </p>
+                <div class="hero-ctas" style="margin-bottom:0;animation:fadeUp 0.6s ease 0.3s both">
+                    <a href="fluvia.html" class="btn-primary" style="box-shadow:0 4px 20px rgba(0,102,255,0.4)">
+                        <i class="fas fa-rocket"></i> Empezar — 15 días gratis
+                    </a>
+                    <a href="#como-funciona" class="btn-outline" style="color:white;border-color:rgba(255,255,255,0.35)">
+                        <i class="fas fa-play-circle"></i> Ver cómo funciona
+                    </a>
                 </div>
             </div>
         </div>
-
-        <!-- Hero Visual: Product Illustration -->
-        <div class="hero-visual">
-            <div style="border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.15);border:1px solid rgba(0,0,0,0.08)">
-                <img src="img/fluvia-hero.jpg" alt="Fluvia — Gestión Inteligente de Flotas" style="width:100%;height:auto;display:block">
+        <!-- Stats bar -->
+        <div style="background:white;border-bottom:1px solid #e2e8f0;padding:24px 0">
+            <div class="container" style="display:flex;justify-content:center;gap:48px;align-items:center">
+                <div class="hero-stat"><span class="hero-stat-number">32</span><span class="hero-stat-label">Módulos integrados</span></div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat"><span class="hero-stat-number">24/7</span><span class="hero-stat-label">Tracking satelital</span></div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat"><span class="hero-stat-number">100%</span><span class="hero-stat-label">Cloud & Mobile</span></div>
             </div>
         </div>
     </section>
