@@ -49,39 +49,71 @@ serve(async (req) => {
     const serviceAccount = JSON.parse(serviceAccountJson);
     const accessToken = await getFirebaseAccessToken(serviceAccount);
 
-    // Send to each token
-    const results = await Promise.allSettled(
-      tokens.map((token) =>
-        fetch(`https://fcm.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/messages:send`, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: {
-              token,
-              notification: {
-                title: title || "Fluvia",
-                body: body || "Nueva notificación",
-              },
-              data: data || {},
-              android: {
-                priority: "high",
+    // Send in chunks of 200 to avoid FCM rate limits
+    const CHUNK_SIZE = 200;
+    let sent = 0;
+    let failed = 0;
+    const invalidTokens: string[] = [];
+
+    for (let i = 0; i < tokens.length; i += CHUNK_SIZE) {
+      const chunk = tokens.slice(i, i + CHUNK_SIZE);
+      const results = await Promise.allSettled(
+        chunk.map(async (token) => {
+          const res = await fetch(`https://fcm.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/messages:send`, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: {
+                token,
                 notification: {
-                  channel_id: "fluvia_channel",
-                  icon: "@mipmap/ic_launcher",
+                  title: title || "Fluvia",
+                  body: body || "Nueva notificación",
+                },
+                data: data || {},
+                android: {
+                  priority: "high",
+                  notification: {
+                    channel_id: "fluvia_channel",
+                    icon: "@mipmap/ic_launcher",
+                  },
                 },
               },
-            },
-          }),
+            }),
+          });
+          if (!res.ok) {
+            const errBody = await res.json().catch(() => ({}));
+            if (errBody?.error?.status === "UNREGISTERED" || errBody?.error?.code === 404) {
+              invalidTokens.push(token);
+            }
+            throw new Error(`FCM ${res.status}`);
+          }
+          return res;
         })
-      )
-    );
+      );
+      sent += results.filter((r) => r.status === "fulfilled").length;
+      failed += results.filter((r) => r.status === "rejected").length;
+    }
 
-    const sent = results.filter((r) => r.status === "fulfilled").length;
+    // Clean up invalid/unregistered tokens from DB
+    if (invalidTokens.length > 0) {
+      for (const deadToken of invalidTokens) {
+        await fetch(`${supabaseUrl}/rest/v1/user_profiles?fcm_token=eq.${encodeURIComponent(deadToken)}`, {
+          method: "PATCH",
+          headers: {
+            "apikey": supabaseKey,
+            "Authorization": `Bearer ${supabaseKey}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal",
+          },
+          body: JSON.stringify({ fcm_token: null }),
+        });
+      }
+    }
 
-    return new Response(JSON.stringify({ success: true, sent, total: tokens.length }), {
+    return new Response(JSON.stringify({ success: true, sent, failed, cleaned: invalidTokens.length, total: tokens.length }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {

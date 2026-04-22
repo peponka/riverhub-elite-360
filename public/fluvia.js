@@ -32,6 +32,10 @@ async function doLogin(){
 }
 
 async function doLogout(){
+    // Cleanup timers and realtime subscriptions
+    if(window._dashSyncInterval) clearInterval(window._dashSyncInterval);
+    if(window._aisInterval) clearInterval(window._aisInterval);
+    if(window._notifChannel) { try { window._notifChannel.unsubscribe(); } catch(e){} }
     await sb.auth.signOut();
     document.getElementById('app-shell').style.display='none';
     document.getElementById('login-screen').style.display='flex';
@@ -152,13 +156,16 @@ function renderNotifs(){
     list.innerHTML=notifData.map(function(n,i){
         var t=n.created_at?new Date(n.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
         var cls=i<3?'notif-item unread':'notif-item';
-        return '<div class="'+cls+'"><div class="notif-title">'+(n.title||n.action_type||'Actividad')+'</div><div class="notif-desc">'+(n.description||n.details||'')+'</div><div class="notif-time">'+t+'</div></div>';
+        return '<div class="'+cls+'"><div class="notif-title">'+esc(n.title||n.action_type||'Actividad')+'</div><div class="notif-desc">'+esc(n.description||n.details||'')+'</div><div class="notif-time">'+t+'</div></div>';
     }).join('');
 }
 loadNotifications();
 // Real-time subscription for new notifications
 try{
-    sb.channel('notif-logs').on('postgres_changes',{event:'INSERT',schema:'public',table:'logs'},function(payload){
+    var notifFilter = currentCompanyId ? 'company_id=eq.'+currentCompanyId : undefined;
+    var channelOpts = {event:'INSERT',schema:'public',table:'logs'};
+    if(notifFilter) channelOpts.filter = notifFilter;
+    window._notifChannel = sb.channel('notif-logs').on('postgres_changes',channelOpts,function(payload){
         notifData.unshift(payload.new);
         if(notifData.length>15)notifData.pop();
         renderNotifs();
@@ -167,7 +174,7 @@ try{
 
 // LOADERS
 var dashSyncTimer=0;
-setInterval(function(){dashSyncTimer++;var el=document.getElementById('dash-sync-time');if(el)el.textContent=dashSyncTimer;},1000);
+window._dashSyncInterval=setInterval(function(){dashSyncTimer++;var el=document.getElementById('dash-sync-time');if(el)el.textContent=dashSyncTimer;},1000);
 
 async function loadDashboard(){
     try{
@@ -222,7 +229,7 @@ async function loadDashboard(){
                 var isMaint=s.indexOf('manten')>=0;
                 var statusColor=isActive?'var(--success)':isMaint?'var(--warning)':'var(--accent)';
                 var statusLabel=isActive?'NAVEGANDO':isMaint?'ATENCIÓN':'EN PUERTO';
-                var speed=isActive?(Math.random()*8+3).toFixed(1):'0';
+                var speed=isActive?'—':'0';
                 var loc=v.location||v.current_position||'ASU';
                 var type=v.type||v.vessel_type||'REM';
                 return '<div onclick="selectDashVessel('+i+')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.15s;border:1px solid transparent;background:var(--bg-primary)" onmouseover="this.style.borderColor=\'var(--separator)\'" onmouseout="this.style.borderColor=\'transparent\'">'+
@@ -255,8 +262,8 @@ function selectDashVessel(idx){
     var s=(v.status||'').toLowerCase();
     var isActive=s==='en viaje'||s==='active'||s==='navegando'||s==='en_viaje';
     var elC=document.getElementById('dash-sel-convoy');if(elC)elC.textContent=isActive?'4+1':'--';
-    var elF=document.getElementById('dash-sel-fuel');if(elF)elF.textContent=isActive?(Math.floor(Math.random()*30+55))+'%':'--';
-    var elE=document.getElementById('dash-sel-eta');if(elE)elE.textContent=isActive?'+'+Math.floor(Math.random()*20+5)+'h':'En puerto';
+    var elF=document.getElementById('dash-sel-fuel');if(elF)elF.textContent=isActive?'—':'—';
+    var elE=document.getElementById('dash-sel-eta');if(elE)elE.textContent=isActive?'—':'En puerto';
 }
 
 async function loadDashWeather(){
@@ -413,8 +420,8 @@ function initMap(){
     loadFleetMarkers();
     // AIS third-party traffic
     loadAISTraffic();
-    // Auto-refresh AIS every 30s
-    setInterval(loadAISTraffic, 30000);
+    // Auto-refresh AIS every 30s (stored for cleanup)
+    window._aisInterval = setInterval(loadAISTraffic, 30000);
     // Hidrovia route — polyline completa Paraguay-Paraná
     var hidroviaRoute=[[-19.0,-57.65],[-20.5,-57.8],[-22.3,-57.9],[-23.4,-57.8],[-25.3,-57.6],[-26.5,-58.1],[-27.3,-58.5],[-29.0,-59.5],[-30.5,-59.9],[-31.5,-60.5],[-32.9,-60.6],[-33.5,-58.5],[-34.6,-58.4]];
     L.polyline(hidroviaRoute,{color:'#3B82F6',weight:2.5,dashArray:'8,6',opacity:0.45}).addTo(map);
@@ -857,11 +864,18 @@ async function loadReportes(){
             var ctx2=document.getElementById('chart-fuel');
             if(ctx2){fuelChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(fuelByDay).slice(-7),datasets:[{label:'Litros',data:Object.values(fuelByDay).slice(-7),backgroundColor:'rgba(59,130,246,0.6)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}});}
         }
-        // Activity Chart
+        // Activity Chart — use real log counts from DB
         if(activityChart)activityChart.destroy();
         var ctx3=document.getElementById('chart-activity');
         var days=[];var counts=[];
-        for(var i=29;i>=0;i--){var dt=new Date();dt.setDate(dt.getDate()-i);days.push((dt.getMonth()+1)+'/'+dt.getDate());counts.push(Math.floor(Math.random()*5));}
+        try {
+            var logsData = await sb.from('logs').select('created_at').gte('created_at', new Date(Date.now()-30*86400000).toISOString()).order('created_at');
+            var logsByDay = {};
+            if(logsData.data) logsData.data.forEach(function(l){ var d = new Date(l.created_at); var k = (d.getMonth()+1)+'/'+d.getDate(); logsByDay[k] = (logsByDay[k]||0)+1; });
+            for(var i=29;i>=0;i--){var dt=new Date();dt.setDate(dt.getDate()-i);var k=(dt.getMonth()+1)+'/'+dt.getDate();days.push(k);counts.push(logsByDay[k]||0);}
+        } catch(e) {
+            for(var i=29;i>=0;i--){var dt=new Date();dt.setDate(dt.getDate()-i);days.push((dt.getMonth()+1)+'/'+dt.getDate());counts.push(0);}
+        }
         if(ctx3){activityChart=new Chart(ctx3,{type:'line',data:{labels:days,datasets:[{label:'Entradas',data:counts,borderColor:'#1A1A2E',backgroundColor:'rgba(26,26,46,0.05)',fill:true,tension:0.4,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false},ticks:{maxTicksLimit:10}}}}});}
     }catch(e){console.log('Reports:',e);}
 }

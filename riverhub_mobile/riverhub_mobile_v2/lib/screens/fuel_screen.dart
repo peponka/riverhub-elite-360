@@ -79,7 +79,7 @@ class _FuelScreenState extends State<FuelScreen> {
       if (capacity <= 0) capacity = 40000;
       _currentLevel = _fuelLogs.isEmpty ? 0 : ((net / capacity) * 100).clamp(5, 100).round();
       _currentAutonomy = (_currentLevel * 2.6).round();
-      _currentEfficiency = _fuelLogs.isEmpty ? 0 : 70 + (vesselId.toString().length % 25);
+      _currentEfficiency = _fuelLogs.isEmpty ? 0 : (totalLoaded > 0 ? ((1 - (totalConsumed / totalLoaded)) * 100).clamp(0, 100).round() : 0);
     } catch (e) {
       debugPrint('Stats Error: $e');
       _currentLevel = 0; _currentAutonomy = 0; _currentEfficiency = 0; _fuelLogs = [];

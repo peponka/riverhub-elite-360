@@ -54,18 +54,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _viajesActivos = 0;
   int _viajesCompletados = 0;
 
+  // Sync counter — use ValueNotifier to avoid full rebuild every second
+  final ValueNotifier<int> _syncNotifier = ValueNotifier<int>(0);
+
   @override
   void initState() {
     super.initState();
     _loadAll();
     _syncTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) setState(() => _syncSeconds++);
+      _syncNotifier.value++;
     });
   }
 
   @override
   void dispose() {
     _syncTimer?.cancel();
+    _syncNotifier.dispose();
     super.dispose();
   }
 
@@ -434,7 +438,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(name, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
             const SizedBox(height: 2),
-            Text('${type.length > 3 ? type.substring(0, 3).toUpperCase() : type.toUpperCase()} · ${loc.length > 3 ? loc.substring(0, 3).toUpperCase() : loc.toUpperCase()} · ${isActive ? '${(idx * 1.3 + 4.5).toStringAsFixed(1)} KN' : '0 KN'}',
+            Text('${type.length > 3 ? type.substring(0, 3).toUpperCase() : type.toUpperCase()} · ${loc.length > 3 ? loc.substring(0, 3).toUpperCase() : loc.toUpperCase()} · ${isActive ? '—' : '0 KN'}',
                 style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
           ])),
           Container(
