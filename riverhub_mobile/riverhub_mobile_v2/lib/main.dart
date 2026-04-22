@@ -89,8 +89,17 @@ Future<void> main() async {
     debugPrint('Supabase init error: $e');
   }
 
-  // Save FCM token to Supabase after auth
-  _saveFcmToken();
+  // Save FCM token after auth state changes (not in main where user is null)
+  Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    if (data.event == AuthChangeEvent.signedIn || data.event == AuthChangeEvent.tokenRefreshed) {
+      _saveFcmToken();
+    }
+  });
+
+  // Also listen for FCM token refreshes
+  FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+    _saveFcmToken();
+  });
 
   runApp(const RiverHubMobileApp());
 }
