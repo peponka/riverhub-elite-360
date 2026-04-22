@@ -3,6 +3,9 @@ const SUPABASE_URL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
 const SUPABASE_KEY = 'REDACTED_SUPABASE_ANON_KEY';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// XSS escape helper — prevents stored XSS via innerHTML
+function esc(str) { const d = document.createElement('div'); d.textContent = str ?? ''; return d.innerHTML; }
+
 // AUTH - Check session on load
 (async function checkSession(){
     var session = await sb.auth.getSession();
@@ -65,10 +68,10 @@ function showApp(user){
             // Auto-create profile if missing
             sb.from('companies').select('id').eq('name','RiverHub Admin').single().then(function(c2){
                 var cid = c2.data ? c2.data.id : null;
-                sb.from('user_profiles').insert({user_id:user.id, company_id:cid, role:'superadmin', full_name:'Administrador'}).then(function(ins){
+                sb.from('user_profiles').insert({user_id:user.id, company_id:cid, role:'viewer', full_name:'Nuevo Usuario'}).then(function(ins){
                     console.log('Profile created:', ins);
                     currentCompanyId=cid;
-                    currentUserRole='superadmin';
+                    currentUserRole='viewer';
                     checkAdminAccess();
                 });
             });
@@ -484,9 +487,11 @@ var modalForms={
     incidente:{title:'Reportar Incidente',fields:[{id:'inc-title',label:'TITULO',type:'text',placeholder:'Descripcion breve del incidente'},{id:'inc-vessel',label:'EMBARCACION',type:'text',placeholder:'Embarcacion afectada'},{id:'inc-severity',label:'SEVERIDAD',type:'select',options:['Critico','Alto','Medio','Bajo']},{id:'inc-type',label:'TIPO',type:'select',options:['Colision','Encalladura','Derrame','Averia mecanica','Incendio','Medico','Otro']},{id:'inc-desc',label:'DESCRIPCION DETALLADA',type:'textarea',placeholder:'Que ocurrio, donde, cuando, medidas tomadas...'}]}
 };
 var currentModal=null;
+function esc(s){var t=document.createElement('div');t.textContent=s;return t.innerHTML;}
 function openModal(type){
     currentModal=type;var c=modalForms[type];document.getElementById('modal-title').textContent=c.title;
-    var h='';c.fields.forEach(function(f){h+='<label>'+f.label+'</label>';if(f.type==='select'){h+='<select id="'+f.id+'">'+f.options.map(function(o){return '<option>'+o+'</option>'}).join('')+'</select>';}else if(f.type==='textarea'){h+='<textarea id="'+f.id+'" placeholder="'+(f.placeholder||'')+'"></textarea>';}else{h+='<input type="'+f.type+'" id="'+f.id+'" placeholder="'+(f.placeholder||'')+'">';}});
+    var submitBtn=document.getElementById('modal-submit');submitBtn.onclick=null;submitBtn.textContent='Guardar';submitBtn.style.display='';submitBtn.disabled=false;
+    var h='';c.fields.forEach(function(f){h+='<label>'+esc(f.label)+'</label>';if(f.type==='select'){h+='<select id="'+f.id+'">'+f.options.map(function(o){return '<option>'+esc(o)+'</option>'}).join('')+'</select>';}else if(f.type==='textarea'){h+='<textarea id="'+f.id+'" placeholder="'+esc(f.placeholder||'')+'"></textarea>';}else{h+='<input type="'+f.type+'" id="'+f.id+'" placeholder="'+esc(f.placeholder||'')+'">';}});
     document.getElementById('modal-body').innerHTML=h;document.getElementById('modal-overlay').classList.add('open');
     setTimeout(function(){var f=document.querySelector('#modal-body input, #modal-body select');if(f)f.focus();},100);
 }
@@ -531,19 +536,19 @@ function selectPlan(plan){
     var price=planPrices[plan][currentPeriod];
     var name=planNames[plan];
     document.getElementById('modal-title').textContent='Checkout - '+name;
-    document.getElementById('modal-body').innerHTML='<div style="background:var(--surface-low);border-radius:12px;padding:20px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">'+name+'</span><span style="font-family:Newsreader,serif;font-size:28px;font-weight:400">$'+price.toLocaleString('en-US')+'</span></div><p style="font-size:11px;color:var(--text-secondary);margin-top:4px">Facturacion '+(currentPeriod==='monthly'?'mensual':'anual')+' - 14 dias gratis</p></div><label>NOMBRE EN TARJETA</label><input type="text" id="pay-name" placeholder="Como aparece en la tarjeta"><label>NUMERO DE TARJETA</label><input type="text" id="pay-card" placeholder="4242 4242 4242 4242" maxlength="19"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>VENCIMIENTO</label><input type="text" id="pay-exp" placeholder="MM/AA" maxlength="5"></div><div><label>CVV</label><input type="text" id="pay-cvv" placeholder="123" maxlength="4"></div></div>';
+    document.getElementById('modal-body').innerHTML='<div style="background:var(--surface-low);border-radius:12px;padding:20px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">'+esc(name)+'</span><span style="font-family:Newsreader,serif;font-size:28px;font-weight:400">$'+price.toLocaleString('en-US')+'</span></div><p style="font-size:11px;color:var(--text-secondary);margin-top:4px">Facturacion '+(currentPeriod==='monthly'?'mensual':'anual')+' - 14 dias gratis</p></div><div style="text-align:center;padding:20px 0"><i class="fa-solid fa-lock" style="font-size:32px;color:var(--accent);margin-bottom:12px"></i><p style="font-size:14px;color:var(--text-primary);font-weight:600">Pago seguro via pasarela externa</p><p style="font-size:12px;color:var(--text-secondary);margin-top:8px">Al confirmar seras redirigido a la pasarela de pago segura para completar la transaccion.</p></div>';
     document.getElementById('modal-overlay').classList.add('open');
-    document.getElementById('modal-submit').textContent='Pagar $'+price.toLocaleString('en-US');
+    document.getElementById('modal-submit').textContent='Contratar '+esc(name);
     document.getElementById('modal-submit').onclick=function(){processPayment(plan,price)};
 }
 async function processPayment(plan,price){
     document.getElementById('modal-submit').disabled=true;
-    document.getElementById('modal-submit').textContent='Procesando...';
+    document.getElementById('modal-submit').textContent='Redirigiendo...';
     setTimeout(function(){
-        document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:40px 0"><i class="fa-solid fa-circle-check" style="font-size:48px;color:var(--success)"></i><h3 style="font-family:Newsreader,serif;font-size:24px;margin-top:16px">Pago Exitoso!</h3><p style="color:var(--text-secondary);margin-top:8px">Tu plan <strong>'+planNames[plan]+'</strong> esta activo.</p><p style="color:var(--text-secondary);font-size:12px;margin-top:4px">Factura enviada a tu email.</p></div>';
+        document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:40px 0"><i class="fa-solid fa-envelope" style="font-size:48px;color:var(--accent)"></i><h3 style="font-family:Newsreader,serif;font-size:24px;margin-top:16px">Solicitud Enviada</h3><p style="color:var(--text-secondary);margin-top:8px">Nuestro equipo se pondra en contacto para activar tu plan <strong>'+esc(planNames[plan])+'</strong>.</p><p style="color:var(--text-secondary);font-size:12px;margin-top:4px">Recibirás un email con instrucciones de pago.</p></div>';
         document.getElementById('modal-submit').style.display='none';
         document.querySelector('.modal-actions .btn-secondary').textContent='Cerrar';
-    },2000);
+    },1500);
 }
 
 // ADMIN PANEL
@@ -568,14 +573,14 @@ async function loadAdmin(){
     var cr=await sb.from('companies').select('*').order('created_at',{ascending:false});
     var html='';
     if(cr.data)cr.data.forEach(function(c){
-        html+='<div class="info-card"><i class="fa-solid fa-building" style="color:var(--text-primary)"></i><div class="info-card-text"><h4>'+c.name+'</h4><p>Plan: '+(c.plan||'basico')+' | Max: '+(c.max_vessels||1)+' barcos | '+(c.active!==false?'Activa':'Inactiva')+'</p></div></div>';
+        html+='<div class="info-card"><i class="fa-solid fa-building" style="color:var(--text-primary)"></i><div class="info-card-text"><h4>'+esc(c.name)+'</h4><p>Plan: '+esc(c.plan||'basico')+' | Max: '+(c.max_vessels||1)+' barcos | '+(c.active!==false?'Activa':'Inactiva')+'</p></div></div>';
     });
     document.getElementById('admin-companies').innerHTML=html||'<div class="empty-state"><p>Sin empresas</p></div>';
     // Users list
     var ur=await sb.from('user_profiles').select('*').order('created_at',{ascending:false});
     var uhtml='';
     if(ur.data)ur.data.forEach(function(u){
-        uhtml+='<div class="info-card"><i class="fa-solid fa-user" style="color:var(--text-primary)"></i><div class="info-card-text"><h4>'+(u.full_name||'Sin nombre')+'</h4><p>Rol: '+(u.role||'admin')+' | Company: '+(u.company_id?u.company_id.substring(0,8)+'...':'Sin asignar')+'</p></div></div>';
+        uhtml+='<div class="info-card"><i class="fa-solid fa-user" style="color:var(--text-primary)"></i><div class="info-card-text"><h4>'+esc(u.full_name||'Sin nombre')+'</h4><p>Rol: '+esc(u.role||'admin')+' | Company: '+(u.company_id?u.company_id.substring(0,8)+'...':'Sin asignar')+'</p></div></div>';
     });
     document.getElementById('admin-users').innerHTML=uhtml||'<div class="empty-state"><p>Sin usuarios</p></div>';
 }
@@ -629,7 +634,7 @@ async function sendCopiloto(){
     var input=document.getElementById('copiloto-input');
     var chat=document.getElementById('copiloto-chat');
     var msg=input.value.trim();if(!msg)return;
-    chat.innerHTML+='<div style="margin:12px 0;text-align:right"><span style="background:var(--text-primary);color:white;padding:8px 14px;border-radius:12px 12px 4px 12px;font-size:13px;display:inline-block;max-width:70%">'+msg+'</span></div>';
+    chat.innerHTML+='<div style="margin:12px 0;text-align:right"><span style="background:var(--text-primary);color:white;padding:8px 14px;border-radius:12px 12px 4px 12px;font-size:13px;display:inline-block;max-width:70%">'+esc(msg)+'</span></div>';
     input.value='';input.disabled=true;
     document.getElementById('copiloto-send').disabled=true;
     chat.innerHTML+='<div style="margin:12px 0" id="ai-typing"><span style="background:var(--surface-low);padding:8px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;color:var(--text-secondary)"><i class="fa-solid fa-spinner fa-spin"></i> Analizando datos...</span></div>';
@@ -645,7 +650,7 @@ async function sendCopiloto(){
         var data=await res.json();
         var typing=document.getElementById('ai-typing');if(typing)typing.remove();
         var answer=data.analysis||data.message||'No pude procesar la consulta.';
-        chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;max-width:80%;line-height:1.5"><i class="fa-solid fa-robot" style="color:var(--accent);margin-right:6px"></i>'+answer.replace(/\n/g,'<br>')+'</span></div>';
+        chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;max-width:80%;line-height:1.5"><i class="fa-solid fa-robot" style="color:var(--accent);margin-right:6px"></i>'+esc(answer).replace(/\n/g,'<br>')+'</span></div>';
     }catch(e){
         var typing=document.getElementById('ai-typing');if(typing)typing.remove();
         chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;color:var(--error)"><i class="fa-solid fa-exclamation-triangle" style="margin-right:6px"></i>Error al conectar con el servidor IA.</span></div>';
