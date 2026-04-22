@@ -261,7 +261,7 @@ class _MapScreenState extends State<MapScreen> {
         children: [
           FlutterMap(
             mapController: _mapController,
-            options: const MapOptions(initialCenter: LatLng(-32.9468, -60.6393), initialZoom: 8.0),
+            options: const MapOptions(initialCenter: LatLng(-29.5, -59.0), initialZoom: 5.5),
             children: [
               TileLayer(
                 urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
@@ -322,7 +322,7 @@ class _MapScreenState extends State<MapScreen> {
             bottom: 24, right: 16,
             child: CupertinoButton(
               padding: EdgeInsets.zero,
-              onPressed: () => _mapController.move(const LatLng(-32.9468, -60.6393), 8.0),
+              onPressed: () => _mapController.move(const LatLng(-29.5, -59.0), 5.5),
               child: Container(
                 width: 44, height: 44,
                 decoration: BoxDecoration(

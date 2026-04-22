@@ -154,6 +154,7 @@ class AppDrawer extends StatelessWidget {
                   _sectionHeader('GESTIÓN'),
                   _drawerTile(context, CupertinoIcons.person_3_fill, 'Tripulación & Safety', const TripulacionScreen()),
                   _drawerTile(context, CupertinoIcons.drop_fill, 'Combustible', const FuelScreen()),
+                  _drawerTile(context, CupertinoIcons.resize_v, 'Calados & Hidrometría', const DraftScreen()),
                   _drawerTile(context, CupertinoIcons.wrench_fill, 'Mantenimiento', const MantenimientoScreen()),
                   _drawerTile(context, CupertinoIcons.archivebox_fill, 'Pañol (Inventario)', const PanolScreen()),
 
@@ -165,6 +166,7 @@ class AppDrawer extends StatelessWidget {
 
                   _sectionHeader('SISTEMA'),
                   _drawerTile(context, CupertinoIcons.bell_fill, 'Notificaciones', const NotificationsScreen()),
+                  _drawerTile(context, CupertinoIcons.creditcard_fill, 'Planes & Facturación', const BillingScreen()),
                   _drawerTile(context, CupertinoIcons.arrow_right_arrow_left, 'Integraciones API', const IntegracionesScreen()),
                   _drawerTile(context, CupertinoIcons.shield_fill, 'Auditoría', const AuditoriaScreen()),
 

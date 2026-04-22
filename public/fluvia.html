@@ -249,8 +249,14 @@
             </div>
             <!-- TRACKING -->
             <div class="view" id="view-tracking">
-                <div class="fluvia-title">Tracking de<br><em>Cargas.</em></div><div class="fluvia-subtitle">SEGUIMIENTO EN TIEMPO REAL</div>
-                <div class="empty-state"><i class="fa-solid fa-location-dot"></i><p>Sin cargas en transito</p></div>
+                <div class="view-header"><div><div class="fluvia-title">Tracking de<br><em>Cargas.</em></div><div class="fluvia-subtitle">SEGUIMIENTO EN TIEMPO REAL - HIDROVIA</div></div><div class="header-actions"><button class="btn-export" onclick="exportTracking('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportTracking('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i></button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="track-active">0</div><div class="stat-lbl">En Transito</div></div><div class="stat-cell"><div class="stat-val" id="track-total-cargo">0</div><div class="stat-lbl">Toneladas</div></div><div class="stat-cell"><div class="stat-val" id="track-completed">0</div><div class="stat-lbl">Completados</div></div></div>
+                <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="track-search" placeholder="Buscar carga, embarcacion o puerto..." oninput="filterTracking()"></div>
+                <div class="section-title">Cargas en Transito</div>
+                <div id="tracking-active-list"></div>
+                <div class="section-title">Historial de Envios</div>
+                <div id="tracking-history-list"></div>
+                <div class="empty-state" id="tracking-empty"><i class="fa-solid fa-location-dot"></i><p>Sin cargas registradas</p></div>
             </div>
             <!-- PLANES & FACTURACION -->
             <div class="view" id="view-planes">

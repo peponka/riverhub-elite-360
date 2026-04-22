@@ -30,6 +30,24 @@ class SupabaseService {
     }
   }
 
+  static Future<bool> upsertCrewMember(Map<String, dynamic> member) async {
+    try {
+      await client.from('crew_members').upsert(member);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> deleteCrewMember(dynamic id) async {
+    try {
+      await client.from('crew_members').delete().eq('id', id);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // ============ MAINTENANCE ============
   static Future<List<Map<String, dynamic>>> getMaintenanceTasks() async {
     try {
