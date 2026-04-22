@@ -96,8 +96,15 @@ document.querySelectorAll('.nav-item').forEach(function(item){
         if(target)target.classList.add('active');
         document.getElementById('topbar-title').textContent=this.textContent.trim();
         if(loaders[viewId])loaders[viewId]();
+        // Scroll content to top on view change
+        var contentArea=document.querySelector('.content');if(contentArea)contentArea.scrollTop=0;
     });
 });
+// Navigate programmatically
+function navigate(viewId){
+    var item=document.querySelector('.nav-item[data-view="'+viewId+'"]');
+    if(item)item.click();
+}
 loadDashboard();
 
 // ─── MOBILE HAMBURGER ────────────────────────────────
@@ -744,36 +751,77 @@ async function loadConvoy(){
     }catch(e){console.log('Convoy:',e);}
 }
 
-// TRACKING - Show active cargo in transit
+// TRACKING - Full cargo tracking with timeline
+var trackingData=[];
 async function loadTracking(){
     try{
-        var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(20);
-        var data=r.data;
-        var container=document.querySelector('#view-tracking .empty-state');
-        if(!container)return;
-        var parent=container.parentNode;
-        // Remove old list if exists
-        var old=parent.querySelector('.tracking-list');if(old)old.remove();
-        if(data&&data.length>0){
-            var inTransit=data.filter(function(v){var s=(v.status||'').toLowerCase();return s==='navegando'||s==='en_curso'||s==='en viaje';});
-            if(inTransit.length>0){
-                container.style.display='none';
-                var list=document.createElement('div');list.className='tracking-list';
-                list.style.marginTop='20px';
-                inTransit.forEach(function(v){
-                    var card=document.createElement('div');card.className='info-card';
-                    card.innerHTML='<i class="fa-solid fa-location-dot" style="color:var(--success)"></i><div class="info-card-text"><h4>'+(v.vessel_name||'')+'</h4><p>'+(v.origin_port||'?')+' → '+(v.destination_port||'?')+' | '+(v.cargo_tons||0)+' ton | '+(v.status||'').toUpperCase()+'</p></div><i class="fa-solid fa-chevron-right chevron"></i>';
-                    list.appendChild(card);
-                });
-                parent.appendChild(list);
-            } else {
-                container.style.display='';
-                container.innerHTML='<i class="fa-solid fa-location-dot"></i><p>No hay cargas en transito activo</p><p style="font-size:11px;color:var(--text-tertiary);margin-top:4px">'+data.length+' viajes registrados en total</p>';
-            }
-        } else {
-            container.style.display='';
-        }
+        var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(50);
+        trackingData=r.data||[];
+        renderTracking();
     }catch(e){console.log('Tracking:',e);}
+}
+function renderTracking(filter){
+    var data=trackingData;
+    var activeList=document.getElementById('tracking-active-list');
+    var historyList=document.getElementById('tracking-history-list');
+    var empty=document.getElementById('tracking-empty');
+    if(!activeList||!historyList)return;
+    activeList.innerHTML='';historyList.innerHTML='';
+    if(filter){data=data.filter(function(d){return JSON.stringify(d).toLowerCase().indexOf(filter.toLowerCase())>=0;});}
+    if(!data||data.length===0){empty.style.display='';return;}
+    empty.style.display='none';
+    var inTransit=data.filter(function(v){var s=(v.status||'').toLowerCase();return s==='navegando'||s==='en_curso'||s==='en viaje'||s==='en_viaje';});
+    var completed=data.filter(function(v){var s=(v.status||'').toLowerCase();return s==='completado'||s==='entregado'||s==='finalizado';});
+    var pending=data.filter(function(v){var s=(v.status||'').toLowerCase();return s!=='navegando'&&s!=='en_curso'&&s!=='en viaje'&&s!=='en_viaje'&&s!=='completado'&&s!=='entregado'&&s!=='finalizado';});
+    // Stats
+    var totalCargo=data.reduce(function(s,v){return s+(v.cargo_tons||0)},0);
+    document.getElementById('track-active').textContent=inTransit.length;
+    document.getElementById('track-total-cargo').textContent=totalCargo>999?(totalCargo/1000).toFixed(1)+'k':totalCargo;
+    document.getElementById('track-completed').textContent=completed.length;
+    // Active transit cards
+    if(inTransit.length>0){
+        inTransit.forEach(function(v){
+            var created=v.created_at?new Date(v.created_at):new Date();
+            var eta=v.eta?new Date(v.eta):new Date(created.getTime()+7*86400000);
+            var now=Date.now();var progress=Math.min(100,Math.max(5,Math.round(((now-created.getTime())/(eta.getTime()-created.getTime()))*100)));
+            var elapsed=Math.round((now-created.getTime())/3600000);
+            var elapsedStr=elapsed>24?Math.round(elapsed/24)+'d '+elapsed%24+'h':elapsed+'h';
+            activeList.innerHTML+='<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px;margin-bottom:12px">'+
+                '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'+
+                '<div style="display:flex;align-items:center;gap:10px"><span style="width:10px;height:10px;border-radius:50%;background:var(--success);animation:pulse 2s infinite"></span><span style="font-size:14px;font-weight:600">'+(v.vessel_name||'--')+'</span></div>'+
+                '<span style="font-size:10px;font-weight:700;color:var(--success);letter-spacing:0.5px">EN TRANSITO</span></div>'+
+                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">'+
+                '<span style="font-size:12px;font-weight:500">'+(v.origin_port||'Origen')+'</span>'+
+                '<div style="flex:1;height:4px;background:var(--surface-low);border-radius:2px;position:relative"><div style="height:4px;background:var(--success);border-radius:2px;width:'+progress+'%;transition:width 1s"></div><div style="position:absolute;top:-3px;left:'+progress+'%;width:10px;height:10px;background:var(--success);border-radius:50%;border:2px solid var(--bg-secondary);transform:translateX(-50%)"></div></div>'+
+                '<span style="font-size:12px;font-weight:500">'+(v.destination_port||'Destino')+'</span></div>'+
+                '<div style="display:flex;gap:20px;font-size:11px;color:var(--text-secondary)">'+
+                '<span><i class="fa-solid fa-box" style="width:14px;color:var(--accent)"></i> '+(v.cargo_tons||0)+' ton</span>'+
+                '<span><i class="fa-solid fa-clock" style="width:14px"></i> '+elapsedStr+' en ruta</span>'+
+                '<span><i class="fa-solid fa-location-dot" style="width:14px"></i> '+progress+'% completado</span></div></div>';
+        });
+    }else{
+        activeList.innerHTML='<div class="empty-state" style="padding:30px"><i class="fa-regular fa-circle-check"></i><p>No hay cargas en transito activo</p></div>';
+    }
+    // History list
+    var historyItems=completed.concat(pending);
+    if(historyItems.length>0){
+        historyItems.forEach(function(v){
+            var s=(v.status||'pendiente').toLowerCase();
+            var stColor=s==='completado'||s==='entregado'||s==='finalizado'?'var(--success)':s==='pendiente'?'var(--warning)':'var(--text-secondary)';
+            var stLabel=(v.status||'PENDIENTE').toUpperCase();
+            var t=v.created_at?new Date(v.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'-';
+            historyList.innerHTML+='<div class="list-item"><div><h4>'+(v.vessel_name||'--')+' → '+(v.destination_port||'--')+'</h4><p>'+(v.origin_port||'')+' | '+(v.cargo_tons||0)+' ton | '+t+'</p></div><span class="badge" style="color:'+stColor+'">'+stLabel+'</span></div>';
+        });
+    }
+}
+function filterTracking(){var q=document.getElementById('track-search').value.trim();renderTracking(q||null);}
+async function exportTracking(format){
+    var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(200);var data=r.data||[];
+    if(format==='excel'){
+        exportToExcel(data.map(function(v){return{Embarcacion:v.vessel_name||'',Origen:v.origin_port||'',Destino:v.destination_port||'',CargaTon:v.cargo_tons||0,Estado:v.status||'',Fecha:v.created_at?new Date(v.created_at).toLocaleDateString('es'):''}}),'Tracking','fluvia_tracking');
+    }else{
+        exportToPDF('Tracking de Cargas',['Embarcacion','Origen','Destino','Carga (t)','Estado','Fecha'],data.map(function(v){return[v.vessel_name||'',v.origin_port||'',v.destination_port||'',(v.cargo_tons||0).toString(),v.status||'',v.created_at?new Date(v.created_at).toLocaleDateString('es'):'']}),'fluvia_tracking');
+    }
 }
 
 // DELETE CONFIRMATION (Fluvia modal, no native confirm)

@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline, Divider, MainAxisSize;
+
 import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
@@ -107,73 +107,87 @@ class _PanolScreenState extends State<PanolScreen> {
 
     showCupertinoModalPopup(
       context: context,
-      builder: (ctx) => Container(
-        height: MediaQuery.of(context).size.height * 0.85,
-        decoration: BoxDecoration(
-          color: AppColors.backgroundSecondary,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
-        ),
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text('Nuevo Ítem', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-              CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.xmark, color: AppColors.textSecondary, size: 20), onPressed: () => Navigator.pop(ctx)),
-            ]),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+        child: Container(
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.75),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundPrimary,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
           ),
-          Container(height: 0.5, color: AppColors.separator),
-          Expanded(child: ListView(
-            padding: const EdgeInsets.all(20),
-            children: [
-              _buildTextField('Nombre del repuesto', nameController),
-              const SizedBox(height: 14),
-              _buildTextField('Categoría', catController),
-              const SizedBox(height: 14),
-              _buildTextField('Stock Inicial', stockController, isNumeric: true),
-              const SizedBox(height: 14),
-              _buildTextField('Alerta de Stock Mínimo', minAlertController, isNumeric: true),
-              const SizedBox(height: 14),
-              _buildTextField('Ubicación', locationController),
-              const SizedBox(height: 24),
-              SizedBox(width: double.infinity, child: CupertinoButton(
-                color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Text('GUARDAR ÍTEM', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textOnAccent)),
-                onPressed: () async {
-                  if (nameController.text.isEmpty) return;
-                  final payload = {
-                    'name': nameController.text, 'category': catController.text,
-                    'quantity': int.tryParse(stockController.text) ?? 0,
-                    'min_stock': int.tryParse(minAlertController.text) ?? 5,
-                    'location': locationController.text, 'unit': 'uds',
-                  };
-                  try {
-                    await SupabaseService.insertInventoryItem(payload);
-                    if (context.mounted) { Navigator.pop(ctx); _loadItems(); }
-                  } catch (e) { debugPrint('Error: \$e'); }
-                },
-              )),
-            ],
-          )),
-        ]),
+          child: Column(children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('Nuevo Ítem', style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                  Text('PAÑOL DE INVENTARIO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                ]),
+                GestureDetector(onTap: () => Navigator.pop(ctx), child: Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textTertiary, size: 24)),
+              ]),
+            ),
+            Container(height: 0.5, color: AppColors.separator),
+            Expanded(child: ListView(
+              padding: const EdgeInsets.all(20),
+              children: [
+                _buildTextField('Nombre del repuesto', nameController, CupertinoIcons.cube_box),
+                const SizedBox(height: 14),
+                _buildTextField('Categoría', catController, CupertinoIcons.tag),
+                const SizedBox(height: 14),
+                _buildTextField('Stock Inicial', stockController, CupertinoIcons.number, isNumeric: true),
+                const SizedBox(height: 14),
+                _buildTextField('Alerta de Stock Mínimo', minAlertController, CupertinoIcons.exclamationmark_triangle, isNumeric: true),
+                const SizedBox(height: 14),
+                _buildTextField('Ubicación', locationController, CupertinoIcons.location),
+                const SizedBox(height: 24),
+                GestureDetector(
+                  onTap: () async {
+                    if (nameController.text.isEmpty) return;
+                    final payload = {
+                      'name': nameController.text, 'category': catController.text,
+                      'quantity': int.tryParse(stockController.text) ?? 0,
+                      'min_stock': int.tryParse(minAlertController.text) ?? 5,
+                      'location': locationController.text, 'unit': 'uds',
+                    };
+                    try {
+                      await SupabaseService.insertInventoryItem(payload);
+                      if (context.mounted) { Navigator.pop(ctx); _loadItems(); }
+                    } catch (e) { debugPrint('Error: $e'); }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
+                    child: Center(child: Text('GUARDAR ÍTEM', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.backgroundPrimary, letterSpacing: 0.5))),
+                  ),
+                ),
+              ],
+            )),
+          ]),
+        ),
       ),
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool isNumeric = false}) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
-      const SizedBox(height: 6),
-      CupertinoTextField(
-        controller: controller,
-        keyboardType: isNumeric ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-        style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
-        placeholderStyle: GoogleFonts.inter(color: AppColors.textSecondary),
-        decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
-        padding: const EdgeInsets.all(12),
-      ),
-    ]);
+  Widget _buildTextField(String label, TextEditingController controller, IconData icon, {bool isNumeric = false}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      decoration: BoxDecoration(border: Border.all(color: AppColors.separator, width: 0.5), borderRadius: BorderRadius.circular(12)),
+      child: Row(children: [
+        Icon(icon, size: 18, color: AppColors.textSecondary),
+        const SizedBox(width: 12),
+        Expanded(child: CupertinoTextField(
+          controller: controller,
+          placeholder: label,
+          keyboardType: isNumeric ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+          style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
+          placeholderStyle: GoogleFonts.inter(color: AppColors.textTertiary, fontSize: 14),
+          decoration: const BoxDecoration(),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+        )),
+      ]),
+    );
   }
 
   Widget _kpi(String val, String label) => Expanded(

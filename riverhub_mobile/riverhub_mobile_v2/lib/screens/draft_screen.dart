@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart'
-    show DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../theme/app_colors.dart';
+import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 class DraftScreen extends StatefulWidget {
   const DraftScreen({super.key});
@@ -13,9 +11,9 @@ class DraftScreen extends StatefulWidget {
 }
 
 class _DraftScreenState extends State<DraftScreen> {
-  bool _isLoading = true;
   List<Map<String, dynamic>> _vessels = [];
   List<Map<String, dynamic>> _draftHistory = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -26,91 +24,175 @@ class _DraftScreenState extends State<DraftScreen> {
   Future<void> _fetchData() async {
     setState(() => _isLoading = true);
     try {
-      final vesselResponse = await Supabase.instance.client.from('fleet_assets')
-          .select('id, name, max_draft').order('name');
+      // Fetch vessels from CORRECT table
+      final vesselResponse = await Supabase.instance.client.from('vessels')
+          .select('id, name, status').order('name');
       _vessels = List<Map<String, dynamic>>.from(vesselResponse);
 
+      // Fetch draft readings from logs
       final logsResponse = await Supabase.instance.client.from('logs')
-          .select('id, created_at, description, location_data, vessel_id, fleet_assets:vessel_id(name)')
-          .eq('action_type', 'DRAFT_READING').order('created_at', ascending: false).limit(50);
+          .select('*')
+          .eq('action_type', 'DRAFT_READING')
+          .order('created_at', ascending: false)
+          .limit(50);
       _draftHistory = List<Map<String, dynamic>>.from(logsResponse);
 
+      // Assign current draft to vessels from most recent reading
       for (var vessel in _vessels) {
-        final recentLog = _draftHistory.firstWhere((l) => l['vessel_id'] == vessel['id'], orElse: () => {});
-        vessel['current_draft'] = (recentLog.isNotEmpty && recentLog['location_data'] != null)
-            ? recentLog['location_data']['draft'] ?? 0.0 : 0.0;
+        final vName = vessel['name'] ?? '';
+        final recentLog = _draftHistory.cast<Map<String, dynamic>?>().firstWhere(
+          (l) => l != null && (l['vessel_name'] == vName),
+          orElse: () => null,
+        );
+        if (recentLog != null) {
+          try {
+            final details = recentLog['details'];
+            if (details is String) {
+              final parsed = Uri.splitQueryString(details.replaceAll('{', '').replaceAll('}', '').replaceAll('"', ''));
+              vessel['current_draft'] = double.tryParse(parsed['draft'] ?? '0') ?? 0.0;
+              vessel['max_draft'] = double.tryParse(parsed['max_draft'] ?? '3.5') ?? 3.5;
+            } else if (details is Map) {
+              vessel['current_draft'] = (details['draft'] ?? 0.0).toDouble();
+              vessel['max_draft'] = (details['max_draft'] ?? 3.5).toDouble();
+            }
+          } catch (_) {}
+        }
+        vessel['current_draft'] ??= 0.0;
+        vessel['max_draft'] ??= 3.5;
       }
+    } catch (e) {
+      debugPrint('Draft fetch error: $e');
+    }
 
-      if (_vessels.isEmpty) {
-        _vessels = [
-          {'id': 'demo-1', 'name': 'TB PARAGUAY 01', 'max_draft': 3.5, 'current_draft': 2.45},
-          {'id': 'demo-2', 'name': 'R/M HERCULES', 'max_draft': 4.0, 'current_draft': 3.80},
-        ];
-      }
-    } catch (e) { debugPrint('Error: $e'); }
+    // Fallback if no vessels
+    if (_vessels.isEmpty) {
+      _vessels = [
+        {'id': 'demo-1', 'name': 'TB PARAGUAY 01', 'max_draft': 3.5, 'current_draft': 2.45},
+        {'id': 'demo-2', 'name': 'R/M HERCULES', 'max_draft': 4.0, 'current_draft': 3.80},
+      ];
+    }
+
     if (mounted) setState(() => _isLoading = false);
   }
 
   Future<void> _addDraftReading() async {
-    if (_vessels.isEmpty) return;
-    Map<String, dynamic> selectedVessel = _vessels.first;
+    int selectedIndex = 0;
     final draftCtrl = TextEditingController();
+    final maxDraftCtrl = TextEditingController(text: '3.50');
     final notesCtrl = TextEditingController();
 
-    await showCupertinoDialog(
+    await showCupertinoModalPopup(
       context: context,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setModal) => CupertinoAlertDialog(
-          title: const Text('Registrar Calado'),
-          content: Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.separator, width: 0.5),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded: true, value: selectedVessel['id'].toString(),
-                    dropdownColor: AppColors.backgroundSecondary,
-                    items: _vessels.map((v) => DropdownMenuItem<String>(
-                      value: v['id'].toString(), child: Text(v['name'], style: GoogleFonts.inter(fontSize: 14)),
-                    )).toList(),
-                    onChanged: (val) => setModal(() {
-                      selectedVessel = _vessels.firstWhere((v) => v['id'].toString() == val);
-                      draftCtrl.text = (selectedVessel['current_draft'] ?? 0).toString();
-                    }),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              CupertinoTextField(controller: draftCtrl, placeholder: 'Calado (metros)', keyboardType: const TextInputType.numberWithOptions(decimal: true), padding: const EdgeInsets.all(12)),
-              const SizedBox(height: 10),
-              CupertinoTextField(controller: notesCtrl, placeholder: 'Observaciones', padding: const EdgeInsets.all(12)),
-            ]),
+        builder: (ctx, setModal) => Container(
+          height: MediaQuery.of(ctx).size.height * 0.65,
+          padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundSecondary,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
           ),
-          actions: [
-            CupertinoDialogAction(child: const Text('Cancelar'), onPressed: () => Navigator.pop(ctx)),
-            CupertinoDialogAction(isDefaultAction: true, child: const Text('Guardar'), onPressed: () async {
-              if (draftCtrl.text.isNotEmpty) {
-                try {
-                  final draftVal = double.tryParse(draftCtrl.text) ?? 0.0;
-                  if (!selectedVessel['id'].toString().startsWith('demo')) {
-                    await Supabase.instance.client.from('logs').insert({
-                      'vessel_id': selectedVessel['id'], 'action_type': 'DRAFT_READING',
-                      'description': notesCtrl.text.isEmpty ? 'Actualización de calado' : notesCtrl.text,
-                      'location_data': {'draft': draftVal},
-                      'user_id': Supabase.instance.client.auth.currentUser?.id,
-                    });
+          child: Column(children: [
+            // Handle
+            Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 6),
+              width: 40, height: 4,
+              decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)),
+            ),
+            // Header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                CupertinoButton(padding: EdgeInsets.zero, child: Text('Cancelar', style: GoogleFonts.inter(color: AppColors.textSecondary)), onPressed: () => Navigator.pop(ctx)),
+                Text('Registrar Calado', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16, color: AppColors.textPrimary)),
+                CupertinoButton(padding: EdgeInsets.zero, child: Text('Guardar', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.accent)), onPressed: () async {
+                  if (draftCtrl.text.isNotEmpty) {
+                    try {
+                      final vessel = _vessels[selectedIndex];
+                      final draftVal = double.tryParse(draftCtrl.text) ?? 0.0;
+                      final maxVal = double.tryParse(maxDraftCtrl.text) ?? 3.5;
+                      final companyId = Supabase.instance.client.auth.currentUser?.userMetadata?['company_id'];
+
+                      await Supabase.instance.client.from('logs').insert({
+                        'title': 'Lectura de calado: ${vessel['name']}',
+                        'vessel_name': vessel['name'],
+                        'action_type': 'DRAFT_READING',
+                        'description': notesCtrl.text.isEmpty
+                            ? 'Calado: ${draftVal.toStringAsFixed(2)}m / Max: ${maxVal.toStringAsFixed(2)}m'
+                            : notesCtrl.text,
+                        'details': '{"draft": $draftVal, "max_draft": $maxVal}',
+                        if (companyId != null) 'company_id': companyId,
+                      });
+                    } catch (e) {
+                      debugPrint('Draft save error: $e');
+                    }
+                    if (ctx.mounted) Navigator.pop(ctx);
+                    _fetchData();
                   }
-                  if (ctx.mounted) { Navigator.pop(ctx); _fetchData(); }
-                } catch (e) { debugPrint('Error: $e'); }
-              }
-            }),
-          ],
+                }),
+              ]),
+            ),
+            Container(height: 0.5, color: AppColors.separator),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                children: [
+                  // Vessel picker
+                  Text('EMBARCACIÓN', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
+                  const SizedBox(height: 6),
+                  GestureDetector(
+                    onTap: () {
+                      showCupertinoModalPopup(
+                        context: ctx,
+                        builder: (pickerCtx) => Container(
+                          height: 250,
+                          color: AppColors.backgroundSecondary,
+                          child: Column(children: [
+                            SizedBox(
+                              height: 44,
+                              child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                                CupertinoButton(child: const Text('Listo'), onPressed: () => Navigator.pop(pickerCtx)),
+                              ]),
+                            ),
+                            Expanded(
+                              child: CupertinoPicker(
+                                itemExtent: 36,
+                                scrollController: FixedExtentScrollController(initialItem: selectedIndex),
+                                onSelectedItemChanged: (i) => setModal(() => selectedIndex = i),
+                                children: _vessels.map((v) => Center(child: Text(v['name'] ?? '--', style: GoogleFonts.inter(fontSize: 16)))).toList(),
+                              ),
+                            ),
+                          ]),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColors.separator, width: 0.5),
+                      ),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        Text(_vessels.isNotEmpty ? _vessels[selectedIndex]['name'] ?? '--' : '--', style: GoogleFonts.inter(fontSize: 15, color: AppColors.textPrimary)),
+                        Icon(CupertinoIcons.chevron_down, size: 14, color: AppColors.textSecondary),
+                      ]),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Text('CALADO ACTUAL (METROS)', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
+                  const SizedBox(height: 6),
+                  CupertinoTextField(controller: draftCtrl, placeholder: '2.45', keyboardType: const TextInputType.numberWithOptions(decimal: true), padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5))),
+                  const SizedBox(height: 18),
+                  Text('CALADO MÁXIMO (METROS)', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
+                  const SizedBox(height: 6),
+                  CupertinoTextField(controller: maxDraftCtrl, placeholder: '3.50', keyboardType: const TextInputType.numberWithOptions(decimal: true), padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5))),
+                  const SizedBox(height: 18),
+                  Text('OBSERVACIONES', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
+                  const SizedBox(height: 6),
+                  CupertinoTextField(controller: notesCtrl, placeholder: 'Condiciones, ubicación...', padding: const EdgeInsets.all(14), maxLines: 3, decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5))),
+                ],
+              ),
+            ),
+          ]),
         ),
       ),
     );
@@ -156,9 +238,9 @@ class _DraftScreenState extends State<DraftScreen> {
 
   Widget _vesselDraftCard(Map<String, dynamic> vessel) {
     double current = (vessel['current_draft'] ?? 0.0).toDouble();
-    double max = (vessel['max_draft'] ?? 3.5).toDouble();
-    if (max <= 0) max = 3.5;
-    double percent = ((current / max) * 100).clamp(0, 100);
+    double maxD = (vessel['max_draft'] ?? 3.5).toDouble();
+    if (maxD <= 0) maxD = 3.5;
+    double percent = ((current / maxD) * 100).clamp(0, 100);
 
     Color dotColor = AppColors.accent;
     String status = 'ÓPTIMO';
@@ -176,7 +258,7 @@ class _DraftScreenState extends State<DraftScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(vessel['name'], style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+            Expanded(child: Text(vessel['name'] ?? '--', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis)),
             Row(children: [
               Container(width: 6, height: 6, decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle)),
               const SizedBox(width: 6),
@@ -191,7 +273,7 @@ class _DraftScreenState extends State<DraftScreen> {
             ]),
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
               Text('MÁXIMO', style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
-              Text('${max.toStringAsFixed(2)}m', style: GoogleFonts.inter(fontSize: 14, color: AppColors.textSecondary)),
+              Text('${maxD.toStringAsFixed(2)}m', style: GoogleFonts.inter(fontSize: 14, color: AppColors.textSecondary)),
             ]),
           ]),
           const SizedBox(height: 12),
@@ -211,8 +293,18 @@ class _DraftScreenState extends State<DraftScreen> {
   Widget _historyItem(Map<String, dynamic> log) {
     DateTime date = DateTime.tryParse(log['created_at'] ?? '') ?? DateTime.now();
     String dateStr = '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-    double draft = log['location_data']?['draft']?.toDouble() ?? 0.0;
-    String vName = log['fleet_assets']?['name'] ?? 'Desconocido';
+
+    double draft = 0.0;
+    String vName = log['vessel_name'] ?? 'Desconocido';
+    try {
+      final details = log['details'];
+      if (details is String && details.contains('draft')) {
+        final match = RegExp(r'"draft"\s*:\s*([\d.]+)').firstMatch(details);
+        if (match != null) draft = double.tryParse(match.group(1)!) ?? 0.0;
+      } else if (details is Map) {
+        draft = (details['draft'] ?? 0.0).toDouble();
+      }
+    } catch (_) {}
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),

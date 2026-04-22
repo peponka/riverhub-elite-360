@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline, MainAxisSize;
 import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
@@ -135,62 +134,187 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
 
   void _showCreateModal() {
     final titleController = TextEditingController();
-    String? selectedVesselId;
+    final descController = TextEditingController();
+    Map<String, dynamic>? selectedVessel;
+    String priority = 'medium';
 
     showCupertinoModalPopup(
       context: context,
-      builder: (ctx) => Container(
-        height: 360, padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundSecondary,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
-        ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
-          const SizedBox(height: 18),
-          Text('Nueva Orden', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-          const SizedBox(height: 18),
-          CupertinoTextField(
-            controller: titleController, placeholder: 'Título de la tarea',
-            style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
-            placeholderStyle: GoogleFonts.inter(color: AppColors.textSecondary),
-            decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
-            padding: const EdgeInsets.all(14),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+          child: Container(
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundPrimary,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
+                const SizedBox(height: 18),
+                Text('Nueva Orden', style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                Text('MANTENIMIENTO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                const SizedBox(height: 20),
+
+                // Title
+                _modalField('Título de la tarea', titleController, CupertinoIcons.wrench),
+                const SizedBox(height: 12),
+
+                // Description
+                _modalField('Descripción (opcional)', descController, CupertinoIcons.doc_text),
+                const SizedBox(height: 16),
+
+                // Vessel selector (tap to open)
+                Text('EMBARCACIÓN', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                const SizedBox(height: 6),
+                GestureDetector(
+                  onTap: () {
+                    if (_vesselsData.isEmpty) return;
+                    showCupertinoModalPopup(
+                      context: ctx,
+                      builder: (innerCtx) => Container(
+                        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
+                        decoration: BoxDecoration(
+                          color: AppColors.backgroundPrimary,
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
+                              child: Row(children: [
+                                Text('Embarcación', style: GoogleFonts.newsreader(fontSize: 20, color: AppColors.textPrimary)),
+                                const Spacer(),
+                                GestureDetector(onTap: () => Navigator.pop(innerCtx), child: Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textTertiary, size: 24)),
+                              ]),
+                            ),
+                            Flexible(child: ListView.builder(
+                              shrinkWrap: true, padding: const EdgeInsets.symmetric(vertical: 8),
+                              itemCount: _vesselsData.length,
+                              itemBuilder: (_, i) {
+                                final v = _vesselsData[i];
+                                return GestureDetector(
+                                  onTap: () { Navigator.pop(innerCtx); setModalState(() => selectedVessel = v); },
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                    padding: const EdgeInsets.all(14),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.backgroundSecondary,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(color: AppColors.separator, width: 0.5),
+                                    ),
+                                    child: Row(children: [
+                                      Icon(CupertinoIcons.helm, size: 18, color: AppColors.textPrimary),
+                                      const SizedBox(width: 12),
+                                      Text(v['name'] ?? '-', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                                    ]),
+                                  ),
+                                );
+                              },
+                            )),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.separator, width: 0.5),
+                    ),
+                    child: Row(children: [
+                      Icon(CupertinoIcons.helm, size: 18, color: selectedVessel != null ? AppColors.textPrimary : AppColors.textTertiary),
+                      const SizedBox(width: 12),
+                      Expanded(child: Text(
+                        selectedVessel?['name'] ?? 'Seleccionar embarcación...',
+                        style: GoogleFonts.inter(fontSize: 14, color: selectedVessel != null ? AppColors.textPrimary : AppColors.textTertiary, fontWeight: selectedVessel != null ? FontWeight.w600 : FontWeight.w400),
+                      )),
+                      Icon(CupertinoIcons.chevron_down, size: 16, color: AppColors.textSecondary),
+                    ]),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Priority
+                Text('PRIORIDAD', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                const SizedBox(height: 8),
+                Row(children: [
+                  _priorityOption('low', 'Baja', priority, (v) => setModalState(() => priority = v)),
+                  const SizedBox(width: 8),
+                  _priorityOption('medium', 'Media', priority, (v) => setModalState(() => priority = v)),
+                  const SizedBox(width: 8),
+                  _priorityOption('high', 'Alta', priority, (v) => setModalState(() => priority = v)),
+                ]),
+                const SizedBox(height: 24),
+
+                // Submit
+                GestureDetector(
+                  onTap: () async {
+                    if (titleController.text.isEmpty || selectedVessel == null) return;
+                    final payload = {
+                      'description': titleController.text,
+                      'vessel_id': selectedVessel!['id'],
+                      'status': 'pendiente',
+                      'priority': priority,
+                      'scheduled_date': DateTime.now().add(const Duration(days: 7)).toIso8601String().split('T')[0],
+                    };
+                    await SupabaseService.insertMaintenanceTask(payload);
+                    if (ctx.mounted) Navigator.pop(ctx);
+                    _loadTasks();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
+                    child: Center(child: Text('CREAR ORDEN', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.backgroundPrimary, letterSpacing: 0.5))),
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          StatefulBuilder(builder: (ctx, setModalState) => Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
-            child: DropdownButtonHideUnderline(child: DropdownButton<String>(
-              value: selectedVesselId, isExpanded: true,
-              hint: Text('Seleccione buque...', style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 14)),
-              dropdownColor: AppColors.backgroundSecondary,
-              style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
-              items: _vesselsData.map((v) => DropdownMenuItem(value: v['id'] as String, child: Text(v['name'] ?? '-'))).toList(),
-              onChanged: (val) => setModalState(() => selectedVesselId = val),
-            )),
-          )),
-          const SizedBox(height: 20),
-          SizedBox(width: double.infinity, child: CupertinoButton(
-            color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Text('CREAR ORDEN', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textOnAccent)),
-            onPressed: () async {
-              if (titleController.text.isEmpty || selectedVesselId == null) return;
-              final payload = {
-                'description': titleController.text, 'vessel_id': selectedVesselId,
-                'status': 'pendiente', 'priority': 'medium',
-                'scheduled_date': DateTime.now().add(const Duration(days: 7)).toIso8601String().split('T')[0],
-              };
-              await SupabaseService.insertMaintenanceTask(payload);
-              if (context.mounted) Navigator.pop(ctx);
-              _loadTasks();
-            },
-          )),
-        ]),
+        ),
       ),
     );
+  }
+
+  Widget _modalField(String placeholder, TextEditingController ctrl, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      decoration: BoxDecoration(border: Border.all(color: AppColors.separator, width: 0.5), borderRadius: BorderRadius.circular(12)),
+      child: Row(children: [
+        Icon(icon, size: 18, color: AppColors.textSecondary),
+        const SizedBox(width: 12),
+        Expanded(child: CupertinoTextField(
+          controller: ctrl, placeholder: placeholder,
+          placeholderStyle: GoogleFonts.inter(fontSize: 14, color: AppColors.textTertiary),
+          style: GoogleFonts.inter(fontSize: 14, color: AppColors.textPrimary),
+          decoration: const BoxDecoration(), padding: const EdgeInsets.symmetric(vertical: 12),
+        )),
+      ]),
+    );
+  }
+
+  Widget _priorityOption(String value, String label, String current, ValueChanged<String> onTap) {
+    final selected = current == value;
+    return Expanded(child: GestureDetector(
+      onTap: () => onTap(value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.textPrimary : AppColors.backgroundPrimary,
+          border: Border.all(color: selected ? AppColors.textPrimary : AppColors.separator, width: 0.5),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(child: Text(label, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: selected ? AppColors.backgroundPrimary : AppColors.textSecondary))),
+      ),
+    ));
   }
 
   Widget _kpi(String val, String label) => Expanded(
