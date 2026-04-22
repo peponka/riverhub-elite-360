@@ -161,12 +161,10 @@ async function loadDashboard(){
         var r=await sb.from('vessels').select('status');
         var vessels=r.data;if(!vessels)return;
         var a=0,d=0,m=0;
-        vessels.forEach(function(v){var s=(v.status||'').toLowerCase();if(s==='en viaje'||s==='active')a++;else if(s.indexOf('manten')>=0)m++;else d++;});
-        var r2=await sb.from('logs').select('action_type').eq('action_type','alert').limit(10);
-        document.querySelector('#view-dashboard .kpi-card:nth-child(1) .kpi-value').textContent=a;
-        document.querySelector('#view-dashboard .kpi-card:nth-child(2) .kpi-value').textContent=d;
-        document.querySelector('#view-dashboard .kpi-card:nth-child(3) .kpi-value').textContent=m;
-        document.querySelector('#view-dashboard .kpi-card:nth-child(4) .kpi-value').textContent=(r2.data?r2.data.length:0);
+        vessels.forEach(function(v){var s=(v.status||'').toLowerCase();if(s==='en viaje'||s==='active'||s==='navegando'||s==='en_viaje')a++;else if(s.indexOf('manten')>=0)m++;else d++;});
+        var el1=document.getElementById('dash-kpi-viaje');if(el1)el1.textContent=a;
+        var el2=document.getElementById('dash-kpi-puerto');if(el2)el2.textContent=d;
+        var el3=document.getElementById('dash-kpi-alertas');if(el3)el3.textContent=m;
         loadDashboardExtras();
     }catch(e){console.log('Dashboard:',e);}
 }
