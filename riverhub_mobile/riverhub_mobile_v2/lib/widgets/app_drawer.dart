@@ -220,11 +220,7 @@ class AppDrawer extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pop(); // close drawer
         if (destination != null) {
-          Navigator.of(context).push(CupertinoPageRoute(builder: (_) => destination)).then((_) {
-            Future.delayed(const Duration(milliseconds: 200), () {
-              rootScaffoldKey.currentState?.openDrawer();
-            });
-          });
+          Navigator.of(context).push(CupertinoPageRoute(builder: (_) => destination));
         }
       },
     );
