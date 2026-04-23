@@ -37,6 +37,21 @@ import '../screens/bitacora_screen.dart';
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
+  Future<String> _getUserRole() async {
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) return 'USUARIO';
+      final r = await Supabase.instance.client
+          .from('user_profiles')
+          .select('role')
+          .eq('user_id', userId)
+          .maybeSingle();
+      return ((r?['role'] as String?) ?? 'user').toUpperCase();
+    } catch (_) {
+      return 'USUARIO';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userEmail =
@@ -118,13 +133,16 @@ class AppDrawer extends StatelessWidget {
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text(
-                              'SUPERADMIN · ASU',
-                              style: GoogleFonts.inter(
-                                fontSize: 9,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textSecondary,
-                                letterSpacing: 0.5,
+                            FutureBuilder<String>(
+                              future: _getUserRole(),
+                              builder: (ctx, snap) => Text(
+                                '${snap.data ?? 'USUARIO'} · ASU',
+                                style: GoogleFonts.inter(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textSecondary,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
                             ),
                           ],

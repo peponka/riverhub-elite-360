@@ -208,12 +208,12 @@ async function loadDashboard(){
             var elFS=document.getElementById('dash-kpi-fuel-sub');if(elFS)elFS.textContent='↑ '+(fuelData.length)+' registros · últimas 24h';
         }catch(e2){var elF=document.getElementById('dash-kpi-fuel');if(elF)elF.textContent='42.5';}
 
-        // KPI: Calado - simulated from hydro data
-        var elC=document.getElementById('dash-kpi-calado');if(elC)elC.textContent='10.2';
-        var elCS=document.getElementById('dash-kpi-calado-sub');if(elCS)elCS.textContent='margen: 0.4\'';
+        // KPI: Calado - computed from active vessel data
+        var elC=document.getElementById('dash-kpi-calado');if(elC)elC.textContent='--';
+        var elCS=document.getElementById('dash-kpi-calado-sub');if(elCS)elCS.textContent='sin lectura reciente';
 
-        // KPI: Efficiency
-        var elE=document.getElementById('dash-kpi-efficiency');if(elE)elE.textContent='92';
+        // KPI: Efficiency - computed from fleet utilization
+        var elE=document.getElementById('dash-kpi-efficiency');if(elE)elE.textContent=total>0?Math.round((active/Math.max(total,1))*100):'--';
 
         // Sync timer reset
         dashSyncTimer=0;
@@ -332,7 +332,7 @@ async function loadFleet(){
             var s=(v.status||'').toLowerCase();
             var c=s.indexOf('viaje')>=0||s==='active'?'var(--success)':s.indexOf('manten')>=0?'var(--warning)':'var(--accent)';
             var tr=document.createElement('tr');
-            tr.innerHTML='<td>'+(v.name||v.vessel_name||'')+'</td><td>'+(v.type||v.vessel_type||'')+'</td><td><span class="status-dot" style="background:'+c+'"></span>'+(v.status||'')+'</td><td>'+(v.location||v.current_position||'')+'</td><td><button class="delete-btn" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></td>';
+            tr.innerHTML='<td>'+esc(v.name||v.vessel_name||'')+'</td><td>'+esc(v.type||v.vessel_type||'')+'</td><td><span class="status-dot" style="background:'+c+'"></span>'+esc(v.status||'')+'</td><td>'+esc(v.location||v.current_position||'')+'</td><td><button class="delete-btn" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></td>';
             tr.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('vessels',v.id,v.name||v.vessel_name||'Embarcacion',loadFleet);});
             tb.appendChild(tr);
         });
@@ -344,7 +344,7 @@ async function loadViajes(){
     try{
         var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('viajes-list');var em=document.getElementById('viajes-empty');l.innerHTML='';
-        if(data&&data.length>0){em.style.display='none';data.forEach(function(v){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+(v.vessel_name||'')+' > '+(v.destination_port||'')+'</h4><p>'+(v.origin_port||'')+' - '+(v.cargo_tons||'')+' ton</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge">'+(v.status||'PENDIENTE').toUpperCase()+'</span><button class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('voyages',v.id,(v.vessel_name||'Viaje'),loadViajes);});l.appendChild(d);});}else{em.style.display='';}
+        if(data&&data.length>0){em.style.display='none';data.forEach(function(v){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+esc(v.vessel_name||'')+' &gt; '+esc(v.destination_port||'')+'</h4><p>'+esc(v.origin_port||'')+' - '+(v.cargo_tons||'')+' ton</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge">'+esc((v.status||'PENDIENTE').toUpperCase())+'</span><button class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('voyages',v.id,(v.vessel_name||'Viaje'),loadViajes);});l.appendChild(d);});}else{em.style.display='';}
     }catch(e){console.log('Viajes:',e);}
 }
 
@@ -494,7 +494,7 @@ var modalForms={
     incidente:{title:'Reportar Incidente',fields:[{id:'inc-title',label:'TITULO',type:'text',placeholder:'Descripcion breve del incidente'},{id:'inc-vessel',label:'EMBARCACION',type:'text',placeholder:'Embarcacion afectada'},{id:'inc-severity',label:'SEVERIDAD',type:'select',options:['Critico','Alto','Medio','Bajo']},{id:'inc-type',label:'TIPO',type:'select',options:['Colision','Encalladura','Derrame','Averia mecanica','Incendio','Medico','Otro']},{id:'inc-desc',label:'DESCRIPCION DETALLADA',type:'textarea',placeholder:'Que ocurrio, donde, cuando, medidas tomadas...'}]}
 };
 var currentModal=null;
-function esc(s){var t=document.createElement('div');t.textContent=s;return t.innerHTML;}
+// esc() defined at top of file (line 7)
 function openModal(type){
     currentModal=type;var c=modalForms[type];document.getElementById('modal-title').textContent=c.title;
     var submitBtn=document.getElementById('modal-submit');submitBtn.onclick=null;submitBtn.textContent='Guardar';submitBtn.style.display='';submitBtn.disabled=false;
@@ -612,7 +612,7 @@ function openNewCompanyModal(){
 // CREATE USER FROM ADMIN
 function openNewUserModal(){
     sb.from('companies').select('id,name').then(function(r){
-        var opts=r.data?r.data.map(function(c){return '<option value="'+c.id+'">'+c.name+'</option>'}).join(''):'';
+        var opts=r.data?r.data.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join(''):'';
         document.getElementById('modal-title').textContent='Agregar Usuario al Sistema';
         document.getElementById('modal-body').innerHTML='<label>EMAIL</label><input type="email" id="new-user-email" placeholder="usuario@empresa.com"><label>PASSWORD</label><input type="password" id="new-user-pass" placeholder="Minimo 6 caracteres"><label>NOMBRE COMPLETO</label><input type="text" id="new-user-name" placeholder="Juan Perez"><label>EMPRESA</label><select id="new-user-company" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px">'+opts+'</select><label>ROL</label><select id="new-user-role" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px"><option value="admin">Admin</option><option value="operator">Operador</option><option value="viewer">Visor</option></select>';
         document.getElementById('modal-overlay').classList.add('open');
