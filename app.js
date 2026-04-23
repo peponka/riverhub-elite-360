@@ -231,7 +231,7 @@ app.locals.aisConnected = false;
 app.locals.io = io;
 
 // --- AIS CONFIGURATION ---
-const API_KEY = process.env.AIS_API_KEY || 'REDACTED_AIS_KEY_3';
+const API_KEY = process.env.AIS_API_KEY || '';
 if (!process.env.AIS_API_KEY) {
     console.warn('⚠️  AIS API Key: usando fallback. Configurar AIS_API_KEY en .env para producción.');
 }

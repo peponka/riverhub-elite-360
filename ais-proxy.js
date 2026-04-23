@@ -2,9 +2,9 @@ const WebSocket = require('ws');
 const { createClient } = require('@supabase/supabase-js');
 
 // Config
-const AIS_KEY = 'REDACTED_AIS_KEY_1';
+const AIS_KEY = process.env.AIS_API_KEY || '';
 const SUPABASE_URL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
-const SUPABASE_KEY = 'REDACTED_SUPABASE_ANON_KEY';
+const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || '';
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
