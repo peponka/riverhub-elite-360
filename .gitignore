@@ -1,11 +1,19 @@
+# ============================================
+# FLUVIA — .gitignore
+# Actualizado: 2026-04-23
+# ============================================
+
 # Dependencies
 node_modules/
 
-# Android builds
-android/
+# Android builds (root-level Capacitor dir only)
+/android/
 *.apk
 
-# Logs
+# Supabase CLI temp
+supabase/.temp/
+
+# Logs & debug output
 *.log
 *.txt
 *.zip
@@ -29,8 +37,15 @@ Thumbs.db
 *.tmp
 temp_*
 
-# Firebase Credentials
+# Firebase / Google credentials
 firebase-service-account.json
+google-services.json
+**/google-services.json
+
+# Keystore & signing
+key.properties
+*.jks
+*.keystore
 
 # Security blocks
 test_*.js
@@ -39,6 +54,41 @@ test_*.js
 
 # Build folders
 riverhub_mobile/build/
+**/build/
 aquafleet/
 aquafleet2/
 __pycache__/
+
+# Debug / test data files
+fcm_output.json
+fcm_debug.log
+token_fcm.txt
+auth_test.json
+db_out.json
+insert_error.json
+RESCATE_FINAL.json
+rpc_out.json
+schema.json
+config.json
+
+# Batch/script files with hardcoded secrets
+push_fuerza.bat
+start_ais.bat
+start_system.bat
+secure_git_purge.bat
+deploy_send_fcm.bat
+
+# n8n automation data
+n8n_email_workflow.json
+Anomalías.json
+"Certificaciones RRHH.json"
+"IA Resumen + Push Notification_.json"
+"RiverHub Emails Automation.json"
+clima.json
+companies.json
+
+# Render config with secrets
+render.yaml
+
+# Large binary archives
+RIverhub.zip
