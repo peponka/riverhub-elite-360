@@ -671,10 +671,10 @@ async function loadDashboardExtras(){
     // Greeting by time of day
     var h=new Date().getHours();
     var greet=h<12?'Buenos dias,':h<18?'Buenas tardes,':'Buenas noches,';
-    var userName=(sb.auth.currentUser&&sb.auth.currentUser.email)?sb.auth.currentUser.email.split('@')[0]:'Capitan';
+    var sess=await sb.auth.getSession();var userName=(sess.data.session&&sess.data.session.user.email)?sess.data.session.user.email.split('@')[0]:'Capitan';
     userName=userName.charAt(0).toUpperCase()+userName.slice(1);
     var el=document.getElementById('dash-greeting');
-    if(el)el.innerHTML=greet+'<br><em>'+userName+'.</em>';
+    if(el)el.innerHTML=greet+'<br><em>'+esc(userName)+'.</em>';
     // Week & date
     var now=new Date();var oneJan=new Date(now.getFullYear(),0,1);var weekNum=Math.ceil((((now-oneJan)/86400000)+oneJan.getDay()+1)/7);
     var de=document.getElementById('dash-week');if(de)de.textContent='SEMANA '+weekNum+' · '+now.getFullYear();
@@ -838,11 +838,9 @@ async function loadHidrologia(){
 var fleetChart=null,fuelChart=null,activityChart=null;
 async function loadReportes(){
     try{
-        // Stats
-        var v=await sb.from('vessels').select('status');
-        var vj=await sb.from('voyages').select('id',{count:'exact',head:true});
-        var fl=await sb.from('fuel_logs').select('liters');
-        var lg=await sb.from('logs').select('id',{count:'exact',head:true});
+        // Stats — parallel queries for performance
+        var results=await Promise.all([sb.from('vessels').select('status'),sb.from('voyages').select('id',{count:'exact',head:true}),sb.from('fuel_logs').select('liters'),sb.from('logs').select('id',{count:'exact',head:true})]);
+        var v=results[0];var vj=results[1];var fl=results[2];var lg=results[3];
         var totalFuel=fl.data?fl.data.reduce(function(s,x){return s+(x.liters||0)},0):0;
         document.getElementById('report-stats').innerHTML=
             '<div class="admin-stat"><div class="stat-value">'+(v.data?v.data.length:0)+'</div><div class="stat-label">EMBARCACIONES</div></div>'+

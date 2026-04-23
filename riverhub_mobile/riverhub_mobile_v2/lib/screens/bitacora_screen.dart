@@ -120,7 +120,8 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                                         final fileExt = selectedImage!.path.split('.').last;
                                         final fileName = '${DateTime.now().millisecondsSinceEpoch}.$fileExt';
                                         await Supabase.instance.client.storage.from('documents').uploadBinary('logs/$fileName', bytes);
-                                        imageUrl = Supabase.instance.client.storage.from('documents').getPublicUrl('logs/$fileName');
+                                        final signedUrlResponse = await Supabase.instance.client.storage.from('documents').createSignedUrl('logs/$fileName', 86400); // 24h expiry
+                                        imageUrl = signedUrlResponse;
                                       } catch (e) { debugPrint('Upload error: $e'); }
                                     }
                                     final payload = {
