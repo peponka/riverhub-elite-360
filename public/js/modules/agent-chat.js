@@ -10,7 +10,7 @@ const AgentChatModule = (() => {
         // Initial Message if empty
         const chatBody = document.getElementById('agent-chat-body');
         if (chatBody && chatBody.children.length === 0) {
-            addMessage(AGENT_NAME, "Hola, soy Antigravity, tu agente de arquitectura y control de RiverHub. ¿En qué puedo ayudarte hoy?", 'agent');
+            addMessage(AGENT_NAME, "Hola, soy Antigravity, tu agente de arquitectura y control de FluviaFleet. ¿En qué puedo ayudarte hoy?", 'agent');
         }
 
         setupListeners();

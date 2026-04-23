@@ -1,5 +1,5 @@
 /*
- * MANTENIMIENTO KANBAN MODULE (FLUVIA STYLED)
+ * MANTENIMIENTO KANBAN MODULE (FLUVIAFLEET STYLED)
  */
 
 const MaintenanceModuleFluvia = (() => {
@@ -16,7 +16,7 @@ const MaintenanceModuleFluvia = (() => {
     };
 
     const init = () => {
-        console.log("🛠️ Mantenimiento (Fluvia) Iniciando...");
+        console.log("🛠️ Mantenimiento (FLUVIAFLEETFleet) Iniciando...");
         loadDemoData();
         initCharts();
     };

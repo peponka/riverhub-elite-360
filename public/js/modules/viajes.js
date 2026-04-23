@@ -322,7 +322,7 @@ const viajesLogic = (() => {
             doc.rect(0, 0, 210, 40, 'F');
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(20);
-            doc.text('RIVERHUB ELITE', 15, 20);
+            doc.text('FLUVIAFLEET', 15, 20);
             doc.setFontSize(10);
             doc.setTextColor(0, 229, 255);
             doc.text('MANIFIESTO DE CARGA', 15, 30);
@@ -351,7 +351,7 @@ const viajesLogic = (() => {
             doc.rect(0, 280, 210, 17, 'F');
             doc.setTextColor(0, 229, 255);
             doc.setFontSize(8);
-            doc.text('RiverHub Elite 360 — Documento generado automáticamente', 15, 289);
+            doc.text('FluviaFleet — Documento generado automáticamente', 15, 289);
             doc.save(`Manifiesto_${vessel.replace(/\\s/g, '_')}.pdf`);
             RiverToast.success('Manifiesto PDF descargado correctamente.', 'Exportación');
         } catch (e) {

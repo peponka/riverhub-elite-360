@@ -250,7 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               if (subtitle != null)
                 Text(subtitle, style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
-              if (trailing != null) trailing!,
+              if (trailing != null) trailing,
               if (trailing == null)
                 Icon(CupertinoIcons.chevron_right, size: 14, color: AppColors.separator),
             ],

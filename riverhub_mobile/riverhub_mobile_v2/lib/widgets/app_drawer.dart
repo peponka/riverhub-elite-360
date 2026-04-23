@@ -3,11 +3,9 @@ import 'package:flutter/material.dart' as material;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
-import '../main.dart';
 // Existing screens
 import '../screens/fuel_screen.dart';
 import '../screens/draft_screen.dart';
-import '../screens/quote_screen.dart';
 import '../screens/convoys_screen.dart';
 import '../screens/trips_screen.dart';
 import '../screens/nexobot_screen.dart';
@@ -16,22 +14,15 @@ import '../screens/fleet_manager_screen.dart';
 import '../screens/comunicaciones_screen.dart';
 import '../screens/daily_report_screen.dart';
 import '../screens/hidrologia_screen.dart';
-import '../screens/incidentes_screen.dart';
-import '../screens/loadmaster_screen.dart';
 import '../screens/mantenimiento_screen.dart';
-import '../screens/monitoring_screen.dart';
 import '../screens/panol_screen.dart';
 import '../screens/tripulacion_screen.dart';
 import '../screens/reportes_screen.dart';
 import '../screens/tracking_screen.dart';
-import '../screens/commercial_screen.dart';
 import '../screens/auditoria_screen.dart';
-import '../screens/docs_screen.dart';
-import '../screens/financial_risk_screen.dart';
 import '../screens/integraciones_screen.dart';
 import '../screens/billing_screen.dart';
 import '../screens/notifications_screen.dart';
-import '../screens/admin_screen.dart';
 import '../screens/bitacora_screen.dart';
 
 class AppDrawer extends StatelessWidget {

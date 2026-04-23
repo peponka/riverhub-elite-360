@@ -14,7 +14,7 @@ let n8nRoutes;
 try { n8nRoutes = require('./routes/n8n-automations'); } catch (e) { console.error('❌ n8n routes failed to load:', e.message); }
 
 // ============================================
-// RIVERHUB ELITE 360 — Servidor Unificado
+// FLUVIAFLEET — Servidor Unificado
 // Version: 2.0.0
 // ============================================
 
@@ -24,7 +24,7 @@ app.use(cors());
 
 const server = http.createServer(app);
 const ALLOWED_ORIGINS = [
-    process.env.FRONTEND_URL || 'https://riverhub.vercel.app',
+    process.env.FRONTEND_URL || 'https://fluviafleet.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000'
 ];
@@ -115,7 +115,7 @@ app.post('/api/ai/chat', async (req, res) => {
         return res.status(400).json({ error: 'Missing message' });
     }
 
-    const systemPrompt = `Eres NexoBot, el asistente de inteligencia artificial de RiverHub Elite 360, un sistema de gestión fluvial para la Hidrovía Paraguay-Paraná.
+    const systemPrompt = `Eres el Copiloto IA de FluviaFleet, un sistema de gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná.
 
 Tu rol:
 - Experto en logística fluvial, navegación de barcos empujadores y barcazas
@@ -331,7 +331,7 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`
 ╔══════════════════════════════════════════╗
-║   🚀 RIVERHUB ELITE 360 — v2.0.0       ║
+║   🚀 FLUVIAFLEET — v2.0.0              ║
 ║   Puerto: ${PORT}                            ║
 ║   AIS: Hidrovía Paraguay-Paraná         ║
 ╚══════════════════════════════════════════╝

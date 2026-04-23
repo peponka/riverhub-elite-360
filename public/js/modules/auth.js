@@ -252,7 +252,7 @@ var AuthModule = (() => {
         if (role === 'superadmin') {
             // Ve todo absoluto
         } else if (role === 'admin') {
-            // Admin de Empresa: Ve todo menos el backoffice global de RiverHub
+            // Admin de Empresa: Ve todo menos el backoffice global de FluviaFleet
             hideNav(['nav-backoffice']);
         } else if (role === 'operator') {
             // Personal Operativo (Capitanes, Armadores): NO ven facturación ni consolas admin
@@ -449,10 +449,10 @@ var AuthModule = (() => {
         console.log("🔓 MODO SIMULADOR ACTIVADO");
         const simulatedUser = {
             id: 'sim-user-001',
-            email: 'simulador@riverhub.local',
+            email: 'simulador@fluviafleet.local',
             full_name: 'Capitán Simulador',
             role: 'superadmin',
-            company: 'RiverHub Demo'
+            company: 'FluviaFleet Demo'
         };
         login(simulatedUser);
     };

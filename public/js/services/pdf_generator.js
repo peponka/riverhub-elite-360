@@ -30,7 +30,7 @@ function descargarPDF() {
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(22);
         doc.setFontType("bold");
-        doc.text(15, 25, 'RIVERHUB ELITE');
+        doc.text(15, 25, 'FLUVIAFLEET');
 
         doc.setFontSize(10);
         doc.setTextColor(0, 229, 255);
@@ -86,10 +86,10 @@ function descargarPDF() {
         // Footer
         doc.setTextColor(150, 150, 150);
         doc.setFontSize(9);
-        doc.text(15, 280, "Generado por RiverHub AI Engine. Valido por 24hs.");
+        doc.text(15, 280, "Generado por FluviaFleet AI Engine. Valido por 24hs.");
 
         // 7. Guardar
-        doc.save('RiverHub_Cotizacion_' + Date.now() + '.pdf');
+        doc.save('FluviaFleet_Cotizacion_' + Date.now() + '.pdf');
 
     } catch (e) {
         console.error(e);

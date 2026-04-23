@@ -1,5 +1,5 @@
 /*
- * FLEET MANAGER MODULE (FLUVIA STYLED)
+ * FLEET MANAGER MODULE (FLUVIAFLEET STYLED)
  */
 
 const FleetManagerFluvia = (() => {
@@ -7,7 +7,7 @@ const FleetManagerFluvia = (() => {
     let vessels = [];
 
     const init = () => {
-        console.log("⚓ FleetManager (Fluvia): Iniciando...");
+        console.log("⚓ FleetManager (FLUVIAFLEETFleet): Iniciando...");
         const content = document.getElementById('flota-grid-container');
         if (!content) return;
 

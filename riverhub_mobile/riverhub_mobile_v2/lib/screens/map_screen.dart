@@ -20,7 +20,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
   List<Map<String, dynamic>> _fleetAssets = [];
-  Map<String, dynamic> _aisShips = {};
+  final Map<String, dynamic> _aisShips = {};
   Timer? _aisTimer;
   final GpsTrackerService _gpsTracker = GpsTrackerService();
   bool _tracking = false;
