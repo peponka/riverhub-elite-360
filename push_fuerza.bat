@@ -1,9 +1,0 @@
-@echo off
-cd /d "c:\Users\pepeq\OneDrive\Desktop\RIverhub"
-echo Agregando archivos...
-git add .
-echo Creando paquete de actualizacion...
-git commit -m "Fix(Render): Inyeccion suprema de mapa localhost al servidor cloud"
-echo Subiendo hacia Render...
-git push origin main
-echo Finalizado.
