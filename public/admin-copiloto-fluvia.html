@@ -5,7 +5,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 
-  <title>RiverHub Elite 360 - Copiloto IA (Fluvia)</title>
+  <title>FluviaFleet - Copiloto IA (Fluvia)</title>
   <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
   <link rel="stylesheet" href="./css/modules/admin-copiloto-fluvia.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -14,7 +14,7 @@
 <body>
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="sidebar-logo"><i class="fa-solid fa-water"></i> Fluvia <span>v4.2</span></div>
+    <div class="sidebar-logo"><i class="fa-solid fa-water"></i> FluviaFleet <span>v4.2</span></div>
     <div class="nav-group">
       <div class="nav-title">Principal</div>
       <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Panel de Control <span class="badge">1</span></a>
@@ -56,7 +56,7 @@
       <div class="copilot-main">
         <div class="copilot-header">
           <h1>Copiloto <i>IA.</i></h1>
-          <div class="copilot-sub">NEXOBOT · GEMINI 2.0 FLASH · CONTEXTO FLUVIAL ACTIVO</div>
+          <div class="copilot-sub">FLUVIAFLEET AI · GEMINI 2.0 FLASH · CONTEXTO FLUVIAL ACTIVO</div>
         </div>
 
         <div class="chat-container">
@@ -65,9 +65,9 @@
             <div class="msg bot">
               <div class="msg-avatar"><i class="fa-solid fa-bolt" style="font-size:0.7rem;"></i></div>
               <div class="msg-body">
-                <span class="msg-name">NexoBot</span>
+                <span class="msg-name">FLUVIAFLEET AI</span>
                 <div class="msg-text">
-                  ¡Buen día, Capitán! 🚢 Soy <b>NexoBot</b>, tu copiloto de inteligencia artificial para la Hidrovía Paraguay-Paraná.<br><br>
+                  ¡Buen día, Capitán! 🚢 Soy <b>FLUVIAFLEET AI</b>, tu copiloto de inteligencia artificial para la Hidrovía Paraguay-Paraná.<br><br>
                   Puedo ayudarte con:<br>
                   • Análisis de condiciones de navegación<br>
                   • Consultas sobre tripulación y mantenimiento<br>
@@ -81,7 +81,7 @@
           </div>
 
           <div class="chat-input-area">
-            <input type="text" class="chat-input" id="chat-input" placeholder="Preguntale a NexoBot..." autocomplete="off">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Preguntale a FLUVIAFLEET AI..." autocomplete="off">
             <button class="chat-send" id="btn-send" onclick="sendMessage()">
               <i class="fa-solid fa-paper-plane"></i>
             </button>
@@ -123,7 +123,7 @@
           <div class="model-info">
             <div class="model-row"><span>Motor</span><span>Gemini 2.0 Flash</span></div>
             <div class="model-row"><span>Contexto</span><span>Hidrovía PY-PA</span></div>
-            <div class="model-row"><span>Rol</span><span>NexoBot Fluvial</span></div>
+            <div class="model-row"><span>Rol</span><span>FLUVIAFLEET AI Fluvial</span></div>
             <div class="model-row"><span>Tokens máx.</span><span>500</span></div>
           </div>
         </div>
@@ -215,7 +215,7 @@
       const avatarContent = type === 'bot'
         ? '<i class="fa-solid fa-bolt" style="font-size:0.7rem;"></i>'
         : 'PE';
-      const name = type === 'bot' ? 'NexoBot' : 'Pepe Orué';
+      const name = type === 'bot' ? 'FLUVIAFLEET AI' : 'Pepe Orué';
 
       // Convert markdown-like formatting
       let html = text
@@ -249,7 +249,7 @@
       el.innerHTML = `
         <div class="msg-avatar"><i class="fa-solid fa-bolt" style="font-size:0.7rem;"></i></div>
         <div class="msg-body">
-          <span class="msg-name">NexoBot</span>
+          <span class="msg-name">FLUVIAFLEET AI</span>
           <div class="typing-indicator"><span></span><span></span><span></span></div>
         </div>
       `;

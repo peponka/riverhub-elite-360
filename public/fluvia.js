@@ -70,7 +70,7 @@ function showApp(user){
         } else {
             console.log('NO PROFILE FOUND - creating one...');
             // Auto-create profile if missing
-            sb.from('companies').select('id').eq('name','RiverHub Admin').single().then(function(c2){
+            sb.from('companies').select('id').eq('name','FluviaFleet Admin').single().then(function(c2){
                 var cid = c2.data ? c2.data.id : null;
                 sb.from('user_profiles').insert({user_id:user.id, company_id:cid, role:'viewer', full_name:'Nuevo Usuario'}).then(function(ins){
                     console.log('Profile created:', ins);
@@ -653,7 +653,7 @@ async function sendCopiloto(){
         var vj=await sb.from('voyages').select('vessel_name,origin_port,destination_port,status,cargo_tons').limit(10);if(vj.data)ctx+='Viajes: '+JSON.stringify(vj.data)+'\n';
         var fl=await sb.from('fuel_logs').select('vessel_name,liters,fuel_type').limit(5);if(fl.data)ctx+='Combustible: '+JSON.stringify(fl.data)+'\n';
         var mt=await sb.from('maintenance_tasks').select('description,vessel_name,priority,status').limit(5);if(mt.data)ctx+='Mantenimiento: '+JSON.stringify(mt.data)+'\n';
-        var res=await fetch('/api/n8n/ai-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Eres el Copiloto IA de RiverHub, asistente maritimo-fluvial experto en la Hidrovia Paraguay-Parana. Responde en español, breve y profesional. Contexto de la empresa:\n'+ctx+'\nPregunta del capitan: '+msg})});
+        var res=await fetch('/api/n8n/ai-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Eres el Copiloto IA de FluviaFleet, asistente maritimo-fluvial experto en la Hidrovia Paraguay-Parana. Responde en español, breve y profesional. Contexto de la empresa:\n'+ctx+'\nPregunta del capitan: '+msg})});
         var data=await res.json();
         var typing=document.getElementById('ai-typing');if(typing)typing.remove();
         var answer=data.analysis||data.message||'No pude procesar la consulta.';
@@ -979,7 +979,7 @@ async function exportTracking(format){
     }
 }
 
-// DELETE CONFIRMATION (Fluvia modal, no native confirm)
+// DELETE CONFIRMATION (FluviaFleet modal, no native confirm)
 function confirmDelete(table, id, itemName, reloadFn){
     document.getElementById('modal-title').textContent='Eliminar Registro';
     document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:20px 0"><i class="fa-regular fa-trash-can" style="font-size:36px;color:var(--error);margin-bottom:16px;display:block"></i><p style="font-size:15px;font-weight:500">Seguro que queres eliminar?</p><p style="font-size:13px;color:var(--text-secondary);margin-top:6px"><strong>'+itemName+'</strong></p><p style="font-size:11px;color:var(--text-tertiary);margin-top:12px">Esta accion no se puede deshacer.</p></div>';
@@ -1132,7 +1132,7 @@ function exportToPDF(title, columns, rows, fileName){
     if(!rows||!rows.length){alert('No hay datos para exportar');return;}
     var doc=new jspdf.jsPDF({orientation:'landscape'});
     // Header
-    doc.setFontSize(18);doc.text('Fluvia — RiverHub Elite 360',14,15);
+    doc.setFontSize(18);doc.text('FluviaFleet',14,15);
     doc.setFontSize(12);doc.text(title,14,24);
     doc.setFontSize(8);doc.setTextColor(128);doc.text('Generado: '+new Date().toLocaleString('es'),14,30);
     doc.setTextColor(0);

@@ -1,7 +1,7 @@
 /**
  * Financial Risk Analysis Engine
  * 
- * Modulo de evaluación de riesgo financiero automatizado para RiverHub.
+ * Modulo de evaluación de riesgo financiero automatizado para FluviaFleet.
  * Implementa lógica de validación, cálculo de ratios, detección de red flags y scoring.
  * 
  * Uso:

@@ -1,5 +1,5 @@
 /* 
- * FLUVIA CREW MANAGER WRAPPER 
+ * FLUVIAFLEET CREW MANAGER WRAPPER 
  */
 
 const CrewModuleFluvia = (() => {
@@ -10,7 +10,7 @@ const CrewModuleFluvia = (() => {
     };
 
     const init = async () => {
-        console.log("Módulo Tripulación (Fluvia) Iniciado.");
+        console.log("Módulo Tripulación (FLUVIAFLEETFleet) Iniciado.");
         await loadData();
     };
 

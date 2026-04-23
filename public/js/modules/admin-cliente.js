@@ -1,6 +1,6 @@
 // ============================================
 // ADMIN CLIENTE — Panel de Administración por Empresa
-// RiverHub Elite 360 — Tenant-Aware
+// FluviaFleet — Tenant-Aware
 // ============================================
 
 const AdminCliente = (() => {

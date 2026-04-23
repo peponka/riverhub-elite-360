@@ -1,5 +1,5 @@
 /*
- * MAPA MODULE (FLUVIA / MAPLIBRE GL JS)
+ * MAPA MODULE (FLUVIAFLEET / MAPLIBRE GL JS)
  */
 
 const MapLogicFluvia = (() => {

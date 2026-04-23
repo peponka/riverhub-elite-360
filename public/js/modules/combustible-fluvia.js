@@ -1,5 +1,5 @@
 /*
- * COMBUSTIBLE MODULE (FLUVIA STYLED)
+ * COMBUSTIBLE MODULE (FLUVIAFLEET STYLED)
  */
 
 const CombustibleModuleFluvia = (() => {
@@ -11,7 +11,7 @@ const CombustibleModuleFluvia = (() => {
     };
 
     const init = async () => {
-        console.log("⛽ Combustible (Fluvia) Iniciando...");
+        console.log("⛽ Combustible (FLUVIAFLEETFleet) Iniciando...");
         loadFallbackData(); // Direct to demo data for isolated UI preview
     };
 

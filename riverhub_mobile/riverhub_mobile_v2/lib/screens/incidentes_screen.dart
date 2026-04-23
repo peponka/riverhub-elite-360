@@ -53,8 +53,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
     final locController = TextEditingController();
     final descController = TextEditingController();
     bool aiAnalyzed = false;
-    String? _attachedImagePath;
-    final ImagePicker _picker = ImagePicker();
+    String? attachedImagePath;
+    final ImagePicker picker = ImagePicker();
 
     showCupertinoModalPopup(
       context: context,
@@ -188,13 +188,13 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                                onPressed: () async {
                                  Navigator.pop(actionSheetCtx);
                                  try {
-                                   final XFile? image = await _picker.pickImage(
+                                   final XFile? image = await picker.pickImage(
                                      source: ImageSource.camera, 
                                      imageQuality: 70
                                    );
                                    if (image != null) {
                                      setModalState(() {
-                                       _attachedImagePath = image.path;
+                                       attachedImagePath = image.path;
                                      });
                                    }
                                  } catch (e) {
@@ -207,13 +207,13 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                                onPressed: () async {
                                  Navigator.pop(actionSheetCtx);
                                  try {
-                                   final XFile? image = await _picker.pickImage(
+                                   final XFile? image = await picker.pickImage(
                                      source: ImageSource.gallery, 
                                      imageQuality: 70
                                    );
                                    if (image != null) {
                                      setModalState(() {
-                                       _attachedImagePath = image.path;
+                                       attachedImagePath = image.path;
                                      });
                                    }
                                  } catch (e) {
@@ -237,9 +237,9 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.separator,
                           borderRadius: BorderRadius.circular(10),
-                          image: _attachedImagePath != null
+                          image: attachedImagePath != null
                               ? DecorationImage(
-                                  image: FileImage(File(_attachedImagePath!)),
+                                  image: FileImage(File(attachedImagePath!)),
                                   fit: BoxFit.cover,
                                   colorFilter: ColorFilter.mode(
                                     AppColors.textPrimary.withValues(alpha: 0.3),
@@ -253,15 +253,15 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                  _attachedImagePath != null ? CupertinoIcons.checkmark_alt_circle : CupertinoIcons.camera_fill,
-                                  color: _attachedImagePath != null ? AppColors.success : AppColors.textSecondary,
+                                  attachedImagePath != null ? CupertinoIcons.checkmark_alt_circle : CupertinoIcons.camera_fill,
+                                  color: attachedImagePath != null ? AppColors.success : AppColors.textSecondary,
                                   size: 32,
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                _attachedImagePath != null ? 'Foto Adjunta' : 'Presionar para Adjuntar Imagen',
+                                attachedImagePath != null ? 'Foto Adjunta' : 'Presionar para Adjuntar Imagen',
                                 style: TextStyle(
-                                  color: _attachedImagePath != null ? AppColors.textOnAccent : AppColors.textSecondary,
+                                  color: attachedImagePath != null ? AppColors.textOnAccent : AppColors.textSecondary,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -361,10 +361,10 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                         
                         String? uploadedImageUrl;
 
-                        if (_attachedImagePath != null) {
+                        if (attachedImagePath != null) {
                           try {
-                            final bytes = await File(_attachedImagePath!).readAsBytes();
-                            final fileExt = _attachedImagePath!.split('.').last;
+                            final bytes = await File(attachedImagePath!).readAsBytes();
+                            final fileExt = attachedImagePath!.split('.').last;
                             final fileName = '${DateTime.now().millisecondsSinceEpoch}.$fileExt';
                             
                             await SupabaseService.client.storage

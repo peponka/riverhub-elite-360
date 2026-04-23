@@ -1,6 +1,6 @@
 // ============================================
 // BACKOFFICE MASTER — SUPERADMIN PANEL
-// RiverHub Elite 360 
+// FluviaFleet
 // ============================================
 
 const BackofficeModule = (() => {
@@ -48,7 +48,7 @@ const BackofficeModule = (() => {
                             <i class="fas fa-user-secret"></i>
                         </div>
                         <div>
-                            <h1 class="bo-title">RIVERHUB BACKOFFICE</h1>
+                            <h1 class="bo-title">FLUVIAFLEET BACKOFFICE</h1>
                             <span class="bo-subtitle">SISTEMA DE ADMINISTRACIÓN GLOBAL</span>
                         </div>
                     </div>
@@ -539,7 +539,7 @@ const BackofficeModule = (() => {
 
         if (users.length === 0) {
             users = [
-                { id: '1', email: 'admin@riverhub.com', full_name: 'Carlos Martínez', role: 'superadmin', is_active: true, company: 'RiverHub HQ' },
+                { id: '1', email: 'admin@fluviafleet.com', full_name: 'Carlos Martínez', role: 'superadmin', is_active: true, company: 'FluviaFleet HQ' },
                 { id: '2', email: 'roberto@navieraparana.com', full_name: 'Roberto Gómez', role: 'admin', is_active: true, company: 'Naviera Paraná S.A.' },
                 { id: '3', email: 'juan@transpfluvial.com', full_name: 'Juan López', role: 'operator', is_active: true, company: 'Transporte Fluvial Chaco' },
                 { id: '4', email: 'maria@barcazassur.com', full_name: 'María Sánchez', role: 'viewer', is_active: false, company: 'Barcazas del Sur' }
@@ -879,7 +879,7 @@ const BackofficeModule = (() => {
                                     <option value="operator">Operador Fluvial (Básico)</option>
                                     <option value="admin">Administrador de Tenant (Empresa)</option>
                                     <option value="viewer">Auditor / Observador Cliente</option>
-                                    <option value="superadmin">SuperAdmin Nivel RiverHub</option>
+                                    <option value="superadmin">SuperAdmin Nivel FluviaFleet</option>
                                 </select>
                             </div>
                         </div>

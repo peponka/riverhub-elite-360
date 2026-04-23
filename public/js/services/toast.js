@@ -1,5 +1,5 @@
 // ============================================
-// RIVERHUB ELITE - Toast Notification System
+// FLUVIAFLEET - Toast Notification System
 // Replaces ALL native alert() calls
 // ============================================
 (function () {
@@ -126,5 +126,5 @@
         ensureContainer();
     }
 
-    console.log('🔔 RiverHub Toast System Active');
+    console.log('🔔 FluviaFleet Toast System Active');
 })();

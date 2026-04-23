@@ -63,6 +63,7 @@ class _CommercialScreenState extends State<CommercialScreen> {
         ),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
+          onPressed: _showCreateOrderModal,
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
             children: const [
@@ -70,7 +71,6 @@ class _CommercialScreenState extends State<CommercialScreen> {
               Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
             ],
           ),
-          onPressed: _showCreateOrderModal,
         ),
       ),
       backgroundColor: AppColors.backgroundPrimary,

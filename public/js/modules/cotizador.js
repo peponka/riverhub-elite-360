@@ -147,7 +147,7 @@ const CotizadorModule = (() => {
                     headers: { 'Content-Type': 'application/json', 'x-api-key': 'RH_Secure_n8n_X9fL!2026' },
                     body: JSON.stringify({
                         message: `Genera un análisis ultra breve (1 oración impactante) de una cotización de flete fluvial: de ${origin} a ${dest}, río crítico a ${river}m, bunker a $${bunker}/L, tarifa final USD ${finalPrice}/TN.`,
-                        context: 'Cotizador Comercial RiverHub'
+                        context: 'Cotizador Comercial FluviaFleet'
                     })
                 });
                 if (res.ok) {

@@ -39,9 +39,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _humidity = 0;
 
   // Hydro
-  String _hydroASU = '--';
-  String _hydroPIL = '--';
-  String _hydroROS = '--';
+  final String _hydroASU = '--';
+  final String _hydroPIL = '--';
+  final String _hydroROS = '--';
 
   // Vessels list
   List<Map<String, dynamic>> _vessels = [];
@@ -82,10 +82,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _fetchActivity(),
       _fetchCrew(),
     ]);
-    if (mounted) setState(() {
+    if (mounted) {
+      setState(() {
       _isLoading = false;
       _syncSeconds = 0;
     });
+    }
   }
 
   Future<void> _fetchFleetStats() async {
@@ -94,13 +96,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       int active = 0, docked = 0, maint = 0;
       for (var v in response) {
         final s = (v['status'] ?? '').toString().toLowerCase();
-        if (s == 'en viaje' || s == 'active' || s == 'navegando' || s == 'en_viaje') active++;
-        else if (s.contains('manten')) maint++;
+        if (s == 'en viaje' || s == 'active' || s == 'navegando' || s == 'en_viaje') {
+          active++;
+        } else if (s.contains('manten')) maint++;
         else docked++;
       }
       final logs = await Supabase.instance.client
           .from('logs').select('action_type').eq('action_type', 'alert').limit(10);
-      if (mounted) setState(() {
+      if (mounted) {
+        setState(() {
         _activeVessels = active;
         _dockedVessels = docked;
         _totalVessels = response.length;
@@ -109,6 +113,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _vessels = List<Map<String, dynamic>>.from(response);
         if (_vessels.isNotEmpty) _selectedVesselIdx = 0;
       });
+      }
     } catch (e) {
       debugPrint('Fleet: $e');
       if (mounted) setState(() => _isLoading = false);

@@ -1,4 +1,4 @@
-/* RIVERHUB ELITE 360 - BUNDLED CORE CSS */
+/* FluviaFleet - BUNDLED CORE CSS */
 
 /* ===== css/global.css ===== */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
@@ -5393,7 +5393,7 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 /* ===== css/modules/comunicaciones.css ===== */
-/* COMUNICACIONES - RIVERHUB ELITE 360 STYLE */
+/* COMUNICACIONES - FluviaFleet STYLE */
 
 #view-comunicaciones {
     height: 100%;
@@ -7626,7 +7626,7 @@ input[type=range]::-webkit-slider-runnable-track {
 /* ===== css/modules/billing.css ===== */
 /* ============================================
    BILLING — Suscripción Premium + Checkout
-   RiverHub Elite 360 — Gold Accent Theme
+   FluviaFleet — Gold Accent Theme
    ============================================ */
 
 .bill-container { padding: 24px; max-width: 1200px; margin: 0 auto; }
@@ -11255,7 +11255,7 @@ input[type=range]::-webkit-slider-runnable-track {
     }
 }
 
-/* --- EXTRA MOBILE FIXES (RIVERHUB CLEANUP) --- */
+/* --- EXTRA MOBILE FIXES (FluviaFleet CLEANUP) --- */
 @media (max-width: 768px) {
     .admin-container {
         padding: 10px;
@@ -12459,7 +12459,7 @@ input[type=range]::-webkit-slider-runnable-track {
 /* ===== css/modules/backoffice.css ===== */
 /* ============================================
    BACKOFFICE MASTER — SUPERADMIN STYLES
-   RiverHub Elite 360 — Dark Enterprise Theme
+   FluviaFleet — Dark Enterprise Theme
    ============================================ */
 
 :root {
@@ -13695,7 +13695,7 @@ input[type=range]::-webkit-slider-runnable-track {
 /* ===== css/modules/admin-cliente.css ===== */
 /* ============================================
    ADMIN CLIENTE — Panel por Empresa
-   RiverHub Elite 360 — Blue Accent Theme
+   FluviaFleet — Blue Accent Theme
    ============================================ */
 
 .ac-container { padding: 24px; max-width: 1200px; margin: 0 auto; }
@@ -13835,7 +13835,7 @@ input[type=range]::-webkit-slider-runnable-track {
 /* ===== css/modules/billing.css ===== */
 /* ============================================
    BILLING — Suscripción Premium + Checkout
-   RiverHub Elite 360 — Gold Accent Theme
+   FluviaFleet — Gold Accent Theme
    ============================================ */
 
 .bill-container { padding: 24px; max-width: 1200px; margin: 0 auto; }
@@ -13968,7 +13968,7 @@ input[type=range]::-webkit-slider-runnable-track {
 /* ===== css/modules/monitoring.css ===== */
 /* ============================================
    MONITORING MODULE (TORRE DE CONTROL)
-   RiverHub Elite 360
+   FluviaFleet
    ============================================ */
 
 /* --- Container --- */
@@ -14247,7 +14247,7 @@ input[type=range]::-webkit-slider-runnable-track {
 /* ===== css/modules/fleet_manager.css ===== */
 /* ============================================
    FLEET MANAGER MODULE
-   RiverHub Elite 360
+   FluviaFleet
    ============================================ */
 
 /* --- Container --- */
@@ -14542,7 +14542,7 @@ input[type=range]::-webkit-slider-runnable-track {
 /* ===== css/modules/financial_risk.css ===== */
 /* ============================================
    FINANCIAL RISK MODULE
-   RiverHub Elite 360
+   FluviaFleet
    ============================================ */
 
 /* --- Container --- */
@@ -14899,7 +14899,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
 /* ===== css/maritime-elite.css ===== */
 /* ====================================
-   RIVERHUB MARITIME ELITE - CUPERTINO LIGHT
+   FluviaFleet MARITIME ELITE - CUPERTINO LIGHT
    Paleta de Colores Premium — Cupertino Edition
    ==================================== */
 
@@ -15258,7 +15258,7 @@ body {
 
 /* ===== css/mejoras-ui.css ===== */
 /* ====================================
-   MEJORAS DE DISEÑO - RIVERHUB V1.0
+   MEJORAS DE DISEÑO - FluviaFleet V1.0
    ==================================== */
 
 /* 1. MICRO-INTERACCIONES MEJORADAS */
@@ -15997,7 +15997,7 @@ textarea:focus {
 
 /* ===== css/flutter-override.css ===== */
 /* ============================================================
-   RIVERHUB WEB — CUPERTINO LIGHT STYLE OVERRIDE
+   FluviaFleet WEB — CUPERTINO LIGHT STYLE OVERRIDE
    Transforms the web theme to match Apple's Cupertino aesthetic
    ============================================================ */
 

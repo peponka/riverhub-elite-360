@@ -56,7 +56,7 @@ const DailyReportModule = (() => {
 
             <div class="report-ticker">
                 <div class="ticker-content">
-                     RIVERHUB SYSTEM STATUS: ONLINE • ACTIVOS: 14 BARCAZAS • TIEMPO EN HIDROVÍA: MAYORMENTE DESPEJADO • ALERTAS DE CALADO: 2 ACTIVAS • COMBUSTIBLE TOTAL: 45,200 LTS • PROXIMO MANTENIMIENTO: TUG-ALPHA •
+                     FLUVIAFLEET SYSTEM STATUS: ONLINE • ACTIVOS: 14 BARCAZAS • TIEMPO EN HIDROVÍA: MAYORMENTE DESPEJADO • ALERTAS DE CALADO: 2 ACTIVAS • COMBUSTIBLE TOTAL: 45,200 LTS • PROXIMO MANTENIMIENTO: TUG-ALPHA •
                 </div>
             </div>
 
@@ -138,7 +138,7 @@ const DailyReportModule = (() => {
     };
 
     const sendEmail = () => {
-        RiverToast.success('Reporte diario enviado a operaciones@riverhub.com', 'Email Enviado');
+        RiverToast.success('Reporte diario enviado a operaciones@fluviafleet.com', 'Email Enviado');
     };
 
     const print = () => {

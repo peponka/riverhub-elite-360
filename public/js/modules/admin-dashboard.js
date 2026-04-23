@@ -1248,7 +1248,7 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
 
     const renderUsersView = () => {
         const users = [
-            { name: "Carlos Martínez", role: "Super Admin", company: "RiverHub HQ", last: "Ahora", status: "active", avatar: "CM" },
+            { name: "Carlos Martínez", role: "Super Admin", company: "FluviaFleet HQ", last: "Ahora", status: "active", avatar: "CM" },
             { name: "Juan Pérez", role: "Admin", company: "Naviera del Sur", last: "2h", status: "active", avatar: "JP" },
             { name: "Ana Gomez", role: "Dispatcher", company: "Naviera del Sur", last: "5h", status: "busy", avatar: "AG" },
             { name: "Roberto Diaz", role: "Captain", company: "Trans. Fluvial X", last: "1d", status: "offline", avatar: "RD" },
@@ -1298,7 +1298,7 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
             { name: "Naviera del Sur S.A.", plan: "PREMIUM", users: 15, status: "active", zone: "ARG-PY" },
             { name: "Transporte Fluvial X", plan: "CORP", users: 42, status: "active", zone: "BRA-PAR" },
             { name: "Logística Yhaguy", plan: "BASIC", users: 5, status: "warning", zone: "PY" },
-            { name: "RiverHub Demo", plan: "DEV", users: 3, status: "active", zone: "GLOBAL" }
+            { name: "FluviaFleet Demo", plan: "DEV", users: 3, status: "active", zone: "GLOBAL" }
         ];
 
         let cards = tenants.map(t => `
@@ -1340,7 +1340,7 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
             { id: 101, client: "Naviera del Sur S.A.", plan: "PREMIUM", amount: "$850.00", due: "15/05/2026", status: "paid" },
             { id: 102, client: "Transporte Fluvial X", plan: "CORP", amount: "$1,200.00", due: "10/05/2026", status: "pending" },
             { id: 103, client: "Logística Yhaguy", plan: "BASIC", amount: "$350.00", due: "01/05/2026", status: "overdue" },
-            { id: 104, client: "RiverHub Demo", plan: "DEV", amount: "$0.00", due: "-", status: "free" }
+            { id: 104, client: "FluviaFleet Demo", plan: "DEV", amount: "$0.00", due: "-", status: "free" }
         ];
 
         let cards = invoices.map(inv => `

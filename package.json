@@ -1,7 +1,7 @@
 {
-  "name": "riverhub-elite",
+  "name": "fluviafleet",
   "version": "2.0.0",
-  "description": "RiverHub Elite 360 - Gestión Inteligente de Flotas en la Hidrovía",
+  "description": "FluviaFleet - Gestión Inteligente de Flotas en la Hidrovía",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

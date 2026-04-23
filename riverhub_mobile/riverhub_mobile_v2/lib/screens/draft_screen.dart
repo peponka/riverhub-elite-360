@@ -120,7 +120,7 @@ class _DraftScreenState extends State<DraftScreen> {
                             ? 'Calado: ${draftVal.toStringAsFixed(2)}m / Max: ${maxVal.toStringAsFixed(2)}m'
                             : notesCtrl.text,
                         'details': '{"draft": $draftVal, "max_draft": $maxVal}',
-                        if (companyId != null) 'company_id': companyId,
+                        'company_id': ?companyId,
                       });
                     } catch (e) {
                       debugPrint('Draft save error: $e');
