@@ -3,6 +3,26 @@ const SUPABASE_URL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ═══════════════════════════════════════════
+// GLOBAL ERROR BOUNDARY — Prevents UI crashes
+// ═══════════════════════════════════════════
+window.onerror = function(msg, src, line, col, err) {
+    // Suppress Supabase auth noise
+    if (typeof msg === 'string' && (msg.includes('refresh_token') || msg.includes('AuthApiException'))) return true;
+    console.error('[FluviaFleet Error]', msg, '@ ' + src + ':' + line);
+    return true; // Prevent default error handling
+};
+window.addEventListener('unhandledrejection', function(e) {
+    var msg = e.reason ? (e.reason.message || String(e.reason)) : '';
+    // Swallow Supabase auth + network errors silently
+    if (msg.includes('refresh_token') || msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('AuthApiException')) {
+        e.preventDefault();
+        return;
+    }
+    console.warn('[FluviaFleet Unhandled]', msg);
+    e.preventDefault();
+});
+
 // XSS escape helper — prevents stored XSS via innerHTML
 function esc(str) { const d = document.createElement('div'); d.textContent = str ?? ''; return d.innerHTML; }
 
@@ -184,7 +204,7 @@ async function loadDashboard(){
         var el=document.getElementById('dash-week');if(el)el.textContent='SEMANA '+weekNum+' · '+now.getFullYear();
 
         // Fetch all vessels
-        var r=await sb.from('vessels').select('*');
+        var r=await sb.from('vessels').select('*').limit(100);
         var vessels=r.data||[];
         var total=vessels.length;
         var active=0,docked=0,maint=0;
@@ -326,7 +346,7 @@ function exportDashboardPDF(){alert('Exportando reporte del dashboard...');}
 
 async function loadFleet(){
     try{
-        var r=await sb.from('vessels').select('*');var data=r.data;if(!data)return;
+        var r=await sb.from('vessels').select('*').limit(100);var data=r.data;if(!data)return;
         var tb=document.getElementById('fleet-tbody');tb.innerHTML='';
         data.forEach(function(v){
             var s=(v.status||'').toLowerCase();
@@ -372,7 +392,7 @@ async function loadBitacora(){
 
 async function loadCrew(){
     try{
-        var r=await sb.from('crew_members').select('*');var data=r.data;
+        var r=await sb.from('crew_members').select('*').limit(200);var data=r.data;
         var l=document.getElementById('crew-list');var em=document.getElementById('crew-empty');l.innerHTML='';
         if(data&&data.length>0){em.style.display='none';data.forEach(function(c){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+(c.full_name||c.name||'')+'</h4><p>'+(c.role||'')+' - '+(c.vessel_name||'')+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:var(--success)">'+(c.status||'EMBARCADO').toUpperCase()+'</span><button class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('crew_members',c.id,(c.full_name||c.name||'Tripulante'),loadCrew);});l.appendChild(d);});document.getElementById('crew-total').textContent=data.length;document.getElementById('crew-on').textContent=data.filter(function(c){return(c.status||'').toLowerCase()==='embarcado'}).length;}else{em.style.display='';}
     }catch(e){console.log('Crew:',e);}
@@ -396,7 +416,7 @@ async function loadMaint(){
 
 async function loadPanol(){
     try{
-        var r=await sb.from('inventory_items').select('*');var data=r.data;
+        var r=await sb.from('inventory_items').select('*').limit(500);var data=r.data;
         var l=document.getElementById('panol-list');l.innerHTML='';
         if(data&&data.length>0){data.forEach(function(i){var d=document.createElement('div');d.className='list-item';var q=i.quantity||i.stock||0;var mn=i.min_stock||0;var low=q<=mn;d.innerHTML='<div><h4>'+(i.name||'')+'</h4><p>'+(i.category||'')+' - Repuesto</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+(low?'var(--warning)':'var(--success)')+'">'+(low?'STOCK BAJO':'OK')+'<br>'+q+' uds</span><button class="delete-btn" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});l.appendChild(d);});document.getElementById('panol-total').textContent=data.length;}
     }catch(e){console.log('Panol:',e);}
@@ -577,14 +597,14 @@ async function loadAdmin(){
         '<div class="admin-stat"><div class="stat-value">'+(vessels.count||0)+'</div><div class="stat-label">EMBARCACIONES</div></div>'+
         '<div class="admin-stat"><div class="stat-value">'+(ais.count||0)+'</div><div class="stat-label">AIS ACTIVOS</div></div>';
     // Companies list
-    var cr=await sb.from('companies').select('*').order('created_at',{ascending:false});
+    var cr=await sb.from('companies').select('*').order('created_at',{ascending:false}).limit(100);
     var html='';
     if(cr.data)cr.data.forEach(function(c){
         html+='<div class="info-card"><i class="fa-solid fa-building" style="color:var(--text-primary)"></i><div class="info-card-text"><h4>'+esc(c.name)+'</h4><p>Plan: '+esc(c.plan||'basico')+' | Max: '+(c.max_vessels||1)+' barcos | '+(c.active!==false?'Activa':'Inactiva')+'</p></div></div>';
     });
     document.getElementById('admin-companies').innerHTML=html||'<div class="empty-state"><p>Sin empresas</p></div>';
     // Users list
-    var ur=await sb.from('user_profiles').select('*').order('created_at',{ascending:false});
+    var ur=await sb.from('user_profiles').select('*').order('created_at',{ascending:false}).limit(200);
     var uhtml='';
     if(ur.data)ur.data.forEach(function(u){
         uhtml+='<div class="info-card"><i class="fa-solid fa-user" style="color:var(--text-primary)"></i><div class="info-card-text"><h4>'+esc(u.full_name||'Sin nombre')+'</h4><p>Rol: '+esc(u.role||'admin')+' | Company: '+(u.company_id?u.company_id.substring(0,8)+'...':'Sin asignar')+'</p></div></div>';
@@ -782,57 +802,8 @@ async function loadDashboardExtras(){
     }catch(e){}
 }
 
-// HIDROLOGIA - Flood API
-var hidroChart=null;
-async function loadHidrologia(){
-    try{
-        // Open-Meteo Flood API - Rio Paraguay (calibrated GloFAS grid coords)
-        var r=await fetch('https://flood-api.open-meteo.com/v1/flood?latitude=-25.3&longitude=-57.7&daily=river_discharge&past_days=7&forecast_days=7');
-        var d=await r.json();
-        if(d.daily&&d.daily.river_discharge){
-            var vals=d.daily.river_discharge;
-            var dates=d.daily.time;
-            var today=vals[7]||vals[Math.floor(vals.length/2)];
-            var yesterday=vals[6]||vals[Math.floor(vals.length/2)-1];
-            document.getElementById('hidro-asu').textContent=today?today.toFixed(0)+' m³/s':'--';
-            document.getElementById('hidro-trend').textContent=today>yesterday?'↑ Sube':today<yesterday?'↓ Baja':'→ Estable';
-            document.getElementById('hidro-trend').style.color=today>yesterday?'var(--success)':today<yesterday?'var(--error)':'var(--text-secondary)';
-            // Chart
-            if(hidroChart)hidroChart.destroy();
-            var ctx=document.getElementById('hidro-chart');
-            if(ctx){hidroChart=new Chart(ctx,{type:'line',data:{labels:dates.map(function(d){return d.substring(5)}),datasets:[{label:'Caudal (m³/s)',data:vals,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.1)',fill:true,tension:0.4,pointRadius:2}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}});}
-        }
-        // Pilar - real data
-        try{
-            var rp=await fetch('https://flood-api.open-meteo.com/v1/flood?latitude=-26.85&longitude=-58.35&daily=river_discharge&past_days=1&forecast_days=0');
-            var dp=await rp.json();
-            if(dp.daily&&dp.daily.river_discharge&&dp.daily.river_discharge[0]){
-                document.getElementById('hidro-pir').textContent=dp.daily.river_discharge[0].toFixed(0)+' m³/s';
-            }
-        }catch(e){}
-        // Stations info with real coords
-        var stationsData=[
-            {name:'Asuncion',river:'Rio Paraguay',lat:-25.3,lng:-57.7},
-            {name:'Pilar',river:'Bajo Paraguay',lat:-26.85,lng:-58.35},
-            {name:'Concepcion',river:'Alto Paraguay',lat:-23.4,lng:-57.5},
-            {name:'Rosario',river:'Rio Parana',lat:-32.95,lng:-60.65}
-        ];
-        var stHtml='';
-        for(var i=0;i<stationsData.length;i++){
-            var st=stationsData[i];
-            var flow='--';
-            try{
-                var sr=await fetch('https://flood-api.open-meteo.com/v1/flood?latitude='+st.lat+'&longitude='+st.lng+'&daily=river_discharge&past_days=1&forecast_days=0');
-                var sd=await sr.json();
-                if(sd.daily&&sd.daily.river_discharge&&sd.daily.river_discharge[0]){
-                    flow=sd.daily.river_discharge[0].toFixed(0)+' m³/s';
-                }
-            }catch(e){}
-            stHtml+='<div class="info-card"><i class="fa-solid fa-water" style="color:var(--accent)"></i><div class="info-card-text"><h4>'+st.name+' <span style="font-weight:400;color:var(--text-secondary);font-size:12px">'+st.river+'</span></h4><p>Caudal: <strong>'+flow+'</strong> — Lat: '+st.lat+' | Lng: '+st.lng+'</p></div></div>';
-        }
-        document.getElementById('hidro-stations').innerHTML=stHtml;
-    }catch(e){console.log('Hydro:',e);}
-}
+// HIDROLOGIA - Extracted to js/modules/fluvia-hidrologia.js (with Promise.all optimization)
+
 
 // REPORTES & ANALYTICS
 var fleetChart=null,fuelChart=null,activityChart=null;
@@ -881,7 +852,7 @@ async function loadReportes(){
 // CONVOY - Load fleet chips for drag-and-drop
 async function loadConvoy(){
     try{
-        var r=await sb.from('vessels').select('*');var data=r.data;
+        var r=await sb.from('vessels').select('*').limit(100);var data=r.data;
         var chips=document.getElementById('convoy-chips');if(!chips)return;
         chips.innerHTML='';
         if(data&&data.length>0){
@@ -1071,146 +1042,6 @@ function filterIncidents(){
     renderIncidents(q||null);
 }
 
-// BRIEFING DIARIO
-async function loadBriefing(){
-    var today=new Date();
-    var dateStr=today.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-    document.getElementById('briefing-date').textContent=dateStr.toUpperCase();
-    try{
-        var v=await sb.from('vessels').select('status');var total=v.data?v.data.length:0;
-        var active=v.data?v.data.filter(function(x){var s=(x.status||'').toLowerCase();return s.indexOf('viaje')>=0||s==='active'}).length:0;
-        document.getElementById('brief-vessels').textContent=active+'/'+total;
-        var vj=await sb.from('voyages').select('status');var trips=vj.data?vj.data.filter(function(x){var s=(x.status||'').toLowerCase();return s==='navegando'||s==='en_curso'}).length:0;
-        document.getElementById('brief-trips').textContent=trips;
-        var fl=await sb.from('fuel_logs').select('liters').limit(30);var totalFuel=fl.data?fl.data.reduce(function(s,x){return s+(x.liters||0)},0):0;
-        document.getElementById('brief-fuel').textContent=totalFuel>0?totalFuel.toLocaleString()+'L':'0L';
-        var cr=await sb.from('crew_members').select('status');var emb=cr.data?cr.data.filter(function(x){return(x.status||'').toLowerCase()==='embarcado'||x.status==='active'}).length:0;
-        document.getElementById('brief-crew').textContent=emb+'/'+(cr.data?cr.data.length:0);
-        var w=await fetch('https://api.open-meteo.com/v1/forecast?latitude=-25.286&longitude=-57.647&current=temperature_2m,wind_speed_10m,weather_code,relative_humidity_2m&timezone=America/Asuncion');
-        var wd=await w.json();
-        if(wd.current){
-            var codes={0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',45:'Niebla',51:'Llovizna',61:'Lluvia',80:'Chaparron',95:'Tormenta'};
-            var desc=codes[wd.current.weather_code]||'Variado';
-            document.getElementById('briefing-weather').innerHTML='<i class="fa-solid fa-cloud-sun"></i><div class="info-card-text"><h4>'+desc+' - '+Math.round(wd.current.temperature_2m)+'C</h4><p>Viento: '+Math.round(wd.current.wind_speed_10m)+' km/h | Humedad: '+(wd.current.relative_humidity_2m||'--')+'% | Asuncion, PY</p></div>';
-        }
-        var lg=await sb.from('logs').select('*').order('created_at',{ascending:false}).limit(5);
-        var act=document.getElementById('briefing-activity');act.innerHTML='';
-        if(lg.data&&lg.data.length>0){
-            lg.data.forEach(function(l){
-                var t=l.created_at?new Date(l.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
-                var icon=l.action_type==='INCIDENTE'?'fa-triangle-exclamation':l.action_type==='DRAFT_READING'?'fa-ruler-vertical':'fa-bookmark';
-                var color=l.action_type==='INCIDENTE'?'var(--error)':'var(--text-primary)';
-                act.innerHTML+='<div class="info-card" style="margin-bottom:8px"><i class="fa-solid '+icon+'" style="color:'+color+'"></i><div class="info-card-text"><h4>'+(l.title||l.action_type||'Actividad')+'</h4><p>'+(l.vessel_name||'')+' - '+(l.description||'')+' - '+t+'</p></div></div>';
-            });
-        }else{act.innerHTML='<div class="empty-state"><i class="fa-regular fa-circle-check"></i><p>Sin actividad reciente</p></div>';}
-        var alertsDiv=document.getElementById('briefing-alerts');
-        var inc=await sb.from('logs').select('*').eq('action_type','INCIDENTE').order('created_at',{ascending:false}).limit(5);
-        if(inc.data&&inc.data.length>0){
-            alertsDiv.innerHTML='';
-            inc.data.forEach(function(i){
-                var det=typeof i.details==='string'?JSON.parse(i.details||'{}'):i.details||{};
-                var sev=det.severity||'Medio';
-                var sevC=sev==='Critico'?'var(--error)':sev==='Alto'?'var(--warning)':'var(--accent)';
-                alertsDiv.innerHTML+='<div class="info-card" style="margin-bottom:8px;border-left:3px solid '+sevC+'"><i class="fa-solid fa-triangle-exclamation" style="color:'+sevC+'"></i><div class="info-card-text"><h4>'+(i.title||'Incidente')+'</h4><p>'+(i.vessel_name||'')+' - '+sev+' - '+(det.type||'')+' '+(det.status||'')+'</p></div></div>';
-            });
-        }
-    }catch(e){console.log('Briefing:',e);}
-}
+// BRIEFING DIARIO - Extracted to js/modules/fluvia-briefing.js (with Promise.all optimization)
 
-// ═══════════════════════════════════════════
-// EXPORT ENGINE — PDF & Excel
-// ═══════════════════════════════════════════
-function exportToExcel(data, sheetName, fileName){
-    if(!data||!data.length){alert('No hay datos para exportar');return;}
-    var ws=XLSX.utils.json_to_sheet(data);
-    var wb=XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,sheetName||'Datos');
-    XLSX.writeFile(wb,(fileName||'export')+'.xlsx');
-}
-
-function exportToPDF(title, columns, rows, fileName){
-    if(!rows||!rows.length){alert('No hay datos para exportar');return;}
-    var doc=new jspdf.jsPDF({orientation:'landscape'});
-    // Header
-    doc.setFontSize(18);doc.text('FluviaFleet',14,15);
-    doc.setFontSize(12);doc.text(title,14,24);
-    doc.setFontSize(8);doc.setTextColor(128);doc.text('Generado: '+new Date().toLocaleString('es'),14,30);
-    doc.setTextColor(0);
-    // Table
-    doc.autoTable({head:[columns],body:rows,startY:36,styles:{fontSize:8,cellPadding:3},headStyles:{fillColor:[30,30,30],textColor:255,fontStyle:'bold'},alternateRowStyles:{fillColor:[248,248,248]},margin:{left:14,right:14}});
-    doc.save((fileName||'reporte')+'.pdf');
-}
-
-// ─── Module-specific exports ──────────────
-async function exportFleet(format){
-    var r=await sb.from('vessels').select('*').order('name');var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(v){return{Nombre:v.name||'',Tipo:v.type||'',Estado:v.status||'',Ubicacion:v.location||'',IMO:v.imo||'',Bandera:v.flag||''}}), 'Flota','fluvia_flota');
-    }else{
-        exportToPDF('Reporte de Flota',['Nombre','Tipo','Estado','Ubicacion','IMO'],data.map(function(v){return[v.name||'',v.type||'',v.status||'',v.location||'',v.imo||'']}),'fluvia_flota');
-    }
-}
-async function exportViajes(format){
-    var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(100);var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(v){return{Origen:v.origin||'',Destino:v.destination||'',Estado:v.status||'',Embarcacion:v.vessel_name||'',Carga:v.cargo_type||'',Fecha:v.created_at?new Date(v.created_at).toLocaleDateString('es'):''}}), 'Viajes','fluvia_viajes');
-    }else{
-        exportToPDF('Reporte de Viajes',['Origen','Destino','Estado','Embarcacion','Carga','Fecha'],data.map(function(v){return[v.origin||'',v.destination||'',v.status||'',v.vessel_name||'',v.cargo_type||'',v.created_at?new Date(v.created_at).toLocaleDateString('es'):'']}),'fluvia_viajes');
-    }
-}
-async function exportBitacora(format){
-    var r=await sb.from('logs').select('*').order('created_at',{ascending:false}).limit(200);var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(l){return{Titulo:l.title||'',Tipo:l.action_type||'',Embarcacion:l.vessel_name||'',Descripcion:l.description||'',Fecha:l.created_at?new Date(l.created_at).toLocaleString('es'):''}}), 'Bitacora','fluvia_bitacora');
-    }else{
-        exportToPDF('Bitacora Digital',['Titulo','Tipo','Embarcacion','Descripcion','Fecha'],data.map(function(l){return[l.title||'',l.action_type||'',l.vessel_name||'',(l.description||'').substring(0,60),l.created_at?new Date(l.created_at).toLocaleDateString('es'):'']}),'fluvia_bitacora');
-    }
-}
-async function exportCrew(format){
-    var r=await sb.from('crew_members').select('*').order('name');var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(c){return{Nombre:c.name||'',Rol:c.role||'',Embarcacion:c.vessel_name||'',Estado:c.status||'',Documento:c.document_number||''}}), 'Tripulacion','fluvia_tripulacion');
-    }else{
-        exportToPDF('Tripulacion & Safety',['Nombre','Rol','Embarcacion','Estado','Documento'],data.map(function(c){return[c.name||'',c.role||'',c.vessel_name||'',c.status||'',c.document_number||'']}),'fluvia_tripulacion');
-    }
-}
-async function exportFuel(format){
-    var r=await sb.from('fuel_logs').select('*').order('created_at',{ascending:false}).limit(200);var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(f){return{Embarcacion:f.vessel_name||'',Litros:f.liters||0,Tipo:f.fuel_type||'',Fecha:f.created_at?new Date(f.created_at).toLocaleDateString('es'):''}}), 'Combustible','fluvia_combustible');
-    }else{
-        exportToPDF('Registro de Combustible',['Embarcacion','Litros','Tipo','Fecha'],data.map(function(f){return[f.vessel_name||'',(f.liters||0).toString(),f.fuel_type||'',f.created_at?new Date(f.created_at).toLocaleDateString('es'):'']}),'fluvia_combustible');
-    }
-}
-async function exportMaint(format){
-    var r=await sb.from('maintenance_tasks').select('*').order('created_at',{ascending:false}).limit(100);var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(m){return{Descripcion:m.description||'',Embarcacion:m.vessel_name||'',Prioridad:m.priority||'',Estado:m.status||'',Fecha:m.created_at?new Date(m.created_at).toLocaleDateString('es'):''}}), 'Mantenimiento','fluvia_mantenimiento');
-    }else{
-        exportToPDF('Ordenes de Mantenimiento',['Descripcion','Embarcacion','Prioridad','Estado','Fecha'],data.map(function(m){return[(m.description||'').substring(0,50),m.vessel_name||'',m.priority||'',m.status||'',m.created_at?new Date(m.created_at).toLocaleDateString('es'):'']}),'fluvia_mantenimiento');
-    }
-}
-async function exportPanol(format){
-    var r=await sb.from('inventory_items').select('*').order('name');var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(p){return{Repuesto:p.name||'',Categoria:p.category||'',Cantidad:p.quantity||0,StockMinimo:p.min_stock||0}}), 'Inventario','fluvia_panol');
-    }else{
-        exportToPDF('Panol (Inventario)',['Repuesto','Categoria','Cantidad','Stock Min'],data.map(function(p){return[p.name||'',p.category||'',(p.quantity||0).toString(),(p.min_stock||0).toString()]}),'fluvia_panol');
-    }
-}
-async function exportCalado(format){
-    var r=await sb.from('logs').select('*').eq('action_type','DRAFT_READING').order('created_at',{ascending:false}).limit(100);var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(d){var det=typeof d.details==='string'?JSON.parse(d.details||'{}'):d.details||{};return{Embarcacion:d.vessel_name||'',Calado:(det.draft||0).toFixed(2),CaladoMax:(det.max_draft||3.5).toFixed(2),Observaciones:d.description||'',Fecha:d.created_at?new Date(d.created_at).toLocaleString('es'):''}}), 'Calados','fluvia_calados');
-    }else{
-        exportToPDF('Lecturas de Calado',['Embarcacion','Calado (m)','Max (m)','Observaciones','Fecha'],data.map(function(d){var det=typeof d.details==='string'?JSON.parse(d.details||'{}'):d.details||{};return[d.vessel_name||'',(det.draft||0).toFixed(2),(det.max_draft||3.5).toFixed(2),(d.description||'').substring(0,40),d.created_at?new Date(d.created_at).toLocaleDateString('es'):'']}),'fluvia_calados');
-    }
-}
-async function exportIncidentes(format){
-    var r=await sb.from('logs').select('*').eq('action_type','INCIDENTE').order('created_at',{ascending:false}).limit(100);var data=r.data||[];
-    if(format==='excel'){
-        exportToExcel(data.map(function(i){var det=typeof i.details==='string'?JSON.parse(i.details||'{}'):i.details||{};return{Titulo:i.title||'',Embarcacion:i.vessel_name||'',Severidad:det.severity||'',Tipo:det.type||'',Estado:det.status||'Abierto',Descripcion:i.description||'',Fecha:i.created_at?new Date(i.created_at).toLocaleString('es'):''}}), 'Incidentes','fluvia_incidentes');
-    }else{
-        exportToPDF('Registro de Incidentes',['Titulo','Embarcacion','Severidad','Tipo','Estado','Fecha'],data.map(function(i){var det=typeof i.details==='string'?JSON.parse(i.details||'{}'):i.details||{};return[(i.title||'').substring(0,35),i.vessel_name||'',det.severity||'',det.type||'',det.status||'Abierto',i.created_at?new Date(i.created_at).toLocaleDateString('es'):'']}),'fluvia_incidentes');
-    }
-}
+// EXPORT ENGINE — Extracted to js/modules/fluvia-exports.js

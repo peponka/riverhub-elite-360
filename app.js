@@ -5,10 +5,27 @@ const { Server } = require("socket.io");
 const WebSocket = require('ws');
 const path = require('path');
 const fs = require('fs');
+const rateLimit = require('express-rate-limit');
 const stripeStr = process.env.STRIPE_SECRET_KEY || 'sk_test_mock';
 const stripe = require('stripe')(stripeStr);
 let createClient;
 try { createClient = require('@supabase/supabase-js').createClient; } catch (e) { console.warn('⚠️ @supabase/supabase-js not found — n8n DB features disabled'); }
+
+// --- RATE LIMITERS ---
+const apiLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 30, // 30 requests per minute per IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Demasiadas solicitudes. Intenta de nuevo en un minuto.' }
+});
+const aiLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 10, // 10 AI requests per minute per IP (protect Gemini quota)
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Límite de consultas IA alcanzado. Espera un momento.' }
+});
 
 let n8nRoutes;
 try { n8nRoutes = require('./routes/n8n-automations'); } catch (e) { console.error('❌ n8n routes failed to load:', e.message); }
@@ -20,14 +37,25 @@ try { n8nRoutes = require('./routes/n8n-automations'); } catch (e) { console.err
 
 const app = express();
 const cors = require('cors');
-app.use(cors());
 
 const server = http.createServer(app);
 const ALLOWED_ORIGINS = [
     process.env.FRONTEND_URL || 'https://fluviafleet.com',
     'http://localhost:3000',
-    'http://127.0.0.1:3000'
+    'http://127.0.0.1:3000',
+    'http://localhost:4001',
+    'http://127.0.0.1:4001'
 ];
+
+// SECURITY: Restrict CORS to known origins only (no open wildcard)
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || ALLOWED_ORIGINS.includes(origin)) callback(null, true);
+        else callback(new Error('Not allowed by CORS'));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true
+}));
 const io = new Server(server, {
     cors: {
         origin: (origin, callback) => {
@@ -45,6 +73,8 @@ app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-XSS-Protection', '1; mode=block');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self), payment=(self)');
     res.setHeader('Content-Security-Policy',
         "default-src 'self'; " +
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; " +
@@ -59,7 +89,7 @@ app.use((req, res, next) => {
 });
 
 // --- ROOT REDIRECT TO LANDING ---
-app.get('/', (req, res) => res.redirect('/landing.html'));
+app.get('/', (req, res) => res.redirect('/landing-new.html'));
 
 // --- REQUEST LOGGING ---
 app.use((req, res, next) => {
@@ -74,7 +104,36 @@ app.use((req, res, next) => {
 });
 
 // --- API ENDPOINTS ---
-app.use(express.json()); // Parse JSON bodies for AI chat
+app.use(express.json({ limit: '1mb' })); // Parse JSON bodies with size limit
+
+// --- AUTH MIDDLEWARE (Supabase JWT validation) ---
+const authenticateUser = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized', message: 'Token de autenticación requerido' });
+    }
+    const token = authHeader.split(' ')[1];
+    try {
+        // Verify token with Supabase
+        const sb = req.app.locals.supabase;
+        if (!sb) {
+            // If no Supabase configured, allow in dev mode only
+            if (process.env.NODE_ENV === 'production') {
+                return res.status(503).json({ error: 'Auth service unavailable' });
+            }
+            return next();
+        }
+        const { data: { user }, error } = await sb.auth.getUser(token);
+        if (error || !user) {
+            return res.status(401).json({ error: 'Invalid token', message: 'Sesión expirada o token inválido' });
+        }
+        req.user = user;
+        next();
+    } catch (e) {
+        console.error('Auth middleware error:', e.message);
+        return res.status(401).json({ error: 'Auth failed' });
+    }
+};
 
 app.get('/api/health', (req, res) => {
     res.json({
@@ -87,8 +146,8 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// --- PUBLIC AIS POSITIONS (for frontend map) ---
-app.get('/api/ais-positions', (req, res) => {
+// --- AIS POSITIONS (authenticated + rate limited) ---
+app.get('/api/ais-positions', apiLimiter, authenticateUser, (req, res) => {
     const aisPositions = req.app.locals.aisPositions || {};
     const vessels = Object.values(aisPositions);
     res.json({
@@ -103,8 +162,8 @@ app.get('/api/ais-positions', (req, res) => {
     });
 });
 
-// --- GEMINI AI CHAT ---
-app.post('/api/ai/chat', async (req, res) => {
+// --- GEMINI AI CHAT (authenticated + rate limited) ---
+app.post('/api/ai/chat', aiLimiter, authenticateUser, async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) {
         return res.status(503).json({ error: 'AI not configured', response: 'IA no disponible. Configura GEMINI_API_KEY en .env' });
@@ -177,9 +236,12 @@ app.post('/api/create-checkout', async (req, res) => {
 
         if (!plans[planId]) return res.status(400).json({ error: 'Plan no válido' });
 
-        // Si no hay API Key real configurada, devolver un bypass simulado
+        // SECURITY: Block mock payments in production
         if (stripeStr === 'sk_test_mock') {
-            console.log("Mock Stripe Checkout triggered");
+            if (process.env.NODE_ENV === 'production') {
+                return res.status(503).json({ error: 'Pasarela de pago no configurada. Contactar soporte.' });
+            }
+            console.warn('⚠️ Mock Stripe Checkout triggered (dev only)');
             return res.json({ url: req.headers.origin + '/app.html?payment=success_mock' });
         }
 
@@ -205,6 +267,96 @@ app.post('/api/create-checkout', async (req, res) => {
     } catch (e) {
         console.error("Stripe Checkout Error:", e.message);
         res.status(500).json({ error: e.message });
+    }
+});
+
+// --- INVOICE INTELLIGENCE (Gemini AI) ---
+app.post('/api/ai/invoice', aiLimiter, async (req, res) => {
+    const GEMINI_KEY = process.env.GEMINI_API_KEY;
+    if (!GEMINI_KEY) {
+        return res.status(503).json({ error: 'AI not configured' });
+    }
+
+    const { invoiceText, voyageId } = req.body;
+    if (!invoiceText) {
+        return res.status(400).json({ error: 'Missing invoiceText' });
+    }
+
+    // Fetch voyage data for validation if voyageId provided
+    let voyageContext = '';
+    if (voyageId && app.locals.supabase) {
+        try {
+            const { data: voyage } = await app.locals.supabase
+                .from('voyages')
+                .select('*')
+                .eq('id', voyageId)
+                .single();
+            if (voyage) {
+                voyageContext = `\nDatos del viaje registrado:\n- Origen: ${voyage.origin || 'N/A'}\n- Destino: ${voyage.destination || 'N/A'}\n- Carga: ${voyage.cargo_tons || 'N/A'} toneladas\n- Combustible registrado: ${voyage.fuel_consumed || 'N/A'} litros\n- Distancia: ${voyage.distance_km || 'N/A'} km\n- Fecha: ${voyage.departure_date || 'N/A'} a ${voyage.arrival_date || 'N/A'}`;
+            }
+        } catch (e) { /* silently continue without voyage data */ }
+    }
+
+    const systemPrompt = `Eres el motor de Invoice Intelligence de FluviaFleet. Tu trabajo es analizar facturas de flete fluvial y extraer datos estructurados.
+
+INSTRUCCIONES:
+1. Extrae TODOS los datos de la factura en formato JSON estructurado
+2. Si hay datos de viaje de referencia, COMPARA y detecta discrepancias
+3. Clasifica cada discrepancia como: CRITICA (>10%), ADVERTENCIA (5-10%), o INFO (<5%)
+4. Calcula totales y verifica sumas
+
+RESPONDE SIEMPRE en este formato JSON exacto:
+{
+  "invoice": {
+    "number": "número de factura",
+    "date": "fecha",
+    "supplier": "proveedor/empresa",
+    "total": 0,
+    "currency": "USD/ARS",
+    "items": [
+      {"description": "desc", "quantity": 0, "unit": "ton/km/lt", "unitPrice": 0, "subtotal": 0}
+    ]
+  },
+  "validation": {
+    "mathCorrect": true,
+    "discrepancies": [
+      {"field": "campo", "invoiceValue": "x", "systemValue": "y", "difference": "z", "severity": "CRITICA/ADVERTENCIA/INFO", "note": "explicación"}
+    ]
+  },
+  "summary": {
+    "status": "APROBADA/REVISAR/RECHAZAR",
+    "confidence": 95,
+    "notes": "observaciones generales"
+  }
+}
+${voyageContext}`;
+
+    try {
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+        const response = await fetch(geminiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: systemPrompt }, { text: `FACTURA A ANALIZAR:\n${invoiceText}` }] }],
+                generationConfig: { temperature: 0.2, maxOutputTokens: 4000 }
+            })
+        });
+
+        const data = await response.json();
+        console.log('[Invoice AI] HTTP:', response.status, JSON.stringify(data).substring(0, 300));
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+        // Try to parse JSON from AI response
+        let parsed = null;
+        try {
+            const jsonMatch = aiText.match(/\{[\s\S]*\}/);
+            if (jsonMatch) parsed = JSON.parse(jsonMatch[0]);
+        } catch (e) { /* will return raw text */ }
+
+        res.json({ result: parsed, raw: aiText, apiError: data.error?.message || null });
+    } catch (e) {
+        console.error('Invoice AI error:', e.message);
+        res.status(500).json({ error: 'Error procesando factura' });
     }
 });
 
@@ -318,6 +470,18 @@ io.on('connection', (socket) => {
     console.log(`🔌 Cliente conectado: ${socket.id}`);
     socket.on('disconnect', () => {
         console.log(`🔌 Cliente desconectado: ${socket.id}`);
+    });
+});
+
+// --- EXPRESS GLOBAL ERROR HANDLER ---
+// Must be AFTER all routes to catch unhandled errors
+app.use((err, req, res, next) => {
+    console.error('[Express Error]', req.method, req.path, err.message);
+    // Never leak stack traces in production
+    const isProd = process.env.NODE_ENV === 'production';
+    res.status(err.status || 500).json({
+        error: isProd ? 'Error interno del servidor' : err.message,
+        ...(isProd ? {} : { stack: err.stack })
     });
 });
 
