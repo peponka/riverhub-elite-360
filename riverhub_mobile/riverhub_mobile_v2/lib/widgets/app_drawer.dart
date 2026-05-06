@@ -24,6 +24,8 @@ import '../screens/integraciones_screen.dart';
 import '../screens/billing_screen.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/bitacora_screen.dart';
+import '../screens/liquidos_screen.dart';
+import '../screens/contratos_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -163,6 +165,7 @@ class AppDrawer extends StatelessWidget {
                   _sectionHeader('GESTIÓN'),
                   _drawerTile(context, CupertinoIcons.person_3_fill, 'Tripulación & Safety', const TripulacionScreen()),
                   _drawerTile(context, CupertinoIcons.drop_fill, 'Combustible', const FuelScreen()),
+                  _drawerTile(context, CupertinoIcons.drop_triangle_fill, 'Líquidos (Tanques)', const LiquidosScreen()),
                   _drawerTile(context, CupertinoIcons.resize_v, 'Calados & Hidrometría', const DraftScreen()),
                   _drawerTile(context, CupertinoIcons.wrench_fill, 'Mantenimiento', const MantenimientoScreen()),
                   _drawerTile(context, CupertinoIcons.archivebox_fill, 'Pañol (Inventario)', const PanolScreen()),
@@ -172,6 +175,9 @@ class AppDrawer extends StatelessWidget {
                   _drawerTile(context, CupertinoIcons.chart_pie_fill, 'Reportes & Analytics', const ReportesScreen()),
                   _drawerTile(context, CupertinoIcons.news_solid, 'Briefing Diario', const DailyReportScreen()),
                   _drawerTile(context, CupertinoIcons.location_fill, 'Tracking de Cargas', const TrackingScreen()),
+
+                  _sectionHeader('COMERCIAL'),
+                  _drawerTile(context, CupertinoIcons.doc_on_doc_fill, 'Contratos de Flete', const ContratosScreen()),
 
                   _sectionHeader('SISTEMA'),
                   _drawerTile(context, CupertinoIcons.bell_fill, 'Notificaciones', const NotificationsScreen()),
