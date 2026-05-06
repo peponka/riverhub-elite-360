@@ -89,7 +89,7 @@ app.use((req, res, next) => {
 });
 
 // --- ROOT REDIRECT TO LANDING ---
-app.get('/', (req, res) => res.redirect('/landing-new.html'));
+app.get('/', (req, res) => res.redirect('/landing.html'));
 
 // --- REQUEST LOGGING ---
 app.use((req, res, next) => {
