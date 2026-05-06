@@ -444,14 +444,20 @@ var AuthModule = (() => {
         }
     };
 
-    // OFFLINE SIMULATOR MODE: Bypass login for local development/demo
+    // OFFLINE SIMULATOR MODE: STRICTLY localhost only
     const bypassLogin = () => {
-        console.log("🔓 MODO SIMULADOR ACTIVADO");
+        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        if (!isLocal) {
+            console.error('🔒 SECURITY: bypassLogin blocked in production.');
+            if (typeof RiverToast !== 'undefined') RiverToast.error('Acceso denegado. Modo simulador solo disponible en desarrollo local.', 'Seguridad');
+            return;
+        }
+        console.log("🔓 MODO SIMULADOR ACTIVADO (localhost only)");
         const simulatedUser = {
             id: 'sim-user-001',
             email: 'simulador@fluviafleet.local',
             full_name: 'Capitán Simulador',
-            role: 'superadmin',
+            role: 'operator',
             company: 'FluviaFleet Demo'
         };
         login(simulatedUser);
