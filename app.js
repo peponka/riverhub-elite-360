@@ -146,8 +146,8 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// --- AIS POSITIONS (authenticated + rate limited) ---
-app.get('/api/ais-positions', apiLimiter, authenticateUser, (req, res) => {
+// --- AIS POSITIONS (rate limited, public — AIS data is non-sensitive) ---
+app.get('/api/ais-positions', apiLimiter, (req, res) => {
     const aisPositions = req.app.locals.aisPositions || {};
     const vessels = Object.values(aisPositions);
     res.json({
