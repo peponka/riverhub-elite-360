@@ -40,8 +40,14 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _fetchAisPositions() async {
     try {
       const String apiBase = String.fromEnvironment('API_BASE_URL', defaultValue: 'https://riverhub-elite-360.onrender.com');
+      // Get current Supabase session token for authenticated API call
+      final session = Supabase.instance.client.auth.currentSession;
+      final token = session?.accessToken ?? '';
       final response = await http.get(
         Uri.parse('$apiBase/api/ais-positions'),
+        headers: {
+          if (token.isNotEmpty) 'Authorization': 'Bearer $token',
+        },
       ).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
