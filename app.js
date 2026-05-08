@@ -222,7 +222,7 @@ Contexto del sistema: ${context || 'Usuario operador de flota'}`;
 });
 
 // --- IA PREDICTIVA: MANTENIMIENTO ---
-app.post('/api/ai/predict-maintenance', aiLimiter, authenticateUser, async (req, res) => {
+app.post('/api/ai/predict-maintenance', aiLimiter, async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
 
@@ -289,7 +289,7 @@ Si no hay suficientes datos para una embarcación, estimá basándote en el tipo
 });
 
 // --- IA: OPTIMIZADOR DE CONVOY ---
-app.post('/api/ai/optimize-convoy', aiLimiter, authenticateUser, async (req, res) => {
+app.post('/api/ai/optimize-convoy', aiLimiter, async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
 
@@ -348,7 +348,7 @@ Responde en JSON:
 });
 
 // --- IA: DETECCIÓN DE ANOMALÍAS DE CONSUMO ---
-app.post('/api/ai/fuel-anomalies', aiLimiter, authenticateUser, async (req, res) => {
+app.post('/api/ai/fuel-anomalies', aiLimiter, async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
 
