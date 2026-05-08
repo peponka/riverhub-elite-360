@@ -221,8 +221,8 @@ Contexto del sistema: ${context || 'Usuario operador de flota'}`;
     }
 });
 
-// --- STRIPE PAYMENT GATEWAY ---
-app.post('/api/create-checkout', async (req, res) => {
+// --- STRIPE PAYMENT GATEWAY (authenticated) ---
+app.post('/api/create-checkout', authenticateUser, async (req, res) => {
     try {
         const { planId, companyId, email } = req.body;
         
@@ -270,8 +270,8 @@ app.post('/api/create-checkout', async (req, res) => {
     }
 });
 
-// --- INVOICE INTELLIGENCE (Gemini AI) ---
-app.post('/api/ai/invoice', aiLimiter, async (req, res) => {
+// --- INVOICE INTELLIGENCE (Gemini AI, authenticated + rate limited) ---
+app.post('/api/ai/invoice', aiLimiter, authenticateUser, async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) {
         return res.status(503).json({ error: 'AI not configured' });
