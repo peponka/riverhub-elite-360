@@ -221,6 +221,191 @@ Contexto del sistema: ${context || 'Usuario operador de flota'}`;
     }
 });
 
+// --- IA PREDICTIVA: MANTENIMIENTO ---
+app.post('/api/ai/predict-maintenance', aiLimiter, authenticateUser, async (req, res) => {
+    const GEMINI_KEY = process.env.GEMINI_API_KEY;
+    if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
+
+    try {
+        const { companyId } = req.body;
+        const supabaseUrl = process.env.SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+
+        // Fetch real data from Supabase
+        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' };
+        const [vesselsRes, maintRes, fuelRes] = await Promise.all([
+            fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=id,name,type,status,draft,current_draft,max_draft,engine_power`, { headers }),
+            fetch(`${supabaseUrl}/rest/v1/maintenance_tasks?company_id=eq.${companyId}&select=*&order=created_at.desc&limit=50`, { headers }),
+            fetch(`${supabaseUrl}/rest/v1/fuel_logs?company_id=eq.${companyId}&select=*&order=created_at.desc&limit=50`, { headers })
+        ]);
+
+        const vessels = await vesselsRes.json();
+        const maintenance = await maintRes.json();
+        const fuel = await fuelRes.json();
+
+        const prompt = `Eres un ingeniero naval experto en mantenimiento predictivo de flotas fluviales en la Hidrovía Paraguay-Paraná.
+
+DATOS DE LA FLOTA:
+${JSON.stringify(vessels, null, 1)}
+
+HISTORIAL DE MANTENIMIENTO (últimas 50 tareas):
+${JSON.stringify(maintenance, null, 1)}
+
+REGISTROS DE COMBUSTIBLE (últimos 50):
+${JSON.stringify(fuel, null, 1)}
+
+TAREA: Analiza estos datos y genera predicciones de mantenimiento para cada embarcación activa. Para cada una:
+1. Componente en riesgo
+2. Probabilidad de falla (%) en los próximos 30 días
+3. Días estimados hasta mantenimiento necesario
+4. Acción recomendada
+5. Severidad: critical/high/medium/low
+
+Responde SOLO en JSON válido, formato:
+[{"vessel":"nombre","component":"componente","probability":85,"days_until":12,"action":"descripción corta","severity":"high"}]
+
+Si no hay suficientes datos para una embarcación, estimá basándote en el tipo de embarcación y estado actual. Genera al menos 1 predicción por embarcación activa.`;
+
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+        const response = await fetch(geminiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.3, maxOutputTokens: 2000 }
+            })
+        });
+
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
+        // Extract JSON from response
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        const predictions = jsonMatch ? JSON.parse(jsonMatch[0]) : [];
+        res.json({ predictions });
+    } catch (e) {
+        console.error('Predict maintenance error:', e.message);
+        res.status(500).json({ error: e.message, predictions: [] });
+    }
+});
+
+// --- IA: OPTIMIZADOR DE CONVOY ---
+app.post('/api/ai/optimize-convoy', aiLimiter, authenticateUser, async (req, res) => {
+    const GEMINI_KEY = process.env.GEMINI_API_KEY;
+    if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
+
+    try {
+        const { companyId, destination, selectedVessels } = req.body;
+        const supabaseUrl = process.env.SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' };
+
+        const vesselsRes = await fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=*`, { headers });
+        const vessels = await vesselsRes.json();
+
+        const prompt = `Eres un despachante naval experto de la Hidrovía Paraguay-Paraná con 20 años de experiencia en formación de convoyes.
+
+FLOTA DISPONIBLE:
+${JSON.stringify(vessels, null, 1)}
+
+${selectedVessels ? `EMBARCACIONES SELECCIONADAS POR EL USUARIO: ${selectedVessels}` : 'El usuario no seleccionó embarcaciones aún.'}
+${destination ? `DESTINO: ${destination}` : 'Sin destino definido aún.'}
+
+CONTEXTO HIDROLÓGICO ACTUAL:
+- Río Paraguay en Asunción: nivel estimado 2.4m (medio-bajo)
+- Tramo Pilcomayo-Confluencia: calado máximo recomendado 2.8m
+- Tramo Confluencia-Rosario: calado máximo 3.2m
+- Condiciones: sin alertas meteorológicas activas
+
+TAREA: Sugiere la formación ÓPTIMA del convoy considerando:
+1. Nivel actual del río y restricciones de calado por tramo
+2. Tipo y calado de cada embarcación
+3. Remolcador(es) necesarios (proa/popa)
+4. Riesgo de varada en tramos críticos
+5. Consumo estimado de combustible
+
+Responde en JSON:
+{"formation":{"proa":"nombre remolcador","barcazas_f1":["nombre1","nombre2"],"barcazas_f2":["nombre3","nombre4"],"popa":"nombre o null"},"config":"2+1 o 4+1 etc","risk_score":25,"risk_level":"bajo/medio/alto","warnings":["advertencia1"],"fuel_estimate_liters":12000,"recommendation":"texto explicativo de 2-3 oraciones"}`;
+
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+        const response = await fetch(geminiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
+            })
+        });
+
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        const suggestion = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+        res.json({ suggestion });
+    } catch (e) {
+        console.error('Optimize convoy error:', e.message);
+        res.status(500).json({ error: e.message, suggestion: {} });
+    }
+});
+
+// --- IA: DETECCIÓN DE ANOMALÍAS DE CONSUMO ---
+app.post('/api/ai/fuel-anomalies', aiLimiter, authenticateUser, async (req, res) => {
+    const GEMINI_KEY = process.env.GEMINI_API_KEY;
+    if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
+
+    try {
+        const { companyId } = req.body;
+        const supabaseUrl = process.env.SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' };
+
+        const [fuelRes, vesselsRes] = await Promise.all([
+            fetch(`${supabaseUrl}/rest/v1/fuel_logs?company_id=eq.${companyId}&select=*&order=created_at.desc&limit=100`, { headers }),
+            fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=id,name,type,engine_power`, { headers })
+        ]);
+
+        const fuelLogs = await fuelRes.json();
+        const vessels = await vesselsRes.json();
+
+        const prompt = `Eres un auditor de consumo de combustible especializado en flotas fluviales de la Hidrovía Paraguay-Paraná.
+
+EMBARCACIONES:
+${JSON.stringify(vessels, null, 1)}
+
+REGISTROS DE COMBUSTIBLE (últimos 30 días):
+${JSON.stringify(fuelLogs, null, 1)}
+
+TAREA: Analiza los patrones de consumo y detecta ANOMALÍAS. Busca:
+1. Consumo inusualmente alto para el tipo de embarcación
+2. Diferencias significativas entre cargas del mismo barco
+3. Posibles indicadores de: motor en mal estado, sobrecarga, fuga, o robo
+4. Tendencias preocupantes
+
+Para cada anomalía encontrada, responde en JSON:
+[{"vessel":"nombre","type":"overconsumption/spike/trend/theft_risk","severity":"critical/high/medium/low","description":"descripción corta en español","deviation_pct":15,"recommendation":"acción recomendada"}]
+
+Si todo parece normal, devolvé un array con al menos 1 item tipo "normal" con severity "low" y descripción positiva. Siempre generá al menos 2 items de análisis.`;
+
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+        const response = await fetch(geminiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
+            })
+        });
+
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        const anomalies = jsonMatch ? JSON.parse(jsonMatch[0]) : [];
+        res.json({ anomalies });
+    } catch (e) {
+        console.error('Fuel anomalies error:', e.message);
+        res.status(500).json({ error: e.message, anomalies: [] });
+    }
+});
+
 // --- STRIPE PAYMENT GATEWAY (authenticated) ---
 app.post('/api/create-checkout', authenticateUser, async (req, res) => {
     try {

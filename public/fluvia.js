@@ -1045,3 +1045,144 @@ function filterIncidents(){
 // BRIEFING DIARIO - Extracted to js/modules/fluvia-briefing.js (with Promise.all optimization)
 
 // EXPORT ENGINE — Extracted to js/modules/fluvia-exports.js
+
+// ============================================
+// IA AVANZADA — MANTENIMIENTO PREDICTIVO
+// ============================================
+async function runPredictiveMaintenance(){
+    var btn=document.getElementById('btn-predict-maint');
+    var container=document.getElementById('predict-maint-results');
+    if(!btn||!container)return;
+    btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Analizando...';
+    container.innerHTML='<div style="text-align:center;padding:40px 0;"><div class="loading-spinner" style="width:30px;height:30px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px;"></div><div style="font-size:12px;color:var(--text-secondary);">Gemini está analizando tu flota...</div></div>';
+    try{
+        var companyId=currentUser?.user_metadata?.company_id||currentUser?.app_metadata?.company_id||'a1b2c3d4-0001-4000-8000-000000000001';
+        var token=(await sb.auth.getSession())?.data?.session?.access_token;
+        var r=await fetch('/api/ai/predict-maintenance',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId})});
+        var data=await r.json();
+        var preds=data.predictions||[];
+        if(preds.length===0){container.innerHTML='<div style="text-align:center;color:var(--text-secondary);padding:20px;">No se encontraron predicciones.</div>';btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-brain"></i> Analizar';return;}
+        var html='';
+        preds.forEach(function(p){
+            var sevColor=p.severity==='critical'?'#ef4444':p.severity==='high'?'#f59e0b':p.severity==='medium'?'#3b82f6':'#10b981';
+            var sevLabel=p.severity==='critical'?'CRITICO':p.severity==='high'?'ALTO':p.severity==='medium'?'MEDIO':'BAJO';
+            var prob=p.probability||0;
+            html+='<div style="border:1px solid var(--border);border-left:4px solid '+sevColor+';border-radius:8px;padding:12px;margin-bottom:8px;">';
+            html+='<div style="display:flex;justify-content:space-between;align-items:center;">';
+            html+='<div style="font-weight:700;font-size:13px;">🚢 '+p.vessel+'</div>';
+            html+='<span style="background:'+sevColor+';color:#fff;font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;">'+sevLabel+'</span>';
+            html+='</div>';
+            html+='<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">⚙️ '+p.component+'</div>';
+            html+='<div style="font-size:12px;margin-top:6px;">'+p.action+'</div>';
+            html+='<div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--text-secondary);">';
+            html+='<span>📊 Probabilidad: <strong style="color:'+sevColor+'">'+prob+'%</strong></span>';
+            html+='<span>📅 '+p.days_until+' días</span>';
+            html+='</div>';
+            html+='<div style="background:var(--bg-main);border-radius:4px;height:6px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:'+prob+'%;background:'+sevColor+';border-radius:4px;transition:width 0.5s;"></div></div>';
+            html+='</div>';
+        });
+        container.innerHTML=html;
+    }catch(e){
+        container.innerHTML='<div style="color:#ef4444;text-align:center;padding:20px;">Error: '+e.message+'</div>';
+    }
+    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-brain"></i> Analizar';
+}
+
+// ============================================
+// IA AVANZADA — ANOMALÍAS DE CONSUMO
+// ============================================
+async function runFuelAnomalies(){
+    var btn=document.getElementById('btn-fuel-anomalies');
+    var container=document.getElementById('fuel-anomaly-results');
+    if(!btn||!container)return;
+    btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Escaneando...';
+    container.innerHTML='<div style="text-align:center;padding:40px 0;"><div class="loading-spinner" style="width:30px;height:30px;border:3px solid var(--border);border-top-color:#10b981;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px;"></div><div style="font-size:12px;color:var(--text-secondary);">Auditando consumo de combustible...</div></div>';
+    try{
+        var companyId=currentUser?.user_metadata?.company_id||currentUser?.app_metadata?.company_id||'a1b2c3d4-0001-4000-8000-000000000001';
+        var token=(await sb.auth.getSession())?.data?.session?.access_token;
+        var r=await fetch('/api/ai/fuel-anomalies',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId})});
+        var data=await r.json();
+        var anomalies=data.anomalies||[];
+        if(anomalies.length===0){container.innerHTML='<div style="text-align:center;color:var(--text-secondary);padding:20px;">Sin anomalías detectadas.</div>';btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-magnifying-glass-chart"></i> Escanear';return;}
+        var html='';
+        anomalies.forEach(function(a){
+            var sevColor=a.severity==='critical'?'#ef4444':a.severity==='high'?'#f59e0b':a.severity==='medium'?'#3b82f6':'#10b981';
+            var icon=a.type==='theft_risk'?'🚨':a.type==='overconsumption'?'📈':a.type==='spike'?'⚡':a.type==='trend'?'📉':'✅';
+            var typeLabel=a.type==='theft_risk'?'RIESGO ROBO':a.type==='overconsumption'?'SOBRECONSUMO':a.type==='spike'?'PICO ANÓMALO':a.type==='trend'?'TENDENCIA':'NORMAL';
+            html+='<div style="border:1px solid var(--border);border-left:4px solid '+sevColor+';border-radius:8px;padding:12px;margin-bottom:8px;">';
+            html+='<div style="display:flex;justify-content:space-between;align-items:center;">';
+            html+='<div style="font-weight:700;font-size:13px;">'+icon+' '+a.vessel+'</div>';
+            html+='<span style="background:'+sevColor+';color:#fff;font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;">'+typeLabel+'</span>';
+            html+='</div>';
+            html+='<div style="font-size:12px;margin-top:6px;">'+a.description+'</div>';
+            if(a.deviation_pct){html+='<div style="font-size:11px;color:'+sevColor+';margin-top:4px;font-weight:600;">Desviación: '+(a.deviation_pct>0?'+':'')+a.deviation_pct+'%</div>';}
+            html+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">💡 '+a.recommendation+'</div>';
+            html+='</div>';
+        });
+        container.innerHTML=html;
+    }catch(e){
+        container.innerHTML='<div style="color:#ef4444;text-align:center;padding:20px;">Error: '+e.message+'</div>';
+    }
+    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-magnifying-glass-chart"></i> Escanear';
+}
+
+// ============================================
+// IA AVANZADA — OPTIMIZADOR DE CONVOY
+// ============================================
+async function suggestConvoyIA(){
+    var btn=document.getElementById('btn-convoy-ai');
+    var container=document.getElementById('convoy-ai-result');
+    var dest=document.getElementById('convoy-destination')?.value||'';
+    if(!btn||!container)return;
+    btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Calculando...';
+    container.style.display='block';
+    container.innerHTML='<div style="text-align:center;padding:20px 0;"><div class="loading-spinner" style="width:24px;height:24px;border:3px solid var(--border);border-top-color:#8b5cf6;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 8px;"></div><div style="font-size:12px;color:var(--text-secondary);">Gemini está optimizando la formación...</div></div>';
+    try{
+        var companyId=currentUser?.user_metadata?.company_id||currentUser?.app_metadata?.company_id||'a1b2c3d4-0001-4000-8000-000000000001';
+        var token=(await sb.auth.getSession())?.data?.session?.access_token;
+        var r=await fetch('/api/ai/optimize-convoy',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId,destination:dest})});
+        var data=await r.json();
+        var s=data.suggestion||{};
+        var f=s.formation||{};
+        var riskColor=s.risk_score<=30?'#10b981':s.risk_score<=60?'#f59e0b':'#ef4444';
+        var html='<div style="background:var(--bg-card);border-radius:10px;padding:16px;">';
+        
+        // Config + Risk
+        html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
+        html+='<div style="font-weight:800;font-size:18px;color:#8b5cf6;">⚓ '+(s.config||'N/A')+'</div>';
+        html+='<div style="text-align:center;"><div style="width:50px;height:50px;border-radius:50%;border:4px solid '+riskColor+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:'+riskColor+';">'+(s.risk_score||'?')+'</div><div style="font-size:9px;color:var(--text-secondary);margin-top:2px;">RIESGO</div></div>';
+        html+='</div>';
+        
+        // Formation
+        if(f.proa){html+='<div style="font-size:12px;margin-bottom:4px;">🔴 <strong>Proa:</strong> '+f.proa+'</div>';}
+        if(f.barcazas_f1&&f.barcazas_f1.length){html+='<div style="font-size:12px;margin-bottom:4px;">📦 <strong>Fila 1:</strong> '+f.barcazas_f1.join(', ')+'</div>';}
+        if(f.barcazas_f2&&f.barcazas_f2.length){html+='<div style="font-size:12px;margin-bottom:4px;">📦 <strong>Fila 2:</strong> '+f.barcazas_f2.join(', ')+'</div>';}
+        if(f.popa){html+='<div style="font-size:12px;margin-bottom:4px;">🔵 <strong>Popa:</strong> '+f.popa+'</div>';}
+        
+        // Fuel estimate
+        if(s.fuel_estimate_liters){html+='<div style="font-size:12px;margin-top:8px;">⛽ Consumo estimado: <strong>'+s.fuel_estimate_liters.toLocaleString()+' lts</strong></div>';}
+        
+        // Warnings
+        if(s.warnings&&s.warnings.length){
+            html+='<div style="margin-top:10px;">';
+            s.warnings.forEach(function(w){html+='<div style="font-size:11px;color:#f59e0b;margin-bottom:2px;">⚠️ '+w+'</div>';});
+            html+='</div>';
+        }
+        
+        // Recommendation
+        if(s.recommendation){html+='<div style="margin-top:10px;padding:10px;background:rgba(139,92,246,0.1);border-radius:8px;font-size:12px;">🤖 '+s.recommendation+'</div>';}
+        
+        html+='</div>';
+        container.innerHTML=html;
+    }catch(e){
+        container.innerHTML='<div style="color:#ef4444;text-align:center;padding:20px;">Error: '+e.message+'</div>';
+    }
+    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-robot"></i> Sugerir';
+}
+
+// CSS spinner animation
+if(!document.getElementById('ai-spinner-css')){
+    var style=document.createElement('style');style.id='ai-spinner-css';
+    style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(style);
+}
