@@ -80,11 +80,17 @@ Future<void> main() async {
     debugPrint('FCM setup error: $e');
   }
 
+  // Supabase credentials via --dart-define (never hardcode in production)
+  const supabaseUrl = String.fromEnvironment(
+    'SUPABASE_URL',
+    defaultValue: 'https://nfybnnpdrvyxucgpqmmo.supabase.co',
+  );
+  const supabaseKey = String.fromEnvironment(
+    'SUPABASE_ANON_KEY',
+    defaultValue: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc',
+  );
   try {
-    await Supabase.initialize(
-      url: 'https://nfybnnpdrvyxucgpqmmo.supabase.co',
-      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc',
-    );
+    await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
   } catch (e) {
     debugPrint('Supabase init error: $e');
   }
