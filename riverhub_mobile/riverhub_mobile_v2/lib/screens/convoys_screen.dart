@@ -4,6 +4,7 @@ import 'package:flutter/material.dart'
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/ai_service.dart';
 
 class ConvoysScreen extends StatefulWidget {
   const ConvoysScreen({super.key});
@@ -21,6 +22,11 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
     text: 'Nuevo Convoy',
   );
   int? _selectedAssetIndex; // For tap-to-assign mode
+
+  // IA Convoy Optimizer
+  bool _loadingConvoyAI = false;
+  Map<String, dynamic>? _convoyAISuggestion;
+  final TextEditingController _destController = TextEditingController();
 
   @override
   void initState() {
@@ -313,6 +319,9 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                 ),
               ),
 
+              // ── IA Convoy Optimizer ──
+              _buildConvoyAIPanel(),
+
               // Formation visual
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -568,6 +577,198 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  String? _convoyAIError;
+
+  Future<void> _runConvoyAI() async {
+    setState(() { _loadingConvoyAI = true; _convoyAIError = null; });
+    try {
+      final result = await AIService.optimizeConvoy(destination: _destController.text);
+      if (mounted) {
+        setState(() {
+          _convoyAISuggestion = result.isNotEmpty ? result : null;
+          _loadingConvoyAI = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _loadingConvoyAI = false;
+          _convoyAIError = 'Error: $e';
+        });
+      }
+    }
+  }
+
+  Widget _buildConvoyAIPanel() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [const Color(0xFF8B5CF6).withValues(alpha: 0.1), const Color(0xFF3B82F6).withValues(alpha: 0.1)],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(CupertinoIcons.wand_stars, color: Color(0xFF8B5CF6), size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Optimizador IA', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 13, color: AppColors.textPrimary)),
+                    Text('Formación óptima según río y calados', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: CupertinoTextField(
+                  controller: _destController,
+                  placeholder: 'Destino (ej: Rosario)',
+                  padding: const EdgeInsets.all(10),
+                  style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary),
+                  placeholderStyle: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundSecondary,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColors.separator),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              CupertinoButton(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                color: const Color(0xFF8B5CF6),
+                borderRadius: BorderRadius.circular(10),
+                onPressed: _loadingConvoyAI ? null : _runConvoyAI,
+                child: _loadingConvoyAI
+                    ? const CupertinoActivityIndicator(color: CupertinoColors.white, radius: 8)
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(CupertinoIcons.sparkles, size: 14, color: CupertinoColors.white),
+                          const SizedBox(width: 4),
+                          Text('Sugerir', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.white)),
+                        ],
+                      ),
+              ),
+            ],
+          ),
+          if (_loadingConvoyAI)
+            Padding(
+              padding: const EdgeInsets.only(top: 14),
+              child: Center(
+                child: Column(
+                  children: [
+                    const CupertinoActivityIndicator(radius: 12),
+                    const SizedBox(height: 8),
+                    Text('Gemini optimizando...\n(puede tardar hasta 60s)', textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary, fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
+            ),
+          if (_convoyAIError != null && !_loadingConvoyAI)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.3)),
+                ),
+                child: Text(_convoyAIError!, style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFFEF4444))),
+              ),
+            ),
+          if (_convoyAISuggestion != null && !_loadingConvoyAI) ...[
+            const SizedBox(height: 12),
+            Builder(builder: (context) {
+              final s = _convoyAISuggestion!;
+              final f = s['formation'] as Map<String, dynamic>? ?? {};
+              return Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundSecondary,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.separator),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Config + Risk
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('⚓ ${s['config'] ?? 'N/A'}',
+                            style: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 18, color: const Color(0xFF8B5CF6))),
+                        _buildRiskGauge(s['risk_score'] as num? ?? 0),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    if (f['proa'] != null) Text('🔴 Proa: ${f['proa']}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
+                    if (f['barcazas_f1'] != null) Text('📦 Fila 1: ${(f['barcazas_f1'] as List).join(', ')}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
+                    if (f['barcazas_f2'] != null) Text('📦 Fila 2: ${(f['barcazas_f2'] as List).join(', ')}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
+                    if (f['popa'] != null) Text('🔵 Popa: ${f['popa']}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
+                    if (s['fuel_estimate_liters'] != null) ...[
+                      const SizedBox(height: 8),
+                      Text('⛽ Consumo: ${s['fuel_estimate_liters']} lts', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                    ],
+                    if (s['warnings'] != null)
+                      ...(s['warnings'] as List).map((w) =>
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text('⚠️ $w', style: GoogleFonts.inter(fontSize: 11, color: const Color(0xFFF59E0B))),
+                          )),
+                    if (s['recommendation'] != null) ...[
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text('🤖 ${s['recommendation']}',
+                            style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
+                      ),
+                    ],
+                  ],
+                ),
+              );
+            }),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRiskGauge(num score) {
+    final color = score <= 30 ? const Color(0xFF10B981) : score <= 60 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444);
+    return Column(
+      children: [
+        Container(
+          width: 44, height: 44,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: color, width: 3.5),
+          ),
+          child: Center(child: Text('$score', style: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 14, color: color))),
+        ),
+        const SizedBox(height: 2),
+        Text('RIESGO', style: GoogleFonts.inter(fontSize: 8, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+      ],
     );
   }
 
