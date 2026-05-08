@@ -243,6 +243,19 @@ app.post('/api/ai/predict-maintenance', aiLimiter, async (req, res) => {
         const maintenance = await maintRes.json();
         const fuel = await fuelRes.json();
 
+        console.log(`[Maint AI] vessels: ${Array.isArray(vessels) ? vessels.length : 'ERR'}, maint: ${Array.isArray(maintenance) ? maintenance.length : 'ERR'}, fuel: ${Array.isArray(fuel) ? fuel.length : 'ERR'}`);
+
+        if (!Array.isArray(vessels) || vessels.length === 0) {
+            return res.json({ predictions: [{
+                vessel: 'Sin datos',
+                component: 'N/A',
+                probability: 0,
+                days_until: 0,
+                action: 'Registre embarcaciones para recibir predicciones de IA',
+                severity: 'low'
+            }]});
+        }
+
         const prompt = `Eres un ingeniero naval experto en mantenimiento predictivo de flotas fluviales en la Hidrovía Paraguay-Paraná.
 
 DATOS DE LA FLOTA:
@@ -272,7 +285,7 @@ Si no hay suficientes datos para una embarcación, estimá basándote en el tipo
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 2000 }
+                generationConfig: { temperature: 0.3, maxOutputTokens: 2000, responseMimeType: 'application/json' }
             })
         });
 
@@ -297,10 +310,28 @@ app.post('/api/ai/optimize-convoy', aiLimiter, async (req, res) => {
         const { companyId, destination, selectedVessels } = req.body;
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+        
+        if (!supabaseUrl || !supabaseKey) {
+            return res.status(503).json({ error: 'Supabase not configured', suggestion: {} });
+        }
+        
         const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' };
 
         const vesselsRes = await fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=*`, { headers });
         const vessels = await vesselsRes.json();
+        
+        console.log(`[Convoy AI] Supabase vessels status: ${vesselsRes.status}, count: ${Array.isArray(vessels) ? vessels.length : 'NOT_ARRAY'}`);
+        
+        // If no vessels found, return helpful message
+        if (!Array.isArray(vessels) || vessels.length === 0) {
+            return res.json({ suggestion: {
+                config: 'Sin datos',
+                risk_score: 0,
+                formation: {},
+                warnings: ['No se encontraron embarcaciones en la base de datos para esta empresa'],
+                recommendation: 'Registre embarcaciones primero para recibir sugerencias de IA.'
+            }});
+        }
 
         const prompt = `Eres un despachante naval experto de la Hidrovía Paraguay-Paraná con 20 años de experiencia en formación de convoyes.
 
@@ -323,7 +354,7 @@ TAREA: Sugiere la formación ÓPTIMA del convoy considerando:
 4. Riesgo de varada en tramos críticos
 5. Consumo estimado de combustible
 
-Responde en JSON:
+Responde SOLO en JSON válido (sin markdown, sin backticks):
 {"formation":{"proa":"nombre remolcador","barcazas_f1":["nombre1","nombre2"],"barcazas_f2":["nombre3","nombre4"],"popa":"nombre o null"},"config":"2+1 o 4+1 etc","risk_score":25,"risk_level":"bajo/medio/alto","warnings":["advertencia1"],"fuel_estimate_liters":12000,"recommendation":"texto explicativo de 2-3 oraciones"}`;
 
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
@@ -332,12 +363,14 @@ Responde en JSON:
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
+                generationConfig: { temperature: 0.3, maxOutputTokens: 1500, responseMimeType: 'application/json' }
             })
         });
 
         const data = await response.json();
+        console.log(`[Convoy AI] Gemini status: ${response.status}`);
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        console.log(`[Convoy AI] Gemini raw: ${text.substring(0, 300)}`);
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         const suggestion = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
         res.json({ suggestion });
