@@ -89,7 +89,7 @@ app.use((req, res, next) => {
 });
 
 // --- ROOT REDIRECT TO LANDING ---
-app.get('/', (req, res) => res.redirect('/landing.html'));
+app.get('/', (req, res) => res.redirect('/fluvia.html'));
 
 // --- REQUEST LOGGING ---
 app.use((req, res, next) => {
