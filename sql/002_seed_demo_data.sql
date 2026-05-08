@@ -43,7 +43,8 @@ INSERT INTO voyages (voyage_number, vessel_id, origin_port, destination_port, ca
   ('VJ-2026-003', 'b0000001-0001-4000-8000-000000000001', 'San Lorenzo (AR)', 'Puerto de Asunción', 'Fertilizante', 18000, NOW() - INTERVAL '15 days', NOW() - INTERVAL '8 days', 'completado', 'a1b2c3d4-0001-4000-8000-000000000001', NOW() - INTERVAL '15 days'),
   ('VJ-2026-004', 'b0000001-0002-4000-8000-000000000001', 'Corumbá (BR)', 'Nueva Palmira (UY)', 'Mineral de Hierro', 40000, NOW() - INTERVAL '25 days', NOW() - INTERVAL '15 days', 'completado', 'a1b2c3d4-0001-4000-8000-000000000001', NOW() - INTERVAL '25 days'),
   ('VJ-2026-005', 'b0000001-0007-4000-8000-000000000001', 'Concepción (PY)', 'Villeta (PY)', 'Madera', 8000, NOW() - INTERVAL '10 days', NOW() - INTERVAL '7 days', 'completado', 'a1b2c3d4-0001-4000-8000-000000000001', NOW() - INTERVAL '10 days'),
-  ('VJ-2026-006', 'b0000001-0001-4000-8000-000000000001', 'Nueva Palmira (UY)', 'Asunción (PY)', 'Vacío (lastre)', 0, NOW() + INTERVAL '7 days', NOW() + INTERVAL '14 days', 'pendiente', 'a1b2c3d4-0001-4000-8000-000000000001', NOW());
+  ('VJ-2026-006', 'b0000001-0001-4000-8000-000000000001', 'Nueva Palmira (UY)', 'Asunción (PY)', 'Vacío (lastre)', 0, NOW() + INTERVAL '7 days', NOW() + INTERVAL '14 days', 'pendiente', 'a1b2c3d4-0001-4000-8000-000000000001', NOW())
+ON CONFLICT (voyage_number) DO NOTHING;
 ALTER TABLE voyages ENABLE TRIGGER USER;
 
 -- 5. FUEL LOGS
@@ -102,7 +103,8 @@ INSERT INTO inventory_items (sku, name, category, stock_current, stock_min_alert
   ('LUB-002', 'Grasa marina Mobilgrease', 'Lubricantes', 25, 10, 18.00, 'a1b2c3d4-0001-4000-8000-000000000001'),
   ('SOL-001', 'Electrodo soldadura 7018', 'Soldadura', 50, 20, 6.00, 'a1b2c3d4-0001-4000-8000-000000000001'),
   ('HID-001', 'Manguera hidráulica 1/2"', 'Hidráulica', 15, 5, 22.00, 'a1b2c3d4-0001-4000-8000-000000000001'),
-  ('FIL-002', 'Filtro combustible CAT', 'Filtros', 6, 4, 52.00, 'a1b2c3d4-0001-4000-8000-000000000001');
+  ('FIL-002', 'Filtro combustible CAT', 'Filtros', 6, 4, 52.00, 'a1b2c3d4-0001-4000-8000-000000000001')
+ON CONFLICT (sku) DO NOTHING;
 ALTER TABLE inventory_items ENABLE TRIGGER USER;
 
 -- 9. COMMS

@@ -312,71 +312,70 @@ app.post('/api/ai/optimize-convoy', aiLimiter, async (req, res) => {
         const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
         
         if (!supabaseUrl || !supabaseKey) {
-            return res.status(503).json({ error: 'Supabase not configured', suggestion: {} });
+            return res.json({ suggestion: { config: 'Error', warnings: ['Supabase no configurado'], recommendation: 'Configurar SUPABASE_URL y SUPABASE_ANON_KEY' } });
         }
         
         const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' };
-
-        const vesselsRes = await fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=*`, { headers });
+        const vesselsRes = await fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=id,name,type,status,draft,engine_power,fuel_capacity,current_lat,current_lng`, { headers });
         const vessels = await vesselsRes.json();
         
-        console.log(`[Convoy AI] Supabase vessels status: ${vesselsRes.status}, count: ${Array.isArray(vessels) ? vessels.length : 'NOT_ARRAY'}`);
+        console.log(`[Convoy AI] vessels: ${Array.isArray(vessels) ? vessels.length : 'ERR'}, status: ${vesselsRes.status}`);
         
-        // If no vessels found, return helpful message
         if (!Array.isArray(vessels) || vessels.length === 0) {
             return res.json({ suggestion: {
-                config: 'Sin datos',
-                risk_score: 0,
-                formation: {},
-                warnings: ['No se encontraron embarcaciones en la base de datos para esta empresa'],
-                recommendation: 'Registre embarcaciones primero para recibir sugerencias de IA.'
+                config: 'Sin datos', risk_score: 0, formation: {},
+                warnings: ['No se encontraron embarcaciones'], recommendation: 'Registre embarcaciones primero.'
             }});
         }
 
-        const prompt = `Eres un despachante naval experto de la Hidrovía Paraguay-Paraná con 20 años de experiencia en formación de convoyes.
+        const prompt = `Eres un despachante naval de la Hidrovía Paraguay-Paraná.
 
-FLOTA DISPONIBLE:
-${JSON.stringify(vessels, null, 1)}
+FLOTA: ${JSON.stringify(vessels)}
+${destination ? `DESTINO: ${destination}` : ''}
+${selectedVessels ? `SELECCIONADAS: ${selectedVessels}` : ''}
 
-${selectedVessels ? `EMBARCACIONES SELECCIONADAS POR EL USUARIO: ${selectedVessels}` : 'El usuario no seleccionó embarcaciones aún.'}
-${destination ? `DESTINO: ${destination}` : 'Sin destino definido aún.'}
+Sugiere la formación óptima del convoy. Responde SOLO JSON:
+{"formation":{"proa":"remolcador","barcazas":["b1","b2"],"popa":"otro o null"},"config":"4+1","risk_score":25,"risk_level":"bajo","warnings":["advertencia"],"fuel_estimate_liters":12000,"recommendation":"texto 2 oraciones"}`;
 
-CONTEXTO HIDROLÓGICO ACTUAL:
-- Río Paraguay en Asunción: nivel estimado 2.4m (medio-bajo)
-- Tramo Pilcomayo-Confluencia: calado máximo recomendado 2.8m
-- Tramo Confluencia-Rosario: calado máximo 3.2m
-- Condiciones: sin alertas meteorológicas activas
-
-TAREA: Sugiere la formación ÓPTIMA del convoy considerando:
-1. Nivel actual del río y restricciones de calado por tramo
-2. Tipo y calado de cada embarcación
-3. Remolcador(es) necesarios (proa/popa)
-4. Riesgo de varada en tramos críticos
-5. Consumo estimado de combustible
-
-Responde SOLO en JSON válido (sin markdown, sin backticks):
-{"formation":{"proa":"nombre remolcador","barcazas_f1":["nombre1","nombre2"],"barcazas_f2":["nombre3","nombre4"],"popa":"nombre o null"},"config":"2+1 o 4+1 etc","risk_score":25,"risk_level":"bajo/medio/alto","warnings":["advertencia1"],"fuel_estimate_liters":12000,"recommendation":"texto explicativo de 2-3 oraciones"}`;
-
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 30000);
+        
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 1500, responseMimeType: 'application/json' }
+                generationConfig: { temperature: 0.3, maxOutputTokens: 1000, responseMimeType: 'application/json' }
             })
         });
+        clearTimeout(timeout);
 
         const data = await response.json();
-        console.log(`[Convoy AI] Gemini status: ${response.status}`);
+        console.log(`[Convoy AI] Gemini HTTP ${response.status}`);
+        
+        if (!response.ok) {
+            console.error('[Convoy AI] Gemini error:', JSON.stringify(data).substring(0, 500));
+            return res.json({ suggestion: { config: 'Error IA', warnings: [`Gemini HTTP ${response.status}`], recommendation: data.error?.message || 'Error de IA' } });
+        }
+        
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-        console.log(`[Convoy AI] Gemini raw: ${text.substring(0, 300)}`);
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        const suggestion = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+        console.log(`[Convoy AI] raw: ${text.substring(0, 200)}`);
+        
+        let suggestion = {};
+        try {
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            suggestion = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+        } catch (parseErr) {
+            console.error('[Convoy AI] JSON parse failed:', parseErr.message);
+            suggestion = { config: 'Respuesta IA', recommendation: text.substring(0, 500), warnings: ['Formato de respuesta no estructurado'] };
+        }
+        
         res.json({ suggestion });
     } catch (e) {
         console.error('Optimize convoy error:', e.message);
-        res.status(500).json({ error: e.message, suggestion: {} });
+        res.json({ suggestion: { config: 'Error', warnings: [e.message], recommendation: 'Intente nuevamente en unos segundos.' } });
     }
 });
 
