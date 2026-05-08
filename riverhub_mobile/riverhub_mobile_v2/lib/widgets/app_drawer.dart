@@ -233,9 +233,18 @@ class AppDrawer extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.of(context).pop(); // close drawer
         if (destination != null) {
-          Navigator.of(context).push(CupertinoPageRoute(builder: (_) => destination));
+          // Close drawer first
+          Navigator.of(context).pop();
+          // Push the screen using the ROOT navigator so back button returns to main + drawer accessible
+          Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute(builder: (_) => destination),
+          ).then((_) {
+            // When user comes back, re-open the drawer automatically
+            Future.delayed(const Duration(milliseconds: 150), () {
+              rootScaffoldKey.currentState?.openDrawer();
+            });
+          });
         }
       },
     );
