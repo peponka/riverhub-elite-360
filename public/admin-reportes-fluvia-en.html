@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -46,7 +46,7 @@
       <div class="nav-title">Main</div>
       <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a>
       <a href="admin-mapa-flota-fluvia.html" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map</a>
-      <a href="admin-mapa-fluvia.html" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS</a>
+      <a href="admin-mapa-fluvia.html" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> AIS Map</a>
       <a href="admin-copiloto-fluvia.html" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot</a>
     </div>
     <div class="nav-group">
@@ -82,7 +82,7 @@
             <h1 style="font-family:'Newsreader',serif; font-size:3rem; font-weight:400; margin:0; letter-spacing:-1px;">Official <i style="font-style:italic; font-weight:300;">Reports.</i></h1>
             <div style="font-family:var(--font-data); font-size:0.7rem; color:var(--text-sec); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-top:6px;">BUSINESS INTELLIGENCE · SUPABASE · CHART.JS</div>
           </div>
-          <button onclick="alert('Generando PDF...')" style="background:var(--text-main); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-family:var(--font-data); font-size:0.8rem; font-weight:700; cursor:pointer;"><i class="fa-solid fa-file-pdf" style="margin-right:6px;"></i> EXPORTAR PDF</button>
+          <button onclick="alert('Generating PDF...')" style="background:var(--text-main); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-family:var(--font-data); font-size:0.8rem; font-weight:700; cursor:pointer;"><i class="fa-solid fa-file-pdf" style="margin-right:6px;"></i> EXPORT PDF</button>
         </div>
 
         <!-- KPIs -->
@@ -99,24 +99,24 @@
           </div>
           <div class="rpt-kpi">
             <div class="rk-val">87%</div>
-            <div class="rk-label">Disponibilidad</div>
-            <div class="rk-sub">Meta: 85%</div>
+            <div class="rk-label">Availability</div>
+            <div class="rk-sub">Target: 85%</div>
           </div>
           <div class="rpt-kpi">
             <div class="rk-val">4.2</div>
             <div class="rk-label">Avg L/km</div>
-            <div class="rk-sub">-8% eficiencia</div>
+            <div class="rk-sub">-8% efficiency</div>
           </div>
         </div>
 
         <!-- Charts -->
         <div class="chart-row">
           <div class="chart-box">
-            <div class="chart-box-title">INGRESOS VS COSTOS OPERATIVOS (kUSD · 2026)</div>
+            <div class="chart-box-title">REVENUE VS OPERATING COSTS (kUSD · 2026)</div>
             <div class="chart-wrap"><canvas id="chartPnl"></canvas></div>
           </div>
           <div class="chart-box">
-            <div class="chart-box-title">DISPONIBILIDAD FLOTA</div>
+            <div class="chart-box-title">FLEET AVAILABILITY</div>
             <div class="chart-wrap"><canvas id="chartOps"></canvas></div>
           </div>
         </div>
