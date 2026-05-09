@@ -272,7 +272,7 @@ async function loadDashboard(){
 
         // KPI: Calado - computed from active vessel data
         var elC=document.getElementById('dash-kpi-calado');if(elC)elC.textContent='--';
-        var elCS=document.getElementById('dash-kpi-calado-sub');if(elCS)elCS.textContent='sin lectura reciente';
+        var elCS=document.getElementById('dash-kpi-calado-sub');if(elCS)elCS.textContent='no recent reading';
 
         // KPI: Efficiency - computed from fleet utilization
         var elE=document.getElementById('dash-kpi-efficiency');if(elE)elE.textContent=total>0?Math.round((active/Math.max(total,1))*100):'--';
@@ -283,14 +283,14 @@ async function loadDashboard(){
         // Live Vessels Panel (right sidebar)
         var liveContainer=document.getElementById('dash-live-vessels');
         var fleetCount=document.getElementById('dash-fleet-count');
-        if(fleetCount)fleetCount.textContent=total+' bajo monitoreo';
+        if(fleetCount)fleetCount.textContent=total+' being monitored';
         if(liveContainer){
             liveContainer.innerHTML=vessels.slice(0,8).map(function(v,i){
                 var s=(v.status||'').toLowerCase();
                 var isActive=s==='en viaje'||s==='active'||s==='navegando'||s==='en_viaje';
                 var isMaint=s.indexOf('manten')>=0;
                 var statusColor=isActive?'var(--success)':isMaint?'var(--warning)':'var(--accent)';
-                var statusLabel=isActive?'NAVEGANDO':isMaint?'ATENCIÓN':'EN PUERTO';
+                var statusLabel=isActive?'IN TRANSIT':isMaint?'ATENCIÓN':'EN PUERTO';
                 var speed=isActive?'—':'0';
                 var loc=v.location||v.current_position||'ASU';
                 var type=v.type||v.vessel_type||'REM';
@@ -344,7 +344,7 @@ async function loadDashWeather(){
 
 async function loadDashHydro(){
     try{
-        var el=document.getElementById('dash-hidro-status');if(el)el.textContent='Nivel normal';
+        var el=document.getElementById('dash-hidro-status');if(el)el.textContent='Normal level';
         var el2=document.getElementById('dash-h-asu');if(el2)el2.textContent='2.45m';
         var el3=document.getElementById('dash-h-pir');if(el3)el3.textContent='3.12m';
         var el4=document.getElementById('dash-h-ros');if(el4)el4.textContent='1.87m';
@@ -493,7 +493,7 @@ function initMap(){
 function loadFleetMarkers(){
     sb.from('vessels').select('*').then(function(r){
         var data=r.data;if(!data)return;
-        data.forEach(function(v){var lat=v.latitude||v.lat;var lng=v.longitude||v.lng;if(!lat||!lng)return;var s=(v.status||'').toLowerCase();var c=s.indexOf('viaje')>=0||s==='active'?'#2EA043':s.indexOf('manten')>=0?'#F59E0B':'#3B82F6';L.circleMarker([lat,lng],{radius:8,fillColor:c,color:'#fff',weight:2,fillOpacity:1}).addTo(map).bindPopup('<strong>'+(v.name||'')+'</strong><br>'+(v.status||'')+'<br><small>Flota propia</small>');});
+        data.forEach(function(v){var lat=v.latitude||v.lat;var lng=v.longitude||v.lng;if(!lat||!lng)return;var s=(v.status||'').toLowerCase();var c=s.indexOf('viaje')>=0||s==='active'?'#2EA043':s.indexOf('manten')>=0?'#F59E0B':'#3B82F6';L.circleMarker([lat,lng],{radius:8,fillColor:c,color:'#fff',weight:2,fillOpacity:1}).addTo(map).bindPopup('<strong>'+(v.name||'')+'</strong><br>'+(v.status||'')+'<br><small>Own fleet</small>');});
     });
 }
 async function loadAISTraffic(){
@@ -545,15 +545,15 @@ function renderAISMarkers(data){
 
 // MODAL
 var modalForms={
-    fleet:{title:'Add Active',fields:[{id:'fleet-name',label:'NOMBRE',type:'text',placeholder:'Ej: R/M ATLAS'},{id:'fleet-type',label:'TIPO',type:'select',options:['Barge','Tugboat','Ponton']},{id:'fleet-status',label:'ESTADO',type:'select',options:['In Transit','In Port','Maintenance']},{id:'fleet-location',label:'UBICACION',type:'text',placeholder:'Ej: Km 1420'}]},
-    viaje:{title:'New Solicitud de Viaje',fields:[{id:'viaje-vessel',label:'EMBARCACION',type:'text',placeholder:'Nombre'},{id:'viaje-origin',label:'ORIGEN',type:'text',placeholder:'Puerto origen'},{id:'viaje-dest',label:'DESTINO',type:'text',placeholder:'Puerto destino'},{id:'viaje-cargo',label:'CARGA (TON)',type:'text',placeholder:'3500'},{id:'viaje-date',label:'FECHA SALIDA',type:'date'}]},
-    bitacora:{title:'New Entrada de Bitacora',fields:[{id:'bit-title',label:'TITULO',type:'text',placeholder:'Resumen'},{id:'bit-vessel',label:'EMBARCACION',type:'text',placeholder:'Embarcacion'},{id:'bit-type',label:'TIPO',type:'select',options:['Observacion','Incidente','Maniobra','Navegacion']},{id:'bit-desc',label:'DESCRIPCION',type:'textarea',placeholder:'Detalle...'}]},
-    crew:{title:'Add Tripulante',fields:[{id:'crew-name',label:'NOMBRE',type:'text',placeholder:'Juan Perez'},{id:'crew-role',label:'ROL',type:'select',options:['Capitan','Timonel','Maquinista','Marinero','Cocinero']},{id:'crew-vessel',label:'EMBARCACION',type:'text',placeholder:'Asignar a...'},{id:'crew-doc',label:'DOCUMENTO',type:'text',placeholder:'Nro documento'}]},
-    fuel:{title:'Registrar Fuel',fields:[{id:'fuel-vessel',label:'EMBARCACION',type:'text',placeholder:'Nombre'},{id:'fuel-liters',label:'LITROS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TIPO',type:'select',options:['Gasoil','IFO 380','MGO']},{id:'fuel-date',label:'FECHA',type:'date'}]},
-    maint:{title:'New Orden de Maintenance',fields:[{id:'maint-title',label:'DESCRIPCION',type:'text',placeholder:'Que reparar'},{id:'maint-vessel',label:'EMBARCACION',type:'text',placeholder:'Embarcacion'},{id:'maint-priority',label:'PRIORIDAD',type:'select',options:['Alta','Media','Baja']},{id:'maint-notes',label:'NOTAS',type:'textarea',placeholder:'Detalles...'}]},
+    fleet:{title:'Add Active',fields:[{id:'fleet-name',label:'NOMBRE',type:'text',placeholder:'Ej: R/M ATLAS'},{id:'fleet-type',label:'TYPE',type:'select',options:['Barge','Tugboat','Ponton']},{id:'fleet-status',label:'STATUS',type:'select',options:['In Transit','In Port','Maintenance']},{id:'fleet-location',label:'LOCATION',type:'text',placeholder:'Ej: Km 1420'}]},
+    viaje:{title:'New Solicitud de Viaje',fields:[{id:'viaje-vessel',label:'VESSEL',type:'text',placeholder:'Nombre'},{id:'viaje-origin',label:'ORIGEN',type:'text',placeholder:'Puerto origen'},{id:'viaje-dest',label:'DESTINO',type:'text',placeholder:'Puerto destino'},{id:'viaje-cargo',label:'CARGA (TON)',type:'text',placeholder:'3500'},{id:'viaje-date',label:'FECHA SALIDA',type:'date'}]},
+    bitacora:{title:'New Entrada de Bitacora',fields:[{id:'bit-title',label:'TITULO',type:'text',placeholder:'Resumen'},{id:'bit-vessel',label:'VESSEL',type:'text',placeholder:'Embarcacion'},{id:'bit-type',label:'TYPE',type:'select',options:['Observacion','Incidente','Maniobra','Navegacion']},{id:'bit-desc',label:'DESCRIPCION',type:'textarea',placeholder:'Detalle...'}]},
+    crew:{title:'Add Tripulante',fields:[{id:'crew-name',label:'NOMBRE',type:'text',placeholder:'Juan Perez'},{id:'crew-role',label:'ROL',type:'select',options:['Capitan','Timonel','Maquinista','Marinero','Cocinero']},{id:'crew-vessel',label:'VESSEL',type:'text',placeholder:'Asignar a...'},{id:'crew-doc',label:'DOCUMENTO',type:'text',placeholder:'Nro documento'}]},
+    fuel:{title:'Registrar Fuel',fields:[{id:'fuel-vessel',label:'VESSEL',type:'text',placeholder:'Nombre'},{id:'fuel-liters',label:'LITROS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TYPE',type:'select',options:['Gasoil','IFO 380','MGO']},{id:'fuel-date',label:'FECHA',type:'date'}]},
+    maint:{title:'New Orden de Maintenance',fields:[{id:'maint-title',label:'DESCRIPCION',type:'text',placeholder:'Que reparar'},{id:'maint-vessel',label:'VESSEL',type:'text',placeholder:'Embarcacion'},{id:'maint-priority',label:'PRIORIDAD',type:'select',options:['Alta','Media','Baja']},{id:'maint-notes',label:'NOTAS',type:'textarea',placeholder:'Detalles...'}]},
     panol:{title:'Add Item',fields:[{id:'panol-name',label:'REPUESTO',type:'text',placeholder:'Filtro de aceite'},{id:'panol-cat',label:'CATEGORIA',type:'select',options:['Motor','Electrico','Hidraulico','Casco','General']},{id:'panol-qty',label:'CANTIDAD',type:'text',placeholder:'10'},{id:'panol-min',label:'STOCK MINIMO',type:'text',placeholder:'2'}]},
-    calado:{title:'Registrar Lectura de Calado',fields:[{id:'calado-vessel',label:'EMBARCACION',type:'text',placeholder:'Nombre de la embarcacion'},{id:'calado-value',label:'CALADO (METROS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'CALADO MAXIMO (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVACIONES',type:'textarea',placeholder:'Condiciones, ubicacion...'}]},
-    incidente:{title:'Reportar Incidente',fields:[{id:'inc-title',label:'TITULO',type:'text',placeholder:'Descripcion breve del incidente'},{id:'inc-vessel',label:'EMBARCACION',type:'text',placeholder:'Embarcacion afectada'},{id:'inc-severity',label:'SEVERIDAD',type:'select',options:['Critico','Alto','Medio','Bajo']},{id:'inc-type',label:'TIPO',type:'select',options:['Colision','Encalladura','Derrame','Averia mecanica','Incendio','Medico','Otro']},{id:'inc-desc',label:'DESCRIPCION DETALLADA',type:'textarea',placeholder:'Que ocurrio, donde, cuando, medidas tomadas...'}]}
+    calado:{title:'Record Reading de Calado',fields:[{id:'calado-vessel',label:'VESSEL',type:'text',placeholder:'Nombre de la embarcacion'},{id:'calado-value',label:'CALADO (METROS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'CALADO MAXIMO (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVACIONES',type:'textarea',placeholder:'Condiciones, ubicacion...'}]},
+    incidente:{title:'Report Incident',fields:[{id:'inc-title',label:'TITULO',type:'text',placeholder:'Descripcion breve del incidente'},{id:'inc-vessel',label:'VESSEL',type:'text',placeholder:'Embarcacion afectada'},{id:'inc-severity',label:'SEVERIDAD',type:'select',options:['Critico','Alto','Medio','Bajo']},{id:'inc-type',label:'TYPE',type:'select',options:['Colision','Encalladura','Derrame','Averia mecanica','Incendio','Medico','Otro']},{id:'inc-desc',label:'DESCRIPCION DETALLADA',type:'textarea',placeholder:'Que ocurrio, donde, cuando, medidas tomadas...'}]}
 };
 var currentModal=null;
 // esc() defined at top of file (line 7)
@@ -599,7 +599,7 @@ function togglePeriod(period){
         el.textContent='$'+val.toLocaleString('en-US');
     });
 }
-var planNames={barcaza:'Por Barge',combo:'Combo Flota',enterprise:'Enterprise',ilimitado:'Ilimitado'};
+var planNames={barcaza:'Per Barge',combo:'Combo Flota',enterprise:'Enterprise',ilimitado:'Unlimited'};
 var planPrices={barcaza:{monthly:149,yearly:119},combo:{monthly:899,yearly:719},enterprise:{monthly:1499,yearly:1199},ilimitado:{monthly:2499,yearly:1999}};
 function selectPlan(plan){
     var price=planPrices[plan][currentPeriod];
@@ -636,7 +636,7 @@ async function loadAdmin(){
     document.getElementById('admin-stats').innerHTML=
         '<div class="admin-stat"><div class="stat-value">'+(companies.count||0)+'</div><div class="stat-label">EMPRESAS</div></div>'+
         '<div class="admin-stat"><div class="stat-value">'+(users.count||0)+'</div><div class="stat-label">USUARIOS</div></div>'+
-        '<div class="admin-stat"><div class="stat-value">'+(vessels.count||0)+'</div><div class="stat-label">EMBARCACIONES</div></div>'+
+        '<div class="admin-stat"><div class="stat-value">'+(vessels.count||0)+'</div><div class="stat-label">VESSELES</div></div>'+
         '<div class="admin-stat"><div class="stat-value">'+(ais.count||0)+'</div><div class="stat-label">AIS ACTIVOS</div></div>';
     // Companies list
     var cr=await sb.from('companies').select('*').order('created_at',{ascending:false}).limit(100);
@@ -654,8 +654,8 @@ async function loadAdmin(){
     document.getElementById('admin-users').innerHTML=uhtml||'<div class="empty-state"><p>Sin usuarios</p></div>';
 }
 function openNewCompanyModal(){
-    document.getElementById('modal-title').textContent='New Empresa';
-    document.getElementById('modal-body').innerHTML='<label>NOMBRE DE EMPRESA</label><input type="text" id="new-company-name" placeholder="Ej: Naviera Guarani"><label>PLAN</label><select id="new-company-plan" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px"><option value="barcaza">Por Barge ($149/mes)</option><option value="combo" selected>Combo Flota ($899/mes)</option><option value="enterprise">Enterprise ($1,499/mes)</option><option value="ilimitado">Ilimitado ($2,499/mes)</option></select><label>MAX EMBARCACIONES</label><input type="number" id="new-company-max" placeholder="10" value="10">';
+    document.getElementById('modal-title').textContent='New Company';
+    document.getElementById('modal-body').innerHTML='<label>NOMBRE DE EMPRESA</label><input type="text" id="new-company-name" placeholder="Ej: Naviera Guarani"><label>PLAN</label><select id="new-company-plan" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px"><option value="barcaza">Per Barge ($149/mes)</option><option value="combo" selected>Combo Flota ($899/mes)</option><option value="enterprise">Enterprise ($1,499/mes)</option><option value="ilimitado">Unlimited ($2,499/mes)</option></select><label>MAX VESSELES</label><input type="number" id="new-company-max" placeholder="10" value="10">';
     document.getElementById('modal-overlay').classList.add('open');
     document.getElementById('modal-submit').textContent='Crear Empresa';
     document.getElementById('modal-submit').style.display='';
@@ -856,9 +856,9 @@ async function loadReportes(){
         var v=results[0];var vj=results[1];var fl=results[2];var lg=results[3];
         var totalFuel=fl.data?fl.data.reduce(function(s,x){return s+(x.liters||0)},0):0;
         document.getElementById('report-stats').innerHTML=
-            '<div class="admin-stat"><div class="stat-value">'+(v.data?v.data.length:0)+'</div><div class="stat-label">EMBARCACIONES</div></div>'+
+            '<div class="admin-stat"><div class="stat-value">'+(v.data?v.data.length:0)+'</div><div class="stat-label">VESSELES</div></div>'+
             '<div class="admin-stat"><div class="stat-value">'+(vj.count||0)+'</div><div class="stat-label">VIAJES TOTALES</div></div>'+
-            '<div class="admin-stat"><div class="stat-value">'+totalFuel.toLocaleString()+'L</div><div class="stat-label">COMBUSTIBLE TOTAL</div></div>'+
+            '<div class="admin-stat"><div class="stat-value">'+totalFuel.toLocaleString()+'L</div><div class="stat-label">FUEL TOTAL</div></div>'+
             '<div class="admin-stat"><div class="stat-value">'+(lg.count||0)+'</div><div class="stat-label">ENTRADAS BITACORA</div></div>';
         // Fleet Status Chart
         if(v.data){
@@ -1103,7 +1103,7 @@ async function runPredictiveMaintenance(){
         var r=await fetch('/api/ai/predict-maintenance',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId})});
         var data=await r.json();
         var preds=data.predictions||[];
-        if(preds.length===0){container.innerHTML='<div style="text-align:center;color:var(--text-secondary);padding:20px;">No se encontraron predicciones.</div>';btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-brain"></i> Analizar';return;}
+        if(preds.length===0){container.innerHTML='<div style="text-align:center;color:var(--text-secondary);padding:20px;">No se encontraron predicciones.</div>';btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-brain"></i> Analyze';return;}
         var html='';
         preds.forEach(function(p){
             var sevColor=p.severity==='critical'?'#ef4444':p.severity==='high'?'#f59e0b':p.severity==='medium'?'#3b82f6':'#10b981';
@@ -1127,7 +1127,7 @@ async function runPredictiveMaintenance(){
     }catch(e){
         container.innerHTML='<div style="color:#ef4444;text-align:center;padding:20px;">Error: '+e.message+'</div>';
     }
-    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-brain"></i> Analizar';
+    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-brain"></i> Analyze';
 }
 
 // ============================================
@@ -1145,7 +1145,7 @@ async function runFuelAnomalies(){
         var r=await fetch('/api/ai/fuel-anomalies',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId})});
         var data=await r.json();
         var anomalies=data.anomalies||[];
-        if(anomalies.length===0){container.innerHTML='<div style="text-align:center;color:var(--text-secondary);padding:20px;">Sin anomalías detectadas.</div>';btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-magnifying-glass-chart"></i> Escanear';return;}
+        if(anomalies.length===0){container.innerHTML='<div style="text-align:center;color:var(--text-secondary);padding:20px;">Sin anomalías detectadas.</div>';btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-magnifying-glass-chart"></i> Scan';return;}
         var html='';
         anomalies.forEach(function(a){
             var sevColor=a.severity==='critical'?'#ef4444':a.severity==='high'?'#f59e0b':a.severity==='medium'?'#3b82f6':'#10b981';
@@ -1165,7 +1165,7 @@ async function runFuelAnomalies(){
     }catch(e){
         container.innerHTML='<div style="color:#ef4444;text-align:center;padding:20px;">Error: '+e.message+'</div>';
     }
-    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-magnifying-glass-chart"></i> Escanear';
+    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-magnifying-glass-chart"></i> Scan';
 }
 
 // ============================================
@@ -1215,7 +1215,7 @@ async function suggestConvoyIA(){
         if(f.popa){html+='<div style="font-size:12px;margin-bottom:4px;">🔵 <strong>Popa:</strong> '+f.popa+'</div>';}
         
         // Fuel estimate
-        if(s.fuel_estimate_liters){html+='<div style="font-size:12px;margin-top:8px;">⛽ Consumo estimado: <strong>'+s.fuel_estimate_liters.toLocaleString()+' lts</strong></div>';}
+        if(s.fuel_estimate_liters){html+='<div style="font-size:12px;margin-top:8px;">⛽ Consumption estimado: <strong>'+s.fuel_estimate_liters.toLocaleString()+' lts</strong></div>';}
         
         // Warnings
         if(s.warnings&&s.warnings.length){
@@ -1232,7 +1232,7 @@ async function suggestConvoyIA(){
     }catch(e){
         container.innerHTML='<div style="color:#ef4444;text-align:center;padding:20px;">Error: '+e.message+'</div>';
     }
-    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-robot"></i> Sugerir';
+    btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-robot"></i> Suggest';
 }
 
 // CSS spinner animation
