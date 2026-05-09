@@ -160,10 +160,10 @@
         <!-- INPUT -->
         <div class="card">
             <div class="card-title">FACTURA A ANALIZAR</div>
-            <textarea id="invoiceText" class="invoice-input" placeholder="Pegá aquí el texto de la factura de flete...&#10;&#10;Ejemplo:&#10;FACTURA N° 0001-00004521&#10;Date: 15/04/2026&#10;Proveedor: Fuels del Litoral S.A.&#10;Concepto: Suministro de combustible — Viaje ASU-ROE&#10;Cantidad: 12.500 litros de Gas Oil Grado 2&#10;Precio unitario: USD 0.85/litro&#10;Subtotal: USD 10,625.00&#10;IVA 21%: USD 2,231.25&#10;TOTAL: USD 12,856.25"></textarea>
+            <textarea id="invoiceText" class="invoice-input" placeholder="Paste the freight invoice text here...&#10;&#10;Example:&#10;INVOICE N° 0001-00004521&#10;Date: 15/04/2026&#10;Supplier: Fuels del Litoral S.A.&#10;Concept: Fuel supply — Trip ASU-ROE&#10;Quantity: 12,500 liters of Grade 2 Diesel&#10;Unit price: USD 0.85/liter&#10;Subtotal: USD 10,625.00&#10;VAT 21%: USD 2,231.25&#10;TOTAL: USD 12,856.25"></textarea>
             <div class="btn-row">
                 <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeInvoice()">
-                    <i class="fas fa-brain"></i> Analyze con IA
+                    <i class="fas fa-brain"></i> Analyze with AI
                 </button>
                 <button class="btn btn-outline" onclick="document.getElementById('invoiceText').value=''; document.querySelector('.result-container').classList.remove('show');">
                     <i class="fas fa-eraser"></i> Limpiar

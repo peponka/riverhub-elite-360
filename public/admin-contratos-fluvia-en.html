@@ -135,7 +135,7 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 <!-- STATS -->
 <div class="stats-row">
 <div class="stat-card"><div class="stat-icon teal"><i class="fas fa-file-signature"></i></div><div class="stat-value">18</div><div class="stat-label">Contratos activos</div></div>
-<div class="stat-card"><div class="stat-icon blue"><i class="fas fa-ship"></i></div><div class="stat-value">284K</div><div class="stat-label">Tons comprometidas</div></div>
+<div class="stat-card"><div class="stat-icon blue"><i class="fas fa-ship"></i></div><div class="stat-value">284K</div><div class="stat-label">Committed Tons</div></div>
 <div class="stat-card"><div class="stat-icon green"><i class="fas fa-dollar-sign"></i></div><div class="stat-value">$1.2M</div><div class="stat-label">Revenue mensual</div></div>
 <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-clock"></i></div><div class="stat-value">4</div><div class="stat-label">Por expirar (30d)</div></div>
 </div>
@@ -146,11 +146,11 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 <span class="card-title">CONTRATOS VIGENTES</span>
 <div style="display:flex;gap:8px">
 <button class="btn btn-outline btn-sm"><i class="fas fa-filter"></i> Filter</button>
-<button class="btn btn-primary btn-sm" onclick="document.getElementById('newContractModal').classList.add('show')"><i class="fas fa-plus"></i> New Contrato</button>
+<button class="btn btn-primary btn-sm" onclick="document.getElementById('newContractModal').classList.add('show')"><i class="fas fa-plus"></i> New Contract</button>
 </div>
 </div>
 <table class="ct-table">
-<thead><tr><th>Cliente</th><th>Ruta</th><th>Producto</th><th>Volumen</th><th>Tarifa</th><th>Uso</th><th>Vigencia</th><th>Status</th></tr></thead>
+<thead><tr><th>Client</th><th>Route</th><th>Product</th><th>Volume</th><th>Rate</th><th>Usage</th><th>Validity</th><th>Status</th></tr></thead>
 <tbody>
 <tr>
 <td><strong>Cargill S.A.C.I.</strong><div class="contract-detail"><span>COA-2026-001</span><span>Yearly</span></div></td>
@@ -249,7 +249,7 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 </div>
 <div class="alert-row">
 <div class="alert-icon warn"><i class="fas fa-bell"></i></div>
-<div class="alert-text"><strong>Bunge COA-2026-012</strong> — Volumen 100% utilizado. Cliente solicitó ampliación spot.</div>
+<div class="alert-text"><strong>Bunge COA-2026-012</strong> — Volume 100% used. Client requested spot expansion.</div>
 <div class="alert-time">Hace 2 días</div>
 </div>
 <div class="alert-row">
@@ -259,12 +259,12 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 </div>
 <div class="alert-row">
 <div class="alert-icon warn"><i class="fas fa-chart-line"></i></div>
-<div class="alert-text"><strong>ADM Paraguay</strong> — Uso al 89%. Proyección supera volumen comprometido en 3 semanas.</div>
+<div class="alert-text"><strong>ADM Paraguay</strong> — Usage at 89%. Projection exceeds committed volume in 3 weeks.</div>
 <div class="alert-time">Hoy</div>
 </div>
 <div class="alert-row">
 <div class="alert-icon info"><i class="fas fa-file-circle-plus"></i></div>
-<div class="alert-text"><strong>Cofco International</strong> — New solicitud de cotización recibida. Ruta SNI→ROE, 40K ton.</div>
+<div class="alert-text"><strong>Cofco International</strong> — New quote request received. Route SNI→ROE, 40K ton.</div>
 <div class="alert-time">Ayer</div>
 </div>
 </div>
@@ -275,20 +275,20 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 <!-- NEW CONTRACT MODAL -->
 <div class="modal-overlay" id="newContractModal">
 <div class="modal">
-<h2>New Contrato de Flete</h2>
-<div class="form-row"><div class="form-group"><label>Cliente</label><select><option>Select cliente...</option><option>Cargill S.A.C.I.</option><option>ADM Paraguay</option><option>Bunge Argentina</option><option>Louis Dreyfus</option><option>Cofco International</option></select></div>
-<div class="form-group"><label>Type</label><select><option>COA (Yearly)</option><option>Semestral</option><option>Trimestral</option><option>Spot</option><option>Time Charter</option></select></div></div>
+<h2>New Freight Contract</h2>
+<div class="form-row"><div class="form-group"><label>Client</label><select><option>Select client...</option><option>Cargill S.A.C.I.</option><option>ADM Paraguay</option><option>Bunge Argentina</option><option>Louis Dreyfus</option><option>Cofco International</option></select></div>
+<div class="form-group"><label>Type</label><select><option>COA (Yearly)</option><option>Semi-annual</option><option>Quarterly</option><option>Spot</option><option>Time Charter</option></select></div></div>
 <div class="form-row"><div class="form-group"><label>Origin</label><select><option>ASU — Asunción</option><option>VCO — Villa Constitución</option><option>CDB — Corumbá</option><option>SNI — San Nicolás</option></select></div>
 <div class="form-group"><label>Destination</label><select><option>ROE — Rosario</option><option>SLO — San Lorenzo</option><option>BHI — Bahía Blanca</option><option>ASU — Asunción</option></select></div></div>
-<div class="form-row"><div class="form-group"><label>Producto</label><input type="text" placeholder="Ej: Soja, Maíz, Gas Oil"></div>
-<div class="form-group"><label>Volumen comprometido</label><input type="text" placeholder="Ej: 48,000 ton"></div></div>
-<div class="form-row"><div class="form-group"><label>Tarifa</label><input type="text" placeholder="Ej: $18.50/ton"></div>
-<div class="form-group"><label>Vigencia desde</label><input type="date"></div></div>
-<div class="form-row"><div class="form-group"><label>Vigencia hasta</label><input type="date"></div>
-<div class="form-group"><label>Demurrage</label><input type="text" placeholder="Ej: $2,500/día"></div></div>
+<div class="form-row"><div class="form-group"><label>Product</label><input type="text" placeholder="Ex: Soy, Corn, Diesel"></div>
+<div class="form-group"><label>Committed volume</label><input type="text" placeholder="Ex: 48,000 ton"></div></div>
+<div class="form-row"><div class="form-group"><label>Rate</label><input type="text" placeholder="Ex: $18.50/ton"></div>
+<div class="form-group"><label>Valid from</label><input type="date"></div></div>
+<div class="form-row"><div class="form-group"><label>Valid until</label><input type="date"></div>
+<div class="form-group"><label>Demurrage</label><input type="text" placeholder="Ex: $2,500/day"></div></div>
 <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">
 <button class="btn btn-outline" onclick="document.getElementById('newContractModal').classList.remove('show')">Cancel</button>
-<button class="btn btn-primary">Crear Contrato</button>
+<button class="btn btn-primary">Create Contract</button>
 </div>
 </div>
 </div>

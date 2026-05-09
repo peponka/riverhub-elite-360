@@ -460,46 +460,44 @@
                     <input type="text" id="login-user" class="input-login-premium" placeholder="Email">
                 </div>
                 <div class="input-login-group">
-                    <input type="password" id="login-pass" class="input-login-premium" placeholder="Contraseña">
+                    <input type="password" id="login-pass" class="input-login-premium" placeholder="Password">
                 </div>
                 <!-- Forgot Password Link inside Login Form -->
                 <div style="text-align: right; margin-bottom: 10px;">
                     <a href="#" onclick="AuthModule.showForgotPassword()"
-                        style="color:var(--md-sys-color-on-surface-variant); font-size:0.8rem; text-decoration:none;">¿Olvidaste
-                        tu contraseña?</a>
+                        style="color:var(--md-sys-color-on-surface-variant); font-size:0.8rem; text-decoration:none;">Forgot your password?</a>
                 </div>
 
                 <button id="btn-login-action" class="btn-login ripple-effect"
-                    onclick="AuthModule.attemptLogin()">INICIAR
-                    SISTEMA</button>
+                    onclick="AuthModule.attemptLogin()">LOG IN</button>
 
                 <button onclick="AuthModule.bypassLogin()"
                     style="margin-top:15px; background:rgba(255,255,255,0.05); border:1px solid var(--md-sys-color-outline); color:var(--md-sys-color-on-surface-variant); width:100%; padding:10px; border-radius:8px; cursor:pointer;">
-                    <i class="fas fa-plane-slash"></i> MODO OFFLINE (SIMULADOR)
+                    <i class="fas fa-plane-slash"></i> OFFLINE MODE (SIMULATOR)
                 </button>
             </div>
 
             <!-- REGISTER FORM (Hidden by default) -->
             <div id="form-register" class="auth-form-container" style="display:none;">
                 <div class="input-login-group">
-                    <input type="text" id="reg-name" class="input-login-premium" placeholder="Nombre Completo">
+                    <input type="text" id="reg-name" class="input-login-premium" placeholder="Full Name">
                 </div>
                 <div class="input-login-group">
-                    <input type="text" id="reg-company" class="input-login-premium" placeholder="Empresa / Buque">
+                    <input type="text" id="reg-company" class="input-login-premium" placeholder="Company / Vessel">
                 </div>
                 <div class="input-login-group">
-                    <input type="text" id="reg-role" class="input-login-premium" placeholder="Cargo / Rol">
+                    <input type="text" id="reg-role" class="input-login-premium" placeholder="Position / Role">
                 </div>
                 <div class="input-login-group">
-                    <input type="tel" id="reg-phone" class="input-login-premium" placeholder="Teléfono / WhatsApp">
+                    <input type="tel" id="reg-phone" class="input-login-premium" placeholder="Phone / WhatsApp">
                 </div>
                 <div class="input-login-group">
-                    <input type="email" id="reg-email" class="input-login-premium" placeholder="Email Corporativo">
+                    <input type="email" id="reg-email" class="input-login-premium" placeholder="Corporate Email">
                 </div>
                 <div class="input-login-group">
-                    <input type="password" id="reg-pass" class="input-login-premium" placeholder="Contraseña">
+                    <input type="password" id="reg-pass" class="input-login-premium" placeholder="Password">
                 </div>
-                <button class="btn-login ripple-effect" onclick="AuthModule.submitRegistration()">REGISTRARME</button>
+                <button class="btn-login ripple-effect" onclick="AuthModule.submitRegistration()">REGISTER</button>
             </div>
 
             <div class="login-footer">
@@ -513,24 +511,23 @@
             <div class="modal-content"
                 style="background:var(--md-sys-color-surface); border:1px solid var(--md-sys-color-outline); max-width:400px;">
                 <div class="modal-header">
-                    <h3>RECUPERAR ACCESO</h3>
+                    <h3>RECOVER ACCESS</h3>
                     <button class="close-modal"
                         onclick="document.getElementById('modal-forgot-pass').style.display='none'"><i
                             class="fas fa-times"></i></button>
                 </div>
                 <div class="modal-body">
                     <p style="color:var(--md-sys-color-on-surface-variant); margin-bottom:15px; font-size:0.9rem;">
-                        Ingresa tu email corporativo. Te
-                        enviaremos un enlace seguro de recuperación.</p>
+                        Enter your corporate email. We will send you a secure recovery link.</p>
                     <div class="input-group">
-                        <label>Email Registrado</label>
-                        <input type="email" id="forgot-email" class="input-dark" placeholder="nombre@empresa.com">
+                        <label>Registered Email</label>
+                        <input type="email" id="forgot-email" class="input-dark" placeholder="name@company.com">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn-secondary"
-                        onclick="document.getElementById('modal-forgot-pass').style.display='none'">CANCELAR</button>
-                    <button class="btn-primary" onclick="AuthModule.sendPasswordReset()">ENVIAR ENLACE</button>
+                        onclick="document.getElementById('modal-forgot-pass').style.display='none'">CANCEL</button>
+                    <button class="btn-primary" onclick="AuthModule.sendPasswordReset()">SEND LINK</button>
                 </div>
             </div>
         </div>
@@ -541,25 +538,23 @@
             <div class="modal-content"
                 style="background:var(--md-sys-color-surface); border:1px solid var(--neon-green); max-width:400px; box-shadow: 0 0 50px rgba(16,185,129,0.2);">
                 <div class="modal-header">
-                    <h3 style="color:var(--neon-green)"><i class="fas fa-shield-alt"></i> SEGURIDAD</h3>
+                    <h3 style="color:var(--neon-green)"><i class="fas fa-shield-alt"></i> SECURITY</h3>
                 </div>
                 <div class="modal-body">
                     <p style="color:var(--md-sys-color-on-surface); margin-bottom:15px; font-weight:bold;">
-                        Restablecimiento de Contraseña</p>
-                    <p style="color:var(--md-sys-color-on-surface-variant); margin-bottom:15px; font-size:0.9rem;">Has
-                        ingresado mediante un enlace
-                        seguro. Por favor define tu nueva contraseña para continuar.</p>
+                        Password Reset</p>
+                    <p style="color:var(--md-sys-color-on-surface-variant); margin-bottom:15px; font-size:0.9rem;">You have logged in via a secure link. Please set your new password to continue.</p>
 
                     <div class="input-group">
-                        <label>New Contraseña</label>
+                        <label>New Password</label>
                         <input type="password" id="new-password-final" class="input-dark"
-                            placeholder="Mínimo 6 caracteres">
+                            placeholder="Minimum 6 characters">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn-primary"
                         style="background:var(--neon-green); color:#000; font-weight:bold; width:100%"
-                        onclick="AuthModule.confirmPasswordChange()">ACTUALIZAR Y ENTRAR</button>
+                        onclick="AuthModule.confirmPasswordChange()">UPDATE AND ENTER</button>
                 </div>
             </div>
         </div>
@@ -598,43 +593,43 @@
                     this.classList.add('active');
                     
                     // 4. Update Title
-                    document.getElementById('page-title').innerText = 'Gestión de Flota (Actives)';
-                    
+                    document.getElementById('page-title').innerText = 'Fleet Management (Assets)';
+
                     return false;
                 ">
-                    <i class="fas fa-ship"></i> Gestión de Flota (Actives)
+                    <i class="fas fa-ship"></i> Fleet Management (Assets)
                 </a>
-                <a href="#" id="nav-tripulacion" data-tooltip="Gestión de personal y certificados de seguridad"><i class="fas fa-user-friends"></i> Tripulación & Safety</a>
+                <a href="#" id="nav-tripulacion" data-tooltip="Personnel and safety certificate management"><i class="fas fa-user-friends"></i> Crew & Safety</a>
 
-                <p class="menu-label">OPERATIONAL DIARIA</p>
-                <a href="#" id="nav-convoys" style="color: #1e3a5f; font-weight: bold;" data-tooltip="Creación y gestión de formaciones de barcazas"><i class="fas fa-th"></i> Convoy Builder</a>
-                <a href="#" id="nav-viajes" data-tooltip="Monitoreo y despacho de viajes activos"><i class="fas fa-route"></i> Gestión de Viajes</a>
-                <a href="#" id="nav-comunicaciones" data-tooltip="Mensajería y enlaces satelitales"><i class="fas fa-satellite-dish"></i> Communications</a>
-                <a href="#" id="nav-bitacora" data-tooltip="Registro oficial de novedades en base de datos"><i class="fas fa-book"></i> Bitácora Digital</a>
+                <p class="menu-label">DAILY OPERATIONS</p>
+                <a href="#" id="nav-convoys" style="color: #1e3a5f; font-weight: bold;" data-tooltip="Creation and management of barge formations"><i class="fas fa-th"></i> Convoy Builder</a>
+                <a href="#" id="nav-viajes" data-tooltip="Monitoring and dispatch of active trips"><i class="fas fa-route"></i> Trip Management</a>
+                <a href="#" id="nav-comunicaciones" data-tooltip="Messaging and satellite links"><i class="fas fa-satellite-dish"></i> Communications</a>
+                <a href="#" id="nav-bitacora" data-tooltip="Official event log in database"><i class="fas fa-book"></i> Digital Logbook</a>
 
-                <p class="menu-label">SOPORTE TÉCNICO</p>
-                <a href="#" id="nav-combustible" data-tooltip="Control de sondajes y consumos Búnker"><i class="fas fa-gas-pump"></i> Fuel</a>
-                <a href="#" id="nav-mantenimiento" data-tooltip="Órdenes de trabajo preventivas y correctivas"><i class="fas fa-wrench"></i> Maintenance</a>
-                <a href="#" id="nav-panol" data-tooltip="Gestión de inventario y repuestos a bordo"><i class="fas fa-box pr-2"></i> Pañol Digital</a>
-                <a href="#" id="nav-calado" data-tooltip="Navegabilidad y márgenes de seguridad"><i class="fas fa-ruler-vertical"></i> Monitoreo de Calado</a>
-                <a href="#" id="nav-incidentes" data-tooltip="Module SMS (Safety Management System)"><i class="fas fa-user-shield"></i> Incidents & SMS</a>
+                <p class="menu-label">TECHNICAL SUPPORT</p>
+                <a href="#" id="nav-combustible" data-tooltip="Tank soundings and bunker consumption control"><i class="fas fa-gas-pump"></i> Fuel</a>
+                <a href="#" id="nav-mantenimiento" data-tooltip="Preventive and corrective work orders"><i class="fas fa-wrench"></i> Maintenance</a>
+                <a href="#" id="nav-panol" data-tooltip="Inventory and spare parts management on board"><i class="fas fa-box pr-2"></i> Digital Store</a>
+                <a href="#" id="nav-calado" data-tooltip="Navigability and safety margins"><i class="fas fa-ruler-vertical"></i> Draft Monitoring</a>
+                <a href="#" id="nav-incidentes" data-tooltip="SMS Module (Safety Management System)"><i class="fas fa-user-shield"></i> Incidents & SMS</a>
 
-                <p class="menu-label">COMERCIAL & CLIENTES</p>
-                <a href="#" id="nav-commercial" data-tooltip="Contratos, Tarifas y Operaciones SPOT"><i class="fas fa-file-contract"></i> Gestión Comercial</a>
-                <a href="#" id="nav-tracking" data-tooltip="Plataforma de visualización para cliente final"><i class="fas fa-globe-americas"></i> Tracking (Clientes)</a>
-                <a href="#" id="nav-cotizador" data-tooltip="Avaluaciones dinámicas con IA Gemini"><i class="fas fa-robot"></i> Cotizador IA</a>
-                <a href="#" id="nav-docs" data-tooltip="Repositorio de documentos legales y certificados"><i class="fas fa-file-contract"></i> Documentación</a>
+                <p class="menu-label">COMMERCIAL & CLIENTS</p>
+                <a href="#" id="nav-commercial" data-tooltip="Contracts, Rates and SPOT Operations"><i class="fas fa-file-contract"></i> Commercial Management</a>
+                <a href="#" id="nav-tracking" data-tooltip="Visualization platform for end clients"><i class="fas fa-globe-americas"></i> Tracking (Clients)</a>
+                <a href="#" id="nav-cotizador" data-tooltip="Dynamic valuations with Gemini AI"><i class="fas fa-robot"></i> AI Quote Tool</a>
+                <a href="#" id="nav-docs" data-tooltip="Repository of legal documents and certificates"><i class="fas fa-file-contract"></i> Documentation</a>
 
-                <p class="menu-label">REPORTES</p>
-                <a href="#" id="nav-reportes" data-tooltip="Exportación avanzada PDF/CSV"><i class="fas fa-chart-bar"></i> Centro de Reportes</a>
-                <a href="#" id="nav-hidrologia" data-tooltip="Análisis de cuencas hídricas"><i class="fas fa-water"></i> Hidrología & Clima</a>
+                <p class="menu-label">REPORTS</p>
+                <a href="#" id="nav-reportes" data-tooltip="Advanced PDF/CSV export"><i class="fas fa-chart-bar"></i> Reports Center</a>
+                <a href="#" id="nav-hidrologia" data-tooltip="Watershed analysis"><i class="fas fa-water"></i> Hydrology & Weather</a>
 
-                <p class="menu-label">SISTEMA</p>
-                <a href="#" id="nav-integraciones" data-tooltip="N8N, Servicios externos y Endpoints APIs"><i class="fas fa-network-wired"></i> Integraciones API</a>
-                <a href="#" id="nav-auditoria" data-tooltip="Bitácoras de servidor y consultas Base de Datos"><i class="fas fa-stethoscope"></i> Auditoría & DB</a>
-                <a href="#" id="nav-loadmaster" data-tooltip="Cálculos de estiba y estabilidad"><i class="fas fa-balance-scale"></i> Load Master <span class="badge-vhf" style="background:#f59e0b; color:#000;">BETA</span></a>
-                <a href="#" id="nav-admin-console" data-tooltip="Panel Maestro de Empresa (Administradores)" style="color: #3b82f6;"><i class="fas fa-building"></i> Mi Consola</a>
-                <a href="#" id="nav-billing" data-tooltip="Suscripción, Addons y Pagos" style="color: #fbbf24;"><i class="fas fa-crown"></i> Suscripción Premium</a>
+                <p class="menu-label">SYSTEM</p>
+                <a href="#" id="nav-integraciones" data-tooltip="N8N, External services and API Endpoints"><i class="fas fa-network-wired"></i> API Integrations</a>
+                <a href="#" id="nav-auditoria" data-tooltip="Server logs and database queries"><i class="fas fa-stethoscope"></i> Audit & DB</a>
+                <a href="#" id="nav-loadmaster" data-tooltip="Stowage and stability calculations"><i class="fas fa-balance-scale"></i> Load Master <span class="badge-vhf" style="background:#f59e0b; color:#000;">BETA</span></a>
+                <a href="#" id="nav-admin-console" data-tooltip="Company Master Panel (Administrators)" style="color: #3b82f6;"><i class="fas fa-building"></i> My Console</a>
+                <a href="#" id="nav-billing" data-tooltip="Subscription, Addons and Payments" style="color: #fbbf24;"><i class="fas fa-crown"></i> Premium Subscription</a>
 
                 <!-- SUPER ADMIN LINK (HIDDEN - only visible with ?sa=1) -->
                 <style>#nav-backoffice { display:none !important; } #nav-backoffice.sa-unlocked { display:flex !important; }</style>
@@ -651,14 +646,14 @@
             <div id="user-menu" class="user-menu-popover">
                 <div id="menu-item-admin" class="user-menu-item"
                     onclick="document.querySelectorAll('.view-section').forEach(v=>v.style.display='none'); const va=document.getElementById('view-admin'); if(va) va.style.display='block'; if(window.AdminCliente) AdminCliente.init(); document.getElementById('page-title').textContent='Mi Consola'; document.getElementById('user-menu').style.display='none';">
-                    <i class="fas fa-building"></i> Mi Consola
+                    <i class="fas fa-building"></i> My Console
                 </div>
                 <div class="user-menu-item danger" onclick="AuthModule.logout()">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    <i class="fas fa-sign-out-alt"></i> Log Out
                 </div>
             </div>
 
-            <div class="user-profile" onclick="AuthModule.toggleUserMenu()" style="cursor: pointer;" data-tooltip="Opciones de tu cuenta">
+            <div class="user-profile" onclick="AuthModule.toggleUserMenu()" style="cursor: pointer;" data-tooltip="Account options">
                 <div class="avatar-circle">CM</div>
                 <div class="user-info">
                     <strong>Carlos Martínez</strong>
@@ -669,10 +664,10 @@
 
         <main class="main-content">
             <header class="top-bar">
-                <h1 id="page-title">Bienvenido</h1>
+                <h1 id="page-title">Welcome</h1>
                 <div class="top-actions">
-                    <button class="status-badge">SISTEMA ONLINE</button>
-                    <div class="btn-share-trigger" onclick="ShareModule.open()" data-tooltip="Compartir Reporte"><i class="fas fa-share-alt"></i></div>
+                    <button class="status-badge">SYSTEM ONLINE</button>
+                    <div class="btn-share-trigger" onclick="ShareModule.open()" data-tooltip="Share Report"><i class="fas fa-share-alt"></i></div>
 
                     <div style="position:relative; cursor:pointer;" onclick="NotificationCenter.toggle()" data-tooltip="Notifications">
                         <i class="fas fa-bell btn-icon" id="btn-notifications-trigger"></i>
@@ -779,7 +774,7 @@
                         <div class="dash-header">
                             <div class="welcome-msg">
                                 <h2 id="dash-welcome-text">FluviaFleet Monitor</h2>
-                                <span class="welcome-sub">CENTRO DE CONTROL UNIFICADO • SERVICE LEVEL: ÓPTIMO</span>
+                                <span class="welcome-sub">UNIFIED CONTROL CENTER • SERVICE LEVEL: OPTIMAL</span>
                             </div>
                             <div class="system-status">
                                 <div class="pulsing-dot"></div>
@@ -982,7 +977,7 @@
                                     <i class="fas fa-crosshairs"></i> SEGUIR
                                 </button>
                                 <button class="bs-btn bs-btn-secondary"
-                                    onclick="RiverToast.info('Consulte detalles completos del buque en el Dashboard o el module de Tracking.', 'Información del Buque')">
+                                    onclick="RiverToast.info('Consulte detalles completos del buque en el Dashboard o el module de Tracking.', 'Vessel Information')">
                                     <i class="fas fa-info-circle"></i> + INFO
                                 </button>
                             </div>
@@ -1008,11 +1003,11 @@
                             <div class="input-row">
                                 <div class="input-group">
                                     <label>ORIGEN</label>
-                                    <input type="text" id="cot-origin" class="input-dark" value="Asunción (PY)" placeholder="Puerto de Origin">
+                                    <input type="text" id="cot-origin" class="input-dark" value="Asunción (PY)" placeholder="Port of Origin">
                                 </div>
                                 <div class="input-group">
                                     <label>DESTINO</label>
-                                    <input type="text" id="cot-dest" class="input-dark" value="Rosario (ARG)" placeholder="Puerto de Destination">
+                                    <input type="text" id="cot-dest" class="input-dark" value="Rosario (ARG)" placeholder="Port of Destination">
                                 </div>
                             </div>
                             <div class="input-group">
@@ -1028,7 +1023,7 @@
                                     <input type="range" id="rio-slider" min="0" max="10" step="0.1" value="3.45">
                                     <div style="display:flex; justify-content:space-between; font-size:10px; color:#445; margin-top:5px;">
                                         <span>NIVEL CRÍTICO</span>
-                                        <span>NIVEL ÓPTIMO</span>
+                                        <span>OPTIMAL LEVEL</span>
                                     </div>
                                 </div>
                             </div>
@@ -1085,7 +1080,7 @@
                             <!-- ACTIONS FOOTER -->
                             <div style="display:flex; gap:10px; margin-top:20px;">
                                 <button class="btn-doc ripple-effect" style="flex:1; background:var(--surface); border:1px solid #334; color:#1A1A1A; padding:12px;"
-                                    onclick="CotizadorModule.descargarPDF()" data-tooltip="Export Informe Comercial en PDF con Membrete">
+                                    onclick="CotizadorModule.descargarPDF()" data-tooltip="Export Commercial Report in PDF with Letterhead">
                                     <i class="fas fa-file-pdf" style="color:#ef4444;"></i> DESCARGAR PDF FORMAL
                                 </button>
                                 <button class="btn-doc ripple-effect"
@@ -1217,7 +1212,7 @@
                             </div>
                             <div class="chart-box box-glass">
                                 <div class="chart-header">
-                                    <h3><i class="fas fa-ship" style="color:#3b82f6;"></i> DISPONIBILIDAD OPERATIONAL
+                                    <h3><i class="fas fa-ship" style="color:#3b82f6;"></i> OPERATIONAL AVAILABILITY
                                     </h3>
                                 </div>
                                 <div class="chart-canvas-wrapper">
@@ -1265,7 +1260,7 @@
                         <div class="canvas-legend">
                             <span class="legend-item"><i class="fas fa-arrow-up"></i> PROA (Adelante)</span>
                             <span class="legend-divider">|</span>
-                            <span class="legend-item"><i class="fas fa-arrow-down"></i> POPA (Atrás - Tugboat)</span>
+                            <span class="legend-item"><i class="fas fa-arrow-down"></i> STERN (Rear - Tugboat)</span>
                         </div>
                     </div>
                 </div>
@@ -1338,7 +1333,7 @@
                             <div class="progress-bar-thin">
                                 <div class="bar-fill" style="width: 65%;"></div>
                             </div>
-                            <div class="cargo-info"><span>STATUS DE CARGA</span><span class="cargo-val">15.400
+                            <div class="cargo-info"><span>CARGO STATUS</span><span class="cargo-val">15.400
                                     TN</span></div>
                             <div class="card-actions-trip"><button class="btn-master"><i class="fas fa-th"></i>
                                     MAESTRO DE CARGA</button></div>
@@ -1358,7 +1353,7 @@
                             <div class="progress-bar-thin">
                                 <div class="bar-fill" style="width: 30%;"></div>
                             </div>
-                            <div class="cargo-info"><span>STATUS DE CARGA</span><span class="cargo-val">22.000
+                            <div class="cargo-info"><span>CARGO STATUS</span><span class="cargo-val">22.000
                                     TN</span></div>
                             <div class="card-actions-trip"><button class="btn-master"><i class="fas fa-th"></i>
                                     MAESTRO DE CARGA</button></div>
@@ -1498,7 +1493,7 @@
                     <!-- TIMELINE FEED -->
                     <div class="timeline-wrapper">
                         <div class="timeline-header">
-                            <h4><i class="fas fa-history" style="color:#10b981;"></i> LINEA DE TIEMPO OPERATIONAL</h4>
+                            <h4><i class="fas fa-history" style="color:#10b981;"></i> OPERATIONAL TIMELINE</h4>
                             <div style="font-size:0.8rem; color:#64748b;">MOSTRANDO ÚLTIMOS 24H</div>
                         </div>
                         <div id="bitacora-list" class="timeline-feed">
@@ -1581,7 +1576,7 @@
                             </div>
                         </div>
                         <div class="transceiver-status">
-                            <span class="ts-label">STATUS DEL TRANSCEPTOR</span>
+                            <span class="ts-label">TRANSCEIVER STATUS</span>
                             <div class="power-bar-group">
                                 <span>TX POWER: HIGH</span>
                                 <div class="power-bar">
@@ -1784,7 +1779,7 @@
                 <div class="panol-container">
                     <div class="panol-header">
                         <div class="title-group-cyan">
-                            <h2><i class="fas fa-boxes icon-box-cyan"></i> INTELLIGENCE DE PAÑOL</h2>
+                            <h2><i class="fas fa-boxes icon-box-cyan"></i> STORE INTELLIGENCE</h2>
                             <span>MÓDULO LOG • GESTIÓN TÉCNICA DE REPUESTOS</span>
                         </div>
                         <button class="btn-neon-solid-cyan" id="btn-new-product"><i class="fas fa-cart-plus"></i>
@@ -1795,7 +1790,7 @@
                         <!-- Left Col -->
                         <div class="panol-metrics-col">
                             <div class="metric-card-dark">
-                                <div class="metric-title">STATUS CRÍTICO</div>
+                                <div class="metric-title">CRITICAL STATUS</div>
                                 <div class="progress-label-row">
                                     <span>STOCK CRÍTICO</span>
                                     <span style="color:#ff4444;">15%</span>
@@ -1938,7 +1933,7 @@
                                     <!-- Icon removed to match user design if needed, keeping h3 -->
                                     <h3 id="shipName">TB PARAGUAY 01</h3>
                                 </div>
-                                <p class="tank-sub">STATUS DE TANQUES EN TIEMPO REAL</p>
+                                <p class="tank-sub">REAL-TIME TANK STATUS</p>
                             </div>
 
                             <div class="tank-visual-container">
@@ -2268,7 +2263,7 @@
                                     style="flex: 1; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 6px; border: 0.5px solid #E5E5E5;">
                                     <div
                                         style="color: #667; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px;">
-                                        STATUS DEL SERVICIO</div>
+                                        SERVICE STATUS</div>
                                     <div style="color: #10b981; font-weight: bold;"><i class="fas fa-circle"
                                             style="font-size: 8px;"></i> OPERATIVO</div>
                                 </div>
@@ -2377,7 +2372,7 @@
                                 style="background:rgba(255,255,255,0.05); padding:15px; border-radius:8px;">
                                 <h3
                                     style="font-size:0.8rem; color:#1e3a5f; margin-bottom:10px; text-transform:uppercase;">
-                                    Asignar Carga a Barge</h3>
+                                    Assign Cargo to Barge</h3>
                                 <div
                                     style="display:grid; grid-template-columns: 2fr 1.5fr 1fr auto; gap:10px; align-items:end;">
                                     <div style="display:flex; flex-direction:column;">
@@ -2899,7 +2894,7 @@
             <div id="modal-despacho" class="modal-overlay" style="display:none;">
                 <div class="modal-card">
                     <div class="modal-header">
-                        <h3><i class="fas fa-route"></i> New Orden de Despacho</h3><button class="btn-close-modal"><i
+                        <h3><i class="fas fa-route"></i> New Dispatch Order</h3><button class="btn-close-modal"><i
                                 class="fas fa-times"></i></button>
                     </div>
                     <div class="wizard-steps">
@@ -2921,7 +2916,7 @@
             <div id="modal-mantenimiento" class="modal-overlay" style="display:none;">
                 <div class="modal-card">
                     <div class="modal-header">
-                        <h3><i class="fas fa-wrench"></i> New Plan Técnico</h3><button id="btn-close-mnt"
+                        <h3><i class="fas fa-wrench"></i> New Technical Plan</h3><button id="btn-close-mnt"
                             class="btn-close-modal"><i class="fas fa-times"></i></button>
                     </div>
                     <div class="modal-body">
@@ -3160,10 +3155,10 @@
                                     oninput="LoadMasterModule.updateInput('hold3', this.value)">
                             </div>
 
-                            <div class="lm-section-title" style="margin-top:20px;">VARIABLES OPERATIONALS</div>
+                            <div class="lm-section-title" style="margin-top:20px;">OPERATIONAL VARIABLES</div>
 
                             <div class="lm-input-group">
-                                <label>TANQUES FUEL (%)</label>
+                                <label>FUEL TANKS (%)</label>
                                 <input type="range" class="lm-input" min="0" max="100" value="50"
                                     oninput="document.getElementById('fuel-val-lm').innerText=this.value+'%'">
                                 <div style="text-align:right; font-size:0.8rem; color:#f59e0b;" id="fuel-val-lm">50%
@@ -3299,7 +3294,7 @@
                         <div class="input-group-modal">
                             <label>BUQUE DE DESTINO</label>
                             <select id="crew-input-vessel" class="modal-input">
-                                <option value="">Select buque...</option>
+                                <option value="">Select vessel...</option>
                                 <option value="demo-1">TB PARAGUAY 01</option>
                                 <option value="demo-2">R/M HERCULES</option>
                                 <option value="demo-3">B/M TITAN</option>
@@ -3374,7 +3369,7 @@
     <div id="modal-bunkering" class="modal-overlay" style="display:none;">
         <div class="modal-card">
             <div class="modal-header">
-                <h3><i class="fas fa-gas-pump"></i> NUEVA CARGA DE FUEL</h3>
+                <h3><i class="fas fa-gas-pump"></i> NEW FUEL LOADING</h3>
                 <button id="btn-close-bunker" class="btn-close-modal"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
@@ -3384,10 +3379,10 @@
                         <input type="number" id="bunker-amount" class="modal-input" placeholder="Ej: 5000">
                     </div>
                     <div class="input-group-modal">
-                        <label>TYPE DE OPERACIÓN</label>
+                        <label>OPERATION TYPE</label>
                         <select class="modal-input" id="bunker-type">
                             <option value="Carga">Carga (Bunkering)</option>
-                            <option value="Consumption">Ajuste / Consumption</option>
+                            <option value="Consumption">Adjustment / Consumption</option>
                         </select>
                     </div>
                 </div>
@@ -3568,7 +3563,7 @@
                         class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
-                <p class="step-desc" style="color:#889;">AUDITORÍA DE FUEL</p>
+                <p class="step-desc" style="color:#889;">FUEL AUDIT</p>
                 <br>
                 <div class="input-group-modal">
                     <label>EMBARCACIÓN RECEPTORA</label>
@@ -3630,10 +3625,10 @@
                 </div>
                 <div class="input-row">
                     <div class="input-group-modal">
-                        <label>TYPE DE CARGA</label>
+                        <label>CARGO TYPE</label>
                         <select id="new-trip-cargo" class="modal-input">
                             <option value="Granel">Granel (Soja/Maíz)</option>
-                            <option value="Fuel">Fuel / Líquidos</option>
+                            <option value="Fuel">Fuel / Liquids</option>
                             <option value="Contenedores">Contenedores</option>
                             <option value="Mineral">Mineral de Hierro</option>
                             <option value="Lastre">En Lastre (Vacío)</option>
@@ -3960,7 +3955,7 @@
 
         <!-- M3 FAB - FLOATING ACTION BUTTON (Solo visible en móvil) -->
         <button class="fab-fleet" onclick="document.getElementById('modal-add-asset').style.display='flex'"
-            aria-label="Add activo">
+            aria-label="Add asset">
             <i class="fas fa-plus"></i>
         </button>
 
@@ -3980,9 +3975,9 @@
                 <div>
                     <h1
                         style="margin:0; font-size:1.5rem; font-weight:600; color:#1A1A1A; font-family:'Roboto',sans-serif; line-height:1.2;">
-                        Gestión de Flota</h1>
-                    <span style="font-size:0.75rem; color:#94a3b8; font-weight:500; letter-spacing:0.5px;">Actives
-                        registrados</span>
+                        Fleet Management</h1>
+                    <span style="font-size:0.75rem; color:#94a3b8; font-weight:500; letter-spacing:0.5px;">Assets
+                        registered</span>
                 </div>
 
                 <!-- Desktop Button - Hidden on mobile via CSS -->
@@ -3990,7 +3985,7 @@
                     <button onclick="document.getElementById('modal-add-asset').style.display='flex'"
                         class="btn-fleet-primary">
                         <i class="fas fa-plus"></i>
-                        <span>New Active</span>
+                        <span>New Asset</span>
                     </button>
                 </div>
             </div>
@@ -3999,7 +3994,7 @@
             <div style="position:relative; flex-shrink:0;">
                 <i class="fas fa-search"
                     style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:#64748b; font-size:14px;"></i>
-                <input type="text" placeholder="Buscar por matrícula..." class="input-search-fleet">
+                <input type="text" placeholder="Search by registration..." class="input-search-fleet">
             </div>
         </div>
 
@@ -4267,9 +4262,9 @@
                             DE UNIDAD ESPECIALIZADA</label>
                         <select id="new-asset-type"
                             style="width:100%; background:#FFFFFF; border:1px solid #334155; padding:14px; color:#1A1A1A; border-radius:8px; outline:none; font-family:'Rajdhani'; font-weight:600; font-size:0.9rem; appearance:none;">
-                            <option>Tugboat de Empuje</option>
-                            <option>Barge Tanque</option>
-                            <option>Barge Granelera</option>
+                            <option>Push Tugboat</option>
+                            <option>Tank Barge</option>
+                            <option>Bulk Barge</option>
                             <option>Lancha de Apoyo</option>
                         </select>
                     </div>
@@ -4402,10 +4397,10 @@
             // SEED DEMO DATA (Restores the 'Elite' look)
             seedDemoData: async function () {
                 const demoFleet = [
-                    { name: 'TB PARAGUAY 01', type: 'Tugboat de Empuje', flag: 'Paraguay (PY)', status: 'EN TRANSITO', ais_speed: 8.5, tank_status: 69, capacity: 2000 },
-                    { name: 'R/M HERCULES', type: 'Tugboat de Empuje', flag: 'Argentina (AR)', status: 'OPERATIVO', ais_speed: 9.2, tank_status: 83, capacity: 2200 },
-                    { name: 'R/M CENTAURO', type: 'Tugboat de Empuje', flag: 'Paraguay (PY)', status: 'EN TRANSITO', ais_speed: 7.8, tank_status: 21, capacity: 1800 },
-                    { name: 'R/M ORION STAR', type: 'Tugboat de Empuje', flag: 'Bolivia (BO)', status: 'MANTENIMIENTO', ais_speed: 0.0, tank_status: 23, capacity: 1500 }
+                    { name: 'TB PARAGUAY 01', type: 'Push Tugboat', flag: 'Paraguay (PY)', status: 'IN TRANSIT', ais_speed: 8.5, tank_status: 69, capacity: 2000 },
+                    { name: 'R/M HERCULES', type: 'Push Tugboat', flag: 'Argentina (AR)', status: 'OPERATIONAL', ais_speed: 9.2, tank_status: 83, capacity: 2200 },
+                    { name: 'R/M CENTAURO', type: 'Push Tugboat', flag: 'Paraguay (PY)', status: 'IN TRANSIT', ais_speed: 7.8, tank_status: 21, capacity: 1800 },
+                    { name: 'R/M ORION STAR', type: 'Push Tugboat', flag: 'Bolivia (BO)', status: 'MAINTENANCE', ais_speed: 0.0, tank_status: 23, capacity: 1500 }
                 ];
 
                 // Use a loop to insert to avoid batch issues if RLS is strict, though batch is better usually.
@@ -4682,7 +4677,7 @@
 
                                         html += '</div>';
 
-                                        container.innerHTML = ` <div style="display:flex; justify-content:space-between; align-items:center;"><h2 style="color:#1A1A1A; margin:0;">ACTIVE FLEET</h2><button onclick="window.FleetManager.init()" style="background:#334155; color:#1A1A1A; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-sync"></i>RECARGAR </button></div>${html}`;
+                                        container.innerHTML = ` <div style="display:flex; justify-content:space-between; align-items:center;"><h2 style="color:#1A1A1A; margin:0;">ACTIVE FLEET</h2><button onclick="window.FleetManager.init()" style="background:#334155; color:#1A1A1A; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-sync"></i>RELOAD</button></div>${html}`;
                                     }
                                 }
 
