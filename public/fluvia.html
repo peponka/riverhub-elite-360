@@ -37,7 +37,14 @@
             <a href="javascript:void(0)" onclick="toggleRegister()" id="toggle-register-btn" style="color:var(--accent);text-decoration:none;">Crear nueva cuenta</a>
             <a href="javascript:void(0)" onclick="doResetPassword()" style="color:var(--text-secondary);text-decoration:none;">¿Olvidaste tu contraseña?</a>
         </div>
-        <p class="login-footer" style="margin-top:24px;">Hidrovia Paraguay-Parana — FluviaFleet</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;">
+            <p class="login-footer" style="margin:0;">Hidrovia Paraguay-Parana — FluviaFleet</p>
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);">
+                <a href="fluvia-en.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="fluvia.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div>
+        </div>
     </div>
 </div>
 <div class="app-shell" id="app-shell" style="display:none;">
@@ -76,7 +83,13 @@
         </div>
     </nav>
     <div class="main-area">
-        <div class="topbar"><button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button><span class="topbar-title" id="topbar-title">Panel de Control</span><div class="topbar-actions"><button class="notif-btn" onclick="toggleNotifPanel()"><i class="fa-regular fa-bell"></i><span class="notif-badge" id="notif-badge" style="display:none">0</span></button></div></div>
+        <div class="topbar"><button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button><span class="topbar-title" id="topbar-title">Panel de Control</span><div class="topbar-actions">
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);margin-right:8px;">
+                <a href="fluvia-en.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="fluvia.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div>
+            <button class="notif-btn" onclick="toggleNotifPanel()"><i class="fa-regular fa-bell"></i><span class="notif-badge" id="notif-badge" style="display:none">0</span></button></div></div>
         <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
         <div class="notif-panel" id="notif-panel"><div class="notif-header"><h4>Notificaciones</h4><button onclick="toggleNotifPanel()" style="background:none;border:none;color:var(--text-secondary);font-size:16px;cursor:pointer"><i class="fa-solid fa-xmark"></i></button></div><div class="notif-list" id="notif-list"><div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><p>Sin notificaciones nuevas</p></div></div></div>
         <div class="content">
