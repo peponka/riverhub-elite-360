@@ -3,7 +3,7 @@ const SUPABASE_URL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// --- AUTOMATIC ENGLISH TRANSLATOR ---
+// --- AUTOMATIC ENGLISH TRANSLATOR (FETCH INTERCEPTOR) ---
 const EN_DICT = {
     'navegación': 'transit',
     'combustible': 'fuel',
@@ -48,44 +48,57 @@ function translateText(str) {
     return translated;
 }
 
-function translateData(dataArray) {
-    if (!dataArray || !Array.isArray(dataArray)) return dataArray;
-    return dataArray.map(item => {
-        let newItem = { ...item };
+function translateData(data) {
+    if (!data) return data;
+    if (Array.isArray(data)) {
+        return data.map(item => translateData(item));
+    } else if (typeof data === 'object') {
+        let newItem = { ...data };
         for (const key in newItem) {
             if (typeof newItem[key] === 'string') {
                 newItem[key] = translateText(newItem[key]);
-            } else if (newItem[key] && typeof newItem[key] === 'object') {
-                 for (const nestedKey in newItem[key]) {
-                     if (typeof newItem[key][nestedKey] === 'string') {
-                         newItem[key][nestedKey] = translateText(newItem[key][nestedKey]);
-                     }
-                 }
+            } else if (newItem[key] !== null && typeof newItem[key] === 'object') {
+                 newItem[key] = translateData(newItem[key]);
             }
         }
         return newItem;
-    });
+    }
+    return data;
 }
-// ------------------------------------
 
-
-
-// MONKEY PATCH SUPABASE TO TRANSLATE EVERYTHING AUTOMATICALLY
-const originalFrom = sb.from.bind(sb);
-sb.from = function(table) {
-    const queryBuilder = originalFrom(table);
-    const originalSelect = queryBuilder.select.bind(queryBuilder);
-    queryBuilder.select = function(...args) {
-        const promise = originalSelect(...args);
-        return promise.then(res => {
-            if (res && res.data) {
-                res.data = translateData(res.data);
-            }
-            return res;
-        });
-    };
-    return queryBuilder;
+// Intercept all fetch requests to Supabase REST API
+const originalFetch = window.fetch;
+window.fetch = async function(...args) {
+    const response = await originalFetch.apply(this, args);
+    const url = (typeof args[0] === 'string') ? args[0] : (args[0] && args[0].url ? args[0].url : '');
+    
+    // Only intercept successful GET requests to Supabase
+    if (url.includes('.supabase.co/rest/v1') && response.ok) {
+        const clonedResponse = response.clone();
+        try {
+            const data = await clonedResponse.json();
+            const translatedData = translateData(data);
+            
+            return new Response(JSON.stringify(translatedData), {
+                status: response.status,
+                statusText: response.statusText,
+                headers: response.headers
+            });
+        } catch (e) {
+            // If it's not JSON or parsing fails, return original response
+            console.error("Fetch interceptor translation error:", e);
+        }
+    }
+    return response;
 };
+// --------------------------------------------------------
+
+
+
+
+
+
+
 
 // ═══════════════════════════════════════════
 // GLOBAL ERROR BOUNDARY — Prevents UI crashes
