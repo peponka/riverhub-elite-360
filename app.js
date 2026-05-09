@@ -90,7 +90,7 @@ app.use((req, res, next) => {
 });
 
 // --- ROOT REDIRECT TO LANDING ---
-app.get('/', (req, res) => res.redirect('/fluvia.html'));
+// Removed redirect so express.static serves index.html (landing page)
 
 // --- REQUEST LOGGING ---
 app.use((req, res, next) => {
