@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -16,25 +16,25 @@
     </div>
     
     <div class="nav-group">
-      <div class="nav-title">Principal</div>
+      <div class="nav-title">Main</div>
       <a href="#" class="nav-item active"><i class="fa-solid fa-table-cells-large"></i> Dashboard <span class="badge">1</span></a>
       <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map <span class="badge">2</span></a>
-      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> AIS Map <span class="badge">3</span></a>
       <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
     </div>
 
     <div class="nav-group">
-      <div class="nav-title">Operativa</div>
+      <div class="nav-title">Operations</div>
       <a href="#" class="nav-item"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
-      <a href="#" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
-      <a href="#" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-route"></i> Trip Management</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Digital Logbook</a>
       <a href="#" class="nav-item alert"><i class="fa-regular fa-comment-dots"></i> Communications <span class="badge">3</span></a>
     </div>
 
     <div class="nav-group">
-      <div class="nav-title">Gestión</div>
+      <div class="nav-title">Management</div>
       <a href="#" class="nav-item"><i class="fa-solid fa-ship"></i> Fleet (Assets)</a>
-      <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i> Crew & Safety</a>
       <a href="#" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Fuel</a>
       <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a>
     </div>
@@ -52,12 +52,12 @@
     <div class="topbar">
       <div class="search-bar">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Buscar embarcación, puerto, viaje...">
+        <input type="text" placeholder="Search vessel, port, trip...">
         <span class="shortcut">⌘K</span>
       </div>
       <div class="topbar-right">
         <div class="settings">
-          <i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> SISTEMA OPERATIVO
+          <i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> SYSTEM ONLINE
         </div>
         <div>ASU · 14:04</div>
         <i class="fa-solid fa-share-nodes"></i>
@@ -69,7 +69,7 @@
     <div class="dashboard-content">
       <div class="header-section">
         <div class="greeting">
-          <p>FLUVIAFLEET OS / PANEL DE CONTROL</p>
+          <p>FLUVIAFLEET OS / CONTROL PANEL</p>
           <h1>Good afternoon, <i>Captain.</i></h1>
           <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec);">UNIFIED CENTER · SERVICE LEVEL OPTIMAL · FLEET SYNCHRONIZED 12 S</p>
         </div>
@@ -86,15 +86,15 @@
           <div class="kpi-value">12<span>/14</span></div>
           <div class="kpi-footer positive">
             <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,8 L6,4 L12,8 L24,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-            ↑ 86% disp. +2 vs. ayer
+            ↑ 86% avail. +2 vs. yesterday
           </div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">ALARMAS CRÍTICAS <i class="fa-solid fa-circle-exclamation" style="color:var(--status-err);"></i></div>
+          <div class="kpi-title">CRITICAL ALERTS <i class="fa-solid fa-circle-exclamation" style="color:var(--status-err);"></i></div>
           <div class="kpi-value alert">02</div>
           <div class="kpi-footer negative">
             <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,4 L6,8 L12,4 L24,10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-            Atención requerida
+            Attention required
           </div>
         </div>
         <div class="kpi-card">
@@ -102,22 +102,22 @@
           <div class="kpi-value">42.5<span>kL</span></div>
           <div class="kpi-footer positive" style="color:var(--status-ok);">
             <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,0 L6,4 L12,2 L24,8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-            ↓ 4.2% vs. promedio · estable
+            ↓ 4.2% vs. average · stable
           </div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">CALADO MÍNIMO <span>PILAR</span></div>
-          <div class="kpi-value">10.2<span>pies</span></div>
+          <div class="kpi-title">MIN DRAFT <span>PILAR</span></div>
+          <div class="kpi-value">10.2<span>ft</span></div>
           <div class="kpi-footer" style="color:var(--status-warn);">
-            Navegable · margen 0.4'
+            Navigable · margin 0.4'
           </div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">EFICIENCIA OTP <span>ON TIME</span></div>
+          <div class="kpi-title">OTP EFFICIENCY <span>ON TIME</span></div>
           <div class="kpi-value ok">92<span>%</span></div>
           <div class="kpi-footer positive">
             <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,10 L6,4 L12,6 L24,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-            ↑ Mejor mes del Q
+            ↑ Best month of Q
           </div>
         </div>
       </div>
@@ -127,18 +127,18 @@
         <div>
           <div class="section-header">
             <div>
-              <span class="section-title">Mapa de flota</span>
-              <span class="section-subtitle">Paraguay-Paraná · AIS en vivo</span>
+              <span class="section-title">Fleet Map</span>
+              <span class="section-subtitle">Paraguay-Paraná · AIS live</span>
             </div>
             <div class="map-badge">LIVE <span style="color:#1A1A2E; margin-left:6px; font-weight:500;">6 VESSELS</span></div>
           </div>
 
           <div class="map-container">
             <div class="map-toolbar">
-              <button class="map-btn">SATÉLITE</button>
-              <button class="map-btn active">CARTOGRÁFICO</button>
-              <button class="map-btn">PROFUNDIDAD</button>
-              <button class="map-btn">CORRIENTE</button>
+              <button class="map-btn">SATELLITE</button>
+              <button class="map-btn active">CARTOGRAPHIC</button>
+              <button class="map-btn">DEPTH</button>
+              <button class="map-btn">CURRENT</button>
               <div class="map-coords">
                 25.28° S<br>
                 -57.64° W<br>
@@ -167,14 +167,14 @@
           <div class="bottom-grid">
             <div style="grid-column: span 2;">
               <div class="section-header" style="margin-top:24px;">
-                <span class="section-title">Pronóstico niveles del río</span>
-                <span class="section-subtitle">ML · 7 Días</span>
-                <span style="margin-left:auto; font-size:10px; color:var(--text-sec); font-weight:600; letter-spacing:1px;">ACTUALIZADO 12:40 · CONFIANZA 91%</span>
+                <span class="section-title">River Level Forecast</span>
+                <span class="section-subtitle">ML · 7 Days</span>
+                <span style="margin-left:auto; font-size:10px; color:var(--text-sec); font-weight:600; letter-spacing:1px;">UPDATED 12:40 · CONFIDENCE 91%</span>
               </div>
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>PUERTO</th><th>HOY</th><th>MIÉ</th><th>JUE</th><th>VIE</th><th>SÁB</th><th>DOM</th><th>LUN</th>
+                    <th>PORT</th><th>TODAY</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th><th>MON</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -222,7 +222,7 @@
               <span class="section-title">Vessels</span>
               <span class="section-subtitle">6 being monitored</span>
             </div>
-            <div style="font-size:10px; color:var(--text-sec); font-weight:600; text-transform:uppercase;">Ordenar · ETA</div>
+            <div style="font-size:10px; color:var(--text-sec); font-weight:600; text-transform:uppercase;">Sort by · ETA</div>
           </div>
 
           <div class="fleet-list">
@@ -253,10 +253,10 @@
                 <i class="fa-solid fa-ferry fleet-icon"></i>
                 <div class="fleet-details">
                   <h4>Don Eugenio</h4>
-                  <div class="fleet-meta">EN ASUNCIÓN · LIBRE · 0 KN</div>
+                  <div class="fleet-meta">IN ASUNCION · AVAILABLE · 0 KN</div>
                 </div>
               </div>
-              <div class="status-badge puerto">EN PUERTO</div>
+              <div class="status-badge puerto">IN PORT</div>
             </div>
 
             <div class="fleet-item">
@@ -267,7 +267,7 @@
                   <div class="fleet-meta">PIL → ROS · 4+1 · 7.8 KN</div>
                 </div>
               </div>
-              <div class="status-badge atencion">ATENCIÓN</div>
+              <div class="status-badge atencion">ATTENTION</div>
             </div>
           </div>
 
@@ -289,13 +289,13 @@
                 <span class="stat-val">+14h 22m</span>
               </div>
               <div class="stat-col" style="text-align:right;">
-                <span class="stat-label" style="text-align:right;">DESTINO</span>
+                <span class="stat-label" style="text-align:right;">DESTINATION</span>
                 <span class="stat-val">ASU &rarr; NPA</span>
               </div>
             </div>
 
             <div class="vessel-actions">
-              <button class="btn-dark">Abrir bitácora</button>
+              <button class="btn-dark">Open logbook</button>
               <button class="btn-outline">Contact</button>
             </div>
           </div>

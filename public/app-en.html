@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -803,7 +803,7 @@
                                     <div class="kpi-icon-wrapper red-glow"><i class="fas fa-exclamation-triangle"></i>
                                     </div>
                                     <div class="kpi-content">
-                                        <span class="kpi-label">ALARMAS CRÍTICAS</span>
+                                        <span class="kpi-label">CRITICAL ALERTS</span>
                                         <div class="kpi-number-row">
                                             <span class="kpi-value" style="color:#ff4444;">02</span>
                                             <span class="kpi-unit">ACT.</span>
@@ -827,13 +827,13 @@
                                 <div class="kpi-card-v3">
                                     <div class="kpi-icon-wrapper emerald-glow"><i class="fas fa-water"></i></div>
                                     <div class="kpi-content">
-                                        <span class="kpi-label">CALADO MIN (MEDIO)</span>
+                                        <span class="kpi-label">MIN DRAFT (AVG)</span>
                                         <div class="kpi-number-row">
                                             <span class="kpi-value">10.2</span>
                                             <span class="kpi-unit">Pies</span>
                                         </div>
                                     </div>
-                                    <div class="kpi-trend positive">Navegable</div>
+                                    <div class="kpi-trend positive">Navigable</div>
                                 </div>
                             </div>
 
@@ -1006,7 +1006,7 @@
                                     <input type="text" id="cot-origin" class="input-dark" value="Asunción (PY)" placeholder="Port of Origin">
                                 </div>
                                 <div class="input-group">
-                                    <label>DESTINO</label>
+                                    <label>DESTINATION</label>
                                     <input type="text" id="cot-dest" class="input-dark" value="Rosario (ARG)" placeholder="Port of Destination">
                                 </div>
                             </div>
@@ -1058,7 +1058,7 @@
                                 </div>
                                 <div class="stat-box" data-tooltip="Nivel de Confianza de la IA">
                                     <i class="fas fa-shield-alt" style="color:#10b981;"></i>
-                                    <span class="stat-title">CONFIANZA IA</span>
+                                    <span class="stat-title">AI CONFIDENCE</span>
                                     <span class="stat-value" id="stat-confianza">0%</span>
                                 </div>
                                 <div class="stat-box" data-tooltip="Comparativa frente a mercado">
@@ -1203,8 +1203,8 @@
                         <div class="chart-row-secondary">
                             <div class="chart-box box-glass">
                                 <div class="chart-header">
-                                    <h3><i class="fas fa-oil-can" style="color:#f59e0b;"></i> EFICIENCIA DE
-                                        FUEL</h3>
+                                    <h3><i class="fas fa-oil-can" style="color:#f59e0b;"></i> FUEL
+                                        EFFICIENCY</h3>
                                 </div>
                                 <div class="chart-canvas-wrapper">
                                     <canvas id="chartFuel"></canvas>
@@ -1381,7 +1381,7 @@
                             <div class="task-list">
                                 <div class="task-card">
                                     <span class="task-tag tag-routine">RUTINA 500H</span>
-                                    <div class="task-desc">Cambio de filtros de aceite y revisión de niveles.</div>
+                                    <div class="task-desc">Oil filter change and fluid level inspection.</div>
                                     <div class="task-meta">
                                         <div class="task-ship">
                                             <div class="task-avatar">TB</div> TB PARAGUAY 01
@@ -1954,7 +1954,7 @@
                                     <div class="stat-val-bunker">182 <small>HRS</small></div>
                                 </div>
                                 <div class="stat-card-bunker">
-                                    <span class="stat-label-bunker">EFICIENCIA MOTOR</span>
+                                    <span class="stat-label-bunker">ENGINE EFFICIENCY</span>
                                     <div class="stat-val-bunker" style="color:#1e3a5f;">94 <small>%</small></div>
                                 </div>
                             </div>
@@ -2202,7 +2202,7 @@
                             </div>
                             <div class="api-icon-circle icon-gov"><i class="fas fa-landmark"></i></div>
                             <h3>HIDROLOGÍA</h3>
-                            <p class="api-desc">"Obtiene niveles de ríos reales para el cálculo de calado seguro."
+                            <p class="api-desc">"Gets real river levels for safe draft calculation."
                             </p>
 
                             <div class="api-input-group">
@@ -2710,7 +2710,7 @@
                                 <label>PLAN DE SUSCRIPCIÓN</label>
                                 <select id="new-client-plan" class="modal-input">
                                     <option value="basic">BÁSICO (Monitoreo)</option>
-                                    <option value="pro" selected>PRO (Gestión Total)</option>
+                                    <option value="pro" selected>PRO (Full Management)</option>
                                     <option value="enterprise">ENTERPRISE (Custom)</option>
                                 </select>
                             </div>
@@ -2751,7 +2751,7 @@
                         </div>
 
                         <div class="input-group-modal" style="margin-top: 15px;">
-                            <label style="color: #1e3a5f; font-weight: bold;">BUQUE DE DESTINO (OBLIGATORIO)</label>
+                            <label style="color: #1e3a5f; font-weight: bold;">DESTINATION VESSEL (REQUIRED)</label>
                             <!-- HARDCODED OPTIONS FOR STABILITY -->
                             <select id="crew-input-vessel" class="modal-input"
                                 style="border: 2px solid #00e5ff; background: #FFFFFF; color: #1A1A1A; padding: 15px; font-weight: bold;">
@@ -3206,7 +3206,7 @@
                             </div>
 
                             <div class="metric-card">
-                                <div class="metric-label">CALADO MEDIO</div>
+                                <div class="metric-label">AVG DRAFT</div>
                                 <div class="metric-value" id="lm-draft-calc">2.00 PIES</div>
                             </div>
 
@@ -3292,7 +3292,7 @@
                 <div style="flex: 2;">
                     <div class="input-row">
                         <div class="input-group-modal">
-                            <label>BUQUE DE DESTINO</label>
+                            <label>DESTINATION VESSEL</label>
                             <select id="crew-input-vessel" class="modal-input">
                                 <option value="">Select vessel...</option>
                                 <option value="demo-1">TB PARAGUAY 01</option>
@@ -3436,7 +3436,7 @@
                 </div>
 
                 <div class="input-group-modal">
-                    <label style="color: #1e3a5f;">BUQUE DE DESTINO (OBLIGATORIO)</label>
+                    <label style="color: #1e3a5f;">DESTINATION VESSEL (REQUIRED)</label>
                     <!-- HARDCODED OPTIONS AS REQUESTED FOR STABILITY -->
                     <select id="crew-v2-vessel" class="modal-input"
                         style="border: 1px solid #00e5ff; background: #FFFFFF; color: #1A1A1A; padding: 15px; font-weight: bold;">
@@ -3498,7 +3498,7 @@
                         <input type="text" id="new-contract-origin" class="modal-input" value="Puerto Corumbá" style="color:var(--flutter-text, #fff);">
                     </div>
                     <div class="input-group-modal">
-                        <label style="color:var(--flutter-text-secondary, #94a3b8);">PUERTO DESTINO</label>
+                        <label style="color:var(--flutter-text-secondary, #94a3b8);">DESTINATION PORT</label>
                         <input type="text" id="new-contract-dest" class="modal-input" value="Puerto Rosario" style="color:var(--flutter-text, #fff);">
                     </div>
                 </div>
@@ -3586,7 +3586,7 @@
 
                 <div class="qr-box" style="border-color:#ffb700; background:rgba(255,183,0,0.05); color:#ffca2c;">
                     <i class="fas fa-barcode" style="font-size:1.5rem;"></i>
-                    <span>Al confirmar, el sistema conciliará esta carga con los sensores de nivel de tanque
+                    <span>Upon confirming, the system will reconcile this load with tank level sensors
                         por telemetría para detectar mermas o robos en tiempo real.</span>
                 </div>
             </div>
@@ -3619,7 +3619,7 @@
                         <input type="text" id="new-trip-origin" class="modal-input" placeholder="Ej: Asunción">
                     </div>
                     <div class="input-group-modal">
-                        <label>PUERTO DESTINO</label>
+                        <label>DESTINATION PORT</label>
                         <input type="text" id="new-trip-dest" class="modal-input" placeholder="Ej: Rosario">
                     </div>
                 </div>
