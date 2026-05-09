@@ -1184,6 +1184,7 @@ async function suggestConvoyIA(){
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
         var r=await fetch('/api/ai/optimize-convoy',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId,destination:dest})});
         var data=await r.json();
+        console.log('AI Convoy Response Data:', data);
         if (data.error) throw new Error(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
         
         var s=data.suggestion||{};
@@ -1191,6 +1192,13 @@ async function suggestConvoyIA(){
         if (s.suggestion) s = s.suggestion;
         var f=s.formation||s.formacion||{};
         var configStr = s.config || s.configuracion || 'N/A';
+        
+        // Debug dump if empty
+        if (configStr === 'N/A') {
+            console.log('AI Convoy Response Dump:', s);
+            return container.innerHTML = '<div style="background:var(--bg-card);padding:16px;border-radius:10px;font-size:12px;overflow:auto;"><strong style="color:#ef4444;">DEBUG - Respuesta IA inesperada (o vacía):</strong><pre>' + JSON.stringify(data, null, 2) + '</pre></div>';
+        }
+        
         var riskColor=(s.risk_score||100)<=30?'#10b981':(s.risk_score||100)<=60?'#f59e0b':'#ef4444';
         var html='<div style="background:var(--bg-card);border-radius:10px;padding:16px;">';
         
