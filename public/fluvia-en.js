@@ -263,7 +263,7 @@ async function doResetPassword() {
         return;
     }
     try {
-        var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/fluvia.html' });
+        var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/fluvia-en.html' });
         if(r.error){errDiv.style.color='var(--error)';errDiv.textContent=r.error.message;errDiv.style.display='block';return;}
         errDiv.style.color = 'var(--success, #10b981)';
         errDiv.textContent='A recovery link has been sent to your email.';
