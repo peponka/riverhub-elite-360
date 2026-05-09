@@ -507,11 +507,14 @@ app.post('/api/ai/invoice', aiLimiter, authenticateUser, async (req, res) => {
     let voyageContext = '';
     if (voyageId && app.locals.supabase) {
         try {
-            const { data: voyage } = await app.locals.supabase
-                .from('voyages')
-                .select('*')
-                .eq('id', voyageId)
-                .single();
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_ANON_KEY;
+            const userToken = req.headers.authorization?.split(' ')[1] || supabaseKey;
+            const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
+            const voyageRes = await fetch(`${supabaseUrl}/rest/v1/voyages?id=eq.${voyageId}&select=*`, { headers });
+            const voyageData = await voyageRes.json();
+            const voyage = voyageData[0];
+            
             if (voyage) {
                 voyageContext = `\nDatos del viaje registrado:\n- Origen: ${voyage.origin || 'N/A'}\n- Destino: ${voyage.destination || 'N/A'}\n- Carga: ${voyage.cargo_tons || 'N/A'} toneladas\n- Combustible registrado: ${voyage.fuel_consumed || 'N/A'} litros\n- Distancia: ${voyage.distance_km || 'N/A'} km\n- Fecha: ${voyage.departure_date || 'N/A'} a ${voyage.arrival_date || 'N/A'}`;
             }
