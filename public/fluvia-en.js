@@ -234,9 +234,9 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
                 '<p class="login-sub">ENTER YOUR NEW PASSWORD</p>'+
                 '<div id="reset-pw-error" style="display:none;font-size:12px;margin:12px 0;font-weight:600;"></div>'+
                 '<label class="login-label">NEW PASSWORD</label>'+
-                '<input type="password" id="new-password-input" class="login-input" placeholder="Minimum 6 characters">'+
+                '<div style="position:relative"><input type="password" id="new-password-input" class="login-input" placeholder="Minimum 6 characters" style="padding-right:44px"><button type="button" onclick="togglePwVis(\'new-password-input\',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-secondary);font-size:16px;padding:4px;" tabindex="-1"><i class="fa-solid fa-eye"></i></button></div>'+
                 '<label class="login-label">CONFIRM PASSWORD</label>'+
-                '<input type="password" id="confirm-password-input" class="login-input" placeholder="Repeat password">'+
+                '<div style="position:relative"><input type="password" id="confirm-password-input" class="login-input" placeholder="Repeat password" style="padding-right:44px"><button type="button" onclick="togglePwVis(\'confirm-password-input\',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-secondary);font-size:16px;padding:4px;" tabindex="-1"><i class="fa-solid fa-eye"></i></button></div>'+
                 '<button class="login-btn" onclick="doChangePassword()">Change Password</button>'+
                 '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Paraguay-Parana Waterway — FluviaFleet</p></div>';
         }, 1000);
@@ -252,10 +252,24 @@ async function doChangePassword(){
     try{
         var r = await sb.auth.updateUser({password: pw});
         if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';return;}
-        var modal = document.querySelector('.modal-card');
-        modal.innerHTML='<div style="padding:24px;text-align:center;"><i class="fa-solid fa-circle-check" style="font-size:48px;color:var(--success,#10b981);margin-bottom:16px;"></i><h3 style="font-family:Newsreader,serif;font-size:1.5rem;margin-bottom:8px;">Password Changed!</h3><p style="color:var(--text-secondary);font-size:13px;">Your password has been updated successfully.</p><button onclick="document.getElementById(\'modal-overlay\').style.display=\'none\';window.history.replaceState({},\'\',window.location.pathname);" class="btn-primary" style="margin-top:16px;padding:12px 32px;">Continue to Dashboard</button></div>';
+        var card = document.querySelector('.login-card');
+        if(card) card.innerHTML='<div style="text-align:center;padding:40px 0;"><i class="fa-solid fa-circle-check" style="font-size:64px;color:var(--success,#10b981);margin-bottom:20px;display:block;"></i><h1 class="login-title" style="margin-bottom:8px;">Password<br><em>Changed!</em></h1><p style="color:var(--text-secondary);font-size:14px;margin-bottom:24px;">Your password has been updated successfully.</p><button class="login-btn" onclick="window.location.href=window.location.pathname;">Continue to Dashboard</button></div>';
     }catch(e){
         errDiv.textContent='Error updating password';errDiv.style.display='block';
+    }
+}
+
+
+// Toggle password visibility (eye icon)
+function togglePwVis(inputId, btn) {
+    var inp = document.getElementById(inputId);
+    if(!inp) return;
+    if(inp.type === 'password'){
+        inp.type = 'text';
+        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+    } else {
+        inp.type = 'password';
+        btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
     }
 }
 
