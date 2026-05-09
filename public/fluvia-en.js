@@ -872,7 +872,7 @@ async function sendCopiloto(){
         var vj=await sb.from('voyages').select('vessel_name,origin_port,destination_port,status,cargo_tonss').limit(10);if(vj.data)ctx+='Trips: '+JSON.stringify(vj.data)+'\n';
         var fl=await sb.from('fuel_logs').select('vessel_name,liters,fuel_type').limit(5);if(fl.data)ctx+='Fuel: '+JSON.stringify(fl.data)+'\n';
         var mt=await sb.from('maintenance_tasks').select('description,vessel_name,priority,status').limit(5);if(mt.data)ctx+='Maintenance: '+JSON.stringify(mt.data)+'\n';
-        var res=await fetch('/api/n8n/ai-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'You are the FluviaFleet AI Copilot, a maritime-fluvial expert assistant for the Paraguay-Parana Waterway. Respond in English, brief and professional. Company context:\n'+ctx+'\nCaptain's question: '+msg})});
+        var res=await fetch('/api/n8n/ai-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'You are the FluviaFleet AI Copilot, a maritime-fluvial expert assistant for the Paraguay-Parana Waterway. Respond in English, brief and professional. Company context:\n'+ctx+'\nCaptain\\\'s question: '+msg})});
         var data=await res.json();
         var typing=document.getElementById('ai-typing');if(typing)typing.remove();
         var answer=data.analysis||data.message||'Could not process the query.';
