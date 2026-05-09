@@ -229,13 +229,13 @@
             </div>
             <!-- FLEET -->
             <div class="view" id="view-fleet">
-                <div class="view-header"><div><div class="fluvia-title">Gestion de<br><em>Flota.</em></div><div class="fluvia-subtitle">ASSET CONTROL - OPERATIONAL FLEET</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFleet('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fleet')"><i class="fa-solid fa-plus"></i> Add Active</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fleet-total">0</div><div class="stat-lbl">Total Actives</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">In Service</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Dry Dock</div></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Fleet<br><em>Management.</em></div><div class="fluvia-subtitle">ASSET CONTROL - OPERATIONAL FLEET</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFleet('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fleet')"><i class="fa-solid fa-plus"></i> Add Asset</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fleet-total">0</div><div class="stat-lbl">Total Assets</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">In Service</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Dry Dock</div></div></div>
                 <table class="data-table"><thead><tr><th>VESSEL</th><th>TYPE</th><th>STATUS</th><th>LOCATION</th></tr></thead><tbody id="fleet-tbody"></tbody></table>
             </div>
             <!-- COPILOTO -->
             <div class="view" id="view-copiloto">
-                <div class="fluvia-title">Copiloto<br><em>IA.</em></div><div class="fluvia-subtitle">ARTIFICIAL INTELLIGENCE CENTER — FLUVIAFLEET AI (GEMINI)</div>
+                <div class="fluvia-title">AI<br><em>Copilot.</em></div><div class="fluvia-subtitle">ARTIFICIAL INTELLIGENCE CENTER — FLUVIAFLEET AI (GEMINI)</div>
                 
                 <!-- IA INTELLIGENCE CARDS -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
@@ -274,7 +274,7 @@
             </div>
             <!-- CONVOY -->
             <div class="view" id="view-convoy">
-                <div class="fluvia-title">Armador de<br><em>Convoyes.</em></div><div class="fluvia-subtitle">FORMATION (0/18)</div>
+                <div class="fluvia-title">Convoy<br><em>Builder.</em></div><div class="fluvia-subtitle">FORMATION (0/18)</div>
                 
                 <!-- IA CONVOY OPTIMIZER -->
                 <div style="background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(59,130,246,0.1));border:1px solid rgba(139,92,246,0.3);border-radius:12px;padding:16px;margin-top:16px;margin-bottom:16px;">
@@ -302,19 +302,19 @@
             </div>
             <!-- VIAJES -->
             <div class="view" id="view-viajes">
-                <div class="view-header"><div><div class="fluvia-title">Gestion de<br><em>Viajes.</em></div><div class="fluvia-subtitle">TRANSIT CONTROL - ACTIVE DISPATCH</div></div><div class="header-actions"><button class="btn-export" onclick="exportViajes('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportViajes('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('viaje')"><i class="fa-solid fa-plus"></i> New Solicitud</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Trip<br><em>Management.</em></div><div class="fluvia-subtitle">TRANSIT CONTROL - ACTIVE DISPATCH</div></div><div class="header-actions"><button class="btn-export" onclick="exportViajes('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportViajes('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('viaje')"><i class="fa-solid fa-plus"></i> New Request</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">In Transit</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Pending</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Tons</div></div></div>
                 <div id="viajes-list"></div><div class="empty-state" id="viajes-empty"><i class="fa-solid fa-route"></i><p>No assets found in dispatch</p></div>
             </div>
             <!-- BITACORA -->
             <div class="view" id="view-bitacora">
-                <div class="view-header"><div><div class="fluvia-title">Bitacora<br><em>Digital.</em></div><div class="fluvia-subtitle">OPERATIONAL LOG - HISTORY</div></div><div class="header-actions"><button class="btn-export" onclick="exportBitacora('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportBitacora('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('bitacora')"><i class="fa-solid fa-plus"></i> New Entrada</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Digital<br><em>Logbook.</em></div><div class="fluvia-subtitle">OPERATIONAL LOG - HISTORY</div></div><div class="header-actions"><button class="btn-export" onclick="exportBitacora('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportBitacora('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('bitacora')"><i class="fa-solid fa-plus"></i> New Entrada</button></div></div>
                 <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" placeholder="Search entry..."></div>
                 <div id="bitacora-list"></div><div class="empty-state" id="bitacora-empty"><i class="fa-solid fa-book-open"></i><p>No recent log entries</p></div>
             </div>
             <!-- COMUNICACIONES -->
             <div class="view" id="view-comunicaciones">
-                <div class="fluvia-title">Canal de<br><em>Communications.</em></div><div class="fluvia-subtitle">ACTIVE SATELLITE LINK</div>
+                <div class="fluvia-title">Communications<br><em>Channel.</em></div><div class="fluvia-subtitle">ACTIVE SATELLITE LINK</div>
                 <div class="comm-channel" style="margin-top:20px"><h4>CH-16</h4><div class="freq">156.800 MHz</div></div>
                 <div class="comm-channel"><h4>CH-06</h4><div class="freq">156.300 MHz</div></div>
                 <div class="comm-msg-area"><p style="color:var(--text-secondary);font-size:12px">Communications channel ready.</p></div>
@@ -322,32 +322,32 @@
             </div>
             <!-- TRIPULACION -->
             <div class="view" id="view-tripulacion">
-                <div class="view-header"><div><div class="fluvia-title">Tripulacion<br><em>&amp; Safety.</em></div><div class="fluvia-subtitle">CREW MANAGEMENT - BIOMETRIC CONTROL</div></div><div class="header-actions"><button class="btn-export" onclick="exportCrew('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportCrew('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('crew')"><i class="fa-solid fa-plus"></i> Add Tripulante</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Crew<br><em>&amp; Safety.</em></div><div class="fluvia-subtitle">CREW MANAGEMENT - BIOMETRIC CONTROL</div></div><div class="header-actions"><button class="btn-export" onclick="exportCrew('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportCrew('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('crew')"><i class="fa-solid fa-plus"></i> Add Crew Member</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="crew-total">0</div><div class="stat-lbl">Total Crew</div></div><div class="stat-cell"><div class="stat-val" id="crew-on">0</div><div class="stat-lbl">Onboard</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">On Leave</div></div></div>
                 <div id="crew-list"></div><div class="empty-state" id="crew-empty"><i class="fa-solid fa-users"></i><p>No crew assigned</p></div>
             </div>
             <!-- FUEL -->
             <div class="view" id="view-combustible">
-                <div class="view-header"><div><div class="fluvia-title">Bunker y<br><em>Fuel.</em></div><div class="fluvia-subtitle">CONSUMPTION MANAGEMENT - OPERATIONAL CONTROL</div></div><div class="header-actions"><button class="btn-export" onclick="exportFuel('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFuel('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Registrar Carga</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Bunker y<br><em>Fuel.</em></div><div class="fluvia-subtitle">CONSUMPTION MANAGEMENT - OPERATIONAL CONTROL</div></div><div class="header-actions"><button class="btn-export" onclick="exportFuel('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFuel('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Record Refuel</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fuel-count">0</div><div class="stat-lbl">Refuels Today</div></div><div class="stat-cell"><div class="stat-val" id="fuel-total">0L</div><div class="stat-lbl">Consumption</div></div><div class="stat-cell"><div class="stat-val">--</div><div class="stat-lbl">Efficiency</div></div></div>
                 <div id="fuel-list"></div><div class="empty-state" id="fuel-empty"><i class="fa-solid fa-gas-pump"></i><p>No consumption records</p></div>
             </div>
             <!-- MANTENIMIENTO -->
             <div class="view" id="view-mantenimiento">
-                <div class="view-header"><div><div class="fluvia-title">Ordenes de<br><em>Maintenance.</em></div><div class="fluvia-subtitle">PREVENTIVE AND CORRECTIVE MANAGEMENT</div></div><div class="header-actions"><button class="btn-export" onclick="exportMaint('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportMaint('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('maint')"><i class="fa-solid fa-plus"></i> New Orden</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Maintenance<br><em>Orders.</em></div><div class="fluvia-subtitle">PREVENTIVE AND CORRECTIVE MANAGEMENT</div></div><div class="header-actions"><button class="btn-export" onclick="exportMaint('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportMaint('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('maint')"><i class="fa-solid fa-plus"></i> New Order</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="maint-pending">0</div><div class="stat-lbl">Pending</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">In Progress</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Completed</div></div></div>
                 <div id="maint-list"></div>
             </div>
             <!-- PANOL -->
             <div class="view" id="view-panol">
-                <div class="view-header"><div><div class="fluvia-title">Panol de<br><em>Inventario.</em></div><div class="fluvia-subtitle">SPARE PARTS AND SUPPLIES MANAGEMENT</div></div><div class="header-actions"><button class="btn-export" onclick="exportPanol('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportPanol('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('panol')"><i class="fa-solid fa-plus"></i> Add Item</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Inventory<br><em>Store.</em></div><div class="fluvia-subtitle">SPARE PARTS AND SUPPLIES MANAGEMENT</div></div><div class="header-actions"><button class="btn-export" onclick="exportPanol('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportPanol('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('panol')"><i class="fa-solid fa-plus"></i> Add Item</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="panol-total">0</div><div class="stat-lbl">Total Items</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Low Stock</div></div><div class="stat-cell"><div class="stat-val">5</div><div class="stat-lbl">Categories</div></div></div>
                 <div class="search-wrapper"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" placeholder="Search spare part..."></div>
                 <div id="panol-list"></div>
             </div>
             <!-- HIDROLOGIA -->
             <div class="view" id="view-hidrologia">
-                <div class="fluvia-title">Pronostico<br><em>Hidrovia.</em></div><div class="fluvia-subtitle">RIVER LEVELS AND CONDITIONS - OPEN METEO</div>
+                <div class="fluvia-title">Waterway<br><em>Forecast.</em></div><div class="fluvia-subtitle">RIVER LEVELS AND CONDITIONS - OPEN METEO</div>
                 <div class="stat-row" id="hidro-stats"><div class="stat-cell"><div class="stat-val" id="hidro-asu">--</div><div class="stat-lbl">ASU Level</div></div><div class="stat-cell"><div class="stat-val" id="hidro-pir">--</div><div class="stat-lbl">PIR Level</div></div><div class="stat-cell"><div class="stat-val" id="hidro-trend">--</div><div class="stat-lbl">Trend</div></div></div>
                 <div class="section-title">7-Day Forecast</div>
                 <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px;margin-top:12px"><canvas id="hidro-chart" height="200"></canvas></div>
@@ -356,7 +356,7 @@
             </div>
             <!-- REPORTES -->
             <div class="view" id="view-reportes">
-                <div class="view-header"><div><div class="fluvia-title">Reportes &amp;<br><em>Analytics.</em></div><div class="fluvia-subtitle">OPERATIONAL INTELLIGENCE - KPI DASHBOARD</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Fleet Report PDF"><i class="fa-solid fa-file-pdf"></i> Flota</button><button class="btn-export" onclick="exportViajes('pdf')" title="Trips Report PDF"><i class="fa-solid fa-file-pdf"></i> Viajes</button><button class="btn-export" onclick="exportFuel('excel')" title="Fuel Excel"><i class="fa-solid fa-file-excel"></i> Fuel</button><button class="btn-export" onclick="exportBitacora('excel')" title="Bitacora Excel"><i class="fa-solid fa-file-excel"></i> Bitacora</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Reports &amp;<br><em>Analytics.</em></div><div class="fluvia-subtitle">OPERATIONAL INTELLIGENCE - KPI DASHBOARD</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Fleet Report PDF"><i class="fa-solid fa-file-pdf"></i> Flota</button><button class="btn-export" onclick="exportViajes('pdf')" title="Trips Report PDF"><i class="fa-solid fa-file-pdf"></i> Viajes</button><button class="btn-export" onclick="exportFuel('excel')" title="Fuel Excel"><i class="fa-solid fa-file-excel"></i> Fuel</button><button class="btn-export" onclick="exportBitacora('excel')" title="Bitacora Excel"><i class="fa-solid fa-file-excel"></i> Bitacora</button></div></div>
                 <div class="admin-stats" id="report-stats" style="margin-top:16px"></div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
                     <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px"><div class="fluvia-subtitle">FLOTA POR STATUS</div><canvas id="chart-fleet" height="200"></canvas></div>
@@ -366,7 +366,7 @@
             </div>
             <!-- CALADO -->
             <div class="view" id="view-calado">
-                <div class="view-header"><div><div class="fluvia-title">Calados &amp;<br><em>Hidrometria.</em></div><div class="fluvia-subtitle">DRAFT CONTROL - OPERATIONAL SAFETY</div></div><div class="header-actions"><button class="btn-export" onclick="exportCalado('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportCalado('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('calado')"><i class="fa-solid fa-plus"></i> Record Reading</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Drafts &amp;<br><em>Hydrometry.</em></div><div class="fluvia-subtitle">DRAFT CONTROL - OPERATIONAL SAFETY</div></div><div class="header-actions"><button class="btn-export" onclick="exportCalado('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportCalado('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('calado')"><i class="fa-solid fa-plus"></i> Record Reading</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="calado-total">0</div><div class="stat-lbl">Vessels</div></div><div class="stat-cell"><div class="stat-val" id="calado-alerts">0</div><div class="stat-lbl">On Alert</div></div><div class="stat-cell"><div class="stat-val" id="calado-avg">--</div><div class="stat-lbl">Average (m)</div></div></div>
                 <div id="calado-list"></div>
                 <div class="section-title" style="margin-top:24px">Reading History</div>
@@ -375,7 +375,7 @@
             </div>
             <!-- INCIDENTES -->
             <div class="view" id="view-incidentes">
-                <div class="view-header"><div><div class="fluvia-title">Registro de<br><em>Incidents.</em></div><div class="fluvia-subtitle">OPERATIONAL SAFETY - REPORTS</div></div><div class="header-actions"><button class="btn-export" onclick="exportIncidents('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportIncidents('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('incidente')"><i class="fa-solid fa-plus"></i> Report Incident</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Incident<br><em>Log.</em></div><div class="fluvia-subtitle">OPERATIONAL SAFETY - REPORTS</div></div><div class="header-actions"><button class="btn-export" onclick="exportIncidents('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportIncidents('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('incidente')"><i class="fa-solid fa-plus"></i> Report Incident</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="inc-total">0</div><div class="stat-lbl">Total</div></div><div class="stat-cell"><div class="stat-val" id="inc-open">0</div><div class="stat-lbl">Open</div></div><div class="stat-cell"><div class="stat-val" id="inc-critical">0</div><div class="stat-lbl">Critical</div></div></div>
                 <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="inc-search" placeholder="Search incident..." oninput="filterIncidents()"></div>
                 <div id="inc-list"></div>
@@ -383,7 +383,7 @@
             </div>
             <!-- BRIEFING DIARIO -->
             <div class="view" id="view-briefing">
-                <div class="fluvia-title">Briefing<br><em>Diario.</em></div><div class="fluvia-subtitle" id="briefing-date">OPERATIONAL SUMMARY</div>
+                <div class="fluvia-title">Daily<br><em>Briefing.</em></div><div class="fluvia-subtitle" id="briefing-date">OPERATIONAL SUMMARY</div>
                 <div class="stat-row" id="briefing-stats"><div class="stat-cell"><div class="stat-val" id="brief-vessels">--</div><div class="stat-lbl">Active Fleet</div></div><div class="stat-cell"><div class="stat-val" id="brief-trips">--</div><div class="stat-lbl">Trips Today</div></div><div class="stat-cell"><div class="stat-val" id="brief-fuel">--</div><div class="stat-lbl">Fuel</div></div><div class="stat-cell"><div class="stat-val" id="brief-crew">--</div><div class="stat-lbl">Crew</div></div></div>
                 <div class="section-title" style="margin-top:24px">Weather &amp; Conditions</div>
                 <div id="briefing-weather" class="info-card"><i class="fa-solid fa-cloud-sun"></i><div class="info-card-text"><h4>Weather</h4><p>Loading...</p></div></div>
@@ -394,7 +394,7 @@
             </div>
             <!-- TRACKING -->
             <div class="view" id="view-tracking">
-                <div class="view-header"><div><div class="fluvia-title">Tracking de<br><em>Cargas.</em></div><div class="fluvia-subtitle">REAL-TIME TRACKING - WATERWAY</div></div><div class="header-actions"><button class="btn-export" onclick="exportTracking('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportTracking('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Cargo<br><em>Tracking.</em></div><div class="fluvia-subtitle">REAL-TIME TRACKING - WATERWAY</div></div><div class="header-actions"><button class="btn-export" onclick="exportTracking('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportTracking('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="track-active">0</div><div class="stat-lbl">En Transito</div></div><div class="stat-cell"><div class="stat-val" id="track-total-cargo">0</div><div class="stat-lbl">Tons</div></div><div class="stat-cell"><div class="stat-val" id="track-completed">0</div><div class="stat-lbl">Completed</div></div></div>
                 <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="track-search" placeholder="Search cargo, vessel, or port..." oninput="filterTracking()"></div>
                 <div class="section-title">Cargo in Transit</div>
@@ -405,7 +405,7 @@
             </div>
             <!-- PLANES & FACTURACION -->
             <div class="view" id="view-planes">
-                <div class="fluvia-title">Planes &amp;<br><em>Facturacion.</em></div>
+                <div class="fluvia-title">Plans &amp;<br><em>Billing.</em></div>
                 <div class="fluvia-subtitle">CHOOSE YOUR PLAN - SMART WATERWAY</div>
                 <div class="plan-toggle" style="margin-top:20px">
                     <span class="plan-period active" id="plan-monthly" onclick="togglePeriod('monthly')">Monthly</span>
@@ -492,7 +492,7 @@
             </div>
             <!-- ADMIN PANEL -->
             <div class="view" id="view-admin">
-                <div class="fluvia-title">Panel<br><em>Admin.</em></div>
+                <div class="fluvia-title">Admin<br><em>Panel.</em></div>
                 <div class="fluvia-subtitle">COMPANY AND USER MANAGEMENT</div>
                 <div class="admin-stats" id="admin-stats"></div>
                 <div class="section-title" style="margin-top:24px">Registered Companies</div>
