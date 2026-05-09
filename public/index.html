@@ -23,6 +23,12 @@
         .nav-links a{text-decoration:none;color:var(--text2);font-size:13px;font-weight:500;transition:color 0.2s;letter-spacing:0.3px}
         .nav-links a:hover{color:var(--text)}
         .nav-actions{display:flex;gap:12px;align-items:center}
+        .lang-toggle { display: flex; align-items: center; gap: 8px; background: var(--surface); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--sep); margin-right: 8px; }
+        .lang-btn { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--text2); text-decoration: none; transition: all 0.2s; }
+        .lang-btn:hover { color: var(--text); }
+        .lang-btn.active { color: var(--text); }
+        .lang-btn img { width: 14px; height: 14px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px rgba(0,0,0,0.1); }
+        .lang-sep { color: var(--sep); font-size: 10px; }
         .btn-ghost{background:none;border:none;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;padding:8px 16px;font-family:'Inter',sans-serif}
         .btn-solid{background:var(--text);color:white;border:none;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.2s}
         .btn-solid:hover{opacity:0.85}
@@ -193,6 +199,11 @@
         <a href="#nosotros">Nosotros</a>
     </div>
     <div class="nav-actions">
+        <div class="lang-toggle">
+            <a href="index-en.html" class="lang-btn"><img src="https://flagcdn.com/w40/us.png" alt="EN"> EN</a>
+            <span class="lang-sep">|</span>
+            <a href="index.html" class="lang-btn active"><img src="https://flagcdn.com/w40/es.png" alt="ES"> ES</a>
+        </div>
         <a href="fluvia.html" class="btn-ghost">Iniciar Sesión</a>
         <a href="#precios" class="btn-solid">Probar Gratis</a>
     </div>
