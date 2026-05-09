@@ -58,9 +58,9 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
                 '<p class="login-sub">INGRESÁ TU NUEVA CONTRASEÑA</p>'+
                 '<div id="reset-pw-error" style="display:none;font-size:12px;margin:12px 0;font-weight:600;"></div>'+
                 '<label class="login-label">NUEVA CONTRASEÑA</label>'+
-                '<input type="password" id="new-password-input" class="login-input" placeholder="Mínimo 6 caracteres">'+
+                '<div style="position:relative"><input type="password" id="new-password-input" class="login-input" placeholder="Mínimo 6 caracteres" style="padding-right:44px"><button type="button" onclick="togglePwVis(\'new-password-input\',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-secondary);font-size:16px;padding:4px;" tabindex="-1"><i class="fa-solid fa-eye"></i></button></div>'+
                 '<label class="login-label">CONFIRMAR CONTRASEÑA</label>'+
-                '<input type="password" id="confirm-password-input" class="login-input" placeholder="Repetir contraseña">'+
+                '<div style="position:relative"><input type="password" id="confirm-password-input" class="login-input" placeholder="Repetir contraseña" style="padding-right:44px"><button type="button" onclick="togglePwVis(\'confirm-password-input\',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-secondary);font-size:16px;padding:4px;" tabindex="-1"><i class="fa-solid fa-eye"></i></button></div>'+
                 '<button class="login-btn" onclick="doChangePassword()">Cambiar Contraseña</button>'+
                 '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Hidrovía Paraguay-Paraná — FluviaFleet</p></div>';
         }, 1000);
@@ -76,10 +76,24 @@ async function doChangePassword(){
     try{
         var r = await sb.auth.updateUser({password: pw});
         if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';return;}
-        var modal = document.querySelector('.modal-card');
-        modal.innerHTML='<div style="padding:24px;text-align:center;"><i class="fa-solid fa-circle-check" style="font-size:48px;color:var(--success,#10b981);margin-bottom:16px;"></i><h3 style="font-family:Newsreader,serif;font-size:1.5rem;margin-bottom:8px;">¡Contraseña Cambiada!</h3><p style="color:var(--text-secondary);font-size:13px;">Tu contraseña fue actualizada exitosamente.</p><button onclick="document.getElementById(\'modal-overlay\').style.display=\'none\';window.history.replaceState({},\'\',window.location.pathname);" class="btn-primary" style="margin-top:16px;padding:12px 32px;">Continuar al Dashboard</button></div>';
+        var card = document.querySelector('.login-card');
+        if(card) card.innerHTML='<div style="text-align:center;padding:40px 0;"><i class="fa-solid fa-circle-check" style="font-size:64px;color:var(--success,#10b981);margin-bottom:20px;display:block;"></i><h1 class="login-title" style="margin-bottom:8px;">Contraseña<br><em>Cambiada!</em></h1><p style="color:var(--text-secondary);font-size:14px;margin-bottom:24px;">Tu contraseña fue actualizada exitosamente.</p><button class="login-btn" onclick="window.location.href=window.location.pathname;">Continuar al Dashboard</button></div>';
     }catch(e){
         errDiv.textContent='Error al actualizar contraseña';errDiv.style.display='block';
+    }
+}
+
+
+// Toggle password visibility (eye icon)
+function togglePwVis(inputId, btn) {
+    var inp = document.getElementById(inputId);
+    if(!inp) return;
+    if(inp.type === 'password'){
+        inp.type = 'text';
+        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+    } else {
+        inp.type = 'password';
+        btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
     }
 }
 
