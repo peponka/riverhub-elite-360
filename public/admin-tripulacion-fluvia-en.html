@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -35,8 +35,8 @@
 
     <div class="nav-group">
       <div class="nav-title">Gestión</div>
-      <a href="admin-flota-fluvia.html" class="nav-item"><i class="fa-solid fa-ship"></i> Flota (Actives)</a>
-      <a href="#" class="nav-item active"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="admin-flota-fluvia.html" class="nav-item"><i class="fa-solid fa-ship"></i> Fleet (Assets)</a>
+      <a href="#" class="nav-item active"><i class="fa-solid fa-user-shield"></i> Crew & Safety</a>
       <a href="#" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Fuel</a>
       <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a>
     </div>
@@ -54,11 +54,11 @@
     <div class="topbar">
       <div class="search-bar">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Buscar tripulante, cargo o documento...">
+        <input type="text" placeholder="Search crew member, role or document...">
       </div>
       <div class="topbar-right">
         <div class="settings">
-          <i class="fa-solid fa-circle" style="color:var(--status-warn); font-size:8px;"></i> AVISOS MÉDICOS PENDIENTES
+          <i class="fa-solid fa-circle" style="color:var(--status-warn); font-size:8px;"></i> PENDING MEDICAL NOTICES
         </div>
         <div>CREW · V2.0</div>
       </div>
@@ -68,26 +68,26 @@
       
       <div class="header-section" style="margin-bottom: 24px;">
         <div class="greeting">
-          <p>RECURSOS HUMANOS</p>
-          <h1>Tripulación & Safety</h1>
+          <p>HUMAN RESOURCES</p>
+          <h1>Crew & Safety</h1>
           <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">GESTIÓN DE ROL · APTITUDES MÉDICAS · RELEVOS</p>
         </div>
         <div class="header-actions">
-           <button class="btn-outline"><i class="fa-solid fa-file-export"></i> Nómina</button>
-           <button class="btn-primary" id="btn-new-crew"><i class="fa-solid fa-plus"></i> Ingresar Personal</button>
+           <button class="btn-outline"><i class="fa-solid fa-file-export"></i> Payroll</button>
+           <button class="btn-primary" id="btn-new-crew"><i class="fa-solid fa-plus"></i> Add Crew</button>
         </div>
       </div>
 
       <!-- Filters -->
       <div class="filters-row-fluvia">
           <select class="input-filter-light">
-              <option value="">TODOS LOS STATUSS</option>
-              <option value="active">OPERATIVO</option>
-              <option value="leave">FRANCO</option>
-              <option value="medical">MÉDICO</option>
+              <option value="">ALL STATUSES</option>
+              <option value="active">ACTIVE</option>
+              <option value="leave">OFF DUTY</option>
+              <option value="medical">MEDICAL</option>
           </select>
           <select class="input-filter-light" id="crew-v2-vessel">
-              <option value="">TODA LA FLOTA</option>
+              <option value="">ALL FLEET</option>
               <!-- Populated by JS theoretically -->
           </select>
       </div>
@@ -108,10 +108,10 @@
   </script>
   <script>
     window.RiverToast = {
-      success: (msg) => alert(`ÉXITO: ${msg}`),
+      success: (msg) => alert(`SUCCESS: ${msg}`),
       error: (msg) => alert(`ERROR: ${msg}`),
-      warning: (msg) => alert(`ATENCIÓN: ${msg}`),
-      info: (msg) => alert(`ACCIÓN: ${msg}`)
+      warning: (msg) => alert(`WARNING: ${msg}`),
+      info: (msg) => alert(`INFO: ${msg}`)
     };
   </script>
 

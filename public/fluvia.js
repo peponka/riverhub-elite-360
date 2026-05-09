@@ -28,6 +28,13 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
 
 // AUTH - Check session on load
 (async function checkSession(){
+    if(window.location.search.includes('logout=true')){
+        await sb.auth.signOut();
+        window.history.replaceState({}, '', window.location.pathname);
+        document.getElementById('login-screen').style.display='flex';
+        document.getElementById('app-shell').style.display='none';
+        return;
+    }
     var session = await sb.auth.getSession();
     if(session.data.session){
         showApp(session.data.session.user);

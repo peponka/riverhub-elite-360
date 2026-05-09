@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 
-  <title>FluviaFleet - Pronóstico Hidrovía (Fluvia)</title>
+  <title>FluviaFleet - Waterway Forecast (Fluvia)</title>
   <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
   <link rel="stylesheet" href="./css/modules/admin-copiloto-fluvia.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -51,23 +51,23 @@
   <div class="sidebar">
     <div class="sidebar-logo"><i class="fa-solid fa-water"></i> FluviaFleet <span>v4.2</span></div>
     <div class="nav-group">
-      <div class="nav-title">Principal</div>
+      <div class="nav-title">Main</div>
       <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a>
       <a href="admin-mapa-flota-fluvia.html" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map</a>
       <a href="admin-mapa-fluvia.html" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS</a>
       <a href="admin-copiloto-fluvia.html" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot</a>
     </div>
     <div class="nav-group">
-      <div class="nav-title">Operativa</div>
+      <div class="nav-title">Operations</div>
       <a href="admin-convoys-fluvia.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
       <a href="admin-viajes-fluvia.html" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
       <a href="admin-bitacora-fluvia.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
       <a href="admin-comunicaciones-fluvia.html" class="nav-item"><i class="fa-regular fa-comment-dots"></i> Communications</a>
     </div>
     <div class="nav-group">
-      <div class="nav-title">Inteligencia</div>
-      <a href="admin-hidrologia-fluvia.html" class="nav-item active"><i class="fa-solid fa-water"></i> Pronóstico Hidrovía</a>
-      <a href="admin-reportes-fluvia.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Reportes Oficiales</a>
+      <div class="nav-title">Intelligence</div>
+      <a href="admin-hidrologia-fluvia.html" class="nav-item active"><i class="fa-solid fa-water"></i> Waterway Forecast</a>
+      <a href="admin-reportes-fluvia.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Official Reports</a>
     </div>
     <div class="user-profile">
       <div class="avatar">PE</div>
@@ -86,8 +86,8 @@
     <div class="dashboard-content hydro-layout">
       <div class="hydro-main">
         <div style="margin-bottom:20px;">
-          <h1 style="font-family:'Newsreader',serif; font-size:3rem; font-weight:400; margin:0; letter-spacing:-1px;">Pronóstico <i style="font-style:italic; font-weight:300;">Hidrovía.</i></h1>
-          <div style="font-family:var(--font-data); font-size:0.7rem; color:var(--text-sec); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-top:6px;">OPEN-METEO FLOOD API · CAUDAL REAL · PARAGUAY-PARANÁ · 30 DÍAS</div>
+          <h1 style="font-family:'Newsreader',serif; font-size:3rem; font-weight:400; margin:0; letter-spacing:-1px;">Waterway <i style="font-style:italic; font-weight:300;">Forecast.</i></h1>
+          <div style="font-family:var(--font-data); font-size:0.7rem; color:var(--text-sec); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-top:6px;">OPEN-METEO FLOOD API · REAL FLOW · PARAGUAY-PARANÁ · 30 DAYS</div>
         </div>
 
         <!-- KPIs -->
@@ -95,17 +95,17 @@
           <div class="hydro-kpi">
             <div class="hk-icon" style="color:#38bdf8;"><i class="fa-solid fa-temperature-half"></i></div>
             <div class="hk-val" id="kpi-temp">--</div>
-            <div class="hk-label">Temperatura</div>
+            <div class="hk-label">Temperature</div>
           </div>
           <div class="hydro-kpi">
             <div class="hk-icon" style="color:#94a3b8;"><i class="fa-solid fa-wind"></i></div>
             <div class="hk-val" id="kpi-wind">--</div>
-            <div class="hk-label">Viento</div>
+            <div class="hk-label">Wind</div>
           </div>
           <div class="hydro-kpi">
             <div class="hk-icon" style="color:#3b82f6;"><i class="fa-solid fa-water"></i></div>
             <div class="hk-val" id="kpi-flow">--</div>
-            <div class="hk-label">Caudal ASU</div>
+            <div class="hk-label">Flow ASU</div>
           </div>
           <div class="hydro-kpi">
             <div class="hk-icon" style="color:#2ea043;"><i class="fa-solid fa-chart-line"></i></div>
@@ -117,12 +117,12 @@
 
         <!-- Flow Chart -->
         <div class="chart-card">
-          <div class="chart-card-title">CAUDAL: RÍO PARAGUAY (m³/s) — ÚLTIMOS 30 DÍAS + FORECAST 7 DÍAS</div>
+          <div class="chart-card-title">FLOW: PARAGUAY RIVER (m³/s) — LAST 30 DAYS + 7-DAY FORECAST</div>
           <div class="flow-bars" id="flow-chart"></div>
           <div class="legend-row">
             <div><div class="legend-swatch" style="background:#3b82f6;"></div> Normal</div>
-            <div><div class="legend-swatch" style="background:#00e5ff;"></div> Crecida (+20%)</div>
-            <div><div class="legend-swatch" style="background:#ef4444;"></div> Bajante (-20%)</div>
+            <div><div class="legend-swatch" style="background:#00e5ff;"></div> Flood (+20%)</div>
+            <div><div class="legend-swatch" style="background:#ef4444;"></div> Drought (-20%)</div>
             <div><div class="legend-swatch" style="background:#94a3b8;"></div> Forecast</div>
           </div>
         </div>
@@ -131,7 +131,7 @@
       <!-- SIDEBAR -->
       <div class="hydro-side">
         <div class="side-box">
-          <div class="side-box-title">Stations de Monitoreo</div>
+          <div class="side-box-title">Monitoring Stations</div>
           <div class="station-card">
             <div class="sc-name"><i class="fa-solid fa-location-dot" style="color:#3b82f6; margin-right:4px;"></i> Asunción</div>
             <div class="sc-val" id="st-asu-val">-- <span class="sc-unit">m³/s</span></div>
@@ -149,7 +149,7 @@
           </div>
         </div>
         <div class="side-box">
-          <div class="side-box-title">Alertas Activas</div>
+          <div class="side-box-title">Active Alerts</div>
           <div id="alerts-list" style="font-family:var(--font-data); font-size:0.8rem; color:var(--text-sec);">Loading...</div>
         </div>
       </div>
@@ -267,13 +267,13 @@
       let html = '';
 
       if (trend.pct < -20) {
-        html = `<div style="background:rgba(239,68,68,0.1); color:#ef4444; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">⚠️ BAJANTE CRÍTICA<br><span style="font-weight:400;">Calado restringido en tramo Pilar-Corrientes</span></div>`;
+        html = `<div style="background:rgba(239,68,68,0.1); color:#ef4444; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">⚠️ CRITICAL LOW WATER<br><span style="font-weight:400;">Draft restricted in Pilar-Corrientes stretch</span></div>`;
       } else if (trend.pct < -10) {
-        html = `<div style="background:rgba(245,158,11,0.1); color:#f59e0b; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">⚡ BAJANTE MODERADA<br><span style="font-weight:400;">Monitorear calado en cruces críticos</span></div>`;
+        html = `<div style="background:rgba(245,158,11,0.1); color:#f59e0b; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">⚡ MODERATE LOW WATER<br><span style="font-weight:400;">Monitor draft at critical crossings</span></div>`;
       } else if (trend.pct > 20) {
-        html = `<div style="background:rgba(0,229,255,0.1); color:#0ea5e9; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">🌊 CRECIDA DETECTADA<br><span style="font-weight:400;">Caudal superior al 20% de mediana histórica</span></div>`;
+        html = `<div style="background:rgba(0,229,255,0.1); color:#0ea5e9; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">🌊 FLOOD DETECTED<br><span style="font-weight:400;">Flow exceeds 20% of historical median</span></div>`;
       } else {
-        html = `<div style="background:rgba(46,160,67,0.1); color:var(--status-ok); padding:10px; border-radius:6px; font-weight:700;">✅ NO ALERTS<br><span style="font-weight:400;">Condiciones normales de navigation</span></div>`;
+        html = `<div style="background:rgba(46,160,67,0.1); color:var(--status-ok); padding:10px; border-radius:6px; font-weight:700;">✅ NO ALERTS<br><span style="font-weight:400;">Normal navigation conditions</span></div>`;
       }
       el.innerHTML = html;
     }
@@ -281,10 +281,10 @@
     function getTrend(current, median) {
       if (!median) return { text: 'N/A', pct: 0, color: '#aaa' };
       const pct = ((current - median) / median) * 100;
-      if (pct < -20) return { text: 'BAJANTE CRÍTICA', pct: pct.toFixed(0), color: '#ef4444' };
-      if (pct < -10) return { text: 'BAJANTE', pct: pct.toFixed(0), color: '#fbbf24' };
-      if (pct > 20) return { text: 'CRECIDA', pct: '+' + pct.toFixed(0), color: '#00e5ff' };
-      return { text: 'ESTABLE', pct: pct.toFixed(0), color: '#2ea043' };
+      if (pct < -20) return { text: 'CRITICAL LOW WATER', pct: pct.toFixed(0), color: '#ef4444' };
+      if (pct < -10) return { text: 'LOW WATER', pct: pct.toFixed(0), color: '#fbbf24' };
+      if (pct > 20) return { text: 'FLOOD', pct: '+' + pct.toFixed(0), color: '#00e5ff' };
+      return { text: 'STABLE', pct: pct.toFixed(0), color: '#2ea043' };
     }
   </script>
 </body>
