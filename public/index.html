@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -204,7 +204,7 @@
             <span class="lang-sep">|</span>
             <a href="index.html" class="lang-btn active"><img src="https://flagcdn.com/w40/es.png" alt="ES"> ES</a>
         </div>
-        <a href="fluvia.html?logout=true" class="btn-ghost">Iniciar Sesión</a>
+        <a href="fluvia.html" class="btn-ghost">Iniciar Sesión</a>
         <a href="#precios" class="btn-solid">Probar Gratis</a>
     </div>
 </nav>
@@ -593,7 +593,7 @@
                 <li><i class="fa-solid fa-check"></i>Mantenimiento preventivo</li>
                 <li class="disabled"><i class="fa-solid fa-xmark"></i>Copiloto IA</li>
             </ul>
-            <a href="fluvia.html?logout=true" class="price-btn">Seleccionar</a>
+            <a href="fluvia.html" class="price-btn">Seleccionar</a>
         </div>
         <div class="price-card featured reveal">
             <div class="price-badge">MÁS POPULAR</div>
@@ -607,7 +607,7 @@
                 <li><i class="fa-solid fa-check"></i>Comunicaciones satelital</li>
                 <li><i class="fa-solid fa-check"></i>Copiloto IA básico</li>
             </ul>
-            <a href="fluvia.html?logout=true" class="price-btn dark">Comenzar Gratis</a>
+            <a href="fluvia.html" class="price-btn dark">Comenzar Gratis</a>
         </div>
         <div class="price-card reveal">
             <h3>Enterprise</h3>
@@ -631,7 +631,7 @@
     <div class="section-tag">LISTO PARA ZARPAR?</div>
     <h2>Digitaliza tu flota<br><em>hoy mismo.</em></h2>
     <p>Combinamos la experiencia de capitanes veteranos con tecnología de punta. Nuestra misión es transformar la Hidrovía Paraguay-Paraná en la vía navegable más eficiente de Sudamérica.</p>
-    <a href="fluvia.html?logout=true" class="btn-hero">Prueba 14 Días Gratis →</a>
+    <a href="fluvia.html" class="btn-hero">Prueba 14 Días Gratis →</a>
 </section>
 </div>
 
@@ -709,7 +709,18 @@ document.addEventListener('DOMContentLoaded',function(){
         });
     },{threshold:0.3});
     var statsSection=document.querySelector('.hidrovia-stats');
-    if(statsSection)counterObs.observe(statsSection);
+    if(statsSection){
+        counterObs.observe(statsSection);
+        // Fallback: force counters after 2s if IntersectionObserver never fired
+        setTimeout(function(){
+            if(!counterStarted){
+                counterStarted=true;
+                document.querySelectorAll('.hv-stat-num[data-target]').forEach(function(el){
+                    el.textContent=parseInt(el.getAttribute('data-target')).toLocaleString('es-AR');
+                });
+            }
+        },2000);
+    }
 });
 </script>
 </body>

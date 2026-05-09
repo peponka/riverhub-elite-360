@@ -28,6 +28,27 @@
     .map-statusbar { position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; background: rgba(255,255,255,0.9); border-top: 1px solid var(--border-color); padding: 8px 20px; display: flex; align-items: center; gap: 15px; font-family: var(--font-data); font-size: 0.7rem; color: var(--text-sec); }
     .map-statusbar .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; }
   </style>
+<script data-id="auth-guard-v1">
+(function(){
+  var SURL='https://nfybnnpdrvyxucgpqmmo.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  document.documentElement.style.visibility='hidden';
+  function check(){
+    var _sb=supabase.createClient(SURL,SKEY);
+    _sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      else{window.location.replace('fluvia.html');}
+    }).catch(function(){document.documentElement.style.visibility='visible';});
+  }
+  if(window.supabase){check();}
+  else{
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload=check;
+    s.onerror=function(){document.documentElement.style.visibility='visible';};
+    document.head.appendChild(s);
+  }
+})();
+</script>
 </head>
 <body>
   <!-- SIDEBAR -->
