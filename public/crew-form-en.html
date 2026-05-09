@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -206,72 +206,71 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-users"></i> PROGRAMAR NUEVO RELEVO</h1>
+            <h1><i class="fas fa-users"></i> SCHEDULE NEW CREW RELIEF</h1>
             <button class="btn-close" onclick="window.history.back()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
         <div class="body">
-            <p class="subtitle">GESTIÓN DE PERSONAL FLUVIAL</p>
+            <p class="subtitle">RIVER CREW MANAGEMENT</p>
 
             <form id="crewForm">
                 <div class="form-group">
-                    <label>NOMBRE COMPLETO DEL TRIPULANTE</label>
-                    <input type="text" id="name" placeholder="Ej: Roberto Gomez" required>
+                    <label>CREW MEMBER FULL NAME</label>
+                    <input type="text" id="name" placeholder="E.g.: Roberto Gomez" required>
                 </div>
 
                 <div class="form-group">
-                    <label>CARGO / ROL</label>
+                    <label>POSITION / ROLE</label>
                     <select id="role" required>
                         <option value="Captain">Captain</option>
                         <option value="Chief Engineer">Chief Engineer</option>
                         <option value="First Officer">First Officer</option>
-                        <option value="Oficial Fluvial">Oficial Fluvial</option>
-                        <option value="Baqueano">Baqueano</option>
-                        <option value="Contramaestre">Contramaestre</option>
-                        <option value="Engrasador">Engrasador</option>
+                        <option value="Oficial Fluvial">River Officer</option>
+                        <option value="Baqueano">River Pilot</option>
+                        <option value="Contramaestre">Boatswain</option>
+                        <option value="Engrasador">Oiler</option>
                         <option value="Seaman" selected>Seaman</option>
                         <option value="Cook">Cook</option>
-                        <option value="Aprendiz">Aprendiz</option>
+                        <option value="Aprendiz">Apprentice</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>⚠️ BUQUE DE DESTINO (OBLIGATORIO)</label>
+                    <label>⚠️ DESTINATION VESSEL (REQUIRED)</label>
                     <select id="vessel" required>
-                        <option value="">Cargando flota...</option>
+                        <option value="">Loading fleet...</option>
                     </select>
                     <small style="color:#64748b; font-size:0.8rem; margin-top:5px; display:block;">
-                        * Solo se muestran buques registrados en Gestión de Flota.
+                        * Only vessels registered in Fleet Management are shown.
                     </small>
                 </div>
 
                 <div class="row">
                     <div class="form-group">
-                        <label>FECHA DE EMBARQUE</label>
+                        <label>EMBARKATION DATE</label>
                         <input type="date" id="date">
                     </div>
                     <div class="form-group">
-                        <label>DÍAS PREVISTOS</label>
+                        <label>PLANNED DAYS</label>
                         <input type="number" id="days" value="20">
                     </div>
                 </div>
 
                 <div class="info-box">
                     <i class="fas fa-shield-check"></i>
-                    <span>El sistema validará automáticamente los títulos STCW y el apto médico del tripulante contra la
-                        base de datos de Prefectura antes de confirmar el embarque.</span>
+                    <span>The system will automatically validate the crew member's STCW certificates and medical fitness against the Coast Guard database before confirming the embarkation.</span>
                 </div>
             </form>
         </div>
 
         <div class="footer">
             <button type="button" class="btn btn-cancel" onclick="window.history.back()">
-                CANCELAR
+                CANCEL
             </button>
             <button type="submit" class="btn btn-submit" id="submitBtn">
-                EMITIR ORDEN DE RELEVO
+                ISSUE RELIEF ORDER
             </button>
         </div>
     </div>
@@ -305,12 +304,12 @@
 
                 if (error) {
                     console.error("Error fetching vessels:", error);
-                    select.innerHTML = '<option value="">Error cargando flota</option>';
+                    select.innerHTML = '<option value="">Error loading fleet</option>';
                     return;
                 }
 
                 if (data && data.length > 0) {
-                    select.innerHTML = '<option value="">Seleccione Embarcación...</option>';
+                    select.innerHTML = '<option value="">Select Vessel...</option>';
                     data.forEach(v => {
                         const opt = document.createElement('option');
                         opt.value = v.id;
@@ -318,11 +317,11 @@
                         select.appendChild(opt);
                     });
                 } else {
-                    select.innerHTML = '<option value="">Sin buques registrados</option>';
+                    select.innerHTML = '<option value="">No vessels registered</option>';
                 }
             } catch (e) {
                 console.warn("Exception loading vessels:", e);
-                select.innerHTML = '<option value="">Error de conexión</option>';
+                select.innerHTML = '<option value="">Connection error</option>';
             }
         }
 
@@ -341,14 +340,14 @@
             const days = document.getElementById('days').value;
 
             if (!name || name.trim() === '' || !vessel) {
-                if (window.RiverToast) RiverToast.warning('Por favor complete el nombre y seleccione un buque', 'Faltan datos');
+                if (window.RiverToast) RiverToast.warning('Please complete the name and select a vessel', 'Missing data');
                 return;
             }
 
             // Deshabilitar botón y mostrar estado de carga
             // Deshabilitar botón y mostrar estado de carga
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESANDO...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...';
 
             try {
                 // DETECTAR SI ES UN BARCO AIS (LIVE) O UNA ID REAL (UUID)
@@ -374,7 +373,7 @@
 
                     // Simular delay de red
                     await new Promise(r => setTimeout(r, 800));
-                    if (window.RiverToast) RiverToast.success('Orden de Relevo (AIS) Generada Correctamente', 'Completado');
+                    if (window.RiverToast) RiverToast.success('Relief Order (AIS) Generated Successfully', 'Done');
                     setTimeout(() => window.history.back(), 1500);
                     return;
                 }
@@ -411,7 +410,7 @@
 
                 if (error) throw error;
 
-                if (window.RiverToast) RiverToast.success('Orden de Relevo Generada Exitosamente', 'Completado');
+                if (window.RiverToast) RiverToast.success('Relief Order Generated Successfully', 'Done');
                 setTimeout(() => window.history.back(), 1500);
 
             } catch (error) {
@@ -431,16 +430,16 @@
                 saveToLocalStorage(localCrew);
 
                 // Mensaje amigable
-                let msg = 'MODO OFFLINE: Orden guardada en dispositivo local.';
+                let msg = 'OFFLINE MODE: Order saved to local device.';
                 if (error.message && error.message.includes("violates row-level security")) {
-                    msg = 'Permisos insuficientes en DB. Se guardó localmente.';
+                    msg = 'Insufficient DB permissions. Saved locally.';
                 }
-                if (window.RiverToast) RiverToast.info(msg, 'Atención');
+                if (window.RiverToast) RiverToast.info(msg, 'Notice');
                 setTimeout(() => window.history.back(), 1500);
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'EMITIR ORDEN DE RELEVO';
+                    submitBtn.innerHTML = 'ISSUE RELIEF ORDER';
                 }
             }
         });
