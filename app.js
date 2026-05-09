@@ -351,7 +351,7 @@ Sugiere la formación óptima del convoy. Responde SOLO JSON:
             signal: controller.signal,
             body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 1000, responseMimeType: 'application/json' }
+                generationConfig: { temperature: 0.3, maxOutputTokens: 1000 }
             })
         });
         clearTimeout(timeout);
@@ -371,6 +371,9 @@ Sugiere la formación óptima del convoy. Responde SOLO JSON:
         try {
             const jsonMatch = text.match(/\{[\s\S]*\}/);
             suggestion = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+            if (Object.keys(suggestion).length === 0) {
+                suggestion = { config: 'Vacio', _raw_text: text, _raw_data: data };
+            }
         } catch (parseErr) {
             console.error('[Convoy AI] JSON parse failed:', parseErr.message);
             suggestion = { config: 'Respuesta IA', recommendation: text.substring(0, 500), warnings: ['Formato de respuesta no estructurado'] };

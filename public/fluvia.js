@@ -1194,7 +1194,7 @@ async function suggestConvoyIA(){
         var configStr = s.config || s.configuracion || 'N/A';
         
         // Debug dump if empty
-        if (configStr === 'N/A') {
+        if (configStr === 'N/A' || configStr === 'Vacio') {
             console.log('AI Convoy Response Dump:', s);
             return container.innerHTML = '<div style="background:var(--bg-card);padding:16px;border-radius:10px;font-size:12px;overflow:auto;"><strong style="color:#ef4444;">DEBUG - Respuesta IA inesperada (o vacía):</strong><pre>' + JSON.stringify(data, null, 2) + '</pre></div>';
         }
