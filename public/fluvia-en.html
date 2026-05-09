@@ -112,7 +112,7 @@
                 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px" id="dash-kpi-grid">
                     <div class="kpi-card" style="position:relative;overflow:hidden">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                            <div class="kpi-label">FLOTA ACTIVA</div>
+                            <div class="kpi-label">ACTIVE FLEET</div>
                             <i class="fa-solid fa-ship" style="color:var(--accent);font-size:14px;opacity:0.5"></i>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px">
@@ -133,7 +133,7 @@
                     </div>
                     <div class="kpi-card" style="position:relative;overflow:hidden">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                            <div class="kpi-label">CONSUMO TOTAL</div>
+                            <div class="kpi-label">TOTAL CONSUMPTION</div>
                             <i class="fa-solid fa-gas-pump" style="color:var(--orange);font-size:14px;opacity:0.5"></i>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
@@ -155,7 +155,7 @@
                     </div>
                     <div class="kpi-card" style="position:relative;overflow:hidden">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                            <div class="kpi-label">EFICIENCIA RUTA</div>
+                            <div class="kpi-label">ROUTE EFFICIENCY</div>
                             <i class="fa-solid fa-route" style="color:var(--success);font-size:14px;opacity:0.5"></i>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
@@ -189,34 +189,34 @@
                             </div>
                         </div>
                         <!-- Vessel Cards Grid -->
-                        <div class="section-title" style="display:flex;align-items:center;justify-content:space-between"><span>Embarcaciones Recientes</span><span style="font-size:11px;color:var(--accent);cursor:pointer" onclick="navigate('fleet')">Ver todas →</span></div>
+                        <div class="section-title" style="display:flex;align-items:center;justify-content:space-between"><span>Recent Vessels</span><span style="font-size:11px;color:var(--accent);cursor:pointer" onclick="navigate('fleet')">View all →</span></div>
                         <div id="dash-vessels" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
                         <!-- Activity feed -->
-                        <div class="section-title" style="margin-top:16px">Actividad Reciente</div>
+                        <div class="section-title" style="margin-top:16px">Recent Activity</div>
                         <div id="dash-activity"></div>
                         <div class="empty-state" id="dash-activity-empty" style="display:none"><i class="fa-solid fa-clock-rotate-left"></i><p>Sin actividad reciente</p></div>
                     </div>
                     <!-- RIGHT: Live Vessels Panel -->
                     <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:16px;height:fit-content">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-                            <div style="font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--text-primary)">Embarcaciones</div>
-                            <div style="font-size:11px;color:var(--text-secondary)" id="dash-fleet-count">-- bajo monitoreo</div>
+                            <div style="font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--text-primary)">Vessels</div>
+                            <div style="font-size:11px;color:var(--text-secondary)" id="dash-fleet-count">-- being monitored</div>
                         </div>
                         <!-- Vessel status list -->
                         <div id="dash-live-vessels" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto"></div>
                         <!-- Selected vessel detail -->
                         <div id="dash-vessel-detail" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--separator)">
-                            <div style="font-size:10px;font-weight:600;letter-spacing:0.5px;color:var(--text-secondary);margin-bottom:8px">SELECCIONADA · <span id="dash-sel-imo">--</span></div>
+                            <div style="font-size:10px;font-weight:600;letter-spacing:0.5px;color:var(--text-secondary);margin-bottom:8px">SELECTED · <span id="dash-sel-imo">--</span></div>
                             <div style="font-size:18px;font-weight:700;color:var(--text-primary)" id="dash-sel-name">--</div>
                             <div style="font-size:11px;color:var(--text-secondary);margin-top:2px" id="dash-sel-route">--</div>
                             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
                                 <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">CONVOY</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-convoy">--</div></div>
-                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">COMBUSTIBLE</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-fuel">--%</div></div>
+                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">FUEL</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-fuel">--%</div></div>
                                 <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">ETA</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-eta">--</div></div>
                             </div>
                             <div style="display:flex;gap:8px;margin-top:12px">
                                 <button onclick="navigate('bitacora')" style="flex:1;padding:8px;border:1px solid var(--separator);border-radius:8px;background:var(--bg-secondary);font-size:11px;font-weight:600;cursor:pointer;color:var(--text-primary)"><i class="fa-solid fa-book"></i> Abrir bitácora</button>
-                                <button onclick="navigate('comunicaciones')" style="flex:1;padding:8px;border:1px solid var(--separator);border-radius:8px;background:var(--bg-secondary);font-size:11px;font-weight:600;cursor:pointer;color:var(--text-primary)"><i class="fa-solid fa-message"></i> Contactar</button>
+                                <button onclick="navigate('comunicaciones')" style="flex:1;padding:8px;border:1px solid var(--separator);border-radius:8px;background:var(--bg-secondary);font-size:11px;font-weight:600;cursor:pointer;color:var(--text-primary)"><i class="fa-solid fa-message"></i> Contact</button>
                             </div>
                         </div>
                     </div>
@@ -225,17 +225,17 @@
             <!-- MAPA -->
             <div class="view" id="view-mapa" style="padding:0;height:100%;position:relative;">
                 <div id="leaflet-map"></div>
-                <div class="map-legend"><h4>Leyenda</h4><div class="map-legend-item"><div class="map-legend-dot" style="background:var(--success)"></div>Flota propia</div><div class="map-legend-item"><div class="map-legend-dot" style="background:var(--text-secondary)"></div>Trafico AIS terceros</div><div class="map-legend-item"><div class="map-legend-dot" style="background:var(--warning)"></div>Atencion requerida</div><div class="map-legend-item"><div class="map-legend-dot" style="background:var(--error)"></div>Alerta critica</div><div class="map-legend-item" style="margin-top:4px;"><div style="width:20px;height:2px;background:var(--accent);border-radius:1px;"></div>Ruta hidrovia</div></div>
+                <div class="map-legend"><h4>Legend</h4><div class="map-legend-item"><div class="map-legend-dot" style="background:var(--success)"></div>Own fleet</div><div class="map-legend-item"><div class="map-legend-dot" style="background:var(--text-secondary)"></div>Third-party AIS traffic</div><div class="map-legend-item"><div class="map-legend-dot" style="background:var(--warning)"></div>Attention required</div><div class="map-legend-item"><div class="map-legend-dot" style="background:var(--error)"></div>Critical alert</div><div class="map-legend-item" style="margin-top:4px;"><div style="width:20px;height:2px;background:var(--accent);border-radius:1px;"></div>Waterway route</div></div>
             </div>
             <!-- FLEET -->
             <div class="view" id="view-fleet">
-                <div class="view-header"><div><div class="fluvia-title">Gestion de<br><em>Flota.</em></div><div class="fluvia-subtitle">CONTROL DE ACTIVOS - FLOTA OPERATIONAL</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFleet('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fleet')"><i class="fa-solid fa-plus"></i> Add Active</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fleet-total">0</div><div class="stat-lbl">Total Actives</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">En Servicio</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">En Dique</div></div></div>
-                <table class="data-table"><thead><tr><th>EMBARCACION</th><th>TIPO</th><th>ESTADO</th><th>UBICACION</th></tr></thead><tbody id="fleet-tbody"></tbody></table>
+                <div class="view-header"><div><div class="fluvia-title">Gestion de<br><em>Flota.</em></div><div class="fluvia-subtitle">ASSET CONTROL - OPERATIONAL FLEET</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFleet('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fleet')"><i class="fa-solid fa-plus"></i> Add Active</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fleet-total">0</div><div class="stat-lbl">Total Actives</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">In Service</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Dry Dock</div></div></div>
+                <table class="data-table"><thead><tr><th>VESSEL</th><th>TYPE</th><th>STATUS</th><th>LOCATION</th></tr></thead><tbody id="fleet-tbody"></tbody></table>
             </div>
             <!-- COPILOTO -->
             <div class="view" id="view-copiloto">
-                <div class="fluvia-title">Copiloto<br><em>IA.</em></div><div class="fluvia-subtitle">CENTRO DE INTELLIGENCE ARTIFICIAL — FLUVIAFLEET AI (GEMINI)</div>
+                <div class="fluvia-title">Copiloto<br><em>IA.</em></div><div class="fluvia-subtitle">ARTIFICIAL INTELLIGENCE CENTER — FLUVIAFLEET AI (GEMINI)</div>
                 
                 <!-- IA INTELLIGENCE CARDS -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
@@ -244,12 +244,12 @@
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
                             <div style="display:flex;align-items:center;gap:10px;">
                                 <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-wrench" style="color:#fff;font-size:16px;"></i></div>
-                                <div><div style="font-weight:700;font-size:14px;">Maintenance Predictivo</div><div style="font-size:11px;color:var(--text-secondary);">Predicción de fallas con IA</div></div>
+                                <div><div style="font-weight:700;font-size:14px;">Predictive Maintenance</div><div style="font-size:11px;color:var(--text-secondary);">Predicción de fallas con IA</div></div>
                             </div>
-                            <button class="btn-primary" onclick="runPredictiveMaintenance()" style="font-size:11px;padding:6px 14px;" id="btn-predict-maint"><i class="fa-solid fa-brain"></i> Analizar</button>
+                            <button class="btn-primary" onclick="runPredictiveMaintenance()" style="font-size:11px;padding:6px 14px;" id="btn-predict-maint"><i class="fa-solid fa-brain"></i> Analyze</button>
                         </div>
                         <div id="predict-maint-results" style="max-height:300px;overflow-y:auto;">
-                            <div style="text-align:center;color:var(--text-secondary);font-size:12px;padding:30px 0;"><i class="fa-solid fa-robot" style="font-size:24px;margin-bottom:8px;display:block;opacity:0.3;"></i>Hacé click en "Analizar" para que la IA escanee tu flota</div>
+                            <div style="text-align:center;color:var(--text-secondary);font-size:12px;padding:30px 0;"><i class="fa-solid fa-robot" style="font-size:24px;margin-bottom:8px;display:block;opacity:0.3;"></i>Hacé click en "Analyze" para que la IA escanee tu flota</div>
                         </div>
                     </div>
                     <!-- ANOMALÍAS DE CONSUMO -->
@@ -257,173 +257,173 @@
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
                             <div style="display:flex;align-items:center;gap:10px;">
                                 <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#10b981,#3b82f6);display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-gas-pump" style="color:#fff;font-size:16px;"></i></div>
-                                <div><div style="font-weight:700;font-size:14px;">Anomalías de Consumo</div><div style="font-size:11px;color:var(--text-secondary);">Detección de patrones anómalos</div></div>
+                                <div><div style="font-weight:700;font-size:14px;">Anomalías de Consumption</div><div style="font-size:11px;color:var(--text-secondary);">Detección de patrones anómalos</div></div>
                             </div>
-                            <button class="btn-primary" onclick="runFuelAnomalies()" style="font-size:11px;padding:6px 14px;" id="btn-fuel-anomalies"><i class="fa-solid fa-magnifying-glass-chart"></i> Escanear</button>
+                            <button class="btn-primary" onclick="runFuelAnomalies()" style="font-size:11px;padding:6px 14px;" id="btn-fuel-anomalies"><i class="fa-solid fa-magnifying-glass-chart"></i> Scan</button>
                         </div>
                         <div id="fuel-anomaly-results" style="max-height:300px;overflow-y:auto;">
-                            <div style="text-align:center;color:var(--text-secondary);font-size:12px;padding:30px 0;"><i class="fa-solid fa-gas-pump" style="font-size:24px;margin-bottom:8px;display:block;opacity:0.3;"></i>Hacé click en "Escanear" para auditar el consumo</div>
+                            <div style="text-align:center;color:var(--text-secondary);font-size:12px;padding:30px 0;"><i class="fa-solid fa-gas-pump" style="font-size:24px;margin-bottom:8px;display:block;opacity:0.3;"></i>Hacé click en "Scan" para auditar el consumo</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- CHAT -->
-                <div style="margin-top:20px;font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:1px;text-transform:uppercase;">Asistente Conversacional</div>
-                <div class="comm-msg-area" id="copiloto-chat" style="margin-top:8px;min-height:200px;max-height:300px;overflow-y:auto;"><p style="color:var(--text-secondary);font-size:13px;"><i class="fa-solid fa-robot" style="margin-right:6px"></i>Hola! Soy el AI Copilot de FluviaFleet. Preguntame sobre tu flota, rutas, combustible, o cualquier dato operativo.</p></div>
-                <div class="comm-input-row"><input class="comm-input" id="copiloto-input" placeholder="Ej: ¿Cuantas embarcaciones tengo en viaje?" onkeydown="if(event.key==='Enter')sendCopiloto()"><button class="btn-primary" id="copiloto-send" onclick="sendCopiloto()"><i class="fa-solid fa-paper-plane"></i> Enviar</button></div>
+                <div style="margin-top:20px;font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:1px;text-transform:uppercase;">Conversational Assistant</div>
+                <div class="comm-msg-area" id="copiloto-chat" style="margin-top:8px;min-height:200px;max-height:300px;overflow-y:auto;"><p style="color:var(--text-secondary);font-size:13px;"><i class="fa-solid fa-robot" style="margin-right:6px"></i>Hello! I am the FluviaFleet AI Copilot. Ask me about your fleet, routes, fuel, or any operational data.</p></div>
+                <div class="comm-input-row"><input class="comm-input" id="copiloto-input" placeholder="Ej: ¿Cuantas embarcaciones tengo en viaje?" onkeydown="if(event.key==='Enter')sendCopiloto()"><button class="btn-primary" id="copiloto-send" onclick="sendCopiloto()"><i class="fa-solid fa-paper-plane"></i> Send</button></div>
             </div>
             <!-- CONVOY -->
             <div class="view" id="view-convoy">
-                <div class="fluvia-title">Armador de<br><em>Convoyes.</em></div><div class="fluvia-subtitle">FORMACION (0/18)</div>
+                <div class="fluvia-title">Armador de<br><em>Convoyes.</em></div><div class="fluvia-subtitle">FORMATION (0/18)</div>
                 
                 <!-- IA CONVOY OPTIMIZER -->
                 <div style="background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(59,130,246,0.1));border:1px solid rgba(139,92,246,0.3);border-radius:12px;padding:16px;margin-top:16px;margin-bottom:16px;">
                     <div style="display:flex;align-items:center;justify-content:space-between;">
                         <div style="display:flex;align-items:center;gap:10px;">
                             <i class="fa-solid fa-wand-magic-sparkles" style="font-size:20px;color:#8b5cf6;"></i>
-                            <div><div style="font-weight:700;font-size:13px;">Optimizador IA de Convoy</div><div style="font-size:11px;color:var(--text-secondary);">Formación óptima según nivel del río y calados</div></div>
+                            <div><div style="font-weight:700;font-size:13px;">AI Convoy Optimizer</div><div style="font-size:11px;color:var(--text-secondary);">Formación óptima según nivel del río y calados</div></div>
                         </div>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <input type="text" id="convoy-destination" placeholder="Destination (ej: Rosario)" style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:12px;width:160px;color:var(--text-primary);">
-                            <button class="btn-primary" onclick="suggestConvoyIA()" style="font-size:11px;padding:6px 14px;background:linear-gradient(135deg,#8b5cf6,#3b82f6);" id="btn-convoy-ai"><i class="fa-solid fa-robot"></i> Sugerir</button>
+                            <button class="btn-primary" onclick="suggestConvoyIA()" style="font-size:11px;padding:6px 14px;background:linear-gradient(135deg,#8b5cf6,#3b82f6);" id="btn-convoy-ai"><i class="fa-solid fa-robot"></i> Suggest</button>
                         </div>
                     </div>
                     <div id="convoy-ai-result" style="margin-top:12px;display:none;"></div>
                 </div>
 
                 <div style="margin-top:20px">
-                    <div class="convoy-remolcador"><i class="fa-regular fa-clone"></i> REMOLCADOR (Proa)</div>
-                    <div style="margin:8px 0;font-size:10px;color:var(--text-secondary);text-align:center;letter-spacing:1px;">BARCAZAS</div>
+                    <div class="convoy-remolcador"><i class="fa-regular fa-clone"></i> TUGBOAT (Bow)</div>
+                    <div style="margin:8px 0;font-size:10px;color:var(--text-secondary);text-align:center;letter-spacing:1px;">BARGES</div>
                     <div class="convoy-grid"><div class="convoy-slot"><i class="fa-regular fa-clone"></i>F1-P1</div><div class="convoy-slot"><i class="fa-regular fa-clone"></i>F1-P2</div><div class="convoy-slot"><i class="fa-regular fa-clone"></i>F1-P3</div><div class="convoy-slot"><i class="fa-regular fa-clone"></i>F1-P4</div><div class="convoy-slot"><i class="fa-regular fa-clone"></i>F2-P1</div><div class="convoy-slot"><i class="fa-regular fa-clone"></i>F2-P2</div><div class="convoy-slot"><i class="fa-regular fa-clone"></i>F2-P3</div><div class="convoy-slot"><i class="fa-regular fa-clone"></i>F2-P4</div></div>
-                    <div class="convoy-remolcador" style="margin-top:8px"><i class="fa-regular fa-clone"></i> REMOLCADOR (Popa)</div>
+                    <div class="convoy-remolcador" style="margin-top:8px"><i class="fa-regular fa-clone"></i> TUGBOAT (Stern)</div>
                 </div>
-                <div class="fluvia-subtitle" style="margin-top:24px">FLOTA DISPONIBLE</div>
+                <div class="fluvia-subtitle" style="margin-top:24px">AVAILABLE FLEET</div>
                 <div class="fleet-chips" id="convoy-chips"></div>
             </div>
             <!-- VIAJES -->
             <div class="view" id="view-viajes">
-                <div class="view-header"><div><div class="fluvia-title">Gestion de<br><em>Viajes.</em></div><div class="fluvia-subtitle">CONTROL DE TRANSITO - DESPACHO ACTIVO</div></div><div class="header-actions"><button class="btn-export" onclick="exportViajes('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportViajes('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('viaje')"><i class="fa-solid fa-plus"></i> New Solicitud</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Navegando</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Pendientes</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Toneladas</div></div></div>
-                <div id="viajes-list"></div><div class="empty-state" id="viajes-empty"><i class="fa-solid fa-route"></i><p>No se encontraron activos en dispatch</p></div>
+                <div class="view-header"><div><div class="fluvia-title">Gestion de<br><em>Viajes.</em></div><div class="fluvia-subtitle">TRANSIT CONTROL - ACTIVE DISPATCH</div></div><div class="header-actions"><button class="btn-export" onclick="exportViajes('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportViajes('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('viaje')"><i class="fa-solid fa-plus"></i> New Solicitud</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">In Transit</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Pending</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Tons</div></div></div>
+                <div id="viajes-list"></div><div class="empty-state" id="viajes-empty"><i class="fa-solid fa-route"></i><p>No assets found in dispatch</p></div>
             </div>
             <!-- BITACORA -->
             <div class="view" id="view-bitacora">
-                <div class="view-header"><div><div class="fluvia-title">Bitacora<br><em>Digital.</em></div><div class="fluvia-subtitle">REGISTRO OPERATIVO - HISTORIAL</div></div><div class="header-actions"><button class="btn-export" onclick="exportBitacora('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportBitacora('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('bitacora')"><i class="fa-solid fa-plus"></i> New Entrada</button></div></div>
-                <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" placeholder="Buscar entrada..."></div>
-                <div id="bitacora-list"></div><div class="empty-state" id="bitacora-empty"><i class="fa-solid fa-book-open"></i><p>Sin entradas de bitacora recientes</p></div>
+                <div class="view-header"><div><div class="fluvia-title">Bitacora<br><em>Digital.</em></div><div class="fluvia-subtitle">OPERATIONAL LOG - HISTORY</div></div><div class="header-actions"><button class="btn-export" onclick="exportBitacora('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportBitacora('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('bitacora')"><i class="fa-solid fa-plus"></i> New Entrada</button></div></div>
+                <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" placeholder="Search entry..."></div>
+                <div id="bitacora-list"></div><div class="empty-state" id="bitacora-empty"><i class="fa-solid fa-book-open"></i><p>No recent log entries</p></div>
             </div>
             <!-- COMUNICACIONES -->
             <div class="view" id="view-comunicaciones">
-                <div class="fluvia-title">Canal de<br><em>Communications.</em></div><div class="fluvia-subtitle">ENLACE SATELITAL ACTIVO</div>
+                <div class="fluvia-title">Canal de<br><em>Communications.</em></div><div class="fluvia-subtitle">ACTIVE SATELLITE LINK</div>
                 <div class="comm-channel" style="margin-top:20px"><h4>CH-16</h4><div class="freq">156.800 MHz</div></div>
                 <div class="comm-channel"><h4>CH-06</h4><div class="freq">156.300 MHz</div></div>
-                <div class="comm-msg-area"><p style="color:var(--text-secondary);font-size:12px">Canal de comunicaciones listo.</p></div>
-                <div class="comm-input-row"><input class="comm-input" placeholder="Mensaje..."><button class="btn-primary" id="comm-send-btn">PTT</button></div>
+                <div class="comm-msg-area"><p style="color:var(--text-secondary);font-size:12px">Communications channel ready.</p></div>
+                <div class="comm-input-row"><input class="comm-input" placeholder="Message..."><button class="btn-primary" id="comm-send-btn">PTT</button></div>
             </div>
             <!-- TRIPULACION -->
             <div class="view" id="view-tripulacion">
-                <div class="view-header"><div><div class="fluvia-title">Tripulacion<br><em>&amp; Safety.</em></div><div class="fluvia-subtitle">MANAGEMENT DE DOTACIONES - CONTROL BIOMETRICO</div></div><div class="header-actions"><button class="btn-export" onclick="exportCrew('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportCrew('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('crew')"><i class="fa-solid fa-plus"></i> Add Tripulante</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="crew-total">0</div><div class="stat-lbl">Total Crew</div></div><div class="stat-cell"><div class="stat-val" id="crew-on">0</div><div class="stat-lbl">Embarcados</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">En Descanso</div></div></div>
-                <div id="crew-list"></div><div class="empty-state" id="crew-empty"><i class="fa-solid fa-users"></i><p>Sin tripulacion asignada</p></div>
+                <div class="view-header"><div><div class="fluvia-title">Tripulacion<br><em>&amp; Safety.</em></div><div class="fluvia-subtitle">CREW MANAGEMENT - BIOMETRIC CONTROL</div></div><div class="header-actions"><button class="btn-export" onclick="exportCrew('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportCrew('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('crew')"><i class="fa-solid fa-plus"></i> Add Tripulante</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="crew-total">0</div><div class="stat-lbl">Total Crew</div></div><div class="stat-cell"><div class="stat-val" id="crew-on">0</div><div class="stat-lbl">Onboard</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">On Leave</div></div></div>
+                <div id="crew-list"></div><div class="empty-state" id="crew-empty"><i class="fa-solid fa-users"></i><p>No crew assigned</p></div>
             </div>
-            <!-- COMBUSTIBLE -->
+            <!-- FUEL -->
             <div class="view" id="view-combustible">
-                <div class="view-header"><div><div class="fluvia-title">Bunker y<br><em>Fuel.</em></div><div class="fluvia-subtitle">MANAGEMENT DE CONSUMO - CONTROL OPERATIVO</div></div><div class="header-actions"><button class="btn-export" onclick="exportFuel('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFuel('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Registrar Carga</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fuel-count">0</div><div class="stat-lbl">Cargas Hoy</div></div><div class="stat-cell"><div class="stat-val" id="fuel-total">0L</div><div class="stat-lbl">Consumo</div></div><div class="stat-cell"><div class="stat-val">--</div><div class="stat-lbl">Eficiencia</div></div></div>
-                <div id="fuel-list"></div><div class="empty-state" id="fuel-empty"><i class="fa-solid fa-gas-pump"></i><p>Sin registros de consumo</p></div>
+                <div class="view-header"><div><div class="fluvia-title">Bunker y<br><em>Fuel.</em></div><div class="fluvia-subtitle">CONSUMPTION MANAGEMENT - OPERATIONAL CONTROL</div></div><div class="header-actions"><button class="btn-export" onclick="exportFuel('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFuel('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Registrar Carga</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fuel-count">0</div><div class="stat-lbl">Refuels Today</div></div><div class="stat-cell"><div class="stat-val" id="fuel-total">0L</div><div class="stat-lbl">Consumption</div></div><div class="stat-cell"><div class="stat-val">--</div><div class="stat-lbl">Efficiency</div></div></div>
+                <div id="fuel-list"></div><div class="empty-state" id="fuel-empty"><i class="fa-solid fa-gas-pump"></i><p>No consumption records</p></div>
             </div>
             <!-- MANTENIMIENTO -->
             <div class="view" id="view-mantenimiento">
-                <div class="view-header"><div><div class="fluvia-title">Ordenes de<br><em>Maintenance.</em></div><div class="fluvia-subtitle">MANAGEMENT PREVENTIVA Y CORRECTIVA</div></div><div class="header-actions"><button class="btn-export" onclick="exportMaint('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportMaint('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('maint')"><i class="fa-solid fa-plus"></i> New Orden</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="maint-pending">0</div><div class="stat-lbl">Pendientes</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">En Progreso</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Completados</div></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Ordenes de<br><em>Maintenance.</em></div><div class="fluvia-subtitle">PREVENTIVE AND CORRECTIVE MANAGEMENT</div></div><div class="header-actions"><button class="btn-export" onclick="exportMaint('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportMaint('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('maint')"><i class="fa-solid fa-plus"></i> New Orden</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="maint-pending">0</div><div class="stat-lbl">Pending</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">In Progress</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Completed</div></div></div>
                 <div id="maint-list"></div>
             </div>
             <!-- PANOL -->
             <div class="view" id="view-panol">
-                <div class="view-header"><div><div class="fluvia-title">Panol de<br><em>Inventario.</em></div><div class="fluvia-subtitle">MANAGEMENT DE REPUESTOS Y SUMINISTROS</div></div><div class="header-actions"><button class="btn-export" onclick="exportPanol('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportPanol('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('panol')"><i class="fa-solid fa-plus"></i> Add Item</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="panol-total">0</div><div class="stat-lbl">Total Items</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Stock Bajo</div></div><div class="stat-cell"><div class="stat-val">5</div><div class="stat-lbl">Categorias</div></div></div>
-                <div class="search-wrapper"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" placeholder="Buscar repuesto..."></div>
+                <div class="view-header"><div><div class="fluvia-title">Panol de<br><em>Inventario.</em></div><div class="fluvia-subtitle">SPARE PARTS AND SUPPLIES MANAGEMENT</div></div><div class="header-actions"><button class="btn-export" onclick="exportPanol('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportPanol('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('panol')"><i class="fa-solid fa-plus"></i> Add Item</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="panol-total">0</div><div class="stat-lbl">Total Items</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Low Stock</div></div><div class="stat-cell"><div class="stat-val">5</div><div class="stat-lbl">Categories</div></div></div>
+                <div class="search-wrapper"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" placeholder="Search spare part..."></div>
                 <div id="panol-list"></div>
             </div>
             <!-- HIDROLOGIA -->
             <div class="view" id="view-hidrologia">
-                <div class="fluvia-title">Pronostico<br><em>Hidrovia.</em></div><div class="fluvia-subtitle">NIVELES Y CONDICIONES FLUVIALES - OPEN METEO</div>
-                <div class="stat-row" id="hidro-stats"><div class="stat-cell"><div class="stat-val" id="hidro-asu">--</div><div class="stat-lbl">Nivel ASU</div></div><div class="stat-cell"><div class="stat-val" id="hidro-pir">--</div><div class="stat-lbl">Nivel PIR</div></div><div class="stat-cell"><div class="stat-val" id="hidro-trend">--</div><div class="stat-lbl">Tendencia</div></div></div>
-                <div class="section-title">Pronostico 7 Dias</div>
+                <div class="fluvia-title">Pronostico<br><em>Hidrovia.</em></div><div class="fluvia-subtitle">RIVER LEVELS AND CONDITIONS - OPEN METEO</div>
+                <div class="stat-row" id="hidro-stats"><div class="stat-cell"><div class="stat-val" id="hidro-asu">--</div><div class="stat-lbl">ASU Level</div></div><div class="stat-cell"><div class="stat-val" id="hidro-pir">--</div><div class="stat-lbl">PIR Level</div></div><div class="stat-cell"><div class="stat-val" id="hidro-trend">--</div><div class="stat-lbl">Trend</div></div></div>
+                <div class="section-title">7-Day Forecast</div>
                 <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px;margin-top:12px"><canvas id="hidro-chart" height="200"></canvas></div>
-                <div class="section-title">Estaciones</div>
+                <div class="section-title">Stations</div>
                 <div id="hidro-stations"></div>
             </div>
             <!-- REPORTES -->
             <div class="view" id="view-reportes">
-                <div class="view-header"><div><div class="fluvia-title">Reportes &amp;<br><em>Analytics.</em></div><div class="fluvia-subtitle">INTELLIGENCE OPERATIONAL - KPI DASHBOARD</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Reporte Flota PDF"><i class="fa-solid fa-file-pdf"></i> Flota</button><button class="btn-export" onclick="exportViajes('pdf')" title="Reporte Viajes PDF"><i class="fa-solid fa-file-pdf"></i> Viajes</button><button class="btn-export" onclick="exportFuel('excel')" title="Fuel Excel"><i class="fa-solid fa-file-excel"></i> Fuel</button><button class="btn-export" onclick="exportBitacora('excel')" title="Bitacora Excel"><i class="fa-solid fa-file-excel"></i> Bitacora</button></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Reportes &amp;<br><em>Analytics.</em></div><div class="fluvia-subtitle">OPERATIONAL INTELLIGENCE - KPI DASHBOARD</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Fleet Report PDF"><i class="fa-solid fa-file-pdf"></i> Flota</button><button class="btn-export" onclick="exportViajes('pdf')" title="Trips Report PDF"><i class="fa-solid fa-file-pdf"></i> Viajes</button><button class="btn-export" onclick="exportFuel('excel')" title="Fuel Excel"><i class="fa-solid fa-file-excel"></i> Fuel</button><button class="btn-export" onclick="exportBitacora('excel')" title="Bitacora Excel"><i class="fa-solid fa-file-excel"></i> Bitacora</button></div></div>
                 <div class="admin-stats" id="report-stats" style="margin-top:16px"></div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
-                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px"><div class="fluvia-subtitle">FLOTA POR ESTADO</div><canvas id="chart-fleet" height="200"></canvas></div>
-                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px"><div class="fluvia-subtitle">COMBUSTIBLE WEEKL</div><canvas id="chart-fuel" height="200"></canvas></div>
+                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px"><div class="fluvia-subtitle">FLOTA POR STATUS</div><canvas id="chart-fleet" height="200"></canvas></div>
+                    <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px"><div class="fluvia-subtitle">FUEL WEEKL</div><canvas id="chart-fuel" height="200"></canvas></div>
                 </div>
-                <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px;margin-top:16px"><div class="fluvia-subtitle">ACTIVIDAD DE BITACORA (ULTIMOS 30 DIAS)</div><canvas id="chart-activity" height="150"></canvas></div>
+                <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:20px;margin-top:16px"><div class="fluvia-subtitle">LOGBOOK ACTIVITY (LAST 30 DAYS)</div><canvas id="chart-activity" height="150"></canvas></div>
             </div>
             <!-- CALADO -->
             <div class="view" id="view-calado">
-                <div class="view-header"><div><div class="fluvia-title">Calados &amp;<br><em>Hidrometria.</em></div><div class="fluvia-subtitle">CONTROL DE CALADO - SEGURIDAD OPERATIONAL</div></div><div class="header-actions"><button class="btn-export" onclick="exportCalado('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportCalado('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('calado')"><i class="fa-solid fa-plus"></i> Registrar Lectura</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="calado-total">0</div><div class="stat-lbl">Embarcaciones</div></div><div class="stat-cell"><div class="stat-val" id="calado-alerts">0</div><div class="stat-lbl">En Alerta</div></div><div class="stat-cell"><div class="stat-val" id="calado-avg">--</div><div class="stat-lbl">Promedio (m)</div></div></div>
+                <div class="view-header"><div><div class="fluvia-title">Calados &amp;<br><em>Hidrometria.</em></div><div class="fluvia-subtitle">DRAFT CONTROL - OPERATIONAL SAFETY</div></div><div class="header-actions"><button class="btn-export" onclick="exportCalado('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportCalado('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('calado')"><i class="fa-solid fa-plus"></i> Record Reading</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="calado-total">0</div><div class="stat-lbl">Vessels</div></div><div class="stat-cell"><div class="stat-val" id="calado-alerts">0</div><div class="stat-lbl">On Alert</div></div><div class="stat-cell"><div class="stat-val" id="calado-avg">--</div><div class="stat-lbl">Average (m)</div></div></div>
                 <div id="calado-list"></div>
-                <div class="section-title" style="margin-top:24px">Historial de Lecturas</div>
+                <div class="section-title" style="margin-top:24px">Reading History</div>
                 <div id="calado-history"></div>
-                <div class="empty-state" id="calado-empty" style="display:none"><i class="fa-solid fa-ruler-vertical"></i><p>Sin lecturas de calado registradas</p></div>
+                <div class="empty-state" id="calado-empty" style="display:none"><i class="fa-solid fa-ruler-vertical"></i><p>No draft readings recorded</p></div>
             </div>
             <!-- INCIDENTES -->
             <div class="view" id="view-incidentes">
-                <div class="view-header"><div><div class="fluvia-title">Registro de<br><em>Incidents.</em></div><div class="fluvia-subtitle">SEGURIDAD OPERATIONAL - REPORTES</div></div><div class="header-actions"><button class="btn-export" onclick="exportIncidents('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportIncidents('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('incidente')"><i class="fa-solid fa-plus"></i> Reportar Incidente</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="inc-total">0</div><div class="stat-lbl">Total</div></div><div class="stat-cell"><div class="stat-val" id="inc-open">0</div><div class="stat-lbl">Abiertos</div></div><div class="stat-cell"><div class="stat-val" id="inc-critical">0</div><div class="stat-lbl">Criticos</div></div></div>
-                <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="inc-search" placeholder="Buscar incidente..." oninput="filterIncidents()"></div>
+                <div class="view-header"><div><div class="fluvia-title">Registro de<br><em>Incidents.</em></div><div class="fluvia-subtitle">OPERATIONAL SAFETY - REPORTS</div></div><div class="header-actions"><button class="btn-export" onclick="exportIncidents('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportIncidents('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('incidente')"><i class="fa-solid fa-plus"></i> Report Incident</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="inc-total">0</div><div class="stat-lbl">Total</div></div><div class="stat-cell"><div class="stat-val" id="inc-open">0</div><div class="stat-lbl">Open</div></div><div class="stat-cell"><div class="stat-val" id="inc-critical">0</div><div class="stat-lbl">Critical</div></div></div>
+                <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="inc-search" placeholder="Search incident..." oninput="filterIncidents()"></div>
                 <div id="inc-list"></div>
-                <div class="empty-state" id="inc-empty"><i class="fa-solid fa-triangle-exclamation"></i><p>Sin incidentes reportados</p></div>
+                <div class="empty-state" id="inc-empty"><i class="fa-solid fa-triangle-exclamation"></i><p>No incidents reported</p></div>
             </div>
             <!-- BRIEFING DIARIO -->
             <div class="view" id="view-briefing">
-                <div class="fluvia-title">Briefing<br><em>Diario.</em></div><div class="fluvia-subtitle" id="briefing-date">RESUMEN OPERATIVO</div>
-                <div class="stat-row" id="briefing-stats"><div class="stat-cell"><div class="stat-val" id="brief-vessels">--</div><div class="stat-lbl">Flota Activa</div></div><div class="stat-cell"><div class="stat-val" id="brief-trips">--</div><div class="stat-lbl">Viajes Hoy</div></div><div class="stat-cell"><div class="stat-val" id="brief-fuel">--</div><div class="stat-lbl">Fuel</div></div><div class="stat-cell"><div class="stat-val" id="brief-crew">--</div><div class="stat-lbl">Crew</div></div></div>
-                <div class="section-title" style="margin-top:24px">Clima &amp; Condiciones</div>
-                <div id="briefing-weather" class="info-card"><i class="fa-solid fa-cloud-sun"></i><div class="info-card-text"><h4>Meteorologia</h4><p>Loading...</p></div></div>
-                <div class="section-title">Actividad Reciente</div>
+                <div class="fluvia-title">Briefing<br><em>Diario.</em></div><div class="fluvia-subtitle" id="briefing-date">OPERATIONAL SUMMARY</div>
+                <div class="stat-row" id="briefing-stats"><div class="stat-cell"><div class="stat-val" id="brief-vessels">--</div><div class="stat-lbl">Active Fleet</div></div><div class="stat-cell"><div class="stat-val" id="brief-trips">--</div><div class="stat-lbl">Trips Today</div></div><div class="stat-cell"><div class="stat-val" id="brief-fuel">--</div><div class="stat-lbl">Fuel</div></div><div class="stat-cell"><div class="stat-val" id="brief-crew">--</div><div class="stat-lbl">Crew</div></div></div>
+                <div class="section-title" style="margin-top:24px">Weather &amp; Conditions</div>
+                <div id="briefing-weather" class="info-card"><i class="fa-solid fa-cloud-sun"></i><div class="info-card-text"><h4>Weather</h4><p>Loading...</p></div></div>
+                <div class="section-title">Recent Activity</div>
                 <div id="briefing-activity"></div>
-                <div class="section-title">Alertas del Dia</div>
-                <div id="briefing-alerts"><div class="empty-state"><i class="fa-regular fa-circle-check"></i><p>Sin alertas criticas hoy</p></div></div>
+                <div class="section-title">Alerts of the Day</div>
+                <div id="briefing-alerts"><div class="empty-state"><i class="fa-regular fa-circle-check"></i><p>No critical alerts today</p></div></div>
             </div>
             <!-- TRACKING -->
             <div class="view" id="view-tracking">
-                <div class="view-header"><div><div class="fluvia-title">Tracking de<br><em>Cargas.</em></div><div class="fluvia-subtitle">SEGUIMIENTO EN TIEMPO REAL - HIDROVIA</div></div><div class="header-actions"><button class="btn-export" onclick="exportTracking('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportTracking('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="track-active">0</div><div class="stat-lbl">En Transito</div></div><div class="stat-cell"><div class="stat-val" id="track-total-cargo">0</div><div class="stat-lbl">Toneladas</div></div><div class="stat-cell"><div class="stat-val" id="track-completed">0</div><div class="stat-lbl">Completados</div></div></div>
-                <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="track-search" placeholder="Buscar carga, embarcacion o puerto..." oninput="filterTracking()"></div>
-                <div class="section-title">Cargas en Transito</div>
+                <div class="view-header"><div><div class="fluvia-title">Tracking de<br><em>Cargas.</em></div><div class="fluvia-subtitle">REAL-TIME TRACKING - WATERWAY</div></div><div class="header-actions"><button class="btn-export" onclick="exportTracking('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportTracking('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="track-active">0</div><div class="stat-lbl">En Transito</div></div><div class="stat-cell"><div class="stat-val" id="track-total-cargo">0</div><div class="stat-lbl">Tons</div></div><div class="stat-cell"><div class="stat-val" id="track-completed">0</div><div class="stat-lbl">Completed</div></div></div>
+                <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="track-search" placeholder="Search cargo, vessel, or port..." oninput="filterTracking()"></div>
+                <div class="section-title">Cargo in Transit</div>
                 <div id="tracking-active-list"></div>
-                <div class="section-title">Historial de Envios</div>
+                <div class="section-title">Shipping History</div>
                 <div id="tracking-history-list"></div>
-                <div class="empty-state" id="tracking-empty"><i class="fa-solid fa-location-dot"></i><p>Sin cargas registradas</p></div>
+                <div class="empty-state" id="tracking-empty"><i class="fa-solid fa-location-dot"></i><p>No cargo registered</p></div>
             </div>
             <!-- PLANES & FACTURACION -->
             <div class="view" id="view-planes">
                 <div class="fluvia-title">Planes &amp;<br><em>Facturacion.</em></div>
-                <div class="fluvia-subtitle">ELIGE TU PLAN - HIDROVIA INTELIGENTE</div>
+                <div class="fluvia-subtitle">CHOOSE YOUR PLAN - SMART WATERWAY</div>
                 <div class="plan-toggle" style="margin-top:20px">
-                    <span class="plan-period active" id="plan-monthly" onclick="togglePeriod('monthly')">Mensual</span>
-                    <span class="plan-period" id="plan-yearly" onclick="togglePeriod('yearly')">Anual <small>-20%</small></span>
+                    <span class="plan-period active" id="plan-monthly" onclick="togglePeriod('monthly')">Monthly</span>
+                    <span class="plan-period" id="plan-yearly" onclick="togglePeriod('yearly')">Yearly <small>-20%</small></span>
                 </div>
                 <div class="pricing-grid" id="pricing-grid">
                     <div class="pricing-card">
                         <div class="plan-icon"><i class="fa-solid fa-ship"></i></div>
-                        <h3 class="plan-name">Por Barge</h3>
-                        <p class="plan-desc">Control individual de cada embarcacion de tu flota</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="149" data-yearly="119">$149</span><span class="plan-unit">/barcaza/mes</span></div>
+                        <h3 class="plan-name">Per Barge</h3>
+                        <p class="plan-desc">Individual control of each vessel in your fleet</p>
+                        <div class="plan-price"><span class="plan-amount" data-monthly="149" data-yearly="119">$149</span><span class="plan-unit">/barge/month</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>1 embarcacion</li>
+                            <li><i class="fa-solid fa-check"></i>1 vessel</li>
                             <li><i class="fa-solid fa-check"></i>Tracking GPS en tiempo real</li>
                             <li><i class="fa-solid fa-check"></i>Bitacora digital</li>
                             <li><i class="fa-solid fa-check"></i>Control de combustible</li>
                             <li><i class="fa-solid fa-check"></i>Maintenance preventivo</li>
-                            <li><i class="fa-solid fa-check"></i>Control de calado</li>
+                            <li><i class="fa-solid fa-check"></i>Draft control</li>
                             <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>AI Copilot</li>
                             <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>API Integraciones</li>
                         </ul>
@@ -433,16 +433,16 @@
                         <div class="plan-badge">MAS POPULAR</div>
                         <div class="plan-icon"><i class="fa-solid fa-anchor"></i></div>
                         <h3 class="plan-name">Combo Flota</h3>
-                        <p class="plan-desc">Gestion integral para flotas de hasta 50 embarcaciones</p>
+                        <p class="plan-desc">Comprehensive management for fleets up to 50 vessels</p>
                         <div class="plan-price"><span class="plan-amount" data-monthly="799" data-yearly="639">$799</span><span class="plan-unit">/mes (hasta 50 barcazas)</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Hasta 50 embarcaciones</li>
-                            <li><i class="fa-solid fa-check"></i>Todo de Por Barge</li>
+                            <li><i class="fa-solid fa-check"></i>Up to 50 vessels</li>
+                            <li><i class="fa-solid fa-check"></i>Todo de Per Barge</li>
                             <li><i class="fa-solid fa-check"></i>Armador de convoyes</li>
                             <li><i class="fa-solid fa-check"></i>Gestion de tripulacion</li>
                             <li><i class="fa-solid fa-check"></i>Communications</li>
                             <li><i class="fa-solid fa-check"></i>AI Copilot basico</li>
-                            <li><i class="fa-solid fa-check"></i>Reportes &amp; analytics</li>
+                            <li><i class="fa-solid fa-check"></i>Reports &amp; analytics</li>
                             <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>API Integraciones</li>
                         </ul>
                         <button class="plan-btn popular-btn" onclick="selectPlan('combo')">Select</button>
@@ -450,55 +450,55 @@
                     <div class="pricing-card">
                         <div class="plan-icon"><i class="fa-solid fa-building"></i></div>
                         <h3 class="plan-name">Enterprise</h3>
-                        <p class="plan-desc">Solucion corporativa para flotas de hasta 150 embarcaciones</p>
+                        <p class="plan-desc">Corporate solution for fleets up to 150 vessels</p>
                         <div class="plan-price"><span class="plan-amount" data-monthly="1999" data-yearly="1599">$1,999</span><span class="plan-unit">/mes (hasta 150 barcazas)</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Hasta 150 embarcaciones</li>
-                            <li><i class="fa-solid fa-check"></i>Todo de Combo Flota</li>
+                            <li><i class="fa-solid fa-check"></i>Up to 150 vessels</li>
+                            <li><i class="fa-solid fa-check"></i>Everything in Fleet Combo</li>
                             <li><i class="fa-solid fa-check"></i>AI Copilot avanzado</li>
                             <li><i class="fa-solid fa-check"></i>API integraciones</li>
-                            <li><i class="fa-solid fa-check"></i>Reportes avanzados</li>
+                            <li><i class="fa-solid fa-check"></i>Advanced reports</li>
                             <li><i class="fa-solid fa-check"></i>Soporte prioritario 24/7</li>
                             <li><i class="fa-solid fa-check"></i>SLA 99.9%</li>
-                            <li><i class="fa-solid fa-check"></i>Incidents &amp; auditoria</li>
+                            <li><i class="fa-solid fa-check"></i>Incidents &amp; auditing</li>
                         </ul>
                         <button class="plan-btn" onclick="selectPlan('enterprise')">Select</button>
                     </div>
                     <div class="pricing-card unlimited">
                         <div class="plan-icon"><i class="fa-solid fa-infinity"></i></div>
-                        <h3 class="plan-name">Ilimitado</h3>
-                        <p class="plan-desc">Sin limites. Toda la hidrovia bajo tu control.</p>
+                        <h3 class="plan-name">Unlimited</h3>
+                        <p class="plan-desc">No limits. The entire waterway under your control.</p>
                         <div class="plan-price"><span class="plan-amount" data-monthly="3999" data-yearly="3199">$3,999</span><span class="plan-unit">/mes</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Embarcaciones ilimitadas</li>
-                            <li><i class="fa-solid fa-check"></i>Users ilimitados</li>
+                            <li><i class="fa-solid fa-check"></i>Vessels ilimitadas</li>
+                            <li><i class="fa-solid fa-check"></i>Unlimited users</li>
                             <li><i class="fa-solid fa-check"></i>AI Copilot premium</li>
-                            <li><i class="fa-solid fa-check"></i>White-label disponible</li>
-                            <li><i class="fa-solid fa-check"></i>Onboarding dedicado</li>
-                            <li><i class="fa-solid fa-check"></i>Account manager exclusivo</li>
-                            <li><i class="fa-solid fa-check"></i>Integraciones custom</li>
-                            <li><i class="fa-solid fa-check"></i>Backups dedicados</li>
+                            <li><i class="fa-solid fa-check"></i>White-label available</li>
+                            <li><i class="fa-solid fa-check"></i>Dedicated onboarding</li>
+                            <li><i class="fa-solid fa-check"></i>Exclusive account manager</li>
+                            <li><i class="fa-solid fa-check"></i>Custom integrations</li>
+                            <li><i class="fa-solid fa-check"></i>Dedicated backups</li>
                         </ul>
-                        <button class="plan-btn unlimited-btn" onclick="selectPlan('ilimitado')">Comenzar Ahora</button>
+                        <button class="plan-btn unlimited-btn" onclick="selectPlan('ilimitado')">Start Now</button>
                     </div>
                 </div>
                 <div class="plan-faq">
-                    <div class="section-title">Preguntas Frecuentes</div>
-                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Puedo cambiar de plan?</h4><p>Si, podes upgradear o downgradear en cualquier momento. El cambio se aplica al proximo ciclo de facturacion.</p></div></div>
-                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Que metodos de pago aceptan?</h4><p>Tarjeta de credito/debito, transferencia bancaria, y facturacion corporativa mensual.</p></div></div>
-                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Hay periodo de prueba?</h4><p>Si, todos los planes incluyen 14 dias gratis sin compromiso. Sin tarjeta requerida.</p></div></div>
-                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Que incluye el soporte?</h4><p>Todos los planes incluyen soporte por email. Enterprise e Ilimitado tienen soporte 24/7 con tiempo de respuesta garantizado.</p></div></div>
+                    <div class="section-title">Frequently Asked Questions</div>
+                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Can I change my plan?</h4><p>Yes, you can upgrade or downgrade at any time. Changes apply to the next billing cycle.</p></div></div>
+                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>What payment methods do you accept?</h4><p>Credit/debit card, bank transfer, and monthly corporate billing.</p></div></div>
+                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Is there a trial period?</h4><p>Yes, all plans include 14 days free with no commitment. No credit card required.</p></div></div>
+                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>What does support include?</h4><p>Todos los planes incluyen soporte por email. Enterprise e Unlimited tienen soporte 24/7 con tiempo de respuesta garantizado.</p></div></div>
                 </div>
             </div>
             <!-- ADMIN PANEL -->
             <div class="view" id="view-admin">
                 <div class="fluvia-title">Panel<br><em>Admin.</em></div>
-                <div class="fluvia-subtitle">MANAGEMENT DE EMPRESAS Y USUARIOS</div>
+                <div class="fluvia-subtitle">COMPANY AND USER MANAGEMENT</div>
                 <div class="admin-stats" id="admin-stats"></div>
-                <div class="section-title" style="margin-top:24px">Empresas Registradas</div>
+                <div class="section-title" style="margin-top:24px">Registered Companies</div>
                 <div id="admin-companies" class="data-list"></div>
-                <button class="btn-primary" style="margin-top:12px" onclick="openNewCompanyModal()"><i class="fa-solid fa-plus"></i> New Empresa</button>
-                <div class="section-title" style="margin-top:32px">Users del Sistema</div>
+                <button class="btn-primary" style="margin-top:12px" onclick="openNewCompanyModal()"><i class="fa-solid fa-plus"></i> New Company</button>
+                <div class="section-title" style="margin-top:32px">System Users</div>
                 <div id="admin-users" class="data-list"></div>
                 <button class="btn-primary" style="margin-top:12px" onclick="openNewUserModal()"><i class="fa-solid fa-plus"></i> New User</button>
             </div>
