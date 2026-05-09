@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show Colors, Material;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
@@ -15,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> _signIn() async {
     setState(() => _isLoading = true);
@@ -27,13 +29,13 @@ class _LoginScreenState extends State<LoginScreen> {
     } on AuthException catch (error) {
       if (mounted) _showErrorDialog(error.message);
     } catch (e) {
-      if (mounted) _showErrorDialog('Error de conexión. Intente nuevamente.');
+      if (mounted) _showErrorDialog('Connection error. Please try again.');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  void _showErrorDialog(String message, {String title = 'Error de acceso'}) {
+  void _showErrorDialog(String message, {String title = 'Access Error'}) {
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
@@ -54,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await Supabase.instance.client.auth.signInWithOAuth(OAuthProvider.google);
     } catch (e) {
-      if (mounted) _showErrorDialog('Error con Google Sign In.');
+      if (mounted) _showErrorDialog('Google Sign In error.');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -62,53 +64,111 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _showForgotPasswordDialog() {
     final emailForgotController = TextEditingController(text: _emailController.text);
-    showCupertinoDialog(
+    showCupertinoModalPopup(
       context: context,
-      builder: (dialogContext) => CupertinoAlertDialog(
-        title: const Text('Recuperar contraseña'),
-        content: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            children: [
-              const Text('Ingresa tu correo para enviarte un enlace de recuperación.'),
-              const SizedBox(height: 16),
-              CupertinoTextField(
-                controller: emailForgotController,
-                placeholder: 'Correo corporativo',
-                keyboardType: TextInputType.emailAddress,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+      builder: (dialogContext) => Center(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.all(28),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundPrimary,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.textPrimary.withValues(alpha: 0.15),
+                blurRadius: 40,
+                offset: const Offset(0, 16),
               ),
             ],
           ),
+          child: Material(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.textPrimary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(CupertinoIcons.lock_rotation, size: 22, color: AppColors.textPrimary),
+                    ),
+                    const SizedBox(width: 14),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Reset', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                        Text('Password.', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic, color: AppColors.textPrimary)),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Enter your email and we\'ll send you a recovery link.',
+                  style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary, height: 1.5),
+                ),
+                const SizedBox(height: 20),
+                Text('EMAIL', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                const SizedBox(height: 8),
+                CupertinoTextField(
+                  controller: emailForgotController,
+                  placeholder: 'user@company.com',
+                  keyboardType: TextInputType.emailAddress,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  placeholderStyle: GoogleFonts.inter(color: AppColors.textTertiary, fontSize: 14),
+                  style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundSecondary,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.separator, width: 0.5),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CupertinoButton(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.backgroundSecondary,
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                        child: Text('Cancel', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textSecondary)),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: CupertinoButton(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.textPrimary,
+                        onPressed: () async {
+                          final email = emailForgotController.text.trim();
+                          if (email.isEmpty) return;
+                          Navigator.of(dialogContext).pop();
+                          setState(() => _isLoading = true);
+                          try {
+                            await Supabase.instance.client.auth.resetPasswordForEmail(email);
+                            if (mounted) _showErrorDialog('A recovery link has been sent to $email', title: 'Email Sent');
+                          } catch (e) {
+                            if (mounted) _showErrorDialog('Error sending email.');
+                          } finally {
+                            if (mounted) setState(() => _isLoading = false);
+                          }
+                        },
+                        child: Text('Send Link', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textOnAccent)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.error)),
-            onPressed: () => Navigator.of(dialogContext).pop(),
-          ),
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            child: const Text('Enviar'),
-            onPressed: () async {
-              final email = emailForgotController.text.trim();
-              if (email.isEmpty) return;
-              Navigator.of(dialogContext).pop();
-              setState(() => _isLoading = true);
-              try {
-                await Supabase.instance.client.auth.resetPasswordForEmail(email);
-                if (mounted) _showErrorDialog('Se ha enviado un enlace a $email', title: 'Éxito');
-              } catch (e) {
-                if (mounted) _showErrorDialog('Error al enviar el correo.');
-              } finally {
-                if (mounted) setState(() => _isLoading = false);
-              }
-            },
-          ),
-        ],
       ),
     );
   }
@@ -130,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icon(CupertinoIcons.drop_fill, size: 32, color: AppColors.textPrimary),
                 const SizedBox(height: 16),
                 Text(
-                  'Fluvia',
+                  'FluviaFleet',
                   style: GoogleFonts.newsreader(
                     fontSize: 42,
                     fontWeight: FontWeight.w400,
@@ -141,12 +201,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'RIVERHUB ELITE 360',
+                  'INTELLIGENT RIVER FLEET MANAGEMENT',
                   style: GoogleFonts.inter(
-                    fontSize: 10,
+                    fontSize: 9,
                     fontWeight: FontWeight.w700,
                     color: AppColors.textSecondary,
-                    letterSpacing: 3,
+                    letterSpacing: 2.5,
                   ),
                 ),
 
@@ -157,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'CORREO CORPORATIVO',
+                      'EMAIL',
                       style: GoogleFonts.inter(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
@@ -168,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
                     CupertinoTextField(
                       controller: _emailController,
-                      placeholder: 'usuario@empresa.com',
+                      placeholder: 'user@company.com',
                       keyboardType: TextInputType.emailAddress,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       placeholderStyle: GoogleFonts.inter(
@@ -189,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
 
                     Text(
-                      'CONTRASEÑA',
+                      'PASSWORD',
                       style: GoogleFonts.inter(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
@@ -201,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     CupertinoTextField(
                       controller: _passwordController,
                       placeholder: '••••••••',
-                      obscureText: true,
+                      obscureText: _obscurePassword,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       placeholderStyle: GoogleFonts.inter(
                         color: AppColors.textTertiary,
@@ -215,6 +275,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: AppColors.backgroundPrimary,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.separator, width: 0.5),
+                      ),
+                      suffix: Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: GestureDetector(
+                          onTap: () => setState(() => _obscurePassword = !_obscurePassword),
+                          child: Icon(
+                            _obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_slash,
+                            size: 20,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
                       ),
                     ),
 
@@ -231,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: _isLoading
                             ? const CupertinoActivityIndicator(color: AppColors.textOnAccent)
                             : Text(
-                                'Iniciar Sesión',
+                                'Log In',
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15,
@@ -249,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: EdgeInsets.zero,
                         onPressed: _showForgotPasswordDialog,
                         child: Text(
-                          '¿Olvidaste tu contraseña?',
+                          'Forgot your password?',
                           style: GoogleFonts.inter(
                             fontSize: 13,
                             color: AppColors.textSecondary,
@@ -270,7 +341,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'o continuar con',
+                        'or continue with',
                         style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
                       ),
                     ),
@@ -298,7 +369,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          'Continuar con Google',
+                          'Continue with Google',
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
@@ -317,7 +388,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '¿No tienes cuenta? ',
+                      "Don't have an account? ",
                       style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 13),
                     ),
                     CupertinoButton(
@@ -326,7 +397,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.of(context).push(CupertinoPageRoute(builder: (_) => const RegisterScreen()));
                       },
                       child: Text(
-                        'Regístrate',
+                        'Sign Up',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w700,
                           color: AppColors.textPrimary,
