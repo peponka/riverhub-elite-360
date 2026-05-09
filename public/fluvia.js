@@ -37,18 +37,60 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
     }
 })();
 
+let authMode = 'login';
+function toggleRegister() {
+    authMode = authMode === 'login' ? 'register' : 'login';
+    document.querySelector('.login-title').innerHTML = authMode === 'login' ? 'Bienvenido<br><em>de vuelta.</em>' : 'Crear<br><em>cuenta nueva.</em>';
+    document.getElementById('login-btn').textContent = authMode === 'login' ? 'Iniciar Sesion' : 'Registrarse';
+    document.getElementById('toggle-register-btn').textContent = authMode === 'login' ? 'Crear nueva cuenta' : 'Ya tengo cuenta (Iniciar Sesion)';
+    document.getElementById('login-error').style.display = 'none';
+}
+
 async function doLogin(){
     var email=document.getElementById('login-email').value.trim();
     var pass=document.getElementById('login-password').value;
     var errDiv=document.getElementById('login-error');
     var btn=document.getElementById('login-btn');
+    errDiv.style.color='var(--error)';
     if(!email||!pass){errDiv.textContent='Completa todos los campos';errDiv.style.display='block';return;}
-    btn.disabled=true;btn.textContent='Ingresando...';errDiv.style.display='none';
+    btn.disabled=true;btn.textContent=authMode==='login'?'Ingresando...':'Registrando...';errDiv.style.display='none';
     try{
-        var r=await sb.auth.signInWithPassword({email:email,password:pass});
-        if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';btn.disabled=false;btn.textContent='Iniciar Sesion';return;}
-        showApp(r.data.user);
-    }catch(e){errDiv.textContent='Error de conexion';errDiv.style.display='block';btn.disabled=false;btn.textContent='Iniciar Sesion';}
+        if (authMode === 'login') {
+            var r=await sb.auth.signInWithPassword({email:email,password:pass});
+            if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';btn.disabled=false;btn.textContent='Iniciar Sesion';return;}
+            showApp(r.data.user);
+        } else {
+            var r=await sb.auth.signUp({email:email,password:pass});
+            if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';btn.disabled=false;btn.textContent='Registrarse';return;}
+            errDiv.style.color = 'var(--success, #10b981)';
+            errDiv.textContent = 'Registro exitoso. Inicia sesión para continuar.';
+            errDiv.style.display='block';
+            btn.disabled=false;btn.textContent='Registrarse';
+            setTimeout(() => { errDiv.style.display='none'; toggleRegister(); }, 3000);
+        }
+    }catch(e){errDiv.style.color='var(--error)';errDiv.textContent='Error de conexion';errDiv.style.display='block';btn.disabled=false;btn.textContent=authMode==='login'?'Iniciar Sesion':'Registrarse';}
+}
+
+async function doResetPassword() {
+    var email=document.getElementById('login-email').value.trim();
+    var errDiv=document.getElementById('login-error');
+    if(!email){
+        errDiv.style.color = 'var(--error)';
+        errDiv.textContent='Ingresa tu email arriba para recuperar la contraseña';
+        errDiv.style.display='block';
+        return;
+    }
+    try {
+        var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/fluvia.html' });
+        if(r.error){errDiv.style.color='var(--error)';errDiv.textContent=r.error.message;errDiv.style.display='block';return;}
+        errDiv.style.color = 'var(--success, #10b981)';
+        errDiv.textContent='Se ha enviado un enlace a tu correo.';
+        errDiv.style.display='block';
+    } catch(e) {
+        errDiv.style.color='var(--error)';
+        errDiv.textContent='Error al enviar correo.';
+        errDiv.style.display='block';
+    }
 }
 
 async function doLogout(){
@@ -1142,14 +1184,19 @@ async function suggestConvoyIA(){
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
         var r=await fetch('/api/ai/optimize-convoy',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId,destination:dest})});
         var data=await r.json();
+        if (data.error) throw new Error(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
+        
         var s=data.suggestion||{};
-        var f=s.formation||{};
-        var riskColor=s.risk_score<=30?'#10b981':s.risk_score<=60?'#f59e0b':'#ef4444';
+        // Handle case where Gemini wraps response in 'suggestion' or translates keys
+        if (s.suggestion) s = s.suggestion;
+        var f=s.formation||s.formacion||{};
+        var configStr = s.config || s.configuracion || 'N/A';
+        var riskColor=(s.risk_score||100)<=30?'#10b981':(s.risk_score||100)<=60?'#f59e0b':'#ef4444';
         var html='<div style="background:var(--bg-card);border-radius:10px;padding:16px;">';
         
         // Config + Risk
         html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
-        html+='<div style="font-weight:800;font-size:18px;color:#8b5cf6;">⚓ '+(s.config||'N/A')+'</div>';
+        html+='<div style="font-weight:800;font-size:18px;color:#8b5cf6;">⚓ '+configStr+'</div>';
         html+='<div style="text-align:center;"><div style="width:50px;height:50px;border-radius:50%;border:4px solid '+riskColor+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:'+riskColor+';">'+(s.risk_score||'?')+'</div><div style="font-size:9px;color:var(--text-secondary);margin-top:2px;">RIESGO</div></div>';
         html+='</div>';
         

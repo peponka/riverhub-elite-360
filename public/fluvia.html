@@ -33,7 +33,11 @@
         <label class="login-label">CONTRASENA</label>
         <input type="password" id="login-password" class="login-input" placeholder="Tu contrasena">
         <button class="login-btn" id="login-btn" onclick="doLogin()">Iniciar Sesion</button>
-        <p class="login-footer">Hidrovia Paraguay-Parana — FluviaFleet</p>
+        <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:12px;font-weight:600;">
+            <a href="javascript:void(0)" onclick="toggleRegister()" id="toggle-register-btn" style="color:var(--accent);text-decoration:none;">Crear nueva cuenta</a>
+            <a href="javascript:void(0)" onclick="doResetPassword()" style="color:var(--text-secondary);text-decoration:none;">¿Olvidaste tu contraseña?</a>
+        </div>
+        <p class="login-footer" style="margin-top:24px;">Hidrovia Paraguay-Parana — FluviaFleet</p>
     </div>
 </div>
 <div class="app-shell" id="app-shell" style="display:none;">
