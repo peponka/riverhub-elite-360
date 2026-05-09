@@ -189,7 +189,7 @@ Tu rol:
 Contexto del sistema: ${context || 'Usuario operador de flota'}`;
 
     try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
 
         const response = await fetch(geminiUrl, {
             method: 'POST',
@@ -282,7 +282,7 @@ Responde SOLO en JSON válido, formato:
 
 Si no hay suficientes datos para una embarcación, estimá basándote en el tipo de embarcación y estado actual. Genera al menos 1 predicción por embarcación activa.`;
 
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -344,7 +344,7 @@ Sugiere la formación óptima del convoy. Responde SOLO JSON:
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 30000);
         
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -422,7 +422,7 @@ Para cada anomalía encontrada, responde en JSON:
 
 Si todo parece normal, devolvé un array con al menos 1 item tipo "normal" con severity "low" y descripción positiva. Siempre generá al menos 2 items de análisis.`;
 
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -557,7 +557,7 @@ RESPONDE SIEMPRE en este formato JSON exacto:
 ${voyageContext}`;
 
     try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
