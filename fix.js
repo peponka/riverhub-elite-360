@@ -1,0 +1,1 @@
+const fs=require('fs'); let c=fs.readFileSync('public/fluvia-en.html','utf8'); c=c.replace(/fluvia\.js/g,'fluvia-en.js'); c=c.replace(/href=\"index.html\"/g,'href=\"index-en.html\"'); fs.writeFileSync('public/fluvia-en.html',c);
