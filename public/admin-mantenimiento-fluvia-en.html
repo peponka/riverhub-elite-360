@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+  <title>FluviaFleet - Maintenance (Fluvia)</title>
+  <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
+  <link rel="stylesheet" href="./css/modules/admin-mantenimiento-fluvia.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- Chart.js for the Vitals Sincronoscopio -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-water"></i> FluviaFleet <span>v4.2</span>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-title">Principal</div>
+      <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard <span class="badge">1</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map <span class="badge">2</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Operativa</div>
+      <a href="admin-convoys-fluvia.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
+      <a href="admin-viajes-fluvia.html" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
+      <a href="admin-bitacora-fluvia.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+      <a href="admin-comunicaciones-fluvia.html" class="nav-item"><i class="fa-regular fa-comment-dots"></i> Communications</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Gestión</div>
+      <a href="admin-flota-fluvia.html" class="nav-item"><i class="fa-solid fa-ship"></i> Flota (Actives)</a>
+      <a href="admin-tripulacion-fluvia.html" class="nav-item"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="admin-combustible-fluvia.html" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Fuel</a>
+      <a href="#" class="nav-item active"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a>
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info">
+        <span class="user-name">Pepe Orué</span>
+        <span class="user-role">SUPERADMIN - ASU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area" id="view-mantenimiento">
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar orden de trabajo o remolcador...">
+      </div>
+      <div class="topbar-right">
+        <div class="settings">
+          <i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> SINCRO ACTIVO
+        </div>
+        <div>MNT · V2.0</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      
+      <div class="header-section" style="margin-bottom: 24px;">
+        <div class="greeting">
+          <p>SOPORTE TÉCNICO</p>
+          <h1>Control de Maintenance</h1>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">SISTEMA KANBAN · TELEMETRÍA DE MOTORES</p>
+        </div>
+        <div class="header-actions">
+           <button class="btn-primary" onclick="window.MaintenanceModuleFluvia.openCreateModal()"><i class="fa-solid fa-plus"></i> New Orden</button>
+        </div>
+      </div>
+
+      <!-- VITALS SECTION -->
+      <div class="mnt-vitals-row">
+          <div class="mnt-sincro-card">
+              <div style="flex-shrink:0; padding-right:10px; display:flex; flex-direction:column; justify-content:center;">
+                  <span style="font-family:var(--font-data); font-size:0.6rem; color:var(--text-sec); font-weight:700;">TELEMETRÍA SIMULADA</span>
+                  <span style="font-family:var(--font-brand); font-size:1.1rem; color:var(--text-main);">SINCRONOSCOPIO</span>
+              </div>
+              <div class="sincro-chart">
+                  <div class="sincro-label">ESTRIBOR</div>
+                  <canvas id="chart-sincro-1"></canvas>
+                  <div class="sincro-val ok" id="rpm-stb">0 RPM</div>
+              </div>
+              <div class="sincro-chart">
+                  <div class="sincro-label">BABOR</div>
+                  <canvas id="chart-sincro-2"></canvas>
+                  <div class="sincro-val warn" id="rpm-port">0 RPM</div>
+              </div>
+          </div>
+
+          <div class="mnt-kpi-card">
+              <div class="mnt-kpi-val" id="kpi-open">0</div>
+              <div class="mnt-kpi-label">Órdenes Abiertas</div>
+          </div>
+          <div class="mnt-kpi-card" style="border-bottom: 4px solid var(--status-err);">
+              <div class="mnt-kpi-val err" id="kpi-crit">0</div>
+              <div class="mnt-kpi-label">Fallos Críticos</div>
+          </div>
+      </div>
+
+      <!-- KANBAN SECTION -->
+      <div class="kanban-fluvia">
+          
+          <!-- Column: Pendiente -->
+          <div class="kb-column" 
+               ondrop="MaintenanceModuleFluvia.drop(event, 'pending')" 
+               ondragover="MaintenanceModuleFluvia.allowDrop(event)"
+               ondragenter="MaintenanceModuleFluvia.dragEnter(event)"
+               ondragleave="MaintenanceModuleFluvia.dragLeave(event)">
+              <div class="kb-header">
+                  <span>Pendiente</span>
+                  <span class="kb-badge" id="c-pending">0</span>
+              </div>
+              <div class="kb-list" id="list-pending"></div>
+          </div>
+
+          <!-- Column: En Progreso -->
+          <div class="kb-column" 
+               ondrop="MaintenanceModuleFluvia.drop(event, 'in_progress')" 
+               ondragover="MaintenanceModuleFluvia.allowDrop(event)"
+               ondragenter="MaintenanceModuleFluvia.dragEnter(event)"
+               ondragleave="MaintenanceModuleFluvia.dragLeave(event)">
+              <div class="kb-header">
+                  <span>En Progreso</span>
+                  <span class="kb-badge" id="c-prog" style="background:rgba(59, 130, 246, 0.1); color:#3b82f6;">0</span>
+              </div>
+              <div class="kb-list" id="list-in_progress"></div>
+          </div>
+
+          <!-- Column: Finalizado -->
+          <div class="kb-column" 
+               ondrop="MaintenanceModuleFluvia.drop(event, 'completed')" 
+               ondragover="MaintenanceModuleFluvia.allowDrop(event)"
+               ondragenter="MaintenanceModuleFluvia.dragEnter(event)"
+               ondragleave="MaintenanceModuleFluvia.dragLeave(event)">
+              <div class="kb-header">
+                  <span>Finalizado</span>
+                  <span class="kb-badge" id="c-comp" style="background:rgba(46, 160, 67, 0.1); color:var(--status-ok);">0</span>
+              </div>
+              <div class="kb-list" id="list-completed"></div>
+          </div>
+
+      </div>
+      
+    </div>
+  </div>
+
+  <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+  <script>
+    window.RiverToast = {
+      success: (msg) => alert(`ÉXITO: ${msg}`),
+      error: (msg) => alert(`ERROR: ${msg}`),
+      warning: (msg) => alert(`ATENCIÓN: ${msg}`),
+      info: (msg) => alert(`INFO: ${msg}`)
+    };
+  </script>
+
+  <script src="./js/modules/mantenimiento-fluvia.js"></script>
+  <script>
+     document.addEventListener('DOMContentLoaded', () => {
+         if(window.MaintenanceModuleFluvia) window.MaintenanceModuleFluvia.init();
+     });
+  </script>
+</body>
+</html>

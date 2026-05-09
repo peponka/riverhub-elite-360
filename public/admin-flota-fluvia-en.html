@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+  <title>FluviaFleet - Flota y Actives (Fluvia)</title>
+  <!-- Base FluviaFleet Styles -->
+  <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
+  <link rel="stylesheet" href="./css/modules/admin-flota-fluvia.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-water"></i> FluviaFleet <span>v4.2</span>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-title">Principal</div>
+      <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard <span class="badge">1</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map <span class="badge">2</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Operativa</div>
+      <a href="admin-convoys-fluvia.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
+      <a href="admin-viajes-fluvia.html" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
+      <a href="admin-bitacora-fluvia.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+      <a href="admin-comunicaciones-fluvia.html" class="nav-item"><i class="fa-regular fa-comment-dots"></i> Communications</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Gestión</div>
+      <a href="#" class="nav-item active"><i class="fa-solid fa-ship"></i> Flota (Actives)</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Fuel</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a>
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info">
+        <span class="user-name">Pepe Orué</span>
+        <span class="user-role">SUPERADMIN - ASU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area" id="view-flota">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar embarcación, matrícula o tipo...">
+      </div>
+      <div class="topbar-right">
+        <div class="settings">
+          <i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> FLEET TRACKING ACTIVO
+        </div>
+        <div>ACTIVOS · V2.0</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content flota-container-fluvia">
+      
+      <div class="header-section" style="margin-bottom: 24px;">
+        <div class="greeting">
+          <p>MASTER DE DATOS</p>
+          <h1>Flota y Actives</h1>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">GESTIÓN CENTRALIZADA · REMOLCADORES Y BARCAZAS</p>
+        </div>
+        <div class="header-actions">
+           <button class="btn-outline" onclick="window.FleetManager.loadData()"><i class="fa-solid fa-sync"></i> Actualizar</button>
+           <button class="btn-primary"><i class="fa-solid fa-plus"></i> Añadir Active</button>
+        </div>
+      </div>
+
+      <!-- STATUS OVERVIEW ROW -->
+      <div class="stats-flota-overview">
+          <div class="flota-overview-card">
+              <div>
+                  <div class="fo-label">Total Actives Físicos</div>
+                  <div class="fo-val" id="stat-total">0</div>
+              </div>
+              <div class="fo-icon"><i class="fa-solid fa-layer-group"></i></div>
+          </div>
+          <div class="flota-overview-card">
+              <div>
+                  <div class="fo-label" style="color: var(--status-ok);">Operativos / En Ruta</div>
+                  <div class="fo-val" id="stat-active">0</div>
+              </div>
+              <div class="fo-icon" style="color: var(--status-ok);"><i class="fa-solid fa-check-double"></i></div>
+          </div>
+          <div class="flota-overview-card">
+              <div>
+                  <div class="fo-label" style="color: var(--status-err);">En Taller / Alerta</div>
+                  <div class="fo-val" id="stat-maint">0</div>
+              </div>
+              <div class="fo-icon" style="color: var(--status-err);"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+          </div>
+      </div>
+
+      <!-- FLEET MATRIX -->
+      <div class="flota-grid" id="flota-grid-container">
+          <!-- JS injects the fleet here -->
+      </div>
+      
+    </div>
+  </div>
+
+  <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+  <!-- Dummy RiverToast -->
+  <script>
+    window.RiverToast = {
+      success: (msg) => alert(`ÉXITO: ${msg}`),
+      error: (msg) => alert(`ERROR: ${msg}`),
+      warning: (msg) => alert(`ATENCIÓN: ${msg}`),
+      info: (msg) => alert(`MÓDULO SEPARADO: ${msg}`)
+    };
+  </script>
+
+  <script src="./js/modules/flota-fluvia.js"></script>
+  <script>
+     document.addEventListener('DOMContentLoaded', () => {
+         if(window.FleetManager) window.FleetManager.init();
+     });
+  </script>
+</body>
+</html>
