@@ -222,7 +222,7 @@ Contexto del sistema: ${context || 'Usuario operador de flota'}`;
 });
 
 // --- IA PREDICTIVA: MANTENIMIENTO ---
-app.post('/api/ai/predict-maintenance', aiLimiter, async (req, res) => {
+app.post('/api/ai/predict-maintenance', aiLimiter, authenticateUser, async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
 
@@ -230,9 +230,11 @@ app.post('/api/ai/predict-maintenance', aiLimiter, async (req, res) => {
         const { companyId } = req.body;
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+        const userToken = req.headers.authorization?.split(' ')[1] || supabaseKey;
 
         // Fetch real data from Supabase
-        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' };
+        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
+
         const [vesselsRes, maintRes, fuelRes] = await Promise.all([
             fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=id,name,type,status,draft,current_draft,max_draft,engine_power`, { headers }),
             fetch(`${supabaseUrl}/rest/v1/maintenance_tasks?company_id=eq.${companyId}&select=*&order=created_at.desc&limit=50`, { headers }),
@@ -302,7 +304,7 @@ Si no hay suficientes datos para una embarcación, estimá basándote en el tipo
 });
 
 // --- IA: OPTIMIZADOR DE CONVOY ---
-app.post('/api/ai/optimize-convoy', aiLimiter, async (req, res) => {
+app.post('/api/ai/optimize-convoy', aiLimiter, authenticateUser, async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
 
@@ -310,12 +312,13 @@ app.post('/api/ai/optimize-convoy', aiLimiter, async (req, res) => {
         const { companyId, destination, selectedVessels } = req.body;
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+        const userToken = req.headers.authorization?.split(' ')[1] || supabaseKey;
         
         if (!supabaseUrl || !supabaseKey) {
             return res.json({ suggestion: { config: 'Error', warnings: ['Supabase no configurado'], recommendation: 'Configurar SUPABASE_URL y SUPABASE_ANON_KEY' } });
         }
         
-        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' };
+        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
         const vesselsRes = await fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=id,name,type,status,draft,engine_power,fuel_capacity,current_lat,current_lng`, { headers });
         const vessels = await vesselsRes.json();
         
@@ -380,7 +383,7 @@ Sugiere la formación óptima del convoy. Responde SOLO JSON:
 });
 
 // --- IA: DETECCIÓN DE ANOMALÍAS DE CONSUMO ---
-app.post('/api/ai/fuel-anomalies', aiLimiter, async (req, res) => {
+app.post('/api/ai/fuel-anomalies', aiLimiter, authenticateUser, async (req, res) => {
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
 
@@ -388,7 +391,8 @@ app.post('/api/ai/fuel-anomalies', aiLimiter, async (req, res) => {
         const { companyId } = req.body;
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
-        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' };
+        const userToken = req.headers.authorization?.split(' ')[1] || supabaseKey;
+        const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
 
         const [fuelRes, vesselsRes] = await Promise.all([
             fetch(`${supabaseUrl}/rest/v1/fuel_logs?company_id=eq.${companyId}&select=*&order=created_at.desc&limit=100`, { headers }),
