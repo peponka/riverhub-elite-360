@@ -75,7 +75,7 @@
                 if (!window.sb) throw new Error("Supabase client not found");
 
                 let { data, error } = await window.sb
-                    .fetchMine('fleet_assets', '*');
+                    .fetchMine('vessels', '*');
 
                 // Sort manually if required, fetchMine might not support order directly if it returns a promise directly
                 if (data) {
@@ -83,8 +83,8 @@
                 }
 
                 if (error) {
-                     console.warn("fetchMine failed on fleet_assets, trying normal select...", error);
-                     let res = await window.sb.from('fleet_assets').select('*').order('name', { ascending: true });
+                     console.warn("fetchMine failed on vessels, trying normal select...", error);
+                     let res = await window.sb.from('vessels').select('*').order('name', { ascending: true });
                      if (res.error) throw res.error;
                      data = res.data;
                 }
@@ -106,10 +106,10 @@
                     ];
                     
                     for (let dv of defaultVessels) {
-                         await window.sb.insertMine('fleet_assets', dv).catch(()=>{});
+                         await window.sb.insertMine('vessels', dv).catch(()=>{});
                     }
                     
-                    let refetch = await window.sb.fetchMine('fleet_assets', '*');
+                    let refetch = await window.sb.fetchMine('vessels', '*');
                     if (refetch.data) {
                          state.assets = refetch.data.map(v => ({
                              id: v.id,

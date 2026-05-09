@@ -44,12 +44,13 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
 
       setState(() {
         _availableAssets = List<Map<String, dynamic>>.from(response).map((v) {
-          String dbType = v['vessel_type']?.toString().toLowerCase() ?? '';
+          String dbType = v['type']?.toString().toLowerCase() ?? v['vessel_type']?.toString().toLowerCase() ?? '';
+          String name = v['name']?.toString().toLowerCase() ?? '';
           String type = 'BARCAZA';
-          if (dbType.contains('tug') || dbType.contains('remolcador')) {
+          if (dbType.contains('tug') || dbType.contains('remolcador') || dbType.contains('push') || name.contains('r/m') || name.contains('b/m') || name.contains('tb ')) {
             type = 'REMOLCADOR';
           }
-          if (dbType.contains('oil') || dbType.contains('tank')) {
+          if (dbType.contains('oil') || dbType.contains('tank') || dbType.contains('cisterna') || name.contains('t-')) {
             type = 'TANQUE';
           }
           v['mapped_type'] = type;
