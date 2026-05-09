@@ -1,12 +1,705 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="refresh" content="0;url=/fluvia.html">
-<title>FluviaFleet — Gestión Inteligente de Flotas Fluviales</title>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FluviaFleet — Gestión Inteligente de Flotas Fluviales</title>
+    <meta name="description" content="Plataforma líder para la gestión inteligente de flotas fluviales. Tracking satelital, control de combustible, IA predictiva. Hidrovía Paraguay-Paraná.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,300;6..72,0,400;6..72,0,500;6..72,0,600;6..72,1,300;6..72,1,400;6..72,1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root{--bg:#F8F9FA;--white:#FFFFFF;--surface:#F1F5F9;--text:#1A1A2E;--text2:#94A3B8;--text3:#CBD5E1;--sep:#E2E8F0;--accent:#3B82F6;--success:#2EA043;--error:#DC2626;--warning:#F59E0B}
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
+
+        /* NAV */
+        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--sep);padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
+        .nav-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text)}
+        .nav-brand img.nav-logo{width:44px;height:44px;border-radius:50%;object-fit:cover}
+        .nav-brand img.nav-wordmark{height:38px;object-fit:contain}
+        .nav-links{display:flex;gap:32px}
+        .nav-links a{text-decoration:none;color:var(--text2);font-size:13px;font-weight:500;transition:color 0.2s;letter-spacing:0.3px}
+        .nav-links a:hover{color:var(--text)}
+        .nav-actions{display:flex;gap:12px;align-items:center}
+        .btn-ghost{background:none;border:none;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;padding:8px 16px;font-family:'Inter',sans-serif}
+        .btn-solid{background:var(--text);color:white;border:none;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.2s}
+        .btn-solid:hover{opacity:0.85}
+
+        /* HERO */
+        .hero{position:relative;min-height:90vh;display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
+        .hero-bg{position:absolute;inset:0;z-index:0}
+        .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center}
+        .hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,15,30,0.85) 0%,rgba(10,15,30,0.4) 40%,rgba(10,15,30,0.15) 100%);z-index:1}
+        .hero-content{position:relative;z-index:2;padding:0 64px 80px;max-width:700px}
+        .hero-tag{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:2px;margin-bottom:16px}
+        .hero h1{font-family:'Newsreader',serif;font-size:64px;font-weight:400;line-height:1.05;color:white;margin-bottom:8px}
+        .hero h1 em{font-weight:300;font-style:italic}
+        .hero-desc{font-size:16px;color:rgba(255,255,255,0.7);line-height:1.7;margin:24px 0 36px;max-width:500px}
+        .hero-cta{display:flex;gap:12px;align-items:center}
+        .btn-hero{background:white;color:var(--text);border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-hero:hover{opacity:0.9;transform:translateY(-1px)}
+        .btn-outline{background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.25);color:white;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-outline:hover{background:rgba(255,255,255,0.2)}
+        .hero-features{display:flex;gap:24px;margin-top:40px}
+        .hero-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.6);font-weight:500}
+        .hero-feat i{color:rgba(147,197,253,1);font-size:11px}
+        .hero-visual{position:relative}
+        .hero-card{background:var(--white);border:0.5px solid var(--sep);border-radius:20px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.06)}
+        .hero-card-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+        .hero-card-dot{width:10px;height:10px;border-radius:50%;background:var(--success)}
+        .hero-card-title{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1px}
+        .hero-card-big{font-family:'Newsreader',serif;font-size:48px;font-weight:400;color:var(--text)}
+        .hero-card-label{font-size:12px;color:var(--text2);margin-top:4px}
+        .hero-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;padding-top:20px;border-top:0.5px solid var(--sep)}
+        .hcg-item .hcg-val{font-family:'Newsreader',serif;font-size:24px;font-weight:400}
+        .hcg-item .hcg-lbl{font-size:10px;color:var(--text2);font-weight:600;letter-spacing:0.5px}
+        .float-card{position:absolute;background:var(--white);border:0.5px solid var(--sep);border-radius:14px;padding:16px 20px;box-shadow:0 8px 24px rgba(0,0,0,0.06);animation:float 3s ease-in-out infinite}
+        .float-card-1{top:-20px;right:-30px}
+        .float-card-2{bottom:40px;left:-40px;animation-delay:1.5s}
+        .float-card .fc-row{display:flex;align-items:center;gap:8px}
+        .float-card .fc-dot{width:8px;height:8px;border-radius:50%}
+        .float-card .fc-text{font-size:12px;font-weight:600}
+        .float-card .fc-sub{font-size:10px;color:var(--text2)}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        /* SHIP ILLUSTRATION */
+        .hero-ship-bg{position:absolute;bottom:-30px;right:-40px;width:420px;opacity:0.18;z-index:0;pointer-events:none}
+        .hero-visual{position:relative;z-index:1}
+        .hero-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(59,130,246,0.1) 0%,transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none}
+        .hero-img{width:100%;border-radius:20px;box-shadow:0 24px 60px rgba(26,26,46,0.12),0 0 0 0.5px var(--sep);position:relative;z-index:2;transition:transform 0.3s ease}
+        .hero-img:hover{transform:translateY(-6px) scale(1.01)}
+        /* WAVE DIVIDER */
+        .wave-divider{position:relative;height:80px;overflow:hidden;background:var(--bg)}
+        .wave-divider svg{position:absolute;bottom:0;width:100%;height:80px}
+        .wave-path{animation:wave-move 4s ease-in-out infinite alternate}
+        @keyframes wave-move{0%{d:path('M0,40 Q250,10 500,40 T1000,40 L1000,80 L0,80 Z')}100%{d:path('M0,40 Q250,70 500,40 T1000,40 L1000,80 L0,80 Z')}}
+
+        /* HOW IT WORKS */
+        .section{padding:100px 48px;max-width:1200px;margin:0 auto}
+        .section-alt{background:var(--bg)}
+        .section-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
+        .section h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
+        .section h2 em{font-weight:300;font-style:italic}
+        .section-desc{font-size:15px;color:var(--text2);line-height:1.6;max-width:520px;margin-bottom:48px}
+
+        .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+        .step-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:32px;transition:all 0.2s}
+        .step-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.06)}
+        .step-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400;color:var(--text3);line-height:1}
+        .step-card h3{font-family:'Newsreader',serif;font-size:22px;font-weight:500;margin:16px 0 8px}
+        .step-card p{font-size:13px;color:var(--text2);line-height:1.6}
+        .step-icon{width:48px;height:48px;background:var(--surface);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-top:20px}
+        .step-icon i{font-size:20px;color:var(--text)}
+
+        /* FEATURES */
+        .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .feat-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:28px;display:flex;gap:16px;transition:all 0.2s}
+        .feat-card:hover{background:var(--surface)}
+        .feat-card i{font-size:20px;color:var(--text2);width:24px;flex-shrink:0;margin-top:2px}
+        .feat-card h4{font-size:15px;font-weight:600;margin-bottom:4px}
+        .feat-card p{font-size:12px;color:var(--text2);line-height:1.5}
+
+        /* STATS BANNER */
+        .stats-banner{background:var(--text);color:white;padding:80px 48px;text-align:center}
+        .stats-banner .section-tag{color:rgba(255,255,255,0.5)}
+        .stats-banner h2{color:white;font-family:'Newsreader',serif;font-size:42px;font-weight:400}
+        .stats-banner h2 em{font-weight:300;font-style:italic}
+        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;max-width:1000px;margin:48px auto 0}
+        .stat-item .stat-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400}
+        .stat-item .stat-lbl{font-size:11px;color:rgba(255,255,255,0.5);font-weight:600;letter-spacing:1px;margin-top:4px}
+
+        /* PRICING */
+        .pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .price-card{background:var(--white);border:0.5px solid var(--sep);border-radius:20px;padding:36px;position:relative;transition:all 0.2s}
+        .price-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.06)}
+        .price-card.featured{border-color:var(--text);border-width:2px}
+        .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:9px;font-weight:800;letter-spacing:1px;padding:5px 16px;border-radius:20px}
+        .price-card h3{font-family:'Newsreader',serif;font-size:24px;font-weight:500;margin-bottom:4px}
+        .price-card .price-desc{font-size:12px;color:var(--text2);margin-bottom:20px}
+        .price-amount{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text)}
+        .price-unit{font-size:13px;color:var(--text2)}
+        .price-list{list-style:none;margin:24px 0;padding:0}
+        .price-list li{font-size:13px;padding:6px 0;display:flex;align-items:center;gap:8px}
+        .price-list li i{font-size:11px;color:var(--success);width:16px}
+        .price-list li.disabled{color:var(--text3)}
+        .price-list li.disabled i{color:var(--text3)}
+        .price-btn{width:100%;padding:13px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;border:0.5px solid var(--sep);background:var(--surface);color:var(--text)}
+        .price-btn:hover{background:var(--sep)}
+        .price-btn.dark{background:var(--text);color:white;border-color:var(--text)}
+        .price-btn.dark:hover{opacity:0.85}
+
+        /* CTA FINAL */
+        .cta-section{text-align:center;padding:100px 48px;max-width:700px;margin:0 auto}
+        .cta-section h2{font-family:'Newsreader',serif;font-size:48px;font-weight:400;line-height:1.1;margin-bottom:16px}
+        .cta-section h2 em{font-weight:300;font-style:italic}
+        .cta-section p{font-size:15px;color:var(--text2);line-height:1.6;margin-bottom:36px}
+
+        /* FOOTER */
+        .footer{border-top:0.5px solid var(--sep);padding:60px 48px 32px}
+        .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto}
+        .footer-brand{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+        .footer-brand i{font-size:16px;color:var(--text)}
+        .footer-brand span{font-family:'Newsreader',serif;font-size:20px;font-weight:500;font-style:italic;color:var(--text)}
+        .footer-desc{font-size:12px;color:var(--text2);line-height:1.6;max-width:280px}
+        .footer h4{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1.5px;margin-bottom:16px}
+        .footer a{display:block;font-size:13px;color:var(--text);text-decoration:none;margin-bottom:10px;transition:color 0.2s}
+        .footer a:hover{color:var(--accent)}
+        .footer-copy{text-align:center;font-size:11px;color:var(--text3);margin-top:48px;padding-top:24px;border-top:0.5px solid var(--sep);max-width:1200px;margin-left:auto;margin-right:auto}
+        .footer-socials{display:flex;gap:12px;margin-top:12px}
+        .footer-socials a{font-size:16px;color:var(--text2);margin-bottom:0}
+        .footer-socials a:hover{color:var(--text)}
+
+        /* ANIMATIONS */
+        .reveal{opacity:0;transform:translateY(24px);transition:all 0.6s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .nav{padding:0 20px}
+            .nav-links{display:none}
+            .hero{min-height:70vh}
+            .hero-content{padding:0 24px 48px}
+            .hero h1{font-size:40px}
+            .hero-desc{margin:16px 0 28px}
+            .hero-features{flex-wrap:wrap;gap:12px}
+            .section{padding:60px 24px}
+            .steps-grid{grid-template-columns:1fr}
+            .feat-grid{grid-template-columns:1fr}
+            .stats-banner{padding:60px 24px}
+            .stats-row{grid-template-columns:1fr 1fr;gap:24px}
+            .pricing-cards{grid-template-columns:1fr}
+            .cta-section{padding:60px 24px}
+            .cta-section h2{font-size:36px}
+            .footer{padding:40px 24px 24px}
+            .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
+            .section h2{font-size:32px}
+        }
+    </style>
 </head>
 <body>
-<script>window.location.href='/fluvia.html';</script>
+
+<!-- NAV -->
+<nav class="nav">
+    <a class="nav-brand" href="#">
+        <img class="nav-logo" src="img/fluvia-logo.jpg" alt="FluviaFleet">
+        <span style="font-family:'Newsreader',serif;font-size:2.1rem;font-weight:400;color:var(--text);letter-spacing:-0.01em">FluviaFleet</span>
+    </a>
+    <div class="nav-links">
+        <a href="#hidrovia" style="color:var(--accent);font-weight:700">Hidrovía</a>
+        <a href="#como-funciona">Cómo Funciona</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#precios">Precios</a>
+        <a href="#nosotros">Nosotros</a>
+    </div>
+    <div class="nav-actions">
+        <a href="fluvia.html" class="btn-ghost">Iniciar Sesión</a>
+        <a href="#precios" class="btn-solid">Probar Gratis</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-bg"><img src="img/fluvia-convoy.jpg" alt="Convoy de barcazas en la Hidrovia Paraguay-Parana"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-tag">PLATAFORMA LÍDER EN LA HIDROVÍA PARANÁ — PARAGUAY</div>
+        <h1>Domina la<br><em>Hidrovía Paraná-Paraguay.</em></h1>
+        <p class="hero-desc">La hidrovía más estratégica de Sudamérica, ahora con inteligencia artificial. Gestiona convoyes, barcazas y remolcadores en 3.442 km de vía navegable — en tiempo real.</p>
+        <div class="hero-cta">
+            <a href="#precios" class="btn-hero">Comenzar Gratis</a>
+            <a href="#hidrovia" class="btn-outline">Conocer la Hidrovía</a>
+        </div>
+        <div class="hero-features">
+            <div class="hero-feat"><i class="fa-solid fa-check"></i>3.442 km monitoreados</div>
+            <div class="hero-feat"><i class="fa-solid fa-check"></i>IA Predictiva</div>
+            <div class="hero-feat"><i class="fa-solid fa-check"></i>5 países conectados</div>
+        </div>
+    </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+    <svg viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,50 C180,20 360,70 540,40 C720,10 900,60 1080,35 C1260,10 1350,45 1440,30 L1440,80 L0,80 Z" fill="#F1F5F9" opacity="0.7"/>
+        <path d="M0,55 C200,35 400,65 600,45 C800,25 1000,55 1200,40 C1350,28 1400,50 1440,42 L1440,80 L0,80 Z" fill="#F8F9FA"/>
+    </svg>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HIDROVÍA PARANÁ-PARAGUAY — MARKETING SHOWCASE  -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .hidrovia-showcase{position:relative;overflow:hidden;background:#0A0F1E}
+    .hidrovia-showcase *{position:relative;z-index:2}
+
+    /* Background image layer */
+    .hidrovia-bg{position:absolute;inset:0;z-index:0}
+    .hidrovia-bg img{width:100%;height:100%;object-fit:cover;opacity:0.25;filter:brightness(0.7)}
+    .hidrovia-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,15,30,0.95) 0%,rgba(10,15,30,0.5) 40%,rgba(10,15,30,0.85) 100%)}
+
+    /* Animated water shimmer */
+    .hidrovia-shimmer{position:absolute;bottom:0;left:0;right:0;height:200px;z-index:1;background:linear-gradient(180deg,transparent,rgba(59,130,246,0.06));overflow:hidden}
+    .hidrovia-shimmer::before{content:'';position:absolute;bottom:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse,rgba(59,130,246,0.08) 0%,transparent 60%);animation:shimmer-move 8s ease-in-out infinite}
+    @keyframes shimmer-move{0%,100%{transform:translateX(-20%) translateY(0)}50%{transform:translateX(20%) translateY(-10%)}}
+
+    /* Header */
+    .hidrovia-header{text-align:center;padding:80px 48px 0;max-width:900px;margin:0 auto}
+    .hidrovia-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:100px;padding:8px 20px;margin-bottom:24px;animation:pulse-badge 3s ease-in-out infinite}
+    .hidrovia-badge i{color:#60A5FA;font-size:10px}
+    .hidrovia-badge span{font-size:10px;font-weight:800;letter-spacing:2.5px;color:#93C5FD;font-family:'Inter',sans-serif}
+    @keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,0.2)}50%{box-shadow:0 0 20px 4px rgba(59,130,246,0.15)}}
+
+    .hidrovia-header h2{font-family:'Newsreader',serif;font-size:56px;font-weight:400;color:white;line-height:1.08;margin-bottom:20px}
+    .hidrovia-header h2 em{font-weight:300;font-style:italic;background:linear-gradient(135deg,#60A5FA,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hidrovia-header p{font-size:17px;color:rgba(255,255,255,0.6);line-height:1.7;max-width:640px;margin:0 auto}
+
+    /* Route Visual */
+    .hidrovia-route{padding:60px 48px 0;max-width:1200px;margin:0 auto}
+    .hidrovia-route-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+    .hidrovia-map-wrap{position:relative;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 24px 80px rgba(0,0,0,0.4)}
+    .hidrovia-map-wrap img{width:100%;display:block;transition:transform 6s ease}
+    .hidrovia-map-wrap:hover img{transform:scale(1.05)}
+    .hidrovia-map-glow{position:absolute;top:50%;left:50%;width:60%;height:60%;background:radial-gradient(circle,rgba(59,130,246,0.2),transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:3}
+
+    /* Route Info */
+    .route-info h3{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:white;margin-bottom:16px}
+    .route-info h3 em{font-weight:300;font-style:italic;color:#93C5FD}
+    .route-info>p{font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:32px}
+
+    /* Port list */
+    .port-list{display:flex;flex-direction:column;gap:12px}
+    .port-item{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px 20px;transition:all 0.3s ease;cursor:default}
+    .port-item:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.2);transform:translateX(6px)}
+    .port-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;position:relative}
+    .port-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid;opacity:0.3}
+    .port-dot.argentina{background:#60A5FA}.port-dot.argentina::after{border-color:#60A5FA}
+    .port-dot.paraguay{background:#F87171}.port-dot.paraguay::after{border-color:#F87171}
+    .port-dot.brasil{background:#34D399}.port-dot.brasil::after{border-color:#34D399}
+    .port-dot.uruguay{background:#FBBF24}.port-dot.uruguay::after{border-color:#FBBF24}
+    .port-name{font-size:14px;font-weight:600;color:white;flex:1}
+    .port-country{font-size:11px;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.5px}
+    .port-km{font-size:12px;color:rgba(255,255,255,0.35);font-family:'Newsreader',serif;font-style:italic}
+
+    /* Mega Stats */
+    .hidrovia-stats{padding:80px 48px 80px;max-width:1200px;margin:0 auto}
+    .hidrovia-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+    .hv-stat{text-align:center;padding:36px 20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:20px;transition:all 0.3s ease}
+    .hv-stat:hover{background:rgba(59,130,246,0.06);border-color:rgba(59,130,246,0.15);transform:translateY(-4px)}
+    .hv-stat-icon{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(52,211,153,0.1));display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+    .hv-stat-icon i{font-size:22px;color:#60A5FA}
+    .hv-stat-num{font-family:'Newsreader',serif;font-size:44px;font-weight:400;color:white;line-height:1}
+    .hv-stat-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);margin-top:8px}
+
+    /* CTA in hidrovia */
+    .hidrovia-cta{text-align:center;padding:0 48px 80px}
+    .hidrovia-cta-inner{max-width:700px;margin:0 auto;padding:48px;background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(52,211,153,0.05));border:1px solid rgba(59,130,246,0.15);border-radius:24px}
+    .hidrovia-cta-inner h3{font-family:'Newsreader',serif;font-size:28px;font-weight:400;color:white;margin-bottom:12px}
+    .hidrovia-cta-inner p{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:24px}
+    .btn-hidrovia{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:white;border:none;padding:15px 36px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s;text-decoration:none;box-shadow:0 8px 32px rgba(59,130,246,0.3)}
+    .btn-hidrovia:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(59,130,246,0.4)}
+    .btn-hidrovia i{font-size:12px}
+
+    /* Country flags row */
+    .country-flags{display:flex;justify-content:center;gap:32px;margin-top:20px}
+    .country-flag{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.4);font-weight:500}
+    .flag-dot{width:8px;height:8px;border-radius:50%}
+
+    @media(max-width:768px){
+        .hidrovia-header{padding:60px 24px 0}
+        .hidrovia-header h2{font-size:36px}
+        .hidrovia-route{padding:40px 24px 0}
+        .hidrovia-route-grid{grid-template-columns:1fr;gap:32px}
+        .hidrovia-stats{padding:60px 24px}
+        .hidrovia-stats-grid{grid-template-columns:1fr 1fr;gap:16px}
+        .hidrovia-cta{padding:0 24px 60px}
+        .hv-stat-num{font-size:32px}
+    }
+</style>
+
+<section class="hidrovia-showcase" id="hidrovia">
+    <!-- Background -->
+    <div class="hidrovia-bg">
+        <img src="img/hidrovia-hero.png" alt="Hidrovía Paraná-Paraguay vista aérea">
+    </div>
+    <div class="hidrovia-shimmer"></div>
+
+    <!-- Header -->
+    <div class="hidrovia-header reveal">
+        <div class="hidrovia-badge">
+            <i class="fa-solid fa-water"></i>
+            <span>HIDROVÍA PARANÁ — PARAGUAY</span>
+            <i class="fa-solid fa-water"></i>
+        </div>
+        <h2>La Hidrovía Paraná-Paraguay:<br>la autopista fluvial de <em>Sudamérica.</em></h2>
+        <p>3.442 km de vía navegable estratégica que conecta cinco países y mueve más de 100 millones de toneladas al año. Soja, minerales, combustibles, contenedores — todo fluye por el sistema Paraná-Paraguay. FluviaFleet es la primera plataforma con IA diseñada exclusivamente para esta ruta.</p>
+        <p style="font-size:14px;color:rgba(255,255,255,0.45);margin-top:12px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7">Desde las minas de hierro de Corumbá hasta los puertos de aguas profundas de Rosario y Buenos Aires, la Paraná-Paraguay es el corredor logístico que sostiene la economía del Mercosur. Sin embargo, el 80% de las flotas aún operan con planillas de papel y radio VHF.</p>
+        <div class="country-flags" style="margin-top:24px">
+            <div class="country-flag"><div class="flag-dot" style="background:#60A5FA"></div>Argentina</div>
+            <div class="country-flag"><div class="flag-dot" style="background:#F87171"></div>Paraguay</div>
+            <div class="country-flag"><div class="flag-dot" style="background:#34D399"></div>Brasil</div>
+            <div class="country-flag"><div class="flag-dot" style="background:#FBBF24"></div>Uruguay</div>
+            <div class="country-flag"><div class="flag-dot" style="background:#C084FC"></div>Bolivia</div>
+        </div>
+    </div>
+
+    <!-- Route Visual + Ports -->
+    <div class="hidrovia-route">
+        <div class="hidrovia-route-grid">
+            <div class="hidrovia-map-wrap reveal">
+                <img src="img/hidrovia-map.png" alt="Mapa de la Hidrovía Paraná-Paraguay">
+                <div class="hidrovia-map-glow"></div>
+            </div>
+            <div class="route-info reveal">
+                <h3>Puertos estratégicos<br><em>de la Paraná-Paraguay</em></h3>
+                <p>La hidrovía atraviesa el corazón productivo del Mercosur. Cada puerto es un nodo crítico en la cadena de exportación de granos, minerales y combustibles que mueve la economía regional.</p>
+                <div class="port-list">
+                    <div class="port-item">
+                        <div class="port-dot brasil"></div>
+                        <div class="port-name">Corumbá / Ladário</div>
+                        <div class="port-country">Brasil</div>
+                        <div class="port-km">Km 2.770</div>
+                    </div>
+                    <div class="port-item">
+                        <div class="port-dot paraguay"></div>
+                        <div class="port-name">Concepción</div>
+                        <div class="port-country">Paraguay</div>
+                        <div class="port-km">Km 2.010</div>
+                    </div>
+                    <div class="port-item">
+                        <div class="port-dot paraguay"></div>
+                        <div class="port-name">Asunción</div>
+                        <div class="port-country">Paraguay</div>
+                        <div class="port-km">Km 1.630</div>
+                    </div>
+                    <div class="port-item">
+                        <div class="port-dot argentina"></div>
+                        <div class="port-name">Barranqueras</div>
+                        <div class="port-country">Argentina</div>
+                        <div class="port-km">Km 1.200</div>
+                    </div>
+                    <div class="port-item">
+                        <div class="port-dot argentina"></div>
+                        <div class="port-name">Santa Fe</div>
+                        <div class="port-country">Argentina</div>
+                        <div class="port-km">Km 580</div>
+                    </div>
+                    <div class="port-item">
+                        <div class="port-dot argentina"></div>
+                        <div class="port-name">Rosario (Hub Sojero)</div>
+                        <div class="port-country">Argentina</div>
+                        <div class="port-km">Km 420</div>
+                    </div>
+                    <div class="port-item">
+                        <div class="port-dot argentina"></div>
+                        <div class="port-name">Buenos Aires</div>
+                        <div class="port-country">Argentina</div>
+                        <div class="port-km">Km 240</div>
+                    </div>
+                    <div class="port-item">
+                        <div class="port-dot uruguay"></div>
+                        <div class="port-name">Nueva Palmira</div>
+                        <div class="port-country">Uruguay</div>
+                        <div class="port-km">Km 0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="hidrovia-stats">
+        <div class="hidrovia-stats-grid">
+            <div class="hv-stat reveal">
+                <div class="hv-stat-icon"><i class="fa-solid fa-route"></i></div>
+                <div class="hv-stat-num" data-target="3442">0</div>
+                <div class="hv-stat-label">KILÓMETROS NAVEGABLES</div>
+            </div>
+            <div class="hv-stat reveal">
+                <div class="hv-stat-icon"><i class="fa-solid fa-box-open"></i></div>
+                <div class="hv-stat-num" data-target="100">0</div>
+                <div class="hv-stat-label">MILLONES TON/AÑO</div>
+            </div>
+            <div class="hv-stat reveal">
+                <div class="hv-stat-icon"><i class="fa-solid fa-earth-americas"></i></div>
+                <div class="hv-stat-num" data-target="5">0</div>
+                <div class="hv-stat-label">PAÍSES CONECTADOS</div>
+            </div>
+            <div class="hv-stat reveal">
+                <div class="hv-stat-icon"><i class="fa-solid fa-anchor"></i></div>
+                <div class="hv-stat-num" data-target="40">0</div>
+                <div class="hv-stat-label">PUERTOS ACTIVOS</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Hidrovia subsection -->
+    <style>
+        .hidrovia-why{padding:0 48px 60px;max-width:1200px;margin:0 auto}
+        .hidrovia-why h3{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:white;text-align:center;margin-bottom:12px}
+        .hidrovia-why h3 em{font-weight:300;font-style:italic;color:#93C5FD}
+        .hidrovia-why>p{text-align:center;font-size:14px;color:rgba(255,255,255,0.45);max-width:600px;margin:0 auto 36px;line-height:1.7}
+        .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .why-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:28px;transition:all 0.3s}
+        .why-card:hover{background:rgba(59,130,246,0.06);border-color:rgba(59,130,246,0.15);transform:translateY(-4px)}
+        .why-card-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(52,211,153,0.08));display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+        .why-card-icon i{font-size:18px;color:#60A5FA}
+        .why-card h4{font-size:15px;font-weight:600;color:white;margin-bottom:6px}
+        .why-card p{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6}
+        .cargo-types{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:0 48px;max-width:1000px;margin:0 auto 60px}
+        .cargo-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:100px;padding:8px 18px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:0.5px;transition:all 0.2s}
+        .cargo-chip:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.2);color:rgba(255,255,255,0.7)}
+        .cargo-chip i{font-size:12px;color:#60A5FA}
+        @media(max-width:768px){.why-grid{grid-template-columns:1fr}.hidrovia-why{padding:0 24px 40px}.cargo-types{padding:0 24px}}
+    </style>
+
+    <!-- Cargo types strip -->
+    <div style="text-align:center;padding:0 48px 16px;max-width:900px;margin:0 auto">
+        <p style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.3);margin-bottom:16px">CARGAS QUE TRANSITAN LA PARANÁ-PARAGUAY</p>
+    </div>
+    <div class="cargo-types reveal">
+        <div class="cargo-chip"><i class="fa-solid fa-wheat-awn"></i>Soja & Cereales</div>
+        <div class="cargo-chip"><i class="fa-solid fa-gem"></i>Mineral de Hierro</div>
+        <div class="cargo-chip"><i class="fa-solid fa-gas-pump"></i>Combustibles</div>
+        <div class="cargo-chip"><i class="fa-solid fa-box"></i>Contenedores</div>
+        <div class="cargo-chip"><i class="fa-solid fa-tree"></i>Madera & Celulosa</div>
+        <div class="cargo-chip"><i class="fa-solid fa-mountain"></i>Clinker & Cemento</div>
+        <div class="cargo-chip"><i class="fa-solid fa-flask"></i>Químicos</div>
+        <div class="cargo-chip"><i class="fa-solid fa-seedling"></i>Fertilizantes</div>
+        <div class="cargo-chip"><i class="fa-solid fa-car"></i>Vehículos</div>
+    </div>
+
+    <!-- Why the Hidrovia -->
+    <div class="hidrovia-why reveal">
+        <h3>¿Por qué la Paraná-Paraguay<br><em>es tan estratégica?</em></h3>
+        <p>Es la columna vertebral logística del Mercosur. Sin ella, el costo del transporte de commodities se multiplicaría por 5x comparado con el flete terrestre.</p>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-card-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+                <h4>5x más barato que camión</h4>
+                <p>El transporte fluvial por la Paraná-Paraguay reduce hasta un 80% los costos logísticos respecto al transporte carretero. Una formación de 16 barcazas equivale a 960 camiones.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-card-icon"><i class="fa-solid fa-leaf"></i></div>
+                <h4>Huella de carbono mínima</h4>
+                <p>El transporte fluvial emite 5 veces menos CO₂ por tonelada/km que el camión. Las empresas que operan en la hidrovía lideran la transición hacia logística sustentable.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-card-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h4>Crecimiento imparable</h4>
+                <p>El tráfico por la Paraná-Paraguay crece un 8% anual. Las inversiones en dragado, señalización y terminales privadas superan los USD 2.000M previstos hasta 2030.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="hidrovia-cta reveal">
+        <div class="hidrovia-cta-inner">
+            <h3>La Paraná-Paraguay necesitaba<br>una plataforma a su altura</h3>
+            <p>FluviaFleet digitaliza cada kilómetro de la hidrovía. Tracking satelital con IA, gestión de convoyes de hasta 40.000 toneladas, control de combustible que ahorra millones, y un Copiloto inteligente que conoce cada tramo del río — de Corumbá a Nueva Palmira.</p>
+            <a href="#precios" class="btn-hidrovia">
+                <i class="fa-solid fa-ship"></i>
+                Digitalizar mi Flota — 14 días gratis
+            </a>
+            <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:16px;margin-bottom:0">Sin tarjeta de crédito · Setup en 5 minutos · Soporte en español 24/7</p>
+        </div>
+    </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<div class="section-alt">
+<section class="section" id="como-funciona">
+    <div class="section-tag">CÓMO FUNCIONA</div>
+    <h2>Tres pasos para<br><em>digitalizar tu flota.</em></h2>
+    <p class="section-desc">Sin instalaciones complejas. Sin hardware caro. Empezá a operar tu flota de forma inteligente en minutos.</p>
+    <div class="steps-grid">
+        <div class="step-card reveal">
+            <div class="step-num">01</div>
+            <h3>Registra tu flota</h3>
+            <p>Cargá tus embarcaciones, barcazas y remolcadores en minutos. El sistema detecta automáticamente datos AIS de tu flota en la hidrovía.</p>
+            <div class="step-icon"><i class="fa-solid fa-anchor"></i></div>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num">02</div>
+            <h3>Opera desde cualquier lugar</h3>
+            <p>Armá convoyes, registrá combustible, gestioná tripulación y bitácora. Todo desde la web o la app móvil con sincronización en tiempo real.</p>
+            <div class="step-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num">03</div>
+            <h3>Toma decisiones con datos</h3>
+            <p>Reportes inteligentes, pronósticos de hidrovía, alertas automáticas y un Copiloto IA que analiza tu operación y sugiere optimizaciones.</p>
+            <div class="step-icon"><i class="fa-solid fa-robot"></i></div>
+        </div>
+    </div>
+</section>
+</div>
+
+<!-- MODULOS -->
+<section class="section" id="modulos">
+    <div class="section-tag">ECOSISTEMA COMPLETO</div>
+    <h2>Todo lo que necesitas<br><em>en una plataforma.</em></h2>
+    <p class="section-desc">15+ módulos integrados que cubren cada aspecto de la operación fluvial, desde el despacho hasta la facturación.</p>
+    <div class="feat-grid">
+        <div class="feat-card reveal"><i class="fa-solid fa-map"></i><div><h4>Mapa de Flota en Vivo</h4><p>Tracking AIS + GPS propio. Visualizá cada embarcación en la hidrovía Paraguay-Paraná en tiempo real.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-link"></i><div><h4>Armador de Convoyes</h4><p>Armá formaciones de hasta 18 barcazas con validación de capacidad directamente desde tu flota registrada.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-gas-pump"></i><div><h4>Control de Combustible</h4><p>Registro de bunker, consumo por viaje y eficiencia por sector. Tu mayor costo, blindado.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-wrench"></i><div><h4>Mantenimiento Preventivo</h4><p>Ordenes de trabajo, historial por equipo y alertas de vencimiento para cada activo de tu flota.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-book"></i><div><h4>Bitácora Digital</h4><p>Registro operativo con fotos, clasificación automática y auditoría de novedades por embarcación.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-robot"></i><div><h4>Copiloto IA</h4><p>Asistente inteligente con Gemini que analiza tu base de datos y responde preguntas sobre tu operación.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-users"></i><div><h4>Tripulación & Safety</h4><p>Gestión de dotaciones, certificaciones, guardias y cumplimiento normativo de cada tripulante.</p></div></div>
+        <div class="feat-card reveal"><i class="fa-solid fa-water"></i><div><h4>Pronóstico Hidrovía</h4><p>Niveles hídricos, tendencias y condiciones meteorológicas de la hidrovía con datos de Open Meteo.</p></div></div>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-banner">
+    <div class="section-tag" style="color:rgba(255,255,255,0.4)">IMPACTO REAL</div>
+    <h2>Números que<br><em>hablan solos.</em></h2>
+    <div class="stats-row">
+        <div class="stat-item reveal"><div class="stat-num">+500</div><div class="stat-lbl">ACTIVOS MONITOREADOS</div></div>
+        <div class="stat-item reveal"><div class="stat-num">1.2M</div><div class="stat-lbl">TONELADAS GESTIONADAS</div></div>
+        <div class="stat-item reveal"><div class="stat-num">-18%</div><div class="stat-lbl">REDUCCIÓN COMBUSTIBLE</div></div>
+        <div class="stat-item reveal"><div class="stat-num">99.9%</div><div class="stat-lbl">UPTIME DEL SISTEMA</div></div>
+    </div>
+</div>
+
+<!-- PRECIOS -->
+<section class="section" id="precios">
+    <div style="text-align:center;margin-bottom:48px">
+        <div class="section-tag">PLANES ESCALABLES</div>
+        <h2>Potencia para flotas<br><em>de todos los tamaños.</em></h2>
+    </div>
+    <div class="pricing-cards">
+        <div class="price-card reveal">
+            <h3>Por Barcaza</h3>
+            <p class="price-desc">Control individual de cada activo</p>
+            <div><span class="price-amount">$149</span><span class="price-unit"> /barcaza/mes</span></div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Tracking GPS en tiempo real</li>
+                <li><i class="fa-solid fa-check"></i>Bitácora digital</li>
+                <li><i class="fa-solid fa-check"></i>Control de combustible</li>
+                <li><i class="fa-solid fa-check"></i>Mantenimiento preventivo</li>
+                <li class="disabled"><i class="fa-solid fa-xmark"></i>Copiloto IA</li>
+            </ul>
+            <a href="fluvia.html" class="price-btn">Seleccionar</a>
+        </div>
+        <div class="price-card featured reveal">
+            <div class="price-badge">MÁS POPULAR</div>
+            <h3>Combo Flota</h3>
+            <p class="price-desc">Hasta 10 embarcaciones con descuento</p>
+            <div><span class="price-amount">$899</span><span class="price-unit"> /mes</span></div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Todo de Por Barcaza</li>
+                <li><i class="fa-solid fa-check"></i>Armador de convoyes</li>
+                <li><i class="fa-solid fa-check"></i>Gestión de tripulación</li>
+                <li><i class="fa-solid fa-check"></i>Comunicaciones satelital</li>
+                <li><i class="fa-solid fa-check"></i>Copiloto IA básico</li>
+            </ul>
+            <a href="fluvia.html" class="price-btn dark">Comenzar Gratis</a>
+        </div>
+        <div class="price-card reveal">
+            <h3>Enterprise</h3>
+            <p class="price-desc">Solución corporativa sin límites</p>
+            <div><span class="price-amount">$1,499</span><span class="price-unit"> /mes</span></div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Embarcaciones ilimitadas</li>
+                <li><i class="fa-solid fa-check"></i>Copiloto IA avanzado</li>
+                <li><i class="fa-solid fa-check"></i>API integraciones</li>
+                <li><i class="fa-solid fa-check"></i>Soporte prioritario 24/7</li>
+                <li><i class="fa-solid fa-check"></i>SLA 99.9%</li>
+            </ul>
+            <a href="mailto:info@fluviafleet.com" class="price-btn">Contactar Ventas</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="section-alt">
+<section class="cta-section" id="nosotros">
+    <div class="section-tag">LISTO PARA ZARPAR?</div>
+    <h2>Digitaliza tu flota<br><em>hoy mismo.</em></h2>
+    <p>Combinamos la experiencia de capitanes veteranos con tecnología de punta. Nuestra misión es transformar la Hidrovía Paraguay-Paraná en la vía navegable más eficiente de Sudamérica.</p>
+    <a href="fluvia.html" class="btn-hero">Prueba 14 Días Gratis →</a>
+</section>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div>
+            <div class="footer-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:36px;height:36px;border-radius:50%;object-fit:cover"><span style="font-family:'Newsreader',serif;font-size:1.7rem;font-weight:400;color:var(--text)">FluviaFleet</span></div>
+            <p class="footer-desc">Gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná. Tecnología al servicio del transporte fluvial.</p>
+            <div class="footer-socials">
+                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
+        </div>
+        <div>
+            <h4>PRODUCTO</h4>
+            <a href="#modulos">Módulos</a>
+            <a href="#precios">Precios</a>
+            <a href="#como-funciona">Cómo Funciona</a>
+            <a href="#modulos">App Móvil</a>
+        </div>
+        <div>
+            <h4>EMPRESA</h4>
+            <a href="#nosotros">Nosotros</a>
+            <a href="#">Trabajá con Nosotros</a>
+            <a href="#">Blog</a>
+            <a href="#">Prensa</a>
+        </div>
+        <div>
+            <h4>LEGAL</h4>
+            <a href="#">Términos de Servicio</a>
+            <a href="#">Política de Privacidad</a>
+            <a href="mailto:info@fluviafleet.com">info@fluviafleet.com</a>
+        </div>
+    </div>
+    <div class="footer-copy">&copy; 2026 FluviaFleet. Todos los derechos reservados.</div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+    var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+    },{threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+    // Navbar scroll effect
+    window.addEventListener('scroll',function(){
+        var nav=document.querySelector('.nav');
+        if(window.scrollY>50)nav.style.borderBottomColor='var(--sep)';
+        else nav.style.borderBottomColor='transparent';
+    });
+
+    // Animated counter for hidrovia stats
+    var counterStarted=false;
+    var counterObs=new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+            if(entry.isIntersecting && !counterStarted){
+                counterStarted=true;
+                document.querySelectorAll('.hv-stat-num[data-target]').forEach(function(el){
+                    var target=parseInt(el.getAttribute('data-target'));
+                    var duration=2000;
+                    var start=0;
+                    var startTime=null;
+                    function animate(ts){
+                        if(!startTime)startTime=ts;
+                        var progress=Math.min((ts-startTime)/duration,1);
+                        var eased=1-Math.pow(1-progress,3);
+                        el.textContent=Math.floor(eased*target).toLocaleString('es-AR');
+                        if(progress<1)requestAnimationFrame(animate);
+                        else el.textContent=target.toLocaleString('es-AR');
+                    }
+                    requestAnimationFrame(animate);
+                });
+            }
+        });
+    },{threshold:0.3});
+    var statsSection=document.querySelector('.hidrovia-stats');
+    if(statsSection)counterObs.observe(statsSection);
+});
+</script>
 </body>
 </html>
