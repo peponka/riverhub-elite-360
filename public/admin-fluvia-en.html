@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+  <title>FluviaFleet - Dashboard</title>
+  <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-water"></i> FluviaFleet <span>v4.2</span>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-title">Principal</div>
+      <a href="#" class="nav-item active"><i class="fa-solid fa-table-cells-large"></i> Dashboard <span class="badge">1</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map <span class="badge">2</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Operativa</div>
+      <a href="#" class="nav-item"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+      <a href="#" class="nav-item alert"><i class="fa-regular fa-comment-dots"></i> Communications <span class="badge">3</span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Gestión</div>
+      <a href="#" class="nav-item"><i class="fa-solid fa-ship"></i> Flota (Actives)</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Fuel</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a>
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info">
+        <span class="user-name">Pepe Orué <i class="fa-solid fa-pen" style="font-size:10px; color:#aaa; margin-left:4px;"></i></span>
+        <span class="user-role">SUPERADMIN - ASU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area">
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar embarcación, puerto, viaje...">
+        <span class="shortcut">⌘K</span>
+      </div>
+      <div class="topbar-right">
+        <div class="settings">
+          <i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> SISTEMA OPERATIVO
+        </div>
+        <div>ASU · 14:04</div>
+        <i class="fa-solid fa-share-nodes"></i>
+        <i class="fa-regular fa-bell"></i>
+        <i class="fa-solid fa-gear"></i>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <div class="header-section">
+        <div class="greeting">
+          <p>FLUVIAFLEET OS / PANEL DE CONTROL</p>
+          <h1>Buenas tardes, <i>Capitán.</i></h1>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec);">UNIFIED CENTER · SERVICE LEVEL ÓPTIMO · FLEET SYNCHRONIZED 12 S</p>
+        </div>
+        <div class="header-actions">
+          <span class="week-info">WEEK 16 - 2026</span>
+          <button class="btn-outline">Export</button>
+          <button class="btn-primary">+ New viaje</button>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-title">FLOTA ACTIVA</div>
+          <div class="kpi-value">12<span>/14</span></div>
+          <div class="kpi-footer positive">
+            <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,8 L6,4 L12,8 L24,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            ↑ 86% disp. +2 vs. ayer
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">ALARMAS CRÍTICAS <i class="fa-solid fa-circle-exclamation" style="color:var(--status-err);"></i></div>
+          <div class="kpi-value alert">02</div>
+          <div class="kpi-footer negative">
+            <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,4 L6,8 L12,4 L24,10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            Atención requerida
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">CONSUMO TOTAL <span>KL/24H</span></div>
+          <div class="kpi-value">42.5<span>kL</span></div>
+          <div class="kpi-footer positive" style="color:var(--status-ok);">
+            <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,0 L6,4 L12,2 L24,8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            ↓ 4.2% vs. promedio · estable
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">CALADO MÍNIMO <span>PILAR</span></div>
+          <div class="kpi-value">10.2<span>pies</span></div>
+          <div class="kpi-footer" style="color:var(--status-warn);">
+            Navegable · margen 0.4'
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">EFICIENCIA OTP <span>ON TIME</span></div>
+          <div class="kpi-value ok">92<span>%</span></div>
+          <div class="kpi-footer positive">
+            <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,10 L6,4 L12,6 L24,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            ↑ Mejor mes del Q
+          </div>
+        </div>
+      </div>
+
+      <div class="main-grid">
+        <!-- Left Col -->
+        <div>
+          <div class="section-header">
+            <div>
+              <span class="section-title">Mapa de flota</span>
+              <span class="section-subtitle">Paraguay-Paraná · AIS en vivo</span>
+            </div>
+            <div class="map-badge">LIVE <span style="color:#1A1A2E; margin-left:6px; font-weight:500;">6 EMBARCACIONES</span></div>
+          </div>
+
+          <div class="map-container">
+            <div class="map-toolbar">
+              <button class="map-btn">SATÉLITE</button>
+              <button class="map-btn active">CARTOGRÁFICO</button>
+              <button class="map-btn">PROFUNDIDAD</button>
+              <button class="map-btn">CORRIENTE</button>
+              <div class="map-coords">
+                25.28° S<br>
+                -57.64° W<br>
+                ZOOM 1:240K
+              </div>
+            </div>
+            <div class="map-view">
+              <div class="river-shape"></div>
+              <!-- Dots randomly -->
+              <div style="position:absolute; left:20%; top:50%; display:flex; flex-direction:column; align-items:center;">
+                <i class="fa-solid fa-location-arrow" style="color:var(--text-main); font-size:12px; transform:rotate(45deg);"></i>
+                <span style="font-size:10px; font-weight:600; margin-top:4px;">ASU</span>
+              </div>
+              <div style="position:absolute; left:40%; top:45%; display:flex; flex-direction:column; align-items:center;">
+                <i class="fa-solid fa-location-arrow" style="color:var(--status-ok); font-size:12px; transform:rotate(60deg);"></i>
+                <span style="font-size:10px; font-weight:600; margin-top:4px;">PIL</span>
+              </div>
+              <div style="position:absolute; left:70%; top:60%; display:flex; flex-direction:column; align-items:center;">
+                <i class="fa-solid fa-circle" style="color:var(--status-warn); font-size:8px;"></i>
+                <span style="font-size:10px; font-weight:600; margin-top:4px;">COR</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Grid: Pronostico y Timeline -->
+          <div class="bottom-grid">
+            <div style="grid-column: span 2;">
+              <div class="section-header" style="margin-top:24px;">
+                <span class="section-title">Pronóstico niveles del río</span>
+                <span class="section-subtitle">ML · 7 Días</span>
+                <span style="margin-left:auto; font-size:10px; color:var(--text-sec); font-weight:600; letter-spacing:1px;">ACTUALIZADO 12:40 · CONFIANZA 91%</span>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>PUERTO</th><th>HOY</th><th>MIÉ</th><th>JUE</th><th>VIE</th><th>SÁB</th><th>DOM</th><th>LUN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Asunción<small>ASU</small></td>
+                    <td><span class="cell-val safe">3.20m</span></td>
+                    <td><span class="cell-val safe">3.15m</span></td>
+                    <td><span class="cell-val safe">3.10m</span></td>
+                    <td><span class="cell-val safe">3.05m</span></td>
+                    <td><span class="cell-val safe">3.00m</span></td>
+                    <td><span class="cell-val warn">2.98m</span></td>
+                    <td><span class="cell-val safe">3.05m</span></td>
+                  </tr>
+                  <tr>
+                    <td>Pilar<small>PIL</small></td>
+                    <td><span class="cell-val safe">3.10m</span></td>
+                    <td><span class="cell-val safe">3.05m</span></td>
+                    <td><span class="cell-val warn">2.95m</span></td>
+                    <td><span class="cell-val warn">2.90m</span></td>
+                    <td><span class="cell-val warn">2.85m</span></td>
+                    <td><span class="cell-val warn">2.80m</span></td>
+                    <td><span class="cell-val warn">2.95m</span></td>
+                  </tr>
+                  <tr>
+                    <td>Corrientes<small>COR</small></td>
+                    <td><span class="cell-val safe">3.40m</span></td>
+                    <td><span class="cell-val safe">3.38m</span></td>
+                    <td><span class="cell-val safe">3.35m</span></td>
+                    <td><span class="cell-val safe">3.30m</span></td>
+                    <td><span class="cell-val safe">3.28m</span></td>
+                    <td><span class="cell-val safe">3.30m</span></td>
+                    <td><span class="cell-val safe">3.35m</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Col -->
+        <div>
+          <div class="section-header">
+            <div>
+              <span class="section-title">Embarcaciones</span>
+              <span class="section-subtitle">6 bajo monitoreo</span>
+            </div>
+            <div style="font-size:10px; color:var(--text-sec); font-weight:600; text-transform:uppercase;">Ordenar · ETA</div>
+          </div>
+
+          <div class="fleet-list">
+            <div class="fleet-item">
+              <div class="fleet-info-main">
+                <i class="fa-solid fa-ferry fleet-icon"></i>
+                <div class="fleet-details">
+                  <h4>Itaipú 07</h4>
+                  <div class="fleet-meta">ASU → NPA · 4+1 · 9.2 KN</div>
+                </div>
+              </div>
+              <div class="status-badge navegando">NAVEGANDO</div>
+            </div>
+
+            <div class="fleet-item">
+              <div class="fleet-info-main">
+                <i class="fa-solid fa-ferry fleet-icon"></i>
+                <div class="fleet-details">
+                  <h4>Paraná Voyager</h4>
+                  <div class="fleet-meta">COR → ROS · 6+1 · 8.1 KN</div>
+                </div>
+              </div>
+              <div class="status-badge navegando">NAVEGANDO</div>
+            </div>
+
+            <div class="fleet-item">
+              <div class="fleet-info-main">
+                <i class="fa-solid fa-ferry fleet-icon"></i>
+                <div class="fleet-details">
+                  <h4>Don Eugenio</h4>
+                  <div class="fleet-meta">EN ASUNCIÓN · LIBRE · 0 KN</div>
+                </div>
+              </div>
+              <div class="status-badge puerto">EN PUERTO</div>
+            </div>
+
+            <div class="fleet-item">
+              <div class="fleet-info-main">
+                <i class="fa-solid fa-ferry fleet-icon"></i>
+                <div class="fleet-details">
+                  <h4>Aquidabán</h4>
+                  <div class="fleet-meta">PIL → ROS · 4+1 · 7.8 KN</div>
+                </div>
+              </div>
+              <div class="status-badge atencion">ATENCIÓN</div>
+            </div>
+          </div>
+
+          <div class="selected-vessel">
+            <div class="vessel-header">SELECCIONADA · IMO 9472314</div>
+            <div class="vessel-name">Itaipú 07</div>
+            
+            <div class="vessel-stats">
+              <div class="stat-col">
+                <span class="stat-label">CONVOY</span>
+                <span class="stat-val">4+1</span>
+              </div>
+              <div class="stat-col">
+                <span class="stat-label">COMBUSTIBLE</span>
+                <span class="stat-val">68%</span>
+              </div>
+              <div class="stat-col">
+                <span class="stat-label">ETA</span>
+                <span class="stat-val">+14h 22m</span>
+              </div>
+              <div class="stat-col" style="text-align:right;">
+                <span class="stat-label" style="text-align:right;">DESTINO</span>
+                <span class="stat-val">ASU &rarr; NPA</span>
+              </div>
+            </div>
+
+            <div class="vessel-actions">
+              <button class="btn-dark">Abrir bitácora</button>
+              <button class="btn-outline">Contactar</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

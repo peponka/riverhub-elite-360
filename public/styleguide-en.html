@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FluviaFleet - Material Design 3 Style Guide</title>
+
+    <!-- FONTS -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- MATERIAL TOKENS -->
+    <link rel="stylesheet" href="css/material-tokens.css">
+
+    <style>
+        body {
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
+            font-family: var(--md-ref-typeface-brand);
+            margin: 0;
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        h2 {
+            font: var(--md-sys-typescale-headline-medium);
+            color: var(--md-sys-color-primary);
+            margin-bottom: 24px;
+        }
+
+        h3 {
+            font: var(--md-sys-typescale-title-large);
+            color: var(--md-sys-color-on-surface);
+            margin: 32px 0 16px 0;
+        }
+
+        /* Color Chips */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .color-chip {
+            border-radius: var(--md-sys-shape-corner-medium);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .color-chip span {
+            font-size: 12px;
+            opacity: 0.8;
+            font-family: var(--md-ref-typeface-code);
+        }
+
+        /* Component Row */
+        .component-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="section">
+        <h1 style="font: var(--md-sys-typescale-display-medium); color: var(--md-sys-color-on-background);">FluviaFleet
+            Design System</h1>
+        <p style="font: var(--md-sys-typescale-body-large); color: var(--md-sys-color-outline);">Based on Material
+            Design 3 (Material You)</p>
+    </header>
+
+    <!-- TYPOGRAPHY -->
+    <section class="section">
+        <h2>Typography</h2>
+        <div style="display: grid; gap: 24px;">
+            <div>
+                <span style="font: var(--md-sys-typescale-display-large);">Display Large</span>
+                <br><code style="color: grey">--md-sys-typescale-display-large</code>
+            </div>
+            <div>
+                <span style="font: var(--md-sys-typescale-headline-large);">Headline Large</span>
+                <br><code style="color: grey">--md-sys-typescale-headline-large</code>
+            </div>
+            <div>
+                <span style="font: var(--md-sys-typescale-title-medium);">Title Medium</span>
+                <br><code style="color: grey">--md-sys-typescale-title-medium</code>
+            </div>
+            <div>
+                <span style="font: var(--md-sys-typescale-body-large);">Body Large - The quick brown fox jumps over the
+                    lazy dog.</span>
+                <br><code style="color: grey">--md-sys-typescale-body-large</code>
+            </div>
+        </div>
+    </section>
+
+    <!-- COLORS -->
+    <section class="section">
+        <h2>Colors</h2>
+        <div class="color-grid">
+            <div class="color-chip"
+                style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);">
+                <span>Primary</span>
+            </div>
+            <div class="color-chip"
+                style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);">
+                <span>Primary Container</span>
+            </div>
+            <div class="color-chip"
+                style="background: var(--md-sys-color-secondary); color: var(--md-sys-color-on-secondary);">
+                <span>Secondary</span>
+            </div>
+            <div class="color-chip"
+                style="background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container);">
+                <span>Secondary Container</span>
+            </div>
+            <div class="color-chip" style="background: var(--md-sys-color-error); color: var(--md-sys-color-on-error);">
+                <span>Error</span>
+            </div>
+            <div class="color-chip"
+                style="background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface);">
+                <span>Surface</span>
+            </div>
+            <div class="color-chip"
+                style="background: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface-variant);">
+                <span>Surface Variant</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="section">
+        <h2>Buttons</h2>
+
+        <h3>Filled Button (Primary Action)</h3>
+        <div class="component-row">
+            <button class="md-btn md-btn-filled">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+            <button class="md-btn md-btn-filled" disabled style="opacity: 0.5; cursor: not-allowed;">
+                Disabled
+            </button>
+        </div>
+
+        <h3>Outlined Button (Secondary Action)</h3>
+        <div class="component-row">
+            <button class="md-btn md-btn-outlined">
+                Cancel
+            </button>
+            <button class="md-btn md-btn-outlined">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </div>
+
+        <h3>Text Button (Low Emphasis)</h3>
+        <div class="component-row">
+            <button class="md-btn md-btn-text">
+                Learn More
+            </button>
+            <button class="md-btn md-btn-text">
+                Reset
+            </button>
+        </div>
+
+        <h3>Elevated Button (Tonal)</h3>
+        <div class="component-row">
+            <button class="md-btn md-btn-elevated">
+                <i class="fas fa-plus"></i> Add Item
+            </button>
+        </div>
+    </section>
+
+    <!-- TEXT FIELDS -->
+    <section class="section">
+        <h2>Inputs / Text Fields</h2>
+
+        <div style="max-width: 400px;">
+            <h3>Outlined Text Field</h3>
+            <div class="md-text-field">
+                <input type="text" id="tf1" placeholder=" " />
+                <label for="tf1" class="md-label">Username</label>
+            </div>
+
+            <div class="md-text-field">
+                <input type="email" id="tf2" placeholder=" " value="carlos@FluviaFleet.com" />
+                <label for="tf2" class="md-label">Email Address</label>
+            </div>
+
+            <div class="md-text-field">
+                <input type="password" id="tf3" placeholder=" " />
+                <label for="tf3" class="md-label">Password</label>
+            </div>
+        </div>
+    </section>
+
+    <!-- CARDS -->
+    <section class="section">
+        <h2>Cards</h2>
+
+        <div class="component-row" style="align-items: stretch;">
+            <!-- Elevated Card -->
+            <div class="md-card md-card-elevated" style="width: 300px;">
+                <h3 style="margin-top: 0;">Elevated Card</h3>
+                <p>This is a standard material card with elevation. It sits on top of the surface.</p>
+                <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                    <button class="md-btn md-btn-text">Action</button>
+                    <button class="md-btn md-btn-filled">Explore</button>
+                </div>
+            </div>
+
+            <!-- Outlined Card -->
+            <div class="md-card md-card-outlined" style="width: 300px;">
+                <h3 style="margin-top: 0;">Outlined Card</h3>
+                <p>This card has a border and is transparent (or same bg as surface). Good for boundaries.</p>
+                <div style="display: flex; justify-content: flex-start; margin-top: 16px;">
+                    <button class="md-btn md-btn-outlined">Details</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+
+</html>

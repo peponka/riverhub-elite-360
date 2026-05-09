@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+  <title>FluviaFleet - Pronóstico Hidrovía (Fluvia)</title>
+  <link rel="stylesheet" href="./css/modules/admin-fluvia.css">
+  <link rel="stylesheet" href="./css/modules/admin-copiloto-fluvia.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+  <style>
+    .hydro-layout { display: flex; gap: 24px; height: calc(100vh - 120px); min-height: 500px; }
+    .hydro-main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding-right: 5px; }
+    .hydro-side { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; padding-top: 10px; }
+
+    .hydro-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 24px; }
+    .hydro-kpi { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+    .hk-icon { font-size: 1.5rem; margin-bottom: 10px; }
+    .hk-val { font-family: var(--font-brand); font-size: 2rem; font-weight: 500; color: var(--text-main); line-height: 1; margin-bottom: 4px; }
+    .hk-label { font-family: var(--font-data); font-size: 0.65rem; font-weight: 700; color: var(--text-sec); text-transform: uppercase; }
+    .hk-trend { font-family: var(--font-data); font-size: 0.7rem; margin-top: 6px; font-weight: 700; }
+    .hk-trend.up { color: var(--status-ok); }
+    .hk-trend.down { color: var(--status-err); }
+    .hk-trend.stable { color: #3b82f6; }
+
+    .chart-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+    .chart-card-title { font-family: var(--font-data); font-size: 0.7rem; font-weight: 700; color: var(--text-sec); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px; }
+
+    .flow-bars { display: flex; align-items: flex-end; height: 180px; gap: 2px; }
+    .flow-bar { flex: 1; min-width: 0; border-radius: 2px 2px 0 0; transition: height 0.8s ease; position: relative; cursor: pointer; }
+    .flow-bar:hover { opacity: 0.8; }
+    .flow-bar .tooltip { display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: var(--text-main); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; white-space: nowrap; font-family: var(--font-data); }
+    .flow-bar:hover .tooltip { display: block; }
+
+    .legend-row { display: flex; gap: 20px; margin-top: 15px; font-family: var(--font-data); font-size: 0.7rem; color: var(--text-sec); }
+    .legend-row div { display: flex; align-items: center; gap: 5px; }
+    .legend-swatch { width: 12px; height: 12px; border-radius: 2px; }
+
+    /* Station Cards */
+    .station-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 15px; }
+    .station-card + .station-card { margin-top: 12px; }
+    .sc-name { font-family: var(--font-data); font-size: 0.75rem; font-weight: 700; color: var(--text-main); text-transform: uppercase; margin-bottom: 8px; }
+    .sc-val { font-family: var(--font-brand); font-size: 1.5rem; font-weight: 500; color: var(--text-main); }
+    .sc-unit { font-size: 0.8rem; color: var(--text-sec); font-weight: 400; }
+    .sc-trend { font-family: var(--font-data); font-size: 0.7rem; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo"><i class="fa-solid fa-water"></i> FluviaFleet <span>v4.2</span></div>
+    <div class="nav-group">
+      <div class="nav-title">Principal</div>
+      <a href="admin-fluvia.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a>
+      <a href="admin-mapa-flota-fluvia.html" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map</a>
+      <a href="admin-mapa-fluvia.html" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS</a>
+      <a href="admin-copiloto-fluvia.html" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Operativa</div>
+      <a href="admin-convoys-fluvia.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
+      <a href="admin-viajes-fluvia.html" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
+      <a href="admin-bitacora-fluvia.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+      <a href="admin-comunicaciones-fluvia.html" class="nav-item"><i class="fa-regular fa-comment-dots"></i> Communications</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Inteligencia</div>
+      <a href="admin-hidrologia-fluvia.html" class="nav-item active"><i class="fa-solid fa-water"></i> Pronóstico Hidrovía</a>
+      <a href="admin-reportes-fluvia.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Reportes Oficiales</a>
+    </div>
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info"><span class="user-name">Pepe Orué</span><span class="user-role">SUPERADMIN - ASU</span></div>
+    </div>
+  </div>
+
+  <div class="main-area" style="padding-bottom:0;">
+    <div class="topbar">
+      <div class="topbar-right" style="margin-left:auto;">
+        <div class="settings"><i class="fa-solid fa-satellite" style="color:var(--status-ok);"></i> OPEN-METEO FLOOD API</div>
+        <div>ASU · 14:04</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content hydro-layout">
+      <div class="hydro-main">
+        <div style="margin-bottom:20px;">
+          <h1 style="font-family:'Newsreader',serif; font-size:3rem; font-weight:400; margin:0; letter-spacing:-1px;">Pronóstico <i style="font-style:italic; font-weight:300;">Hidrovía.</i></h1>
+          <div style="font-family:var(--font-data); font-size:0.7rem; color:var(--text-sec); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-top:6px;">OPEN-METEO FLOOD API · CAUDAL REAL · PARAGUAY-PARANÁ · 30 DÍAS</div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="hydro-kpis">
+          <div class="hydro-kpi">
+            <div class="hk-icon" style="color:#38bdf8;"><i class="fa-solid fa-temperature-half"></i></div>
+            <div class="hk-val" id="kpi-temp">--</div>
+            <div class="hk-label">Temperatura</div>
+          </div>
+          <div class="hydro-kpi">
+            <div class="hk-icon" style="color:#94a3b8;"><i class="fa-solid fa-wind"></i></div>
+            <div class="hk-val" id="kpi-wind">--</div>
+            <div class="hk-label">Viento</div>
+          </div>
+          <div class="hydro-kpi">
+            <div class="hk-icon" style="color:#3b82f6;"><i class="fa-solid fa-water"></i></div>
+            <div class="hk-val" id="kpi-flow">--</div>
+            <div class="hk-label">Caudal ASU</div>
+          </div>
+          <div class="hydro-kpi">
+            <div class="hk-icon" style="color:#2ea043;"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="hk-val" id="kpi-trend">--</div>
+            <div class="hk-label">Tendencia</div>
+            <div class="hk-trend stable" id="kpi-trend-text"></div>
+          </div>
+        </div>
+
+        <!-- Flow Chart -->
+        <div class="chart-card">
+          <div class="chart-card-title">CAUDAL: RÍO PARAGUAY (m³/s) — ÚLTIMOS 30 DÍAS + FORECAST 7 DÍAS</div>
+          <div class="flow-bars" id="flow-chart"></div>
+          <div class="legend-row">
+            <div><div class="legend-swatch" style="background:#3b82f6;"></div> Normal</div>
+            <div><div class="legend-swatch" style="background:#00e5ff;"></div> Crecida (+20%)</div>
+            <div><div class="legend-swatch" style="background:#ef4444;"></div> Bajante (-20%)</div>
+            <div><div class="legend-swatch" style="background:#94a3b8;"></div> Forecast</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="hydro-side">
+        <div class="side-box">
+          <div class="side-box-title">Estaciones de Monitoreo</div>
+          <div class="station-card">
+            <div class="sc-name"><i class="fa-solid fa-location-dot" style="color:#3b82f6; margin-right:4px;"></i> Asunción</div>
+            <div class="sc-val" id="st-asu-val">-- <span class="sc-unit">m³/s</span></div>
+            <div class="sc-trend" id="st-asu-trend"></div>
+          </div>
+          <div class="station-card">
+            <div class="sc-name"><i class="fa-solid fa-location-dot" style="color:#2ea043; margin-right:4px;"></i> Rosario</div>
+            <div class="sc-val" id="st-ros-val">-- <span class="sc-unit">m³/s</span></div>
+            <div class="sc-trend" id="st-ros-trend"></div>
+          </div>
+          <div class="station-card">
+            <div class="sc-name"><i class="fa-solid fa-location-dot" style="color:#f59e0b; margin-right:4px;"></i> Corumbá</div>
+            <div class="sc-val" id="st-cor-val">-- <span class="sc-unit">m³/s</span></div>
+            <div class="sc-trend" id="st-cor-trend"></div>
+          </div>
+        </div>
+        <div class="side-box">
+          <div class="side-box-title">Alertas Activas</div>
+          <div id="alerts-list" style="font-family:var(--font-data); font-size:0.8rem; color:var(--text-sec);">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const stations = {
+      asuncion: { lat: -25.296, lng: -57.649 },
+      rosario:  { lat: -32.964, lng: -60.608 },
+      corumba:  { lat: -19.000, lng: -57.650 }
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Weather
+      try {
+        const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=-25.296&longitude=-57.649&current_weather=true`);
+        const wData = await wRes.json();
+        if (wData.current_weather) {
+          document.getElementById('kpi-temp').textContent = wData.current_weather.temperature + '°C';
+          document.getElementById('kpi-wind').textContent = wData.current_weather.windspeed + ' km/h';
+        }
+      } catch(e) { console.warn('Weather fetch failed'); }
+
+      // 2. River discharge for all stations
+      for (const [key, st] of Object.entries(stations)) {
+        await loadStation(key, st.lat, st.lng);
+      }
+    });
+
+    async function loadStation(key, lat, lng) {
+      try {
+        const url = `https://flood-api.open-meteo.com/v1/flood?latitude=${lat}&longitude=${lng}&daily=river_discharge,river_discharge_median&past_days=30&forecast_days=7`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.daily || !data.daily.river_discharge) return;
+
+        const discharges = data.daily.river_discharge;
+        const medians = data.daily.river_discharge_median || [];
+        const dates = data.daily.time;
+
+        // Today's value (index 30 = today, 0-29 = past)
+        const todayIdx = 30;
+        const todayFlow = discharges[todayIdx] || discharges[discharges.length - 8] || 0;
+        const todayMedian = medians[todayIdx] || medians[medians.length - 8] || todayFlow;
+
+        // Update station cards
+        const valEl = document.getElementById(`st-${key.substring(0,3)}-val`);
+        const trendEl = document.getElementById(`st-${key.substring(0,3)}-trend`);
+        if (valEl) valEl.innerHTML = `${Math.round(todayFlow)} <span class="sc-unit">m³/s</span>`;
+        if (trendEl) {
+          const trend = getTrend(todayFlow, todayMedian);
+          trendEl.style.color = trend.color;
+          trendEl.textContent = `${trend.text} (${trend.pct}% vs mediana)`;
+        }
+
+        // Main KPIs (Asunción is primary)
+        if (key === 'asuncion') {
+          document.getElementById('kpi-flow').textContent = Math.round(todayFlow) + ' m³/s';
+          const trend = getTrend(todayFlow, todayMedian);
+          document.getElementById('kpi-trend').textContent = trend.text;
+          const trendTextEl = document.getElementById('kpi-trend-text');
+          trendTextEl.textContent = trend.pct + '% vs mediana';
+          trendTextEl.className = 'hk-trend ' + (trend.pct > 0 ? 'up' : trend.pct < -10 ? 'down' : 'stable');
+
+          // Render chart
+          renderFlowChart(discharges, medians, dates);
+
+          // Alerts
+          renderAlerts(todayFlow, todayMedian);
+        }
+      } catch(e) {
+        console.warn(`Station ${key} fetch failed:`, e);
+      }
+    }
+
+    function renderFlowChart(discharges, medians, dates) {
+      const container = document.getElementById('flow-chart');
+      container.innerHTML = '';
+
+      const maxFlow = Math.max(...discharges.filter(v => v !== null)) * 1.1 || 1;
+
+      discharges.forEach((val, i) => {
+        if (val === null) return;
+        const median = medians[i] || val;
+        const pct = (val / maxFlow) * 100;
+        const isPast = i < 30;
+
+        const bar = document.createElement('div');
+        bar.className = 'flow-bar';
+        bar.style.height = '0%';
+
+        // Color logic
+        if (!isPast) {
+          bar.style.background = '#94a3b8'; // Forecast = gray
+        } else if (val < median * 0.8) {
+          bar.style.background = '#ef4444'; // Drought
+        } else if (val > median * 1.2) {
+          bar.style.background = '#00e5ff'; // Flood
+        } else {
+          bar.style.background = '#3b82f6'; // Normal
+        }
+
+        bar.innerHTML = `<div class="tooltip">${dates[i]}: ${Math.round(val)} m³/s</div>`;
+        container.appendChild(bar);
+
+        setTimeout(() => { bar.style.height = pct + '%'; }, i * 25);
+      });
+    }
+
+    function renderAlerts(flow, median) {
+      const el = document.getElementById('alerts-list');
+      const trend = getTrend(flow, median);
+      let html = '';
+
+      if (trend.pct < -20) {
+        html = `<div style="background:rgba(239,68,68,0.1); color:#ef4444; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">⚠️ BAJANTE CRÍTICA<br><span style="font-weight:400;">Calado restringido en tramo Pilar-Corrientes</span></div>`;
+      } else if (trend.pct < -10) {
+        html = `<div style="background:rgba(245,158,11,0.1); color:#f59e0b; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">⚡ BAJANTE MODERADA<br><span style="font-weight:400;">Monitorear calado en cruces críticos</span></div>`;
+      } else if (trend.pct > 20) {
+        html = `<div style="background:rgba(0,229,255,0.1); color:#0ea5e9; padding:10px; border-radius:6px; margin-bottom:8px; font-weight:700;">🌊 CRECIDA DETECTADA<br><span style="font-weight:400;">Caudal superior al 20% de mediana histórica</span></div>`;
+      } else {
+        html = `<div style="background:rgba(46,160,67,0.1); color:var(--status-ok); padding:10px; border-radius:6px; font-weight:700;">✅ SIN ALERTAS<br><span style="font-weight:400;">Condiciones normales de navegación</span></div>`;
+      }
+      el.innerHTML = html;
+    }
+
+    function getTrend(current, median) {
+      if (!median) return { text: 'N/A', pct: 0, color: '#aaa' };
+      const pct = ((current - median) / median) * 100;
+      if (pct < -20) return { text: 'BAJANTE CRÍTICA', pct: pct.toFixed(0), color: '#ef4444' };
+      if (pct < -10) return { text: 'BAJANTE', pct: pct.toFixed(0), color: '#fbbf24' };
+      if (pct > 20) return { text: 'CRECIDA', pct: '+' + pct.toFixed(0), color: '#00e5ff' };
+      return { text: 'ESTABLE', pct: pct.toFixed(0), color: '#2ea043' };
+    }
+  </script>
+</body>
+</html>
