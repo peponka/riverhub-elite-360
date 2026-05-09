@@ -44,7 +44,8 @@ const ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:4001',
-    'http://127.0.0.1:4001'
+    'http://127.0.0.1:4001',
+    'https://riverhub-elite-360.onrender.com'
 ];
 
 // SECURITY: Restrict CORS to known origins only (no open wildcard)
@@ -338,7 +339,7 @@ ${destination ? `DESTINO: ${destination}` : ''}
 ${selectedVessels ? `SELECCIONADAS: ${selectedVessels}` : ''}
 
 Sugiere la formación óptima del convoy. Responde SOLO JSON:
-{"formation":{"proa":"remolcador","barcazas":["b1","b2"],"popa":"otro o null"},"config":"4+1","risk_score":25,"risk_level":"bajo","warnings":["advertencia"],"fuel_estimate_liters":12000,"recommendation":"texto 2 oraciones"}`;
+{"formation":{"proa":"nombre del remolcador","barcazas_f1":["b1","b2"],"barcazas_f2":["b3","b4"],"popa":"otro o null"},"config":"4+1","risk_score":25,"risk_level":"bajo","warnings":["advertencia"],"fuel_estimate_liters":12000,"recommendation":"texto 2 oraciones"}`;
 
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 30000);
