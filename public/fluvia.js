@@ -1056,7 +1056,7 @@ async function runPredictiveMaintenance(){
     btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Analizando...';
     container.innerHTML='<div style="text-align:center;padding:40px 0;"><div class="loading-spinner" style="width:30px;height:30px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px;"></div><div style="font-size:12px;color:var(--text-secondary);">Gemini está analizando tu flota...</div></div>';
     try{
-        var companyId=currentUser?.user_metadata?.company_id||currentUser?.app_metadata?.company_id||'a1b2c3d4-0001-4000-8000-000000000001';
+        var companyId=currentCompanyId||'a1b2c3d4-0001-4000-8000-000000000001';
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
         var r=await fetch('/api/ai/predict-maintenance',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId})});
         var data=await r.json();
@@ -1098,7 +1098,7 @@ async function runFuelAnomalies(){
     btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Escaneando...';
     container.innerHTML='<div style="text-align:center;padding:40px 0;"><div class="loading-spinner" style="width:30px;height:30px;border:3px solid var(--border);border-top-color:#10b981;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px;"></div><div style="font-size:12px;color:var(--text-secondary);">Auditando consumo de combustible...</div></div>';
     try{
-        var companyId=currentUser?.user_metadata?.company_id||currentUser?.app_metadata?.company_id||'a1b2c3d4-0001-4000-8000-000000000001';
+        var companyId=currentCompanyId||'a1b2c3d4-0001-4000-8000-000000000001';
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
         var r=await fetch('/api/ai/fuel-anomalies',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId})});
         var data=await r.json();
@@ -1138,7 +1138,7 @@ async function suggestConvoyIA(){
     container.style.display='block';
     container.innerHTML='<div style="text-align:center;padding:20px 0;"><div class="loading-spinner" style="width:24px;height:24px;border:3px solid var(--border);border-top-color:#8b5cf6;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 8px;"></div><div style="font-size:12px;color:var(--text-secondary);">Gemini está optimizando la formación...</div></div>';
     try{
-        var companyId=currentUser?.user_metadata?.company_id||currentUser?.app_metadata?.company_id||'a1b2c3d4-0001-4000-8000-000000000001';
+        var companyId=currentCompanyId||'a1b2c3d4-0001-4000-8000-000000000001';
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
         var r=await fetch('/api/ai/optimize-convoy',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({companyId:companyId,destination:dest})});
         var data=await r.json();
