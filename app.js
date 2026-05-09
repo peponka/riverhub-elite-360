@@ -288,7 +288,7 @@ Si no hay suficientes datos para una embarcación, estimá basándote en el tipo
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 2000, responseMimeType: 'application/json' }
+                generationConfig: { temperature: 0.3, maxOutputTokens: 8192, responseMimeType: 'application/json' }
             })
         });
 
@@ -351,7 +351,7 @@ Sugiere la formación óptima del convoy. Responde SOLO JSON:
             signal: controller.signal,
             body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 1000 }
+                generationConfig: { temperature: 0.3, maxOutputTokens: 8192 }
             })
         });
         clearTimeout(timeout);
@@ -430,8 +430,8 @@ Si todo parece normal, devolvé un array con al menos 1 item tipo "normal" con s
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
+                contents: [{ parts: [{ text: `INSTRUCCIONES: Responde de forma muy directa y sin preámbulos. \n\n${prompt}` }] }],
+                generationConfig: { temperature: 0.4, maxOutputTokens: 8192 }
             })
         });
 
