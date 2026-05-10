@@ -278,9 +278,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         border: Border.all(color: AppColors.separator, width: 0.5),
                       ),
                       suffix: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: () => setState(() => _obscurePassword = !_obscurePassword),
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 14),
+                          padding: const EdgeInsets.all(14.0),
                           child: Icon(
                             _obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_slash,
                             size: 20,

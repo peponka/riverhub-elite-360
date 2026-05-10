@@ -799,6 +799,64 @@ app.get('/api/notifications/test', async (req, res) => {
     });
 });
 
+// --- COPILOT IA (Gemini REST API) ---
+app.post('/api/copilot/chat', async (req, res) => {
+    try {
+        const { prompt } = req.body;
+        if (!prompt) return res.status(400).json({ error: 'prompt requerido' });
+        
+        const geminiKey = process.env.GEMINI_API_KEY;
+        if (!geminiKey) return res.status(503).json({ error: 'GEMINI_API_KEY no configurada' });
+        
+        const geminiRes = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { maxOutputTokens: 1024, temperature: 0.7 }
+                })
+            }
+        );
+        const data = await geminiRes.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude procesar la consulta.';
+        res.json({ analysis: text });
+    } catch (e) {
+        console.error('[Copilot Chat]', e.message);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// Backward compat: redirect old n8n endpoint to copilot
+app.post('/api/n8n/ai-analyze', async (req, res) => {
+    try {
+        const { prompt } = req.body;
+        if (!prompt) return res.status(400).json({ error: 'prompt requerido' });
+        
+        const geminiKey = process.env.GEMINI_API_KEY;
+        if (!geminiKey) return res.status(503).json({ analysis: 'Gemini API Key no configurada.' });
+        
+        const geminiRes = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { maxOutputTokens: 1024, temperature: 0.7 }
+                })
+            }
+        );
+        const data = await geminiRes.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude procesar la consulta.';
+        res.json({ analysis: text });
+    } catch (e) {
+        console.error('[AI Analyze]', e.message);
+        res.status(500).json({ analysis: 'Error al procesar consulta IA: ' + e.message });
+    }
+});
+
 // --- KEEP ALIVE (for Render free tier) ---
 setInterval(() => {
     // Prevent Render from sleeping
