@@ -1006,11 +1006,11 @@ async function sendCopiloto(){
     // Gather context from Supabase
     try{
         var ctx='';
-        var v=await sb.from('vessels').select('*').limit(10);if(v.data)ctx+='Flota: '+JSON.stringify(v.data)+'\n';
-        var ais=await sb.from('ais_traffic').select('ship_name,latitude,longitude,speed,course,updated_at').limit(10);if(ais.data)ctx+='AIS Positions: '+JSON.stringify(ais.data)+'\n';
-        var vj=await sb.from('voyages').select('*').limit(10);if(vj.data)ctx+='Trips: '+JSON.stringify(vj.data)+'\n';
-        var fl=await sb.from('fuel_logs').select('*').limit(5);if(fl.data)ctx+='Fuel: '+JSON.stringify(fl.data)+'\n';
-        var mt=await sb.from('maintenance_tasks').select('*').limit(5);if(mt.data)ctx+='Maintenance: '+JSON.stringify(mt.data)+'\n';
+        var v=await sb.from('vessels').select('*').limit(200);if(v.data)ctx+='Flota: '+JSON.stringify(v.data)+'\n';
+        var ais=await sb.from('ais_traffic').select('ship_name,latitude,longitude,speed,course,updated_at').limit(200);if(ais.data)ctx+='AIS Positions: '+JSON.stringify(ais.data)+'\n';
+        var vj=await sb.from('voyages').select('*').limit(100);if(vj.data)ctx+='Trips: '+JSON.stringify(vj.data)+'\n';
+        var fl=await sb.from('fuel_logs').select('*').limit(50);if(fl.data)ctx+='Fuel: '+JSON.stringify(fl.data)+'\n';
+        var mt=await sb.from('maintenance_tasks').select('*').limit(50);if(mt.data)ctx+='Maintenance: '+JSON.stringify(mt.data)+'\n';
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
         var res=await fetch('/api/ai/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({message:msg,context:ctx})});
         var data=await res.json();
