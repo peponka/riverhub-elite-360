@@ -994,6 +994,7 @@ function openNewUserModal(){
 }
 
 // COPILOTO IA (GEMINI)
+var chatHistoryEn = [];
 async function sendCopiloto(){
     var input=document.getElementById('copiloto-input');
     var chat=document.getElementById('copiloto-chat');
@@ -1012,11 +1013,14 @@ async function sendCopiloto(){
         var fl=await sb.from('fuel_logs').select('*').limit(50);if(fl.data)ctx+='Fuel: '+JSON.stringify(fl.data)+'\n';
         var mt=await sb.from('maintenance_tasks').select('*').limit(50);if(mt.data)ctx+='Maintenance: '+JSON.stringify(mt.data)+'\n';
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
-        var res=await fetch('/api/ai/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({message:msg,context:ctx})});
+        var res=await fetch('/api/ai/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({message:msg,context:ctx,history:chatHistoryEn})});
         var data=await res.json();
         var typing=document.getElementById('ai-typing');if(typing)typing.remove();
-        var answer=data.response||data.analysis||data.message||'Could not process the query.';
+        var answer=data.response||data.analysis||data.message||'Could not process request.';
         chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;max-width:80%;line-height:1.5"><i class="fa-solid fa-robot" style="color:var(--accent);margin-right:6px"></i>'+esc(answer).replace(/\n/g,'<br>')+'</span></div>';
+        chatHistoryEn.push({ role: 'user', text: msg });
+        chatHistoryEn.push({ role: 'model', text: answer });
+        if(chatHistoryEn.length > 20) chatHistoryEn = chatHistoryEn.slice(-20);
     }catch(e){
         var typing=document.getElementById('ai-typing');if(typing)typing.remove();
         chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;color:var(--error)"><i class="fa-solid fa-exclamation-triangle" style="margin-right:6px"></i>Error connecting to the AI server.</span></div>';
