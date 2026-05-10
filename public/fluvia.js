@@ -831,6 +831,7 @@ async function sendCopiloto(){
     try{
         var ctx='';
         var v=await sb.from('vessels').select('*').limit(10);if(v.data)ctx+='Flota: '+JSON.stringify(v.data)+'\n';
+        var ais=await sb.from('ais_traffic').select('ship_name,latitude,longitude,speed,course,updated_at').limit(10);if(ais.data)ctx+='Posiciones AIS: '+JSON.stringify(ais.data)+'\n';
         var vj=await sb.from('voyages').select('*').limit(10);if(vj.data)ctx+='Viajes: '+JSON.stringify(vj.data)+'\n';
         var fl=await sb.from('fuel_logs').select('*').limit(5);if(fl.data)ctx+='Combustible: '+JSON.stringify(fl.data)+'\n';
         var mt=await sb.from('maintenance_tasks').select('*').limit(5);if(mt.data)ctx+='Mantenimiento: '+JSON.stringify(mt.data)+'\n';
