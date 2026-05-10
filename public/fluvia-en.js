@@ -1006,10 +1006,10 @@ async function sendCopiloto(){
     // Gather context from Supabase
     try{
         var ctx='';
-        var v=await sb.from('vessels').select('name,status,type,location');if(v.data)ctx+='Flota: '+JSON.stringify(v.data)+'\n';
-        var vj=await sb.from('voyages').select('vessel_name,origin_port,destination_port,status,cargo_tonss').limit(10);if(vj.data)ctx+='Trips: '+JSON.stringify(vj.data)+'\n';
-        var fl=await sb.from('fuel_logs').select('vessel_name,liters,fuel_type').limit(5);if(fl.data)ctx+='Fuel: '+JSON.stringify(fl.data)+'\n';
-        var mt=await sb.from('maintenance_tasks').select('description,vessel_name,priority,status').limit(5);if(mt.data)ctx+='Maintenance: '+JSON.stringify(mt.data)+'\n';
+        var v=await sb.from('vessels').select('*').limit(10);if(v.data)ctx+='Flota: '+JSON.stringify(v.data)+'\n';
+        var vj=await sb.from('voyages').select('*').limit(10);if(vj.data)ctx+='Trips: '+JSON.stringify(vj.data)+'\n';
+        var fl=await sb.from('fuel_logs').select('*').limit(5);if(fl.data)ctx+='Fuel: '+JSON.stringify(fl.data)+'\n';
+        var mt=await sb.from('maintenance_tasks').select('*').limit(5);if(mt.data)ctx+='Maintenance: '+JSON.stringify(mt.data)+'\n';
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
         var res=await fetch('/api/ai/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({message:msg,context:ctx})});
         var data=await res.json();
