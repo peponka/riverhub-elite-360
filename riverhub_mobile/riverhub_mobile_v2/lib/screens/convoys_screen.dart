@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 import '../services/ai_service.dart';
+import '../services/locale_service.dart';
 
 class ConvoysScreen extends StatefulWidget {
   const ConvoysScreen({super.key});
@@ -18,9 +19,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
   List<Map<String, dynamic>> _availableAssets = [];
   // Convoy formation: ordered list of assigned assets (position = index)
   final List<Map<String, dynamic>?> _formation = List.filled(18, null);
-  final TextEditingController _nameController = TextEditingController(
-    text: 'Nuevo Convoy',
-  );
+  late TextEditingController _nameController;
   int? _selectedAssetIndex; // For tap-to-assign mode
 
   // IA Convoy Optimizer
@@ -31,6 +30,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
   @override
   void initState() {
     super.initState();
+    _nameController = TextEditingController(text: LocaleService.t('convoy_name'));
     _fetchAssets();
   }
 
@@ -51,7 +51,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
             type = 'REMOLCADOR';
           }
           if (dbType.contains('oil') || dbType.contains('tank') || dbType.contains('cisterna') || name.contains('t-')) {
-            type = 'TANQUE';
+            type = LocaleService.t('dyn_key_85');
           }
           v['mapped_type'] = type;
           return v;
@@ -125,8 +125,8 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
       showCupertinoDialog(
         context: context,
         builder: (ctx) => CupertinoAlertDialog(
-          title: const Text('Sin Embarcaciones'),
-          content: const Text('Agregue al menos una embarcación al convoy.'),
+          title: Text(LocaleService.t('convoy_no_vessels')),
+          content: Text(LocaleService.t('convoy_add_vessel_msg')),
           actions: [
             CupertinoDialogAction(
               onPressed: () => Navigator.pop(ctx),
@@ -164,7 +164,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
         showCupertinoDialog(
           context: context,
           builder: (ctx) => CupertinoAlertDialog(
-            title: const Text('✅ Convoy Guardado'),
+            title: Text(LocaleService.t('convoy_saved')),
             content: Text('Código: $convoyCode'),
             actions: [
               CupertinoDialogAction(
@@ -182,7 +182,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
         showCupertinoDialog(
           context: context,
           builder: (ctx) => CupertinoAlertDialog(
-            title: const Text('Error'),
+            title: Text(LocaleService.t('dyn_key_86')),
             content: Text('Error: $e'),
             actions: [
               CupertinoDialogAction(
@@ -233,17 +233,17 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
     {'id': 11, 'name': 'B-108 ARENA', 'mapped_type': 'BARCAZA'},
     {'id': 12, 'name': 'B-109 CLINKER', 'mapped_type': 'BARCAZA'},
     {'id': 13, 'name': 'B-110 MINERAL', 'mapped_type': 'BARCAZA'},
-    {'id': 14, 'name': 'T-501 GASOIL', 'mapped_type': 'TANQUE'},
-    {'id': 15, 'name': 'T-502 NAFTA', 'mapped_type': 'TANQUE'},
-    {'id': 16, 'name': 'T-503 QUIMICO', 'mapped_type': 'TANQUE'},
+    {'id': 14, 'name': 'T-501 GASOIL', 'mapped_type': LocaleService.t('dyn_key_85')},
+    {'id': 15, 'name': 'T-502 NAFTA', 'mapped_type': LocaleService.t('dyn_key_85')},
+    {'id': 16, 'name': 'T-503 QUIMICO', 'mapped_type': LocaleService.t('dyn_key_85')},
   ];
 
   String _slotLabel(int i) {
-    if (i == 0) return 'REMOLCADOR (Proa)';
-    if (i == 17) return 'REMOLCADOR (Popa)';
+    if (i == 0) return LocaleService.t('convoy_slot_proa');
+    if (i == 17) return LocaleService.t('convoy_slot_stern');
     final row = ((i - 1) ~/ 4) + 1;
     final pos = ((i - 1) % 4) + 1;
-    return 'Fila $row • Pos $pos';
+    return '${LocaleService.t('convoy_slot_row')} $row • ${LocaleService.t('convoy_slot_pos')} $pos';
   }
 
   @override
@@ -255,7 +255,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
         middle: Text(
-          'Armador de Convoyes',
+          LocaleService.t('convoy_title'),
           style: GoogleFonts.inter(fontWeight: FontWeight.bold),
         ),
         leading: CupertinoButton(
@@ -280,7 +280,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
               padding: EdgeInsets.zero,
               onPressed: _isLoading ? null : _saveConvoy,
               child: Text(
-                'Guardar',
+                LocaleService.t('convoy_save'),
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.bold,
                   color: AppColors.accent,
@@ -300,7 +300,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                 child: CupertinoTextField(
                   controller: _nameController,
-                  placeholder: 'Nombre del Convoy',
+                  placeholder: LocaleService.t('convoy_name'),
                   style: const TextStyle(color: AppColors.textPrimary),
                   placeholderStyle: const TextStyle(color: AppColors.textSecondary),
                   padding: const EdgeInsets.all(14),
@@ -330,7 +330,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'FORMACIÓN ($assignedCount/18)',
+                      '${LocaleService.t('convoy_formation')} ($assignedCount/18)',
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
@@ -349,7 +349,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'Toque un slot para asignar',
+                          LocaleService.t('convoy_tap_assign'),
                           style: GoogleFonts.inter(
                             fontSize: 11,
                             color: AppColors.success,
@@ -390,7 +390,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                                 horizontal: 8,
                               ),
                               child: Text(
-                                'BARCAZAS',
+                                LocaleService.t('convoy_barges_section'),
                                 style: GoogleFonts.inter(
                                   fontSize: 9,
                                   color: AppColors.systemGray2,
@@ -434,7 +434,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                                 horizontal: 8,
                               ),
                               child: Text(
-                                '▼ POPA',
+                                LocaleService.t('convoy_stern'),
                                 style: GoogleFonts.inter(
                                   fontSize: 9,
                                   color: AppColors.systemGray2,
@@ -471,7 +471,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
                       child: Text(
-                        'FLOTA DISPONIBLE (${_availableAssets.length})',
+                        '${LocaleService.t('convoy_fleet_available')} (${_availableAssets.length})',
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
@@ -486,7 +486,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                           : _availableAssets.isEmpty
                           ? Center(
                               child: Text(
-                                'Toda la flota está asignada',
+                                LocaleService.t('convoy_all_assigned'),
                                 style: GoogleFonts.inter(
                                   fontSize: 12,
                                   color: AppColors.systemGray2,
@@ -625,8 +625,8 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Optimizador IA', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 13, color: AppColors.textPrimary)),
-                    Text('Formación óptima según río y calados', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
+                    Text(LocaleService.t('convoy_ai_optimizer'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 13, color: AppColors.textPrimary)),
+                    Text(LocaleService.t('convoy_ai_desc'), style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
                   ],
                 ),
               ),
@@ -638,7 +638,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
               Expanded(
                 child: CupertinoTextField(
                   controller: _destController,
-                  placeholder: 'Destino (ej: Rosario)',
+                  placeholder: LocaleService.t('convoy_dest_hint'),
                   padding: const EdgeInsets.all(10),
                   style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary),
                   placeholderStyle: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary),
@@ -662,7 +662,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                         children: [
                           const Icon(CupertinoIcons.sparkles, size: 14, color: CupertinoColors.white),
                           const SizedBox(width: 4),
-                          Text('Sugerir', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.white)),
+                          Text(LocaleService.t('convoy_suggest'), style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.white)),
                         ],
                       ),
               ),
@@ -676,7 +676,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                   children: [
                     const CupertinoActivityIndicator(radius: 12),
                     const SizedBox(height: 8),
-                    Text('Gemini optimizando...\n(puede tardar hasta 60s)', textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary, fontStyle: FontStyle.italic)),
+                    Text(LocaleService.t('convoy_optimizing'), textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary, fontStyle: FontStyle.italic)),
                   ],
                 ),
               ),
@@ -768,7 +768,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
           child: Center(child: Text('$score', style: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 14, color: color))),
         ),
         const SizedBox(height: 2),
-        Text('RIESGO', style: GoogleFonts.inter(fontSize: 8, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+        Text(LocaleService.t('convoy_risk'), style: GoogleFonts.inter(fontSize: 8, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
       ],
     );
   }
@@ -889,7 +889,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                           ),
                         ),
                         Text(
-                          'Toque para quitar',
+                          LocaleService.t('convoy_tap_remove'),
                           style: GoogleFonts.inter(
                             fontSize: 7,
                             color: AppColors.textSecondary,

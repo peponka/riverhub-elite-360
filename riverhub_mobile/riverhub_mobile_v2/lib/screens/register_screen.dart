@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' show Colors, Material;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -44,8 +45,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         showCupertinoDialog(
           context: context,
           builder: (ctx) => CupertinoAlertDialog(
-            title: const Text('Registration Successful'),
-            content: const Text('Your account has been created. Please verify your email.'),
+            title: Text(LocaleService.t('register_registration_success')),
+            content: Text(LocaleService.t('register_your_account_has_bee')),
             actions: [
               CupertinoDialogAction(child: const Text('OK'), onPressed: () { Navigator.pop(ctx); Navigator.pop(ctx); }),
             ],
@@ -65,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Error'), content: Text(message),
+        title: Text(LocaleService.t('register_error')), content: Text(message),
         actions: [CupertinoDialogAction(child: const Text('OK'), onPressed: () => Navigator.pop(ctx))],
       ),
     );
@@ -130,7 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
-        middle: Text('Sign Up', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('register_sign_up'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         previousPageTitle: 'Back',
       ),
       child: SafeArea(
@@ -141,9 +142,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo
-                Text('FluviaFleet', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                Text(LocaleService.t('register_fluviafleet'), style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
                 const SizedBox(height: 4),
-                Text('CREATE ACCOUNT', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                Text(LocaleService.t('register_create_account'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                 const SizedBox(height: 40),
                 Container(
                   padding: const EdgeInsets.all(24),
@@ -168,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onPressed: _isLoading ? null : _signUp,
                         child: _isLoading
                             ? const CupertinoActivityIndicator(color: AppColors.textOnAccent)
-                            : Text('Sign Up', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.textOnAccent)),
+                            : Text(LocaleService.t('register_sign_up'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.textOnAccent)),
                       ),
                     ),
                   ]),

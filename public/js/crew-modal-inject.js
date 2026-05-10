@@ -3,13 +3,13 @@
 
 (function () {
     // alert("🚀 VERIFICACIÓN: JavaScript ejecutándose correctamente. Si ves esto, el código nuevo SÍ llega a tu teléfono.");
-    console.log("🚢 Inicializando Modal de Tripulación JS...");
+    void("🚢 Inicializando Modal de Tripulación JS...");
 
     // Destruir modal viejo si existe
     const oldModal = document.getElementById('modal-nuevo-relevo');
     if (oldModal) {
         oldModal.remove();
-        console.log("✅ Modal viejo destruido");
+        void("✅ Modal viejo destruido");
     }
 
     // Crear modal completamente nuevo
@@ -93,7 +93,7 @@
 
     // Inyectar en el DOM
     document.body.insertAdjacentHTML('beforeend', modalHTML);
-    console.log("✅ Modal JS inyectado");
+    void("✅ Modal JS inyectado");
 
     // Referencias
     const modal = document.getElementById('modal-nuevo-relevo-js');
@@ -104,7 +104,7 @@
     // Función para abrir
     window.openCrewModalJS = function () {
         modal.style.display = 'flex';
-        console.log("🔵 Modal JS abierto");
+        void("🔵 Modal JS abierto");
     };
 
     // Función para cerrar
@@ -165,9 +165,9 @@
         const btnNewCrew = document.getElementById('btn-new-crew');
         if (btnNewCrew) {
             btnNewCrew.onclick = () => window.openCrewModalJS();
-            console.log("✅ Botón redirigido a modal JS");
+            void("✅ Botón redirigido a modal JS");
         }
     }, 1000);
 
-    console.log("🚀 Modal de Tripulación JS listo");
+    void("🚀 Modal de Tripulación JS listo");
 })();

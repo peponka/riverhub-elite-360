@@ -14,7 +14,7 @@ const MapLogicFlota = (() => {
     ];
 
     const init = () => {
-        console.log("🗺️ MapLogicFlota (MapLibre) Iniciando...");
+        void("🗺️ MapLogicFlota (MapLibre) Iniciando...");
         
         if (typeof maplibregl === 'undefined') {
             console.error("MapLibre no cargado.");

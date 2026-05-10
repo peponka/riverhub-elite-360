@@ -5,7 +5,7 @@ const dashboardLogic = {
     dashMap: null,
 
     init: async function () {
-        console.log("🚀 Módulo Radar Dashboard Activo.");
+        void("🚀 Módulo Radar Dashboard Activo.");
         this.updateGreeting();
         this.renderScadaCharts();
 
@@ -30,14 +30,14 @@ const dashboardLogic = {
             // GUARD: Only show onboarding popup AFTER user is logged in
             const loginView = document.getElementById('login-view');
             if (loginView && loginView.style.display !== 'none' && loginView.offsetParent !== null) {
-                console.log("Dashboard: Skipping onboarding — login screen active.");
+                void("Dashboard: Skipping onboarding — login screen active.");
                 return;
             }
             // Also check if AuthModule says user is not authenticated
             if (window.AuthModule && typeof window.AuthModule.getCurrentUser === 'function') {
                 const user = window.AuthModule.getCurrentUser();
                 if (!user) {
-                    console.log("Dashboard: Skipping onboarding — no user session.");
+                    void("Dashboard: Skipping onboarding — no user session.");
                     return;
                 }
             }
@@ -240,7 +240,7 @@ const dashboardLogic = {
     subscribeToAIS: function () {
         if (!window.AisStreamService || !window.AisStreamService.subscribe) return;
 
-        console.log("📡 Dashboard: Subscribing to AIS live updates (ol)...");
+        void("📡 Dashboard: Subscribing to AIS live updates (ol)...");
 
         window.AisStreamService.subscribe((vessel) => {
             if (!this.dashMap || !this.vectorSource) return;

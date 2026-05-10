@@ -3,7 +3,7 @@ const ReportesModule = (() => {
     let supabaseData = null; // Cached Supabase data
 
     const init = async () => {
-        console.log("ReportesModule: Initializing BI Dashboard...");
+        void("ReportesModule: Initializing BI Dashboard...");
 
         // Ensure Chart.js is loaded
         if (typeof Chart === 'undefined') {
@@ -19,7 +19,7 @@ const ReportesModule = (() => {
             renderPnlChart();
             renderFuelChart();
             renderOpsChart();
-            console.log("ReportesModule: Charts rendered.");
+            void("ReportesModule: Charts rendered.");
         }, 150);
     };
 
@@ -41,7 +41,7 @@ const ReportesModule = (() => {
             }
 
             supabaseData = { vessels: vessels || [], quotations: quotes || [] };
-            console.log("ReportesModule: Supabase BI data loaded ✅", supabaseData);
+            void("ReportesModule: Supabase BI data loaded ✅", supabaseData);
         } catch (e) {
             console.warn("ReportesModule: Supabase fetch error, using demo:", e.message);
             supabaseData = null;

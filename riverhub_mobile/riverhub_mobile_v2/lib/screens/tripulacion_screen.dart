@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
 import '../theme/app_colors.dart';
 import '../main.dart';
+import '../services/locale_service.dart';
 
 class TripulacionScreen extends StatefulWidget {
   const TripulacionScreen({super.key});
@@ -28,17 +29,15 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
       final data = await SupabaseService.getCrewMembers();
       setState(() {
         if (data.isNotEmpty) {
-          _crew = data
-              .map((c) => {
-                    'id': c['id'],
-                    'name': c['full_name'] ?? c['name'] ?? 'Sin nombre',
-                    'role': c['role'] ?? c['position'] ?? '-',
-                    'vessel': c['vessel_name'] ?? c['vessel'] ?? '-',
-                    'status': c['status'] ?? 'active',
-                    'phone': c['phone'] ?? '',
-                    'document': c['document'] ?? c['dni'] ?? '',
-                  })
-              .toList();
+          _crew = data.map((c) => {
+            'id': c['id'],
+            'name': c['full_name'] ?? c['name'] ?? LocaleService.t('common_no_name'),
+            'role': c['role'] ?? c['position'] ?? '-',
+            'vessel': c['vessel_name'] ?? c['vessel'] ?? '-',
+            'status': c['status'] ?? 'active',
+            'phone': c['phone'] ?? '',
+            'document': c['document'] ?? c['dni'] ?? '',
+          }).toList();
         } else {
           _crew = [];
         }
@@ -54,7 +53,6 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
     return _crew.where((c) => c['status'] == _filter).toList();
   }
 
-  // ─── ADD / EDIT CREW MEMBER ─────────────────────────────────────────
   void _showCrewForm({Map<String, dynamic>? existing}) {
     final nameCtrl = TextEditingController(text: existing?['name'] ?? '');
     final roleCtrl = TextEditingController(text: existing?['role'] ?? '');
@@ -77,40 +75,37 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
           ),
           child: ListView(
             children: [
-              // Handle bar
               Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
               const SizedBox(height: 20),
               Text(
-                existing != null ? 'Editar Tripulante' : 'Nuevo Tripulante',
+                existing != null ? LocaleService.t('crew_edit') : LocaleService.t('crew_add'),
                 style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
               ),
               Text(
-                'GESTIÓN DE PERSONAL',
+                LocaleService.t('crew_management'),
                 style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5),
               ),
               const SizedBox(height: 24),
-              _formField('Nombre completo', nameCtrl, CupertinoIcons.person),
+              _formField(LocaleService.t('crew_name'), nameCtrl, CupertinoIcons.person),
               const SizedBox(height: 12),
-              _formField('Cargo / Rol', roleCtrl, CupertinoIcons.briefcase),
+              _formField(LocaleService.t('crew_role'), roleCtrl, CupertinoIcons.briefcase),
               const SizedBox(height: 12),
-              _formField('Teléfono', phoneCtrl, CupertinoIcons.phone, keyboard: TextInputType.phone),
+              _formField(LocaleService.t('crew_phone'), phoneCtrl, CupertinoIcons.phone, keyboard: TextInputType.phone),
               const SizedBox(height: 12),
-              _formField('Documento', docCtrl, CupertinoIcons.doc_text),
+              _formField(LocaleService.t('crew_doc'), docCtrl, CupertinoIcons.doc_text),
               const SizedBox(height: 20),
-              // Status selector
-              Text('Estado', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 0.5)),
+              Text(LocaleService.t('crew_status'), style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 0.5)),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  _statusOption('active', 'Embarcado', status, (v) => setModalState(() => status = v)),
+                  _statusOption('active', LocaleService.t('crew_status_onboard'), status, (v) => setModalState(() => status = v)),
                   const SizedBox(width: 8),
-                  _statusOption('leave', 'Franco', status, (v) => setModalState(() => status = v)),
+                  _statusOption('leave', LocaleService.t('crew_status_leave'), status, (v) => setModalState(() => status = v)),
                   const SizedBox(width: 8),
-                  _statusOption('inactive', 'Inactivo', status, (v) => setModalState(() => status = v)),
+                  _statusOption('inactive', LocaleService.t('crew_status_inactive'), status, (v) => setModalState(() => status = v)),
                 ],
               ),
               const SizedBox(height: 28),
-              // Save button
               GestureDetector(
                 onTap: () async {
                   if (nameCtrl.text.trim().isEmpty) return;
@@ -132,13 +127,10 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  decoration: BoxDecoration(
-                    color: AppColors.textPrimary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
                   child: Center(
                     child: Text(
-                      existing != null ? 'Guardar Cambios' : 'Agregar Tripulante',
+                      existing != null ? LocaleService.t('crew_save_changes') : LocaleService.t('crew_add_member'),
                       style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.backgroundPrimary),
                     ),
                   ),
@@ -152,17 +144,16 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
     );
   }
 
-  // ─── DELETE CREW MEMBER ────────────────────────────────────────────
   void _confirmDelete(Map<String, dynamic> c) {
     showCupertinoModalPopup(
       context: context,
       builder: (ctx) => CupertinoActionSheet(
-        title: Text('Eliminar tripulante', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
-        message: Text('¿Eliminar a ${c['name']}? Esta acción no se puede deshacer.', style: GoogleFonts.inter()),
+        title: Text(LocaleService.t('crew_delete_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+        message: Text('${LocaleService.t('crew_delete_msg_part1')}${c['name']}${LocaleService.t('crew_delete_msg_part2')}', style: GoogleFonts.inter()),
         actions: [
           CupertinoActionSheetAction(
             isDestructiveAction: true,
-            child: Text('Eliminar', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+            child: Text(LocaleService.t('crew_delete_action'), style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
             onPressed: () async {
               Navigator.pop(ctx);
               try {
@@ -171,13 +162,13 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
                 }
                 _loadCrew();
               } catch (e) {
-                debugPrint('Error deleting crew: \$e');
+                debugPrint('Error deleting crew: $e');
               }
             },
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
-          child: Text('Cancelar', style: GoogleFonts.inter()),
+          child: Text(LocaleService.t('common_cancel'), style: GoogleFonts.inter()),
           onPressed: () => Navigator.pop(ctx),
         ),
       ),
@@ -187,22 +178,17 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
   Widget _formField(String placeholder, TextEditingController ctrl, IconData icon, {TextInputType keyboard = TextInputType.text}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.separator, width: 0.5),
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(border: Border.all(color: AppColors.separator, width: 0.5), borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
           Icon(icon, size: 18, color: AppColors.textSecondary),
           const SizedBox(width: 12),
           Expanded(
             child: CupertinoTextField(
-              controller: ctrl,
-              placeholder: placeholder,
+              controller: ctrl, placeholder: placeholder,
               placeholderStyle: GoogleFonts.inter(fontSize: 14, color: AppColors.textTertiary),
               style: GoogleFonts.inter(fontSize: 14, color: AppColors.textPrimary),
-              keyboardType: keyboard,
-              decoration: const BoxDecoration(),
+              keyboardType: keyboard, decoration: const BoxDecoration(),
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
           ),
@@ -224,23 +210,13 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
-            child: Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: selected ? AppColors.backgroundPrimary : AppColors.textSecondary,
-              ),
-            ),
+            child: Text(label, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: selected ? AppColors.backgroundPrimary : AppColors.textSecondary)),
           ),
         ),
       ),
     );
   }
 
-
-
-  // ─── BUILD ──────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final active = _crew.where((c) => c['status'] == 'active').length;
@@ -251,22 +227,10 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: Navigator.of(context).canPop()
-            ? CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary),
-                onPressed: () => Navigator.pop(context),
-              )
-            : CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary),
-                onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
-              ),
-        middle: Text('Tripulación', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: () => _showCrewForm(),
-          child: Icon(CupertinoIcons.person_add, size: 22, color: AppColors.textPrimary),
-        ),
+            ? CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
+            : CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
+        middle: Text(LocaleService.t('crew_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: () => _showCrewForm(), child: Icon(CupertinoIcons.person_add, size: 22, color: AppColors.textPrimary)),
       ),
       backgroundColor: AppColors.backgroundPrimary,
       child: SafeArea(
@@ -275,49 +239,39 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
             : ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
-                  // ── KPI Row ────────────────────────────────────
                   Row(
                     children: [
-                      _kpi('Embarcados', '$active'),
+                      _kpi(LocaleService.t('crew_kpi_onboard'), '$active'),
                       const SizedBox(width: 10),
-                      _kpi('De Franco', '$onLeave'),
+                      _kpi(LocaleService.t('crew_kpi_leave'), '$onLeave'),
                       const SizedBox(width: 10),
-                      _kpi('Total', '${_crew.length}'),
+                      _kpi(LocaleService.t('crew_kpi_total'), '${_crew.length}'),
                     ],
                   ),
                   const SizedBox(height: 20),
 
-                  // ── Filter Chips ───────────────────────────────
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        _chip('Todos', 'all'),
-                        _chip('Embarcados', 'active'),
-                        _chip('Franco', 'leave'),
-                        _chip('Inactivos', 'inactive'),
+                        _chip(LocaleService.t('crew_all'), 'all'),
+                        _chip(LocaleService.t('crew_filter_onboard'), 'active'),
+                        _chip(LocaleService.t('crew_filter_leave'), 'leave'),
+                        _chip(LocaleService.t('crew_filter_inactive'), 'inactive'),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
 
-                  // ── Section Header ─────────────────────────────
                   Row(
                     children: [
-                      Text(
-                        'PERSONAL',
-                        style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5),
-                      ),
+                      Text(LocaleService.t('crew_personnel'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                       const Spacer(),
-                      Text(
-                        '${_filtered.length} registros',
-                        style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary),
-                      ),
+                      Text('${_filtered.length} ${LocaleService.t('crew_records')}', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
                     ],
                   ),
                   const SizedBox(height: 12),
 
-                  // ── Crew List ──────────────────────────────────
                   if (_filtered.isEmpty)
                     Container(
                       padding: const EdgeInsets.all(40),
@@ -325,9 +279,9 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
                         children: [
                           Icon(CupertinoIcons.person_2, size: 40, color: AppColors.textTertiary),
                           const SizedBox(height: 12),
-                          Text('Sin tripulantes', style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
+                          Text(LocaleService.t('crew_empty'), style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
                           const SizedBox(height: 4),
-                          Text('Agregá un miembro para comenzar', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
+                          Text(LocaleService.t('crew_add_hint'), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
                         ],
                       ),
                     )
@@ -339,34 +293,22 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
     );
   }
 
-  // ─── KPI CARD (Fluvia editorial style) ────────────────────────────
   Widget _kpi(String label, String val) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundSecondary,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.separator, width: 0.5),
-        ),
+        decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
         child: Column(
           children: [
-            Text(
-              val,
-              style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
-            ),
+            Text(val, style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
             const SizedBox(height: 2),
-            Text(
-              label.toUpperCase(),
-              style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 1),
-            ),
+            Text(label.toUpperCase(), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 1)),
           ],
         ),
       ),
     );
   }
 
-  // ─── FILTER CHIP (Fluvia monochrome) ──────────────────────────────
   Widget _chip(String label, String value) {
     final sel = _filter == value;
     return Padding(
@@ -380,31 +322,18 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: sel ? AppColors.textPrimary : AppColors.separator, width: 0.5),
           ),
-          child: Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: sel ? AppColors.backgroundPrimary : AppColors.textSecondary,
-            ),
-          ),
+          child: Text(label, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: sel ? AppColors.backgroundPrimary : AppColors.textSecondary)),
         ),
       ),
     );
   }
 
-  // ─── CREW CARD (Fluvia editorial style + swipe actions) ───────────
   Widget _crewCard(Map<String, dynamic> c) {
     String statusText;
     switch (c['status']) {
-      case 'active':
-        statusText = 'EMBARCADO';
-        break;
-      case 'leave':
-        statusText = 'FRANCO';
-        break;
-      default:
-        statusText = 'INACTIVO';
+      case 'active': statusText = LocaleService.t('crew_active_label'); break;
+      case 'leave': statusText = LocaleService.t('crew_leave_label'); break;
+      default: statusText = LocaleService.t('crew_inactive_label');
     }
 
     final initials = c['name'].toString().split(' ').map((w) => w.isNotEmpty ? w[0] : '').take(2).join().toUpperCase();
@@ -415,47 +344,25 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundSecondary,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.separator, width: 0.5),
-        ),
+        decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
         child: Row(
           children: [
-            // Avatar with initials
             Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: AppColors.textPrimary.withValues(alpha: 0.08),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  initials,
-                  style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
-                ),
-              ),
+              width: 44, height: 44,
+              decoration: BoxDecoration(color: AppColors.textPrimary.withValues(alpha: 0.08), shape: BoxShape.circle),
+              child: Center(child: Text(initials, style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary))),
             ),
             const SizedBox(width: 14),
-            // Info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    c['name'],
-                    style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                  ),
+                  Text(c['name'], style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
                   const SizedBox(height: 2),
-                  Text(
-                    '${c['role']} · ${c['vessel']}',
-                    style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
-                  ),
+                  Text('${c['role']} · ${c['vessel']}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
                 ],
               ),
             ),
-            // Status badge
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
@@ -463,15 +370,7 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: AppColors.separator, width: 0.5),
               ),
-              child: Text(
-                statusText,
-                style: GoogleFonts.inter(
-                  fontSize: 9,
-                  fontWeight: FontWeight.w700,
-                  color: c['status'] == 'active' ? AppColors.textPrimary : AppColors.textTertiary,
-                  letterSpacing: 0.5,
-                ),
-              ),
+              child: Text(statusText, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: c['status'] == 'active' ? AppColors.textPrimary : AppColors.textTertiary, letterSpacing: 0.5)),
             ),
           ],
         ),

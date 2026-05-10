@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
 import '../main.dart';
+import '../services/locale_service.dart';
 
 class TrackingScreen extends StatefulWidget {
   const TrackingScreen({super.key});
@@ -36,9 +37,9 @@ class _TrackingScreenState extends State<TrackingScreen> {
           final status = _mapStatus(v['status'] ?? 'planned');
           return {
             'id': v['id'],
-            'vessel': vessel['name'] ?? v['voyage_number'] ?? 'Embarcación',
+            'vessel': vessel['name'] ?? v['voyage_number'] ?? LocaleService.t('dyn_key_173'),
             'vessel_type': vessel['type'] ?? 'Remolcador',
-            'product': v['cargo_type'] ?? 'General',
+            'product': v['cargo_type'] ?? LocaleService.t('dyn_key_222'),
             'qty': v['cargo_quantity'] != null ? '${v['cargo_quantity']} TN' : '-',
             'origin': v['origin_port'] ?? 'N/A',
             'dest': v['destination_port'] ?? 'N/A',
@@ -51,19 +52,19 @@ class _TrackingScreenState extends State<TrackingScreen> {
         }).toList();
       } else {
         // Demo fallback
-        _shipments = const [
-          {'vessel': 'TUG-ALPHA', 'vessel_type': 'Remolcador', 'product': 'Soja', 'qty': '2,000 TN', 'origin': 'Asunción', 'dest': 'Rosario', 'status': 'En Tránsito', 'status_raw': 'active', 'eta': '18:00', 'progress': 0.65, 'voyage_number': 'V-001'},
-          {'vessel': 'BARGE-04', 'vessel_type': 'Barcaza', 'product': 'Vacío', 'qty': '-', 'origin': 'Rosario', 'dest': 'Asunción', 'status': 'En Puerto', 'status_raw': 'planned', 'eta': '-', 'progress': 0.0, 'voyage_number': 'V-002'},
-          {'vessel': 'BARGE-12', 'vessel_type': 'Barcaza', 'product': 'Mineral', 'qty': '1,500 TN', 'origin': 'Corumbá', 'dest': 'San Lorenzo', 'status': 'Cargando', 'status_raw': 'loading', 'eta': '12/03', 'progress': 0.3, 'voyage_number': 'V-003'},
-          {'vessel': 'TUG-BETA', 'vessel_type': 'Remolcador', 'product': 'Clinker', 'qty': '800 TN', 'origin': 'Corrientes', 'dest': 'Bs Aires', 'status': 'En Tránsito', 'status_raw': 'active', 'eta': '20:30', 'progress': 0.82, 'voyage_number': 'V-004'},
+        _shipments = [
+          {'vessel': 'TUG-ALPHA', 'vessel_type': 'Remolcador', 'product': LocaleService.t('dyn_key_74'), 'qty': '2,000 TN', 'origin': 'Asunción', 'dest': 'Rosario', 'status': LocaleService.t('dyn_key_224'), 'status_raw': 'active', 'eta': '18:00', 'progress': 0.65, 'voyage_number': 'V-001'},
+          {'vessel': 'BARGE-04', 'vessel_type': LocaleService.t('dyn_key_116'), 'product': LocaleService.t('dyn_key_227'), 'qty': '-', 'origin': 'Rosario', 'dest': 'Asunción', 'status': LocaleService.t('dyn_key_218'), 'status_raw': 'planned', 'eta': '-', 'progress': 0.0, 'voyage_number': 'V-002'},
+          {'vessel': 'BARGE-12', 'vessel_type': LocaleService.t('dyn_key_116'), 'product': LocaleService.t('dyn_key_225'), 'qty': '1,500 TN', 'origin': 'Corumbá', 'dest': 'San Lorenzo', 'status': LocaleService.t('dyn_key_219'), 'status_raw': 'loading', 'eta': '12/03', 'progress': 0.3, 'voyage_number': 'V-003'},
+          {'vessel': 'TUG-BETA', 'vessel_type': 'Remolcador', 'product': 'Clinker', 'qty': '800 TN', 'origin': 'Corrientes', 'dest': 'Bs Aires', 'status': LocaleService.t('dyn_key_224'), 'status_raw': 'active', 'eta': '20:30', 'progress': 0.82, 'voyage_number': 'V-004'},
         ];
       }
     } catch (e) {
       debugPrint('Error fetching shipments: $e');
       // Demo fallback on error
-      _shipments = const [
-        {'vessel': 'TUG-ALPHA', 'vessel_type': 'Remolcador', 'product': 'Soja', 'qty': '2,000 TN', 'origin': 'Asunción', 'dest': 'Rosario', 'status': 'En Tránsito', 'status_raw': 'active', 'eta': '18:00', 'progress': 0.65, 'voyage_number': 'V-001'},
-        {'vessel': 'BARGE-04', 'vessel_type': 'Barcaza', 'product': 'Vacío', 'qty': '-', 'origin': 'Rosario', 'dest': 'Asunción', 'status': 'En Puerto', 'status_raw': 'planned', 'eta': '-', 'progress': 0.0, 'voyage_number': 'V-002'},
+      _shipments = [
+        {'vessel': 'TUG-ALPHA', 'vessel_type': 'Remolcador', 'product': LocaleService.t('dyn_key_74'), 'qty': '2,000 TN', 'origin': 'Asunción', 'dest': 'Rosario', 'status': LocaleService.t('dyn_key_224'), 'status_raw': 'active', 'eta': '18:00', 'progress': 0.65, 'voyage_number': 'V-001'},
+        {'vessel': 'BARGE-04', 'vessel_type': LocaleService.t('dyn_key_116'), 'product': LocaleService.t('dyn_key_227'), 'qty': '-', 'origin': 'Rosario', 'dest': 'Asunción', 'status': LocaleService.t('dyn_key_218'), 'status_raw': 'planned', 'eta': '-', 'progress': 0.0, 'voyage_number': 'V-002'},
       ];
     }
     if (mounted) setState(() => _isLoading = false);
@@ -71,11 +72,11 @@ class _TrackingScreenState extends State<TrackingScreen> {
 
   String _mapStatus(String raw) {
     switch (raw) {
-      case 'active': case 'live': return 'En Tránsito';
-      case 'loading': return 'Cargando';
-      case 'completed': return 'Completado';
-      case 'docked': case 'planned': return 'En Puerto';
-      default: return 'Planificado';
+      case 'active': case 'live': return LocaleService.t('dyn_key_224');
+      case 'loading': return LocaleService.t('dyn_key_219');
+      case 'completed': return LocaleService.t('dyn_key_220');
+      case 'docked': case 'planned': return LocaleService.t('dyn_key_218');
+      default: return LocaleService.t('dyn_key_228');
     }
   }
 
@@ -113,10 +114,10 @@ class _TrackingScreenState extends State<TrackingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final inTransit = _shipments.where((s) => s['status'] == 'En Tránsito').length;
-    final inPort = _shipments.where((s) => s['status'] == 'En Puerto' || s['status'] == 'Planificado').length;
-    final loading = _shipments.where((s) => s['status'] == 'Cargando').length;
-    final completed = _shipments.where((s) => s['status'] == 'Completado').length;
+    final inTransit = _shipments.where((s) => s['status'] == LocaleService.t('dyn_key_224')).length;
+    final inPort = _shipments.where((s) => s['status'] == LocaleService.t('dyn_key_218') || s['status'] == LocaleService.t('dyn_key_228')).length;
+    final loading = _shipments.where((s) => s['status'] == LocaleService.t('dyn_key_219')).length;
+    final completed = _shipments.where((s) => s['status'] == LocaleService.t('dyn_key_220')).length;
 
     return CupertinoPageScaffold(
       backgroundColor: AppColors.backgroundPrimary,
@@ -126,7 +127,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
         leading: Navigator.of(context).canPop()
             ? CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
             : CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
-        middle: Text('Tracking', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('tracking_tracking'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: _isLoading
@@ -139,29 +140,29 @@ class _TrackingScreenState extends State<TrackingScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                        Text('Tracking de', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-                        Text('Cargas.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+                        Text(LocaleService.t('tracking_tracking_de'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+                        Text(LocaleService.t('tracking_cargas'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
                         const SizedBox(height: 6),
                         Text('${_shipments.length} MANIFIESTOS', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                         const SizedBox(height: 20),
 
                         // KPIs
                         Row(children: [
-                          _kpi('$inTransit', 'En Tránsito'),
+                          _kpi('$inTransit', LocaleService.t('dyn_key_224')),
                           const SizedBox(width: 10),
-                          _kpi('$inPort', 'En Puerto'),
+                          _kpi('$inPort', LocaleService.t('dyn_key_218')),
                           const SizedBox(width: 10),
-                          _kpi('$loading', 'Cargando'),
+                          _kpi('$loading', LocaleService.t('dyn_key_219')),
                           if (completed > 0) ...[
                             const SizedBox(width: 10),
-                            _kpi('$completed', 'Completados'),
+                            _kpi('$completed', LocaleService.t('dyn_key_226')),
                           ],
                         ]),
                         const SizedBox(height: 20),
 
                         // Section header
                         Row(children: [
-                          Text('EMBARQUES', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                          Text(LocaleService.t('tracking_embarques'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                           const Spacer(),
                           Text('${_shipments.length} activos', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
                         ]),
@@ -173,9 +174,9 @@ class _TrackingScreenState extends State<TrackingScreen> {
                             child: Column(children: [
                               Icon(CupertinoIcons.cube_box, size: 40, color: AppColors.textTertiary),
                               const SizedBox(height: 12),
-                              Text('Sin embarques', style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
+                              Text(LocaleService.t('tracking_sin_embarques'), style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
                               const SizedBox(height: 4),
-                              Text('Creá un viaje para comenzar el tracking', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
+                              Text(LocaleService.t('tracking_crea_un_viaje_para_c'), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
                             ]),
                           )
                         else
@@ -231,7 +232,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: AppColors.textPrimary.withValues(alpha: s['status'] == 'En Tránsito' ? 0.08 : 0.04),
+                color: AppColors.textPrimary.withValues(alpha: s['status'] == LocaleService.t('dyn_key_224') ? 0.08 : 0.04),
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: AppColors.separator, width: 0.5),
               ),
@@ -283,17 +284,17 @@ class _TrackingScreenState extends State<TrackingScreen> {
             if (s['voyage_number'] != null && s['voyage_number'].toString().isNotEmpty)
               Text(s['voyage_number'], style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
             const SizedBox(height: 20),
-            _detailRow('Producto', s['product'] ?? '-'),
-            _detailRow('Cantidad', s['qty'] ?? '-'),
-            _detailRow('Origen', s['origin'] ?? '-'),
-            _detailRow('Destino', s['dest'] ?? '-'),
-            _detailRow('Estado', s['status'] ?? '-'),
+            _detailRow(LocaleService.t('dyn_key_221'), s['product'] ?? '-'),
+            _detailRow(LocaleService.t('dyn_key_223'), s['qty'] ?? '-'),
+            _detailRow(LocaleService.t('dyn_key_204'), s['origin'] ?? '-'),
+            _detailRow(LocaleService.t('dyn_key_206'), s['dest'] ?? '-'),
+            _detailRow(LocaleService.t('dyn_key_229'), s['status'] ?? '-'),
             _detailRow('ETA', s['eta'] ?? '-'),
             const SizedBox(height: 20),
 
             // Progress indicator
             Row(children: [
-              Text('PROGRESO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+              Text(LocaleService.t('tracking_progreso'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
               const Spacer(),
               Text('${((s['progress'] as num? ?? 0) * 100).round()}%', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
             ]),
@@ -316,7 +317,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
-                child: Center(child: Text('Actualizar Estado', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.backgroundPrimary))),
+                child: Center(child: Text(LocaleService.t('tracking_actualizar_estado'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.backgroundPrimary))),
               ),
             ),
             const SizedBox(height: 8),
@@ -334,25 +335,25 @@ class _TrackingScreenState extends State<TrackingScreen> {
         title: Text('Cambiar estado de ${s['vessel']}', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
         actions: [
           CupertinoActionSheetAction(
-            child: Text('En Puerto', style: GoogleFonts.inter()),
+            child: Text(LocaleService.t('tracking_en_puerto'), style: GoogleFonts.inter()),
             onPressed: () { Navigator.pop(ctx); _setStatus(s, 'planned'); },
           ),
           CupertinoActionSheetAction(
-            child: Text('Cargando', style: GoogleFonts.inter()),
+            child: Text(LocaleService.t('tracking_cargando'), style: GoogleFonts.inter()),
             onPressed: () { Navigator.pop(ctx); _setStatus(s, 'loading'); },
           ),
           CupertinoActionSheetAction(
-            child: Text('En Tránsito', style: GoogleFonts.inter()),
+            child: Text(LocaleService.t('tracking_en_transito'), style: GoogleFonts.inter()),
             onPressed: () { Navigator.pop(ctx); _setStatus(s, 'active'); },
           ),
           CupertinoActionSheetAction(
-            child: Text('Completado', style: GoogleFonts.inter()),
+            child: Text(LocaleService.t('tracking_completado'), style: GoogleFonts.inter()),
             onPressed: () { Navigator.pop(ctx); _setStatus(s, 'completed'); },
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
           isDestructiveAction: true,
-          child: Text('Cancelar', style: GoogleFonts.inter()),
+          child: Text(LocaleService.t('tracking_cancelar'), style: GoogleFonts.inter()),
           onPressed: () => Navigator.pop(ctx),
         ),
       ),

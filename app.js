@@ -6,6 +6,7 @@ const WebSocket = require('ws');
 const path = require('path');
 const fs = require('fs');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 const stripeStr = process.env.STRIPE_SECRET_KEY || 'sk_test_mock';
 const stripe = require('stripe')(stripeStr);
 let createClient;
@@ -29,6 +30,8 @@ const aiLimiter = rateLimit({
 
 let n8nRoutes;
 try { n8nRoutes = require('./routes/n8n-automations'); } catch (e) { console.error('❌ n8n routes failed to load:', e.message); }
+let hydrologyRoutes;
+try { hydrologyRoutes = require('./routes/hydrologyRoutes'); } catch (e) { console.error('❌ hydrology routes failed to load:', e.message); }
 
 // ============================================
 // FLUVIAFLEET — Servidor Unificado
@@ -68,26 +71,25 @@ const io = new Server(server, {
     }
 });
 
-// --- SECURITY HEADERS ---
-app.use((req, res, next) => {
-    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self), payment=(self)');
-    res.setHeader('Content-Security-Policy',
-        "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; " +
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; " +
-        "style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; " +
-        "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
-        "img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://cartodb-basemaps-a.global.ssl.fastly.net https://cartodb-basemaps-b.global.ssl.fastly.net https://cartodb-basemaps-c.global.ssl.fastly.net https://cartodb-basemaps-d.global.ssl.fastly.net https://a.basemaps.cartocdn.com https://b.basemaps.cartocdn.com https://c.basemaps.cartocdn.com https://d.basemaps.cartocdn.com https://tile.openstreetmap.org; " +
-        "connect-src 'self' wss: ws: https://*.supabase.co https://api.open-meteo.com https://flood-api.open-meteo.com https://unpkg.com https://cdn.jsdelivr.net; " +
-        "frame-ancestors 'self'"
-    );
-    next();
-});
+// --- SECURITY HEADERS (helmet) ---
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://cdn.sheetjs.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
+            styleSrcElem: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            imgSrc: ["'self'", "data:", "blob:", "https://*.basemaps.cartocdn.com", "https://*.tile.openstreetmap.org", "https://cartodb-basemaps-a.global.ssl.fastly.net", "https://cartodb-basemaps-b.global.ssl.fastly.net", "https://cartodb-basemaps-c.global.ssl.fastly.net", "https://cartodb-basemaps-d.global.ssl.fastly.net", "https://a.basemaps.cartocdn.com", "https://b.basemaps.cartocdn.com", "https://c.basemaps.cartocdn.com", "https://d.basemaps.cartocdn.com", "https://tile.openstreetmap.org", "https://flagcdn.com"],
+            connectSrc: ["'self'", "wss:", "ws:", "https://*.supabase.co", "https://api.open-meteo.com", "https://flood-api.open-meteo.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
+            frameAncestors: ["'self'"]
+        }
+    },
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    hsts: { maxAge: 31536000, includeSubDomains: true },
+    crossOriginEmbedderPolicy: false, // Required for CDN resources
+    crossOriginResourcePolicy: false  // Required for CDN resources
+}));
 
 // --- ROOT REDIRECT TO LANDING ---
 // Removed redirect so express.static serves index.html (landing page)
@@ -588,6 +590,12 @@ ${voyageContext}`;
     }
 });
 
+// --- HYDROLOGY (modularized) ---
+if (hydrologyRoutes) {
+    app.use('/api/hydrology', hydrologyRoutes);
+    console.log('✅ Hydrology API mounted at /api/hydrology');
+}
+
 // --- STATIC FILES ---
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -699,6 +707,11 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log(`🔌 Cliente desconectado: ${socket.id}`);
     });
+});
+
+// --- 404 HANDLER ---
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
 // --- EXPRESS GLOBAL ERROR HANDLER ---

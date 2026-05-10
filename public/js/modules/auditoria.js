@@ -6,7 +6,7 @@ const AuditoriaModule = (() => {
 
     // Init
     const init = () => {
-        console.log("🛡️ Iniciando Módulo de Auditoría del Sistema...");
+        void("🛡️ Iniciando Módulo de Auditoría del Sistema...");
 
         // Check Dependencies
         checkSystemHealth();

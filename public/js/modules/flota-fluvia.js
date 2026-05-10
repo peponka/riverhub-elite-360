@@ -7,7 +7,7 @@ const FleetManagerFluvia = (() => {
     let vessels = [];
 
     const init = () => {
-        console.log("⚓ FleetManager (FLUVIAFLEETFleet): Iniciando...");
+        void("⚓ FleetManager (FLUVIAFLEETFleet): Iniciando...");
         const content = document.getElementById('flota-grid-container');
         if (!content) return;
 

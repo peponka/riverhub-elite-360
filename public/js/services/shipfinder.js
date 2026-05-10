@@ -15,7 +15,7 @@ const ShipfinderService = {
         const url = `${this.BASE_URL}/GetManyShip?v=2&k=${this.API_KEY}&enc=1&id=${idString}`;
 
         try {
-            console.log(`📡 Shipfinder: Requesting ${shipIds.length} ships...`);
+            void(`📡 Shipfinder: Requesting ${shipIds.length} ships...`);
             const response = await fetch(url);
             const data = await response.json();
 

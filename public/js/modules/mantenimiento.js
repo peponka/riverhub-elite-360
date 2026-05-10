@@ -4,7 +4,7 @@ const MaintenanceModule = (() => {
     let tasks = []; // Store fetched tasks
 
     const init = async () => {
-        console.log("🛠️ Inicializando Módulo de Mantenimiento (Hybrid Elite)...");
+        void("🛠️ Inicializando Módulo de Mantenimiento (Hybrid Elite)...");
         const container = document.getElementById('view-mantenimiento');
         if (!container) return;
 

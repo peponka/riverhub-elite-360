@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import '../theme/app_colors.dart';
 import '../main.dart';
+import '../services/locale_service.dart';
 
 class BitacoraScreen extends StatefulWidget {
   const BitacoraScreen({super.key});
@@ -95,15 +96,15 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                       children: [
                         CupertinoButton(
                           padding: EdgeInsets.zero,
-                          child: Text('Cancelar', style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 14)),
+                          child: Text(LocaleService.t('log_cancel'), style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 14)),
                           onPressed: () => Navigator.pop(context),
                         ),
-                        Text('Nueva Novedad', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 15, color: AppColors.textPrimary)),
+                        Text(LocaleService.t('log_new_entry'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 15, color: AppColors.textPrimary)),
                         isUploading
                             ? const CupertinoActivityIndicator()
                             : CupertinoButton(
                                 padding: EdgeInsets.zero,
-                                child: Text('Guardar', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textPrimary)),
+                                child: Text(LocaleService.t('log_save'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textPrimary)),
                                 onPressed: () async {
                                   if (textController.text.isEmpty) return;
                                   setModalState(() => isUploading = true);
@@ -158,7 +159,7 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                       children: [
                         CupertinoTextField(
                           controller: textController,
-                          placeholder: 'Escriba el suceso aquí... Use #hashtags',
+                          placeholder: LocaleService.t('log_write_hint'),
                           minLines: 3, maxLines: 5,
                           padding: const EdgeInsets.all(14),
                           placeholderStyle: GoogleFonts.inter(color: AppColors.textTertiary, fontSize: 14),
@@ -234,7 +235,7 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                                     children: [
                                       Icon(CupertinoIcons.camera_fill, color: AppColors.textOnAccent, size: 16),
                                       const SizedBox(width: 6),
-                                      Text('Cámara', style: GoogleFonts.inter(color: AppColors.textOnAccent, fontSize: 13, fontWeight: FontWeight.w600)),
+                                      Text(LocaleService.t('log_camera'), style: GoogleFonts.inter(color: AppColors.textOnAccent, fontSize: 13, fontWeight: FontWeight.w600)),
                                     ],
                                   ),
                                 ),
@@ -249,7 +250,7 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                                     final image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 70);
                                     if (image != null) setModalState(() => selectedImage = File(image.path));
                                   },
-                                  child: Text('Galería', style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600)),
+                                  child: Text(LocaleService.t('log_gallery'), style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600)),
                                 ),
                               ),
                             ],
@@ -294,7 +295,7 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
           child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary),
           onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
         ),
-        middle: Text('Bitácora', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('log_title1'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: _addLogEntry,
@@ -305,14 +306,14 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
         child: _isLoading
             ? const Center(child: CupertinoActivityIndicator(radius: 14))
             : _logs.isEmpty
-            ? Center(child: Text('Sin registros recientes', style: GoogleFonts.inter(color: AppColors.textSecondary)))
+            ? Center(child: Text(LocaleService.t('log_no_records'), style: GoogleFonts.inter(color: AppColors.textSecondary)))
             : ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 children: [
-                  Text('Bitácora', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-                  Text('Digital.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('log_title1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('log_title2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
                   const SizedBox(height: 6),
-                  Text('ÚLTIMAS ${logs.length} NOVEDADES${_activeFilter != null ? ' · ${_activeFilter!.toUpperCase()}' : ''}',
+                  Text('${LocaleService.t('log_latest')} ${logs.length} ${LocaleService.t('log_entries')}${_activeFilter != null ? ' · ${_activeFilter!.toUpperCase()}' : ''}',
                       style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
 
                   // ── Hashtag Filter Bar ──────────────────────
@@ -334,7 +335,7 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(color: AppColors.separator, width: 0.5),
                               ),
-                              child: Text('Todas', style: GoogleFonts.inter(
+                              child: Text(LocaleService.t('log_all'), style: GoogleFonts.inter(
                                 fontSize: 11, fontWeight: FontWeight.w600,
                                 color: _activeFilter == null ? AppColors.textOnAccent : AppColors.textSecondary,
                               )),
@@ -372,7 +373,7 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                     final date = DateTime.tryParse(log['created_at'] ?? '') ?? DateTime.now();
                     final timeStr = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
                     final dayStr = '${date.day}/${date.month}';
-                    final author = log['user_id'] != null ? 'Tripulante' : 'Sistema';
+                    final author = log['user_id'] != null ? LocaleService.t('log_crew_member') : LocaleService.t('log_system');
                     Color dotColor = AppColors.accent;
                     if (log['action_type'] == 'alert') dotColor = AppColors.warning;
                     if (log['action_type'] == 'success') dotColor = AppColors.success;

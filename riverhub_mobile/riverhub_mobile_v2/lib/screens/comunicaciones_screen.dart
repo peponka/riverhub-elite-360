@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class ComunicacionesScreen extends StatefulWidget {
   const ComunicacionesScreen({super.key});
@@ -30,17 +31,13 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
     setState(() {
       if (data.isNotEmpty) {
         final myId = SupabaseService.currentUserId;
-        _messages = data
-            .map(
-              (m) => {
-                'sender': m['sender_name'] ?? m['sender'] ?? 'DESCONOCIDO',
-                'content': m['message'] ?? m['content'] ?? '',
-                'time': m['created_at']?.toString().substring(11, 16) ?? '-',
-                'type': m['type'] ?? 'VHF',
-                'isMe': m['sender_id'] == myId,
-              },
-            )
-            .toList();
+        _messages = data.map((m) => {
+          'sender': m['sender_name'] ?? m['sender'] ?? LocaleService.t('comms_unknown'),
+          'content': m['message'] ?? m['content'] ?? '',
+          'time': m['created_at']?.toString().substring(11, 16) ?? '-',
+          'type': m['type'] ?? 'VHF',
+          'isMe': m['sender_id'] == myId,
+        }).toList();
       } else {
         _messages = [];
       }
@@ -52,7 +49,7 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
     if (text.isEmpty) return;
     setState(() {
       _messages.add({
-        'sender': 'OPERADOR',
+        'sender': LocaleService.t('comms_you'),
         'content': text,
         'time': material.TimeOfDay.now().format(context),
         'type': 'VHF',
@@ -67,21 +64,18 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
         curve: Curves.easeOut,
       );
     });
-    // Auto-reply
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
       final replies = [
-        'Copiado Central.',
+        LocaleService.t('dyn_key_68'),
         'Afirmativo, procedemos.',
-        'Enterado, mantengo escucha.',
+        LocaleService.t('dyn_key_67'),
         'Recibido, ETA confirmado.',
       ];
       setState(() {
         _messages.add({
           'sender': 'CAPITAN TB-101',
-          'content':
-              replies[(replies.length * (DateTime.now().millisecond / 1000))
-                  .floor()],
+          'content': replies[(replies.length * (DateTime.now().millisecond / 1000)).floor()],
           'time': material.TimeOfDay.now().format(context),
           'type': 'VHF',
           'isMe': false,
@@ -95,7 +89,7 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(
-          'Comunicaciones $_activeChannel',
+          '${LocaleService.t('comms_title')} $_activeChannel',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
@@ -109,7 +103,6 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
       child: SafeArea(
         child: Column(
           children: [
-            // Channel selector
             Container(
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -124,21 +117,15 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: sel
-                              ? AppColors.accent
-                              : AppColors.separator,
+                          color: sel ? AppColors.accent : AppColors.separator,
                           borderRadius: BorderRadius.circular(20),
-                          border: sel
-                              ? null
-                              : Border.all(color: AppColors.separatorLight),
+                          border: sel ? null : Border.all(color: AppColors.separatorLight),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           ch,
                           style: TextStyle(
-                            color: sel
-                                ? AppColors.textPrimary
-                                : AppColors.textOnAccent,
+                            color: sel ? AppColors.textPrimary : AppColors.textOnAccent,
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                           ),
@@ -149,7 +136,6 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                 }).toList(),
               ),
             ),
-            // Messages
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
@@ -158,7 +144,6 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                 itemBuilder: (context, i) => _messageBubble(_messages[i]),
               ),
             ),
-            // Input
             Container(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
               decoration: const BoxDecoration(
@@ -170,23 +155,11 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                   Expanded(
                     child: CupertinoTextField(
                       controller: _msgController,
-                      placeholder: 'Transmitir mensaje...',
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 14,
-                      ),
-                      placeholderStyle: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.separator,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
+                      placeholder: LocaleService.t('comms_write'),
+                      style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                      placeholderStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                      decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       onSubmitted: (_) => _sendMessage(),
                     ),
                   ),
@@ -195,15 +168,8 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                     onTap: _sendMessage,
                     child: Container(
                       padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.accent,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        CupertinoIcons.paperplane_fill,
-                        color: AppColors.textPrimary,
-                        size: 20,
-                      ),
+                      decoration: BoxDecoration(color: AppColors.accent, borderRadius: BorderRadius.circular(12)),
+                      child: const Icon(CupertinoIcons.paperplane_fill, color: AppColors.textPrimary, size: 20),
                     ),
                   ),
                 ],
@@ -222,19 +188,11 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(12),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
-        ),
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         decoration: BoxDecoration(
-          color: isMe
-              ? AppColors.accentTeal.withValues(alpha: 0.15)
-              : AppColors.separator,
+          color: isMe ? AppColors.accentTeal.withValues(alpha: 0.15) : AppColors.separator,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isMe
-                ? AppColors.accentTeal.withValues(alpha: 0.3)
-                : AppColors.separatorLight,
-          ),
+          border: Border.all(color: isMe ? AppColors.accentTeal.withValues(alpha: 0.3) : AppColors.separatorLight),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,50 +202,20 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
               children: [
                 Text(
                   '● ${msg['sender']}',
-                  style: TextStyle(
-                    color: isMe
-                        ? AppColors.accentTeal
-                        : AppColors.error,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(color: isMe ? AppColors.accentTeal : AppColors.error, fontSize: 11, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  '[${msg['time']}]',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 10,
-                  ),
-                ),
+                Text('[${msg['time']}]', style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
                 const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 1,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.separatorLight,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    msg['type'],
-                    style: const TextStyle(
-                      color: AppColors.textTertiary,
-                      fontSize: 9,
-                    ),
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                  decoration: BoxDecoration(color: AppColors.separatorLight, borderRadius: BorderRadius.circular(4)),
+                  child: Text(msg['type'], style: const TextStyle(color: AppColors.textTertiary, fontSize: 9)),
                 ),
               ],
             ),
             const SizedBox(height: 6),
-            Text(
-              msg['content'],
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 14,
-              ),
-            ),
+            Text(msg['content'], style: const TextStyle(color: AppColors.textPrimary, fontSize: 14)),
           ],
         ),
       ),

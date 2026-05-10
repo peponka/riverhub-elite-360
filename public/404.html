@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — FluviaFleet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;1,300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #F8F9FA;
+            color: #1A1A2E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container { max-width: 480px; padding: 40px 24px; }
+        .code {
+            font-family: 'Newsreader', serif;
+            font-size: 96px;
+            font-weight: 300;
+            color: #3B82F6;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-family: 'Newsreader', serif;
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+        p {
+            color: #94A3B8;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: #3B82F6;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #2563EB; }
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 13px;
+            color: #94A3B8;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <span class="lang-toggle" onclick="toggleLang()" id="langBtn">English</span>
+    <div class="container">
+        <div class="code">404</div>
+        <h1 id="title">Página no encontrada</h1>
+        <p id="desc">La ruta que buscás no existe o fue movida. Verificá la URL o volvé al inicio.</p>
+        <a href="/" class="btn" id="homeBtn">Volver al inicio</a>
+    </div>
+    <script>
+        let lang = 'es';
+        function toggleLang() {
+            lang = lang === 'es' ? 'en' : 'es';
+            document.getElementById('langBtn').textContent = lang === 'es' ? 'English' : 'Español';
+            document.getElementById('title').textContent = lang === 'es' ? 'Página no encontrada' : 'Page not found';
+            document.getElementById('desc').textContent = lang === 'es'
+                ? 'La ruta que buscás no existe o fue movida. Verificá la URL o volvé al inicio.'
+                : 'The page you\'re looking for doesn\'t exist or has been moved. Check the URL or go back home.';
+            document.getElementById('homeBtn').textContent = lang === 'es' ? 'Volver al inicio' : 'Back to home';
+        }
+    </script>
+</body>
+</html>

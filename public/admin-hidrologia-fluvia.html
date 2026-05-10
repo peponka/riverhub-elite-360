@@ -206,14 +206,14 @@
         document.getElementById('kpi-wind').textContent = '14 km/h';
       }
 
-      // 2. River discharge for all stations
-      let anySuccess = false;
-      for (const [key, st] of Object.entries(stations)) {
-        const ok = await loadStation(key, st.lat, st.lng);
-        if (ok) anySuccess = true;
-      }
-      // If all API calls failed, apply fallback data
-      if (!anySuccess) applyFallback();
+      // 2. River discharge via server-side proxy (multi-coordinate grid search)
+      try {
+        const hRes = await fetch('/api/hydrology');
+        if (hRes.ok) {
+          const hData = await hRes.json();
+          processHydrologyData(hData.stations);
+        } else { applyFallback(); }
+      } catch(e) { applyFallback(); }
     });
 
     function applyFallback() {
@@ -250,54 +250,41 @@
       });
     }
 
-    async function loadStation(key, lat, lng) {
-      try {
-        const url = `https://flood-api.open-meteo.com/v1/flood?latitude=${lat}&longitude=${lng}&daily=river_discharge,river_discharge_mean&past_days=30&forecast_days=7`;
-        const res = await fetch(url);
-        if (!res.ok) return false;
-        const data = await res.json();
+    function processHydrologyData(stations) {
+      const stMap = {};
+      stations.forEach(s => { stMap[s.id] = s; });
 
-        if (!data.daily || !data.daily.river_discharge) return false;
-
-        const discharges = data.daily.river_discharge;
-        const medians = data.daily.river_discharge_mean || data.daily.river_discharge_median || discharges.map(v => v);
-        const dates = data.daily.time;
-
-        // Today's value (index 30 = today, 0-29 = past)
-        const todayIdx = 30;
-        const todayFlow = discharges[todayIdx] || discharges[discharges.length - 8] || 0;
-        const todayMedian = medians[todayIdx] || medians[medians.length - 8] || todayFlow;
-
-        // Update station cards
-        const valEl = document.getElementById(`st-${key.substring(0,3)}-val`);
-        const trendEl = document.getElementById(`st-${key.substring(0,3)}-trend`);
-        if (valEl) valEl.innerHTML = `${Math.round(todayFlow)} <span class="sc-unit">m³/s</span>`;
+      // Update station cards
+      stations.forEach(s => {
+        const key3 = s.id.substring(0, 3);
+        const valEl = document.getElementById(`st-${key3}-val`);
+        const trendEl = document.getElementById(`st-${key3}-trend`);
+        if (valEl) valEl.innerHTML = `${s.discharge.toLocaleString('es-AR')} <span class="sc-unit">m³/s</span>`;
         if (trendEl) {
-          const trend = getTrend(todayFlow, todayMedian);
+          const trend = getTrend(s.discharge, s.median);
           trendEl.style.color = trend.color;
           trendEl.textContent = `${trend.text} (${trend.pct}% vs mediana)`;
         }
+      });
 
-        // Main KPIs (Asunción is primary)
-        if (key === 'asuncion') {
-          document.getElementById('kpi-flow').textContent = Math.round(todayFlow) + ' m³/s';
-          const trend = getTrend(todayFlow, todayMedian);
-          document.getElementById('kpi-trend').textContent = trend.text;
-          const trendTextEl = document.getElementById('kpi-trend-text');
-          trendTextEl.textContent = trend.pct + '% vs mediana';
-          trendTextEl.className = 'hk-trend ' + (trend.pct > 0 ? 'up' : trend.pct < -10 ? 'down' : 'stable');
+      // Main KPIs from Asunción station
+      const asu = stMap['asuncion'];
+      if (!asu) { applyFallback(); return; }
 
-          // Render chart
-          renderFlowChart(discharges, medians, dates);
+      document.getElementById('kpi-flow').textContent = asu.discharge.toLocaleString('es-AR') + ' m³/s';
+      const trend = getTrend(asu.discharge, asu.median);
+      document.getElementById('kpi-trend').textContent = trend.text;
+      const trendTextEl = document.getElementById('kpi-trend-text');
+      trendTextEl.textContent = trend.pct + '% vs mediana';
+      trendTextEl.className = 'hk-trend ' + (trend.pct > 0 ? 'up' : trend.pct < -10 ? 'down' : 'stable');
 
-          // Alerts
-          renderAlerts(todayFlow, todayMedian);
-        }
-        return true;
-      } catch(e) {
-        console.warn(`Station ${key} fetch failed:`, e);
-        return false;
+      if (asu.series && asu.dates) {
+        const medArr = asu.medianSeries || asu.series.map(() => asu.median);
+        renderFlowChart(asu.series, medArr, asu.dates);
+      } else {
+        applyFallback();
       }
+      renderAlerts(asu.discharge, asu.median);
     }
 
     function renderFlowChart(discharges, medians, dates) {

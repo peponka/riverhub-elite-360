@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class QuoteScreen extends StatefulWidget {
   const QuoteScreen({super.key});
@@ -18,10 +19,10 @@ class _QuoteScreenState extends State<QuoteScreen> {
   double _riverLevel = 3.5;
   String? _finalPrice;
   bool _isCalculating = false;
-  String _aiAnalysis = 'Listo para calcular tarifa...';
+  String _aiAnalysis = LocaleService.t('dyn_key_203');
 
   Future<void> _calculateQuote() async {
-    setState(() { _isCalculating = true; _finalPrice = null; _aiAnalysis = 'Analizando variables...'; });
+    setState(() { _isCalculating = true; _finalPrice = null; _aiAnalysis = LocaleService.t('dyn_key_205'); });
     await Future.delayed(const Duration(milliseconds: 1500));
 
     String bunkerRaw = _bunkerController.text.replaceAll(',', '.');
@@ -51,7 +52,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
       final quoteNum = "QT-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}";
       await Supabase.instance.client.from('quotations').insert({
         'quote_number': quoteNum, 'origin_port': origin, 'destination_port': dest,
-        'cargo_type': 'Granel General', 'estimated_weight': 15000, 'freight_rate': rate,
+        'cargo_type': LocaleService.t('dyn_key_207'), 'estimated_weight': 15000, 'freight_rate': rate,
         'currency': 'USD', 'status': 'draft',
         'ai_argumentation': 'Calculado con Río en ${river}m y Bunker a \$$bunker',
         'generated_by': user?.email ?? 'System Mobile',
@@ -80,14 +81,14 @@ class _QuoteScreenState extends State<QuoteScreen> {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
-        middle: Text('Cotizador', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('quote_cotizador'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
-            Text('Cotizador', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-            Text('Inteligente.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('quote_cotizador'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('quote_inteligente'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
             const SizedBox(height: 24),
 
             // Route card
@@ -100,30 +101,30 @@ class _QuoteScreenState extends State<QuoteScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('RUTA LOGÍSTICA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text(LocaleService.t('quote_ruta_logistica'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                   const SizedBox(height: 14),
                   Row(children: [
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text('ORIGEN', style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                      Text(LocaleService.t('quote_origen'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                       const SizedBox(height: 4),
-                      _field(_originController, 'Origen'),
+                      _field(_originController, LocaleService.t('dyn_key_204')),
                     ])),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                       child: Icon(CupertinoIcons.arrow_right, color: AppColors.separator, size: 16),
                     ),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text('DESTINO', style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                      Text(LocaleService.t('quote_destino'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                       const SizedBox(height: 4),
-                      _field(_destController, 'Destino'),
+                      _field(_destController, LocaleService.t('dyn_key_206')),
                     ])),
                   ]),
                   const SizedBox(height: 20),
                   Container(height: 0.5, color: AppColors.separator),
                   const SizedBox(height: 20),
-                  Text('VARIABLES FÍSICAS', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text(LocaleService.t('quote_variables_fisicas'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                   const SizedBox(height: 14),
-                  Text('Precio Bunker (USD/L)', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+                  Text(LocaleService.t('quote_precio_bunker_usd_l'), style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
                   const SizedBox(height: 4),
                   _field(_bunkerController, '1.12', prefix: Padding(
                     padding: const EdgeInsets.only(left: 14),
@@ -131,7 +132,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
                   )),
                   const SizedBox(height: 16),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Text('Nivel del Río', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+                    Text(LocaleService.t('quote_nivel_del_rio'), style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
                     Text('${_riverLevel.toStringAsFixed(2)} m', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
                   ]),
                   CupertinoSlider(
@@ -154,7 +155,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
                 onPressed: _isCalculating ? null : _calculateQuote,
                 child: _isCalculating
                     ? const CupertinoActivityIndicator(color: AppColors.textOnAccent)
-                    : Text('CALCULAR TARIFA', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textOnAccent)),
+                    : Text(LocaleService.t('quote_calcular_tarifa'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textOnAccent)),
               ),
             ),
             const SizedBox(height: 24),
@@ -167,7 +168,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
                 border: Border.all(color: AppColors.separator, width: 0.5),
               ),
               child: Column(children: [
-                Text('TARIFA RECOMENDADA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                Text(LocaleService.t('quote_tarifa_recomendada'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                 const SizedBox(height: 12),
                 Text(
                   _finalPrice ?? '---',

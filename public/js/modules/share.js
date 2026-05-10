@@ -5,7 +5,7 @@ const ShareModule = (() => {
     let isModalOpen = false;
 
     const init = () => {
-        console.log("Share Module Initialized");
+        void("Share Module Initialized");
         injectModal();
     };
 

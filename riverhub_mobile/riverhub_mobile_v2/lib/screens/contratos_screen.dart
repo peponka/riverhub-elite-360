@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import '../main.dart';
+import '../services/locale_service.dart';
 
 class ContratosScreen extends StatefulWidget {
   const ContratosScreen({super.key});
@@ -11,12 +12,12 @@ class ContratosScreen extends StatefulWidget {
 
 class _ContratosScreenState extends State<ContratosScreen> {
   final List<Map<String, dynamic>> _contracts = [
-    {'client': 'Cargill S.A.', 'route': 'Rosario → Asunción', 'product': 'Soja', 'type': 'COA Anual', 'status': 'active', 'vol': 84000, 'volUsed': 61200, 'rate': 28.5, 'expires': '31 Dic 2026'},
-    {'client': 'ADM Paraguay', 'route': 'Concepción → San Lorenzo', 'product': 'Maíz', 'type': 'Semestral', 'status': 'active', 'vol': 48000, 'volUsed': 32400, 'rate': 24.2, 'expires': '30 Jun 2026'},
-    {'client': 'PETROPAR', 'route': 'Montevideo → Asunción', 'product': 'Gas Oil', 'type': 'COA Anual', 'status': 'expires', 'vol': 36000, 'volUsed': 33800, 'rate': 42.8, 'expires': '15 Jun 2026'},
-    {'client': 'Bunge Ltd.', 'route': 'Rosario → Nueva Palmira', 'product': 'Harina', 'type': 'Trimestral', 'status': 'active', 'vol': 24000, 'volUsed': 18000, 'rate': 22.0, 'expires': '30 Sep 2026'},
-    {'client': 'Louis Dreyfus', 'route': 'Barranqueras → Rosario', 'product': 'Algodón', 'type': 'Spot', 'status': 'renewing', 'vol': 12000, 'volUsed': 12000, 'rate': 35.0, 'expires': '10 May 2026'},
-    {'client': 'Viterra', 'route': 'San Lorenzo → Bahía Blanca', 'product': 'Trigo', 'type': 'Semestral', 'status': 'active', 'vol': 60000, 'volUsed': 22000, 'rate': 26.8, 'expires': '31 Dic 2026'},
+    {'client': 'Cargill S.A.', 'route': 'Rosario → Asunción', 'product': LocaleService.t('dyn_key_74'), 'type': LocaleService.t('dyn_key_82'), 'status': 'active', 'vol': 84000, 'volUsed': 61200, 'rate': 28.5, 'expires': '31 Dic 2026'},
+    {'client': 'ADM Paraguay', 'route': 'Concepción → San Lorenzo', 'product': 'Maíz', 'type': LocaleService.t('dyn_key_70'), 'status': 'active', 'vol': 48000, 'volUsed': 32400, 'rate': 24.2, 'expires': '30 Jun 2026'},
+    {'client': 'PETROPAR', 'route': 'Montevideo → Asunción', 'product': 'Gas Oil', 'type': LocaleService.t('dyn_key_82'), 'status': 'expires', 'vol': 36000, 'volUsed': 33800, 'rate': 42.8, 'expires': '15 Jun 2026'},
+    {'client': 'Bunge Ltd.', 'route': 'Rosario → Nueva Palmira', 'product': LocaleService.t('dyn_key_83'), 'type': LocaleService.t('dyn_key_78'), 'status': 'active', 'vol': 24000, 'volUsed': 18000, 'rate': 22.0, 'expires': '30 Sep 2026'},
+    {'client': 'Louis Dreyfus', 'route': 'Barranqueras → Rosario', 'product': LocaleService.t('dyn_key_73'), 'type': LocaleService.t('dyn_key_76'), 'status': 'renewing', 'vol': 12000, 'volUsed': 12000, 'rate': 35.0, 'expires': '10 May 2026'},
+    {'client': 'Viterra', 'route': 'San Lorenzo → Bahía Blanca', 'product': 'Trigo', 'type': LocaleService.t('dyn_key_70'), 'status': 'active', 'vol': 60000, 'volUsed': 22000, 'rate': 26.8, 'expires': '31 Dic 2026'},
   ];
 
   int get _activeCount => _contracts.where((c) => c['status'] == 'active').length;
@@ -34,33 +35,33 @@ class _ContratosScreenState extends State<ContratosScreen> {
         leading: Navigator.of(context).canPop()
             ? CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
             : CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
-        middle: Text('Contratos', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('contratos_contratos'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: _showNewContract, child: const Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           children: [
-            Text('Contratos de', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-            Text('Flete.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('contratos_contratos_de'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('contratos_flete'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
             const SizedBox(height: 20),
 
             // KPIs
             Row(children: [
-              Expanded(child: _kpi('ACTIVOS', '$_activeCount', CupertinoIcons.doc_text_fill, AppColors.accent)),
+              Expanded(child: _kpi(LocaleService.t('dyn_key_75'), '$_activeCount', CupertinoIcons.doc_text_fill, AppColors.accent)),
               const SizedBox(width: 8),
-              Expanded(child: _kpi('TONELAJE', '${(_totalTonnage / 1000).round()}k', CupertinoIcons.cube_box_fill, AppColors.success)),
+              Expanded(child: _kpi(LocaleService.t('dyn_key_84'), '${(_totalTonnage / 1000).round()}k', CupertinoIcons.cube_box_fill, AppColors.success)),
             ]),
             const SizedBox(height: 8),
             Row(children: [
               Expanded(child: _kpi('REVENUE', '\$${_totalRevenue.toStringAsFixed(0)}k', CupertinoIcons.money_dollar_circle_fill, AppColors.warning)),
               const SizedBox(width: 8),
-              Expanded(child: _kpi('POR EXPIRAR', '$_expiringCount', CupertinoIcons.exclamationmark_triangle_fill, AppColors.error)),
+              Expanded(child: _kpi(LocaleService.t('dyn_key_71'), '$_expiringCount', CupertinoIcons.exclamationmark_triangle_fill, AppColors.error)),
             ]),
             const SizedBox(height: 24),
 
             // Contracts List
-            _sectionTitle('Contratos Vigentes', '${_contracts.length} total'),
+            _sectionTitle(LocaleService.t('dyn_key_72'), '${_contracts.length} total'),
             const SizedBox(height: 12),
             ..._contracts.map((c) => _contractCard(c)),
 
@@ -109,8 +110,8 @@ class _ContratosScreenState extends State<ContratosScreen> {
   String _statusLabel(String status) {
     switch (status) {
       case 'active': return 'ACTIVO';
-      case 'expires': return 'EXPIRA';
-      case 'renewing': return 'RENOVANDO';
+      case 'expires': return LocaleService.t('dyn_key_81');
+      case 'renewing': return LocaleService.t('dyn_key_69');
       default: return status.toUpperCase();
     }
   }
@@ -193,14 +194,14 @@ class _ContratosScreenState extends State<ContratosScreen> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
           const SizedBox(height: 20),
-          Text('Nuevo Contrato', style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+          Text(LocaleService.t('contratos_nuevo_contrato'), style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
           const SizedBox(height: 4),
-          Text('Esta funcionalidad se conectará con el módulo web', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
+          Text(LocaleService.t('contratos_esta_funcionalidad_s'), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
           const SizedBox(height: 24),
           ...[
-            _infoRow('Tipos disponibles', 'COA Anual, Semestral, Trimestral, Spot'),
-            _infoRow('Campos requeridos', 'Cliente, ruta, producto, volumen, tarifa'),
-            _infoRow('Integración', 'Sync con admin-contratos-fluvia.html'),
+            _infoRow(LocaleService.t('dyn_key_80'), 'COA Anual, Semestral, Trimestral, Spot'),
+            _infoRow(LocaleService.t('dyn_key_79'), 'Cliente, ruta, producto, volumen, tarifa'),
+            _infoRow(LocaleService.t('dyn_key_77'), 'Sync con admin-contratos-fluvia.html'),
           ],
           const Spacer(),
           GestureDetector(
@@ -209,7 +210,7 @@ class _ContratosScreenState extends State<ContratosScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
-              child: Center(child: Text('Cerrar', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.backgroundPrimary))),
+              child: Center(child: Text(LocaleService.t('contratos_cerrar'), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.backgroundPrimary))),
             ),
           ),
         ]),

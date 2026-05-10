@@ -7,7 +7,7 @@ const NotificationCenter = {
     notifications: [],
 
     init: async function () {
-        console.log("🔔 Notification Center Initialized");
+        void("🔔 Notification Center Initialized");
         this.renderBadge();
         this.setupListeners();
 
@@ -72,7 +72,7 @@ const NotificationCenter = {
                         module: alert.module || 'sistema'
                     });
                 });
-                console.log(`🔔 ${data.length} alertas cargadas de Supabase`);
+                void(`🔔 ${data.length} alertas cargadas de Supabase`);
             }
         } catch (e) {
             console.warn("NotificationCenter: Supabase error, using demo:", e.message);
@@ -174,7 +174,7 @@ const NotificationCenter = {
 
             // Click Handler (Mock navigation)
             item.onclick = () => {
-                console.log("Clicked notification for", n.module);
+                void("Clicked notification for", n.module);
                 // Here we could switch views: window.showView('view-' + n.module)
             };
 

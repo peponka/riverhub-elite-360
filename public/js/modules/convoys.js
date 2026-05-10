@@ -19,7 +19,7 @@
 
         // HOISTED INIT FUNCTION
         const initializeModule = async () => {
-            console.log("Módulo Armador de Convoys activo (Elite V2).");
+            void("Módulo Armador de Convoys activo (Elite V2).");
 
             setupGlobalDelegation(); // ROBUST EVENT DELEGATION
             await loadAssets();
@@ -38,7 +38,7 @@
                 const btn = e.target.closest('.btn-save-convoy');
                 if (btn) {
                     e.preventDefault();
-                    console.log("Global Delegate: SAVE CLICKED");
+                    void("Global Delegate: SAVE CLICKED");
                     saveConvoyToDB();
                 }
             });
@@ -97,7 +97,7 @@
                         raw: v
                     }));
                 } else {
-                    console.log("Creando barcazas y remolcadores por defecto en Supabase...");
+                    void("Creando barcazas y remolcadores por defecto en Supabase...");
                     const defaultVessels = [
                         { name: 'B-101 (Grano)', type: 'Barcaza', status: 'OPERATIVO' },
                         { name: 'B-102 (Grano)', type: 'Barcaza', status: 'OPERATIVO' },
@@ -197,7 +197,7 @@
                     document.querySelectorAll('.draggable-asset').forEach(a => a.classList.remove('selected'));
                     el.classList.add('selected');
 
-                    console.log("Selected:", asset.name);
+                    void("Selected:", asset.name);
                     showToast(`Seleccionado: ${asset.name}`, 'info');
                 };
 
@@ -374,7 +374,7 @@
                 if (error) throw error;
 
                 showToast("✅ Convoy guardado y sincronizado exitosamente.", "success");
-                console.log("Convoy Saved:", data);
+                void("Convoy Saved:", data);
 
             } catch (err) {
                 console.error("Save Error:", err);
@@ -506,7 +506,7 @@
 
         // 6. EXIT LOGIC (Exposed)
         const exitMobileMode = () => {
-            console.log("Exiting Convoys Mode... (Global Trigger)");
+            void("Exiting Convoys Mode... (Global Trigger)");
 
             // 0. Remove Floating Button
             const floatBtn = document.getElementById('float-exit-convoy');

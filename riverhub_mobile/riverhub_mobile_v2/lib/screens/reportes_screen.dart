@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class ReportesScreen extends StatelessWidget {
   const ReportesScreen({super.key});
@@ -13,26 +14,26 @@ class ReportesScreen extends StatelessWidget {
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
-        middle: Text('Reportes', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('reportes_reportes'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         trailing: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.printer, color: AppColors.textSecondary, size: 20), onPressed: () {}),
       ),
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
-            Text('Reportes &', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-            Text('Analytics.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('reportes_reportes_1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('reportes_analytics'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
             const SizedBox(height: 24),
 
             // P&L KPIs - editorial monochrome
-            Text('ESTADO DE RESULTADOS', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            Text(LocaleService.t('reportes_estado_de_resultados'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
             const SizedBox(height: 12),
             Row(children: [
-              _metricCard('Ingresos', '\$2.4M', CupertinoIcons.arrow_up_right),
+              _metricCard(LocaleService.t('dyn_key_209'), '\$2.4M', CupertinoIcons.arrow_up_right),
               const SizedBox(width: 10),
-              _metricCard('Gastos', '\$1.8M', CupertinoIcons.arrow_down_right),
+              _metricCard(LocaleService.t('dyn_key_215'), '\$1.8M', CupertinoIcons.arrow_down_right),
               const SizedBox(width: 10),
-              _metricCard('Margen', '25%', CupertinoIcons.chart_bar),
+              _metricCard(LocaleService.t('dyn_key_216'), '25%', CupertinoIcons.chart_bar),
             ]),
             const SizedBox(height: 20),
 
@@ -41,13 +42,13 @@ class ReportesScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Fuel chart
-            Text('EFICIENCIA COMBUSTIBLE', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            Text(LocaleService.t('reportes_eficiencia_combustib'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
             const SizedBox(height: 10),
             _chartContainer('CONSUMO LT/KM POR EMBARCACIÓN', _buildFuelChart()),
             const SizedBox(height: 20),
 
             // Operational status
-            Text('ESTADO OPERACIONAL', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            Text(LocaleService.t('reportes_estado_operacional'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(18),
@@ -56,21 +57,21 @@ class ReportesScreen extends StatelessWidget {
                 border: Border.all(color: AppColors.separator, width: 0.5),
               ),
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                _pieSlice('Navegando', '60%'),
-                _pieSlice('En Puerto', '25%'),
-                _pieSlice('Taller', '10%'),
-                _pieSlice('Dique', '5%'),
+                _pieSlice(LocaleService.t('dyn_key_214'), '60%'),
+                _pieSlice(LocaleService.t('dyn_key_218'), '25%'),
+                _pieSlice(LocaleService.t('dyn_key_212'), '10%'),
+                _pieSlice(LocaleService.t('dyn_key_213'), '5%'),
               ]),
             ),
             const SizedBox(height: 20),
 
             // Report generation
-            Text('GENERAR REPORTE', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            Text(LocaleService.t('reportes_generar_reporte'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
             const SizedBox(height: 10),
-            _reportButton('Reporte Operacional Mensual', CupertinoIcons.doc_chart),
-            _reportButton('Informe de Combustible', CupertinoIcons.drop),
-            _reportButton('Estado de Flota PDF', CupertinoIcons.helm),
-            _reportButton('Balance Financiero', CupertinoIcons.money_dollar_circle),
+            _reportButton(LocaleService.t('dyn_key_208'), CupertinoIcons.doc_chart),
+            _reportButton(LocaleService.t('dyn_key_211'), CupertinoIcons.drop),
+            _reportButton(LocaleService.t('dyn_key_210'), CupertinoIcons.helm),
+            _reportButton(LocaleService.t('dyn_key_217'), CupertinoIcons.money_dollar_circle),
           ],
         ),
       ),

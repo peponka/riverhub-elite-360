@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import '../services/supabase_service.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class CommercialScreen extends StatefulWidget {
   const CommercialScreen({super.key});
@@ -51,8 +52,8 @@ class _CommercialScreenState extends State<CommercialScreen> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text(
-          'Módulo Comercial',
+        middle: Text(
+          LocaleService.t('dyn_key_58'),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
@@ -66,9 +67,9 @@ class _CommercialScreenState extends State<CommercialScreen> {
           onPressed: _showCreateOrderModal,
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
-            children: const [
-              Text('Nuevo ', style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
+            children: [
+              Text(LocaleService.t('commercial_nuevo'), style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
+              const Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
             ],
           ),
         ),
@@ -80,16 +81,16 @@ class _CommercialScreenState extends State<CommercialScreen> {
           children: [
             Row(
               children: [
-                _kpi('Contratos Activos', '$active', AppColors.success),
+                _kpi(LocaleService.t('dyn_key_56'), '$active', AppColors.success),
                 const SizedBox(width: 10),
-                _kpi('Valor Total', totalValue, AppColors.blue),
+                _kpi(LocaleService.t('dyn_key_62'), totalValue, AppColors.blue),
                 const SizedBox(width: 10),
-                _kpi('Clientes', '4', AppColors.purple),
+                _kpi(LocaleService.t('dyn_key_4'), '4', AppColors.purple),
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Órdenes de Servicio',
+            Text(
+              LocaleService.t('dyn_key_2'),
               style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 16,
@@ -130,7 +131,7 @@ class _CommercialScreenState extends State<CommercialScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Nuevo Contrato', style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(LocaleService.t('commercial_nuevo_contrato'), style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                   CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textSecondary), onPressed: () => Navigator.pop(ctx)),
                 ],
               ),
@@ -140,22 +141,22 @@ class _CommercialScreenState extends State<CommercialScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  _buildTextField('Cliente', clientController),
+                  _buildTextField(LocaleService.t('dyn_key_57'), clientController),
                   const SizedBox(height: 12),
-                  _buildTextField('Tipo (Ej: TRANSPORTE)', typeController),
+                  _buildTextField(LocaleService.t('dyn_key_63'), typeController),
                   const SizedBox(height: 12),
-                  _buildTextField('Mercadería', commodityController),
+                  _buildTextField(LocaleService.t('dyn_key_61'), commodityController),
                   const SizedBox(height: 12),
                   _buildTextField('Cantidad (Tn/M3)', qtyController, isNumeric: true),
                   const SizedBox(height: 12),
                   _buildTextField('Valor (\$)', valueController, isNumeric: true),
                   const SizedBox(height: 12),
-                  _buildTextField('Ruta', routeController),
+                  _buildTextField(LocaleService.t('dyn_key_60'), routeController),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
                     child: CupertinoButton.filled(
-                      child: const Text('Guardar Contrato'),
+                      child: Text(LocaleService.t('commercial_guardar_contrato')),
                       onPressed: () async {
                         if (clientController.text.isEmpty) return;
                         
@@ -249,11 +250,11 @@ class _CommercialScreenState extends State<CommercialScreen> {
         break;
       case 'pending':
         statusColor = AppColors.warning;
-        statusText = 'PENDIENTE';
+        statusText = LocaleService.t('dyn_key_66');
         break;
       default:
         statusColor = AppColors.textSecondary;
-        statusText = 'COMPLETADO';
+        statusText = LocaleService.t('dyn_key_64');
     }
     final isSelected = _selectedIndex == idx;
 
@@ -370,8 +371,8 @@ class _CommercialScreenState extends State<CommercialScreen> {
                     child: CupertinoButton(
                       padding: const EdgeInsets.all(8),
                       color: AppColors.separator,
-                      child: const Text(
-                        'Ver Manifiestos',
+                      child: Text(
+                        LocaleService.t('dyn_key_59'),
                         style: TextStyle(
                           color: AppColors.accent,
                           fontSize: 12,
@@ -381,11 +382,11 @@ class _CommercialScreenState extends State<CommercialScreen> {
                         showCupertinoDialog(
                           context: context,
                           builder: (ctx) => CupertinoAlertDialog(
-                            title: const Text('Detalle de Manifiesto'),
-                            content: const Text('La visualización de manifiestos comerciales estará disponible próximamente en la versión móvil.'),
+                            title: Text(LocaleService.t('commercial_detalle_de_manifiest')),
+                            content: Text(LocaleService.t('commercial_la_visualizacion_de_')),
                             actions: [
                               CupertinoDialogAction(
-                                child: const Text('Cerrar'),
+                                child: Text(LocaleService.t('commercial_cerrar')),
                                 onPressed: () => Navigator.pop(ctx),
                               ),
                             ],
@@ -399,8 +400,8 @@ class _CommercialScreenState extends State<CommercialScreen> {
                     child: CupertinoButton(
                       padding: const EdgeInsets.all(8),
                       color: AppColors.separator,
-                      child: const Text(
-                        'Asignar Carga',
+                      child: Text(
+                        LocaleService.t('dyn_key_65'),
                         style: TextStyle(
                           color: AppColors.success,
                           fontSize: 12,
@@ -410,11 +411,11 @@ class _CommercialScreenState extends State<CommercialScreen> {
                         showCupertinoDialog(
                           context: context,
                           builder: (ctx) => CupertinoAlertDialog(
-                            title: const Text('Asignación de Carga'),
-                            content: const Text('Por favor, utilice RiverHub Elite Web para asignaciones complejas de carga.'),
+                            title: Text(LocaleService.t('commercial_asignacion_de_carga')),
+                            content: Text(LocaleService.t('commercial_por_favor_utilice_ri')),
                             actions: [
                               CupertinoDialogAction(
-                                child: const Text('Cerrar'),
+                                child: Text(LocaleService.t('commercial_cerrar')),
                                 onPressed: () => Navigator.pop(ctx),
                               ),
                             ],

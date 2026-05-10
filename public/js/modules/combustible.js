@@ -10,7 +10,7 @@ var FuelModule = (() => {
 
     // --- INIT ---
     const init = async () => {
-        console.log("⛽ Módulo Combustible (Supabase) Inicializando...");
+        void("⛽ Módulo Combustible (Supabase) Inicializando...");
         try {
             await loadVessels();
             setupEventListeners();
@@ -19,7 +19,7 @@ var FuelModule = (() => {
                 renderVesselList();
                 updateDashboard(state.vessels[0]);
             }
-            console.log("✅ Combustible Renderizado OK");
+            void("✅ Combustible Renderizado OK");
         } catch (e) {
             console.error("❌ Error en Combustible:", e);
             // Fallback to demo data

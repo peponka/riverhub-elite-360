@@ -149,12 +149,12 @@ const viajesLogic = (() => {
     // --- REALTIME ---
     const subscribeToTrips = () => {
         // Placeholder for Realtime
-        console.log("Viajes: Suscripción a cambios en tiempo real activa.");
+        void("Viajes: Suscripción a cambios en tiempo real activa.");
         if (window.sb) {
             window.sb
                 .channel('trips-changes')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'trips' }, payload => {
-                    console.log('Cambio en viajes detectado:', payload);
+                    void('Cambio en viajes detectado:', payload);
                     loadTrips();
                 })
                 .subscribe();
@@ -295,14 +295,14 @@ const viajesLogic = (() => {
 
                 // Filter logic could go here
                 // renderTrips(e.target.innerText);
-                console.log("Tab changed:", e.target.innerText);
+                void("Tab changed:", e.target.innerText);
             });
         });
     }
 
     // Extended Init
     const init = async () => {
-        console.log("Módulo Gestión de Viajes activo (Supabase + Robust).");
+        void("Módulo Gestión de Viajes activo (Supabase + Robust).");
         state.currentUser = window.AuthModule ? window.AuthModule.getCurrentUser() : null;
         initTabs();
         await loadTrips();

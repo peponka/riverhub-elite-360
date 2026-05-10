@@ -23,7 +23,7 @@ const LoadMasterModule = {
     },
 
     init: function () {
-        console.log("⚓ Load Master Initialized");
+        void("⚓ Load Master Initialized");
         this.recalculate();
         this.setupListeners();
     },

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
+import '../services/locale_service.dart';
 import 'login_screen.dart';
 import '../main.dart';
 
@@ -45,6 +46,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = LocaleService.t;
+
     return CupertinoPageScaffold(
       backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
@@ -56,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
         ),
         middle: Text(
-          'Perfil',
+          t('profile_title'),
           style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
         ),
       ),
@@ -66,13 +69,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             // ─── Fluvia Title ────────────────────────
             Text(
-              'Mi',
+              t('profile_my'),
               style: GoogleFonts.newsreader(
                 fontSize: 36, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1,
               ),
             ),
             Text(
-              'Perfil.',
+              t('profile_subtitle'),
               style: GoogleFonts.newsreader(
                 fontSize: 36, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1,
               ),
@@ -138,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // ─── Settings Section ───────────────────
             Text(
-              'CONFIGURACIÓN',
+              t('profile_settings'),
               style: GoogleFonts.inter(
                 fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5,
               ),
@@ -148,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _settingsGroup([
               _settingRow(
                 icon: CupertinoIcons.bell,
-                title: 'Notificaciones',
+                title: t('profile_notifications'),
                 trailing: CupertinoSwitch(
                   value: true, onChanged: (v) {},
                   activeTrackColor: AppColors.textPrimary,
@@ -156,20 +159,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               _settingRow(
                 icon: CupertinoIcons.lock,
-                title: 'Privacidad y Seguridad',
+                title: t('profile_privacy'),
               ),
-              _settingRow(
-                icon: CupertinoIcons.globe,
-                title: 'Idioma / Región',
-                subtitle: 'Español',
-                isLast: true,
-              ),
+              // ─── Language Toggle ──────────────────
+              _languageToggleRow(),
             ]),
 
             const SizedBox(height: 28),
 
             Text(
-              'CUENTA',
+              t('profile_account'),
               style: GoogleFonts.inter(
                 fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5,
               ),
@@ -187,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Icon(CupertinoIcons.square_arrow_right, color: AppColors.error, size: 20),
                       const SizedBox(width: 14),
                       Text(
-                        'Cerrar Sesión',
+                        t('profile_sign_out'),
                         style: GoogleFonts.inter(
                           fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.error,
                         ),
@@ -209,6 +208,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // ─── Language Toggle Row ─────────────────────────────────────────────────
+  Widget _languageToggleRow() {
+    final isEn = LocaleService.current == 'en';
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 18),
+          child: Row(
+            children: [
+              Icon(CupertinoIcons.globe, color: AppColors.textSecondary, size: 20),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  LocaleService.t('profile_language'),
+                  style: GoogleFonts.inter(
+                    fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              // ── EN/ES Segmented Control ──
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _langButton('ES', !isEn, () {
+                      LocaleService.setLocale('es');
+                      setState(() {});
+                    }),
+                    _langButton('EN', isEn, () {
+                      LocaleService.setLocale('en');
+                      setState(() {});
+                    }),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _langButton(String label, bool active, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: active ? AppColors.textPrimary : CupertinoColors.transparent,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: active ? AppColors.textOnAccent : AppColors.textSecondary,
+            letterSpacing: 0.5,
+          ),
         ),
       ),
     );

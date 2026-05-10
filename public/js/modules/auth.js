@@ -5,7 +5,7 @@ var AuthModule = (() => {
     let currentUser = null;
 
     const init = async () => {
-        console.log("Auth System Initializing...");
+        void("Auth System Initializing...");
 
         // ----------------------------------------------------
         // WAITING ROOM: Poll for window.sb availability
@@ -23,7 +23,7 @@ var AuthModule = (() => {
 
             // LISTEN FOR PASSWORD RECOVERY
             window.sb.auth.onAuthStateChange(async (event, session) => {
-                console.log("AUTH EVENT:", event);
+                void("AUTH EVENT:", event);
                 if (event === "PASSWORD_RECOVERY") {
                     document.getElementById('modal-change-pass').style.display = 'flex';
                 }
@@ -165,7 +165,7 @@ var AuthModule = (() => {
         const { data } = await window.sb.auth.getSession();
 
         if (data && data.session) {
-            console.log("DEBUG: Session Found", data.session);
+            void("DEBUG: Session Found", data.session);
             try {
                 const { data: profile } = await window.sb
                     .from('profiles')
@@ -184,7 +184,7 @@ var AuthModule = (() => {
         } else {
             // NO SESSION: Always show Login Screen instead of redirecting
             // This fixes the "refresh goes to landing" issue
-            console.log("No session -> Showing Login View");
+            void("No session -> Showing Login View");
             document.querySelector('.app-container').style.display = 'none';
             document.getElementById('login-view').style.display = 'flex';
 
@@ -452,7 +452,7 @@ var AuthModule = (() => {
             if (typeof RiverToast !== 'undefined') RiverToast.error('Acceso denegado. Modo simulador solo disponible en desarrollo local.', 'Seguridad');
             return;
         }
-        console.log("🔓 MODO SIMULADOR ACTIVADO (localhost only)");
+        void("🔓 MODO SIMULADOR ACTIVADO (localhost only)");
         const simulatedUser = {
             id: 'sim-user-001',
             email: 'simulador@fluviafleet.local',

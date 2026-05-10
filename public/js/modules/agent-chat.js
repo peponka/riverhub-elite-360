@@ -5,7 +5,7 @@ const AgentChatModule = (() => {
     const USER_NAME = "Operador";
 
     const init = () => {
-        console.log("Módulo Agente Virtual Iniciado 🤖");
+        void("Módulo Agente Virtual Iniciado 🤖");
 
         // Initial Message if empty
         const chatBody = document.getElementById('agent-chat-body');
@@ -53,16 +53,16 @@ const AgentChatModule = (() => {
             if (res.ok) {
                 const data = await res.json();
                 response = data.response;
-                console.log("🤖 NexoBot: Gemini AI response");
+                void("🤖 NexoBot: Gemini AI response");
             } else {
                 // AI not available, use mock
                 response = await generateMockResponse(text);
-                console.log("🤖 NexoBot: Mock response (AI unavailable)");
+                void("🤖 NexoBot: Mock response (AI unavailable)");
             }
         } catch (e) {
             // Offline or server down, use mock
             response = await generateMockResponse(text);
-            console.log("🤖 NexoBot: Mock response (offline)");
+            void("🤖 NexoBot: Mock response (offline)");
         }
 
         showTypingIndicator(false);

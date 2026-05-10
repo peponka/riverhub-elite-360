@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class MantenimientoScreen extends StatefulWidget {
   const MantenimientoScreen({super.key});
@@ -25,7 +26,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
       setState(() {
         if (data.isNotEmpty) {
           _tasks = data.map((t) => {
-            'title': t['title'] ?? t['description'] ?? 'Sin título',
+            'title': t['title'] ?? t['description'] ?? LocaleService.t('maint_no_title'),
             'vessel': t['vessel']?['name'] ?? t['vessel_name'] ?? '-',
             'priority': t['priority'] ?? 'medium',
             'status': t['status'] ?? 'pendiente',
@@ -49,17 +50,14 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
-        middle: Text('Mantenimiento', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('maint_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         trailing: Row(mainAxisSize: MainAxisSize.min, children: [
           CupertinoButton(
             padding: EdgeInsets.zero,
             child: Icon(_viewMode == 'list' ? CupertinoIcons.square_grid_2x2 : CupertinoIcons.list_bullet, color: AppColors.textSecondary, size: 20),
             onPressed: () => setState(() => _viewMode = _viewMode == 'list' ? 'board' : 'list'),
           ),
-          CupertinoButton(
-            padding: EdgeInsets.zero, onPressed: _showCreateModal,
-            child: Icon(CupertinoIcons.plus, color: AppColors.textPrimary, size: 22),
-          ),
+          CupertinoButton(padding: EdgeInsets.zero, onPressed: _showCreateModal, child: Icon(CupertinoIcons.plus, color: AppColors.textPrimary, size: 22)),
         ]),
       ),
       child: SafeArea(
@@ -67,21 +65,20 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
             ? ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 children: [
-                  Text('Órdenes de', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-                  Text('Mantenimiento.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('maint_header1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('maint_header2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
                   const SizedBox(height: 24),
-
                   Row(children: [
-                    _kpi('${pending.length}', 'Pendientes'),
+                    _kpi('${pending.length}', LocaleService.t('maint_pending_kpi')),
                     const SizedBox(width: 10),
-                    _kpi('${inProgress.length}', 'En Progreso'),
+                    _kpi('${inProgress.length}', LocaleService.t('maint_progress_kpi')),
                     const SizedBox(width: 10),
-                    _kpi('${completed.length}', 'Completados'),
+                    _kpi('${completed.length}', LocaleService.t('maint_done_kpi')),
                   ]),
                   const SizedBox(height: 20),
                   ..._tasks.map((t) => _taskCard(t)),
                   if (_tasks.isEmpty)
-                    Padding(padding: const EdgeInsets.all(20), child: Center(child: Text('Sin tareas', style: GoogleFonts.inter(color: AppColors.textSecondary)))),
+                    Padding(padding: EdgeInsets.all(20), child: Center(child: Text(LocaleService.t('maint_empty'), style: GoogleFonts.inter(color: AppColors.textSecondary)))),
                 ],
               )
             : _boardView(pending, inProgress, completed),
@@ -94,11 +91,11 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.all(20),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _boardColumn('PENDIENTE', pending),
+        _boardColumn(LocaleService.t('maint_pending'), pending),
         const SizedBox(width: 12),
-        _boardColumn('EN PROGRESO', inProgress),
+        _boardColumn(LocaleService.t('maint_in_progress'), inProgress),
         const SizedBox(width: 12),
-        _boardColumn('COMPLETADO', completed),
+        _boardColumn(LocaleService.t('maint_completed'), completed),
       ]),
     );
   }
@@ -106,17 +103,11 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
   Widget _boardColumn(String title, List<Map<String, dynamic>> tasks) {
     return Container(
       width: 260,
-      decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.separator, width: 0.5),
-      ),
+      decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceContainerLow,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
-          ),
+          decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: const BorderRadius.vertical(top: Radius.circular(14))),
           child: Row(children: [
             Container(width: 6, height: 6, decoration: const BoxDecoration(color: AppColors.textPrimary, shape: BoxShape.circle)),
             const SizedBox(width: 8),
@@ -127,7 +118,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
         ),
         ...tasks.map((t) => Padding(padding: const EdgeInsets.all(8), child: _taskCard(t, compact: true))),
         if (tasks.isEmpty)
-          Padding(padding: const EdgeInsets.all(20), child: Center(child: Text('Sin tareas', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)))),
+          Padding(padding: EdgeInsets.all(20), child: Center(child: Text(LocaleService.t('maint_empty'), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)))),
       ]),
     );
   }
@@ -156,20 +147,16 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
               children: [
                 Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
                 const SizedBox(height: 18),
-                Text('Nueva Orden', style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-                Text('MANTENIMIENTO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                Text(LocaleService.t('maint_new_order'), style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                Text(LocaleService.t('maint_title').toUpperCase(), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                 const SizedBox(height: 20),
 
-                // Title
-                _modalField('Título de la tarea', titleController, CupertinoIcons.wrench),
+                _modalField(LocaleService.t('maint_task_title'), titleController, CupertinoIcons.wrench),
                 const SizedBox(height: 12),
-
-                // Description
-                _modalField('Descripción (opcional)', descController, CupertinoIcons.doc_text),
+                _modalField(LocaleService.t('maint_desc_optional'), descController, CupertinoIcons.doc_text),
                 const SizedBox(height: 16),
 
-                // Vessel selector (tap to open)
-                Text('EMBARCACIÓN', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                Text(LocaleService.t('draft_vessel_section'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                 const SizedBox(height: 6),
                 GestureDetector(
                   onTap: () {
@@ -178,17 +165,14 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                       context: ctx,
                       builder: (innerCtx) => Container(
                         constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
-                        decoration: BoxDecoration(
-                          color: AppColors.backgroundPrimary,
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                        ),
+                        decoration: BoxDecoration(color: AppColors.backgroundPrimary, borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
                               padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
                               child: Row(children: [
-                                Text('Embarcación', style: GoogleFonts.newsreader(fontSize: 20, color: AppColors.textPrimary)),
+                                Text(LocaleService.t('draft_select_vessel'), style: GoogleFonts.newsreader(fontSize: 20, color: AppColors.textPrimary)),
                                 const Spacer(),
                                 GestureDetector(onTap: () => Navigator.pop(innerCtx), child: Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textTertiary, size: 24)),
                               ]),
@@ -203,11 +187,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                                     padding: const EdgeInsets.all(14),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.backgroundSecondary,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(color: AppColors.separator, width: 0.5),
-                                    ),
+                                    decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
                                     child: Row(children: [
                                       Icon(CupertinoIcons.helm, size: 18, color: AppColors.textPrimary),
                                       const SizedBox(width: 12),
@@ -224,16 +204,12 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                   },
                   child: Container(
                     padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundSecondary,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.separator, width: 0.5),
-                    ),
+                    decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
                     child: Row(children: [
                       Icon(CupertinoIcons.helm, size: 18, color: selectedVessel != null ? AppColors.textPrimary : AppColors.textTertiary),
                       const SizedBox(width: 12),
                       Expanded(child: Text(
-                        selectedVessel?['name'] ?? 'Seleccionar embarcación...',
+                        selectedVessel?['name'] ?? LocaleService.t('trips_select_hint'),
                         style: GoogleFonts.inter(fontSize: 14, color: selectedVessel != null ? AppColors.textPrimary : AppColors.textTertiary, fontWeight: selectedVessel != null ? FontWeight.w600 : FontWeight.w400),
                       )),
                       Icon(CupertinoIcons.chevron_down, size: 16, color: AppColors.textSecondary),
@@ -242,19 +218,17 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Priority
-                Text('PRIORIDAD', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                Text(LocaleService.t('maint_priority'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                 const SizedBox(height: 8),
                 Row(children: [
-                  _priorityOption('low', 'Baja', priority, (v) => setModalState(() => priority = v)),
+                  _priorityOption('low', LocaleService.t('maint_low'), priority, (v) => setModalState(() => priority = v)),
                   const SizedBox(width: 8),
-                  _priorityOption('medium', 'Media', priority, (v) => setModalState(() => priority = v)),
+                  _priorityOption('medium', LocaleService.t('maint_medium'), priority, (v) => setModalState(() => priority = v)),
                   const SizedBox(width: 8),
-                  _priorityOption('high', 'Alta', priority, (v) => setModalState(() => priority = v)),
+                  _priorityOption('high', LocaleService.t('maint_high'), priority, (v) => setModalState(() => priority = v)),
                 ]),
                 const SizedBox(height: 24),
 
-                // Submit
                 GestureDetector(
                   onTap: () async {
                     if (titleController.text.isEmpty || selectedVessel == null) return;
@@ -273,7 +247,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
-                    child: Center(child: Text('CREAR ORDEN', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.backgroundPrimary, letterSpacing: 0.5))),
+                    child: Center(child: Text(LocaleService.t('maint_create_order'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.backgroundPrimary, letterSpacing: 0.5))),
                   ),
                 ),
               ],
@@ -320,10 +294,7 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
   Widget _kpi(String val, String label) => Expanded(
     child: Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.separator, width: 0.5),
-      ),
+      decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
       child: Column(children: [
         Text(val, style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
         Text(label, style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),

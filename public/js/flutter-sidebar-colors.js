@@ -68,7 +68,7 @@
                 flex-shrink: 0 !important;
             `;
         }
-        console.log('🎨 Flutter sidebar colors applied');
+        void('🎨 Flutter sidebar colors applied');
     }
 
     // Apply on DOM ready

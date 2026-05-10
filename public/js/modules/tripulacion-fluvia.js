@@ -10,7 +10,7 @@ const CrewModuleFluvia = (() => {
     };
 
     const init = async () => {
-        console.log("Módulo Tripulación (FLUVIAFLEETFleet) Iniciado.");
+        void("Módulo Tripulación (FLUVIAFLEETFleet) Iniciado.");
         await loadData();
     };
 

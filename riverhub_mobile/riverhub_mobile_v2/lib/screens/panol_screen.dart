@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class PanolScreen extends StatefulWidget {
   const PanolScreen({super.key});
@@ -23,14 +23,17 @@ class _PanolScreenState extends State<PanolScreen> {
       setState(() {
         if (data.isNotEmpty) {
           _items = data.map((i) => {
-            'name': i['name'] ?? 'Sin nombre', 'category': i['category'] ?? '-',
-            'stock': i['quantity'] ?? i['stock'] ?? 0, 'minAlert': i['min_stock'] ?? i['minAlert'] ?? 5,
-            'unit': i['unit'] ?? 'uds', 'location': i['location'] ?? '-',
+            'name': i['name'] ?? LocaleService.t('common_no_name'),
+            'category': i['category'] ?? '-',
+            'stock': i['quantity'] ?? i['stock'] ?? 0,
+            'minAlert': i['min_stock'] ?? i['minAlert'] ?? 5,
+            'unit': i['unit'] ?? 'uds',
+            'location': i['location'] ?? '-',
           }).toList();
         } else { _items = []; }
       });
     } catch (e) {
-      debugPrint('Error cargando pañol: \$e');
+      debugPrint('Error cargando pañol: $e');
       setState(() => _items = []);
     }
   }
@@ -52,32 +55,28 @@ class _PanolScreenState extends State<PanolScreen> {
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
-        middle: Text('Pañol', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero, onPressed: _showAddItemModal,
-          child: Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary),
-        ),
+        middle: Text(LocaleService.t('panol_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: _showAddItemModal, child: Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
-            Text('Pañol de', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-            Text('Inventario.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('panol_header1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('panol_header2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
             const SizedBox(height: 24),
 
             Row(children: [
-              _kpi('${_items.length}', 'Total Ítems'),
+              _kpi('${_items.length}', LocaleService.t('panol_total_items')),
               const SizedBox(width: 10),
-              _kpi('$_lowStockCount', 'Stock Bajo'),
+              _kpi('$_lowStockCount', LocaleService.t('panol_low_stock_kpi')),
               const SizedBox(width: 10),
-              _kpi('5', 'Categorías'),
+              _kpi('5', LocaleService.t('panol_categories')),
             ]),
             const SizedBox(height: 16),
 
-            // Search
             CupertinoTextField(
-              placeholder: 'Buscar repuesto...',
+              placeholder: LocaleService.t('panol_search'),
               prefix: const Padding(padding: EdgeInsets.only(left: 12), child: Icon(CupertinoIcons.search, color: AppColors.textSecondary, size: 16)),
               style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
               placeholderStyle: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 14),
@@ -90,7 +89,7 @@ class _PanolScreenState extends State<PanolScreen> {
             if (_filteredItems.isEmpty)
               Padding(
                 padding: const EdgeInsets.all(20),
-                child: Center(child: Text('Sin ítems', style: GoogleFonts.inter(color: AppColors.textSecondary))),
+                child: Center(child: Text(LocaleService.t('panol_empty'), style: GoogleFonts.inter(color: AppColors.textSecondary))),
               ),
           ],
         ),
@@ -100,7 +99,7 @@ class _PanolScreenState extends State<PanolScreen> {
 
   void _showAddItemModal() {
     final nameController = TextEditingController();
-    final catController = TextEditingController(text: 'Repuestos');
+    final catController = TextEditingController(text: LocaleService.t('dyn_key_202'));
     final stockController = TextEditingController();
     final minAlertController = TextEditingController();
     final locationController = TextEditingController();
@@ -121,8 +120,8 @@ class _PanolScreenState extends State<PanolScreen> {
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('Nuevo Ítem', style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-                  Text('PAÑOL DE INVENTARIO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text(LocaleService.t('panol_add'), style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                  Text(LocaleService.t('panol_inventory_label'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                 ]),
                 GestureDetector(onTap: () => Navigator.pop(ctx), child: Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textTertiary, size: 24)),
               ]),
@@ -131,15 +130,15 @@ class _PanolScreenState extends State<PanolScreen> {
             Expanded(child: ListView(
               padding: const EdgeInsets.all(20),
               children: [
-                _buildTextField('Nombre del repuesto', nameController, CupertinoIcons.cube_box),
+                _buildTextField(LocaleService.t('panol_name'), nameController, CupertinoIcons.cube_box),
                 const SizedBox(height: 14),
-                _buildTextField('Categoría', catController, CupertinoIcons.tag),
+                _buildTextField(LocaleService.t('panol_category'), catController, CupertinoIcons.tag),
                 const SizedBox(height: 14),
-                _buildTextField('Stock Inicial', stockController, CupertinoIcons.number, isNumeric: true),
+                _buildTextField(LocaleService.t('panol_initial_stock'), stockController, CupertinoIcons.number, isNumeric: true),
                 const SizedBox(height: 14),
-                _buildTextField('Alerta de Stock Mínimo', minAlertController, CupertinoIcons.exclamationmark_triangle, isNumeric: true),
+                _buildTextField(LocaleService.t('panol_min_alert'), minAlertController, CupertinoIcons.exclamationmark_triangle, isNumeric: true),
                 const SizedBox(height: 14),
-                _buildTextField('Ubicación', locationController, CupertinoIcons.location),
+                _buildTextField(LocaleService.t('panol_location_label'), locationController, CupertinoIcons.location),
                 const SizedBox(height: 24),
                 GestureDetector(
                   onTap: () async {
@@ -159,7 +158,7 @@ class _PanolScreenState extends State<PanolScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
-                    child: Center(child: Text('GUARDAR ÍTEM', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.backgroundPrimary, letterSpacing: 0.5))),
+                    child: Center(child: Text(LocaleService.t('panol_save_item'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.backgroundPrimary, letterSpacing: 0.5))),
                   ),
                 ),
               ],
@@ -178,13 +177,11 @@ class _PanolScreenState extends State<PanolScreen> {
         Icon(icon, size: 18, color: AppColors.textSecondary),
         const SizedBox(width: 12),
         Expanded(child: CupertinoTextField(
-          controller: controller,
-          placeholder: label,
+          controller: controller, placeholder: label,
           keyboardType: isNumeric ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
           style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
           placeholderStyle: GoogleFonts.inter(color: AppColors.textTertiary, fontSize: 14),
-          decoration: const BoxDecoration(),
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: const BoxDecoration(), padding: const EdgeInsets.symmetric(vertical: 12),
         )),
       ]),
     );
@@ -193,10 +190,7 @@ class _PanolScreenState extends State<PanolScreen> {
   Widget _kpi(String val, String label) => Expanded(
     child: Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.separator, width: 0.5),
-      ),
+      decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
       child: Column(children: [
         Text(val, style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
         Text(label, style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
@@ -209,10 +203,7 @@ class _PanolScreenState extends State<PanolScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.separator, width: 0.5),
-      ),
+      decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Expanded(child: Text(item['name'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary))),
@@ -220,7 +211,7 @@ class _PanolScreenState extends State<PanolScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(6)),
-              child: Text('STOCK BAJO', style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textPrimary, letterSpacing: 0.5)),
+              child: Text(LocaleService.t('panol_low'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textPrimary, letterSpacing: 0.5)),
             ),
         ]),
         const SizedBox(height: 8),

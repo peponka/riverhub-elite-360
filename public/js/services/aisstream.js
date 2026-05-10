@@ -2,7 +2,7 @@
 // Connects to the server which receives AIS data from aisstream.io
 
 const AisStreamService = (() => {
-    console.log("🚢 AISStream: Service Module Loaded (Socket.IO Version)");
+    void("🚢 AISStream: Service Module Loaded (Socket.IO Version)");
 
     let socket = null;
     let _subscribers = [];
@@ -11,7 +11,7 @@ const AisStreamService = (() => {
     let reconnectAttempts = 0;
 
     const setStatus = (msg, color = 'white') => {
-        console.log(`[AIS-Status] ${msg}`);
+        void(`[AIS-Status] ${msg}`);
         if (statusCallback) statusCallback(msg, color);
     };
 
@@ -45,7 +45,7 @@ const AisStreamService = (() => {
                 isConnected = true;
                 reconnectAttempts = 0;
                 setStatus("✅ CONECTADO AL SERVIDOR AIS", "#10b981");
-                console.log("🚢 AISStream: Connected to server");
+                void("🚢 AISStream: Connected to server");
             });
 
             // Listen for AIS position updates from server
@@ -67,13 +67,13 @@ const AisStreamService = (() => {
                 _subscribers.forEach(cb => cb(vesselData));
 
                 // Log for debugging
-                console.log(`📡 AIS: ${vesselData.name} (${vesselData.mmsi}) @ ${vesselData.lat?.toFixed(4)}, ${vesselData.lon?.toFixed(4)}`);
+                void(`📡 AIS: ${vesselData.name} (${vesselData.mmsi}) @ ${vesselData.lat?.toFixed(4)}, ${vesselData.lon?.toFixed(4)}`);
             });
 
             socket.on('disconnect', (reason) => {
                 isConnected = false;
                 setStatus(`❌ Desconectado: ${reason}`, "#ef4444");
-                console.log("AISStream: Disconnected -", reason);
+                void("AISStream: Disconnected -", reason);
             });
 
             socket.on('connect_error', (error) => {
@@ -94,7 +94,7 @@ const AisStreamService = (() => {
      */
     const subscribe = (callback) => {
         _subscribers.push(callback);
-        console.log(`AISStream: New subscriber (total: ${_subscribers.length})`);
+        void(`AISStream: New subscriber (total: ${_subscribers.length})`);
     };
 
     /**

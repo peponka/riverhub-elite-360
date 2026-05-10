@@ -9,7 +9,7 @@ const AdminCliente = (() => {
     let subChart = null;
 
     const init = () => {
-        console.log("🔵 AdminCliente: Inicializando panel de cliente...");
+        void("🔵 AdminCliente: Inicializando panel de cliente...");
 
         // Get tenant from logged-in user
         const user = window.AuthModule?.getCurrentUser?.() || {};

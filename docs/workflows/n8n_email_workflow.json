@@ -1,0 +1,153 @@
+{
+  "name": "RiverHub Emails Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "riverhub-events",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "e6f49e1a-c454-4a2a-b6ce-ebee155c5fb4",
+      "name": "Webhook RiverHub",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        300
+      ],
+      "credentials": {},
+      "webhookId": "riverhub-events-uuid"
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json[\"body\"][\"event\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "NEW_COMPANY_REGISTRATION",
+              "output": 0
+            },
+            {
+              "value2": "PAYMENT_COMPLETED",
+              "output": 1
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-e5f6-4a5b-8c7d-9e0f1a2b3c4d",
+      "name": "Switch Evento",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "no-reply@riverhub.com",
+        "toEmail": "={{$json[\"body\"][\"email\"]}}",
+        "subject": "¡Bienvenido a RiverHub Elite 360, {{$json[\"body\"][\"company\"]}}!",
+        "html": "<h2>¡Hola! Tu empresa ha sido registrada con éxito.</h2>\n<p>Has sido asignado como el <strong>Administrador (SuperAdmin)</strong> de tu entorno.</p>\n<p>Podes comenzar a armar tus convoyes y monitorear tu flota de inmediato usando nuestro Dashboard Satelital.</p>\n<p>Si necesitas ayuda, respondé a este correo.</p>\n<br>\n<p>Equipo de RiverHub.</p>",
+        "options": {}
+      },
+      "id": "b1c2d3e4-f5a6-4b7c-8d9e-1f2a3b4c5d6e",
+      "name": "Email Bienvenida",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        680,
+        200
+      ],
+      "notes": "Requiere configurar Credenciales SMTP"
+    },
+    {
+      "parameters": {
+        "fromEmail": "billing@riverhub.com",
+        "toEmail": "={{$json[\"body\"][\"email\"]}}",
+        "subject": "Factura RiverHub: Plan {{$json[\"body\"][\"plan\"]}} Activado",
+        "html": "<h2>¡Pago Confirmado!</h2>\n<p>El pago de <strong>${{$json[\"body\"][\"amount\"]}} USD</strong> para el plan <strong>{{$json[\"body\"][\"plan\"]}}</strong> ha sido procesado correctamente.</p>\n<p>Empresa: {{$json[\"body\"][\"company\"]}}</p>\n<p>Tu límite de embarcaciones y usuarios ha sido actualizado automáticamente en el sistema.</p>\n<br>\n<p>Gracias por confiar en RiverHub Elite 360.</p>",
+        "options": {}
+      },
+      "id": "c1d2e3f4-a5b6-4c7d-8e9f-2a3b4c5d6e7f",
+      "name": "Email Recibo Pago",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        680,
+        400
+      ],
+      "notes": "Requiere configurar Credenciales SMTP"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "respond-to-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        920,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook RiverHub": {
+      "main": [
+        [
+          {
+            "node": "Switch Evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Evento": {
+      "main": [
+        [
+          {
+            "node": "Email Bienvenida",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Recibo Pago",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Bienvenida": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Recibo Pago": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class FinancialRiskScreen extends StatefulWidget {
   const FinancialRiskScreen({super.key});
@@ -17,7 +18,7 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
     setState(() {
       _analyzed = true;
       _riskScore = 72;
-      _riskLevel = 'MEDIO';
+      _riskLevel = LocaleService.t('dyn_key_111');
       _flags = [
         'Endeudamiento alto (60%) > 50%',
         'Cobertura de deuda ajustada (1.2x)',
@@ -35,8 +36,8 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text(
-          'Riesgo Financiero',
+        middle: Text(
+          LocaleService.t('dyn_key_112'),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
@@ -62,8 +63,8 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
               width: double.infinity,
               child: CupertinoButton.filled(
                 onPressed: _analyze,
-                child: const Text(
-                  'ANALIZAR RIESGO',
+                child: Text(
+                  LocaleService.t('dyn_key_110'),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -118,7 +119,7 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Row(
                     children: [
-                      const Text('⚠️ ', style: TextStyle(fontSize: 14)),
+                      Text(LocaleService.t('financial_risk_'), style: TextStyle(fontSize: 14)),
                       Expanded(
                         child: Text(
                           f,

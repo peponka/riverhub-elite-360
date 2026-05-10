@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class HidrologiaScreen extends StatefulWidget {
   const HidrologiaScreen({super.key});
@@ -17,24 +18,21 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
   late AnimationController _animController;
   bool _loading = true;
 
-  // Weather data
   double _temp = 0;
   double _wind = 0;
   int _humidity = 0;
-  String _weatherDesc = 'Cargando...';
+  String _weatherDesc = '';
   int _weatherCode = 0;
 
-  // Flood/river data
   List<double> _chartData = [];
   List<String> _chartLabels = [];
-
-  // Stations with real data
   List<Map<String, dynamic>> _stations = [];
 
   @override
   void initState() {
     super.initState();
     _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
+    _weatherDesc = LocaleService.t('hydro_loading');
     _fetchAllData();
   }
 
@@ -74,14 +72,12 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
       }
     } catch (e) {
       debugPrint('Weather error: $e');
-      // Fallback
-      if (mounted) setState(() { _temp = 28; _wind = 15; _humidity = 72; _weatherDesc = 'Sin conexión'; });
+      if (mounted) setState(() { _temp = 28; _wind = 15; _humidity = 72; _weatherDesc = LocaleService.t('hydro_no_connection'); });
     }
   }
 
   Future<void> _fetchFloodData() async {
     try {
-      // Stations: coordinates calibrated to GloFAS river grid cells
       final stations = [
         {'name': 'Asunción', 'river': 'Río Paraguay', 'lat': -25.3, 'lon': -57.7},
         {'name': 'Pilar', 'river': 'Bajo Paraguay', 'lat': -26.85, 'lon': -58.35},
@@ -109,9 +105,9 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
               final previous = discharges.length > 6 ? discharges[6] : discharges.first;
               final median = discharges.map((d) => (d ?? 0).toDouble()).reduce((a, b) => a + b) / discharges.length;
 
-              String trend = 'ESTABLE';
-              if ((current ?? 0) > (previous ?? 0) * 1.05) trend = 'CRECIENTE';
-              if ((current ?? 0) < (previous ?? 0) * 0.95) trend = 'BAJANTE';
+              String trend = LocaleService.t('dyn_key_118');
+              if ((current ?? 0) > (previous ?? 0) * 1.05) trend = LocaleService.t('dyn_key_117');
+              if ((current ?? 0) < (previous ?? 0) * 0.95) trend = LocaleService.t('dyn_key_119');
 
               loadedStations.add({
                 'name': st['name'],
@@ -121,7 +117,6 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
                 'trend': trend,
               });
 
-              // Use first station (Asunción) for chart
               if (st['name'] == 'Asunción') {
                 setState(() {
                   _chartData = discharges.map((d) => (d ?? 0).toDouble()).toList().cast<double>();
@@ -138,8 +133,8 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
       if (mounted) {
         setState(() {
           _stations = loadedStations.isNotEmpty ? loadedStations : [
-            {'name': 'Asunción', 'river': 'Río Paraguay', 'flow': 2450.0, 'median': 2800.0, 'trend': 'BAJANTE'},
-            {'name': 'Rosario', 'river': 'Río Paraná', 'flow': 15200.0, 'median': 16500.0, 'trend': 'ESTABLE'},
+            {'name': 'Asunción', 'river': 'Río Paraguay', 'flow': 2450.0, 'median': 2800.0, 'trend': LocaleService.t('dyn_key_119')},
+            {'name': 'Rosario', 'river': 'Río Paraná', 'flow': 15200.0, 'median': 16500.0, 'trend': LocaleService.t('dyn_key_118')},
           ];
           if (_chartData.isEmpty) {
             _chartData = List.generate(14, (i) => 2000 + Random().nextDouble() * 1500);
@@ -152,16 +147,23 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
   }
 
   String _weatherName(int code) {
-    const map = {
-      0: 'Despejado', 1: 'Mayormente despejado', 2: 'Parcialmente nublado',
-      3: 'Nublado', 45: 'Niebla', 48: 'Niebla helada',
-      51: 'Llovizna leve', 53: 'Llovizna', 55: 'Llovizna fuerte',
-      61: 'Lluvia leve', 63: 'Lluvia moderada', 65: 'Lluvia fuerte',
-      71: 'Nieve leve', 73: 'Nieve', 75: 'Nieve fuerte',
-      80: 'Chaparrón', 81: 'Chaparrón moderado', 82: 'Chaparrón fuerte',
-      95: 'Tormenta', 96: 'Tormenta con granizo', 99: 'Tormenta severa',
-    };
-    return map[code] ?? 'Variado';
+    if (code == 0 || code == 1) return LocaleService.t('hydro_clear');
+    if (code == 2) return LocaleService.t('hydro_partly_cloudy');
+    if (code == 3) return LocaleService.t('hydro_cloudy');
+    if (code >= 45 && code <= 48) return LocaleService.t('hydro_fog');
+    if (code >= 51 && code <= 55) return LocaleService.t('hydro_drizzle');
+    if (code >= 61 && code <= 65) return LocaleService.t('hydro_rain');
+    if (code >= 80 && code <= 82) return LocaleService.t('hydro_rain');
+    if (code >= 95) return LocaleService.t('hydro_storm');
+    return LocaleService.t('hydro_varied');
+  }
+
+  String _trendLabel(String trend) {
+    switch (trend) {
+      case 'CRECIENTE': return LocaleService.t('hydro_rising');
+      case 'BAJANTE': return LocaleService.t('hydro_falling');
+      default: return LocaleService.t('hydro_stable');
+    }
   }
 
   IconData _weatherIcon(int code) {
@@ -185,12 +187,8 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
-        middle: Text('Hidrología', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: _fetchAllData,
-          child: Icon(CupertinoIcons.refresh, size: 20, color: AppColors.textPrimary),
-        ),
+        middle: Text(LocaleService.t('hydro_screen_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: _fetchAllData, child: Icon(CupertinoIcons.refresh, size: 20, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: _loading
@@ -198,29 +196,23 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
             : ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 children: [
-                  Text('Pronóstico', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-                  Text('Hidrológico.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('hydro_header1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('hydro_header2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
                   const SizedBox(height: 24),
 
-                  // ─── Weather Card (Real) ────────────────────────
                   Container(
                     padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.separator, width: 0.5),
-                    ),
+                    decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
                     child: Row(children: [
                       Icon(_weatherIcon(_weatherCode), color: AppColors.textSecondary, size: 32),
                       const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text('${_temp.round()}°C', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-                          Text(_weatherDesc, style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
-                        ]),
-                      ),
+                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text('${_temp.round()}°C', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                        Text(_weatherDesc, style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
+                      ])),
                       Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                        Text('Viento: ${_wind.round()} km/h', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
-                        Text('Humedad: $_humidity%', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+                        Text('${LocaleService.t('hydro_wind_label')}: ${_wind.round()} km/h', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+                        Text('${LocaleService.t('hydro_humidity_label')}: $_humidity%', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
                         const SizedBox(height: 2),
                         Text('Asunción, PY', style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.textTertiary, letterSpacing: 0.5)),
                       ]),
@@ -228,15 +220,11 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
                   ),
                   const SizedBox(height: 20),
 
-                  // ─── Chart (Real Flood API) ─────────────────────
-                  Text('CAUDAL: RÍO PARAGUAY (M³/S) — 14 DÍAS', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text(LocaleService.t('hydro_chart_label'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                   const SizedBox(height: 10),
                   Container(
                     height: 150, padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.separator, width: 0.5),
-                    ),
+                    decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
                     child: AnimatedBuilder(
                       animation: _animController,
                       builder: (context, _) => CustomPaint(
@@ -252,16 +240,15 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(_chartLabels.first, style: GoogleFonts.inter(fontSize: 9, color: AppColors.textTertiary)),
-                          Text('HOY', style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+                          Text(LocaleService.t('hydro_today'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
                           Text(_chartLabels.last, style: GoogleFonts.inter(fontSize: 9, color: AppColors.textTertiary)),
                         ],
                       ),
                     ),
                   const SizedBox(height: 28),
 
-                  // ─── Stations (Real) ────────────────────────────
-                  Text('ESTACIONES DE MONITOREO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
-                  Text('Datos en vivo — Open-Meteo Flood API', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
+                  Text(LocaleService.t('hydro_stations'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text(LocaleService.t('hydro_data_source'), style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
                   const SizedBox(height: 12),
                   ..._stations.map((s) => _stationCard(s)),
                 ],
@@ -277,16 +264,13 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
     final trend = s['trend'] as String;
 
     Color trendColor = AppColors.textSecondary;
-    if (trend == 'CRECIENTE') trendColor = AppColors.accent;
-    if (trend == 'BAJANTE') trendColor = AppColors.error;
+    if (trend == LocaleService.t('dyn_key_117')) trendColor = AppColors.accent;
+    if (trend == LocaleService.t('dyn_key_119')) trendColor = AppColors.error;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.separator, width: 0.5),
-      ),
+      decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
       child: Row(children: [
         Icon(CupertinoIcons.waveform_path, color: AppColors.textSecondary, size: 22),
         const SizedBox(width: 14),
@@ -297,11 +281,9 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Text('${flow.toStringAsFixed(0)} m³/s', style: GoogleFonts.newsreader(fontWeight: FontWeight.w400, fontSize: 18, color: AppColors.textPrimary)),
           Row(children: [
-            Container(width: 5, height: 5, decoration: BoxDecoration(
-              color: trendColor, shape: BoxShape.circle,
-            )),
+            Container(width: 5, height: 5, decoration: BoxDecoration(color: trendColor, shape: BoxShape.circle)),
             const SizedBox(width: 4),
-            Text('${pct >= 0 ? "+" : ""}${pct.toStringAsFixed(1)}%  $trend', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: trendColor)),
+            Text('${pct >= 0 ? "+" : ""}${pct.toStringAsFixed(1)}%  ${_trendLabel(trend)}', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: trendColor)),
           ]),
         ]),
       ]),

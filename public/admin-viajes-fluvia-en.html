@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -78,7 +78,7 @@
     <div class="topbar">
       <div class="search-bar">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Buscar puerto, viaje o destino...">
+        <input type="text" placeholder="Search port, trip or destination...">
       </div>
       <div class="topbar-right">
         <div class="lang-switch-toggle" style="display:flex;align-items:center;gap:6px;margin-right:8px;"><a href="admin-viajes-fluvia-en.html" style="color:var(--text-main);font-family:var(--font-data);font-size:0.7rem;font-weight:700;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">EN</a><span style="color:var(--border-color);">|</span><a href="admin-viajes-fluvia.html" style="color:var(--text-sec);font-family:var(--font-data);font-size:0.7rem;font-weight:600;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">ES</a></div>
@@ -93,12 +93,12 @@
       
       <div class="header-section" style="margin-bottom: 24px;">
         <div class="greeting">
-          <p>CENTRO DE MANDO</p>
+          <p>COMMAND CENTER</p>
           <h1>Trip Management</h1>
-          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">TRAFICO FLUVIAL · ETA EN TIEMPO REAL</p>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">RIVER TRAFFIC · REAL-TIME ETA</p>
         </div>
         <div class="header-actions">
-           <button class="btn-primary btn-new-request" onclick="ViajesModule.openModal()"><i class="fa-solid fa-plus"></i> NUEVO VIAJE</button>
+           <button class="btn-primary btn-new-request" onclick="ViajesModule.openModal()"><i class="fa-solid fa-plus"></i> NEW TRIP</button>
         </div>
       </div>
 
@@ -107,7 +107,7 @@
         <div class="stat-dispatch-card">
           <div class="stat-icon-circle"><i class="fa-solid fa-route"></i></div>
           <div class="stat-info">
-            <span>VIAJES ACTIVOS</span>
+            <span>ACTIVE TRIPS</span>
             <h3>12</h3>
           </div>
         </div>
@@ -121,14 +121,14 @@
         <div class="stat-dispatch-card">
           <div class="stat-icon-circle" style="color:var(--status-ok); border-color:transparent;"><i class="fa-solid fa-check-double"></i></div>
           <div class="stat-info">
-            <span>COMPLETADOS (MES)</span>
+            <span>COMPLETED (MONTH)</span>
             <h3>38</h3>
           </div>
         </div>
         <div class="stat-dispatch-card">
           <div class="stat-icon-circle" style="color:#F59E0B; border-color:transparent;"><i class="fa-solid fa-cubes"></i></div>
           <div class="stat-info">
-            <span>VOLUMEN DESPACHADO</span>
+            <span>DISPATCHED VOLUME</span>
             <h3>145k TN</h3>
           </div>
         </div>
@@ -136,10 +136,10 @@
 
       <!-- TABS -->
       <div class="dispatch-tabs">
-        <div class="tab-link active">TODOS LOS VIAJES</div>
-        <div class="tab-link">EN RUTA</div>
-        <div class="tab-link">PLANIFICADOS</div>
-        <div class="tab-link">COMPLETADOS</div>
+        <div class="tab-link active">ALL TRIPS</div>
+        <div class="tab-link">IN TRANSIT</div>
+        <div class="tab-link">PLANNED</div>
+        <div class="tab-link">COMPLETED</div>
       </div>
 
       <!-- THE GRID (Injected by JS) -->
@@ -155,9 +155,9 @@
     <div class="modal-content">
       <h3>Plan New Trip</h3>
       
-      <label>Embarcación / Convoy</label>
+      <label>Vessel / Convoy</label>
       <select id="new-trip-vessel">
-        <option value="">Seleccione Embarcación...</option>
+        <option value="">Select Vessel...</option>
       </select>
 
       <div style="display:flex; gap:15px;">
@@ -173,12 +173,12 @@
 
       <div style="display:flex; gap:15px;">
         <div style="flex:1;">
-          <label>Carga (Ej: Soja, Fuel)</label>
+          <label>Cargo (e.g. Soy, Fuel)</label>
           <input type="text" id="new-trip-cargo" placeholder="Cargo type">
         </div>
         <div style="flex:1;">
-          <label>Tonelaje Estimado</label>
-          <input type="number" id="new-trip-cargo-tons" placeholder="Ej: 15000">
+          <label>Estimated Tonnage</label>
+          <input type="number" id="new-trip-cargo-tons" placeholder="e.g. 15000">
         </div>
       </div>
 
