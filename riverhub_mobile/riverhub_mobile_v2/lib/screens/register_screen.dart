@@ -85,10 +85,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         padding: const EdgeInsets.only(left: 14),
         child: Icon(icon, color: AppColors.textSecondary, size: 18),
       ),
-      suffix: Padding(
-        padding: const EdgeInsets.only(right: 12),
-        child: GestureDetector(
-          onTap: toggleObscure,
+      suffix: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: toggleObscure,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
           child: Icon(
             obscure ? CupertinoIcons.eye : CupertinoIcons.eye_slash,
             size: 18,
