@@ -178,35 +178,33 @@ app.post('/api/ai/chat', aiLimiter, authenticateUser, async (req, res) => {
         return res.status(400).json({ error: 'Missing message' });
     }
 
-    const systemPrompt = `Eres el Copiloto IA de FluviaFleet, un sistema de gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná.
+    const systemPrompt = `Eres el Copiloto IA de FluviaFleet, un experto en gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná.
+Reglas estrictas:
+1. NO te presentes ni saludes repetidamente en cada mensaje. Respondé directamente a la pregunta.
+2. Respondé en español rioplatense profesional.
+3. Sé conciso y al grano.
+4. Si el usuario te pregunta algo sobre sus barcos (R/M, posiciones), lee el 'Contexto de Flota' provisto abajo. Si la información no está en el contexto, decí que no la tenés disponible en este momento.
 
-Tu rol:
-- Experto en logística fluvial, navegación de barcos empujadores y barcazas
-- Conoces sobre hidrología del Río Paraná y Paraguay
-- Manejas temas de tripulación, combustible, mantenimiento naval
-- Respondes en español rioplatense profesional
-- Eres conciso pero completo (máx 150 palabras)
-- Usas emojis marítimos cuando es apropiado (🚢⚓📡🌊)
-- Si te preguntan datos específicos que no tenés, decí que necesitás consultar la base de datos
-
-Contexto del sistema: ${context || 'Usuario operador de flota'}`;
+Contexto de Flota actual:
+${context || 'No hay embarcaciones registradas o activas.'}`;
 
     try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
 
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
                 contents: [{
-                    parts: [
-                        { text: systemPrompt },
-                        { text: message }
-                    ]
+                    role: 'user',
+                    parts: [{ text: message }]
                 }],
                 generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 500
+                    temperature: 0.4,
+                    maxOutputTokens: 1024
                 }
             })
         });
