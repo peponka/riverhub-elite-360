@@ -210,7 +210,7 @@ ${context || 'No hay embarcaciones registradas o activas.'}`;
                 contents: contents,
                 generationConfig: {
                     temperature: 0.4,
-                    maxOutputTokens: 1024
+                    maxOutputTokens: 4096
                 }
             })
         });
