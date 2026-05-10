@@ -1,30 +1,93 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:riverhub_mobile_v2/main.dart';
+import 'package:riverhub_mobile_v2/screens/splash_screen.dart';
+import 'package:riverhub_mobile_v2/widgets/offline_banner.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const RiverHubMobileApp());
+  group('SplashScreen', () {
+    testWidgets('renders logo image and FluviaFleet text', (tester) async {
+      await tester.pumpWidget(
+        CupertinoApp(
+          home: SplashScreen(
+            destination: const CupertinoPageScaffold(
+              child: Center(child: Text('Destination')),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      // Should show FluviaFleet text
+      expect(find.text('FluviaFleet'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      // Should show HIDROVÍA INTELIGENTE tagline
+      expect(find.text('HIDROVÍA INTELIGENTE'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      // Should have an activity indicator
+      expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+    });
+
+    testWidgets('navigates to destination after animation', (tester) async {
+      await tester.pumpWidget(
+        CupertinoApp(
+          home: SplashScreen(
+            destination: const CupertinoPageScaffold(
+              child: Center(child: Text('Arrived')),
+            ),
+          ),
+        ),
+      );
+
+      // Before animation completes
+      expect(find.text('FluviaFleet'), findsOneWidget);
+      expect(find.text('Arrived'), findsNothing);
+
+      // Pump through the full 2.4s animation + navigation
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      // Should have navigated to destination
+      expect(find.text('Arrived'), findsOneWidget);
+    });
+  });
+
+  group('OfflineBanner', () {
+    testWidgets('renders child widget when online', (tester) async {
+      ConnectivityService.isOnline.value = true;
+
+      await tester.pumpWidget(
+        const CupertinoApp(
+          home: CupertinoPageScaffold(
+            child: OfflineBanner(
+              child: Center(child: Text('Content')),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Content'), findsOneWidget);
+      // No wifi_slash icon when online
+      expect(find.byIcon(CupertinoIcons.wifi_slash), findsNothing);
+    });
+
+    testWidgets('shows banner when offline', (tester) async {
+      ConnectivityService.isOnline.value = false;
+
+      await tester.pumpWidget(
+        const CupertinoApp(
+          home: CupertinoPageScaffold(
+            child: OfflineBanner(
+              child: Center(child: Text('Content')),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Should show wifi_slash icon
+      expect(find.byIcon(CupertinoIcons.wifi_slash), findsOneWidget);
+
+      // Child should still be visible
+      expect(find.text('Content'), findsOneWidget);
+    });
   });
 }

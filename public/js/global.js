@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("FluviaFleet: Sistema Global Iniciado ⚓");
+    void("FluviaFleet: Sistema Global Iniciado ⚓");
 
     // Init Auth
     if (window.AuthModule) window.AuthModule.init();

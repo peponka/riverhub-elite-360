@@ -9,7 +9,7 @@ const MapLogicFluvia = (() => {
     let isDemo = true;
 
     const init = () => {
-        console.log("🗺️ MapLogic (MapLibre) Iniciando...");
+        void("🗺️ MapLogic (MapLibre) Iniciando...");
         
         if (typeof maplibregl === 'undefined') {
             console.error("MapLibre no cargado.");

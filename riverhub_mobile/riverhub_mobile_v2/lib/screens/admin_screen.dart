@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -13,38 +14,38 @@ class AdminScreen extends StatelessWidget {
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
-        middle: Text('Administración', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('admin_administracion'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
-            Text('Panel', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-            Text('Administrativo.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('admin_panel'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('admin_administrativo'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
             const SizedBox(height: 24),
 
             Row(children: [
-              _kpi('12', 'Clientes'),
+              _kpi('12', LocaleService.t('dyn_key_4')),
               const SizedBox(width: 10),
-              _kpi('48', 'Usuarios'),
+              _kpi('48', LocaleService.t('dyn_key_6')),
               const SizedBox(width: 10),
-              _kpi('32', 'Flota'),
+              _kpi('32', LocaleService.t('dyn_key_8')),
             ]),
             const SizedBox(height: 28),
 
-            Text('ADMINISTRACIÓN', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            Text(LocaleService.t('admin_administracion_1'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
             const SizedBox(height: 12),
-            _menuItem('Gestión de Clientes', CupertinoIcons.building_2_fill, '12 empresas registradas'),
-            _menuItem('Usuarios del Sistema', CupertinoIcons.person_2, '48 usuarios activos'),
+            _menuItem(LocaleService.t('dyn_key_5'), CupertinoIcons.building_2_fill, '12 empresas registradas'),
+            _menuItem(LocaleService.t('dyn_key_1'), CupertinoIcons.person_2, '48 usuarios activos'),
             _menuItem('Flota Global', CupertinoIcons.helm, '32 embarcaciones'),
             _menuItem('Tenants (Multi-org)', CupertinoIcons.square_stack_3d_up, '3 organizaciones'),
-            _menuItem('Órdenes de Servicio', CupertinoIcons.doc_text, '156 este mes'),
-            _menuItem('Facturación Global', CupertinoIcons.creditcard, '\$45,200 facturado'),
-            _menuItem('Logs de Auditoría', CupertinoIcons.shield, '2,340 eventos'),
+            _menuItem(LocaleService.t('dyn_key_2'), CupertinoIcons.doc_text, '156 este mes'),
+            _menuItem(LocaleService.t('dyn_key_10'), CupertinoIcons.creditcard, '\$45,200 facturado'),
+            _menuItem(LocaleService.t('dyn_key_12'), CupertinoIcons.shield, '2,340 eventos'),
             const SizedBox(height: 24),
 
             // System info
-            Text('SISTEMA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            Text(LocaleService.t('admin_sistema'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(18),
@@ -52,11 +53,11 @@ class AdminScreen extends StatelessWidget {
                 color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: AppColors.separator, width: 0.5),
               ),
-              child: Column(children: const [
-                _InfoRow(label: 'Versión', value: 'v3.2.1 (Fluvia)'),
-                _InfoRow(label: 'Base de Datos', value: 'Supabase (PostgreSQL 15)'),
-                _InfoRow(label: 'Hosting', value: 'Supabase Edge'),
-                _InfoRow(label: 'Último Deploy', value: '18/04/2026'),
+              child: Column(children: [
+                _InfoRow(label: LocaleService.t('dyn_key_9'), value: 'v3.2.1 (Fluvia)'),
+                _InfoRow(label: LocaleService.t('dyn_key_3'), value: 'Supabase (PostgreSQL 15)'),
+                _InfoRow(label: LocaleService.t('dyn_key_11'), value: 'Supabase Edge'),
+                _InfoRow(label: LocaleService.t('dyn_key_7'), value: '18/04/2026'),
               ]),
             ),
           ],

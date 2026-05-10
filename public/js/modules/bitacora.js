@@ -11,7 +11,7 @@ const BitacoraModule = (() => {
     };
 
     const init = async () => {
-        console.log("Módulo Bitácora Digital Iniciado.");
+        void("Módulo Bitácora Digital Iniciado.");
         setupListeners(); // Attach input listener
         await loadLogs(); // Load data (async)
     };

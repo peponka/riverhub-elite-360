@@ -64,5 +64,5 @@ async function loadBriefing(){
                 alertsDiv.innerHTML+='<div class="info-card" style="margin-bottom:8px;border-left:3px solid '+sevC+'"><i class="fa-solid fa-triangle-exclamation" style="color:'+sevC+'"></i><div class="info-card-text"><h4>'+(i.title||'Incidente')+'</h4><p>'+(i.vessel_name||'')+' - '+sev+' - '+(det.type||'')+' '+(det.status||'')+'</p></div></div>';
             });
         }
-    }catch(e){console.log('Briefing:',e);}
+    }catch(e){void('Briefing:',e);}
 }

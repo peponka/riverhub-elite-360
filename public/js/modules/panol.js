@@ -7,7 +7,7 @@ const panolLogic = (() => {
     };
 
     const init = async () => {
-        console.log("Módulo Pañol Digital activo (Supabase).");
+        void("Módulo Pañol Digital activo (Supabase).");
         bindEvents();
         await loadInventory();
     };
@@ -286,7 +286,7 @@ const panolLogic = (() => {
             console.error(updateError);
             RiverToast.error("Error al actualizar la tabla de inventario online.", "Error DB");
         } else {
-            console.log("Inventario Actualizado. Restando 1.");
+            void("Inventario Actualizado. Restando 1.");
             // Also notify N8N about stock update logic inside brain (Optional but good)
             fetch('/api/n8n/webhook', {
                 method: 'POST',

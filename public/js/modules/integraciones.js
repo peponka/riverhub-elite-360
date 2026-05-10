@@ -2,7 +2,7 @@
 
 const apiLogic = {
     init: function () {
-        console.log("Módulo Integraciones activo.");
+        void("Módulo Integraciones activo.");
         this.addLog("SYSTEM", "Centro de Conectividad inicializado.");
         this.bindEvents();
         this.initTabs();

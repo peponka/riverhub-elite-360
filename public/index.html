@@ -1,11 +1,31 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FluviaFleet — Gestión Inteligente de Flotas Fluviales</title>
     <meta name="description" content="Plataforma líder para la gestión inteligente de flotas fluviales. Tracking satelital, control de combustible, IA predictiva. Hidrovía Paraguay-Paraná.">
+    <meta name="keywords" content="fluviafleet, gestión fluvial, hidrovía, Paraguay-Paraná, tracking satelital, barcazas, remolcadores, flota fluvial, IA predictiva, convoy">
+    <meta name="author" content="FluviaFleet">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://fluviafleet.com/">
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fluviafleet.com/">
+    <meta property="og:title" content="FluviaFleet — Gestión Inteligente de Flotas Fluviales">
+    <meta property="og:description" content="La primera plataforma con IA diseñada para la Hidrovía Paraguay-Paraná. Tracking satelital, control de combustible, armador de convoyes y Copiloto IA.">
+    <meta property="og:image" content="https://fluviafleet.com/img/fluvia-convoy.jpg">
+    <meta property="og:locale" content="es_AR">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FluviaFleet — Gestión Inteligente de Flotas Fluviales">
+    <meta name="twitter:description" content="Tracking satelital con IA para la Hidrovía Paraguay-Paraná. +500 activos monitoreados.">
+    <meta name="twitter:image" content="https://fluviafleet.com/img/fluvia-convoy.jpg">
+    <link rel="manifest" href="/manifest.json">
+    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,300;6..72,0,400;6..72,0,500;6..72,0,600;6..72,1,300;6..72,1,400;6..72,1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -331,7 +351,7 @@
 <section class="hidrovia-showcase" id="hidrovia">
     <!-- Background -->
     <div class="hidrovia-bg">
-        <img src="img/hidrovia-hero.png" alt="Hidrovía Paraná-Paraguay vista aérea">
+        <img src="img/hidrovia-hero.png" alt="Hidrovía Paraná-Paraguay vista aérea" loading="lazy">
     </div>
     <div class="hidrovia-shimmer"></div>
 
@@ -358,7 +378,7 @@
     <div class="hidrovia-route">
         <div class="hidrovia-route-grid">
             <div class="hidrovia-map-wrap reveal">
-                <img src="img/hidrovia-map.png" alt="Mapa de la Hidrovía Paraná-Paraguay">
+                <img src="img/hidrovia-map.png" alt="Mapa de la Hidrovía Paraná-Paraguay" loading="lazy">
                 <div class="hidrovia-map-glow"></div>
             </div>
             <div class="route-info reveal">
@@ -671,17 +691,62 @@
     <div class="footer-copy">&copy; 2026 FluviaFleet. Todos los derechos reservados.</div>
 </footer>
 
+<!-- Structured Data (JSON-LD) for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FluviaFleet",
+  "description": "Plataforma líder para la gestión inteligente de flotas fluviales en la Hidrovía Paraguay-Paraná.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web, Android",
+  "url": "https://fluviafleet.com",
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": "149",
+    "highPrice": "1499",
+    "priceCurrency": "USD",
+    "offerCount": "3"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "127"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "FluviaFleet",
+    "url": "https://fluviafleet.com"
+  }
+}
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded',function(){
+    // Reveal on scroll
     var obs=new IntersectionObserver(function(entries){
-        entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
-    },{threshold:0.1});
+        entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+    },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
     document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
-    // Navbar scroll effect
+
+    // Navbar scroll effect with shadow
+    var nav=document.querySelector('.nav');
+    var lastScroll=0;
     window.addEventListener('scroll',function(){
-        var nav=document.querySelector('.nav');
-        if(window.scrollY>50)nav.style.borderBottomColor='var(--sep)';
-        else nav.style.borderBottomColor='transparent';
+        var y=window.scrollY;
+        if(y>50){nav.style.borderBottomColor='var(--sep)';nav.style.boxShadow='0 1px 12px rgba(0,0,0,0.04)';}
+        else{nav.style.borderBottomColor='transparent';nav.style.boxShadow='none';}
+        lastScroll=y;
+    },{passive:true});
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+        a.addEventListener('click',function(e){
+            var id=this.getAttribute('href').slice(1);if(!id)return;
+            var target=document.getElementById(id);if(!target)return;
+            e.preventDefault();
+            target.scrollIntoView({behavior:'smooth',block:'start'});
+        });
     });
 
     // Animated counter for hidrovia stats
@@ -693,7 +758,6 @@ document.addEventListener('DOMContentLoaded',function(){
                 document.querySelectorAll('.hv-stat-num[data-target]').forEach(function(el){
                     var target=parseInt(el.getAttribute('data-target'));
                     var duration=2000;
-                    var start=0;
                     var startTime=null;
                     function animate(ts){
                         if(!startTime)startTime=ts;
@@ -711,7 +775,6 @@ document.addEventListener('DOMContentLoaded',function(){
     var statsSection=document.querySelector('.hidrovia-stats');
     if(statsSection){
         counterObs.observe(statsSection);
-        // Fallback: force counters after 2s if IntersectionObserver never fired
         setTimeout(function(){
             if(!counterStarted){
                 counterStarted=true;
@@ -721,6 +784,34 @@ document.addEventListener('DOMContentLoaded',function(){
             }
         },2000);
     }
+
+    // Stats banner counter animation
+    var statsObs2=new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+            if(entry.isIntersecting){
+                entry.target.querySelectorAll('.stat-num').forEach(function(el){
+                    if(el.dataset.animated)return;el.dataset.animated='1';
+                    var text=el.textContent;var num=parseFloat(text.replace(/[^0-9.]/g,''));
+                    var prefix=text.match(/^[^0-9]*/)[0];
+                    var suffix=text.match(/[^0-9.]*$/)[0];
+                    var duration=1800;var startTime=null;
+                    function anim(ts){
+                        if(!startTime)startTime=ts;
+                        var p=Math.min((ts-startTime)/duration,1);
+                        var eased=1-Math.pow(1-p,3);
+                        var current=num<10?(eased*num).toFixed(1):Math.floor(eased*num);
+                        el.textContent=prefix+current+suffix;
+                        if(p<1)requestAnimationFrame(anim);
+                        else el.textContent=text;
+                    }
+                    requestAnimationFrame(anim);
+                });
+                statsObs2.unobserve(entry.target);
+            }
+        });
+    },{threshold:0.3});
+    var statsBanner=document.querySelector('.stats-banner');
+    if(statsBanner)statsObs2.observe(statsBanner);
 });
 </script>
 </body>

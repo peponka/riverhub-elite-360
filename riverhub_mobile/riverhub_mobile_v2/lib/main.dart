@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -9,7 +10,11 @@ import 'screens/dashboard_screen.dart';
 import 'screens/bitacora_screen.dart';
 import 'screens/profile_screen.dart';
 import 'widgets/app_drawer.dart';
+import 'screens/splash_screen.dart';
+import 'widgets/offline_banner.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'services/locale_service.dart';
+import 'services/supabase_service.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -107,6 +112,27 @@ Future<void> main() async {
     _saveFcmToken();
   });
 
+  // Global Error Handlers para Refresh Token Bug (Supabase)
+  FlutterError.onError = (details) {
+    final errorStr = details.exceptionAsString().toLowerCase();
+    if (errorStr.contains('refresh_token') || errorStr.contains('already_used') || errorStr.contains('invalid refresh token')) {
+      SupabaseService.forceSignOutCorruptSession();
+      return;
+    }
+    FlutterError.presentError(details);
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    final errorStr = error.toString().toLowerCase();
+    if (errorStr.contains('refresh_token') || errorStr.contains('already_used') || errorStr.contains('invalid refresh token')) {
+      SupabaseService.forceSignOutCorruptSession();
+      return true;
+    }
+    return true; // Consider handled to prevent red screen
+  };
+
+  ConnectivityService.startMonitoring();
+
   runApp(const RiverHubMobileApp());
 }
 
@@ -124,60 +150,93 @@ Future<void> _saveFcmToken() async {
   }
 }
 
-class RiverHubMobileApp extends StatelessWidget {
+class RiverHubMobileApp extends StatefulWidget {
   const RiverHubMobileApp({super.key});
 
   @override
+  State<RiverHubMobileApp> createState() => _RiverHubMobileAppState();
+}
+
+class _RiverHubMobileAppState extends State<RiverHubMobileApp> {
+  bool _splashDone = false;
+  bool? _loggedIn;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check initial session
+    final session = Supabase.instance.client.auth.currentSession;
+    _loggedIn = session != null;
+
+    // Listen for auth changes AFTER initial build
+    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      if (!mounted) return;
+      final hasSession = data.session != null;
+      if (hasSession != _loggedIn) {
+        setState(() {
+          _loggedIn = hasSession;
+          _splashDone = true; // skip splash on login/logout transitions
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      title: 'Fluvia',
-      debugShowCheckedModeBanner: false,
-      locale: const material.Locale('en', 'US'),
-      theme: CupertinoThemeData(
-        brightness: Brightness.light,
-        primaryColor: AppColors.accent,
-        scaffoldBackgroundColor: AppColors.backgroundPrimary,
-        barBackgroundColor: AppColors.backgroundSecondary,
-        textTheme: CupertinoTextThemeData(
-          primaryColor: AppColors.accent,
-          textStyle: GoogleFonts.inter(
-            color: AppColors.textPrimary,
-            fontSize: 15,
-          ),
-          navLargeTitleTextStyle: GoogleFonts.newsreader(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w400,
-            fontSize: 34,
-          ),
-          navTitleTextStyle: GoogleFonts.inter(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w600,
-            fontSize: 17,
-          ),
-        ),
-      ),
-      localizationsDelegates: const [
-        material.DefaultMaterialLocalizations.delegate,
-      ],
-      home: StreamBuilder<AuthState>(
-        stream: Supabase.instance.client.auth.onAuthStateChange,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const material.Scaffold(
-              backgroundColor: AppColors.backgroundPrimary,
-              body: Center(
-                child: CupertinoActivityIndicator(),
+    return ValueListenableBuilder<String>(
+      valueListenable: LocaleService.notifier,
+      builder: (context, locale, _) {
+        return CupertinoApp(
+          title: 'Fluvia',
+          debugShowCheckedModeBanner: false,
+          locale: material.Locale(locale == 'en' ? 'en' : 'es'),
+          theme: CupertinoThemeData(
+            brightness: Brightness.light,
+            primaryColor: AppColors.accent,
+            scaffoldBackgroundColor: AppColors.backgroundPrimary,
+            barBackgroundColor: AppColors.backgroundSecondary,
+            textTheme: CupertinoTextThemeData(
+              primaryColor: AppColors.accent,
+              textStyle: GoogleFonts.inter(
+                color: AppColors.textPrimary,
+                fontSize: 15,
               ),
-            );
-          }
-          final session = snapshot.data?.session;
-          if (session != null) {
-            return const MainWrapper();
-          }
-          return const LoginScreen();
-        },
-      ),
+              navLargeTitleTextStyle: GoogleFonts.newsreader(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w400,
+                fontSize: 34,
+              ),
+              navTitleTextStyle: GoogleFonts.inter(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+                fontSize: 17,
+              ),
+            ),
+          ),
+          localizationsDelegates: const [
+            material.DefaultMaterialLocalizations.delegate,
+          ],
+          home: _buildHome(),
+        );
+      },
     );
+  }
+
+  Widget _buildHome() {
+    final destination = (_loggedIn == true)
+        ? const MainWrapper()
+        : const LoginScreen();
+
+    // Show splash only on first app launch
+    if (!_splashDone) {
+      return SplashScreen(
+        destination: destination,
+        onComplete: () {
+          if (mounted) setState(() => _splashDone = true);
+        },
+      );
+    }
+    return destination;
   }
 }
 
@@ -190,7 +249,7 @@ class MainWrapper extends StatelessWidget {
       child: material.Scaffold(
         key: rootScaffoldKey,
         drawer: const AppDrawer(),
-        body: const MainTabScaffold(),
+        body: const OfflineBanner(child: MainTabScaffold()),
       ),
     );
   }
@@ -208,26 +267,26 @@ class MainTabScaffold extends StatelessWidget {
         inactiveColor: AppColors.textSecondary,
         iconSize: 24,
         border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.square_grid_2x2),
             activeIcon: Icon(CupertinoIcons.square_grid_2x2_fill),
-            label: 'Panel',
+            label: LocaleService.t('tab_panel'),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.map),
             activeIcon: Icon(CupertinoIcons.map_fill),
-            label: 'Flota',
+            label: LocaleService.t('tab_fleet'),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.book),
             activeIcon: Icon(CupertinoIcons.book_fill),
-            label: 'Bitácora',
+            label: LocaleService.t('tab_logbook'),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person),
             activeIcon: Icon(CupertinoIcons.person_solid),
-            label: 'Perfil',
+            label: LocaleService.t('tab_profile'),
           ),
         ],
       ),

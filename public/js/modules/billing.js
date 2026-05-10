@@ -14,7 +14,7 @@ const BillingModule = (() => {
     let selectedPlan = null;
 
     const init = () => {
-        console.log("💳 BillingModule: Initializing...");
+        void("💳 BillingModule: Initializing...");
 
         const urlParams = new URLSearchParams(window.location.search);
         const paymentStatus = urlParams.get('payment');
@@ -366,7 +366,7 @@ const BillingModule = (() => {
                     plan: selectedPlan.name,
                     timestamp: new Date().toISOString()
                 });
-                console.log("n8n Webhook Sent: PAYMENT_COMPLETED");
+                void("n8n Webhook Sent: PAYMENT_COMPLETED");
             } catch (webhookErr) {
                 console.warn("Fallo el envío del recibo vía n8n, pero el pago se procesó:", webhookErr);
             }

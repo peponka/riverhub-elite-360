@@ -37,7 +37,7 @@ var tryConnect = () => {
                 }
             });
 
-            console.log("🟢 Supabase Client Connected (SaaS Mode Active)");
+            void("🟢 Supabase Client Connected (SaaS Mode Active)");
 
             // --- INJECT CUSTOM TENANT FUNCTIONS ---
 
@@ -48,7 +48,7 @@ var tryConnect = () => {
                 // For now, strict isolation: even Admins see filtered unless using raw calls.
 
                 // Temporary console log to verify logic
-                // console.log(`🔒 SaaS Read: [${table}] for Tenant [${tenant}]`);
+                // void(`🔒 SaaS Read: [${table}] for Tenant [${tenant}]`);
 
                 return await window.sb
                     .from(table)

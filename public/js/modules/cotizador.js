@@ -1,7 +1,7 @@
 const CotizadorModule = (() => {
 
     const init = () => {
-        console.log("Módulo Cotizador IA Activo (Supabase Edition).");
+        void("Módulo Cotizador IA Activo (Supabase Edition).");
         bindEvents();
         loadHistory();
     };
@@ -200,7 +200,7 @@ const CotizadorModule = (() => {
                 if (saveAttempt.error) throw saveAttempt.error;
             }
             
-            console.log("✅ Cotización guardada en Supabase bajo el ID: " + quoteNum);
+            void("✅ Cotización guardada en Supabase bajo el ID: " + quoteNum);
 
         } catch (e) {
             console.error("Error offline/DB al guardar cotización:", e);

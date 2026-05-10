@@ -16,7 +16,7 @@ const MaintenanceModuleFluvia = (() => {
     };
 
     const init = () => {
-        console.log("🛠️ Mantenimiento (FLUVIAFLEETFleet) Iniciando...");
+        void("🛠️ Mantenimiento (FLUVIAFLEETFleet) Iniciando...");
         loadDemoData();
         initCharts();
     };

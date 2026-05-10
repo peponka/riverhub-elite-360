@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class DailyReportScreen extends StatefulWidget {
   const DailyReportScreen({super.key});
@@ -30,10 +31,10 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
           _criticalAlerts = alerts.where((a) => a['severity'] == 'critical' || a['severity'] == 'high').length;
           if (orders.isNotEmpty) {
             _movements = orders.take(5).map((o) => {
-              'vessel': o['vessel_name'] ?? o['order_number'] ?? 'Desconocido',
-              'status': o['status'] ?? 'En Curso',
+              'vessel': o['vessel_name'] ?? o['order_number'] ?? LocaleService.t('dyn_key_89'),
+              'status': o['status'] ?? LocaleService.t('dyn_key_87'),
               'cargo': '-',
-              'dest': o['destination_port'] ?? 'En ruta',
+              'dest': o['destination_port'] ?? LocaleService.t('dyn_key_88'),
             }).toList().cast<Map<String, dynamic>>();
           } else { _movements = []; }
           _isLoading = false;
@@ -56,7 +57,7 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
         leading: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
-        middle: Text('Briefing Diario', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('daily_report_briefing_diario'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: _isLoading
@@ -64,32 +65,32 @@ class _DailyReportScreenState extends State<DailyReportScreen> {
             : ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 children: [
-                  Text('Briefing', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-                  Text('Ejecutivo.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('daily_report_briefing'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('daily_report_ejecutivo'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
                   const SizedBox(height: 8),
                   Text(dateStr, style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
                   const SizedBox(height: 24),
 
                   // KPIs - editorial monochrome
-                  Text('RESUMEN DE OPERACIONES', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text(LocaleService.t('daily_report_resumen_de_operacion'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                   const SizedBox(height: 12),
                   Row(children: [
-                    _metricCard('$_activeVessels', 'Activos'),
+                    _metricCard('$_activeVessels', LocaleService.t('dyn_key_91')),
                     const SizedBox(width: 10),
-                    _metricCard('$_criticalAlerts', 'Alertas'),
+                    _metricCard('$_criticalAlerts', LocaleService.t('dyn_key_92')),
                     const SizedBox(width: 10),
-                    _metricCard('98%', 'Eficiencia'),
+                    _metricCard('98%', LocaleService.t('dyn_key_90')),
                   ]),
                   const SizedBox(height: 28),
 
                   // Movements
-                  Text('MOVIMIENTOS RECIENTES', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text(LocaleService.t('daily_report_movimientos_reciente'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                   const SizedBox(height: 12),
                   ..._movements.map((m) => _movementRow(m)),
                   if (_movements.isEmpty)
                     Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Center(child: Text('Sin movimientos registrados', style: GoogleFonts.inter(color: AppColors.textSecondary))),
+                      child: Center(child: Text(LocaleService.t('daily_report_sin_movimientos_regi'), style: GoogleFonts.inter(color: AppColors.textSecondary))),
                     ),
                 ],
               ),

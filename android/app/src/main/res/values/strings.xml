@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Fluvia</string>
-    <string name="title_activity_main">Riverhub Mobile</string>
-    <string name="package_name">com.riverhub.elite360</string>
-    <string name="custom_url_scheme">com.riverhub.elite360</string>
-</resources>

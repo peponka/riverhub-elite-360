@@ -3,7 +3,7 @@
 const DailyReportModule = (() => {
 
     const init = () => {
-        console.log("Briefing Module Loaded 📰");
+        void("Briefing Module Loaded 📰");
         injectOverlay();
     };
 

@@ -12,7 +12,7 @@ const hydroLogic = {
     },
 
     init: async function () {
-        console.log("Módulo Hidrología REAL activo (Open-Meteo Flood API).");
+        void("Módulo Hidrología REAL activo (Open-Meteo Flood API).");
 
         // 1. Cargar Clima Base (Rosario como ref)
         await this.loadCurrentWeather();

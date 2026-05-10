@@ -13,7 +13,7 @@ const AdminModule = (() => {
 
     // --- 1. INICIALIZACION (The Hook) ---
     const init = async () => {
-        console.log("🚀 AdminModule: Iniciando (REBOOT)...");
+        void("🚀 AdminModule: Iniciando (REBOOT)...");
 
         // 1.1 Verificar contenedor
         const container = document.getElementById('admin-content');
@@ -43,7 +43,7 @@ const AdminModule = (() => {
                     state.assets = data;
                 } else {
                     // Si devuelve array vacío, usamos demo
-                    console.log("⚠️ AdminModule: DB vacía, usando datos demo.");
+                    void("⚠️ AdminModule: DB vacía, usando datos demo.");
                     state.assets = getDemoData();
                 }
             } else {
@@ -192,4 +192,4 @@ const AdminModule = (() => {
 
 // AUTO-BOOTSTRAP (Por si 'global.js' falla)
 window.AdminModule = AdminModule;
-console.log("✅ AdminModule (REBOOT) Cargado en Memoria.");
+void("✅ AdminModule (REBOOT) Cargado en Memoria.");

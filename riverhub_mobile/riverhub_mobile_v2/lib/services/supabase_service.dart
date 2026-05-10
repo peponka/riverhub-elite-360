@@ -14,6 +14,21 @@ class SupabaseService {
   static String get currentUserEmail =>
       client.auth.currentUser?.email ?? 'Usuario';
 
+  static bool _isForceSigningOut = false;
+
+  static Future<void> forceSignOutCorruptSession() async {
+    if (_isForceSigningOut) return;
+    _isForceSigningOut = true;
+    debugPrint('🔴 forceSignOutCorruptSession: limpiando sesión corrupta...');
+    try {
+      await client.auth.signOut(scope: SignOutScope.local);
+    } catch (e) {
+      debugPrint('⚠️ forceSignOut fallback: $e');
+    } finally {
+      _isForceSigningOut = false;
+    }
+  }
+
   /// Default query limit for list endpoints
   static const int _defaultLimit = 200;
 

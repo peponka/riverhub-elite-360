@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class LoadMasterScreen extends StatefulWidget {
   const LoadMasterScreen({super.key});
@@ -51,7 +52,7 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Calcular ', style: const TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.bold)),
+              Text(LocaleService.t('loadmaster_calcular'), style: TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.bold)),
               Icon(CupertinoIcons.refresh, color: AppColors.accent, size: 20),
             ],
           ),
@@ -73,13 +74,13 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
             Row(
               children: [
                 _kpiBox(
-                  'CARGA TOTAL',
+                  LocaleService.t('dyn_key_166'),
                   '${totalLoad.toStringAsFixed(0)} TN',
                   AppColors.blue,
                 ),
                 const SizedBox(width: 10),
                 _kpiBox(
-                  'CALADO',
+                  LocaleService.t('dyn_key_168'),
                   '${draftValue.toStringAsFixed(2)} PIES',
                   AppColors.accent,
                 ),
@@ -98,8 +99,8 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'VISUALIZACIÓN DE BODEGAS',
+                  Text(
+                    LocaleService.t('dyn_key_165'),
                     style: TextStyle(
                       color: AppColors.textTertiary,
                       fontSize: 11,
@@ -111,14 +112,14 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _holdVisual('PROA', hold1, AppColors.error),
-                      _holdVisual('CENTRO', hold2, AppColors.blue),
-                      _holdVisual('POPA', hold3, AppColors.success),
+                      _holdVisual(LocaleService.t('dyn_key_167'), hold2, AppColors.blue),
+                      _holdVisual(LocaleService.t('dyn_key_170'), hold3, AppColors.success),
                     ],
                   ),
                   const SizedBox(height: 16),
                   // Stability bar
-                  const Text(
-                    'ESTABILIDAD',
+                  Text(
+                    LocaleService.t('dyn_key_162'),
                     style: TextStyle(color: AppColors.textSecondary, fontSize: 10),
                   ),
                   const SizedBox(height: 8),
@@ -159,33 +160,33 @@ class _LoadMasterScreenState extends State<LoadMasterScreen> {
             const SizedBox(height: 20),
             // Sliders
             _sliderSection(
-              'Bodega 1 (Proa)',
+              LocaleService.t('dyn_key_169'),
               hold1,
               (v) => setState(() => hold1 = v),
               AppColors.error,
             ),
             _sliderSection(
-              'Bodega 2 (Centro)',
+              LocaleService.t('dyn_key_164'),
               hold2,
               (v) => setState(() => hold2 = v),
               AppColors.blue,
             ),
             _sliderSection(
-              'Bodega 3 (Popa)',
+              LocaleService.t('dyn_key_172'),
               hold3,
               (v) => setState(() => hold3 = v),
               AppColors.success,
             ),
             const SizedBox(height: 10),
             _sliderSection(
-              'Combustible (%)',
+              LocaleService.t('dyn_key_171'),
               fuel,
               (v) => setState(() => fuel = v),
               AppColors.warning,
               max: 100,
             ),
             _sliderSection(
-              'Lastre (%)',
+              LocaleService.t('dyn_key_163'),
               ballast,
               (v) => setState(() => ballast = v),
               AppColors.purple,

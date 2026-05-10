@@ -1,3 +1,4 @@
+import '../services/locale_service.dart';
 import 'package:flutter/cupertino.dart';
 import '../services/supabase_service.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
@@ -44,7 +45,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
           ? geoData
                 .map(
                   (g) => {
-                    'name': g['name'] ?? 'Sin nombre',
+                    'name': g['name'] ?? LocaleService.t('dyn_key_113'),
                     'minDepth': g['min_depth'] ?? 0,
                     'status': g['status'] ?? 'active',
                   },
@@ -58,8 +59,8 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text(
-          'Torre de Control',
+        middle: Text(
+          LocaleService.t('dyn_key_175'),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
@@ -78,7 +79,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             Row(
               children: [
                 _statusCard(
-                  'Alertas',
+                  LocaleService.t('dyn_key_92'),
                   '${_alerts.length}',
                   CupertinoIcons.exclamationmark_triangle_fill,
                   AppColors.error,
@@ -101,8 +102,8 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             ),
             const SizedBox(height: 20),
             // Alerts
-            const Text(
-              'Alertas Activas',
+            Text(
+              LocaleService.t('dyn_key_174'),
               style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 16,
@@ -113,8 +114,8 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             ..._alerts.map((a) => _alertCard(a)),
             const SizedBox(height: 20),
             // Geofences
-            const Text(
-              'Zonas Geofence',
+            Text(
+              LocaleService.t('dyn_key_177'),
               style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 16,
@@ -135,8 +136,8 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Verificador UKC Rápido',
+                  Text(
+                    LocaleService.t('dyn_key_179'),
                     style: TextStyle(
                       color: AppColors.accent,
                       fontSize: 14,
@@ -146,9 +147,9 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      Expanded(child: _infoRow('Calado convoy', '3.2 m')),
+                      Expanded(child: _infoRow(LocaleService.t('dyn_key_176'), '3.2 m')),
                       const SizedBox(width: 10),
-                      Expanded(child: _infoRow('Prof. ubicación', '3.5 m')),
+                      Expanded(child: _infoRow(LocaleService.t('dyn_key_178'), '3.5 m')),
                     ],
                   ),
                   const SizedBox(height: 10),

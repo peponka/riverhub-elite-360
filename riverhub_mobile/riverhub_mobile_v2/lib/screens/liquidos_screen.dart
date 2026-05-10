@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import '../main.dart';
+import '../services/locale_service.dart';
 
 class LiquidosScreen extends StatefulWidget {
   const LiquidosScreen({super.key});
@@ -11,18 +12,18 @@ class LiquidosScreen extends StatefulWidget {
 
 class _LiquidosScreenState extends State<LiquidosScreen> {
   final List<Map<String, dynamic>> _tanks = [
-    {'name': 'BT-001 Petrobras', 'type': 'Tanque doble casco', 'cap': 2200, 'current': 1804, 'product': 'Gas Oil', 'productType': 'fuel', 'temp': 23, 'status': 'En tránsito', 'route': 'ASU → ROE'},
-    {'name': 'BT-002 Copetrol', 'type': 'Tanque simple', 'cap': 1800, 'current': 810, 'product': 'Metanol', 'productType': 'chemical', 'temp': 19, 'status': 'Fondeada', 'route': 'Rosario'},
-    {'name': 'BT-003 YPF', 'type': 'Tanque doble casco', 'cap': 2500, 'current': 2375, 'product': 'Crudo', 'productType': 'oil', 'temp': 28, 'status': 'En tránsito', 'route': 'CDB → BHI'},
-    {'name': 'BT-004 Axion', 'type': 'Tanque simple', 'cap': 1500, 'current': 180, 'product': 'Nafta', 'productType': 'fuel', 'temp': 21, 'status': 'Descargando', 'route': 'San Lorenzo'},
-    {'name': 'BT-005 Shell', 'type': 'Tanque doble casco', 'cap': 2000, 'current': 1200, 'product': 'Aceite Veg.', 'productType': 'water', 'temp': 25, 'status': 'En tránsito', 'route': 'VCO → SLO'},
-    {'name': 'BT-006 Reserva', 'type': 'Tanque simple', 'cap': 1200, 'current': 0, 'product': 'Gas Oil', 'productType': 'fuel', 'temp': 0, 'status': 'Mantenimiento', 'route': 'Astillero ASU'},
+    {'name': 'BT-001 Petrobras', 'type': LocaleService.t('dyn_key_152'), 'cap': 2200, 'current': 1804, 'product': 'Gas Oil', 'productType': 'fuel', 'temp': 23, 'status': LocaleService.t('dyn_key_159'), 'route': 'ASU → ROE'},
+    {'name': 'BT-002 Copetrol', 'type': LocaleService.t('dyn_key_157'), 'cap': 1800, 'current': 810, 'product': 'Metanol', 'productType': 'chemical', 'temp': 19, 'status': LocaleService.t('dyn_key_147'), 'route': 'Rosario'},
+    {'name': 'BT-003 YPF', 'type': LocaleService.t('dyn_key_152'), 'cap': 2500, 'current': 2375, 'product': LocaleService.t('dyn_key_145'), 'productType': 'oil', 'temp': 28, 'status': LocaleService.t('dyn_key_159'), 'route': 'CDB → BHI'},
+    {'name': 'BT-004 Axion', 'type': LocaleService.t('dyn_key_157'), 'cap': 1500, 'current': 180, 'product': 'Nafta', 'productType': 'fuel', 'temp': 21, 'status': LocaleService.t('dyn_key_154'), 'route': 'San Lorenzo'},
+    {'name': 'BT-005 Shell', 'type': LocaleService.t('dyn_key_152'), 'cap': 2000, 'current': 1200, 'product': LocaleService.t('dyn_key_160'), 'productType': 'water', 'temp': 25, 'status': LocaleService.t('dyn_key_159'), 'route': 'VCO → SLO'},
+    {'name': 'BT-006 Reserva', 'type': LocaleService.t('dyn_key_157'), 'cap': 1200, 'current': 0, 'product': 'Gas Oil', 'productType': 'fuel', 'temp': 0, 'status': LocaleService.t('dyn_key_151'), 'route': 'Astillero ASU'},
   ];
 
   final List<Map<String, dynamic>> _ops = [
-    {'date': '06/05 08:30', 'op': 'Descarga', 'barge': 'BT-004 Axion', 'product': 'Nafta', 'vol': '1,320 m³', 'terminal': 'Terminal San Lorenzo', 'dur': '6h 45m'},
-    {'date': '05/05 14:00', 'op': 'Carga', 'barge': 'BT-001 Petrobras', 'product': 'Gas Oil', 'vol': '1,804 m³', 'terminal': 'PETROPAR Asunción', 'dur': '8h 20m'},
-    {'date': '05/05 06:00', 'op': 'Trasvasije', 'barge': 'BT-002 → BT-005', 'product': 'Aceite Vegetal', 'vol': '400 m³', 'terminal': 'Zona fondeo Rosario', 'dur': '3h 10m'},
+    {'date': '06/05 08:30', 'op': LocaleService.t('dyn_key_144'), 'barge': 'BT-004 Axion', 'product': 'Nafta', 'vol': '1,320 m³', 'terminal': 'Terminal San Lorenzo', 'dur': '6h 45m'},
+    {'date': '05/05 14:00', 'op': LocaleService.t('dyn_key_158'), 'barge': 'BT-001 Petrobras', 'product': 'Gas Oil', 'vol': '1,804 m³', 'terminal': 'PETROPAR Asunción', 'dur': '8h 20m'},
+    {'date': '05/05 06:00', 'op': LocaleService.t('dyn_key_156'), 'barge': 'BT-002 → BT-005', 'product': LocaleService.t('dyn_key_150'), 'vol': '400 m³', 'terminal': LocaleService.t('dyn_key_155'), 'dur': '3h 10m'},
   ];
 
   int get _totalCurrent => _tanks.fold(0, (s, t) => s + (t['current'] as int));
@@ -39,39 +40,39 @@ class _LiquidosScreenState extends State<LiquidosScreen> {
         leading: Navigator.of(context).canPop()
             ? CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
             : CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
-        middle: Text('Líquidos', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('liquidos_liquidos'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           children: [
-            Text('Gestión de', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-            Text('Líquidos.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('liquidos_gestion_de'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('liquidos_liquidos_1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
             const SizedBox(height: 20),
 
             // KPIs
             Row(children: [
               Expanded(child: _kpi('BARCAZAS', '${_tanks.length}', CupertinoIcons.drop_fill, AppColors.purple)),
               const SizedBox(width: 8),
-              Expanded(child: _kpi('UTILIZACIÓN', '$_avgUtil%', CupertinoIcons.chart_bar_fill, AppColors.warning)),
+              Expanded(child: _kpi(LocaleService.t('dyn_key_146'), '$_avgUtil%', CupertinoIcons.chart_bar_fill, AppColors.warning)),
             ]),
             const SizedBox(height: 8),
             Row(children: [
-              Expanded(child: _kpi('EN TRÁNSITO', '${(_totalCurrent / 1000).toStringAsFixed(1)}k m³', CupertinoIcons.arrow_right_arrow_left, AppColors.accent)),
+              Expanded(child: _kpi(LocaleService.t('dyn_key_161'), '${(_totalCurrent / 1000).toStringAsFixed(1)}k m³', CupertinoIcons.arrow_right_arrow_left, AppColors.accent)),
               const SizedBox(width: 8),
-              Expanded(child: _kpi('OPS HOY', '${_ops.length}', CupertinoIcons.arrow_2_circlepath, AppColors.success)),
+              Expanded(child: _kpi(LocaleService.t('dyn_key_149'), '${_ops.length}', CupertinoIcons.arrow_2_circlepath, AppColors.success)),
             ]),
             const SizedBox(height: 24),
 
             // Tank Cards
-            _sectionTitle('Barcazas Tanque', '${_tanks.length} monitoreadas'),
+            _sectionTitle(LocaleService.t('dyn_key_148'), '${_tanks.length} monitoreadas'),
             const SizedBox(height: 12),
             ..._tanks.map((t) => _tankCard(t)),
 
             const SizedBox(height: 24),
 
             // Operations
-            _sectionTitle('Últimas Operaciones', ''),
+            _sectionTitle(LocaleService.t('dyn_key_153'), ''),
             const SizedBox(height: 12),
             ..._ops.map((o) => _opCard(o)),
             const SizedBox(height: 30),
@@ -192,8 +193,8 @@ class _LiquidosScreenState extends State<LiquidosScreen> {
   }
 
   Widget _opCard(Map<String, dynamic> o) {
-    final isLoad = o['op'] == 'Carga';
-    final isTransfer = o['op'] == 'Trasvasije';
+    final isLoad = o['op'] == LocaleService.t('dyn_key_158');
+    final isTransfer = o['op'] == LocaleService.t('dyn_key_156');
     final color = isLoad ? AppColors.success : isTransfer ? AppColors.accent : AppColors.error;
     final icon = isLoad ? CupertinoIcons.arrow_up : isTransfer ? CupertinoIcons.arrow_right_arrow_left : CupertinoIcons.arrow_down;
 

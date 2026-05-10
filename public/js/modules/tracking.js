@@ -18,7 +18,7 @@ try {
             if (typeof io !== 'undefined') {
                 const socket = io();
 
-                socket.on('connect', () => console.log("✅ Conectado al Sistema FluviaFleet (WebSocket)"));
+                socket.on('connect', () => void("✅ Conectado al Sistema FluviaFleet (WebSocket)"));
                 socket.on('position_update', (ship) => {
                     updateShipMarker(ship);
                 });
@@ -68,7 +68,7 @@ try {
         // INIT
         const init = async () => {
             try {
-                console.log("🛰️ Iniciando Tracking Elite 360 (Client View)...");
+                void("🛰️ Iniciando Tracking Elite 360 (Client View)...");
                 const container = document.getElementById('view-tracking');
                 if (!container) return;
 

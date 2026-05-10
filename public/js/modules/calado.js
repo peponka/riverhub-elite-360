@@ -11,7 +11,7 @@ const CaladoModule = (() => {
     // Inicialización
     // FIX: Resize map on load and resize events to prevent grey tiles
     const init = async () => {
-        console.log('Módulo de Tracking Conectado (Socket.io).');
+        void('Módulo de Tracking Conectado (Socket.io).');
 
         // Listen for resize to fix map layout
         window.addEventListener('resize', () => {

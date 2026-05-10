@@ -9,7 +9,7 @@ const monitoringLogic = (() => {
     };
 
     const init = async () => {
-        console.log("📡 Módulo de Monitoreo (Torre de Control) Iniciado");
+        void("📡 Módulo de Monitoreo (Torre de Control) Iniciado");
         await loadGeofences();
         await loadSafetyRules();
         startAlertPolling();
@@ -81,7 +81,7 @@ const monitoringLogic = (() => {
         if (typeof alerts === 'object' && alerts.length > 0) {
             const lastAlert = alerts[0];
             // Simple console log for now to avoid toast spam
-            console.log("⚠️ ALERTA:", lastAlert);
+            void("⚠️ ALERTA:", lastAlert);
         }
     };
 

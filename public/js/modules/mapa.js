@@ -12,7 +12,7 @@ var mapLogic = {
 
     // Called when map view is shown
     onShow: function () {
-        console.log("🗺️ Nexus Map: onShow triggered");
+        void("🗺️ Nexus Map: onShow triggered");
         var container = document.getElementById('map-nexus');
         if (!container) return;
 
@@ -39,7 +39,7 @@ var mapLogic = {
 
     // Initialize map
     initMap: function () {
-        console.log("🗺️ Nexus Map: Initializing with OpenLayers (Canvas 2D)...");
+        void("🗺️ Nexus Map: Initializing with OpenLayers (Canvas 2D)...");
 
         var container = document.getElementById('map-nexus');
         if (!container) return;
@@ -184,12 +184,12 @@ var mapLogic = {
         }, 500);
 
         this.isInitialized = true;
-        console.log("🗺️ Nexus Map: Initialized successfully with OpenLayers!");
+        void("🗺️ Nexus Map: Initialized successfully with OpenLayers!");
     },
 
     // Connect to AIS
     connectAIS: function () {
-        console.log("🚢 Conectando a AIS en tiempo real...");
+        void("🚢 Conectando a AIS en tiempo real...");
 
         var list = document.getElementById('nexus-ship-list');
         if (list) list.innerHTML = '<div style="padding:20px;text-align:center;color:#94a3b8;">Esperando barcos AIS...</div>';
@@ -220,11 +220,11 @@ var mapLogic = {
 
                     // Add to sidebar list
                     self.addVesselToList(vessel);
-                    console.log('📡 AIS: ' + (vessel.name || key) + ' @ ' + vessel.lat.toFixed(2) + ', ' + vessel.lon.toFixed(2));
+                    void('📡 AIS: ' + (vessel.name || key) + ' @ ' + vessel.lat.toFixed(2) + ', ' + vessel.lon.toFixed(2));
                 }
             });
 
-            console.log("✅ Conectado a AIS - Solo barcos reales");
+            void("✅ Conectado a AIS - Solo barcos reales");
         } else {
             console.warn("⚠️ AisStreamService no disponible, reintentando...");
             var self = this;

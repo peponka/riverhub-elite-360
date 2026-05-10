@@ -51,4 +51,4 @@ const AppConfig = {
 
 // Exponer al scope global
 window.AppConfig = AppConfig;
-console.log("⚙️ AppConfig Cargado: Datalastic DESACTIVADO, usando AISStream.");
+void("⚙️ AppConfig Cargado: Datalastic DESACTIVADO, usando AISStream.");

@@ -9,7 +9,7 @@ var CommsModule = (() => {
     };
 
     const init = async () => {
-        console.log("Módulo Comunicaciones Activo (Supabase Realtime).");
+        void("Módulo Comunicaciones Activo (Supabase Realtime).");
         state.currentUser = window.AuthModule ? window.AuthModule.getCurrentUser() : null;
 
         setupChannelListeners();
@@ -243,7 +243,7 @@ var CommsModule = (() => {
                 table: 'comms',
                 filter: `channel=eq.${state.activeChannel}`
             }, (payload) => {
-                console.log('New Msg:', payload);
+                void('New Msg:', payload);
                 // Don't duplicate if we just sent it and appended locally (though loadMessages handles sync ideally)
                 // We just append to end and scroll over
                 state.messages.push(payload.new);

@@ -9,6 +9,7 @@ import 'dart:async';
 import '../theme/app_colors.dart';
 import '../main.dart';
 import '../services/gps_tracker_service.dart';
+import '../services/locale_service.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -98,8 +99,8 @@ class _MapScreenState extends State<MapScreen> {
         showCupertinoDialog(
           context: context,
           builder: (_) => CupertinoAlertDialog(
-            title: const Text('Sin embarcaciones'),
-            content: const Text('Agrega una embarcación primero desde la web.'),
+            title: Text(LocaleService.t('map_no_vessels')),
+            content: Text(LocaleService.t('map_add_vessel')),
             actions: [CupertinoDialogAction(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
           ),
         );
@@ -122,8 +123,8 @@ class _MapScreenState extends State<MapScreen> {
           children: [
             Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
             const SizedBox(height: 16),
-            Text('Seleccionar Embarcación', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-            Text('GPS EN VIVO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            Text(LocaleService.t('map_select_vessel'), style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+            Text(LocaleService.t('map_gps_live'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
@@ -149,8 +150,8 @@ class _MapScreenState extends State<MapScreen> {
                         Expanded(child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(v['name'] ?? 'Sin nombre', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                            Text('${v['type'] ?? 'Embarcación'} • ${v['status'] ?? 'Operativo'}', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+                            Text(v['name'] ?? LocaleService.t('dyn_key_113'), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                            Text('${v['type'] ?? LocaleService.t('dyn_key_173')} • ${v['status'] ?? 'Operativo'}', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
                           ],
                         )),
                         Icon(CupertinoIcons.chevron_right, color: AppColors.textSecondary, size: 16),
@@ -190,14 +191,14 @@ class _MapScreenState extends State<MapScreen> {
           children: [
             Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
             const SizedBox(height: 18),
-            Text('${asset['name'] ?? 'Desconocido'}', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+            Text('${asset['name'] ?? LocaleService.t('map_unknown')}', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
             const SizedBox(height: 14),
-            _detailRow(CupertinoIcons.location_solid, 'Coordenadas',
+            _detailRow(CupertinoIcons.location_solid, LocaleService.t('map_coords'),
               asset['current_lat'] != null
                   ? '${(asset['current_lat'] as num).toStringAsFixed(4)}, ${(asset['current_lng'] as num).toStringAsFixed(4)}'
-                  : 'Sin señal 🛰️'),
-            _detailRow(CupertinoIcons.tag, 'Tipo', '${asset['type'] ?? 'Activo'}'),
-            _detailRow(CupertinoIcons.chart_bar_alt_fill, 'Estado', '${asset['status'] ?? 'OPERATIVO'}'),
+                  : LocaleService.t('map_no_signal')),
+            _detailRow(CupertinoIcons.tag, LocaleService.t('map_vessel_type'), '${asset['type'] ?? LocaleService.t('common_operative')}'),
+            _detailRow(CupertinoIcons.chart_bar_alt_fill, LocaleService.t('map_vessel_status'), '${asset['status'] ?? LocaleService.t('common_operative').toUpperCase()}'),
           ],
         ),
       ),
@@ -222,9 +223,9 @@ class _MapScreenState extends State<MapScreen> {
             const SizedBox(height: 18),
             Text('${ship['name'] ?? 'AIS Target'}', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
             const SizedBox(height: 14),
-            _detailRow(CupertinoIcons.speedometer, 'Velocidad', '${ship['speed'] ?? 0} nds'),
-            _detailRow(CupertinoIcons.compass, 'Rumbo (COG)', '${ship['course'] ?? 0}°'),
-            _detailRow(CupertinoIcons.location_solid, 'Ubicación', '${(ship['lat'] as num).toStringAsFixed(4)}, ${(ship['lon'] as num).toStringAsFixed(4)}'),
+            _detailRow(CupertinoIcons.speedometer, LocaleService.t('map_speed'), '${ship['speed'] ?? 0} kn'),
+            _detailRow(CupertinoIcons.compass, LocaleService.t('map_heading'), '${ship['course'] ?? 0}°'),
+            _detailRow(CupertinoIcons.location_solid, LocaleService.t('map_coords'), '${(ship['lat'] as num).toStringAsFixed(4)}, ${(ship['lon'] as num).toStringAsFixed(4)}'),
           ],
         ),
       ),
@@ -261,7 +262,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary),
                 onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
               ),
-        middle: Text('Mapa en Vivo', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('map_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
       ),
       child: Stack(
         children: [
@@ -377,13 +378,13 @@ class _MapScreenState extends State<MapScreen> {
                   const Icon(CupertinoIcons.antenna_radiowaves_left_right, color: CupertinoColors.white, size: 16),
                   const SizedBox(width: 8),
                   Text(
-                    'GPS ACTIVO — Enviando cada 15s',
+                    LocaleService.t('map_gps_active'),
                     style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.white),
                   ),
                   const Spacer(),
                   GestureDetector(
                     onTap: _toggleTracking,
-                    child: Text('DETENER', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: CupertinoColors.white)),
+                    child: Text(LocaleService.t('map_stop'), style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: CupertinoColors.white)),
                   ),
                 ]),
               ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' show Colors, Material;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
+import '../services/locale_service.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,17 +30,17 @@ class _LoginScreenState extends State<LoginScreen> {
     } on AuthException catch (error) {
       if (mounted) _showErrorDialog(error.message);
     } catch (e) {
-      if (mounted) _showErrorDialog('Connection error. Please try again.');
+      if (mounted) _showErrorDialog(LocaleService.t('login_error_connection'));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  void _showErrorDialog(String message, {String title = 'Access Error'}) {
+  void _showErrorDialog(String message, {String? title}) {
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: Text(title),
+        title: Text(title ?? LocaleService.t('login_error_title')),
         content: Text(message),
         actions: [
           CupertinoDialogAction(
@@ -56,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await Supabase.instance.client.auth.signInWithOAuth(OAuthProvider.google);
     } catch (e) {
-      if (mounted) _showErrorDialog('Google Sign In error.');
+      if (mounted) _showErrorDialog(LocaleService.t('login_error_connection'));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -101,23 +102,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Reset', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-                        Text('Password.', style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic, color: AppColors.textPrimary)),
+                        Text(LocaleService.t('forgot_title1'), style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                        Text(LocaleService.t('forgot_title2'), style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic, color: AppColors.textPrimary)),
                       ],
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Enter your email and we\'ll send you a recovery link.',
+                  LocaleService.t('forgot_desc'),
                   style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary, height: 1.5),
                 ),
                 const SizedBox(height: 20),
-                Text('EMAIL', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                Text(LocaleService.t('forgot_email_label'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                 const SizedBox(height: 8),
                 CupertinoTextField(
                   controller: emailForgotController,
-                  placeholder: 'user@company.com',
+                  placeholder: 'usuario@empresa.com',
                   keyboardType: TextInputType.emailAddress,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   placeholderStyle: GoogleFonts.inter(color: AppColors.textTertiary, fontSize: 14),
@@ -137,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(12),
                         color: AppColors.backgroundSecondary,
                         onPressed: () => Navigator.of(dialogContext).pop(),
-                        child: Text('Cancel', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textSecondary)),
+                        child: Text(LocaleService.t('forgot_cancel'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textSecondary)),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -153,14 +154,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           setState(() => _isLoading = true);
                           try {
                             await Supabase.instance.client.auth.resetPasswordForEmail(email);
-                            if (mounted) _showErrorDialog('A recovery link has been sent to $email', title: 'Email Sent');
+                            if (mounted) _showErrorDialog('${LocaleService.t('forgot_sent_msg')} $email', title: LocaleService.t('forgot_sent_title'));
                           } catch (e) {
-                            if (mounted) _showErrorDialog('Error sending email.');
+                            if (mounted) _showErrorDialog(LocaleService.t('forgot_error'));
                           } finally {
                             if (mounted) setState(() => _isLoading = false);
                           }
                         },
-                        child: Text('Send Link', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textOnAccent)),
+                        child: Text(LocaleService.t('forgot_send'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textOnAccent)),
                       ),
                     ),
                   ],
@@ -201,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'INTELLIGENT RIVER FLEET MANAGEMENT',
+                  LocaleService.t('login_subtitle'),
                   style: GoogleFonts.inter(
                     fontSize: 9,
                     fontWeight: FontWeight.w700,
@@ -217,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'EMAIL',
+                      LocaleService.t('login_email_label'),
                       style: GoogleFonts.inter(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
@@ -228,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
                     CupertinoTextField(
                       controller: _emailController,
-                      placeholder: 'user@company.com',
+                      placeholder: LocaleService.t('login_email_hint'),
                       keyboardType: TextInputType.emailAddress,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       placeholderStyle: GoogleFonts.inter(
@@ -249,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
 
                     Text(
-                      'PASSWORD',
+                      LocaleService.t('login_password_label'),
                       style: GoogleFonts.inter(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
@@ -276,10 +277,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.separator, width: 0.5),
                       ),
-                      suffix: Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: GestureDetector(
-                          onTap: () => setState(() => _obscurePassword = !_obscurePassword),
+                      suffix: GestureDetector(
+                        onTap: () => setState(() => _obscurePassword = !_obscurePassword),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 14),
                           child: Icon(
                             _obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_slash,
                             size: 20,
@@ -302,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: _isLoading
                             ? const CupertinoActivityIndicator(color: AppColors.textOnAccent)
                             : Text(
-                                'Log In',
+                                LocaleService.t('login_button'),
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15,
@@ -320,7 +321,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: EdgeInsets.zero,
                         onPressed: _showForgotPasswordDialog,
                         child: Text(
-                          'Forgot your password?',
+                          LocaleService.t('login_forgot'),
                           style: GoogleFonts.inter(
                             fontSize: 13,
                             color: AppColors.textSecondary,
@@ -341,7 +342,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'or continue with',
+                        LocaleService.t('login_or'),
                         style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
                       ),
                     ),
@@ -369,7 +370,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          'Continue with Google',
+                          LocaleService.t('login_google'),
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
@@ -388,7 +389,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
+                      LocaleService.t('login_no_account'),
                       style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 13),
                     ),
                     CupertinoButton(
@@ -397,7 +398,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.of(context).push(CupertinoPageRoute(builder: (_) => const RegisterScreen()));
                       },
                       child: Text(
-                        'Sign Up',
+                        LocaleService.t('login_register'),
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w700,
                           color: AppColors.textPrimary,

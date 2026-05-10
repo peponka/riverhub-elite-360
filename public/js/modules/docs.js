@@ -2,7 +2,7 @@ const DocsModule = (() => {
     let documents = [];
 
     const init = async () => {
-        console.log("DocsModule: Initializing (Supabase)...");
+        void("DocsModule: Initializing (Supabase)...");
 
         const grid = document.querySelector('.docs-grid');
         if (grid) {
@@ -68,10 +68,10 @@ const DocsModule = (() => {
                         status: doc.status || 'BORRADOR',
                         barge: doc.cargo_type || '-', prod: doc.cargo_type || '-', qty: doc.cargo_qty || '-', dest: doc.destination || '-'
                     }));
-                    console.log(`DocsModule: ${data.length} documentos cargados de Supabase`);
+                    void(`DocsModule: ${data.length} documentos cargados de Supabase`);
                     return;
                 } else {
-                     console.log("Creando documentos por defecto en Supabase...");
+                     void("Creando documentos por defecto en Supabase...");
                      const mockDocs = [
                          { doc_number: 'RH-8829', title: 'MANIFIESTO DE CARGA', doc_type: 'PDF', file_size: '2.4 MB', status: 'FIRMADO', cargo_type: 'Soja', cargo_qty: '1500 TN', destination: 'Rosario' },
                          { doc_number: 'RH-7731', title: 'BILL OF LADING T-55', doc_type: 'PDF', file_size: '1.1 MB', status: 'ENVIADO', cargo_type: 'Hierro', cargo_qty: '2200 TN', destination: 'San Nicolas' },

@@ -10,7 +10,7 @@ const FleetManager = (() => {
 
     // --- INIT ---
     const init = () => {
-        console.log("⚓ FleetManager: Iniciando...");
+        void("⚓ FleetManager: Iniciando...");
 
         // 1. Encuentra el contenedor
         const content = document.getElementById('admin-content');
@@ -112,4 +112,4 @@ const FleetManager = (() => {
 
 // Attach globally
 window.FleetManager = FleetManager;
-console.log("✅ FleetManager Loaded.");
+void("✅ FleetManager Loaded.");

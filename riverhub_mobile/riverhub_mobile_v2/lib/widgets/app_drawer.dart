@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 import '../main.dart';
+import '../services/locale_service.dart';
 // Existing screens
 import '../screens/fuel_screen.dart';
 import '../screens/draft_screen.dart';
@@ -152,39 +153,39 @@ class AppDrawer extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 children: [
-                  _sectionHeader('PRINCIPAL'),
-                  _drawerTile(context, CupertinoIcons.map_fill, 'Mapa de Flota', const MapScreen()),
-                  _drawerTile(context, CupertinoIcons.helm, 'Gestión de Flota', const FleetManagerScreen()),
-                  _drawerTile(context, CupertinoIcons.chat_bubble_2_fill, 'Copiloto IA', const NexoBotScreen()),
+                  _sectionHeader(LocaleService.t('drawer_main')),
+                  _drawerTile(context, CupertinoIcons.map_fill, LocaleService.t('drawer_fleet_map'), const MapScreen()),
+                  _drawerTile(context, CupertinoIcons.helm, LocaleService.t('drawer_fleet_mgmt'), const FleetManagerScreen()),
+                  _drawerTile(context, CupertinoIcons.chat_bubble_2_fill, LocaleService.t('drawer_ai_copilot'), const NexoBotScreen()),
 
-                  _sectionHeader('OPERATIVA'),
-                  _drawerTile(context, CupertinoIcons.link, 'Armador de Convoy', const ConvoysScreen()),
-                  _drawerTile(context, CupertinoIcons.doc_text_fill, 'Gestión de Viajes', const TripsScreen()),
-                  _drawerTile(context, CupertinoIcons.book_fill, 'Bitácora Digital', const BitacoraScreen()),
-                  _drawerTile(context, CupertinoIcons.radiowaves_right, 'Comunicaciones', const ComunicacionesScreen()),
+                  _sectionHeader(LocaleService.t('drawer_operations')),
+                  _drawerTile(context, CupertinoIcons.link, LocaleService.t('drawer_convoy'), const ConvoysScreen()),
+                  _drawerTile(context, CupertinoIcons.doc_text_fill, LocaleService.t('drawer_trips'), const TripsScreen()),
+                  _drawerTile(context, CupertinoIcons.book_fill, LocaleService.t('drawer_logbook'), const BitacoraScreen()),
+                  _drawerTile(context, CupertinoIcons.radiowaves_right, LocaleService.t('drawer_comms'), const ComunicacionesScreen()),
 
-                  _sectionHeader('GESTIÓN'),
-                  _drawerTile(context, CupertinoIcons.person_3_fill, 'Tripulación & Safety', const TripulacionScreen()),
-                  _drawerTile(context, CupertinoIcons.drop_fill, 'Combustible', const FuelScreen()),
-                  _drawerTile(context, CupertinoIcons.drop_triangle_fill, 'Líquidos (Tanques)', const LiquidosScreen()),
-                  _drawerTile(context, CupertinoIcons.resize_v, 'Calados & Hidrometría', const DraftScreen()),
-                  _drawerTile(context, CupertinoIcons.wrench_fill, 'Mantenimiento', const MantenimientoScreen()),
-                  _drawerTile(context, CupertinoIcons.archivebox_fill, 'Pañol (Inventario)', const PanolScreen()),
+                  _sectionHeader(LocaleService.t('drawer_management')),
+                  _drawerTile(context, CupertinoIcons.person_3_fill, LocaleService.t('drawer_crew'), const TripulacionScreen()),
+                  _drawerTile(context, CupertinoIcons.drop_fill, LocaleService.t('drawer_fuel'), const FuelScreen()),
+                  _drawerTile(context, CupertinoIcons.drop_triangle_fill, LocaleService.t('drawer_liquids'), const LiquidosScreen()),
+                  _drawerTile(context, CupertinoIcons.resize_v, LocaleService.t('drawer_drafts'), const DraftScreen()),
+                  _drawerTile(context, CupertinoIcons.wrench_fill, LocaleService.t('drawer_maintenance'), const MantenimientoScreen()),
+                  _drawerTile(context, CupertinoIcons.archivebox_fill, LocaleService.t('drawer_inventory'), const PanolScreen()),
 
-                  _sectionHeader('INTELIGENCIA'),
-                  _drawerTile(context, CupertinoIcons.waveform_path, 'Pronóstico Hidrovía', const HidrologiaScreen()),
-                  _drawerTile(context, CupertinoIcons.chart_pie_fill, 'Reportes & Analytics', const ReportesScreen()),
-                  _drawerTile(context, CupertinoIcons.news_solid, 'Briefing Diario', const DailyReportScreen()),
-                  _drawerTile(context, CupertinoIcons.location_fill, 'Tracking de Cargas', const TrackingScreen()),
+                  _sectionHeader(LocaleService.t('drawer_intelligence')),
+                  _drawerTile(context, CupertinoIcons.waveform_path, LocaleService.t('drawer_hydrology'), const HidrologiaScreen()),
+                  _drawerTile(context, CupertinoIcons.chart_pie_fill, LocaleService.t('drawer_reports'), const ReportesScreen()),
+                  _drawerTile(context, CupertinoIcons.news_solid, LocaleService.t('drawer_daily'), const DailyReportScreen()),
+                  _drawerTile(context, CupertinoIcons.location_fill, LocaleService.t('drawer_tracking'), const TrackingScreen()),
 
-                  _sectionHeader('COMERCIAL'),
-                  _drawerTile(context, CupertinoIcons.doc_on_doc_fill, 'Contratos de Flete', const ContratosScreen()),
+                  _sectionHeader(LocaleService.t('drawer_commercial')),
+                  _drawerTile(context, CupertinoIcons.doc_on_doc_fill, LocaleService.t('drawer_contracts'), const ContratosScreen()),
 
-                  _sectionHeader('SISTEMA'),
-                  _drawerTile(context, CupertinoIcons.bell_fill, 'Notificaciones', const NotificationsScreen()),
-                  _drawerTile(context, CupertinoIcons.creditcard_fill, 'Planes & Facturación', const BillingScreen()),
-                  _drawerTile(context, CupertinoIcons.arrow_right_arrow_left, 'Integraciones API', const IntegracionesScreen()),
-                  _drawerTile(context, CupertinoIcons.shield_fill, 'Auditoría', const AuditoriaScreen()),
+                  _sectionHeader(LocaleService.t('drawer_system')),
+                  _drawerTile(context, CupertinoIcons.bell_fill, LocaleService.t('drawer_notifications'), const NotificationsScreen()),
+                  _drawerTile(context, CupertinoIcons.creditcard_fill, LocaleService.t('drawer_billing'), const BillingScreen()),
+                  _drawerTile(context, CupertinoIcons.arrow_right_arrow_left, LocaleService.t('drawer_integrations'), IntegracionesScreen()),
+                  _drawerTile(context, CupertinoIcons.shield_fill, LocaleService.t('drawer_audit'), const AuditoriaScreen()),
 
                   const SizedBox(height: 20),
                 ],

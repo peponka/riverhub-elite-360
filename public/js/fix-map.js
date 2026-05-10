@@ -1,7 +1,7 @@
 // fix-map.js: Force Load Map with Dark Theme
 // Updated: 2026-02-06 - Estilo igual al Mapa de Flota
 
-console.log("🚀 Módulo Fix-Map Cargado");
+void("🚀 Módulo Fix-Map Cargado");
 
 window.addEventListener('load', () => {
     setTimeout(() => {
@@ -14,7 +14,7 @@ window.addEventListener('load', () => {
         }
         mapContainer.innerHTML = '';
 
-        console.log("🔄 Re-iniciando Mapa Dashboard (Estilo Dark)...");
+        void("🔄 Re-iniciando Mapa Dashboard (Estilo Dark)...");
 
         const map = L.map('map-dashboard-new', {
             zoomControl: true,
@@ -67,7 +67,7 @@ async function loadShipsFix(map) {
                     .bindPopup(`<b>${v.name}</b><br>Estado: ${v.status}`);
             });
 
-            console.log(`✅ Dashboard: ${data.length} barcos cargados`);
+            void(`✅ Dashboard: ${data.length} barcos cargados`);
         }
     } catch (e) {
         console.warn("Dashboard loadShips error:", e);

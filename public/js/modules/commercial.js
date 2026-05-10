@@ -11,7 +11,7 @@ const commercialLogic = (() => {
 
     // INIT
     const init = async () => {
-        console.log("💼 Módulo Comercial Iniciado");
+        void("💼 Módulo Comercial Iniciado");
 
         // GHOST BUSTER
         const allButtons = document.querySelectorAll('button');
@@ -70,7 +70,7 @@ const commercialLogic = (() => {
         } else {
             if (!data || data.length === 0) {
                 // AUTO-SEED DB if empty
-                console.log("Creando clientes por defecto en Supabase...");
+                void("Creando clientes por defecto en Supabase...");
                 const defaultClients = [
                     { name: 'ADM PARAGUAY', type: 'Agro', country: 'Paraguay' },
                     { name: 'CARGILL S.A.', type: 'Agro', country: 'Argentina' },
@@ -98,7 +98,7 @@ const commercialLogic = (() => {
             if (error) throw error;
             
             if (!data || data.length === 0) {
-                 console.log("No hay contratos, pero la base está online. Dejando vacío, espera interacción del usuario.");
+                 void("No hay contratos, pero la base está online. Dejando vacío, espera interacción del usuario.");
                  state.contracts = [];
             } else {
                  state.contracts = data;

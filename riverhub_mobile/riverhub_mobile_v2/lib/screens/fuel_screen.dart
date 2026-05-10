@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
 import '../main.dart';
+import '../services/locale_service.dart';
 
 class FuelScreen extends StatefulWidget {
   const FuelScreen({super.key});
@@ -37,24 +38,22 @@ class _FuelScreenState extends State<FuelScreen> {
         _selectedVessel = vessels.first;
         await _fetchFuelStats(_selectedVessel!['id'], _selectedVessel!['fuel_capacity'] ?? 40000);
       } else {
-        // Demo data when no vessels exist
         _vessels = [
           {'id': 'demo-1', 'name': 'TB PARAGUAY 01', 'fuel_capacity': 45000, 'type': 'Remolcador'},
           {'id': 'demo-2', 'name': 'R/M HERCULES', 'fuel_capacity': 55000, 'type': 'Remolcador'},
-          {'id': 'demo-3', 'name': 'BZ ITAIPÚ', 'fuel_capacity': 8000, 'type': 'Barcaza'},
+          {'id': 'demo-3', 'name': 'BZ ITAIPÚ', 'fuel_capacity': 8000, 'type': LocaleService.t('dyn_key_116')},
         ];
         _selectedVessel = _vessels.first;
         _currentLevel = 69; _currentAutonomy = 182; _currentEfficiency = 94;
         _fuelLogs = [
           {'log_type': 'CARGA', 'location': 'Puerto Rosario', 'quantity': 8000, 'logged_at': DateTime.now().toIso8601String()},
-          {'log_type': 'CONSUMO', 'location': 'KM 1445 — Navegación', 'quantity': 450, 'logged_at': DateTime.now().subtract(const Duration(hours: 6)).toIso8601String()},
+          {'log_type': LocaleService.t('dyn_key_115'), 'location': 'KM 1445 — Navegación', 'quantity': 450, 'logged_at': DateTime.now().subtract(Duration(hours: 6)).toIso8601String()},
           {'log_type': 'CARGA', 'location': 'Puerto Asunción', 'quantity': 12000, 'logged_at': DateTime.now().subtract(const Duration(days: 2)).toIso8601String()},
-          {'log_type': 'CONSUMO', 'location': 'KM 1380 — Convoy', 'quantity': 980, 'logged_at': DateTime.now().subtract(const Duration(days: 3)).toIso8601String()},
+          {'log_type': LocaleService.t('dyn_key_115'), 'location': 'KM 1380 — Convoy', 'quantity': 980, 'logged_at': DateTime.now().subtract(Duration(days: 3)).toIso8601String()},
         ];
       }
     } catch (e) {
       debugPrint('Error: $e');
-      // Fallback demo
       _vessels = [{'id': 'demo-1', 'name': 'TB PARAGUAY 01', 'fuel_capacity': 45000, 'type': 'Remolcador'}];
       _selectedVessel = _vessels.first;
       _currentLevel = 69; _currentAutonomy = 182; _currentEfficiency = 94; _fuelLogs = [];
@@ -104,7 +103,7 @@ class _FuelScreenState extends State<FuelScreen> {
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
               child: Row(
                 children: [
-                  Text('Embarcación', style: GoogleFonts.newsreader(fontSize: 20, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                  Text(LocaleService.t('fuel_select_vessel'), style: GoogleFonts.newsreader(fontSize: 20, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
                   const Spacer(),
                   GestureDetector(onTap: () => Navigator.pop(ctx), child: Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textTertiary, size: 24)),
                 ],
@@ -142,7 +141,7 @@ class _FuelScreenState extends State<FuelScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(v['name'] ?? '', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                              Text(v['type'] ?? 'Embarcación', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+                              Text(v['type'] ?? '', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
                             ],
                           )),
                           if (isSelected) Icon(CupertinoIcons.checkmark_circle_fill, color: AppColors.textPrimary, size: 20),
@@ -159,7 +158,6 @@ class _FuelScreenState extends State<FuelScreen> {
     );
   }
 
-  // ─── ADD FUEL LOG ──────────────────────────────────────────────────
   void _addFuelLog() {
     final amountCtrl = TextEditingController();
     final locationCtrl = TextEditingController();
@@ -182,25 +180,24 @@ class _FuelScreenState extends State<FuelScreen> {
             children: [
               Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
               const SizedBox(height: 20),
-              Text('Registrar Combustible', style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+              Text(LocaleService.t('fuel_register'), style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
               Text(_selectedVessel?['name'] ?? '', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
               const SizedBox(height: 24),
 
-              // Type selector
-              Text('TIPO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+              Text(LocaleService.t('fuel_type_label'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  _typeOption('CARGA', logType, (v) => setModalState(() => logType = v)),
+                  _typeOption(LocaleService.t('fuel_load'), 'CARGA', logType, (v) => setModalState(() => logType = v)),
                   const SizedBox(width: 8),
-                  _typeOption('CONSUMO', logType, (v) => setModalState(() => logType = v)),
+                  _typeOption(LocaleService.t('fuel_consumption'), LocaleService.t('dyn_key_115'), logType, (v) => setModalState(() => logType = v)),
                 ],
               ),
               const SizedBox(height: 16),
 
-              _inputField('Cantidad (litros)', amountCtrl, CupertinoIcons.drop, keyboard: TextInputType.number),
+              _inputField(LocaleService.t('fuel_quantity'), amountCtrl, CupertinoIcons.drop, keyboard: TextInputType.number),
               const SizedBox(height: 12),
-              _inputField('Ubicación / Puerto', locationCtrl, CupertinoIcons.location),
+              _inputField(LocaleService.t('fuel_location'), locationCtrl, CupertinoIcons.location),
               const SizedBox(height: 28),
 
               GestureDetector(
@@ -218,7 +215,6 @@ class _FuelScreenState extends State<FuelScreen> {
                         'logged_at': DateTime.now().toIso8601String(),
                       });
                     } else {
-                      // Demo mode — add locally
                       _fuelLogs.insert(0, {
                         'log_type': logType, 'location': locationCtrl.text,
                         'quantity': amount, 'logged_at': DateTime.now().toIso8601String(),
@@ -240,7 +236,7 @@ class _FuelScreenState extends State<FuelScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
-                  child: Center(child: Text('Confirmar Registro', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.backgroundPrimary))),
+                  child: Center(child: Text(LocaleService.t('fuel_confirm_register'), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.backgroundPrimary))),
                 ),
               ),
             ],
@@ -251,7 +247,7 @@ class _FuelScreenState extends State<FuelScreen> {
     );
   }
 
-  Widget _typeOption(String value, String current, ValueChanged<String> onTap) {
+  Widget _typeOption(String label, String value, String current, ValueChanged<String> onTap) {
     final selected = current == value;
     return Expanded(
       child: GestureDetector(
@@ -263,7 +259,7 @@ class _FuelScreenState extends State<FuelScreen> {
             border: Border.all(color: selected ? AppColors.textPrimary : AppColors.separator, width: 0.5),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Center(child: Text(value, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: selected ? AppColors.backgroundPrimary : AppColors.textSecondary, letterSpacing: 0.5))),
+          child: Center(child: Text(label, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: selected ? AppColors.backgroundPrimary : AppColors.textSecondary, letterSpacing: 0.5))),
         ),
       ),
     );
@@ -288,7 +284,6 @@ class _FuelScreenState extends State<FuelScreen> {
     );
   }
 
-  // ─── BUILD ─────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -299,7 +294,7 @@ class _FuelScreenState extends State<FuelScreen> {
         leading: Navigator.of(context).canPop()
             ? CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
             : CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
-        middle: Text('Combustible', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('fuel_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: _addFuelLog, child: Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
@@ -308,11 +303,10 @@ class _FuelScreenState extends State<FuelScreen> {
             : ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 children: [
-                  Text('Combustible', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-                  Text('& Energía.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('fuel_header1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('fuel_header2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
                   const SizedBox(height: 20),
 
-                  // ── Vessel selector (tap to open) ──────────────
                   GestureDetector(
                     onTap: _selectVessel,
                     child: Container(
@@ -329,7 +323,7 @@ class _FuelScreenState extends State<FuelScreen> {
                           Expanded(child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_selectedVessel?['name'] ?? 'Seleccionar...', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                              Text(_selectedVessel?['name'] ?? LocaleService.t('fuel_select_hint'), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
                               Text(_selectedVessel?['type'] ?? '', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
                             ],
                           )),
@@ -340,7 +334,6 @@ class _FuelScreenState extends State<FuelScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // ── Fuel Level Gauge ───────────────────────────
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -350,15 +343,20 @@ class _FuelScreenState extends State<FuelScreen> {
                     ),
                     child: Column(
                       children: [
-                        Text('NIVEL ACTUAL', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                        Text(LocaleService.t('fuel_level'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                         const SizedBox(height: 12),
-                        // Visual gauge bar
                         _buildFuelGauge(_currentLevel),
                         const SizedBox(height: 16),
                         Text('$_currentLevel%', style: GoogleFonts.newsreader(fontSize: 52, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1)),
                         const SizedBox(height: 4),
                         Text(
-                          _currentLevel > 70 ? 'ÓPTIMO' : _currentLevel > 30 ? 'NORMAL' : _currentLevel > 0 ? 'BAJO' : 'SIN DATOS',
+                          _currentLevel > 70
+                              ? LocaleService.t('fuel_optimal')
+                              : _currentLevel > 30
+                                  ? LocaleService.t('fuel_normal_level')
+                                  : _currentLevel > 0
+                                      ? LocaleService.t('fuel_low_level')
+                                      : LocaleService.t('fuel_no_data'),
                           style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1),
                         ),
                         const SizedBox(height: 20),
@@ -367,11 +365,11 @@ class _FuelScreenState extends State<FuelScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _stat('AUTONOMÍA', '$_currentAutonomy hrs'),
+                            _stat(LocaleService.t('fuel_autonomy'), '$_currentAutonomy ${LocaleService.t('fuel_hours')}'),
                             Container(width: 0.5, height: 30, color: AppColors.separator),
-                            _stat('EFICIENCIA', '$_currentEfficiency%'),
+                            _stat(LocaleService.t('fuel_efficiency'), '$_currentEfficiency%'),
                             Container(width: 0.5, height: 30, color: AppColors.separator),
-                            _stat('CAPACIDAD', '${((_selectedVessel?['fuel_capacity'] ?? 40000) / 1000).round()}k L'),
+                            _stat(LocaleService.t('fuel_capacity'), '${((_selectedVessel?['fuel_capacity'] ?? 40000) / 1000).round()}k L'),
                           ],
                         ),
                       ],
@@ -379,12 +377,11 @@ class _FuelScreenState extends State<FuelScreen> {
                   ),
                   const SizedBox(height: 28),
 
-                  // ── Fuel Logs ──────────────────────────────────
                   Row(
                     children: [
-                      Text('REGISTRO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                      Text(LocaleService.t('fuel_log_section'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                       const Spacer(),
-                      Text('${_fuelLogs.length} entradas', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
+                      Text('${_fuelLogs.length} ${LocaleService.t('fuel_entries')}', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -395,9 +392,9 @@ class _FuelScreenState extends State<FuelScreen> {
                         children: [
                           Icon(CupertinoIcons.drop, size: 36, color: AppColors.textTertiary),
                           const SizedBox(height: 12),
-                          Text('Sin registros', style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
+                          Text(LocaleService.t('fuel_no_records'), style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
                           const SizedBox(height: 4),
-                          Text('Agregá una carga con el botón +', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
+                          Text(LocaleService.t('fuel_add_hint'), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
                         ],
                       ),
                     )
@@ -409,7 +406,6 @@ class _FuelScreenState extends State<FuelScreen> {
     );
   }
 
-  // ── Visual fuel gauge bar ──────────────────────────────────────────
   Widget _buildFuelGauge(int level) {
     final double fraction = level / 100.0;
     return Container(

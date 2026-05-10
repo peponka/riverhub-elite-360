@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import '../services/ai_service.dart';
+import '../services/locale_service.dart';
 
 class Message {
   final String sender;
@@ -132,10 +133,10 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
 
   String _severityLabel(String severity) {
     switch (severity) {
-      case 'critical': return 'CRÍTICO';
-      case 'high': return 'ALTO';
-      case 'medium': return 'MEDIO';
-      default: return 'BAJO';
+      case 'critical': return LocaleService.t('dyn_key_184');
+      case 'high': return LocaleService.t('dyn_key_181');
+      case 'medium': return LocaleService.t('dyn_key_111');
+      default: return LocaleService.t('dyn_key_186');
     }
   }
 
@@ -151,7 +152,7 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
           children: [
             Icon(CupertinoIcons.bolt_fill, color: AppColors.textPrimary, size: 16),
             const SizedBox(width: 6),
-            Text('Copiloto IA', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+            Text(LocaleService.t('nexobot_copiloto_ia'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
           ],
         ),
       ),
@@ -221,8 +222,8 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
           icon: CupertinoIcons.wrench,
           gradient: const [Color(0xFFF59E0B), Color(0xFFEF4444)],
           title: 'Mantenimiento Predictivo',
-          subtitle: 'Predicción de fallas con IA',
-          buttonLabel: 'Analizar',
+          subtitle: LocaleService.t('dyn_key_190'),
+          buttonLabel: LocaleService.t('dyn_key_187'),
           loading: _loadingMaint,
           onTap: _runPredictiveMaintenance,
           errorText: _maintError,
@@ -238,9 +239,9 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
         _buildAICard(
           icon: CupertinoIcons.flame,
           gradient: const [Color(0xFF10B981), Color(0xFF3B82F6)],
-          title: 'Anomalías de Consumo',
-          subtitle: 'Detección de patrones anómalos',
-          buttonLabel: 'Escanear',
+          title: LocaleService.t('dyn_key_180'),
+          subtitle: LocaleService.t('dyn_key_185'),
+          buttonLabel: LocaleService.t('dyn_key_188'),
           loading: _loadingFuel,
           onTap: _runFuelAnomalies,
           errorText: _fuelError,
@@ -315,7 +316,7 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
                   children: [
                     const CupertinoActivityIndicator(radius: 14),
                     const SizedBox(height: 10),
-                    Text('Gemini está analizando...\n(puede tardar hasta 60s la primera vez)', 
+                    Text(LocaleService.t('nexobot_gemini_esta_analizan'), 
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary, fontStyle: FontStyle.italic)),
                   ],
@@ -391,7 +392,7 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
           const SizedBox(height: 8),
           Row(
             children: [
-              Text('📊 ', style: GoogleFonts.inter(fontSize: 11)),
+              Text(LocaleService.t('nexobot_'), style: GoogleFonts.inter(fontSize: 11)),
               Text('$prob%', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: color)),
               const SizedBox(width: 16),
               Text('📅 ${p['days_until'] ?? '?'} días', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
@@ -420,7 +421,7 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
     final color = _severityColor(severity);
     final type = a['type'] as String? ?? '';
     final icon = type == 'theft_risk' ? '🚨' : type == 'overconsumption' ? '📈' : type == 'spike' ? '⚡' : type == 'trend' ? '📉' : '✅';
-    final typeLabel = type == 'theft_risk' ? 'RIESGO ROBO' : type == 'overconsumption' ? 'SOBRECONSUMO' : type == 'spike' ? 'PICO' : type == 'trend' ? 'TENDENCIA' : 'NORMAL';
+    final typeLabel = type == 'theft_risk' ? LocaleService.t('dyn_key_182') : type == 'overconsumption' ? LocaleService.t('dyn_key_191') : type == 'spike' ? 'PICO' : type == 'trend' ? LocaleService.t('dyn_key_183') : LocaleService.t('dyn_key_189');
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -481,7 +482,7 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
               children: [
                 const CupertinoActivityIndicator(radius: 8),
                 const SizedBox(width: 10),
-                Text('NexoBot está analizando...', style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 12, fontStyle: FontStyle.italic)),
+                Text(LocaleService.t('nexobot_nexobot_esta_analiza'), style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 12, fontStyle: FontStyle.italic)),
               ],
             ),
           ),
@@ -496,7 +497,7 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
               Expanded(
                 child: CupertinoTextField(
                   controller: _textController,
-                  placeholder: 'Preguntale a NexoBot...',
+                  placeholder: LocaleService.t('nexobot_preguntale_a_nexobot'),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   maxLines: null,
                   textInputAction: TextInputAction.send,
@@ -549,7 +550,7 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
               crossAxisAlignment: isAgent ? CrossAxisAlignment.start : CrossAxisAlignment.end,
               children: [
                 Text(
-                  isAgent ? 'NEXOBOT' : 'TÚ',
+                  isAgent ? 'NEXOBOT' : LocaleService.t('dyn_key_192'),
                   style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5),
                 ),
                 const SizedBox(height: 4),
@@ -575,7 +576,7 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
               margin: const EdgeInsets.only(left: 10, top: 4),
               width: 28, height: 28,
               decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(8)),
-              child: Center(child: Text('OP', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+              child: Center(child: Text(LocaleService.t('nexobot_op'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
             ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
 import '../main.dart';
+import '../services/locale_service.dart';
 
 class TripsScreen extends StatefulWidget {
   const TripsScreen({super.key});
@@ -42,14 +43,13 @@ class _TripsScreenState extends State<TripsScreen> {
     }
   }
 
-  // ─── VESSEL SELECTOR (Cupertino Action Sheet) ─────────────────────
   void _showVesselPicker(Map<String, dynamic>? current, ValueChanged<Map<String, dynamic>> onSelect) {
     if (_vessels.isEmpty) {
       showCupertinoDialog(
         context: context,
         builder: (_) => CupertinoAlertDialog(
-          title: Text('Sin embarcaciones', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
-          content: Text('Agregá embarcaciones desde la web primero.', style: GoogleFonts.inter()),
+          title: Text(LocaleService.t('trips_no_vessels'), style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+          content: Text(LocaleService.t('trips_no_vessels_desc'), style: GoogleFonts.inter()),
           actions: [CupertinoDialogAction(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
         ),
       );
@@ -72,7 +72,7 @@ class _TripsScreenState extends State<TripsScreen> {
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
               child: Row(
                 children: [
-                  Text('Seleccionar Embarcación', style: GoogleFonts.newsreader(fontSize: 20, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                  Text(LocaleService.t('trips_select_vessel'), style: GoogleFonts.newsreader(fontSize: 20, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
                   const Spacer(),
                   GestureDetector(
                     onTap: () => Navigator.pop(ctx),
@@ -114,8 +114,8 @@ class _TripsScreenState extends State<TripsScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(v['name'] ?? 'Sin nombre', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                                Text(v['type'] ?? 'Embarcación', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+                                Text(v['name'] ?? LocaleService.t('common_no_name'), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                                Text(v['type'] ?? '', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
                               ],
                             ),
                           ),
@@ -133,7 +133,6 @@ class _TripsScreenState extends State<TripsScreen> {
     );
   }
 
-  // ─── ADD TRIP MODAL ─────────────────────────────────────────────────
   void _showAddTripModal() {
     Map<String, dynamic>? selectedVessel = _vessels.isNotEmpty ? _vessels.first : null;
     final originCtrl = TextEditingController();
@@ -155,18 +154,16 @@ class _TripsScreenState extends State<TripsScreen> {
             child: SafeArea(
               child: Column(
                 children: [
-                  // Handle bar
                   Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
                   const SizedBox(height: 16),
-                  Text('Crear Nuevo Viaje', style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-                  Text('MANIFIESTO DE NAVEGACIÓN', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text(LocaleService.t('trips_create_title'), style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                  Text(LocaleService.t('trips_manifest'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                   const SizedBox(height: 20),
                   Expanded(
                     child: ListView(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       children: [
-                        // ── Vessel Selector (tap to open) ────────
-                        Text('EMBARCACIÓN', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                        Text(LocaleService.t('trips_vessel_section'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                         const SizedBox(height: 6),
                         GestureDetector(
                           onTap: () => _showVesselPicker(selectedVessel, (v) {
@@ -185,7 +182,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    selectedVessel?['name'] ?? 'Seleccionar embarcación...',
+                                    selectedVessel?['name'] ?? LocaleService.t('trips_select_hint'),
                                     style: GoogleFonts.inter(
                                       fontSize: 14,
                                       color: selectedVessel != null ? AppColors.textPrimary : AppColors.textTertiary,
@@ -200,21 +197,18 @@ class _TripsScreenState extends State<TripsScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        // ── Ports ────────────────────────────────
-                        Text('RUTA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                        Text(LocaleService.t('trips_route_section'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                         const SizedBox(height: 6),
-                        _formField(originCtrl, 'Puerto de Origen', CupertinoIcons.location),
+                        _formField(originCtrl, LocaleService.t('trips_origin'), CupertinoIcons.location),
                         const SizedBox(height: 10),
-                        _formField(destCtrl, 'Puerto de Destino', CupertinoIcons.location_solid),
+                        _formField(destCtrl, LocaleService.t('trips_dest'), CupertinoIcons.location_solid),
                         const SizedBox(height: 16),
 
-                        // ── Cargo ────────────────────────────────
-                        Text('CARGA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                        Text(LocaleService.t('trips_cargo_label'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                         const SizedBox(height: 6),
-                        _formField(cargoCtrl, 'Tipo de Carga', CupertinoIcons.cube_box),
+                        _formField(cargoCtrl, LocaleService.t('trips_cargo'), CupertinoIcons.cube_box),
                         const SizedBox(height: 16),
 
-                        // ── ETA ──────────────────────────────────
                         Text('ETA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                         const SizedBox(height: 6),
                         Container(
@@ -233,7 +227,6 @@ class _TripsScreenState extends State<TripsScreen> {
                     ),
                   ),
 
-                  // ── Submit Button ──────────────────────────────
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: GestureDetector(
@@ -250,7 +243,7 @@ class _TripsScreenState extends State<TripsScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
-                          child: Text('PROCESAR VIAJE', style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: AppColors.backgroundPrimary, fontSize: 14, letterSpacing: 0.5)),
+                          child: Text(LocaleService.t('trips_process'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, color: AppColors.backgroundPrimary, fontSize: 14, letterSpacing: 0.5)),
                         ),
                       ),
                     ),
@@ -325,7 +318,7 @@ class _TripsScreenState extends State<TripsScreen> {
                 child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary),
                 onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
               ),
-        middle: Text('Viajes', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('trips_nav_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero, onPressed: _showAddTripModal,
           child: Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary),
@@ -341,19 +334,19 @@ class _TripsScreenState extends State<TripsScreen> {
                   children: [
                     Icon(CupertinoIcons.map, size: 40, color: AppColors.textTertiary),
                     const SizedBox(height: 12),
-                    Text('Sin viajes activos', style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
+                    Text(LocaleService.t('trips_empty'), style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
                     const SizedBox(height: 4),
-                    Text('Creá un nuevo viaje para comenzar', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
+                    Text(LocaleService.t('trips_add_desc'), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
                   ],
                 ),
               )
             : ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 children: [
-                  Text('Gestión de', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-                  Text('Viajes.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('trips_header1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+                  Text(LocaleService.t('trips_header2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
                   const SizedBox(height: 6),
-                  Text('${_trips.length} MANIFIESTOS', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                  Text('${_trips.length} ${LocaleService.t('trips_manifests')}', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                   const SizedBox(height: 24),
                   ..._trips.map((t) => _tripCard(t)),
                 ],
@@ -364,16 +357,22 @@ class _TripsScreenState extends State<TripsScreen> {
 
   Widget _tripCard(Map<String, dynamic> trip) {
     final vessel = trip['fleet_assets'] ?? {};
-    final vesselName = vessel['name'] ?? 'Desconocido';
+    final vesselName = vessel['name'] ?? LocaleService.t('common_no_name');
     final origin = trip['origin_port'] ?? 'N/A';
     final dest = trip['destination_port'] ?? 'N/A';
     final status = trip['status'] ?? 'pending';
     final etaStr = trip['eta'] != null ? trip['eta'].toString().split('T').first : '--';
 
-    String statusLabel = 'PENDIENTE';
-    if (status == 'active' || status == 'live') { statusLabel = 'EN VIVO'; }
-    else if (status == 'completed') { statusLabel = 'COMPLETADO'; }
-    else if (status == 'planned') { statusLabel = 'PLANIFICADO'; }
+    String statusLabel;
+    if (status == 'active' || status == 'live') {
+      statusLabel = LocaleService.t('trips_live_label');
+    } else if (status == 'completed') {
+      statusLabel = LocaleService.t('trips_done_label');
+    } else if (status == 'planned') {
+      statusLabel = LocaleService.t('trips_planned_label');
+    } else {
+      statusLabel = LocaleService.t('trips_pending_label');
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -406,12 +405,12 @@ class _TripsScreenState extends State<TripsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('ORIGEN', style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                Text(LocaleService.t('trips_origin_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                 Text(origin, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
               ]),
               Icon(CupertinoIcons.arrow_right, color: AppColors.separator, size: 16),
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text('DESTINO', style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                Text(LocaleService.t('trips_dest_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
                 Text(dest, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
               ]),
             ],
@@ -424,8 +423,8 @@ class _TripsScreenState extends State<TripsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('CARGA', style: GoogleFonts.inter(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.w700)),
-                  Text(trip['cargo_type'] ?? 'General', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                  Text(LocaleService.t('trips_cargo_label'), style: GoogleFonts.inter(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.w700)),
+                  Text(trip['cargo_type'] ?? LocaleService.t('dyn_key_222'), style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
                 ]),
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   Text('ETA', style: GoogleFonts.inter(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.w700)),

@@ -43,7 +43,7 @@
     // View Details (Drill Down) with Tabs
     function viewClientDetails(id, name, activeTab = 'general') {
         // Debug
-        console.log('Viewing details:', id, name, activeTab);
+        void('Viewing details:', id, name, activeTab);
 
         const contentArea = document.getElementById('admin-main-content');
         if (!contentArea) {
@@ -324,7 +324,7 @@
         const plan = planInput ? planInput.value : 'BASIC';
         const type = typeInput ? typeInput.value : 'AGRO';
 
-        console.log("Submit Debug:", { name, plan, type });
+        void("Submit Debug:", { name, plan, type });
 
         if (!name) {
             // Debug alert to help user understand what happened

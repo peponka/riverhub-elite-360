@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class DocsScreen extends StatelessWidget {
-  const DocsScreen({super.key});
+  DocsScreen({super.key});
 
   final List<Map<String, dynamic>> _docs = const [
     {
@@ -14,14 +15,14 @@ class DocsScreen extends StatelessWidget {
       'icon': CupertinoIcons.doc_fill,
     },
     {
-      'name': 'Certificado Navegación',
+      'name': LocaleService.t('dyn_key_108'),
       'type': 'PDF',
       'size': '1.1 MB',
       'date': '05/03/2026',
       'icon': CupertinoIcons.doc_text_fill,
     },
     {
-      'name': 'Póliza Seguro Flota',
+      'name': LocaleService.t('dyn_key_105'),
       'type': 'PDF',
       'size': '3.8 MB',
       'date': '01/03/2026',
@@ -54,8 +55,8 @@ class DocsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text(
-          'Documentación',
+        middle: Text(
+          LocaleService.t('dyn_key_107'),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
@@ -69,9 +70,9 @@ class DocsScreen extends StatelessWidget {
           onPressed: () {},
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
-            children: const [
-              Text('Subir ', style: TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.cloud_upload, color: AppColors.accent, size: 22),
+            children: [
+              Text(LocaleService.t('docs_subir'), style: TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.bold)),
+              const Icon(CupertinoIcons.cloud_upload, color: AppColors.accent, size: 22),
             ],
           ),
         ),
@@ -83,9 +84,9 @@ class DocsScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                _kpi('Documentos', '${_docs.length}', AppColors.blue),
+                _kpi(LocaleService.t('dyn_key_106'), '${_docs.length}', AppColors.blue),
                 const SizedBox(width: 10),
-                _kpi('Espacio', '22.2 MB', AppColors.purple),
+                _kpi(LocaleService.t('dyn_key_109'), '22.2 MB', AppColors.purple),
               ],
             ),
             const SizedBox(height: 16),

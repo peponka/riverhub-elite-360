@@ -11,7 +11,7 @@ const BackofficeModule = (() => {
     let revenueChart = null;
 
     const init = () => {
-        console.log("🔴 BackofficeModule: Initializing SuperAdmin Panel...");
+        void("🔴 BackofficeModule: Initializing SuperAdmin Panel...");
         let container = document.getElementById('view-backoffice');
 
         // FAILSAFE: If container doesn't exist or is outside content-area, fix it

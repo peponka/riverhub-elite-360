@@ -3,7 +3,7 @@
 // Usa sintaxis ES5 compatible para evitar problemas de módulos
 
 function descargarPDF() {
-    console.log("Iniciando generación de PDF...");
+    void("Iniciando generación de PDF...");
 
     // Verificar si la librería cargó
     if (typeof jsPDF === 'undefined') {

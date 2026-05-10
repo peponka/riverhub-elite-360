@@ -8,7 +8,7 @@ const CrewModule = (() => {
     };
 
     const init = async () => {
-        console.log("Módulo Tripulación & Safety activo (Supabase).");
+        void("Módulo Tripulación & Safety activo (Supabase).");
 
         // Wait for connection/session briefly
         if (!window.sb) {
@@ -29,13 +29,13 @@ const CrewModule = (() => {
             btnNewCrew.onclick = () => {
                 window.location.href = 'crew-form.html';
             };
-            console.log("✅ Botón de tripulación redirigido a página standalone");
+            void("✅ Botón de tripulación redirigido a página standalone");
         }
 
         // Auto-refresh when returning to tab
         window.addEventListener('focus', () => {
             if (document.getElementById('view-tripulacion').style.display !== 'none') {
-                console.log("Tab focused, refreshing crew...");
+                void("Tab focused, refreshing crew...");
                 loadData();
             }
         });

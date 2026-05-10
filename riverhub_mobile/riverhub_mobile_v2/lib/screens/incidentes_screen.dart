@@ -4,6 +4,7 @@ import '../services/supabase_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../services/locale_service.dart';
 class IncidentesScreen extends StatefulWidget {
   const IncidentesScreen({super.key});
 
@@ -34,10 +35,10 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
         _incidents = data
             .map(
               (i) => {
-                'title': i['title'] ?? i['description'] ?? 'Sin título',
+                'title': i['title'] ?? i['description'] ?? LocaleService.t('dyn_key_139'),
                 'vessel': i['vessel_name'] ?? i['vessel'] ?? '-',
-                'severity': i['severity'] ?? 'MEDIA',
-                'status': i['status'] ?? 'ABIERTO',
+                'severity': i['severity'] ?? LocaleService.t('dyn_key_140'),
+                'status': i['status'] ?? LocaleService.t('dyn_key_129'),
                 'date': i['created_at']?.toString().substring(0, 10) ?? '-',
               },
             )
@@ -75,8 +76,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Nuevo Expediente',
+                    Text(
+                      LocaleService.t('dyn_key_121'),
                       style: TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 18,
@@ -98,8 +99,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    const Text(
-                      'Buque Involucrado',
+                    Text(
+                      LocaleService.t('dyn_key_132'),
                       style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
@@ -111,8 +112,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                       ),
                       child: material.DropdownButton<String>(
                         value: selectedVesselId,
-                        hint: const Text(
-                          'Seleccione buque...',
+                        hint: Text(
+                          LocaleService.t('dyn_key_124'),
                           style: TextStyle(color: AppColors.textSecondary),
                         ),
                         dropdownColor: AppColors.separator,
@@ -132,14 +133,14 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    const Text(
-                      'Ubicación (Km)',
+                    Text(
+                      LocaleService.t('dyn_key_127'),
                       style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
                     CupertinoTextField(
                       controller: locController,
-                      placeholder: 'Ej: KM 1285',
+                      placeholder: LocaleService.t('incidentes_ej_km_1285'),
                       style: const TextStyle(color: AppColors.textPrimary),
                       placeholderStyle: const TextStyle(
                         color: AppColors.textSecondary,
@@ -151,14 +152,14 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                       padding: const EdgeInsets.all(12),
                     ),
                     const SizedBox(height: 14),
-                    const Text(
-                      'Descripción',
+                    Text(
+                      LocaleService.t('dyn_key_131'),
                       style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
                     CupertinoTextField(
                       controller: descController,
-                      placeholder: 'Describa el incidente...',
+                      placeholder: LocaleService.t('incidentes_describa_el_incident'),
                       maxLines: 4,
                       style: const TextStyle(color: AppColors.textPrimary),
                       placeholderStyle: const TextStyle(
@@ -171,8 +172,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                       padding: const EdgeInsets.all(12),
                     ),
                     const SizedBox(height: 14),
-                    const Text(
-                      'Evidencia Fotográfica',
+                    Text(
+                      LocaleService.t('dyn_key_135'),
                       style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
@@ -181,8 +182,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                         showCupertinoModalPopup(
                           context: ctx,
                           builder: (actionSheetCtx) => CupertinoActionSheet(
-                            title: const Text('Adjuntar Evidencia'),
-                            message: const Text('Seleccione la fuente de la imagen'),
+                            title: Text(LocaleService.t('incidentes_adjuntar_evidencia')),
+                            message: Text(LocaleService.t('incidentes_seleccione_la_fuente')),
                             actions: [
                               CupertinoActionSheetAction(
                                onPressed: () async {
@@ -201,7 +202,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                                    debugPrint("Error tomando foto: $e");
                                  }
                                },
-                               child: const Text('Tomar Foto'),
+                               child: Text(LocaleService.t('incidentes_tomar_foto')),
                               ),
                               CupertinoActionSheetAction(
                                onPressed: () async {
@@ -220,13 +221,13 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                                    debugPrint("Error seleccionando foto: $e");
                                  }
                                },
-                               child: const Text('Elegir de Galería'),
+                               child: Text(LocaleService.t('incidentes_elegir_de_galeria')),
                               ),
                             ],
                             cancelButton: CupertinoActionSheetAction(
                               isDefaultAction: true,
                               onPressed: () => Navigator.pop(actionSheetCtx),
-                              child: const Text('Cancelar'),
+                              child: Text(LocaleService.t('incidentes_cancelar')),
                             ),
                           ),
                         );
@@ -259,7 +260,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                attachedImagePath != null ? 'Foto Adjunta' : 'Presionar para Adjuntar Imagen',
+                                attachedImagePath != null ? LocaleService.t('dyn_key_123') : LocaleService.t('dyn_key_126'),
                                 style: TextStyle(
                                   color: attachedImagePath != null ? AppColors.textOnAccent : AppColors.textSecondary,
                                   fontSize: 12,
@@ -314,8 +315,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                             const SizedBox(width: 8),
                             Text(
                               aiAnalyzed
-                                  ? 'ANÁLISIS COMPLETADO'
-                                  : 'ANALIZAR CON IA',
+                                  ? LocaleService.t('dyn_key_125')
+                                  : LocaleService.t('dyn_key_130'),
                               style: TextStyle(
                                 color: aiAnalyzed
                                     ? AppColors.success
@@ -330,8 +331,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                     ),
                     const SizedBox(height: 20),
                     CupertinoButton.filled(
-                      child: const Text(
-                        'EMITIR EXPEDIENTE OPERATIVO',
+                      child: Text(
+                        LocaleService.t('dyn_key_138'),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
@@ -339,9 +340,9 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                           showCupertinoDialog(
                             context: ctx,
                             builder: (c) => CupertinoAlertDialog(
-                              title: const Text('Error'),
-                              content: const Text(
-                                'Seleccione un buque involucrado.',
+                              title: Text(LocaleService.t('incidentes_error')),
+                              content: Text(
+                                LocaleService.t('dyn_key_128'),
                               ),
                               actions: [
                                 CupertinoDialogAction(
@@ -356,7 +357,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
 
                         // We can show a loading indicator here in a real app, but for now we just wait
                         String title = locController.text.isEmpty
-                            ? 'INCIDENTE'
+                            ? LocaleService.t('dyn_key_137')
                             : 'INCIDENTE - ${locController.text}';
                         
                         String? uploadedImageUrl;
@@ -383,8 +384,8 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
                           'title': title,
                           'description': descController.text,
                           'vessel_id': selectedVesselId,
-                          'severity': 'MEDIA',
-                          'status': 'ABIERTO',
+                          'severity': LocaleService.t('dyn_key_140'),
+                          'status': LocaleService.t('dyn_key_129'),
                           'reported_by': SupabaseService.currentUserId,
                           'location': locController.text,
                         };
@@ -432,9 +433,9 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
           onPressed: _openNewIncident,
           child: Row(
             mainAxisSize: material.MainAxisSize.min,
-            children: const [
-              Text('Reportar ', style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
-              Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
+            children: [
+              Text(LocaleService.t('incidentes_reportar'), style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
+              const Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
             ],
           ),
         ),
@@ -447,17 +448,17 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
             // KPIs
             Row(
               children: [
-                _kpi('Total', '${_incidents.length}', AppColors.blue),
+                _kpi(LocaleService.t('dyn_key_133'), '${_incidents.length}', AppColors.blue),
                 const SizedBox(width: 10),
                 _kpi(
-                  'Abiertos',
-                  '${_incidents.where((i) => i['status'] == 'ABIERTO').length}',
+                  LocaleService.t('dyn_key_120'),
+                  '${_incidents.where((i) => i['status'] == LocaleService.t('dyn_key_129')).length}',
                   AppColors.error,
                 ),
                 const SizedBox(width: 10),
                 _kpi(
-                  'Cerrados',
-                  '${_incidents.where((i) => i['status'] == 'CERRADO').length}',
+                  LocaleService.t('dyn_key_122'),
+                  '${_incidents.where((i) => i['status'] == LocaleService.t('dyn_key_136')).length}',
                   AppColors.success,
                 ),
               ],
@@ -571,7 +572,7 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
               Text(
                 inc['status'],
                 style: TextStyle(
-                  color: inc['status'] == 'CERRADO'
+                  color: inc['status'] == LocaleService.t('dyn_key_136')
                       ? AppColors.success
                       : AppColors.warning,
                   fontSize: 11,

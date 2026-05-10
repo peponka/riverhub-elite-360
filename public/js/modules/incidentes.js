@@ -8,7 +8,7 @@ const incidentsLogic = (() => {
     };
 
     const init = async () => {
-        console.log("Módulo Siniestralidad & Forense activo (Supabase).");
+        void("Módulo Siniestralidad & Forense activo (Supabase).");
         await loadData();
         await loadIncidents();
         bindEvents();

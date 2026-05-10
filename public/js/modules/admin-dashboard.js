@@ -4,7 +4,7 @@ const AdminDashboard = (() => {
 
     // STARTUP
     const init = () => {
-        console.log("Admin Dashboard: Init...");
+        void("Admin Dashboard: Init...");
 
         // Render Layout FIRST to ensure user sees something
         renderLayout();
@@ -21,7 +21,7 @@ const AdminDashboard = (() => {
 
     // ROUTING
     const routeTo = (viewName) => {
-        console.log(`Admin Router: ${viewName}`);
+        void(`Admin Router: ${viewName}`);
 
         // Update Nav Active State (Horizontal)
         document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
@@ -212,7 +212,7 @@ const AdminDashboard = (() => {
                 return;
             }
 
-            console.log("Clients loaded:", clients);
+            void("Clients loaded:", clients);
 
             let cards = clients.map(c => `
                 <div class="client-card" style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border:1px solid #334; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:15px; box-shadow:0 4px 6px rgba(0,0,0,0.3);">
@@ -281,7 +281,7 @@ const AdminDashboard = (() => {
 
     const impersonateUser = (name, role) => {
         if (window.RiverToast) RiverToast.warning(`Iniciando sesiÃ³n remota como "${name}". PÃ©rdida temporal de root...`, 'Impersonate Activo', 'fas fa-user-secret');
-        console.log("Impersonating:", name);
+        void("Impersonating:", name);
         setTimeout(() => {
             AuthModule.login({
                 id: 'impersonated-id',

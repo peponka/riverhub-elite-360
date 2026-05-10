@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
 import '../theme/app_colors.dart';
+import '../services/locale_service.dart';
 
 class FleetManagerScreen extends StatefulWidget {
   const FleetManagerScreen({super.key});
@@ -26,8 +27,8 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
     setState(() {
       if (data.isNotEmpty) {
         vessels = data.map((v) => {
-          'name': v['name'] ?? 'Sin nombre',
-          'type': v['type'] ?? 'DESCONOCIDO',
+          'name': v['name'] ?? LocaleService.t('dyn_key_113'),
+          'type': v['type'] ?? LocaleService.t('dyn_key_114'),
           'status': v['status'] ?? 'active',
           'zone': v['current_location'] ?? v['zone'] ?? '-',
           'fuel': v['fuel_level'] ?? 0,
@@ -54,7 +55,7 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
-        middle: Text('Flota', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        middle: Text(LocaleService.t('fleet_nav_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Icon(CupertinoIcons.back, color: AppColors.textPrimary, size: 22),
@@ -65,18 +66,18 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
-            Text('Gestión de', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-            Text('Flota.', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('fleet_title1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text(LocaleService.t('fleet_title2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
             const SizedBox(height: 20),
 
             // KPI Row
             Row(
               children: [
-                Expanded(child: _kpi('Operativos', '$active', AppColors.success)),
+                Expanded(child: _kpi(LocaleService.t('fleet_operative'), '$active', AppColors.success)),
                 const SizedBox(width: 10),
-                Expanded(child: _kpi('En Taller', '$maintenance', AppColors.error)),
+                Expanded(child: _kpi(LocaleService.t('fleet_in_workshop'), '$maintenance', AppColors.error)),
                 const SizedBox(width: 10),
-                Expanded(child: _kpi('En Ruta', '$transit', AppColors.accent)),
+                Expanded(child: _kpi(LocaleService.t('fleet_on_route'), '$transit', AppColors.accent)),
               ],
             ),
             const SizedBox(height: 20),
@@ -85,8 +86,8 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(children: [
-                _chip('Todos', 'all'), _chip('Activos', 'active'),
-                _chip('Taller', 'maintenance'), _chip('En Ruta', 'transito'),
+                _chip(LocaleService.t('fleet_all'), 'all'), _chip(LocaleService.t('fleet_active'), 'active'),
+                _chip(LocaleService.t('fleet_workshop'), 'maintenance'), _chip(LocaleService.t('fleet_route'), 'transito'),
               ]),
             ),
             const SizedBox(height: 20),
@@ -147,9 +148,9 @@ class _FleetManagerScreenState extends State<FleetManagerScreen> {
     Color dotColor;
     String statusText;
     switch (v['status']) {
-      case 'active': dotColor = AppColors.success; statusText = 'OPERATIVO'; break;
-      case 'maintenance': dotColor = AppColors.error; statusText = 'TALLER'; break;
-      default: dotColor = AppColors.accent; statusText = 'EN RUTA';
+      case 'active': dotColor = AppColors.success; statusText = LocaleService.t('fleet_status_operative'); break;
+      case 'maintenance': dotColor = AppColors.error; statusText = LocaleService.t('fleet_status_workshop'); break;
+      default: dotColor = AppColors.accent; statusText = LocaleService.t('fleet_status_route');
     }
 
     return Container(

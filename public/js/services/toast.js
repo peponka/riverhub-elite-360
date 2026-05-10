@@ -126,5 +126,5 @@
         ensureContainer();
     }
 
-    console.log('🔔 FluviaFleet Toast System Active');
+    void('🔔 FluviaFleet Toast System Active');
 })();
