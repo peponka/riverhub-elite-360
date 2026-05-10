@@ -588,7 +588,7 @@ function initMap(){
     var hidroviaRoute=[[-19.0,-57.65],[-20.5,-57.8],[-22.3,-57.9],[-23.4,-57.8],[-25.3,-57.6],[-26.5,-58.1],[-27.3,-58.5],[-29.0,-59.5],[-30.5,-59.9],[-31.5,-60.5],[-32.9,-60.6],[-33.5,-58.5],[-34.6,-58.4]];
     L.polyline(hidroviaRoute,{color:'#3B82F6',weight:2.5,dashArray:'8,6',opacity:0.45}).addTo(map);
     // Zoom fit to hidrovía bounds
-    map.fitBounds([[-19.0,-60.5],[-34.6,-56.5]],{padding:[30,30],maxZoom:7});
+    map.fitBounds([[-33.0,-59.2],[-35.0,-58.0]],{padding:[30,30],maxZoom:9});
 }
 function _shipIcon(color,size,heading){
     var rot=heading||0;
@@ -598,7 +598,7 @@ function _shipIcon(color,size,heading){
 function loadFleetMarkers(){
     sb.from('vessels').select('*').then(function(r){
         var data=r.data;if(!data)return;
-        data.forEach(function(v){var lat=v.latitude||v.lat;var lng=v.longitude||v.lng;if(!lat||!lng)return;var s=(v.status||'').toLowerCase();var c=s.indexOf('viaje')>=0||s==='active'?'#2EA043':s.indexOf('manten')>=0?'#F59E0B':'#3B82F6';var heading=v.heading||v.course||0;L.marker([lat,lng],{icon:_shipIcon(c,36,heading)}).addTo(map).bindPopup('<strong>'+(v.name||'')+'</strong><br>'+(v.status||'')+'<br><small>Flota propia</small>');});
+        data.forEach(function(v){var lat=v.latitude||v.lat;var lng=v.longitude||v.lng;if(!lat||!lng)return;var s=(v.status||'').toLowerCase();var c=s.indexOf('viaje')>=0||s==='active'?'#10b981':s.indexOf('manten')>=0?'#F59E0B':'#3B82F6';var heading=v.heading||v.course||0;L.marker([lat,lng],{icon:_shipIcon(c,48,heading)}).addTo(map).bindPopup('<strong>'+(v.name||'')+'</strong><br>'+(v.status||'')+'<br><small>Flota propia</small>');});});
     });
 }
 async function loadAISTraffic(){
@@ -614,7 +614,7 @@ async function loadAISTraffic(){
                     aisMarkers[key].setLatLng([v.lat,v.lon]);
                 }else{
                     var hdg=v.heading||v.course||0;
-                    var m=L.marker([v.lat,v.lon],{icon:_shipIcon('#64748B',28,hdg)}).addTo(map);
+                    var m=L.marker([v.lat,v.lon],{icon:_shipIcon('#10b981',40,hdg)}).addTo(map);
                     m.bindPopup('<strong>'+(v.name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'°<br><small>AIS Satelital</small>');
                     aisMarkers[key]=m;
                 }
@@ -640,7 +640,7 @@ function renderAISMarkers(data){
             aisMarkers[key].setLatLng([lat,lng]);
             aisMarkers[key].setPopupContent('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Trafico terceros</small>');
         }else{
-            var m=L.marker([lat,lng],{icon:_shipIcon('#94A3B8',28,v.course||0)}).addTo(map);
+            var m=L.marker([lat,lng],{icon:_shipIcon('#10b981',40,v.course||0)}).addTo(map);
             m.bindPopup('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Trafico terceros</small>');
             aisMarkers[key]=m;
         }
