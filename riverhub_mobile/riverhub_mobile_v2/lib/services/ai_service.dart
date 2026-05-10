@@ -67,12 +67,38 @@ class AIService {
     return Map<String, dynamic>.from(data['suggestion'] ?? {});
   }
 
+  // ── Gather Context Helper ──
+  static Future<String> _gatherContext() async {
+    final sb = Supabase.instance.client;
+    String ctx = '';
+    try {
+      final v = await sb.from('vessels').select().limit(200);
+      if ((v as List).isNotEmpty) ctx += 'Flota: ${jsonEncode(v)}\n';
+      
+      final ais = await sb.from('ais_traffic').select('ship_name,latitude,longitude,speed,course,updated_at').limit(200);
+      if ((ais as List).isNotEmpty) ctx += 'Posiciones AIS: ${jsonEncode(ais)}\n';
+      
+      final vj = await sb.from('voyages').select().limit(100);
+      if ((vj as List).isNotEmpty) ctx += 'Viajes: ${jsonEncode(vj)}\n';
+      
+      final fl = await sb.from('fuel_logs').select().limit(50);
+      if ((fl as List).isNotEmpty) ctx += 'Combustible: ${jsonEncode(fl)}\n';
+      
+      final mt = await sb.from('maintenance_tasks').select().limit(50);
+      if ((mt as List).isNotEmpty) ctx += 'Mantenimiento: ${jsonEncode(mt)}\n';
+    } catch (e) {
+      debugPrint('[AIService] _gatherContext error: $e');
+    }
+    return ctx;
+  }
+
   // ── Conversational Chat (Gemini) ──
   static Future<String> chat(String message) async {
     try {
+      final contextData = await _gatherContext();
       final data = await _post('/api/ai/chat', {
         'message': message,
-        'context': 'Operador de flota, company_id: $_companyId',
+        'context': 'Operador de flota, company_id: $_companyId\n$contextData',
       });
       return data['response'] as String? ?? 'Sin respuesta';
     } catch (e) {
