@@ -37,10 +37,14 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) {
-        widget.onComplete?.call();
-        Navigator.of(context).pushReplacement(
-          CupertinoPageRoute(builder: (_) => widget.destination),
-        );
+        if (widget.onComplete != null) {
+          // Parent handles routing via setState rebuild
+          widget.onComplete!();
+        } else {
+          Navigator.of(context).pushReplacement(
+            CupertinoPageRoute(builder: (_) => widget.destination),
+          );
+        }
       }
     });
   }
