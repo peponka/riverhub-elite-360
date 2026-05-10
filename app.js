@@ -173,7 +173,7 @@ app.post('/api/ai/chat', aiLimiter, authenticateUser, async (req, res) => {
         return res.status(503).json({ error: 'AI not configured', response: 'IA no disponible. Configura GEMINI_API_KEY en .env' });
     }
 
-    const { message, context } = req.body;
+    const { message, context, history } = req.body;
     if (!message) {
         return res.status(400).json({ error: 'Missing message' });
     }
@@ -191,6 +191,15 @@ ${context || 'No hay embarcaciones registradas o activas.'}`;
     try {
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
 
+        let contents = [];
+        if (history && Array.isArray(history)) {
+            contents = history.map(h => ({
+                role: h.role === 'model' ? 'model' : 'user',
+                parts: [{ text: h.text }]
+            }));
+        }
+        contents.push({ role: 'user', parts: [{ text: message }] });
+
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -198,10 +207,7 @@ ${context || 'No hay embarcaciones registradas o activas.'}`;
                 systemInstruction: {
                     parts: [{ text: systemPrompt }]
                 },
-                contents: [{
-                    role: 'user',
-                    parts: [{ text: message }]
-                }],
+                contents: contents,
                 generationConfig: {
                     temperature: 0.4,
                     maxOutputTokens: 1024
