@@ -92,6 +92,8 @@ class AIService {
     return ctx;
   }
 
+  static final List<Map<String, String>> _chatHistory = [];
+
   // ── Conversational Chat (Gemini) ──
   static Future<String> chat(String message) async {
     try {
@@ -99,8 +101,18 @@ class AIService {
       final data = await _post('/api/ai/chat', {
         'message': message,
         'context': 'Operador de flota, company_id: $_companyId\n$contextData',
+        'history': _chatHistory,
       });
-      return data['response'] as String? ?? 'Sin respuesta';
+      
+      final answer = data['response'] as String? ?? 'Sin respuesta';
+      
+      _chatHistory.add({'role': 'user', 'text': message});
+      _chatHistory.add({'role': 'model', 'text': answer});
+      if (_chatHistory.length > 20) {
+        _chatHistory.removeRange(0, _chatHistory.length - 20);
+      }
+      
+      return answer;
     } catch (e) {
       debugPrint('[AIService] chat error: $e');
       return 'Error de conexión: $e';
