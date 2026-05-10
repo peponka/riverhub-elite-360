@@ -727,6 +727,78 @@ app.use((err, req, res, next) => {
     });
 });
 
+// --- PUSH NOTIFICATIONS (Firebase Admin SDK) ---
+let firebaseAdmin;
+try {
+    firebaseAdmin = require('firebase-admin');
+    const serviceAccount = require('./firebase-service-account.json');
+    if (!firebaseAdmin.apps.length) {
+        firebaseAdmin.initializeApp({
+            credential: firebaseAdmin.credential.cert(serviceAccount)
+        });
+    }
+    console.log('✅ Firebase Admin initialized for push notifications');
+} catch (e) {
+    console.warn('⚠️ Firebase Admin not available:', e.message);
+}
+
+// Send push to specific user
+app.post('/api/notifications/send', authenticateUser, async (req, res) => {
+    try {
+        if (!firebaseAdmin) return res.status(503).json({ error: 'Firebase no configurado' });
+        const { userId, title, body, data } = req.body;
+        if (!userId || !title) return res.status(400).json({ error: 'userId y title requeridos' });
+        
+        // Get FCM token from user_profiles
+        const { data: profile } = await supabaseServer.from('user_profiles').select('fcm_token').eq('user_id', userId).single();
+        if (!profile?.fcm_token) return res.status(404).json({ error: 'Usuario sin token FCM' });
+        
+        const message = {
+            token: profile.fcm_token,
+            notification: { title, body: body || '' },
+            data: data || {},
+            android: { priority: 'high', notification: { channelId: 'fluvia_channel' } }
+        };
+        const result = await firebaseAdmin.messaging().send(message);
+        res.json({ success: true, messageId: result });
+    } catch (e) {
+        console.error('[Push Send]', e.message);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// Broadcast push to all users
+app.post('/api/notifications/broadcast', authenticateUser, async (req, res) => {
+    try {
+        if (!firebaseAdmin) return res.status(503).json({ error: 'Firebase no configurado' });
+        const { title, body, data } = req.body;
+        if (!title) return res.status(400).json({ error: 'title requerido' });
+        
+        const { data: profiles } = await supabaseServer.from('user_profiles').select('fcm_token').not('fcm_token', 'is', null);
+        const tokens = (profiles || []).map(p => p.fcm_token).filter(t => t && t.length > 10);
+        if (tokens.length === 0) return res.json({ success: true, sent: 0, message: 'No hay tokens FCM registrados' });
+        
+        const message = {
+            notification: { title, body: body || '' },
+            data: data || {},
+            android: { priority: 'high', notification: { channelId: 'fluvia_channel' } }
+        };
+        const result = await firebaseAdmin.messaging().sendEachForMulticast({ ...message, tokens });
+        res.json({ success: true, sent: result.successCount, failed: result.failureCount });
+    } catch (e) {
+        console.error('[Push Broadcast]', e.message);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// Test push endpoint
+app.get('/api/notifications/test', async (req, res) => {
+    res.json({ 
+        firebaseReady: !!firebaseAdmin, 
+        status: firebaseAdmin ? 'Push notifications operativas' : 'Firebase Admin no configurado'
+    });
+});
+
 // --- KEEP ALIVE (for Render free tier) ---
 setInterval(() => {
     // Prevent Render from sleeping
