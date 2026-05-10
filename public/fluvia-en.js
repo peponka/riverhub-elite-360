@@ -764,7 +764,7 @@ function initMap(){
     var hidroviaRoute=[[-19.0,-57.65],[-20.5,-57.8],[-22.3,-57.9],[-23.4,-57.8],[-25.3,-57.6],[-26.5,-58.1],[-27.3,-58.5],[-29.0,-59.5],[-30.5,-59.9],[-31.5,-60.5],[-32.9,-60.6],[-33.5,-58.5],[-34.6,-58.4]];
     L.polyline(hidroviaRoute,{color:'#3B82F6',weight:2.5,dashArray:'8,6',opacity:0.45}).addTo(map);
     // Zoom fit to hidrovÃ­a bounds
-    map.setView([-28.0,-58.0],6);
+    map.setView([-30.0,-55.5],6);
 }
 function _shipIcon(color,size,heading){
     var rot=heading||0;
