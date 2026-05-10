@@ -1,4 +1,4 @@
-﻿// Supabase Init
+// Supabase Init
 const SUPABASE_URL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -750,6 +750,7 @@ async function loadComms(){
 
 // MAP
 var aisMarkers = {};
+var heatLayer = null;
 function initMap(){
     map=L.map('leaflet-map',{zoomControl:false}).setView([-27.5,-58.3],6);
     L.control.zoom({position:'topleft'}).addTo(map);
@@ -798,6 +799,7 @@ async function loadAISTraffic(){
             // Update legend
             var legend=document.querySelector('.map-legend');
             if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=json.total+' active';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=json.total+' active AIS';legend.appendChild(d);}}
+            updateHeatmap();
             return;
         }
     }catch(e){/* AIS API: */;}
@@ -823,6 +825,17 @@ function renderAISMarkers(data){
     });
     var legend=document.querySelector('.map-legend');
     if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=data.length+' active';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=data.length+' active AIS';legend.appendChild(d);}}
+    updateHeatmap();
+}
+function updateHeatmap(){
+    var points=[];
+    Object.values(aisMarkers).forEach(function(m){
+        var ll=m.getLatLng();
+        points.push([ll.lat,ll.lng,0.7]);
+    });
+    if(points.length===0)return;
+    if(heatLayer){map.removeLayer(heatLayer);}
+    heatLayer=L.heatLayer(points,{radius:25,blur:20,maxZoom:10,max:1.0,gradient:{0.2:'#3B82F6',0.4:'#10b981',0.6:'#F59E0B',0.8:'#EF4444',1.0:'#DC2626'}}).addTo(map);
 }
 
 // MODAL
