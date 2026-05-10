@@ -189,7 +189,7 @@ Contexto de Flota actual:
 ${context || 'No hay embarcaciones registradas o activas.'}`;
 
     try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_KEY}`;
 
         let contents = [];
         if (history && Array.isArray(history)) {
