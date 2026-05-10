@@ -18,6 +18,16 @@ function trad(s) {
         'low': 'Baja',
         'critical': 'Critico',
         'cargo': 'Carga',
+        'captain': 'Capit�n',
+        'engineer': 'Maquinista',
+        'deckhand': 'Marinero',
+        'cook': 'Cocinero',
+        'helmsman': 'Timonel',
+        'collision': 'Colisi�n',
+        'grounding': 'Encalladura',
+        'spill': 'Derrame',
+        'fire': 'Incendio',
+        'medical': 'M�dico',
         'passenger': 'Pasajeros'
     };
     return m[str] ? m[str] : s;
@@ -560,7 +570,7 @@ async function loadCrew(){
     try{
         var r=await sb.from('crew_members').select('*').limit(200);var data=r.data;
         var l=document.getElementById('crew-list');var em=document.getElementById('crew-empty');l.innerHTML='';
-        if(data&&data.length>0){em.style.display='none';data.forEach(function(c){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+(c.full_name||c.name||'')+'</h4><p>'+(c.role||'')+' - '+(c.vessel_name||'')+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:var(--success)">'+(trad(c.status||'EMBARCADO')).toUpperCase()+'</span><button class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('crew_members',c.id,(c.full_name||c.name||'Tripulante'),loadCrew);});l.appendChild(d);});document.getElementById('crew-total').textContent=data.length;document.getElementById('crew-on').textContent=data.filter(function(c){return(c.status||'').toLowerCase()==='embarcado'}).length;}else{em.style.display='';}
+        if(data&&data.length>0){em.style.display='none';data.forEach(function(c){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+(c.full_name||c.name||'')+'</h4><p>'+trad(c.role||'')+' - '+(c.vessel_name||'')+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:var(--success)">'+(trad(c.status||'EMBARCADO')).toUpperCase()+'</span><button class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('crew_members',c.id,(c.full_name||c.name||'Tripulante'),loadCrew);});l.appendChild(d);});document.getElementById('crew-total').textContent=data.length;document.getElementById('crew-on').textContent=data.filter(function(c){return(c.status||'').toLowerCase()==='embarcado'}).length;}else{em.style.display='';}
     }catch(e){/* Crew: */;}
 }
 
@@ -1055,7 +1065,7 @@ async function loadConvoy(){
                 chip.className='fleet-chip';
                 chip.style.opacity=isBusy?'0.5':'1';
                 chip.style.cursor=isBusy?'not-allowed':'grab';
-                chip.innerHTML='<i class="fa-regular fa-clone"></i><div class="chip-name">'+(v.name||v.vessel_name||'--')+'</div><div class="chip-type">'+(v.type||v.vessel_type||'BARCAZA').toUpperCase()+'</div>';
+                chip.innerHTML='<i class="fa-regular fa-clone"></i><div class="chip-name">'+(v.name||v.vessel_name||'--')+'</div><div class="chip-type">'+trad(v.type||v.vessel_type||'BARCAZA').toUpperCase()+'</div>';
                 if(!isBusy){
                     chip.draggable=true;
                     chip.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',v.name||v.vessel_name||'');});
@@ -1220,7 +1230,7 @@ function renderIncidents(filter){
             if(st==='Abierto')open++;if(sev==='Critico')crit++;
             var sevC=sev==='Critico'?'var(--error)':sev==='Alto'?'var(--warning)':sev==='Medio'?'var(--accent)':'var(--text-secondary)';
             var t=d.created_at?new Date(d.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
-            l.innerHTML+='<div class="list-item"><div><h4 style="display:flex;align-items:center;gap:8px"><span class="status-dot" style="background:'+sevC+'"></span>'+(d.title||'Incidente')+'</h4><p>'+(d.vessel_name||'')+' - '+(det.type||'')+' - '+t+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+sevC+'">'+sev.toUpperCase()+'</span><button class="delete-btn" data-id="'+d.id+'" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div></div>';
+            l.innerHTML+='<div class="list-item"><div><h4 style="display:flex;align-items:center;gap:8px"><span class="status-dot" style="background:'+sevC+'"></span>'+(d.title||'Incidente')+'</h4><p>'+(d.vessel_name||'')+' - '+trad(det.type||'')+' - '+t+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+sevC+'">'+trad(sev).toUpperCase()+'</span><button class="delete-btn" data-id="'+d.id+'" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div></div>';
         });
         document.getElementById('inc-total').textContent=incidentesData.length;
         document.getElementById('inc-open').textContent=open;
