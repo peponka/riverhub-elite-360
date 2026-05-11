@@ -694,18 +694,26 @@ async function loadBitacora(){
         l.innerHTML='';
         if(data&&data.length>0){
             if(em)em.style.display='none';
+            var catIcons={'navegacion':'fa-route','navigation':'fa-route','combustible':'fa-gas-pump','fuel':'fa-gas-pump','clima':'fa-cloud-sun','weather':'fa-cloud-sun','tripulacion':'fa-users','crew':'fa-users','mantenimiento':'fa-wrench','maintenance':'fa-wrench','maniobra':'fa-anchor','maneuver':'fa-anchor','incidente':'fa-triangle-exclamation','incident':'fa-triangle-exclamation','observacion':'fa-eye','observation':'fa-eye','carga':'fa-box','cargo':'fa-box','seguridad':'fa-shield-halved','safety':'fa-shield-halved'};
+            var catColors={'navegacion':'#3B82F6','navigation':'#3B82F6','combustible':'#F97316','fuel':'#F97316','clima':'#0EA5E9','weather':'#0EA5E9','tripulacion':'#8B5CF6','crew':'#8B5CF6','mantenimiento':'#6B7280','maintenance':'#6B7280','maniobra':'#10B981','maneuver':'#10B981','incidente':'#DC2626','incident':'#DC2626','observacion':'#F59E0B','observation':'#F59E0B','carga':'#0EA5E9','cargo':'#0EA5E9','seguridad':'#EF4444','safety':'#EF4444'};
             data.forEach(function(row){
-                var d=document.createElement('div');d.className='list-item';
-                var t=row.created_at?new Date(row.created_at).toLocaleString('en',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
-                d.innerHTML='<div><h4>'+(row.title||row.action_type||'Entry')+'</h4><p>'+(row.vessel_name||'')+' - '+(row.description||row.details||'')+' - '+t+'</p></div><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons>';
+                var cat=(row.title||row.action_type||'entry').toLowerCase();
+                var icon=catIcons[cat]||'fa-pen-to-square';
+                var color=catColors[cat]||'#94A3B8';
+                var t=row.created_at?new Date(row.created_at).toLocaleDateString('en',{day:'2-digit',month:'short'}):'-';
+                var tTime=row.created_at?new Date(row.created_at).toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}):'-';
+                var d=document.createElement('div');
+                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:all 0.2s;cursor:default;display:flex;align-items:flex-start;gap:14px';
+                d.onmouseenter=function(){this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.04)'};
+                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+                d.innerHTML='<div style="width:38px;height:38px;border-radius:10px;background:'+color+'12;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:15px;color:'+color+'"></i></div>'+'<div style="flex:1;min-width:0">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'+'<span style="display:inline-flex;align-items:center;gap:5px"><span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px">'+(row.title||row.action_type||'Entry').toUpperCase()+'</span>'+(row.vessel_name?'<span style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="font-size:9px;margin-right:3px;color:var(--text-tertiary)"></i>'+row.vessel_name+'</span>':'')+'</span>'+'<div style="display:flex;align-items:center;gap:8px">'+'<span style="font-size:10px;color:var(--text-tertiary);white-space:nowrap">'+t+', '+tTime+'</span>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:2px 4px;border-radius:6px;font-size:12px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'</div>'+'<div style="font-size:13px;color:var(--text-primary);line-height:1.5">'+(row.description||row.details||'No details')+'</div>'+'</div>';
                 if(row.id){
                     var btn=d.querySelector('.delete-btn');
                     if(btn)btn.addEventListener('click',function(){confirmDelete('logs',row.id,(row.title||'Entry'),loadBitacora);});
                 }
                 l.appendChild(d);
             });
-        }else{if(em)em.style.display='';}
-    }catch(e){/* Bitacora: */;}
+        }else{if(em)em.style.display='';}catch(e){/* Bitacora: */;}
 }
 
 async function loadCrew(){
