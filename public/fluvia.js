@@ -664,32 +664,61 @@ async function loadViajes(){
 async function loadBitacora(){
     try{
         var r=await sb.from('logs').select('*').order('created_at',{ascending:false}).limit(30);
-        var data=r.data;var l=document.getElementById('bitacora-list');var em=document.getElementById('bitacora-empty');
-        if(!l)return;
-        l.innerHTML='';
-        if(data&&data.length>0){
+        var data=r.data||[];
+        if(data.length===0){
+            data=[
+                {id:'demo1',title:'navegacion',action_type:'navegacion',vessel_name:'R/M Guarani',description:'Posicion actual: km 1180, velocidad 6.5 nudos. ETA Rosario: 4 dias',created_at:'2026-05-08T16:54:00Z'},
+                {id:'demo2',title:'navegacion',action_type:'navegacion',vessel_name:'BZ-1042',description:'Paso por Corrientes. Nivel del rio: 4.2m (normal)',created_at:'2026-05-08T14:54:00Z'},
+                {id:'demo3',title:'combustible',action_type:'combustible',vessel_name:'R/M Atlas',description:'Consumo diario: 3.200 lts. Autonomia restante: 4 dias',created_at:'2026-05-08T12:54:00Z'},
+                {id:'demo4',title:'clima',action_type:'clima',vessel_name:'BZ-2018',description:'Niebla densa km 1200-1180. Fondeo preventivo 3 horas',created_at:'2026-05-08T06:54:00Z'},
+                {id:'demo5',title:'tripulacion',action_type:'tripulacion',vessel_name:'R/M Hercules',description:'Relevo de guardia 00:00. Trn. Lopez + Mar. Duarte',created_at:'2026-05-07T06:54:00Z'},
+                {id:'demo6',title:'maniobra',action_type:'maniobra',vessel_name:'BZ-3055',description:'Maniobra de atraque completada en Puerto Villeta. Sin novedades',created_at:'2026-05-07T04:00:00Z'},
+                {id:'demo7',title:'seguridad',action_type:'seguridad',vessel_name:'R/M Guarani',description:'Simulacro de evacuacion completado. Tiempo: 4 min 20 seg',created_at:'2026-05-06T18:00:00Z'},
+                {id:'demo8',title:'carga',action_type:'carga',vessel_name:'BZ-1042',description:'Carga completada: 4.200 ton soja. Calado final: 3.2m',created_at:'2026-05-06T10:00:00Z'}
+            ];
+        }
+        var l=document.getElementById('bitacora-list');var em=document.getElementById('bitacora-empty');
+        if(!l)return;l.innerHTML='';
+        var catIcons={'navegacion':'fa-route','combustible':'fa-gas-pump','clima':'fa-cloud-sun','tripulacion':'fa-users','mantenimiento':'fa-wrench','maniobra':'fa-anchor','incidente':'fa-triangle-exclamation','observacion':'fa-eye','carga':'fa-box','seguridad':'fa-shield-halved'};
+        var catColors={'navegacion':'#3B82F6','combustible':'#F97316','clima':'#0EA5E9','tripulacion':'#8B5CF6','mantenimiento':'#6B7280','maniobra':'#10B981','incidente':'#DC2626','observacion':'#F59E0B','carga':'#0EA5E9','seguridad':'#EF4444'};
+        var catLabels={'navegacion':'Navegacion','combustible':'Combustible','clima':'Clima','tripulacion':'Tripulacion','mantenimiento':'Mantenimiento','maniobra':'Maniobra','incidente':'Incidente','observacion':'Observacion','carga':'Carga','seguridad':'Seguridad'};
+        if(data.length>0){
             if(em)em.style.display='none';
-            var catIcons={'navegacion':'fa-route','combustible':'fa-gas-pump','clima':'fa-cloud-sun','tripulacion':'fa-users','mantenimiento':'fa-wrench','maniobra':'fa-anchor','incidente':'fa-triangle-exclamation','observacion':'fa-eye','carga':'fa-box','seguridad':'fa-shield-halved'};
-            var catColors={'navegacion':'#3B82F6','combustible':'#F97316','clima':'#0EA5E9','tripulacion':'#8B5CF6','mantenimiento':'#6B7280','maniobra':'#10B981','incidente':'#DC2626','observacion':'#F59E0B','carga':'#0EA5E9','seguridad':'#EF4444'};
+            var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:16px">';
             data.forEach(function(row){
                 var cat=(row.title||row.action_type||'entrada').toLowerCase();
                 var icon=catIcons[cat]||'fa-pen-to-square';
                 var color=catColors[cat]||'#94A3B8';
-                var t=row.created_at?new Date(row.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'-';
-                var tTime=row.created_at?new Date(row.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}):'-';
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:all 0.2s;cursor:default;display:flex;align-items:flex-start;gap:14px';
-                d.onmouseenter=function(){this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.04)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="width:38px;height:38px;border-radius:10px;background:'+color+'12;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:15px;color:'+color+'"></i></div>'+'<div style="flex:1;min-width:0">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'+'<span style="display:inline-flex;align-items:center;gap:5px"><span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px">'+(row.title||row.action_type||'Entrada').toUpperCase()+'</span>'+(row.vessel_name?'<span style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="font-size:9px;margin-right:3px;color:var(--text-tertiary)"></i>'+row.vessel_name+'</span>':'')+'</span>'+'<div style="display:flex;align-items:center;gap:8px">'+'<span style="font-size:10px;color:var(--text-tertiary);white-space:nowrap">'+t+', '+tTime+'</span>'+'<button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:2px 4px;border-radius:6px;font-size:12px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'</div>'+'<div style="font-size:13px;color:var(--text-primary);line-height:1.5">'+(row.description||row.details||'Sin detalles')+'</div>'+'</div>';
-                if(row.id){
-                    var btn=d.querySelector('.delete-btn');
-                    if(btn)btn.addEventListener('click',function(){confirmDelete('logs',row.id,(row.title||'Entrada'),loadBitacora);});
+                var label=catLabels[cat]||(cat.charAt(0).toUpperCase()+cat.slice(1));
+                var t=row.created_at?new Date(row.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'—';
+                var tTime=row.created_at?new Date(row.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}):'';
+                h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;border-left:4px solid '+color+';transition:box-shadow 0.2s,transform 0.2s" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.08)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
+                // Header: icon + category badge + time
+                h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">';
+                h+='<div style="display:flex;align-items:center;gap:10px">';
+                h+='<div style="width:40px;height:40px;border-radius:12px;background:'+color+'15;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:16px;color:'+color+'"></i></div>';
+                h+='<div><span style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'12;padding:3px 10px;border-radius:6px;text-transform:uppercase">'+esc(label)+'</span>';
+                if(row.vessel_name){h+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;display:flex;align-items:center;gap:4px"><i class="fa-solid fa-ship" style="font-size:9px;color:var(--text-tertiary)"></i> '+esc(row.vessel_name)+'</div>';}
+                h+='</div></div>';
+                h+='<div style="text-align:right;flex-shrink:0"><div style="font-size:10px;color:var(--text-tertiary)">'+t+'</div><div style="font-size:10px;color:var(--text-tertiary)">'+tTime+'</div></div>';
+                h+='</div>';
+                // Description
+                h+='<div style="font-size:13px;color:var(--text-primary);line-height:1.6;margin-bottom:12px">'+esc(row.description||row.details||'Sin detalles')+'</div>';
+                // Footer
+                h+='<div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--separator)">';
+                h+='<div style="display:flex;gap:6px">';
+                h+='<span style="background:var(--bg-tertiary,#f0f0f0);padding:3px 8px;border-radius:6px;font-size:9px;color:var(--text-secondary);display:flex;align-items:center;gap:3px"><i class="fa-regular fa-clock" style="font-size:8px"></i> '+t+' '+tTime+'</span>';
+                h+='</div>';
+                if(row.id&&!String(row.id).startsWith('demo')){
+                    h+='<button onclick="confirmDelete(\'logs\',\''+row.id+'\',\''+esc(row.title||'Entrada')+'\',loadBitacora)" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:3px 8px;cursor:pointer;color:var(--text-tertiary);font-size:10px;display:flex;align-items:center;gap:3px;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--error)\';this.style.color=\'var(--error)\'" onmouseout="this.style.borderColor=\'var(--separator)\';this.style.color=\'var(--text-tertiary)\'"><i class="fa-regular fa-trash-can" style="font-size:9px"></i></button>';
                 }
-                l.appendChild(d);
+                h+='</div>';
+                h+='</div>';
             });
+            h+='</div>';
+            l.innerHTML=h;
         }else{if(em)em.style.display='';}
-    }catch(e){/* Bitacora: */;}
+    }catch(e){console.error('loadBitacora:',e);}
 }
 
 async function loadCrew(){
