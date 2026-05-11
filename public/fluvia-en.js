@@ -665,17 +665,38 @@ var _dashAutoRefresh=setInterval(function(){
 async function loadFleet(){
     try{
         var r=await sb.from('vessels').select('*').limit(100);var data=r.data;if(!data)return;
-        var tb=document.getElementById('fleet-tbody');tb.innerHTML='';
+        var tb=document.getElementById('fleet-tbody');
+        // Hide table structure, use parent as card container
+        var table=tb.closest('table');if(table){var thead=table.querySelector('thead');if(thead)thead.style.display='none';table.style.border='none';table.style.background='transparent';}
+        tb.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px';
+        tb.innerHTML='';
+        var typeIcons={'remolcador':'fa-ship','tugboat':'fa-ship','empujador':'fa-truck-moving','pusher':'fa-truck-moving','barcaza':'fa-box-open','barge':'fa-box-open','tanque':'fa-droplet','tanker':'fa-droplet','lancha':'fa-ferry','patrol':'fa-shield-halved'};
+        var typeColors={'remolcador':'#3B82F6','tugboat':'#3B82F6','empujador':'#8B5CF6','pusher':'#8B5CF6','barcaza':'#F97316','barge':'#F97316','tanque':'#0EA5E9','tanker':'#0EA5E9','lancha':'#10B981','patrol':'#DC2626'};
+        var typeLabels={'remolcador':'TUGBOAT','tugboat':'TUGBOAT','empujador':'PUSHER','pusher':'PUSHER','barcaza':'BARGE','barge':'BARGE','tanque':'TANKER','tanker':'TANKER','lancha':'PATROL','patrol':'PATROL'};
+        var inService=0;var inDock=0;
         data.forEach(function(v){
-            var s=(v.status||'').toLowerCase();
-            var c=s.indexOf('viaje')>=0||s==='active'?'var(--success)':s.indexOf('manten')>=0?'var(--warning)':'var(--accent)';
-            var tr=document.createElement('tr');
-            tr.innerHTML='<td>'+esc(v.name||v.vessel_name||'')+'</td><td>'+esc(v.type||v.vessel_type||'')+'</td><td><span class="status-dot" style="background:'+c+'"></span>'+esc(v.status||'')+'</td><td>'+esc(v.location||v.current_position||'')+'</td><td><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></td>';
-            tr.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('vessels',v.id,v.name||v.vessel_name||'Vessel',loadFleet);});
-            tb.appendChild(tr);
+            var type=(v.type||v.vessel_type||'tugboat').toLowerCase();
+            var icon=typeIcons[type]||'fa-ship';
+            var color=typeColors[type]||'#94A3B8';
+            var typeLabel=typeLabels[type]||(v.type||v.vessel_type||'Vessel').toUpperCase();
+            var st=(v.status||'active').toLowerCase();
+            var isActive=st==='activo'||st==='active'||st.indexOf('viaje')>=0||st.indexOf('transit')>=0;
+            var isDock=st.indexOf('dique')>=0||st.indexOf('dock')>=0||st.indexOf('manten')>=0;
+            if(isActive)inService++;if(isDock)inDock++;
+            var stColor=isActive?'#2EA043':isDock?'#F59E0B':'#94A3B8';
+            var stLabel=isActive?'Active':isDock?'Dry Dock':(v.status||'Active');
+            var d=document.createElement('tr');
+            d.style.cssText='display:block;background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default';
+            d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
+            d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+            d.innerHTML='<td style="display:block;padding:0;border:none"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px"><div style="width:44px;height:44px;border-radius:12px;background:'+color+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid '+icon+'" style="font-size:18px;color:'+color+'"></i></div><button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button></div><div style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:3px;letter-spacing:0.3px">'+esc(v.name||v.vessel_name||'')+'</div><div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px;margin-bottom:12px">'+typeLabel+'</div><div style="display:flex;align-items:center;justify-content:space-between"><span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-location-dot" style="font-size:10px;color:var(--text-tertiary)"></i>'+(v.location||v.current_position||'No location')+'</span><span style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:'+stColor+'"><span style="width:6px;height:6px;border-radius:50%;background:'+stColor+'"></span>'+stLabel+'</span></div></td>';
+            d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('vessels',v.id,v.name||v.vessel_name||'Vessel',loadFleet);});
+            tb.appendChild(d);
         });
         document.getElementById('fleet-total').textContent=data.length;
-    }catch(e){/* Fleet: */;}
+        var elServ=document.getElementById('fleet-service');if(elServ)elServ.textContent=inService;
+        var elDock=document.getElementById('fleet-dock');if(elDock)elDock.textContent=inDock;
+    }catch(e){console.error('loadFleet:',e);}
 }
 
 async function loadTrips(){
