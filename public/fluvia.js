@@ -727,32 +727,43 @@ async function loadCrew(){
         var l=document.getElementById('crew-list');var em=document.getElementById('crew-empty');l.innerHTML='';
         if(data&&data.length>0){
             em.style.display='none';
-            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px';
-            var roleIcons={'capitan':'fa-star','captain':'fa-star','timonel':'fa-compass','helmsman':'fa-compass','maquinista':'fa-gears','engineer':'fa-gears','marinero':'fa-anchor','deckhand':'fa-anchor','cocinero':'fa-utensils','cook':'fa-utensils','primer oficial':'fa-user-tie','jefe de maquinas':'fa-wrench'};
-            var roleColors={'capitan':'#F59E0B','captain':'#F59E0B','timonel':'#3B82F6','helmsman':'#3B82F6','maquinista':'#6B7280','engineer':'#6B7280','marinero':'#0EA5E9','deckhand':'#0EA5E9','cocinero':'#10B981','cook':'#10B981','primer oficial':'#8B5CF6','jefe de maquinas':'#DC2626'};
+            var roleIcons={'capitan':'fa-star','timonel':'fa-compass','maquinista':'fa-gears','marinero':'fa-anchor','cocinero':'fa-utensils','primer oficial':'fa-user-tie','jefe de maquinas':'fa-wrench','practico':'fa-map-marked-alt','mecanico':'fa-screwdriver-wrench'};
+            var roleColors={'capitan':'#F59E0B','timonel':'#3B82F6','maquinista':'#6B7280','marinero':'#0EA5E9','cocinero':'#10B981','primer oficial':'#8B5CF6','jefe de maquinas':'#DC2626','practico':'#F97316','mecanico':'#64748B'};
+            var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:16px">';
             data.forEach(function(c){
                 var name=c.full_name||c.name||'Tripulante';
-                var initials=name.split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase();
                 var role=(c.role||'marinero').toLowerCase();
                 var icon=roleIcons[role]||'fa-user';
                 var color=roleColors[role]||'#94A3B8';
+                var roleLabel=trad(c.role||'Marinero');
                 var st=(c.status||'embarcado').toLowerCase();
-                var isActive=st==='activo'||st==='active';
                 var isOnboard=st==='embarcado'||st==='onboard';
-                var stColor=isActive?'#3B82F6':isOnboard?'#2EA043':'#94A3B8';
-                var stBg=isActive?'rgba(59,130,246,0.08)':isOnboard?'rgba(46,160,67,0.08)':'rgba(148,163,184,0.08)';
+                var isActive=st==='activo'||st==='active';
+                var isFranco=st==='franco'||st==='leave';
+                var stColor=isOnboard?'#2EA043':isActive?'#3B82F6':isFranco?'#F59E0B':'#94A3B8';
                 var stLabel=trad(c.status||'Embarcado').toUpperCase();
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default';
-                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">'+'<div style="display:flex;align-items:center;gap:12px">'+'<div style="width:44px;height:44px;border-radius:12px;background:'+color+'14;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:'+color+'">'+initials+'</div>'+'<div>'+'<div style="font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.3">'+name+'</div>'+'<div style="display:flex;align-items:center;gap:5px;margin-top:3px"><i class="fa-solid '+icon+'" style="font-size:10px;color:'+color+'"></i><span style="font-size:11px;color:var(--text-secondary)">'+trad(c.role||'Marinero')+'</span></div>'+'</div>'+'</div>'+'<button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="font-size:10px;color:var(--text-tertiary)"></i>'+(c.vessel_name||'Sin asignar')+'</span>'+'<span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+stColor+';background:'+stBg+';padding:4px 10px;border-radius:6px;display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:'+stColor+'"></span>'+stLabel+'</span>'+'</div>';
-                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('crew_members',c.id,(c.full_name||c.name||'Tripulante'),loadCrew);});
-                l.appendChild(d);
+                var vessel=c.vessel_name||'Sin asignar';
+                var docId=c.document_number||c.doc_id||'';
+                h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;border-left:4px solid '+color+';transition:box-shadow 0.2s,transform 0.2s" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.08)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
+                h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">';
+                h+='<div style="display:flex;align-items:center;gap:10px">';
+                h+='<div style="width:40px;height:40px;border-radius:12px;background:'+color+'15;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:16px;color:'+color+'"></i></div>';
+                h+='<div><span style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'12;padding:3px 10px;border-radius:6px;text-transform:uppercase">'+roleLabel+'</span>';
+                h+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;display:flex;align-items:center;gap:4px"><i class="fa-solid fa-ship" style="font-size:9px;color:var(--text-tertiary)"></i> '+vessel+'</div>';
+                h+='</div></div>';
+                h+='<span style="font-size:10px;font-weight:700;color:'+stColor+';background:'+stColor+'15;padding:3px 8px;border-radius:6px;white-space:nowrap">'+stLabel+'</span>';
+                h+='</div>';
+                h+='<div style="font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.5;margin-bottom:12px">'+name+'</div>';
+                h+='<div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--separator)">';
+                h+='<span style="background:var(--bg-tertiary,#f0f0f0);padding:3px 8px;border-radius:6px;font-size:9px;color:var(--text-secondary);display:flex;align-items:center;gap:3px"><i class="fa-regular fa-id-card" style="font-size:8px"></i> '+(docId||'S/D')+'</span>';
+                if(c.id){h+='<button onclick="confirmDelete(\'crew_members\',\''+c.id+'\',\''+name+'\',loadCrew)" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:3px 8px;cursor:pointer;color:var(--text-tertiary);font-size:10px;display:flex;align-items:center;gap:3px;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--error)\';this.style.color=\'var(--error)\'" onmouseout="this.style.borderColor=\'var(--separator)\';this.style.color=\'var(--text-tertiary)\'"><i class="fa-regular fa-trash-can" style="font-size:9px"></i></button>';}
+                h+='</div></div>';
             });
+            h+='</div>';
+            l.innerHTML=h;
             document.getElementById('crew-total').textContent=data.length;
             document.getElementById('crew-on').textContent=data.filter(function(c){var s=(c.status||'').toLowerCase();return s==='embarcado'||s==='onboard'}).length;
-        }else{em.style.display='';}
+        }else{if(em)em.style.display='';}
     }catch(e){/* Crew: */;}
 }
 
@@ -790,22 +801,24 @@ async function loadMaint(){
         var r=await sb.from('maintenance_tasks').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('maint-list');l.innerHTML='';
         if(data&&data.length>0){
+            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:8px';
             data.forEach(function(m){
                 var pri=(m.priority||'').toLowerCase();
                 var st=(m.status||'').toLowerCase();
                 var priColor=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'#DC2626':pri==='media'||pri==='medium'?'#F59E0B':'#94A3B8';
                 var priBg=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'rgba(220,38,38,0.08)':pri==='media'||pri==='medium'?'rgba(245,158,11,0.08)':'rgba(148,163,184,0.08)';
                 var priIcon=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'fa-triangle-exclamation':pri==='media'||pri==='medium'?'fa-exclamation':'fa-minus';
+                var priLabel=trad(m.priority||'Baja').toUpperCase();
                 var stColor=st==='completed'||st==='completado'?'#2EA043':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'#3B82F6':'#F59E0B';
                 var stBg=st==='completed'||st==='completado'?'rgba(46,160,67,0.08)':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'rgba(59,130,246,0.08)':'rgba(245,158,11,0.08)';
                 var stIcon=st==='completed'||st==='completado'?'fa-circle-check':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'fa-spinner':'fa-clock';
                 var stLabel=trad(m.status||'Pendiente').toUpperCase();
                 var t=m.created_at?new Date(m.created_at).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}):'-';
                 var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-left:4px solid '+priColor+';border-radius:12px;padding:18px 20px;margin-bottom:10px;transition:all 0.2s;cursor:default';
-                d.onmouseenter=function(){this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.05)'};
+                d.style.cssText='background:var(--bg-secondary);border:1px solid var(--separator);border-left:4px solid '+priColor+';border-radius:16px;padding:20px;transition:all 0.2s;cursor:default';
+                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'};
                 d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">'+'<div style="flex:1;min-width:0">'+'<div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px;line-height:1.4">'+(m.description||m.title||'Orden de mantenimiento')+'</div>'+'<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">'+'<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="color:var(--text-tertiary);font-size:10px"></i>'+(m.vessel_name||'--')+'</span>'+'<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-regular fa-calendar" style="color:var(--text-tertiary);font-size:10px"></i>'+t+'</span>'+'<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:'+priColor+';background:'+priBg+';padding:3px 8px;border-radius:5px;letter-spacing:0.3px"><i class="fa-solid '+priIcon+'" style="font-size:8px"></i>'+(trad(m.priority||'Baja')).toUpperCase()+'</span>'+'</div>'+'</div>'+'<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+'<span style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:'+stColor+';background:'+stBg+';padding:5px 12px;border-radius:6px;letter-spacing:0.3px"><i class="fa-solid '+stIcon+'" style="font-size:9px"></i>'+stLabel+'</span>'+'<button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px 6px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'</div>';
+                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:12px;background:'+priColor+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-wrench" style="font-size:16px;color:'+priColor+'"></i></div><span style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:'+stColor+';background:'+stBg+';padding:5px 12px;border-radius:6px;letter-spacing:0.3px"><i class="fa-solid '+stIcon+'" style="font-size:9px"></i>'+stLabel+'</span></div><div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:10px;line-height:1.4">'+esc(m.description||m.title||'Orden de mantenimiento')+'</div><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px"><span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="color:var(--text-tertiary);font-size:10px"></i>'+(m.vessel_name||'--')+'</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-regular fa-calendar" style="color:var(--text-tertiary);font-size:10px"></i>'+t+'</span></div><div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--separator)"><span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:'+priColor+';background:'+priBg+';padding:3px 8px;border-radius:5px;letter-spacing:0.3px"><i class="fa-solid '+priIcon+'" style="font-size:8px"></i>'+priLabel+'</span><button class="delete-btn" title="Eliminar" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:3px 8px;cursor:pointer;color:var(--text-tertiary);font-size:10px;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--error)\';this.style.color=\'var(--error)\'" onmouseout="this.style.borderColor=\'var(--separator)\';this.style.color=\'var(--text-tertiary)\'"><i class="fa-regular fa-trash-can" style="font-size:9px"></i></button></div>';
                 d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('maintenance_tasks',m.id,(m.description||m.title||'Orden'),loadMaint);});
                 l.appendChild(d);
             });
@@ -816,7 +829,7 @@ async function loadMaint(){
             var elProg=document.getElementById('maint-progress');if(elProg)elProg.textContent=inProg;
             var elDone=document.getElementById('maint-done');if(elDone)elDone.textContent=done;
         }
-    }catch(e){/* Maint: */;}
+    }catch(e){console.error('loadMaint:',e);}
 }
 
 async function loadPanol(){

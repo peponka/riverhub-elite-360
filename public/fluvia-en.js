@@ -846,8 +846,38 @@ async function loadMaint(){
     try{
         var r=await sb.from('maintenance_tasks').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('maint-list');l.innerHTML='';
-        if(data&&data.length>0){data.forEach(function(m){var d=document.createElement('div');d.className='list-item';var pc=m.priority==='High'||m.priority==='high'?'var(--error)':m.priority==='Medium'?'var(--warning)':'var(--text-secondary)';d.innerHTML='<div><h4>'+(m.description||m.title||'')+'</h4><p>'+String.fromCodePoint(0x1F6A2)+' '+(m.vessel_name||'')+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+pc+'">'+(m.status||m.priority||'').toUpperCase()+'</span><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('maintenance_tasks',m.id,(m.description||m.title||'Order'),loadMaint);});l.appendChild(d);});document.getElementById('maint-pending').textContent=data.filter(function(m){return(m.status||'').toLowerCase()!=='completed'}).length;}
-    }catch(e){/* Maint: */;}
+        if(data&&data.length>0){
+            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:8px';
+            var priLabels={'alta':'CRITICAL','high':'HIGH','critico':'CRITICAL','critical':'CRITICAL','media':'MEDIUM','medium':'MEDIUM','baja':'LOW','low':'LOW'};
+            var stLabels={'pendiente':'PENDING','pending':'PENDING','en progreso':'IN PROGRESS','in progress':'IN PROGRESS','completado':'COMPLETED','completed':'COMPLETED'};
+            data.forEach(function(m){
+                var pri=(m.priority||'').toLowerCase();
+                var st=(m.status||'').toLowerCase();
+                var priColor=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'#DC2626':pri==='media'||pri==='medium'?'#F59E0B':'#94A3B8';
+                var priBg=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'rgba(220,38,38,0.08)':pri==='media'||pri==='medium'?'rgba(245,158,11,0.08)':'rgba(148,163,184,0.08)';
+                var priIcon=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'fa-triangle-exclamation':pri==='media'||pri==='medium'?'fa-exclamation':'fa-minus';
+                var priLabel=priLabels[pri]||(m.priority||'LOW').toUpperCase();
+                var stColor=st==='completed'||st==='completado'?'#2EA043':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'#3B82F6':'#F59E0B';
+                var stBg=st==='completed'||st==='completado'?'rgba(46,160,67,0.08)':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'rgba(59,130,246,0.08)':'rgba(245,158,11,0.08)';
+                var stIcon=st==='completed'||st==='completado'?'fa-circle-check':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'fa-spinner':'fa-clock';
+                var stLabel=stLabels[st]||(m.status||'PENDING').toUpperCase();
+                var t=m.created_at?new Date(m.created_at).toLocaleDateString('en',{day:'2-digit',month:'short',year:'numeric'}):'-';
+                var d=document.createElement('div');
+                d.style.cssText='background:var(--bg-secondary);border:1px solid var(--separator);border-left:4px solid '+priColor+';border-radius:16px;padding:20px;transition:all 0.2s;cursor:default';
+                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'};
+                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:12px;background:'+priColor+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-wrench" style="font-size:16px;color:'+priColor+'"></i></div><span style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:'+stColor+';background:'+stBg+';padding:5px 12px;border-radius:6px;letter-spacing:0.3px"><i class="fa-solid '+stIcon+'" style="font-size:9px"></i>'+stLabel+'</span></div><div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:10px;line-height:1.4">'+esc(m.description||m.title||'Maintenance order')+'</div><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px"><span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="color:var(--text-tertiary);font-size:10px"></i>'+(m.vessel_name||'--')+'</span><span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-regular fa-calendar" style="color:var(--text-tertiary);font-size:10px"></i>'+t+'</span></div><div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--separator)"><span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:'+priColor+';background:'+priBg+';padding:3px 8px;border-radius:5px;letter-spacing:0.3px"><i class="fa-solid '+priIcon+'" style="font-size:8px"></i>'+priLabel+'</span><button class="delete-btn" title="Delete" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:3px 8px;cursor:pointer;color:var(--text-tertiary);font-size:10px;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--error)\';this.style.color=\'var(--error)\'" onmouseout="this.style.borderColor=\'var(--separator)\';this.style.color=\'var(--text-tertiary)\'"><i class="fa-regular fa-trash-can" style="font-size:9px"></i></button></div>';
+                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('maintenance_tasks',m.id,(m.description||m.title||'Order'),loadMaint);});
+                l.appendChild(d);
+            });
+            var pending=data.filter(function(m){return(m.status||'').toLowerCase()!=='completed'&&(m.status||'').toLowerCase()!=='completado'}).length;
+            var inProg=data.filter(function(m){var s=(m.status||'').toLowerCase();return s.indexOf('progreso')>=0||s.indexOf('progress')>=0}).length;
+            var done=data.filter(function(m){var s=(m.status||'').toLowerCase();return s==='completed'||s==='completado'}).length;
+            document.getElementById('maint-pending').textContent=pending;
+            var elProg=document.getElementById('maint-progress');if(elProg)elProg.textContent=inProg;
+            var elDone=document.getElementById('maint-done');if(elDone)elDone.textContent=done;
+        }
+    }catch(e){console.error('loadMaint:',e);}
 }
 
 async function loadPanol(){
