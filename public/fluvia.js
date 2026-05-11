@@ -246,7 +246,7 @@ document.getElementById('login-email').addEventListener('keydown',function(e){if
 
 // SPA Router
 let map = null;
-const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,liquidos:loadLiquidos,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidentes,briefing:loadBriefing};
+const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,liquidos:loadLiquidos,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidentes,briefing:loadBriefing,contratos:loadContratos};
 
 document.querySelectorAll('.nav-item').forEach(function(item){
     item.addEventListener('click',function(e){
@@ -855,7 +855,8 @@ var modalForms={
     maint:{title:'Nueva Orden de Mantenimiento',fields:[{id:'maint-title',label:'DESCRIPCION',type:'text',placeholder:'Que reparar'},{id:'maint-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'maint-priority',label:'PRIORIDAD',type:'select',options:['Alta','Media','Baja']},{id:'maint-notes',label:'NOTAS',type:'textarea',placeholder:'Detalles...'}]},
     panol:{title:'Agregar Item',fields:[{id:'panol-name',label:'REPUESTO',type:'text',placeholder:'Filtro de aceite'},{id:'panol-cat',label:'CATEGORIA',type:'select',options:['Motor','Electrico','Hidraulico','Casco','General']},{id:'panol-qty',label:'CANTIDAD',type:'text',placeholder:'10'},{id:'panol-min',label:'STOCK MINIMO',type:'text',placeholder:'2'}]},
     calado:{title:'Registrar Lectura de Calado',fields:[{id:'calado-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'calado-value',label:'CALADO (METROS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'CALADO MAXIMO (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVACIONES',type:'textarea',placeholder:'Condiciones, ubicacion...'}]},
-    incidente:{title:'Reportar Incidente',fields:[{id:'inc-title',label:'TITULO',type:'text',placeholder:'Descripcion breve del incidente'},{id:'inc-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'inc-severity',label:'SEVERIDAD',type:'select',options:['Critico','Alto','Medio','Bajo']},{id:'inc-type',label:'TIPO',type:'select',options:['Colision','Encalladura','Derrame','Averia mecanica','Incendio','Medico','Otro']},{id:'inc-desc',label:'DESCRIPCION DETALLADA',type:'textarea',placeholder:'Que ocurrio, donde, cuando, medidas tomadas...'}]}
+    incidente:{title:'Reportar Incidente',fields:[{id:'inc-title',label:'TITULO',type:'text',placeholder:'Descripcion breve del incidente'},{id:'inc-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'inc-severity',label:'SEVERIDAD',type:'select',options:['Critico','Alto','Medio','Bajo']},{id:'inc-type',label:'TIPO',type:'select',options:['Colision','Encalladura','Derrame','Averia mecanica','Incendio','Medico','Otro']},{id:'inc-desc',label:'DESCRIPCION DETALLADA',type:'textarea',placeholder:'Que ocurrio, donde, cuando, medidas tomadas...'}]},
+    contrato:{title:'Nuevo Contrato de Flete',fields:[{id:'ctr-client',label:'CLIENTE',type:'text',placeholder:'Ej: Cargill S.A.'},{id:'ctr-route',label:'RUTA',type:'text',placeholder:'Ej: Rosario \u2192 Asunci\u00F3n'},{id:'ctr-product',label:'PRODUCTO',type:'text',placeholder:'Ej: Soja, Gas Oil'},{id:'ctr-type',label:'TIPO DE CONTRATO',type:'select',options:['COA Anual','Semestral','Trimestral','Spot']},{id:'ctr-volume',label:'VOLUMEN TOTAL (TON)',type:'text',placeholder:'84000'},{id:'ctr-rate',label:'TARIFA (USD/TON)',type:'text',placeholder:'28.5'},{id:'ctr-expdate',label:'FECHA EXPIRACION',type:'date'}]}
 };
 var currentModal=null;
 // esc() defined at top of file (line 7)
@@ -891,6 +892,7 @@ document.getElementById('modal-submit').addEventListener('click',async function(
         else if(t==='panol'&&d['panol-name']){await sb.from('inventory_items').insert({name:d['panol-name'],category:d['panol-cat'],quantity:parseInt(d['panol-qty'])||0,min_stock:parseInt(d['panol-min'])||0,company_id:cid});loadPanol();}
         else if(t==='calado'&&d['calado-vessel']){await sb.from('logs').insert({title:'Lectura de calado: '+d['calado-vessel'],vessel_name:d['calado-vessel'],action_type:'DRAFT_READING',description:d['calado-notes']||'Calado: '+d['calado-value']+'m / Max: '+d['calado-max']+'m',details:JSON.stringify({draft:parseFloat(d['calado-value'])||0,max_draft:parseFloat(d['calado-max'])||3.5}),company_id:cid});loadCalado();}
         else if(t==='incidente'&&d['inc-title']){await sb.from('logs').insert({title:d['inc-title'],vessel_name:d['inc-vessel'],action_type:'INCIDENTE',description:d['inc-desc'],details:JSON.stringify({severity:d['inc-severity'],type:d['inc-type'],status:'Abierto'}),company_id:cid});loadIncidentes();}
+        else if(t==='contrato'&&d['ctr-client']){await sb.from('freight_contracts').insert({client:d['ctr-client'],route:d['ctr-route'],product:d['ctr-product'],contract_type:d['ctr-type'],volume_total:parseInt(d['ctr-volume'])||0,volume_used:0,rate_per_ton:parseFloat(d['ctr-rate'])||0,expiration_date:d['ctr-expdate']||null,status:'active',company_id:cid});loadContratos();}
     }catch(e){console.error('Save:',e);}
     document.getElementById('modal-overlay').classList.remove('open');
 });
@@ -1559,6 +1561,72 @@ if(!document.getElementById('ai-spinner-css')){
     var style=document.createElement('style');style.id='ai-spinner-css';
     style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
     document.head.appendChild(style);
+}
+
+// ─── CONTRATOS DE FLETE ────────────────────────────────────
+function exportContratos(fmt){alert('Exportar contratos en '+fmt+' - próximamente');}
+async function loadContratos(){
+    try{
+        var r=await sb.from('freight_contracts').select('*').order('created_at',{ascending:false}).limit(50);
+        var data=r.data||[];
+        var activeCount=data.filter(function(c){return c.status==='active'}).length;
+        var totalTon=data.reduce(function(s,c){return s+(c.volume_total||0)},0);
+        var revenue=data.reduce(function(s,c){return s+((c.volume_used||0)*(parseFloat(c.rate_per_ton)||0))},0);
+        var expiringCount=data.filter(function(c){return c.status==='expires'||c.status==='renewing'}).length;
+
+        var ae=document.getElementById('ctr-active');if(ae)ae.textContent=activeCount;
+        var te=document.getElementById('ctr-tonnage');if(te)te.textContent=totalTon>=1000?(totalTon/1000).toFixed(0)+'k':totalTon;
+        var re=document.getElementById('ctr-revenue');if(re)re.textContent='$'+(revenue>=1000?(revenue/1000).toFixed(0)+'k':revenue.toFixed(0));
+        var ee=document.getElementById('ctr-expiring');if(ee)ee.textContent=expiringCount;
+
+        var container=document.getElementById('ctr-list');
+        if(!container)return;
+
+        if(data.length===0){container.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-secondary);"><i class="fa-solid fa-file-contract" style="font-size:32px;opacity:0.3;margin-bottom:12px;display:block;"></i>Sin contratos registrados</div>';return;}
+
+        var h='<div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px 0;">';
+        h+='<div style="font-family:Newsreader,serif;font-size:22px;font-weight:400;color:var(--text-primary);">Contratos Vigentes</div>';
+        h+='<div style="font-size:12px;color:var(--accent);font-weight:600;">'+data.length+' total</div></div>';
+
+        h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;">';
+        data.forEach(function(c){
+            var vol=c.volume_total||1;
+            var used=c.volume_used||0;
+            var pct=Math.round(used/vol*100);
+            var sc=c.status==='active'?'#10B981':c.status==='expires'?'#F59E0B':c.status==='renewing'?'#3B82F6':'#6B7280';
+            var sl=c.status==='active'?'ACTIVO':c.status==='expires'?'EXPIRA':c.status==='renewing'?'RENOVANDO':c.status.toUpperCase();
+            var barColor=pct>90?'#EF4444':pct>70?'#F59E0B':'#10B981';
+            var expDate=c.expiration_date?new Date(c.expiration_date).toLocaleDateString('es',{day:'numeric',month:'short',year:'numeric'}):'—';
+
+            h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,0.08)\'" onmouseout="this.style.boxShadow=\'none\'">';
+
+            // Header: client + status badge
+            h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">';
+            h+='<div style="font-weight:700;font-size:15px;color:var(--text-primary);">'+esc(c.client)+'</div>';
+            h+='<span style="background:'+sc+'18;color:'+sc+';padding:4px 10px;border-radius:8px;font-size:9px;font-weight:700;letter-spacing:0.5px;">'+sl+'</span>';
+            h+='</div>';
+            h+='<div style="font-size:11px;color:var(--text-secondary);margin-bottom:14px;">'+esc(c.route)+' \u2014 '+esc(c.product)+'</div>';
+
+            // Progress bar
+            h+='<div style="position:relative;height:8px;background:var(--bg-tertiary);border-radius:4px;overflow:hidden;margin-bottom:8px;">';
+            h+='<div style="position:absolute;top:0;left:0;height:100%;width:'+Math.min(pct,100)+'%;background:'+barColor+';border-radius:4px;transition:width 0.6s ease;"></div></div>';
+
+            // Volume + rate
+            h+='<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:10px;">';
+            h+='<span style="font-weight:600;color:var(--text-primary);">'+used.toLocaleString()+' / '+vol.toLocaleString()+' ton \u00B7 '+pct+'%</span>';
+            h+='<span style="font-weight:700;color:var(--accent);">$'+parseFloat(c.rate_per_ton).toFixed(1)+'/ton</span></div>';
+
+            // Meta chips
+            h+='<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+            h+='<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary);">'+esc(c.contract_type)+'</span>';
+            h+='<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary);">Exp: '+expDate+'</span>';
+            h+='</div>';
+
+            h+='</div>';
+        });
+        h+='</div>';
+        container.innerHTML=h;
+    }catch(e){console.error('loadContratos:',e);}
 }
 
 // ─── LIQUIDOS (TANQUES) ────────────────────────────────────
