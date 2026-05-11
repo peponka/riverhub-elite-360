@@ -682,7 +682,25 @@ async function loadTrips(){
     try{
         var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('viajes-list');var em=document.getElementById('viajes-empty');l.innerHTML='';
-        if(data&&data.length>0){em.style.display='none';data.forEach(function(v){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+esc(v.vessel_name||'')+' &gt; '+esc(v.destination_port||'')+'</h4><p>'+esc(v.origin_port||'')+' - '+(v.cargo_tonss||'')+' tons</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge">'+esc((v.status||'PENDING').toUpperCase())+'</span><buttons class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('voyages',v.id,(v.vessel_name||'Trip'),loadTrips);});l.appendChild(d);});}else{em.style.display='';}
+        if(data&&data.length>0){
+            em.style.display='none';
+            data.forEach(function(v){
+                var st=(v.status||'pending').toLowerCase();
+                var stColor=st==='completed'||st==='completado'||st==='finalizado'?'#2EA043':st.indexOf('transit')>=0||st.indexOf('navegando')>=0?'#3B82F6':st==='planned'||st==='planificado'?'#8B5CF6':'#F59E0B';
+                var stBg=st==='completed'||st==='completado'||st==='finalizado'?'rgba(46,160,67,0.08)':st.indexOf('transit')>=0||st.indexOf('navegando')>=0?'rgba(59,130,246,0.08)':st==='planned'||st==='planificado'?'rgba(139,92,246,0.08)':'rgba(245,158,11,0.08)';
+                var stIcon=st==='completed'||st==='completado'||st==='finalizado'?'fa-circle-check':st.indexOf('transit')>=0||st.indexOf('navegando')>=0?'fa-ship':st==='planned'||st==='planificado'?'fa-calendar-check':'fa-clock';
+                var stLabel=(v.status||'Pending').toUpperCase();
+                var tons=v.cargo_tons||v.cargo_tonss||0;
+                var t=v.created_at?new Date(v.created_at).toLocaleDateString('en',{day:'2-digit',month:'short'}):'-';
+                var d=document.createElement('div');
+                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:all 0.2s;cursor:default';
+                d.onmouseenter=function(){this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.04)'};
+                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+                d.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between">'+'<div style="display:flex;align-items:center;gap:14px;flex:1;min-width:0">'+'<div style="width:40px;height:40px;border-radius:10px;background:'+stBg+';display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+stIcon+'" style="font-size:16px;color:'+stColor+'"></i></div>'+'<div style="min-width:0">'+'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+'<span style="font-size:14px;font-weight:600;color:var(--text-primary)">'+esc(v.origin_port||'--')+'</span>'+'<i class="fa-solid fa-arrow-right" style="font-size:9px;color:var(--accent)"></i>'+'<span style="font-size:14px;font-weight:600;color:var(--text-primary)">'+esc(v.destination_port||'--')+'</span>'+'</div>'+'<div style="display:flex;align-items:center;gap:12px;margin-top:4px;font-size:11px;color:var(--text-secondary)">'+'<span><i class="fa-solid fa-ship" style="width:12px;color:var(--text-tertiary)"></i> '+esc(v.vessel_name||'--')+'</span>'+(tons?'<span><i class="fa-solid fa-box" style="width:12px;color:var(--text-tertiary)"></i> '+tons+' ton</span>':'')+'<span><i class="fa-regular fa-calendar" style="width:12px;color:var(--text-tertiary)"></i> '+t+'</span>'+'</div>'+'</div>'+'</div>'+'<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+'<span style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:'+stColor+';background:'+stBg+';padding:5px 12px;border-radius:6px;letter-spacing:0.3px"><i class="fa-solid '+stIcon+'" style="font-size:9px"></i>'+stLabel+'</span>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px 6px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'</div>';
+                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('voyages',v.id,(v.vessel_name||'Voyage'),loadViajes);});
+                l.appendChild(d);
+            });
+        }else{em.style.display='';}
     }catch(e){/* Trips: */;}
 }
 
