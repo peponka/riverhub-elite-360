@@ -1555,19 +1555,44 @@ function renderIncidents(filter){
     if(filter){data=data.filter(function(d){var s=JSON.stringify(d).toLowerCase();return s.indexOf(filter.toLowerCase())>=0;});}
     if(data&&data.length>0){
         em.style.display='none';var open=0;var crit=0;
+        var sevIcons={'Critical':'fa-circle-exclamation','High':'fa-triangle-exclamation','Medium':'fa-circle-info','Low':'fa-shield-halved'};
+        var sevColors={'Critical':'#DC2626','High':'#F59E0B','Medium':'#3B82F6','Low':'#10B981'};
+        var typeIcons={'Collision':'fa-ship','Grounding':'fa-anchor','Spill':'fa-droplet','Mechanical failure':'fa-gears','Fire':'fa-fire','Medical':'fa-kit-medical','Other':'fa-circle-dot'};
+        var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:16px">';
         data.forEach(function(d){
             var det=typeof d.details==='string'?JSON.parse(d.details||'{}'):d.details||{};
             var sev=det.severity||'Medium';var st=det.status||'Open';
             if(st==='Open')open++;if(sev==='Critical')crit++;
-            var sevC=sev==='Critical'?'var(--error)':sev==='High'?'var(--warning)':sev==='Medium'?'var(--accent)':'var(--text-secondary)';
-            var t=d.created_at?new Date(d.created_at).toLocaleString('en',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
-            l.innerHTML+='<div class="list-item"><div><h4 style="display:flex;align-items:center;gap:8px"><span class="status-dot" style="background:'+sevC+'"></span>'+(d.title||'Incident')+'</h4><p>'+(d.vessel_name||'')+' - '+(det.type||'')+' - '+t+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+sevC+'">'+sev.toUpperCase()+'</span><buttons class="delete-btn" data-id="'+d.id+'" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div></div>';
+            var sevColor=sevColors[sev]||'#94A3B8';
+            var sevIcon=sevIcons[sev]||'fa-triangle-exclamation';
+            var typeIcon=typeIcons[det.type]||'fa-triangle-exclamation';
+            var stColor=st==='Open'?'#DC2626':st==='In Progress'?'#F59E0B':'#10B981';
+            var t=d.created_at?new Date(d.created_at).toLocaleDateString('en',{day:'2-digit',month:'short'}):'—';
+            var tTime=d.created_at?new Date(d.created_at).toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}):'';
+            h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;border-left:4px solid '+sevColor+';transition:box-shadow 0.2s,transform 0.2s" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.08)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
+            h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">';
+            h+='<div style="display:flex;align-items:center;gap:10px">';
+            h+='<div style="width:40px;height:40px;border-radius:12px;background:'+sevColor+'15;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+sevIcon+'" style="font-size:16px;color:'+sevColor+'"></i></div>';
+            h+='<div><span style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:'+sevColor+';background:'+sevColor+'12;padding:3px 10px;border-radius:6px;text-transform:uppercase">'+sev+'</span>';
+            if(d.vessel_name){h+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;display:flex;align-items:center;gap:4px"><i class="fa-solid fa-ship" style="font-size:9px;color:var(--text-tertiary)"></i> '+d.vessel_name+'</div>';}
+            h+='</div></div>';
+            h+='<div style="text-align:right;flex-shrink:0"><div style="font-size:10px;color:var(--text-tertiary)">'+t+'</div><div style="font-size:10px;color:var(--text-tertiary)">'+tTime+'</div></div>';
+            h+='</div>';
+            h+='<div style="font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.5;margin-bottom:6px">'+(d.title||'Incident')+'</div>';
+            if(det.type){h+='<div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);margin-bottom:10px"><i class="fa-solid '+typeIcon+'" style="font-size:10px;color:var(--text-tertiary)"></i> '+det.type+'</div>';}
+            h+='<div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--separator)">';
+            h+='<span style="font-size:10px;font-weight:700;color:'+stColor+';background:'+stColor+'15;padding:3px 8px;border-radius:6px">'+st.toUpperCase()+'</span>';
+            if(d.id){h+='<button onclick="confirmDelete(\'logs\',\''+d.id+'\',\''+(d.title||'Incident')+'\',loadIncidents)" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:3px 8px;cursor:pointer;color:var(--text-tertiary);font-size:10px;display:flex;align-items:center;gap:3px;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--error)\';this.style.color=\'var(--error)\'" onmouseout="this.style.borderColor=\'var(--separator)\';this.style.color=\'var(--text-tertiary)\'"><i class="fa-regular fa-trash-can" style="font-size:9px"></i></button>';}
+            h+='</div></div>';
         });
+        h+='</div>';
+        l.innerHTML=h;
         document.getElementById('inc-total').textContent=incidentesData.length;
         document.getElementById('inc-open').textContent=open;
         document.getElementById('inc-critical').textContent=crit;
-        l.querySelectorAll('.delete-btn').forEach(function(btn){btn.addEventListener('click',function(){confirmDelete('logs',this.dataset.id,'Incident',loadIncidents);});});
-    }else{em.style.display='';}
+    }else{
+        if(em){em.style.display='';em.innerHTML='<div style="text-align:center;padding:60px 20px"><div style="width:64px;height:64px;border-radius:20px;background:#10B98115;display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><i class="fa-solid fa-shield-halved" style="font-size:28px;color:#10B981"></i></div><div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:6px">No incidents reported</div><div style="font-size:13px;color:var(--text-secondary)">Operations running smoothly</div></div>';}
+    }
 }
 function filterIncidents(){
     var q=document.getElementById('inc-search').value.trim();
