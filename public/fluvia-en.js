@@ -5,23 +5,23 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // --- AUTOMATIC ENGLISH TRANSLATOR (FETCH INTERCEPTOR) ---
 const EN_DICT = {
-    'navegaciÃƒÆ’Ã‚Â³n': 'navigation',
+    'navegación': 'navigation',
     'navegacion': 'navigation',
-    'NavegaciÃƒÆ’Ã‚Â³n': 'Navigation',
+    'Navegación': 'Navigation',
     'combustible': 'fuel',
     'Combustible': 'Fuel',
-    'PosiciÃƒÆ’Ã‚Â³n actual': 'Current position',
+    'Posición actual': 'Current position',
     'velocidad': 'speed',
     'nudos': 'knots',
-    'dÃƒÆ’Ã‚Â­as': 'days',
-    'dÃƒÆ’Ã‚Â­a': 'day',
+    'días': 'days',
+    'día': 'day',
     'Paso por': 'Passed by',
-    'Nivel del rÃƒÆ’Ã‚Â­o': 'River level',
+    'Nivel del río': 'River level',
     'normal': 'normal',
     'Consumo diario': 'Daily consumption',
     'lts': 'L',
-    'AutonomÃƒÆ’Ã‚Â­a restante': 'Remaining autonomy',
-    'DecisiÃƒÆ’Ã‚Â³n actual': 'Current decision',
+    'Autonomía restante': 'Remaining autonomy',
+    'Decisión actual': 'Current decision',
     'ETA Rosario:': 'ETA Rosario:',
     'Remolcador': 'Tugboat',
     'remolcador': 'tugboat',
@@ -52,8 +52,8 @@ const EN_DICT = {
     'finalizado': 'completed',
     'mantenimiento': 'maintenance',
     'Mantenimiento': 'Maintenance',
-    'CapitÃƒÆ’Ã‚Â¡n': 'Captain',
-    'capitÃƒÆ’Ã‚Â¡n': 'captain',
+    'Capitán': 'Captain',
+    'capitán': 'captain',
     'CAPITÃƒÆ’Ã‚ÂN': 'CAPTAIN',
     'Timonel': 'Helmsman',
     'TIMONEL': 'HELMSMAN',
@@ -62,31 +62,31 @@ const EN_DICT = {
     'Marinero': 'Seaman',
     'MARINERO': 'SEAMAN',
     'Primer Oficial': 'First Officer',
-    'Jefe de MÃƒÆ’Ã‚Â¡quinas': 'Chief Engineer',
+    'Jefe de Máquinas': 'Chief Engineer',
     'Cocinero': 'Cook',
     'maniobra': 'maneuver',
-    'observaciÃƒÆ’Ã‚Â³n': 'observation',
+    'observación': 'observation',
     'observacion': 'observation',
     'incidente': 'incident',
     'Abierto': 'Open',
     'Cerrado': 'Closed',
     'VENCIDO': 'EXPIRED',
-    'VibraciÃƒÆ’Ã‚Â³n detectada a 1200 RPM': 'Vibration detected at 1200 RPM',
-    'VibraciÃƒÆ’Ã‚Â³n detectada': 'Vibration detected',
-    'CalibraciÃƒÆ’Ã‚Â³n ecosonda': 'Echosounder calibration',
-    'lectura errÃƒÆ’Ã‚Â¡tica': 'erratic reading',
-    'RevisiÃƒÆ’Ã‚Â³n sistema hidrÃƒÆ’Ã‚Â¡ulico timÃƒÆ’Ã‚Â³n trimestral': 'Quarterly rudder hydraulic system inspection',
-    'RevisiÃƒÆ’Ã‚Â³n sistema hidrÃƒÆ’Ã‚Â¡ulico': 'Hydraulic system inspection',
-    'timÃƒÆ’Ã‚Â³n trimestral': 'quarterly rudder',
-    'Sistema de navegaciÃƒÆ’Ã‚Â³n actualizado y calibrado. Todo nominal.': 'Navigation system updated and calibrated. All nominal.',
-    'Condiciones normales de navegaciÃƒÆ’Ã‚Â³n': 'Normal navigation conditions',
-    'AnÃƒÆ’Ã‚Â¡lisis de condiciones de navegaciÃƒÆ’Ã‚Â³n': 'Navigation conditions analysis',
-    'Sistema AutomÃƒÆ’Ã‚Â¡tico': 'Automatic System',
+    'Vibración detectada a 1200 RPM': 'Vibration detected at 1200 RPM',
+    'Vibración detectada': 'Vibration detected',
+    'Calibración ecosonda': 'Echosounder calibration',
+    'lectura errática': 'erratic reading',
+    'Revisión sistema hidráulico timón trimestral': 'Quarterly rudder hydraulic system inspection',
+    'Revisión sistema hidráulico': 'Hydraulic system inspection',
+    'timón trimestral': 'quarterly rudder',
+    'Sistema de navegación actualizado y calibrado. Todo nominal.': 'Navigation system updated and calibrated. All nominal.',
+    'Condiciones normales de navegación': 'Normal navigation conditions',
+    'Análisis de condiciones de navegación': 'Navigation conditions analysis',
+    'Sistema Automático': 'Automatic System',
     'SIN ALERTAS': 'NO ALERTS',
     'Alta': 'High',
     'Media': 'Medium',
     'Baja': 'Low',
-    'CrÃƒÆ’Ã‚Â­tico': 'Critical',
+    'Crítico': 'Critical',
     'Aceite Motor CAT 15W-40': 'CAT 15W-40 Engine Oil',
     'Filtro aceite CAT 1R-0716': 'CAT 1R-0716 Oil Filter',
     'Cabo de amarre 32mm': '32mm Mooring Line',
@@ -95,29 +95,29 @@ const EN_DICT = {
     'Bengalas de emergencia': 'Emergency Flares',
     'Grasa marina Mobilgrease': 'Mobilgrease Marine Grease',
     'Electrodo soldadura 7018': '7018 Welding Electrode',
-    'Manguera hidrÃƒÆ’Ã‚Â¡ulica': 'Hydraulic Hose',
+    'Manguera hidráulica': 'Hydraulic Hose',
     'Filtro fuel CAT': 'CAT Fuel Filter',
-    'CabullerÃƒÆ’Ã‚Â­a': 'Cordage',
+    'Cabullería': 'Cordage',
     'Lubricantes': 'Lubricants',
     'Filtros': 'Filters',
     'Pintura': 'Paint',
     'Seguridad': 'Safety',
-    'HidrÃƒÆ’Ã‚Â¡ulica': 'Hydraulics',
+    'Hidráulica': 'Hydraulics',
     'Motor': 'Engine',
-    'ElÃƒÆ’Ã‚Â©ctrico': 'Electrical',
+    'Eléctrico': 'Electrical',
     'Casco': 'Hull',
     'inyector': 'injector',
-    'MeteorologÃƒÆ’Ã‚Â­a': 'Weather',
+    'Meteorología': 'Weather',
     'METEOROLOGÃƒÆ’Ã‚ÂA': 'WEATHER',
-    'Condiciones ÃƒÆ’Ã‚Â³ptimas': 'Optimal conditions',
+    'Condiciones óptimas': 'Optimal conditions',
     'Sistema': 'System',
     'Carga de combustible registrada exitosamente': 'Fuel refuel recorded successfully',
     'Carga Terminada': 'Refuel Complete',
-    'Puerto de AsunciÃƒÆ’Ã‚Â³n': 'Port of AsunciÃƒÆ’Ã‚Â³n',
-    'GestiÃƒÆ’Ã‚Â³n Inteligente de Flotas Fluviales': 'Intelligent River Fleet Management',
-    'GuÃƒÆ’Ã‚Â­a completa': 'Complete guide',
+    'Puerto de Asunción': 'Port of Asunción',
+    'Gestión Inteligente de Flotas Fluviales': 'Intelligent River Fleet Management',
+    'Guía completa': 'Complete guide',
     'PREFECTURA': 'Coast Guard',
-    'Plataforma de gestiÃƒÆ’Ã‚Â³n': 'Management platform'
+    'Plataforma de gestión': 'Management platform'
 }
 
 function translateText(str) {
@@ -186,7 +186,7 @@ window.fetch = async function(...args) {
 
 
 // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
-// GLOBAL ERROR BOUNDARY ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Prevents UI crashes
+// ━━━━━━━━━━ GLOBAL ERROR BOUNDARY  Prevents UI crashes ━━━━━━━━━━
 // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
 window.onerror = function(msg, src, line, col, err) {
     // Suppress Supabase auth noise
@@ -205,7 +205,7 @@ window.addEventListener('unhandledrejection', function(e) {
     e.preventDefault();
 });
 
-// XSS escape helper ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â prevents stored XSS via innerHTML
+// ━━━━━━━━━━ XSS escape helper  prevents stored XSS via innerHTML ━━━━━━━━━━
 function esc(str) { const d = document.createElement('div'); d.textContent = str ?? ''; return d.innerHTML; }
 
 // AUTH - Check session on load
@@ -412,7 +412,7 @@ function navigate(viewId){
 }
 loadDashboard();
 
-// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ MOBILE HAMBURGER ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
+// ━━━━━━━━━━ MOBILE HAMBURGER ━━━━━━━━━━
 function toggleMobileSidebar(){
     var sb2=document.querySelector('.sidebar');
     var ov=document.getElementById('sidebar-overlay');
@@ -429,7 +429,7 @@ document.querySelectorAll('.nav-item').forEach(function(item){
     });
 });
 
-// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ NOTIFICATIONS ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
+// ━━━━━━━━━━ NOTIFICATIONS ━━━━━━━━━━
 function toggleNotifPanel(){
     document.getElementById('notif-panel').classList.toggle('open');
 }
@@ -623,7 +623,7 @@ async function loadDashActivity(){
 
 function exportDashboardPDF(){alert('Exporting dashboard report...');}
 
-// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ DASHBOARD MINI CHARTS ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
+// ━━━━━━━━━━ DASHBOARD MINI CHARTS ━━━━━━━━━━
 var dashFuelTrendChart=null, dashFleetUtilChart=null;
 async function loadDashMiniCharts(vessels){
     try{
@@ -654,7 +654,7 @@ async function loadDashMiniCharts(vessels){
     }catch(e){/* Fleet util: */;}
 }
 
-// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ DASHBOARD AUTO-REFRESH (60s) ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
+// ━━━━━━━━━━ DASHBOARD AUTO-REFRESH (60s) ━━━━━━━━━━
 var _dashAutoRefresh=setInterval(function(){
     var dashView=document.getElementById('view-dashboard');
     if(dashView && dashView.classList.contains('active')){
@@ -761,10 +761,10 @@ function initMap(){
     loadAISTraffic();
     // Auto-refresh AIS every 30s (stored for cleanup)
     window._aisInterval = setInterval(loadAISTraffic, 30000);
-    // Hidrovia route ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â polyline completa Paraguay-ParanÃƒÆ’Ã‚Â¡
+// ━━━━━━━━━━ Hidrovia route  polyline completa Paraguay-Paran ━━━━━━━━━━
     var hidroviaRoute=[[-19.0,-57.65],[-20.5,-57.8],[-22.3,-57.9],[-23.4,-57.8],[-25.3,-57.6],[-26.5,-58.1],[-27.3,-58.5],[-29.0,-59.5],[-30.5,-59.9],[-31.5,-60.5],[-32.9,-60.6],[-33.5,-58.5],[-34.6,-58.4]];
     L.polyline(hidroviaRoute,{color:'#3B82F6',weight:2.5,dashArray:'8,6',opacity:0.45}).addTo(map);
-    // Zoom fit to hidrovÃƒÆ’Ã‚Â­a bounds
+    // Zoom fit to hidrovía bounds
     map.setView([-30.0,-55.5],6);
 }
 function _shipIcon(color,size,heading){
@@ -1153,7 +1153,7 @@ async function loadDashboardExtras(){
 var fleetChart=null,fuelChart=null,activityChart=null;
 async function loadReportes(){
     try{
-        // Stats ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â parallel queries for performance
+// ━━━━━━━━━━ Stats  parallel queries for performance ━━━━━━━━━━
         var results=await Promise.all([sb.from('vessels').select('status'),sb.from('voyages').select('id',{count:'exact',head:true}),sb.from('fuel_logs').select('liters'),sb.from('logs').select('id',{count:'exact',head:true})]);
         var v=results[0];var vj=results[1];var fl=results[2];var lg=results[3];
         var totalFuel=fl.data?fl.data.reduce(function(s,x){return s+(x.liters||0)},0):0;
@@ -1177,7 +1177,7 @@ async function loadReportes(){
             var ctx2=document.getElementById('chart-fuel');
             if(ctx2){fuelChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(fuelByDay).slice(-7),datasets:[{label:'Liters',data:Object.values(fuelByDay).slice(-7),backgroundColor:'rgba(59,130,246,0.6)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}});}
         }
-        // Activity Chart ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â use real log counts from DB
+// ━━━━━━━━━━ Activity Chart  use real log counts from DB ━━━━━━━━━━
         if(activityChart)activityChart.destroy();
         var ctx3=document.getElementById('chart-activity');
         var days=[];var counts=[];
@@ -1390,10 +1390,10 @@ function filterIncidents(){
 
 // BRIEFING DIARIO - Extracted to js/modules/fluvia-briefing.js (with Promise.all optimization)
 
-// EXPORT ENGINE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Extracted to js/modules/fluvia-exports.js
+// ━━━━━━━━━━ EXPORT ENGINE  Extracted to js/modules/fluvia-exports.js ━━━━━━━━━━
 
 // ============================================
-// IA AVANZADA ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â MANTENIMIENTO PREDICTIVO
+// ━━━━━━━━━━ IA AVANZADA  MANTENIMIENTO PREDICTIVO ━━━━━━━━━━
 // ============================================
 async function runPredictiveMaintenance(){
     var btn=document.getElementById('btn-predict-maint');
@@ -1415,14 +1415,14 @@ async function runPredictiveMaintenance(){
             var prob=p.probability||0;
             html+='<div style="border:1px solid var(--border);border-left:4px solid '+sevColor+';border-radius:8px;padding:12px;margin-bottom:8px;">';
             html+='<div style="display:flex;justify-content:space-between;align-items:center;">';
-            html+='<div style="font-weight:700;font-size:13px;">ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¢ '+p.vessel+'</div>';
+            html+='<div style="font-weight:700;font-size:13px;">📊 '+p.vessel+'</div>';
             html+='<span style="background:'+sevColor+';color:#fff;font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;">'+sevLabel+'</span>';
             html+='</div>';
-            html+='<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">ÃƒÂ¢Ã…Â¡Ã¢â€žÂ¢ÃƒÂ¯Ã‚Â¸Ã‚Â '+p.component+'</div>';
+            html+='<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">⚙️ '+p.component+'</div>';
             html+='<div style="font-size:12px;margin-top:6px;">'+p.action+'</div>';
             html+='<div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--text-secondary);">';
-            html+='<span>ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã…Â  Probability: <strong style="color:'+sevColor+'">'+prob+'%</strong></span>';
-            html+='<span>ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â¦ '+p.days_until+' days</span>';
+            html+='<span>📊 Probability: <strong style="color:'+sevColor+'">'+prob+'%</strong></span>';
+            html+='<span>📊 '+p.days_until+' days</span>';
             html+='</div>';
             html+='<div style="background:var(--bg-main);border-radius:4px;height:6px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:'+prob+'%;background:'+sevColor+';border-radius:4px;transition:width 0.5s;"></div></div>';
             html+='</div>';
@@ -1435,7 +1435,7 @@ async function runPredictiveMaintenance(){
 }
 
 // ============================================
-// IA AVANZADA ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ANOMALÃƒÆ’Ã‚ÂAS DE CONSUMO
+// ━━━━━━━━━━ IA AVANZADA  ANOMALAS DE CONSUMO ━━━━━━━━━━
 // ============================================
 async function runFuelAnomalies(){
     var btn=document.getElementById('btn-fuel-anomalies');
@@ -1453,7 +1453,7 @@ async function runFuelAnomalies(){
         var html='';
         anomalies.forEach(function(a){
             var sevColor=a.severity==='critical'?'#ef4444':a.severity==='high'?'#f59e0b':a.severity==='medium'?'#3b82f6':'#10b981';
-            var icon=a.type==='theft_risk'?'ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨':a.type==='overconsumption'?'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‹â€ ':a.type==='spike'?'ÃƒÂ¢Ã…Â¡Ã‚Â¡':a.type==='trend'?'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â°':'ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦';
+            var icon=a.type==='theft_risk'?'📊':a.type==='overconsumption'?'🔥':a.type==='spike'?'⚙️':a.type==='trend'?'📊':'ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦';
             var typeLabel=a.type==='theft_risk'?'THEFT RISK':a.type==='overconsumption'?'OVERCONSUMPTION':a.type==='spike'?'ANOMALOUS SPIKE':a.type==='trend'?'TREND':'NORMAL';
             html+='<div style="border:1px solid var(--border);border-left:4px solid '+sevColor+';border-radius:8px;padding:12px;margin-bottom:8px;">';
             html+='<div style="display:flex;justify-content:space-between;align-items:center;">';
@@ -1462,7 +1462,7 @@ async function runFuelAnomalies(){
             html+='</div>';
             html+='<div style="font-size:12px;margin-top:6px;">'+a.description+'</div>';
             if(a.deviation_pct){html+='<div style="font-size:11px;color:'+sevColor+';margin-top:4px;font-weight:600;">Deviation: '+(a.deviation_pct>0?'+':'')+a.deviation_pct+'%</div>';}
-            html+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¡ '+a.recommendation+'</div>';
+            html+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">📊 '+a.recommendation+'</div>';
             html+='</div>';
         });
         container.innerHTML=html;
@@ -1473,7 +1473,7 @@ async function runFuelAnomalies(){
 }
 
 // ============================================
-// IA AVANZADA ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â OPTIMIZADOR DE CONVOY
+// ━━━━━━━━━━ IA AVANZADA  OPTIMIZADOR DE CONVOY ━━━━━━━━━━
 // ============================================
 async function suggestConvoyIA(){
     var btn=document.getElementById('btn-convoy-ai');
