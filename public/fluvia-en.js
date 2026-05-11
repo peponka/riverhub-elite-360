@@ -680,10 +680,45 @@ async function loadFleet(){
 
 async function loadTrips(){
     try{
-        var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(20);
-        var data=r.data;var l=document.getElementById('viajes-list');var em=document.getElementById('viajes-empty');l.innerHTML='';
-        if(data&&data.length>0){em.style.display='none';data.forEach(function(v){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+esc(v.vessel_name||'')+' &gt; '+esc(v.destination_port||'')+'</h4><p>'+esc(v.origin_port||'')+' - '+(v.cargo_tonss||'')+' tons</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge">'+esc((v.status||'PENDING').toUpperCase())+'</span><buttons class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('voyages',v.id,(v.vessel_name||'Trip'),loadTrips);});l.appendChild(d);});}else{em.style.display='';}
-    }catch(e){/* Trips: */;}
+        var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(50);
+        var data=r.data||[];
+        if(data.length===0){
+            data=[
+                {id:'demo1',vessel_name:'R/M Guarani',origin_port:'Nueva Palmira (UY)',destination_port:'Asuncion (PY)',cargo_tons:3500,status:'pending',created_at:'2026-05-08T10:00:00Z',departure_date:'2026-05-11'},
+                {id:'demo2',vessel_name:'BZ-1042 Soybean',origin_port:'Villeta (PY)',destination_port:'Rosario (AR)',cargo_tons:4200,status:'in_transit',created_at:'2026-05-06T14:00:00Z',eta:'2026-05-14T08:00:00Z',departure_date:'2026-05-06'},
+                {id:'demo3',vessel_name:'BZ-2018 Grain',origin_port:'Port of Asuncion',destination_port:'San Nicolas (AR)',cargo_tons:3800,status:'in_transit',created_at:'2026-05-05T09:00:00Z',eta:'2026-05-13T16:00:00Z',departure_date:'2026-05-05'},
+                {id:'demo4',vessel_name:'R/M Atlas',origin_port:'Concepcion (PY)',destination_port:'Villeta (PY)',cargo_tons:2100,status:'completed',created_at:'2026-04-28T12:00:00Z',departure_date:'2026-04-28'},
+                {id:'demo5',vessel_name:'BZ-3055 Mineral',origin_port:'San Lorenzo (AR)',destination_port:'Port of Asuncion',cargo_tons:5500,status:'completed',created_at:'2026-04-23T06:00:00Z',departure_date:'2026-04-23'},
+                {id:'demo6',vessel_name:'BZ-1099 Bulk',origin_port:'Corumba (BR)',destination_port:'Nueva Palmira (UY)',cargo_tons:4800,status:'completed',created_at:'2026-04-13T18:00:00Z',departure_date:'2026-04-13'}
+            ];
+        }
+        var l=document.getElementById('viajes-list');var em=document.getElementById('viajes-empty');
+        if(!l)return;l.innerHTML='';
+        var iTC=0,pC=0,cC=0,tT=0;
+        data.forEach(function(v){var s=(v.status||'').toLowerCase();if(s.indexOf('transit')>=0||s.indexOf('viaje')>=0||s==='navegando'||s==='en_curso')iTC++;else if(s==='completed'||s==='completado'||s==='finalizado')cC++;else pC++;tT+=(v.cargo_tons||v.cargo_tonss||0);});
+        var e1=document.getElementById('trips-transit');if(e1)e1.textContent=iTC;
+        var e2=document.getElementById('trips-pending');if(e2)e2.textContent=pC;
+        var e3=document.getElementById('trips-tons');if(e3)e3.textContent=tT>=1000?(tT/1000).toFixed(1)+'k':tT;
+        var e4=document.getElementById('trips-completed');if(e4)e4.textContent=cC;
+        if(data.length>0){
+            if(em)em.style.display='none';
+            var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-top:16px">';
+            data.forEach(function(v){
+                var st=(v.status||'pending').toLowerCase();var isT=st.indexOf('transit')>=0||st.indexOf('viaje')>=0||st==='navegando'||st==='en_curso';var isC=st==='completed'||st==='completado'||st==='finalizado';var isP=st==='planned'||st==='planificado';
+                var sc=isC?'#10B981':isT?'#3B82F6':isP?'#8B5CF6':'#F59E0B';var sl=isC?'COMPLETED':isT?'IN TRANSIT':isP?'PLANNED':'PENDING';var si=isC?'fa-circle-check':isT?'fa-ship':isP?'fa-calendar-check':'fa-clock';
+                var tons=v.cargo_tons||v.cargo_tonss||0;var dd=v.departure_date?new Date(v.departure_date).toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric'}):(v.created_at?new Date(v.created_at).toLocaleDateString('en',{day:'numeric',month:'short'}):'--');
+                var pg=0;if(isT){var cr=v.departure_date?new Date(v.departure_date):v.created_at?new Date(v.created_at):new Date();var et=v.eta?new Date(v.eta):new Date(cr.getTime()+7*86400000);pg=Math.min(95,Math.max(10,Math.round(((Date.now()-cr.getTime())/(et.getTime()-cr.getTime()))*100)));}else if(isC){pg=100;}
+                h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;transition:box-shadow 0.2s,transform 0.2s" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.08)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
+                h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div style="display:flex;align-items:center;gap:12px"><div style="width:42px;height:42px;border-radius:12px;background:'+sc+'15;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+si+'" style="font-size:18px;color:'+sc+'"></i></div><div><div style="font-weight:700;font-size:15px;color:var(--text-primary)">'+esc(v.vessel_name||'Unassigned')+'</div><div style="font-size:11px;color:var(--text-secondary);margin-top:2px">General Cargo \u00B7 '+tons.toLocaleString()+' ton</div></div></div><span style="background:'+sc+'18;color:'+sc+';padding:4px 10px;border-radius:8px;font-size:9px;font-weight:700;letter-spacing:0.5px;white-space:nowrap">'+sl+'</span></div>';
+                h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px 14px;background:var(--bg-tertiary,#f8f9fa);border-radius:10px"><div style="text-align:center;flex:1;min-width:0"><div style="font-size:9px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px;margin-bottom:3px">ORIGIN</div><div style="font-size:12px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(v.origin_port||'--')+'</div></div><div style="display:flex;align-items:center;gap:4px;flex-shrink:0"><div style="width:20px;height:2px;background:'+sc+'60;border-radius:1px"></div><i class="fa-solid fa-arrow-right" style="font-size:10px;color:'+sc+'"></i><div style="width:20px;height:2px;background:'+sc+'60;border-radius:1px"></div></div><div style="text-align:center;flex:1;min-width:0"><div style="font-size:9px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px;margin-bottom:3px">DESTINATION</div><div style="font-size:12px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(v.destination_port||'--')+'</div></div></div>';
+                if(isT||isC){var bc=isC?'#10B981':pg>80?'#F59E0B':'#3B82F6';h+='<div style="position:relative;height:8px;background:var(--bg-tertiary,#f0f0f0);border-radius:4px;overflow:hidden;margin-bottom:8px"><div style="position:absolute;top:0;left:0;height:100%;width:'+pg+'%;background:'+bc+';border-radius:4px;transition:width 0.6s ease"></div></div>';h+='<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-secondary);margin-bottom:10px"><span>'+pg+'% complete</span>';if(isT&&v.eta){var dl=Math.max(0,Math.ceil((new Date(v.eta)-Date.now())/86400000));h+='<span style="font-weight:600;color:'+sc+'">ETA: '+dl+'d remaining</span>';}else if(isC){h+='<span style="font-weight:600;color:#10B981">Delivered</span>';}h+='</div>';}
+                h+='<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:space-between"><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="background:var(--bg-tertiary,#f0f0f0);padding:4px 10px;border-radius:8px;font-size:10px;color:var(--text-secondary);display:flex;align-items:center;gap:4px"><i class="fa-regular fa-calendar" style="font-size:9px"></i> '+dd+'</span>';
+                if(tons>0){h+='<span style="background:var(--bg-tertiary,#f0f0f0);padding:4px 10px;border-radius:8px;font-size:10px;color:var(--text-secondary);display:flex;align-items:center;gap:4px"><i class="fa-solid fa-weight-hanging" style="font-size:9px"></i> '+tons.toLocaleString()+' ton</span>';}
+                h+='</div>';if(v.id&&!String(v.id).startsWith('demo')){h+='<button onclick="confirmDelete(\'voyages\',\''+v.id+'\',\''+esc(v.vessel_name||'Trip')+'\',loadTrips)" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:4px 10px;cursor:pointer;color:var(--text-tertiary);font-size:11px;display:flex;align-items:center;gap:4px;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--error)\';this.style.color=\'var(--error)\'" onmouseout="this.style.borderColor=\'var(--separator)\';this.style.color=\'var(--text-tertiary)\'"><i class="fa-regular fa-trash-can" style="font-size:10px"></i></button>';}
+                h+='</div></div>';
+            });h+='</div>';l.innerHTML=h;
+        }else{if(em)em.style.display='';}
+    }catch(e){console.error('loadTrips:',e);}
 }
 
 async function loadBitacora(){
