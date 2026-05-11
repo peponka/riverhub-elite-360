@@ -894,8 +894,36 @@ async function loadPanol(){
     try{
         var r=await sb.from('inventory_items').select('*').limit(500);var data=r.data;
         var l=document.getElementById('panol-list');l.innerHTML='';
-        if(data&&data.length>0){data.forEach(function(i){var d=document.createElement('div');d.className='list-item';var q=i.quantity||i.stock||0;var mn=i.min_stock||0;var low=q<=mn;d.innerHTML='<div><h4>'+(i.name||'')+'</h4><p>'+(i.category||'')+' - Spare</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+(low?'var(--warning)':'var(--success)')+'">'+(low?'LOW STOCK':'OK')+'<br>'+q+' units</span><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});l.appendChild(d);});document.getElementById('panol-total').textContent=data.length;}
-    }catch(e){/* Panol: */;}
+        if(data&&data.length>0){
+            var catIcons={'lubricantes':'fa-oil-can','lubricants':'fa-oil-can','filtros':'fa-filter','filters':'fa-filter','pintura':'fa-paint-roller','paint':'fa-paint-roller','seguridad':'fa-shield-halved','safety':'fa-shield-halved','motor':'fa-gear','engine':'fa-gear','casco':'fa-ship','hull':'fa-ship','hidraulica':'fa-droplet','hydraulic':'fa-droplet','electrico':'fa-bolt','electrical':'fa-bolt','cabulleria':'fa-link','cordage':'fa-link','soldadura':'fa-fire','welding':'fa-fire'};
+            var catColors={'lubricantes':'#8B5CF6','lubricants':'#8B5CF6','filtros':'#3B82F6','filters':'#3B82F6','pintura':'#F97316','paint':'#F97316','seguridad':'#EF4444','safety':'#EF4444','motor':'#6B7280','engine':'#6B7280','casco':'#0EA5E9','hull':'#0EA5E9','hidraulica':'#06B6D4','hydraulic':'#06B6D4','electrico':'#F59E0B','electrical':'#F59E0B','cabulleria':'#10B981','cordage':'#10B981','soldadura':'#DC2626','welding':'#DC2626'};
+            var catLabels={'lubricantes':'LUBRICANTS','filtros':'FILTERS','pintura':'PAINT','seguridad':'SAFETY','motor':'ENGINE','casco':'HULL','hidraulica':'HYDRAULIC','electrico':'ELECTRICAL','cabulleria':'CORDAGE','soldadura':'WELDING'};
+            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px';
+            data.forEach(function(i){
+                var q=i.quantity||i.stock||0;var mn=i.min_stock||5;var low=q<=mn;var critical=q===0;
+                var cat=(i.category||'general').toLowerCase();
+                var icon=catIcons[cat]||'fa-box';
+                var color=catColors[cat]||'var(--accent)';
+                var catLabel=catLabels[cat]||(i.category||'General').toUpperCase();
+                var pct=Math.min(100,Math.round((q/Math.max(mn*3,1))*100));
+                var barColor=critical?'var(--error)':low?'var(--warning)':'var(--success)';
+                var statusLabel=critical?'OUT OF STOCK':low?'LOW STOCK':'IN STOCK';
+                var statusBg=critical?'rgba(220,38,38,0.08)':low?'rgba(245,158,11,0.08)':'rgba(46,160,67,0.08)';
+                var d=document.createElement('div');
+                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default;position:relative;overflow:hidden';
+                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
+                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px"><div style="width:42px;height:42px;border-radius:12px;background:'+color+'12;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:17px;color:'+color+'"></i></div><button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px;transition:all 0.15s"><i class="fa-regular fa-trash-can"></i></button></div><div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px;line-height:1.3">'+(i.name||'')+'</div><div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px;margin-bottom:14px">'+catLabel+'</div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:11px;color:var(--text-secondary);font-weight:500">Stock</span><span style="font-size:13px;font-weight:700;color:var(--text-primary)">'+q+' <span style="font-size:10px;font-weight:500;color:var(--text-secondary)">units</span></span></div><div style="width:100%;height:6px;background:var(--surface-low);border-radius:3px;overflow:hidden;margin-bottom:12px"><div style="width:'+pct+'%;height:100%;background:'+barColor+';border-radius:3px;transition:width 0.5s ease"></div></div><div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+barColor+';background:'+statusBg+';padding:4px 10px;border-radius:6px">'+statusLabel+'</span><span style="font-size:10px;color:var(--text-tertiary)">min: '+mn+'</span></div>';
+                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});
+                l.appendChild(d);
+            });
+            document.getElementById('panol-total').textContent=data.length;
+            var cats={};var lowCount=0;
+            data.forEach(function(i){cats[i.category||'General']=1;if((i.quantity||i.stock||0)<=(i.min_stock||0))lowCount++;});
+            var elLow=document.getElementById('panol-low');if(elLow)elLow.textContent=lowCount;
+            var elCats=document.getElementById('panol-cats');if(elCats)elCats.textContent=Object.keys(cats).length;
+        }
+    }catch(e){console.error('loadPanol:',e);}
 }
 
 async function loadComms(){
