@@ -1429,49 +1429,50 @@ function renderTracking(filter){
     var inTransit=data.filter(function(v){var s=(v.status||'').toLowerCase();return s==='navegando'||s==='en_curso'||s==='en viaje'||s==='in_transit';});
     var completed=data.filter(function(v){var s=(v.status||'').toLowerCase();return s==='completed'||s==='entregado'||s==='finalizado';});
     var pending=data.filter(function(v){var s=(v.status||'').toLowerCase();return s!=='navegando'&&s!=='en_curso'&&s!=='en viaje'&&s!=='in_transit'&&s!=='completed'&&s!=='entregado'&&s!=='finalizado';});
-    // Stats
-    var totalCargo=data.reduce(function(s,v){return s+(v.cargo_tonss||0)},0);
+    var totalCargo=data.reduce(function(s,v){return s+(v.cargo_tons||v.cargo_tonss||0)},0);
     document.getElementById('track-active').textContent=inTransit.length;
     document.getElementById('track-total-cargo').textContent=totalCargo>999?(totalCargo/1000).toFixed(1)+'k':totalCargo;
     document.getElementById('track-completed').textContent=completed.length;
-    // Active transit cards
     if(inTransit.length>0){
+        activeList.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px';
         inTransit.forEach(function(v){
             var created=v.created_at?new Date(v.created_at):new Date();
             var eta=v.eta?new Date(v.eta):new Date(created.getTime()+7*86400000);
             var now=Date.now();var progress=Math.min(100,Math.max(5,Math.round(((now-created.getTime())/(eta.getTime()-created.getTime()))*100)));
             var elapsed=Math.round((now-created.getTime())/3600000);
             var elapsedStr=elapsed>24?Math.round(elapsed/24)+'d '+elapsed%24+'h':elapsed+'h';
-            activeList.innerHTML+='<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px;margin-bottom:12px">'+
-                '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'+
-                '<div style="display:flex;align-items:center;gap:10px"><span style="width:10px;height:10px;border-radius:50%;background:var(--success);animation:pulse 2s infinite"></span><span style="font-size:14px;font-weight:600">'+(v.vessel_name||'--')+'</span></div>'+
-                '<span style="font-size:10px;font-weight:700;color:var(--success);letter-spacing:0.5px">IN TRANSIT</span></div>'+
-                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">'+
-                '<span style="font-size:12px;font-weight:500">'+(v.origin_port||'Origin')+'</span>'+
-                '<div style="flex:1;height:4px;background:var(--surface-low);border-radius:2px;position:relative"><div style="height:4px;background:var(--success);border-radius:2px;width:'+progress+'%;transition:width 1s"></div><div style="position:absolute;top:-3px;left:'+progress+'%;width:10px;height:10px;background:var(--success);border-radius:50%;border:2px solid var(--bg-secondary);transform:translateX(-50%)"></div></div>'+
-                '<span style="font-size:12px;font-weight:500">'+(v.destination_port||'Destination')+'</span></div>'+
-                '<div style="display:flex;gap:20px;font-size:11px;color:var(--text-secondary)">'+
-                '<span><i class="fa-solid fa-box" style="width:14px;color:var(--accent)"></i> '+(v.cargo_tonss||0)+' tons</span>'+
-                '<span><i class="fa-solid fa-clock" style="width:14px"></i> '+elapsedStr+' en route</span>'+
-                '<span><i class="fa-solid fa-location-dot" style="width:14px"></i> '+progress+'% completed</span></div></div>';
+            var d=document.createElement('div');
+            d.style.cssText='background:var(--bg-secondary);border:1px solid var(--separator);border-left:4px solid #2EA043;border-radius:16px;padding:20px;transition:all 0.2s;cursor:default';
+            d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'};
+            d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+            d.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="display:flex;align-items:center;gap:10px"><div style="width:40px;height:40px;border-radius:12px;background:rgba(46,160,67,0.08);display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-ship" style="font-size:16px;color:#2EA043"></i></div><div><div style="font-size:14px;font-weight:700;color:var(--text-primary)">'+(v.vessel_name||'--')+'</div><div style="font-size:10px;color:var(--text-secondary)">'+(v.cargo_tons||v.cargo_tonss||0)+' tons</div></div></div><span style="font-size:9px;font-weight:700;color:#2EA043;background:rgba(46,160,67,0.08);padding:4px 10px;border-radius:6px;display:flex;align-items:center;gap:4px;letter-spacing:0.3px"><span style="width:6px;height:6px;border-radius:50%;background:#2EA043;animation:pulse 2s infinite"></span>IN TRANSIT</span></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><span style="font-size:11px;font-weight:600;color:var(--text-primary);min-width:60px;text-align:right">'+(v.origin_port||'Origin')+'</span><div style="flex:1;height:6px;background:var(--surface-low,#f0f0f0);border-radius:3px;position:relative;overflow:visible"><div style="height:6px;background:linear-gradient(90deg,#2EA043,#3B82F6);border-radius:3px;width:'+progress+'%;transition:width 1s"></div><div style="position:absolute;top:-4px;left:'+progress+'%;width:14px;height:14px;background:#3B82F6;border-radius:50%;border:3px solid var(--bg-secondary);transform:translateX(-50%);box-shadow:0 2px 6px rgba(59,130,246,0.3)"></div></div><span style="font-size:11px;font-weight:600;color:var(--text-primary);min-width:60px">'+(v.destination_port||'Destination')+'</span></div><div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--separator)"><div style="display:flex;gap:16px;font-size:11px;color:var(--text-secondary)"><span><i class="fa-solid fa-clock" style="color:var(--text-tertiary);margin-right:4px"></i>'+elapsedStr+' en route</span><span><i class="fa-solid fa-location-dot" style="color:var(--text-tertiary);margin-right:4px"></i>'+progress+'%</span></div><span style="font-size:10px;font-weight:600;color:#3B82F6">ETA: '+(v.eta?new Date(v.eta).toLocaleDateString('en',{day:'2-digit',month:'short'}):'--')+'</span></div>';
+            activeList.appendChild(d);
         });
     }else{
         activeList.innerHTML='<div class="empty-state" style="padding:30px"><i class="fa-regular fa-circle-check"></i><p>No active cargo in transit</p></div>';
     }
-    // History list
     var historyItems=completed.concat(pending);
     if(historyItems.length>0){
+        historyList.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:8px';
         historyItems.forEach(function(v){
             var s=(v.status||'pending').toLowerCase();
-                        var stColor=s==='completed'||s==='entregado'||s==='finalizado'?'var(--success)':s==='pending'?'var(--warning)':'var(--text-secondary)';
-            var stBg=s==='completed'||s==='entregado'||s==='finalizado'?'rgba(46,160,67,0.08)':s==='pending'?'rgba(245,158,11,0.08)':'rgba(148,163,184,0.08)';
-            var stLabel=(v.status||'PENDING').toUpperCase();
-            var stIcon=s==='completed'||s==='entregado'||s==='finalizado'?'fa-circle-check':s==='pending'?'fa-clock':'fa-ship';
+            var isCompleted=s==='completed'||s==='entregado'||s==='finalizado';
+            var isPending=s==='pending'||s==='pendiente';
+            var stColor=isCompleted?'#2EA043':isPending?'#F59E0B':'#94A3B8';
+            var stBg=isCompleted?'rgba(46,160,67,0.08)':isPending?'rgba(245,158,11,0.08)':'rgba(148,163,184,0.08)';
+            var stLabel=isCompleted?'COMPLETED':isPending?'PENDING':(v.status||'PENDING').toUpperCase();
+            var stIcon=isCompleted?'fa-circle-check':isPending?'fa-clock':'fa-ship';
             var t=v.created_at?new Date(v.created_at).toLocaleDateString('en',{day:'2-digit',month:'short'}):'-';
-            historyList.innerHTML+='<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:all 0.2s;cursor:default" onmouseenter="this.style.transform=\'translateX(3px)\';this.style.boxShadow=\'0 4px 12px rgba(0,0,0,0.04)\'" onmouseleave="this.style.transform=\'none\';this.style.boxShadow=\'none\'">'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<div style="display:flex;align-items:center;gap:14px;flex:1;min-width:0">'+'<div style="width:38px;height:38px;border-radius:10px;background:'+stBg+';display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+stIcon+'" style="font-size:15px;color:'+stColor+'"></i></div>'+'<div style="min-width:0">'+'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+'<span style="font-size:14px;font-weight:600;color:var(--text-primary)">'+(v.vessel_name||'--')+'</span>'+'<i class="fa-solid fa-arrow-right" style="font-size:9px;color:var(--accent)"></i>'+'<span style="font-size:13px;font-weight:500;color:var(--text-primary)">'+(v.destination_port||'--')+'</span>'+'</div>'+'<div style="display:flex;align-items:center;gap:12px;margin-top:4px;font-size:11px;color:var(--text-secondary)">'+'<span><i class="fa-solid fa-location-dot" style="width:12px;color:var(--text-tertiary)"></i> '+(v.origin_port||'--')+'</span>'+'<span><i class="fa-solid fa-box" style="width:12px;color:var(--text-tertiary)"></i> '+(v.cargo_tons||0)+' ton</span>'+'<span><i class="fa-regular fa-calendar" style="width:12px;color:var(--text-tertiary)"></i> '+t+'</span>'+'</div>'+'</div>'+'</div>'+'<span style="background:'+stBg+';color:'+stColor+';font-size:10px;font-weight:700;padding:5px 12px;border-radius:6px;letter-spacing:0.5px;white-space:nowrap">'+stLabel+'</span>'+'</div>'+'</div>';
+            var d=document.createElement('div');
+            d.style.cssText='background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;transition:all 0.2s;cursor:default';
+            d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'};
+            d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+            d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:12px;background:'+stBg+';display:flex;align-items:center;justify-content:center"><i class="fa-solid '+stIcon+'" style="font-size:16px;color:'+stColor+'"></i></div><span style="font-size:9px;font-weight:700;color:'+stColor+';background:'+stBg+';padding:4px 10px;border-radius:6px;letter-spacing:0.3px">'+stLabel+'</span></div><div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:4px">'+(v.vessel_name||'--')+' <i class="fa-solid fa-arrow-right" style="font-size:9px;color:var(--accent);margin:0 4px"></i> '+(v.destination_port||'--')+'</div><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px"><span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-location-dot" style="font-size:9px;color:var(--text-tertiary)"></i>'+(v.origin_port||'--')+'</span><span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-box" style="font-size:9px;color:var(--text-tertiary)"></i>'+(v.cargo_tons||v.cargo_tonss||0)+' tons</span><span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-secondary)"><i class="fa-regular fa-calendar" style="font-size:9px;color:var(--text-tertiary)"></i>'+t+'</span></div>';
+            historyList.appendChild(d);
         });
     }
 }
+
 function filterTracking(){var q=document.getElementById('track-search').value.trim();renderTracking(q||null);}
 async function exportTracking(format){
     var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(200);var data=r.data||[];
