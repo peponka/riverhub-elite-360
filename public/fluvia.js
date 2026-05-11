@@ -655,7 +655,7 @@ async function loadFuel(){
             em.style.display='none';
             l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px';
             var totalLiters=0;
-            var _vnames=['R/M ATLAS','B/T PARANÁ','R/M DELTA','B/T IGUAZÚ','R/M HIDROVÍA'];data.forEach(function(f,_vi){
+            var _vnames=['TB PARAGUAY 01','R/M HERCULES','B/M TITAN','R/M CENTAURO','TB PARAGUAY 01'];data.forEach(function(f,_vi){
                 if(!f.vessel_name)f.vessel_name=_vnames[_vi%_vnames.length];var liters=f.liters||f.quantity||0;
                 totalLiters+=liters;
                 var fType=(f.fuel_type||'Gasoil').toLowerCase();
