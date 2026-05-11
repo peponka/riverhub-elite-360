@@ -374,69 +374,141 @@ class _BitacoraScreenState extends State<BitacoraScreen> {
                     final timeStr = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
                     final dayStr = '${date.day}/${date.month}';
                     final author = log['user_id'] != null ? LocaleService.t('log_crew_member') : LocaleService.t('log_system');
-                    Color dotColor = AppColors.accent;
-                    if (log['action_type'] == 'alert') dotColor = AppColors.warning;
-                    if (log['action_type'] == 'success') dotColor = AppColors.success;
+
+                    // Determine category from action_type or description
+                    String category = (log['action_type'] ?? 'info').toString().toUpperCase();
+                    Color catColor = AppColors.accent;
+                    IconData catIcon = CupertinoIcons.info_circle_fill;
+
+                    // Smart category detection from description
+                    final descLower = desc.toLowerCase();
+                    if (descLower.contains('navegaci') || descLower.contains('posici') || descLower.contains('ruta') || descLower.contains('km ')) {
+                      category = 'NAVEGACIÓN';
+                      catColor = const Color(0xFF3B82F6);
+                      catIcon = CupertinoIcons.location_solid;
+                    } else if (descLower.contains('combustible') || descLower.contains('consumo') || descLower.contains('autonomi')) {
+                      category = 'COMBUSTIBLE';
+                      catColor = const Color(0xFFF97316);
+                      catIcon = CupertinoIcons.drop_fill;
+                    } else if (descLower.contains('clima') || descLower.contains('viento') || descLower.contains('tormenta') || descLower.contains('nivel del r')) {
+                      category = 'CLIMA';
+                      catColor = const Color(0xFF0EA5E9);
+                      catIcon = CupertinoIcons.cloud_fill;
+                    } else if (descLower.contains('tripulaci') || descLower.contains('guardia')) {
+                      category = 'TRIPULACIÓN';
+                      catColor = const Color(0xFF8B5CF6);
+                      catIcon = CupertinoIcons.person_2_fill;
+                    } else if (descLower.contains('manten') || descLower.contains('motor') || descLower.contains('repar')) {
+                      category = 'MANTENIMIENTO';
+                      catColor = const Color(0xFF6B7280);
+                      catIcon = CupertinoIcons.wrench_fill;
+                    } else if (descLower.contains('incidente') || descLower.contains('alerta') || descLower.contains('emergencia')) {
+                      category = 'INCIDENTE';
+                      catColor = AppColors.error;
+                      catIcon = CupertinoIcons.exclamationmark_triangle_fill;
+                    } else if (descLower.contains('carga') || descLower.contains('descarga')) {
+                      category = 'CARGA';
+                      catColor = const Color(0xFF10B981);
+                      catIcon = CupertinoIcons.cube_box_fill;
+                    } else if (log['action_type'] == 'alert') {
+                      category = 'ALERTA';
+                      catColor = AppColors.warning;
+                      catIcon = CupertinoIcons.exclamationmark_triangle_fill;
+                    } else if (log['action_type'] == 'success') {
+                      category = 'OPERATIVO';
+                      catColor = AppColors.success;
+                      catIcon = CupertinoIcons.checkmark_shield_fill;
+                    }
 
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Container(
-                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: AppColors.backgroundSecondary,
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(color: AppColors.separator, width: 0.5),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(children: [
-                              Container(width: 8, height: 8, decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle)),
-                              const SizedBox(width: 10),
-                              Text(
-                                (log['action_type'] ?? 'INFO').toString().toUpperCase(),
-                                style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              // Left color bar
+                              Container(
+                                width: 4,
+                                decoration: BoxDecoration(
+                                  color: catColor,
+                                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
+                                ),
                               ),
-                              const Spacer(),
-                              Text('$author · $dayStr $timeStr', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
-                            ]),
-                            const SizedBox(height: 10),
-                            // Rich text with highlighted hashtags
-                            _buildRichDescription(desc),
-                            // Hashtag chips
-                            if (tags.isNotEmpty) ...[
-                              const SizedBox(height: 10),
-                              Wrap(
-                                spacing: 6,
-                                runSpacing: 4,
-                                children: tags.map((tag) => GestureDetector(
-                                  onTap: () => setState(() => _activeFilter = _activeFilter == tag ? null : tag),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: _getTagColor(tag).withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(tag, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: _getTagColor(tag))),
-                                  ),
-                                )).toList(),
-                              ),
-                            ],
-                            if (log['image_url'] != null && (log['image_url'] as String).isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  log['image_url'],
-                                  height: 180, width: double.infinity, fit: BoxFit.cover,
-                                  errorBuilder: (c, e, s) => Container(
-                                    height: 100, color: AppColors.surfaceContainerLow,
-                                    child: const Center(child: Icon(CupertinoIcons.photo, color: AppColors.textSecondary)),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Header: icon + category + date
+                                      Row(children: [
+                                        Container(
+                                          width: 28, height: 28,
+                                          decoration: BoxDecoration(
+                                            color: catColor.withValues(alpha: 0.12),
+                                            borderRadius: BorderRadius.circular(7),
+                                          ),
+                                          child: Center(child: Icon(catIcon, size: 14, color: catColor)),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                          decoration: BoxDecoration(
+                                            color: catColor.withValues(alpha: 0.1),
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: Text(category, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: catColor, letterSpacing: 0.3)),
+                                        ),
+                                        const Spacer(),
+                                        Text('$author · $dayStr $timeStr', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textTertiary)),
+                                      ]),
+                                      const SizedBox(height: 10),
+                                      // Description
+                                      _buildRichDescription(desc),
+                                      // Hashtag chips
+                                      if (tags.isNotEmpty) ...[
+                                        const SizedBox(height: 10),
+                                        Wrap(
+                                          spacing: 6,
+                                          runSpacing: 4,
+                                          children: tags.map((tag) => GestureDetector(
+                                            onTap: () => setState(() => _activeFilter = _activeFilter == tag ? null : tag),
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                              decoration: BoxDecoration(
+                                                color: _getTagColor(tag).withValues(alpha: 0.1),
+                                                borderRadius: BorderRadius.circular(5),
+                                              ),
+                                              child: Text(tag, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: _getTagColor(tag))),
+                                            ),
+                                          )).toList(),
+                                        ),
+                                      ],
+                                      if (log['image_url'] != null && (log['image_url'] as String).isNotEmpty) ...[
+                                        const SizedBox(height: 12),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: Image.network(
+                                            log['image_url'],
+                                            height: 180, width: double.infinity, fit: BoxFit.cover,
+                                            errorBuilder: (c, e, s) => Container(
+                                              height: 100, color: AppColors.surfaceContainerLow,
+                                              child: const Center(child: Icon(CupertinoIcons.photo, color: AppColors.textSecondary)),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
                               ),
                             ],
-                          ],
+                          ),
                         ),
                       ),
                     );

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
-import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../theme/app_colors.dart';
+import '../main.dart';
 import '../services/locale_service.dart';
 
 class MantenimientoScreen extends StatefulWidget {
@@ -69,14 +70,22 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
                   Text(LocaleService.t('maint_header2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
                   const SizedBox(height: 24),
                   Row(children: [
-                    _kpi('${pending.length}', LocaleService.t('maint_pending_kpi')),
+                    _kpi('${pending.length}', LocaleService.t('maint_pending_kpi'), color: AppColors.warning),
                     const SizedBox(width: 10),
-                    _kpi('${inProgress.length}', LocaleService.t('maint_progress_kpi')),
+                    _kpi('${inProgress.length}', LocaleService.t('maint_progress_kpi'), color: AppColors.accent),
                     const SizedBox(width: 10),
-                    _kpi('${completed.length}', LocaleService.t('maint_done_kpi')),
+                    _kpi('${completed.length}', LocaleService.t('maint_done_kpi'), color: AppColors.success),
                   ]),
                   const SizedBox(height: 20),
-                  ..._tasks.map((t) => _taskCard(t)),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.85,
+                    children: _tasks.map((t) => _taskCard(t)).toList(),
+                  ),
                   if (_tasks.isEmpty)
                     Padding(padding: EdgeInsets.all(20), child: Center(child: Text(LocaleService.t('maint_empty'), style: GoogleFonts.inter(color: AppColors.textSecondary)))),
                 ],
@@ -291,37 +300,146 @@ class _MantenimientoScreenState extends State<MantenimientoScreen> {
     ));
   }
 
-  Widget _kpi(String val, String label) => Expanded(
+  Widget _kpi(String val, String label, {Color? color}) => Expanded(
     child: Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
       child: Column(children: [
-        Text(val, style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+        Text(val, style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: color ?? AppColors.textPrimary)),
         Text(label, style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
       ]),
     ),
   );
 
   Widget _taskCard(Map<String, dynamic> t, {bool compact = false}) {
+    // Status colors
+    Color statusColor;
+    String statusLabel;
+    switch (t['status']) {
+      case 'en_progreso': statusColor = AppColors.accent; statusLabel = 'EN PROGRESO'; break;
+      case 'completado': statusColor = AppColors.success; statusLabel = 'COMPLETADO'; break;
+      default: statusColor = AppColors.warning; statusLabel = 'PENDIENTE';
+    }
+    // Priority colors
+    Color prioColor;
+    String prioLabel;
+    switch (t['priority']) {
+      case 'high': prioColor = AppColors.error; prioLabel = 'ALTA'; break;
+      case 'low': prioColor = AppColors.success; prioLabel = 'BAJA'; break;
+      default: prioColor = AppColors.orange; prioLabel = 'MEDIA';
+    }
+
+    if (compact) {
+      // Compact mode for board view
+      return Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.separator, width: 0.5),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(t['title'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary), maxLines: 2, overflow: TextOverflow.ellipsis),
+          const SizedBox(height: 6),
+          Row(children: [
+            Icon(CupertinoIcons.helm, color: AppColors.textSecondary, size: 12),
+            const SizedBox(width: 4),
+            Text(t['vessel'], style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+          ]),
+          const SizedBox(height: 6),
+          Row(children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+              child: Text(statusLabel, style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w700, color: statusColor)),
+            ),
+            const SizedBox(width: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(color: prioColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+              child: Text(prioLabel, style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w700, color: prioColor)),
+            ),
+          ]),
+        ]),
+      );
+    }
+
+    // Grid card mode
     return Container(
-      margin: compact ? EdgeInsets.zero : const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: compact ? AppColors.surfaceContainerLow : AppColors.backgroundSecondary,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.separator, width: 0.5),
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(t['title'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
-        const SizedBox(height: 6),
-        Row(children: [
-          Icon(CupertinoIcons.helm, color: AppColors.textSecondary, size: 13),
-          const SizedBox(width: 4),
-          Text(t['vessel'], style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
-          const Spacer(),
-          Text(t['dueDate'], style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
-        ]),
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top accent bar
+          Container(
+            height: 4,
+            decoration: BoxDecoration(
+              color: statusColor,
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Wrench icon + title
+                  Row(children: [
+                    Container(
+                      width: 28, height: 28,
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: Center(child: Icon(CupertinoIcons.wrench_fill, size: 14, color: statusColor)),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(t['title'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12, color: AppColors.textPrimary), maxLines: 2, overflow: TextOverflow.ellipsis)),
+                  ]),
+                  const SizedBox(height: 10),
+                  // Vessel
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(6)),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(CupertinoIcons.helm, size: 10, color: AppColors.textSecondary),
+                      const SizedBox(width: 4),
+                      Flexible(child: Text(t['vessel'], style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis)),
+                    ]),
+                  ),
+                  const Spacer(),
+                  // Badges
+                  Row(children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4), border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 0.5)),
+                      child: Text(statusLabel, style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w700, color: statusColor, letterSpacing: 0.3)),
+                    ),
+                    const SizedBox(width: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      decoration: BoxDecoration(color: prioColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                      child: Text(prioLabel, style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w700, color: prioColor, letterSpacing: 0.3)),
+                    ),
+                  ]),
+                  const SizedBox(height: 6),
+                  // Date
+                  Row(children: [
+                    Icon(CupertinoIcons.calendar, color: AppColors.textTertiary, size: 11),
+                    const SizedBox(width: 4),
+                    Text(t['dueDate'], style: GoogleFonts.inter(fontSize: 10, color: AppColors.textTertiary)),
+                  ]),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

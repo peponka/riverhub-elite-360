@@ -27,8 +27,8 @@ class _TripsScreenState extends State<TripsScreen> {
     setState(() => _isLoading = true);
     try {
       final tripsResponse = await Supabase.instance.client.from('voyages')
-          .select('*, fleet_assets(name, type)').order('created_at', ascending: false);
-      final vesselsResponse = await Supabase.instance.client.from('fleet_assets')
+          .select('*').order('created_at', ascending: false);
+      final vesselsResponse = await Supabase.instance.client.from('vessels')
           .select('id, name, type').order('name', ascending: true);
       if (mounted) {
         setState(() {
@@ -287,11 +287,13 @@ class _TripsScreenState extends State<TripsScreen> {
   Future<void> _submitNewTrip(String vesselId, String origin, String dest, String cargo, DateTime eta) async {
     setState(() => _isLoading = true);
     try {
+      final vesselData = _vessels.firstWhere((v) => v['id'].toString() == vesselId, orElse: () => {});
       await Supabase.instance.client.from('voyages').insert({
-        'vessel_id': int.parse(vesselId),
+        'vessel_id': int.tryParse(vesselId) ?? vesselId,
+        'vessel_name': vesselData['name'] ?? '',
         'voyage_number': 'V-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
         'origin_port': origin, 'destination_port': dest, 'cargo_type': cargo,
-        'eta': eta.toIso8601String(), 'status': 'planned', 'company_id': 'DEMO_TENANT',
+        'eta': eta.toIso8601String(), 'status': 'planned',
       });
       _fetchData();
     } catch (e) {
@@ -348,7 +350,15 @@ class _TripsScreenState extends State<TripsScreen> {
                   const SizedBox(height: 6),
                   Text('${_trips.length} ${LocaleService.t('trips_manifests')}', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                   const SizedBox(height: 24),
-                  ..._trips.map((t) => _tripCard(t)),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.78,
+                    children: _trips.map((t) => _tripCard(t)).toList(),
+                  ),
                 ],
               ),
       ),
@@ -356,12 +366,12 @@ class _TripsScreenState extends State<TripsScreen> {
   }
 
   Widget _tripCard(Map<String, dynamic> trip) {
-    final vessel = trip['fleet_assets'] ?? {};
-    final vesselName = vessel['name'] ?? LocaleService.t('common_no_name');
+    final vesselName = trip['vessel_name'] ?? LocaleService.t('common_no_name');
     final origin = trip['origin_port'] ?? 'N/A';
     final dest = trip['destination_port'] ?? 'N/A';
     final status = trip['status'] ?? 'pending';
     final etaStr = trip['eta'] != null ? trip['eta'].toString().split('T').first : '--';
+    final cargo = trip['cargo_type'] ?? LocaleService.t('dyn_key_222');
 
     String statusLabel;
     if (status == 'active' || status == 'live') {
@@ -374,9 +384,18 @@ class _TripsScreenState extends State<TripsScreen> {
       statusLabel = LocaleService.t('trips_pending_label');
     }
 
+    Color statusColor;
+    if (status == 'active' || status == 'live') {
+      statusColor = AppColors.success;
+    } else if (status == 'completed') {
+      statusColor = AppColors.accent;
+    } else if (status == 'planned') {
+      statusColor = AppColors.purple;
+    } else {
+      statusColor = AppColors.orange;
+    }
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(14),
@@ -385,52 +404,70 @@ class _TripsScreenState extends State<TripsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(vesselName, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: AppColors.textPrimary.withValues(alpha: status == 'active' || status == 'live' ? 0.1 : 0.05),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: AppColors.separator, width: 0.5),
-                ),
-                child: Text(statusLabel, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textPrimary, letterSpacing: 0.5)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(LocaleService.t('trips_origin_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
-                Text(origin, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
-              ]),
-              Icon(CupertinoIcons.arrow_right, color: AppColors.separator, size: 16),
-              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text(LocaleService.t('trips_dest_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
-                Text(dest, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
-              ]),
-            ],
-          ),
-          const SizedBox(height: 12),
+          // Top accent bar
           Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: AppColors.textPrimary.withValues(alpha: 0.03), borderRadius: BorderRadius.circular(10)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(LocaleService.t('trips_cargo_label'), style: GoogleFonts.inter(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.w700)),
-                  Text(trip['cargo_type'] ?? LocaleService.t('dyn_key_222'), style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                ]),
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  Text('ETA', style: GoogleFonts.inter(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.w700)),
-                  Text(etaStr, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                ]),
-              ],
+            height: 4,
+            decoration: BoxDecoration(
+              color: statusColor,
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Vessel name + status
+                  Row(
+                    children: [
+                      Expanded(child: Text(vesselName, style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis)),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: statusColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 0.5),
+                        ),
+                        child: Text(statusLabel, style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w700, color: statusColor, letterSpacing: 0.3)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Origin
+                  Text('ORIGEN', style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w700, color: AppColors.textTertiary, letterSpacing: 0.5)),
+                  Text(origin, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 4),
+                  Row(children: [
+                    Icon(CupertinoIcons.arrow_down, color: statusColor, size: 12),
+                    const SizedBox(width: 4),
+                    Expanded(child: Container(height: 0.5, color: AppColors.separator)),
+                  ]),
+                  const SizedBox(height: 4),
+                  // Dest
+                  Text('DESTINO', style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w700, color: AppColors.textTertiary, letterSpacing: 0.5)),
+                  Text(dest, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis),
+                  const Spacer(),
+                  // Bottom info
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(8)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text('CARGA', style: GoogleFonts.inter(fontSize: 7, color: AppColors.textTertiary, fontWeight: FontWeight.w700)),
+                          Text(cargo, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis),
+                        ]),
+                        Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                          Text('ETA', style: GoogleFonts.inter(fontSize: 7, color: AppColors.textTertiary, fontWeight: FontWeight.w700)),
+                          Text(etaStr, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                        ]),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

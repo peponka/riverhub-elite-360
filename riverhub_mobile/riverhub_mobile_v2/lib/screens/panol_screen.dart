@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
-import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../theme/app_colors.dart';
 import '../services/locale_service.dart';
 
 class PanolScreen extends StatefulWidget {
@@ -69,7 +69,7 @@ class _PanolScreenState extends State<PanolScreen> {
             Row(children: [
               _kpi('${_items.length}', LocaleService.t('panol_total_items')),
               const SizedBox(width: 10),
-              _kpi('$_lowStockCount', LocaleService.t('panol_low_stock_kpi')),
+              _kpi('$_lowStockCount', LocaleService.t('panol_low_stock_kpi'), color: AppColors.error),
               const SizedBox(width: 10),
               _kpi('5', LocaleService.t('panol_categories')),
             ]),
@@ -85,11 +85,20 @@ class _PanolScreenState extends State<PanolScreen> {
               onChanged: (v) => setState(() => _searchQuery = v),
             ),
             const SizedBox(height: 16),
-            ..._filteredItems.map((item) => _itemCard(item)),
             if (_filteredItems.isEmpty)
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Center(child: Text(LocaleService.t('panol_empty'), style: GoogleFonts.inter(color: AppColors.textSecondary))),
+              )
+            else
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.9,
+                children: _filteredItems.map((item) => _itemCard(item)).toList(),
               ),
           ],
         ),
@@ -187,48 +196,115 @@ class _PanolScreenState extends State<PanolScreen> {
     );
   }
 
-  Widget _kpi(String val, String label) => Expanded(
+  Widget _kpi(String val, String label, {Color? color}) => Expanded(
     child: Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
       child: Column(children: [
-        Text(val, style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+        Text(val, style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: color ?? AppColors.textPrimary)),
         Text(label, style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
       ]),
     ),
   );
 
   Widget _itemCard(Map<String, dynamic> item) {
-    final isLow = item['stock'] <= item['minAlert'];
+    final int stock = item['stock'] ?? 0;
+    final int minAlert = item['minAlert'] ?? 5;
+    final bool isLow = stock <= minAlert;
+    final bool isCritical = stock == 0;
+
+    // Stock level badge
+    String levelLabel;
+    Color levelColor;
+    if (isCritical) {
+      levelLabel = 'SIN STOCK';
+      levelColor = AppColors.error;
+    } else if (isLow) {
+      levelLabel = LocaleService.t('panol_low');
+      levelColor = AppColors.orange;
+    } else {
+      levelLabel = 'OK';
+      levelColor = AppColors.success;
+    }
+
+    // Category color
+    final cat = (item['category'] ?? '').toString().toLowerCase();
+    Color catColor = AppColors.accent;
+    IconData catIcon = CupertinoIcons.cube_box_fill;
+    if (cat.contains('motor')) { catColor = const Color(0xFFF97316); catIcon = CupertinoIcons.gear_alt_fill; }
+    else if (cat.contains('lubri')) { catColor = const Color(0xFF8B5CF6); catIcon = CupertinoIcons.drop_fill; }
+    else if (cat.contains('filtro')) { catColor = const Color(0xFF6B7280); catIcon = CupertinoIcons.slider_horizontal_3; }
+    else if (cat.contains('cabull')) { catColor = const Color(0xFF0EA5E9); catIcon = CupertinoIcons.link; }
+    else if (cat.contains('pintura')) { catColor = const Color(0xFFEC4899); catIcon = CupertinoIcons.paintbrush_fill; }
+    else if (cat.contains('seguri') || cat.contains('salvav')) { catColor = AppColors.error; catIcon = CupertinoIcons.shield_fill; }
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Expanded(child: Text(item['name'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary))),
-          if (isLow)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(6)),
-              child: Text(LocaleService.t('panol_low'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textPrimary, letterSpacing: 0.5)),
-            ),
-        ]),
-        const SizedBox(height: 8),
-        Row(children: [
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: isLow ? levelColor.withValues(alpha: 0.3) : AppColors.separator, width: isLow ? 1 : 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top accent bar
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(6)),
-            child: Text(item['category'], style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+            height: 4,
+            decoration: BoxDecoration(
+              color: levelColor,
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+            ),
           ),
-          const SizedBox(width: 8),
-          Icon(CupertinoIcons.location, color: AppColors.textSecondary, size: 12),
-          const SizedBox(width: 4),
-          Text(item['location'], style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
-          const Spacer(),
-          Text('${item['stock']} ${item['unit']}', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textPrimary)),
-        ]),
-      ]),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Icon + name
+                  Row(children: [
+                    Container(
+                      width: 28, height: 28,
+                      decoration: BoxDecoration(
+                        color: catColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: Center(child: Icon(catIcon, size: 14, color: catColor)),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(item['name'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12, color: AppColors.textPrimary), maxLines: 2, overflow: TextOverflow.ellipsis)),
+                  ]),
+                  const SizedBox(height: 8),
+                  // Category chip
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(color: catColor.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
+                    child: Text(item['category'], style: GoogleFonts.inter(fontSize: 9, color: catColor, fontWeight: FontWeight.w600)),
+                  ),
+                  const Spacer(),
+                  // Stock number
+                  Center(
+                    child: Text('$stock ${item['unit']}', style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w600, color: isLow ? levelColor : AppColors.textPrimary)),
+                  ),
+                  const SizedBox(height: 6),
+                  // Level badge
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: levelColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: levelColor.withValues(alpha: 0.3), width: 0.5),
+                      ),
+                      child: Text(levelLabel, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: levelColor, letterSpacing: 0.5)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

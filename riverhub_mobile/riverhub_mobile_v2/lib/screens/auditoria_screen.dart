@@ -149,15 +149,15 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
           border: Border.all(color: AppColors.separator, width: 0.5),
         ),
         child: Column(children: [
-          Icon(icon, color: AppColors.textSecondary, size: 20),
+          Icon(icon, color: ok ? AppColors.success : AppColors.error, size: 20),
           const SizedBox(height: 8),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Container(width: 5, height: 5, decoration: BoxDecoration(
-              color: ok ? AppColors.textPrimary : AppColors.textSecondary,
+            Container(width: 6, height: 6, decoration: BoxDecoration(
+              color: ok ? AppColors.success : AppColors.error,
               shape: BoxShape.circle,
             )),
             const SizedBox(width: 5),
-            Text(ok ? 'ONLINE' : 'ERROR', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textPrimary, letterSpacing: 0.5)),
+            Text(ok ? 'ONLINE' : 'ERROR', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: ok ? AppColors.success : AppColors.error, letterSpacing: 0.5)),
           ]),
           const SizedBox(height: 2),
           Text(label, style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
@@ -204,13 +204,23 @@ class _AuditoriaScreenState extends State<AuditoriaScreen> {
   }
 
   Widget _logEntry(Map<String, dynamic> l) {
-    // All monochrome — type label is just bold, no colors
-    final isBold = l['type'] == 'SUCCESS' || l['type'] == 'WARN' || l['type'] == 'ERROR';
+    Color typeColor;
+    switch (l['type']) {
+      case 'SUCCESS': typeColor = AppColors.success; break;
+      case 'WARN': typeColor = AppColors.warning; break;
+      case 'ERROR': typeColor = AppColors.error; break;
+      default: typeColor = AppColors.accent;
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('[${l['time']}]  ', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
-        Text('${l['type']}: ', style: GoogleFonts.inter(fontSize: 11, fontWeight: isBold ? FontWeight.w700 : FontWeight.w500, color: AppColors.textPrimary)),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+          decoration: BoxDecoration(color: typeColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(3)),
+          child: Text(l['type'], style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: typeColor)),
+        ),
+        const SizedBox(width: 6),
         Expanded(child: Text(l['msg'], style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary, height: 1.4))),
       ]),
     );

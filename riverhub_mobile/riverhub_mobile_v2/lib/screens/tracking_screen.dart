@@ -27,18 +27,18 @@ class _TrackingScreenState extends State<TrackingScreen> {
     try {
       final response = await Supabase.instance.client
           .from('voyages')
-          .select('*, fleet_assets(name, type)')
+          .select('*')
           .order('created_at', ascending: false);
       final data = List<Map<String, dynamic>>.from(response);
 
       if (data.isNotEmpty) {
         _shipments = data.map((v) {
-          final vessel = v['fleet_assets'] ?? {};
+          final vessel = v['vessel_name'] ?? v['voyage_number'] ?? LocaleService.t('dyn_key_173');
           final status = _mapStatus(v['status'] ?? 'planned');
           return {
             'id': v['id'],
-            'vessel': vessel['name'] ?? v['voyage_number'] ?? LocaleService.t('dyn_key_173'),
-            'vessel_type': vessel['type'] ?? 'Remolcador',
+            'vessel': vessel,
+            'vessel_type': 'Remolcador',
             'product': v['cargo_type'] ?? LocaleService.t('dyn_key_222'),
             'qty': v['cargo_quantity'] != null ? '${v['cargo_quantity']} TN' : '-',
             'origin': v['origin_port'] ?? 'N/A',

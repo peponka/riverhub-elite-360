@@ -241,9 +241,9 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
                 children: [
                   Row(
                     children: [
-                      _kpi(LocaleService.t('crew_kpi_onboard'), '$active'),
+                      _kpi(LocaleService.t('crew_kpi_onboard'), '$active', color: AppColors.success),
                       const SizedBox(width: 10),
-                      _kpi(LocaleService.t('crew_kpi_leave'), '$onLeave'),
+                      _kpi(LocaleService.t('crew_kpi_leave'), '$onLeave', color: AppColors.orange),
                       const SizedBox(width: 10),
                       _kpi(LocaleService.t('crew_kpi_total'), '${_crew.length}'),
                     ],
@@ -286,21 +286,29 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
                       ),
                     )
                   else
-                    ..._filtered.map((c) => _crewCard(c)),
+                    GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 0.82,
+                      children: _filtered.map((c) => _crewCard(c)).toList(),
+                    ),
                 ],
               ),
       ),
     );
   }
 
-  Widget _kpi(String label, String val) {
+  Widget _kpi(String label, String val, {Color? color}) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-        decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
+        decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
         child: Column(
           children: [
-            Text(val, style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+            Text(val, style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: color ?? AppColors.textPrimary)),
             const SizedBox(height: 2),
             Text(label.toUpperCase(), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 1)),
           ],
@@ -330,47 +338,101 @@ class _TripulacionScreenState extends State<TripulacionScreen> {
 
   Widget _crewCard(Map<String, dynamic> c) {
     String statusText;
+    Color statusColor;
     switch (c['status']) {
-      case 'active': statusText = LocaleService.t('crew_active_label'); break;
-      case 'leave': statusText = LocaleService.t('crew_leave_label'); break;
-      default: statusText = LocaleService.t('crew_inactive_label');
+      case 'active':
+        statusText = LocaleService.t('crew_active_label');
+        statusColor = AppColors.success;
+        break;
+      case 'leave':
+        statusText = LocaleService.t('crew_leave_label');
+        statusColor = AppColors.orange;
+        break;
+      default:
+        statusText = LocaleService.t('crew_inactive_label');
+        statusColor = AppColors.error;
     }
 
     final initials = c['name'].toString().split(' ').map((w) => w.isNotEmpty ? w[0] : '').take(2).join().toUpperCase();
+    final hasPhone = c['phone'] != null && c['phone'].toString().isNotEmpty;
+    final hasVessel = c['vessel'] != null && c['vessel'] != '-' && c['vessel'].toString().isNotEmpty;
 
     return GestureDetector(
       onTap: () => _showCrewForm(existing: c),
       onLongPress: () => _confirmDelete(c),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
-        child: Row(
+        decoration: BoxDecoration(
+          color: AppColors.backgroundSecondary,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.separator, width: 0.5),
+        ),
+        child: Column(
           children: [
+            // Top accent bar
             Container(
-              width: 44, height: 44,
-              decoration: BoxDecoration(color: AppColors.textPrimary.withValues(alpha: 0.08), shape: BoxShape.circle),
-              child: Center(child: Text(initials, style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary))),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(c['name'], style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                  const SizedBox(height: 2),
-                  Text('${c['role']} · ${c['vessel']}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              height: 4,
               decoration: BoxDecoration(
-                color: AppColors.textPrimary.withValues(alpha: c['status'] == 'active' ? 0.08 : 0.04),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: AppColors.separator, width: 0.5),
+                color: statusColor,
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
               ),
-              child: Text(statusText, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: c['status'] == 'active' ? AppColors.textPrimary : AppColors.textTertiary, letterSpacing: 0.5)),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    // Avatar
+                    Container(
+                      width: 48, height: 48,
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 1.5),
+                      ),
+                      child: Center(child: Text(initials, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: statusColor))),
+                    ),
+                    const SizedBox(height: 8),
+                    // Name
+                    Text(c['name'], style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
+                    const SizedBox(height: 2),
+                    // Role
+                    Text(c['role'], style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary), textAlign: TextAlign.center, overflow: TextOverflow.ellipsis),
+                    const Spacer(),
+                    // Vessel chip
+                    if (hasVessel) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Icon(CupertinoIcons.helm, size: 10, color: AppColors.accent),
+                          const SizedBox(width: 4),
+                          Flexible(child: Text(c['vessel'], style: GoogleFonts.inter(fontSize: 9, color: AppColors.accent, fontWeight: FontWeight.w600), overflow: TextOverflow.ellipsis)),
+                        ]),
+                      ),
+                      const SizedBox(height: 6),
+                    ],
+                    // Phone chip
+                    if (hasPhone) ...[
+                      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        Icon(CupertinoIcons.phone, size: 10, color: AppColors.textTertiary),
+                        const SizedBox(width: 4),
+                        Flexible(child: Text(c['phone'], style: GoogleFonts.inter(fontSize: 9, color: AppColors.textTertiary), overflow: TextOverflow.ellipsis)),
+                      ]),
+                      const SizedBox(height: 6),
+                    ],
+                    // Status badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: statusColor.withValues(alpha: 0.25), width: 0.5),
+                      ),
+                      child: Text(statusText, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: statusColor, letterSpacing: 0.5)),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

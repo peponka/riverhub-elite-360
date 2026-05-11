@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../theme/app_colors.dart';
+import '../main.dart';
 import '../services/locale_service.dart';
 class IncidentesScreen extends StatefulWidget {
   const IncidentesScreen({super.key});
@@ -417,54 +419,42 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text(
-          'Siniestralidad & Forense',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
-          onPressed: () => Navigator.pop(context),
-        ),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: _openNewIncident,
-          child: Row(
-            mainAxisSize: material.MainAxisSize.min,
-            children: [
-              Text(LocaleService.t('incidentes_reportar'), style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
-              const Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
-            ],
-          ),
-        ),
-      ),
       backgroundColor: AppColors.backgroundPrimary,
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: const Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        leading: Navigator.of(context).canPop()
+            ? CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
+            : CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
+        middle: Text('Incidentes', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: _openNewIncident, child: Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary)),
+      ),
       child: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
+            Text('Siniestralidad', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text('& Forense', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            const SizedBox(height: 6),
+            Text('${_incidents.length} REGISTROS', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            const SizedBox(height: 20),
             // KPIs
-            Row(
-              children: [
-                _kpi(LocaleService.t('dyn_key_133'), '${_incidents.length}', AppColors.blue),
-                const SizedBox(width: 10),
-                _kpi(
-                  LocaleService.t('dyn_key_120'),
-                  '${_incidents.where((i) => i['status'] == LocaleService.t('dyn_key_129')).length}',
-                  AppColors.error,
-                ),
-                const SizedBox(width: 10),
-                _kpi(
-                  LocaleService.t('dyn_key_122'),
-                  '${_incidents.where((i) => i['status'] == LocaleService.t('dyn_key_136')).length}',
-                  AppColors.success,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            ..._incidents.map((inc) => _incidentCard(inc)),
+            Row(children: [
+              _kpi(LocaleService.t('dyn_key_133'), '${_incidents.length}', AppColors.accent),
+              const SizedBox(width: 8),
+              _kpi(LocaleService.t('dyn_key_120'), '${_incidents.where((i) => i['status'] == LocaleService.t('dyn_key_129')).length}', AppColors.error),
+              const SizedBox(width: 8),
+              _kpi(LocaleService.t('dyn_key_122'), '${_incidents.where((i) => i['status'] == LocaleService.t('dyn_key_136')).length}', AppColors.success),
+            ]),
+            const SizedBox(height: 20),
+            if (_incidents.isEmpty)
+              Center(child: Padding(padding: const EdgeInsets.all(30), child: Column(children: [
+                Icon(CupertinoIcons.shield, size: 40, color: AppColors.textTertiary),
+                const SizedBox(height: 12),
+                Text('Sin incidentes', style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
+              ])))
+            else
+              ..._incidents.map((inc) => _incidentCard(inc)),
           ],
         ),
       ),
@@ -472,122 +462,59 @@ class _IncidentesScreenState extends State<IncidentesScreen> {
   }
 
   Widget _kpi(String label, String value, Color color) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: TextStyle(
-                color: color,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
-            ),
-          ],
-        ),
+    return Expanded(child: Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.separator, width: 0.5),
       ),
-    );
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(label, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+          Container(width: 6, height: 6, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        ]),
+        const SizedBox(height: 8),
+        Text(value, style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w600, color: AppColors.textPrimary, height: 1)),
+      ]),
+    ));
   }
 
   Widget _incidentCard(Map<String, dynamic> inc) {
     Color sevColor;
     switch (inc['severity']) {
-      case 'ALTA':
-        sevColor = AppColors.error;
-        break;
-      case 'MEDIA':
-        sevColor = AppColors.warning;
-        break;
-      default:
-        sevColor = AppColors.success;
+      case 'ALTA': sevColor = AppColors.error; break;
+      case 'MEDIA': sevColor = AppColors.warning; break;
+      default: sevColor = AppColors.success;
     }
-
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.backgroundSecondary,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: sevColor.withValues(alpha: 0.3)),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.separator, width: 0.5),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  inc['title'],
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: sevColor.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  inc['severity'],
-                  style: TextStyle(
-                    color: sevColor,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Expanded(child: Text(inc['title'], style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary))),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(color: sevColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
+            child: Text(inc['severity'], style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: sevColor, letterSpacing: 0.5)),
           ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              const Icon(
-                CupertinoIcons.helm,
-                color: AppColors.textSecondary,
-                size: 14,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                inc['vessel'],
-                style: const TextStyle(color: AppColors.textTertiary, fontSize: 12),
-              ),
-              const Spacer(),
-              Text(
-                inc['status'],
-                style: TextStyle(
-                  color: inc['status'] == LocaleService.t('dyn_key_136')
-                      ? AppColors.success
-                      : AppColors.warning,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            inc['date'],
-            style: const TextStyle(color: AppColors.systemGray2, fontSize: 11),
-          ),
-        ],
-      ),
+        ]),
+        const SizedBox(height: 10),
+        Row(children: [
+          Icon(CupertinoIcons.helm, color: AppColors.textSecondary, size: 14),
+          const SizedBox(width: 6),
+          Text(inc['vessel'], style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
+          const Spacer(),
+          Text(inc['status'], style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: inc['status'] == LocaleService.t('dyn_key_136') ? AppColors.success : AppColors.warning)),
+        ]),
+        const SizedBox(height: 4),
+        Text(inc['date'], style: GoogleFonts.inter(fontSize: 10, color: AppColors.textTertiary)),
+      ]),
     );
   }
 }
