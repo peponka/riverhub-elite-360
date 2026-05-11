@@ -246,7 +246,7 @@ document.getElementById('login-email').addEventListener('keydown',function(e){if
 
 // SPA Router
 let map = null;
-const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidentes,briefing:loadBriefing};
+const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,liquidos:loadLiquidos,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidentes,briefing:loadBriefing};
 
 document.querySelectorAll('.nav-item').forEach(function(item){
     item.addEventListener('click',function(e){
@@ -1559,4 +1559,53 @@ if(!document.getElementById('ai-spinner-css')){
     var style=document.createElement('style');style.id='ai-spinner-css';
     style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
     document.head.appendChild(style);
+}
+
+// ─── LIQUIDOS (TANQUES) ────────────────────────────────────
+function loadLiquidos(){
+    var tanks=[
+        {name:'BT-001 Petrobras',type:'Tanque doble casco',cap:2200,current:1804,product:'Gas Oil',color:'#F97316',temp:23,status:'En tránsito',route:'ASU → ROE'},
+        {name:'BT-002 Copetrol',type:'Tanque simple',cap:1800,current:810,product:'Metanol',color:'#8B5CF6',temp:19,status:'Fondeada',route:'Rosario'},
+        {name:'BT-003 YPF',type:'Tanque doble casco',cap:2500,current:2375,product:'Crudo Pesado',color:'#1E293B',temp:28,status:'En tránsito',route:'CDB → BHI'},
+        {name:'BT-004 Axion',type:'Tanque simple',cap:1500,current:180,product:'Nafta',color:'#F97316',temp:21,status:'En descarga',route:'San Lorenzo'},
+        {name:'BT-005 Shell',type:'Tanque doble casco',cap:2000,current:1200,product:'Agua Destilada',color:'#3B82F6',temp:25,status:'En tránsito',route:'VCO → SLO'},
+        {name:'BT-006 Reserva',type:'Tanque simple',cap:1200,current:0,product:'Gas Oil',color:'#F97316',temp:0,status:'En astillero',route:'Astillero ASU'}
+    ];
+    var totalCur=tanks.reduce(function(s,t){return s+t.current},0);
+    var totalCap=tanks.reduce(function(s,t){return s+t.cap},0);
+    var util=totalCap>0?Math.round((totalCur/totalCap)*100):0;
+    var inTransit=tanks.filter(function(t){return t.status==='En tránsito'}).reduce(function(s,t){return s+t.current},0);
+
+    var ce=document.getElementById('liq-count');if(ce)ce.textContent=tanks.length;
+    var ue=document.getElementById('liq-util');if(ue)ue.textContent=util+'%';
+    var te=document.getElementById('liq-transit');if(te)te.textContent=(inTransit/1000).toFixed(1)+'k m³';
+
+    var container=document.getElementById('liq-list');
+    if(!container)return;
+    var html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:16px;">';
+    tanks.forEach(function(t){
+        var pct=t.cap>0?Math.round(t.current/t.cap*100):0;
+        var statusColor=t.status==='En tránsito'?'#3B82F6':t.status==='Fondeada'?'#10B981':t.status==='En descarga'?'#F97316':'#6B7280';
+        html+='<div class="card" style="padding:20px;border-radius:16px;">';
+        html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">';
+        html+='<div><div style="font-weight:700;font-size:14px;color:var(--text-primary)">'+t.name+'</div>';
+        html+='<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">'+t.type+' — '+t.cap.toLocaleString()+' m³</div></div>';
+        html+='<span style="background:'+t.color+'18;color:'+t.color+';padding:3px 10px;border-radius:8px;font-size:10px;font-weight:700;">'+t.product+'</span></div>';
+        // Gauge bar
+        html+='<div style="position:relative;height:48px;background:var(--bg-tertiary);border-radius:8px;overflow:hidden;margin-bottom:10px;">';
+        html+='<div style="position:absolute;bottom:0;left:0;width:100%;height:'+pct+'%;background:'+t.color+'CC;border-radius:'+(pct>=100?'8px':'0 0 0 0')+';transition:height 0.5s ease;"></div>';
+        html+='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:'+(pct>50?'#fff':'var(--text-primary)')+';">'+pct+'%</div></div>';
+        // Stats
+        html+='<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px;">';
+        html+='<span style="font-weight:600;color:var(--text-primary)">Actual: '+t.current.toLocaleString()+' m³</span>';
+        html+='<span style="color:var(--text-secondary)">Cap: '+t.cap.toLocaleString()+' m³</span></div>';
+        // Meta chips
+        html+='<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+        if(t.temp>0) html+='<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary);">🌡️ '+t.temp+'°C</span>';
+        html+='<span style="background:'+statusColor+'14;color:'+statusColor+';padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;">'+t.status+'</span>';
+        html+='<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary);">'+t.route+'</span>';
+        html+='</div></div>';
+    });
+    html+='</div>';
+    container.innerHTML=html;
 }
