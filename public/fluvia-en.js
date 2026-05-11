@@ -388,7 +388,7 @@ document.getElementById('login-email').addEventListener('keydown',function(e){if
 
 // SPA Router
 let map = null;
-const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadTrips,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidents,briefing:loadBriefing};
+const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadTrips,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidents,liquidos:loadLiquidosEN,contratos:loadContratosEN,briefing:loadBriefing};
 
 document.querySelectorAll('.nav-item').forEach(function(item){
     item.addEventListener('click',function(e){
@@ -848,7 +848,7 @@ var modalForms={
     maint:{title:'New Maintenance Order',fields:[{id:'maint-title',label:'DESCRIPTION',type:'text',placeholder:'What to repair'},{id:'maint-vessel',label:'VESSEL',type:'text',placeholder:'Vessel'},{id:'maint-priority',label:'PRIORITY',type:'select',options:['High','Medium','Low']},{id:'maint-notes',label:'NOTES',type:'textarea',placeholder:'Details...'}]},
     panol:{title:'Add Item',fields:[{id:'panol-name',label:'SPARE PART',type:'text',placeholder:'Oil filter'},{id:'panol-cat',label:'CATEGORY',type:'select',options:['Motor','Electric','Hydraulic','Hull','General']},{id:'panol-qty',label:'QUANTITY',type:'text',placeholder:'10'},{id:'panol-min',label:'MIN STOCK',type:'text',placeholder:'2'}]},
     calado:{title:'Record Draft Reading',fields:[{id:'calado-vessel',label:'VESSEL',type:'vessel-select'},{id:'calado-value',label:'DRAFT (METERS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'MAX DRAFT (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVATIONS',type:'textarea',placeholder:'Conditions, location...'}]},
-    incidente:{title:'Report Incident',fields:[{id:'inc-title',label:'TITLE',type:'text',placeholder:'Brief incident description'},{id:'inc-vessel',label:'VESSEL',type:'vessel-select'},{id:'inc-severity',label:'SEVERITY',type:'select',options:['Critical','High','Medium','Low']},{id:'inc-type',label:'TYPE',type:'select',options:['Collision','Grounding','Spill','Mechanical failure','Fire','Medical','Other']},{id:'inc-desc',label:'DETAILED DESCRIPTION',type:'textarea',placeholder:'What happened, where, when, actions taken...'}]}
+    contrato:{title:'New Freight Contract',fields:[{id:'cont-client',label:'CLIENT',type:'text',placeholder:'Company name'},{id:'cont-route',label:'ROUTE',type:'text',placeholder:'Origin - Destination'},{id:'cont-product',label:'PRODUCT',type:'text',placeholder:'Soybean, Iron Ore, etc.'},{id:'cont-type',label:'TYPE',type:'select',options:['Spot','COA','Time Charter','Volume']},{id:'cont-volume',label:'VOLUME (tons)',type:'number',placeholder:'Total tonnage'},{id:'cont-rate',label:'RATE (USD/ton)',type:'number',placeholder:'Rate per ton'},{id:'cont-exp',label:'EXPIRATION',type:'date'}]},incidente:{title:'Report Incident',fields:[{id:'inc-title',label:'TITLE',type:'text',placeholder:'Brief incident description'},{id:'inc-vessel',label:'VESSEL',type:'vessel-select'},{id:'inc-severity',label:'SEVERITY',type:'select',options:['Critical','High','Medium','Low']},{id:'inc-type',label:'TYPE',type:'select',options:['Collision','Grounding','Spill','Mechanical failure','Fire','Medical','Other']},{id:'inc-desc',label:'DETAILED DESCRIPTION',type:'textarea',placeholder:'What happened, where, when, actions taken...'}]}
 };
 var currentModal=null;
 // esc() defined at top of file (line 7)
@@ -875,6 +875,7 @@ document.getElementById('modal-submit').addEventListener('click',async function(
         else if(t==='panol'&&d['panol-name']){await sb.from('inventory_items').insert({name:d['panol-name'],category:d['panol-cat'],quantity:parseInt(d['panol-qty'])||0,min_stock:parseInt(d['panol-min'])||0,company_id:cid});loadPanol();}
         else if(t==='calado'&&d['calado-vessel']){await sb.from('logs').insert({title:'Draft reading: '+d['calado-vessel'],vessel_name:d['calado-vessel'],action_type:'DRAFT_READING',description:d['calado-notes']||'Draft: '+d['calado-value']+'m / Max: '+d['calado-max']+'m',details:JSON.stringify({draft:parseFloat(d['calado-value'])||0,max_draft:parseFloat(d['calado-max'])||3.5}),company_id:cid});loadCalado();}
         else if(t==='incidente'&&d['inc-title']){await sb.from('logs').insert({title:d['inc-title'],vessel_name:d['inc-vessel'],action_type:'INCIDENT',description:d['inc-desc'],details:JSON.stringify({severity:d['inc-severity'],type:d['inc-type'],status:'Open'}),company_id:cid});loadIncidents();}
+        else if(t==='contrato'&&d['cont-client']){await sb.from('freight_contracts').insert({client:d['cont-client'],route:d['cont-route'],product:d['cont-product'],contract_type:d['cont-type'],volume_total:parseFloat(d['cont-volume'])||0,rate_per_ton:parseFloat(d['cont-rate'])||0,expiration_date:d['cont-exp'],status:'active',volume_used:0,company_id:cid});loadContratosEN();}
     }catch(e){console.error('Save:',e);}
     document.getElementById('modal-overlay').classList.remove('open');
 });
@@ -1538,7 +1539,83 @@ async function suggestConvoyIA(){
     btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-robot"></i> Suggest';
 }
 
-// CSS spinner animation
+// ─── LIQUIDOS EN ────────────────────────────────────
+function exportLiquidos(fmt){alert('Export tanks in '+fmt+' — coming soon');}
+function loadLiquidosEN(){
+    var tanks=[
+        {name:'BT-001 Petrobras',type:'Double hull tank',cap:2200,cur:1870,pct:85,product:'Diesel Marine',temp:'32°C',status:'Loading',route:'ASU → PIL'},
+        {name:'BT-002 Shell',type:'Chemical tanker',cap:1800,cur:1260,pct:70,product:'Naphtha',temp:'28°C',status:'In transit',route:'PIL → ROS'},
+        {name:'BT-003 YPF',type:'Single hull tank',cap:2500,cur:2125,pct:85,product:'Gasoline',temp:'30°C',status:'At port',route:'ROS → BUE'},
+        {name:'BT-004 Axion',type:'Double hull tank',cap:2000,cur:800,pct:40,product:'Fuel Oil',temp:'45°C',status:'Discharging',route:'BUE → MVD'},
+        {name:'BT-005 Total',type:'IMO II tanker',cap:2200,cur:2090,pct:95,product:'Methanol',temp:'22°C',status:'In transit',route:'ASU → ROS'},
+        {name:'BT-006 Repsol',type:'Chemical tanker',cap:2500,cur:1250,pct:50,product:'Ethanol',temp:'26°C',status:'Waiting',route:'PIL → BUE'}
+    ];
+    var el=document.getElementById('liq-list-en');
+    if(!el) return;
+    var h='<div style="font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--text-secondary);margin:20px 0 12px">TANK BARGES · '+tanks.length+'</div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px">';
+    tanks.forEach(function(t){
+        var col=t.pct>70?'var(--success)':t.pct>40?'var(--warning)':'var(--error)';
+        h+='<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px;transition:box-shadow .2s" onmouseover="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,0.08)\'" onmouseout="this.style.boxShadow=\'none\'">';
+        h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:14px;font-weight:700">'+t.name+'</div><span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:'+col+'22;color:'+col+';letter-spacing:0.5px">'+t.status.toUpperCase()+'</span></div>';
+        h+='<div style="font-size:11px;color:var(--text-secondary);margin-bottom:10px">'+t.type+'</div>';
+        h+='<div style="background:var(--separator);border-radius:6px;height:8px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:'+t.pct+'%;background:'+col+';border-radius:6px;transition:width .5s"></div></div>';
+        h+='<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-bottom:12px"><span>'+t.cur.toLocaleString()+' / '+t.cap.toLocaleString()+' m³</span><span style="font-weight:700;color:'+col+'">'+t.pct+'%</span></div>';
+        h+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+        h+='<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--accent);color:#fff">'+t.product+'</span>';
+        h+='<span style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--bg-primary);border:1px solid var(--separator);color:var(--text-secondary)">🌡 '+t.temp+'</span>';
+        h+='<span style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--bg-primary);border:1px solid var(--separator);color:var(--text-secondary)">🚢 '+t.route+'</span>';
+        h+='</div></div>';
+    });
+    h+='</div>';
+    el.innerHTML=h;
+}
+
+// ─── CONTRATOS EN ────────────────────────────────────
+function exportContratos(fmt){alert('Export contracts in '+fmt+' — coming soon');}
+async function loadContratosEN(){
+    var el=document.getElementById('cont-list-en');
+    if(!el) return;
+    var contracts=[];
+    try{
+        var r=await sb.from('freight_contracts').select('*').order('created_at',{ascending:false});
+        if(r.data&&r.data.length>0) contracts=r.data;
+    }catch(e){}
+    if(contracts.length===0){
+        contracts=[
+            {client:'Cargill',route:'Asunción - Rosario',product:'Soybean',contract_type:'COA',status:'active',volume_total:50000,volume_used:32000,rate_per_ton:18.5,expiration_date:'2026-08-15'},
+            {client:'ADM',route:'Villeta - San Lorenzo',product:'Soybean Meal',contract_type:'Spot',status:'active',volume_total:25000,volume_used:25000,rate_per_ton:22.0,expiration_date:'2026-06-01'},
+            {client:'PETROPAR',route:'Villa Elisa - Campana',product:'Diesel',contract_type:'Time Charter',status:'active',volume_total:15000,volume_used:8700,rate_per_ton:35.0,expiration_date:'2026-12-31'},
+            {client:'Bunge',route:'Concepción - Rosario',product:'Corn',contract_type:'Volume',status:'completed',volume_total:40000,volume_used:40000,rate_per_ton:16.0,expiration_date:'2026-03-30'},
+            {client:'Louis Dreyfus',route:'Encarnación - Buenos Aires',product:'Wheat',contract_type:'COA',status:'active',volume_total:30000,volume_used:12000,rate_per_ton:20.0,expiration_date:'2026-09-15'},
+            {client:'Viterra',route:'Pilar - San Nicolás',product:'Iron Ore',contract_type:'Spot',status:'pending',volume_total:60000,volume_used:0,rate_per_ton:12.5,expiration_date:'2026-07-01'}
+        ];
+    }
+    var active=contracts.filter(function(c){return c.status==='active'}).length;
+    var tons=contracts.reduce(function(s,c){return s+((c.volume_total||0))},0);
+    var rev=contracts.reduce(function(s,c){return s+((c.volume_used||0)*(c.rate_per_ton||0))},0);
+    var soon=contracts.filter(function(c){var d=new Date(c.expiration_date);var now=new Date();return c.status==='active'&&(d-now)<30*86400000&&(d-now)>0}).length;
+    var ae=document.getElementById('cont-active-en');if(ae)ae.textContent=active;
+    var te=document.getElementById('cont-tons-en');if(te)te.textContent=tons.toLocaleString();
+    var re=document.getElementById('cont-revenue-en');if(re)re.textContent='$'+Math.round(rev).toLocaleString();
+    var se=document.getElementById('cont-expiring-en');if(se)se.textContent=soon;
+    var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:16px">';
+    contracts.forEach(function(c){
+        var pct=c.volume_total>0?Math.round((c.volume_used/c.volume_total)*100):0;
+        var sc=c.status==='active'?'var(--success)':c.status==='completed'?'var(--accent)':c.status==='pending'?'var(--warning)':'var(--error)';
+        h+='<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px;border-top:3px solid '+sc+'">';
+        h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-size:14px;font-weight:700">'+c.client+'</div><span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:'+sc+'22;color:'+sc+';letter-spacing:0.5px">'+c.status.toUpperCase()+'</span></div>';
+        h+='<div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px"><i class="fa-solid fa-route" style="width:14px"></i> '+c.route+'</div>';
+        h+='<div style="font-size:11px;color:var(--text-secondary);margin-bottom:10px"><i class="fa-solid fa-cubes" style="width:14px"></i> '+c.product+' · '+c.contract_type+'</div>';
+        h+='<div style="background:var(--separator);border-radius:6px;height:6px;overflow:hidden;margin-bottom:6px"><div style="height:100%;width:'+pct+'%;background:'+sc+';border-radius:6px"></div></div>';
+        h+='<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-bottom:8px"><span>'+(c.volume_used||0).toLocaleString()+' / '+(c.volume_total||0).toLocaleString()+' ton</span><span style="font-weight:700">'+pct+'%</span></div>';
+        h+='<div style="display:flex;justify-content:space-between;font-size:11px;margin-top:8px;padding-top:8px;border-top:1px solid var(--separator)"><span style="color:var(--text-secondary)"><i class="fa-solid fa-dollar-sign" style="width:12px"></i> $'+(c.rate_per_ton||0)+'/ton</span><span style="color:var(--text-secondary)"><i class="fa-solid fa-calendar" style="width:12px"></i> '+(c.expiration_date||'N/A')+'</span></div>';
+        h+='</div>';
+    });
+    h+='</div>';
+    el.innerHTML=h;
+}
+
 if(!document.getElementById('ai-spinner-css')){
     var style=document.createElement('style');style.id='ai-spinner-css';
     style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
