@@ -18,16 +18,16 @@ function trad(s) {
         'low': 'Baja',
         'critical': 'Critico',
         'cargo': 'Carga',
-        'captain': 'Capit�n',
+        'captain': 'Capit\u00e1n',
         'engineer': 'Maquinista',
         'deckhand': 'Marinero',
         'cook': 'Cocinero',
         'helmsman': 'Timonel',
-        'collision': 'Colisi�n',
+        'collision': 'Colisi\u00f3n',
         'grounding': 'Encalladura',
         'spill': 'Derrame',
         'fire': 'Incendio',
-        'medical': 'M�dico',
+        'medical': 'M\u00e9dico',
         'passenger': 'Pasajeros'
     };
     return m[str] ? m[str] : s;
@@ -1135,9 +1135,11 @@ function renderTracking(filter){
         historyItems.forEach(function(v){
             var s=(v.status||'pendiente').toLowerCase();
             var stColor=s==='completado'||s==='entregado'||s==='finalizado'?'var(--success)':s==='pendiente'?'var(--warning)':'var(--text-secondary)';
+            var stBg=s==='completado'||s==='entregado'||s==='finalizado'?'rgba(46,160,67,0.08)':s==='pendiente'?'rgba(245,158,11,0.08)':'rgba(148,163,184,0.08)';
             var stLabel=(trad(v.status||'PENDIENTE')).toUpperCase();
+            var stIcon=s==='completado'||s==='entregado'||s==='finalizado'?'fa-circle-check':s==='pendiente'?'fa-clock':'fa-ship';
             var t=v.created_at?new Date(v.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'-';
-            historyList.innerHTML+='<div class="list-item"><div><h4>'+(v.vessel_name||'--')+' → '+(v.destination_port||'--')+'</h4><p>'+(v.origin_port||'')+' | '+(v.cargo_tons||0)+' ton | '+t+'</p></div><span class="badge" style="color:'+stColor+'">'+stLabel+'</span></div>';
+            historyList.innerHTML+='<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:all 0.2s;cursor:default" onmouseenter="this.style.transform=\'translateX(3px)\';this.style.boxShadow=\'0 4px 12px rgba(0,0,0,0.04)\'" onmouseleave="this.style.transform=\'none\';this.style.boxShadow=\'none\'">'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<div style="display:flex;align-items:center;gap:14px;flex:1;min-width:0">'+'<div style="width:38px;height:38px;border-radius:10px;background:'+stBg+';display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+stIcon+'" style="font-size:15px;color:'+stColor+'"></i></div>'+'<div style="min-width:0">'+'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+'<span style="font-size:14px;font-weight:600;color:var(--text-primary)">'+(v.vessel_name||'--')+'</span>'+'<i class="fa-solid fa-arrow-right" style="font-size:9px;color:var(--accent)"></i>'+'<span style="font-size:13px;font-weight:500;color:var(--text-primary)">'+(v.destination_port||'--')+'</span>'+'</div>'+'<div style="display:flex;align-items:center;gap:12px;margin-top:4px;font-size:11px;color:var(--text-secondary)">'+'<span><i class="fa-solid fa-location-dot" style="width:12px;color:var(--text-tertiary)"></i> '+(v.origin_port||'--')+'</span>'+'<span><i class="fa-solid fa-box" style="width:12px;color:var(--text-tertiary)"></i> '+(v.cargo_tons||0)+' ton</span>'+'<span><i class="fa-regular fa-calendar" style="width:12px;color:var(--text-tertiary)"></i> '+t+'</span>'+'</div>'+'</div>'+'</div>'+'<span style="background:'+stBg+';color:'+stColor+';font-size:10px;font-weight:700;padding:5px 12px;border-radius:6px;letter-spacing:0.5px;white-space:nowrap">'+stLabel+'</span>'+'</div>'+'</div>';
         });
     }
 }
