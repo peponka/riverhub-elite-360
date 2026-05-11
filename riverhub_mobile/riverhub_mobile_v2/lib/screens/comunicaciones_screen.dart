@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
-import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../theme/app_colors.dart';
+import '../main.dart';
 import '../services/locale_service.dart';
 
 class ComunicacionesScreen extends StatefulWidget {
@@ -87,25 +89,21 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(
-          '${LocaleService.t('comms_title')} $_activeChannel',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
       backgroundColor: AppColors.backgroundPrimary,
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: const Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        leading: Navigator.of(context).canPop()
+            ? CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
+            : CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
+        middle: Text('${LocaleService.t('comms_title')} $_activeChannel', style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+      ),
       child: SafeArea(
         child: Column(
           children: [
             Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              height: 46,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: _channels.map((ch) {
@@ -113,23 +111,19 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
                     child: GestureDetector(
-                      onTap: () => setState(() => _activeChannel = ch),
+                      onTap: () => setState(() { _activeChannel = ch; _loadMessages(); }),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: sel ? AppColors.accent : AppColors.separator,
+                          color: sel ? AppColors.textPrimary : AppColors.backgroundSecondary,
                           borderRadius: BorderRadius.circular(20),
-                          border: sel ? null : Border.all(color: AppColors.separatorLight),
+                          border: Border.all(color: sel ? AppColors.textPrimary : AppColors.separator, width: 0.5),
                         ),
                         alignment: Alignment.center,
-                        child: Text(
-                          ch,
-                          style: TextStyle(
-                            color: sel ? AppColors.textPrimary : AppColors.textOnAccent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
+                        child: Text(ch, style: GoogleFonts.inter(
+                          color: sel ? AppColors.textOnAccent : AppColors.textSecondary,
+                          fontWeight: FontWeight.w600, fontSize: 12,
+                        )),
                       ),
                     ),
                   );
@@ -145,35 +139,31 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-              decoration: const BoxDecoration(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
+              decoration: BoxDecoration(
                 color: AppColors.backgroundSecondary,
-                border: Border(top: BorderSide(color: AppColors.separator)),
+                border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CupertinoTextField(
-                      controller: _msgController,
-                      placeholder: LocaleService.t('comms_write'),
-                      style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
-                      placeholderStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                      decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                      onSubmitted: (_) => _sendMessage(),
-                    ),
+              child: Row(children: [
+                Expanded(child: CupertinoTextField(
+                  controller: _msgController,
+                  placeholder: LocaleService.t('comms_write'),
+                  style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 14),
+                  placeholderStyle: GoogleFonts.inter(color: AppColors.textTertiary, fontSize: 14),
+                  decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  onSubmitted: (_) => _sendMessage(),
+                )),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: _sendMessage,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
+                    child: Icon(CupertinoIcons.paperplane_fill, color: AppColors.backgroundPrimary, size: 18),
                   ),
-                  const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: _sendMessage,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(color: AppColors.accent, borderRadius: BorderRadius.circular(12)),
-                      child: const Icon(CupertinoIcons.paperplane_fill, color: AppColors.textPrimary, size: 20),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ]),
             ),
           ],
         ),
@@ -187,37 +177,30 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         decoration: BoxDecoration(
-          color: isMe ? AppColors.accentTeal.withValues(alpha: 0.15) : AppColors.separator,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isMe ? AppColors.accentTeal.withValues(alpha: 0.3) : AppColors.separatorLight),
+          color: isMe ? AppColors.accent.withValues(alpha: 0.08) : AppColors.backgroundSecondary,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: isMe ? AppColors.accent.withValues(alpha: 0.2) : AppColors.separator, width: 0.5),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '● ${msg['sender']}',
-                  style: TextStyle(color: isMe ? AppColors.accentTeal : AppColors.error, fontSize: 11, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(width: 8),
-                Text('[${msg['time']}]', style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
-                const SizedBox(width: 6),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                  decoration: BoxDecoration(color: AppColors.separatorLight, borderRadius: BorderRadius.circular(4)),
-                  child: Text(msg['type'], style: const TextStyle(color: AppColors.textTertiary, fontSize: 9)),
-                ),
-              ],
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Container(width: 6, height: 6, decoration: BoxDecoration(color: isMe ? AppColors.accent : AppColors.error, shape: BoxShape.circle)),
+            const SizedBox(width: 6),
+            Text(msg['sender'], style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: isMe ? AppColors.accent : AppColors.textPrimary)),
+            const SizedBox(width: 8),
+            Text('[${msg['time']}]', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
+            const SizedBox(width: 6),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+              decoration: BoxDecoration(color: AppColors.textPrimary.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(4)),
+              child: Text(msg['type'], style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.w700, color: AppColors.textTertiary)),
             ),
-            const SizedBox(height: 6),
-            Text(msg['content'], style: const TextStyle(color: AppColors.textPrimary, fontSize: 14)),
-          ],
-        ),
+          ]),
+          const SizedBox(height: 6),
+          Text(msg['content'], style: GoogleFonts.inter(fontSize: 14, color: AppColors.textPrimary, height: 1.4)),
+        ]),
       ),
     );
   }

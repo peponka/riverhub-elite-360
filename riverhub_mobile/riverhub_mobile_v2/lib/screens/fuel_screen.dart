@@ -15,11 +15,7 @@ class FuelScreen extends StatefulWidget {
 class _FuelScreenState extends State<FuelScreen> {
   bool _isLoading = true;
   List<Map<String, dynamic>> _vessels = [];
-  Map<String, dynamic>? _selectedVessel;
   List<Map<String, dynamic>> _fuelLogs = [];
-  int _currentAutonomy = 0;
-  int _currentEfficiency = 0;
-  int _currentLevel = 0;
 
   @override
   void initState() {
@@ -30,138 +26,69 @@ class _FuelScreenState extends State<FuelScreen> {
   Future<void> _fetchData() async {
     setState(() => _isLoading = true);
     try {
-      final response = await Supabase.instance.client.from('fleet_assets')
-          .select('id, name, type, fuel_capacity, status');
-      final List<Map<String, dynamic>> vessels = List<Map<String, dynamic>>.from(response);
-      if (vessels.isNotEmpty) {
-        _vessels = vessels;
-        _selectedVessel = vessels.first;
-        await _fetchFuelStats(_selectedVessel!['id'], _selectedVessel!['fuel_capacity'] ?? 40000);
-      } else {
-        _vessels = [
-          {'id': 'demo-1', 'name': 'TB PARAGUAY 01', 'fuel_capacity': 45000, 'type': 'Remolcador'},
-          {'id': 'demo-2', 'name': 'R/M HERCULES', 'fuel_capacity': 55000, 'type': 'Remolcador'},
-          {'id': 'demo-3', 'name': 'BZ ITAIPÚ', 'fuel_capacity': 8000, 'type': LocaleService.t('dyn_key_116')},
-        ];
-        _selectedVessel = _vessels.first;
-        _currentLevel = 69; _currentAutonomy = 182; _currentEfficiency = 94;
-        _fuelLogs = [
-          {'log_type': 'CARGA', 'location': 'Puerto Rosario', 'quantity': 8000, 'logged_at': DateTime.now().toIso8601String()},
-          {'log_type': LocaleService.t('dyn_key_115'), 'location': 'KM 1445 — Navegación', 'quantity': 450, 'logged_at': DateTime.now().subtract(Duration(hours: 6)).toIso8601String()},
-          {'log_type': 'CARGA', 'location': 'Puerto Asunción', 'quantity': 12000, 'logged_at': DateTime.now().subtract(const Duration(days: 2)).toIso8601String()},
-          {'log_type': LocaleService.t('dyn_key_115'), 'location': 'KM 1380 — Convoy', 'quantity': 980, 'logged_at': DateTime.now().subtract(Duration(days: 3)).toIso8601String()},
-        ];
+      // Fetch all vessels
+      final vesselRes = await Supabase.instance.client.from('vessels')
+          .select('id, name, type, status');
+      _vessels = List<Map<String, dynamic>>.from(vesselRes);
+
+      // Fetch ALL fuel logs
+      final logsRes = await Supabase.instance.client.from('fuel_logs')
+          .select('id, vessel_id, vessel_name, quantity, log_type, location, logged_at')
+          .order('logged_at', ascending: false)
+          .limit(50);
+      _fuelLogs = List<Map<String, dynamic>>.from(logsRes);
+
+      // If no fuel logs exist, show demo data
+      if (_fuelLogs.isEmpty && _vessels.isNotEmpty) {
+        _fuelLogs = _buildDemoLogs();
       }
     } catch (e) {
-      debugPrint('Error: $e');
-      _vessels = [{'id': 'demo-1', 'name': 'TB PARAGUAY 01', 'fuel_capacity': 45000, 'type': 'Remolcador'}];
-      _selectedVessel = _vessels.first;
-      _currentLevel = 69; _currentAutonomy = 182; _currentEfficiency = 94; _fuelLogs = [];
+      debugPrint('FuelScreen error: $e');
+      _vessels = [];
+      _fuelLogs = _buildDemoLogs();
     }
     if (mounted) setState(() => _isLoading = false);
   }
 
-  Future<void> _fetchFuelStats(dynamic vesselId, num capacity) async {
-    try {
-      final logs = await Supabase.instance.client.from('fuel_logs')
-          .select('quantity, log_type, logged_at, location')
-          .eq('vessel_id', vesselId)
-          .order('logged_at', ascending: false).limit(20);
-      _fuelLogs = List<Map<String, dynamic>>.from(logs);
-      num totalLoaded = 0, totalConsumed = 0;
-      for (var log in _fuelLogs) {
-        num qty = log['quantity'] ?? 0;
-        String type = (log['log_type'] ?? '').toString().toUpperCase();
-        if (type == 'CARGA' || type == 'LOAD') { totalLoaded += qty; } else { totalConsumed += qty.abs(); }
-      }
-      num net = totalLoaded - totalConsumed;
-      if (capacity <= 0) capacity = 40000;
-      _currentLevel = _fuelLogs.isEmpty ? 0 : ((net / capacity) * 100).clamp(5, 100).round();
-      _currentAutonomy = (_currentLevel * 2.6).round();
-      _currentEfficiency = _fuelLogs.isEmpty ? 0 : (totalLoaded > 0 ? ((1 - (totalConsumed / totalLoaded)) * 100).clamp(0, 100).round() : 0);
-    } catch (e) {
-      debugPrint('Stats Error: $e');
-      _currentLevel = 0; _currentAutonomy = 0; _currentEfficiency = 0; _fuelLogs = [];
-    }
-    if (mounted) setState(() {});
+  List<Map<String, dynamic>> _buildDemoLogs() {
+    return [
+      {'vessel_name': 'R/M ATLAS', 'quantity': 12000, 'log_type': 'CARGA', 'logged_at': '2026-05-07T10:00:00Z'},
+      {'vessel_name': 'B/T PARANÁ', 'quantity': 12000, 'log_type': 'CARGA', 'logged_at': '2026-05-07T10:00:00Z'},
+      {'vessel_name': 'R/M DELTA', 'quantity': 15000, 'log_type': 'CARGA', 'logged_at': '2026-05-08T10:00:00Z'},
+      {'vessel_name': 'B/T IGUAZÚ', 'quantity': 15000, 'log_type': 'CARGA', 'logged_at': '2026-05-08T10:00:00Z'},
+      {'vessel_name': 'R/M HIDROVÍA', 'quantity': 8500, 'log_type': 'CARGA', 'logged_at': '2026-05-01T10:00:00Z'},
+      {'vessel_name': 'R/M ATLAS', 'quantity': 8500, 'log_type': 'CARGA', 'logged_at': '2026-04-25T10:00:00Z'},
+      {'vessel_name': 'B/T PARANÁ', 'quantity': 6000, 'log_type': 'CARGA', 'logged_at': '2026-05-01T10:00:00Z'},
+      {'vessel_name': 'R/M DELTA', 'quantity': 6000, 'log_type': 'CARGA', 'logged_at': '2026-04-28T10:00:00Z'},
+      {'vessel_name': 'B/T IGUAZÚ', 'quantity': 9200, 'log_type': 'CARGA', 'logged_at': '2026-04-28T10:00:00Z'},
+      {'vessel_name': 'R/M HIDROVÍA', 'quantity': 9200, 'log_type': 'CARGA', 'logged_at': '2026-04-16T10:00:00Z'},
+      {'vessel_name': 'R/M ATLAS', 'quantity': 11000, 'log_type': 'CARGA', 'logged_at': '2026-04-20T10:00:00Z'},
+      {'vessel_name': 'B/T PARANÁ', 'quantity': 11000, 'log_type': 'CARGA', 'logged_at': '2026-04-20T10:00:00Z'},
+      {'vessel_name': 'R/M DELTA', 'quantity': 7800, 'log_type': 'CARGA', 'logged_at': '2026-04-18T10:00:00Z'},
+      {'vessel_name': 'B/T IGUAZÚ', 'quantity': 7800, 'log_type': 'CARGA', 'logged_at': '2026-04-18T10:00:00Z'},
+      {'vessel_name': 'R/M HIDROVÍA', 'quantity': 13500, 'log_type': 'CARGA', 'logged_at': '2026-04-10T10:00:00Z'},
+      {'vessel_name': 'R/M ATLAS', 'quantity': 13500, 'log_type': 'CARGA', 'logged_at': '2026-04-10T10:00:00Z'},
+    ];
   }
 
-  void _selectVessel() {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (ctx) => Container(
-        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundPrimary,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          border: Border(top: BorderSide(color: AppColors.separator, width: 0.5)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
-              child: Row(
-                children: [
-                  Text(LocaleService.t('fuel_select_vessel'), style: GoogleFonts.newsreader(fontSize: 20, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-                  const Spacer(),
-                  GestureDetector(onTap: () => Navigator.pop(ctx), child: Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textTertiary, size: 24)),
-                ],
-              ),
-            ),
-            Container(height: 0.5, color: AppColors.separator),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: _vessels.length,
-                itemBuilder: (_, i) {
-                  final v = _vessels[i];
-                  final isSelected = _selectedVessel?['id'].toString() == v['id'].toString();
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.pop(ctx);
-                      setState(() { _selectedVessel = v; _isLoading = true; });
-                      _fetchFuelStats(v['id'], v['fuel_capacity'] ?? 40000)
-                          .then((_) => setState(() => _isLoading = false));
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.textPrimary.withValues(alpha: 0.06) : AppColors.backgroundSecondary,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: isSelected ? AppColors.textPrimary : AppColors.separator, width: isSelected ? 1.0 : 0.5),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(CupertinoIcons.helm, size: 20, color: AppColors.textPrimary),
-                          const SizedBox(width: 12),
-                          Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(v['name'] ?? '', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                              Text(v['type'] ?? '', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
-                            ],
-                          )),
-                          if (isSelected) Icon(CupertinoIcons.checkmark_circle_fill, color: AppColors.textPrimary, size: 20),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  String _vesselNameFromLog(Map<String, dynamic> log) {
+    // Try vessel_name first, then look up by vessel_id
+    if (log['vessel_name'] != null && log['vessel_name'].toString().isNotEmpty) {
+      return log['vessel_name'];
+    }
+    final vesselId = log['vessel_id'];
+    if (vesselId != null) {
+      final match = _vessels.where((v) => v['id'].toString() == vesselId.toString());
+      if (match.isNotEmpty) return match.first['name'] ?? '-';
+    }
+    return '-';
   }
 
   void _addFuelLog() {
     final amountCtrl = TextEditingController();
     final locationCtrl = TextEditingController();
     String logType = 'CARGA';
+    Map<String, dynamic>? selectedVessel = _vessels.isNotEmpty ? _vessels.first : null;
 
     showCupertinoModalPopup(
       context: context,
@@ -169,7 +96,7 @@ class _FuelScreenState extends State<FuelScreen> {
         builder: (ctx, setModalState) => Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
           child: Container(
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.65),
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: AppColors.backgroundPrimary,
@@ -181,18 +108,72 @@ class _FuelScreenState extends State<FuelScreen> {
               Center(child: Container(width: 36, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)))),
               const SizedBox(height: 20),
               Text(LocaleService.t('fuel_register'), style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-              Text(_selectedVessel?['name'] ?? '', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
-              const SizedBox(height: 24),
+              Text('COMBUSTIBLE', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+              const SizedBox(height: 20),
+
+              // Vessel selector
+              Text(LocaleService.t('fuel_select_vessel'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+              const SizedBox(height: 8),
+              GestureDetector(
+                onTap: () {
+                  if (_vessels.isEmpty) return;
+                  showCupertinoModalPopup(
+                    context: ctx,
+                    builder: (innerCtx) => Container(
+                      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
+                      decoration: BoxDecoration(color: AppColors.backgroundPrimary, borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
+                          child: Row(children: [
+                            Text(LocaleService.t('fuel_select_vessel'), style: GoogleFonts.newsreader(fontSize: 20, color: AppColors.textPrimary)),
+                            const Spacer(),
+                            GestureDetector(onTap: () => Navigator.pop(innerCtx), child: Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textTertiary, size: 24)),
+                          ]),
+                        ),
+                        Flexible(child: ListView.builder(
+                          shrinkWrap: true, itemCount: _vessels.length,
+                          itemBuilder: (_, i) {
+                            final v = _vessels[i];
+                            return GestureDetector(
+                              onTap: () { Navigator.pop(innerCtx); setModalState(() => selectedVessel = v); },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
+                                child: Row(children: [
+                                  Icon(CupertinoIcons.helm, size: 18, color: AppColors.textPrimary),
+                                  const SizedBox(width: 12),
+                                  Text(v['name'] ?? '-', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                                ]),
+                              ),
+                            );
+                          },
+                        )),
+                      ]),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.separator, width: 0.5)),
+                  child: Row(children: [
+                    Icon(CupertinoIcons.helm, size: 18, color: selectedVessel != null ? AppColors.textPrimary : AppColors.textTertiary),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(selectedVessel?['name'] ?? 'Seleccionar embarcación', style: GoogleFonts.inter(fontSize: 14, color: selectedVessel != null ? AppColors.textPrimary : AppColors.textTertiary))),
+                    Icon(CupertinoIcons.chevron_down, size: 16, color: AppColors.textSecondary),
+                  ]),
+                ),
+              ),
+              const SizedBox(height: 16),
 
               Text(LocaleService.t('fuel_type_label'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  _typeOption(LocaleService.t('fuel_load'), 'CARGA', logType, (v) => setModalState(() => logType = v)),
-                  const SizedBox(width: 8),
-                  _typeOption(LocaleService.t('fuel_consumption'), LocaleService.t('dyn_key_115'), logType, (v) => setModalState(() => logType = v)),
-                ],
-              ),
+              Row(children: [
+                _typeOption(LocaleService.t('fuel_load'), 'CARGA', logType, (v) => setModalState(() => logType = v)),
+                const SizedBox(width: 8),
+                _typeOption(LocaleService.t('fuel_consumption'), 'CONSUMO', logType, (v) => setModalState(() => logType = v)),
+              ]),
               const SizedBox(height: 16),
 
               _inputField(LocaleService.t('fuel_quantity'), amountCtrl, CupertinoIcons.drop, keyboard: TextInputType.number),
@@ -202,34 +183,21 @@ class _FuelScreenState extends State<FuelScreen> {
 
               GestureDetector(
                 onTap: () async {
-                  if (amountCtrl.text.isEmpty || locationCtrl.text.isEmpty) return;
+                  if (amountCtrl.text.isEmpty || selectedVessel == null) return;
                   Navigator.pop(ctx);
                   final amount = double.tryParse(amountCtrl.text) ?? 0;
                   try {
-                    if (_selectedVessel != null && !_selectedVessel!['id'].toString().startsWith('demo')) {
+                    if (!selectedVessel!['id'].toString().startsWith('demo')) {
                       await Supabase.instance.client.from('fuel_logs').insert({
-                        'vessel_id': _selectedVessel!['id'],
+                        'vessel_id': selectedVessel!['id'],
+                        'vessel_name': selectedVessel!['name'] ?? '',
                         'log_type': logType,
                         'quantity': amount,
                         'location': locationCtrl.text,
                         'logged_at': DateTime.now().toIso8601String(),
                       });
-                    } else {
-                      _fuelLogs.insert(0, {
-                        'log_type': logType, 'location': locationCtrl.text,
-                        'quantity': amount, 'logged_at': DateTime.now().toIso8601String(),
-                      });
-                      if (logType == 'CARGA') {
-                        _currentLevel = (_currentLevel + (amount / 450).round()).clamp(0, 100);
-                      } else {
-                        _currentLevel = (_currentLevel - (amount / 450).round()).clamp(0, 100);
-                      }
-                      _currentAutonomy = (_currentLevel * 2.6).round();
                     }
-                    setState(() {});
-                    if (_selectedVessel != null && !_selectedVessel!['id'].toString().startsWith('demo')) {
-                      _fetchFuelStats(_selectedVessel!['id'], _selectedVessel!['fuel_capacity'] ?? 40000);
-                    }
+                    _fetchData();
                   } catch (e) { debugPrint('Error: $e'); }
                 },
                 child: Container(
@@ -269,18 +237,16 @@ class _FuelScreenState extends State<FuelScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       decoration: BoxDecoration(border: Border.all(color: AppColors.separator, width: 0.5), borderRadius: BorderRadius.circular(12)),
-      child: Row(
-        children: [
-          Icon(icon, size: 18, color: AppColors.textSecondary),
-          const SizedBox(width: 12),
-          Expanded(child: CupertinoTextField(
-            controller: ctrl, placeholder: placeholder, keyboardType: keyboard,
-            placeholderStyle: GoogleFonts.inter(fontSize: 14, color: AppColors.textTertiary),
-            style: GoogleFonts.inter(fontSize: 14, color: AppColors.textPrimary),
-            decoration: const BoxDecoration(), padding: const EdgeInsets.symmetric(vertical: 12),
-          )),
-        ],
-      ),
+      child: Row(children: [
+        Icon(icon, size: 18, color: AppColors.textSecondary),
+        const SizedBox(width: 12),
+        Expanded(child: CupertinoTextField(
+          controller: ctrl, placeholder: placeholder, keyboardType: keyboard,
+          placeholderStyle: GoogleFonts.inter(fontSize: 14, color: AppColors.textTertiary),
+          style: GoogleFonts.inter(fontSize: 14, color: AppColors.textPrimary),
+          decoration: const BoxDecoration(), padding: const EdgeInsets.symmetric(vertical: 12),
+        )),
+      ]),
     );
   }
 
@@ -298,194 +264,160 @@ class _FuelScreenState extends State<FuelScreen> {
         trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: _addFuelLog, child: Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
-        child: _isLoading && _vessels.isEmpty
+        child: _isLoading
             ? const Center(child: CupertinoActivityIndicator(radius: 14))
             : ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 children: [
+                  // Header
                   Text(LocaleService.t('fuel_header1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
                   Text(LocaleService.t('fuel_header2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+                  const SizedBox(height: 8),
+                  Text('${_fuelLogs.length} registros', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
                   const SizedBox(height: 20),
 
-                  GestureDetector(
-                    onTap: _selectVessel,
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: AppColors.backgroundSecondary,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.separator, width: 0.5),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(CupertinoIcons.helm, size: 18, color: AppColors.textPrimary),
-                          const SizedBox(width: 12),
-                          Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(_selectedVessel?['name'] ?? LocaleService.t('fuel_select_hint'), style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                              Text(_selectedVessel?['type'] ?? '', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
-                            ],
-                          )),
-                          Icon(CupertinoIcons.chevron_down, size: 16, color: AppColors.textSecondary),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundSecondary,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.separator, width: 0.5),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(LocaleService.t('fuel_level'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
-                        const SizedBox(height: 12),
-                        _buildFuelGauge(_currentLevel),
-                        const SizedBox(height: 16),
-                        Text('$_currentLevel%', style: GoogleFonts.newsreader(fontSize: 52, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1)),
-                        const SizedBox(height: 4),
-                        Text(
-                          _currentLevel > 70
-                              ? LocaleService.t('fuel_optimal')
-                              : _currentLevel > 30
-                                  ? LocaleService.t('fuel_normal_level')
-                                  : _currentLevel > 0
-                                      ? LocaleService.t('fuel_low_level')
-                                      : LocaleService.t('fuel_no_data'),
-                          style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1),
-                        ),
-                        const SizedBox(height: 20),
-                        Container(height: 0.5, color: AppColors.separator),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _stat(LocaleService.t('fuel_autonomy'), '$_currentAutonomy ${LocaleService.t('fuel_hours')}'),
-                            Container(width: 0.5, height: 30, color: AppColors.separator),
-                            _stat(LocaleService.t('fuel_efficiency'), '$_currentEfficiency%'),
-                            Container(width: 0.5, height: 30, color: AppColors.separator),
-                            _stat(LocaleService.t('fuel_capacity'), '${((_selectedVessel?['fuel_capacity'] ?? 40000) / 1000).round()}k L'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-
-                  Row(
-                    children: [
-                      Text(LocaleService.t('fuel_log_section'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
-                      const Spacer(),
-                      Text('${_fuelLogs.length} ${LocaleService.t('fuel_entries')}', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+                  // Grid of fuel cards — 2 columns like the web
                   if (_fuelLogs.isEmpty)
                     Container(
                       padding: const EdgeInsets.all(40),
-                      child: Column(
-                        children: [
-                          Icon(CupertinoIcons.drop, size: 36, color: AppColors.textTertiary),
-                          const SizedBox(height: 12),
-                          Text(LocaleService.t('fuel_no_records'), style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
-                          const SizedBox(height: 4),
-                          Text(LocaleService.t('fuel_add_hint'), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
-                        ],
-                      ),
+                      child: Column(children: [
+                        Icon(CupertinoIcons.drop, size: 36, color: AppColors.textTertiary),
+                        const SizedBox(height: 12),
+                        Text(LocaleService.t('fuel_no_records'), style: GoogleFonts.newsreader(fontSize: 18, color: AppColors.textSecondary)),
+                        const SizedBox(height: 4),
+                        Text(LocaleService.t('fuel_add_hint'), style: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary)),
+                      ]),
                     )
                   else
-                    ..._fuelLogs.map((log) => _logItem(log)),
+                    ..._buildGrid(),
                 ],
               ),
       ),
     );
   }
 
-  Widget _buildFuelGauge(int level) {
-    final double fraction = level / 100.0;
-    return Container(
-      height: 12,
-      decoration: BoxDecoration(
-        color: AppColors.textPrimary.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutCubic,
-                width: constraints.maxWidth * fraction,
-                height: 12,
-                decoration: BoxDecoration(
-                  color: level > 50
-                      ? AppColors.textPrimary
-                      : level > 20
-                          ? AppColors.textSecondary
-                          : AppColors.error,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
+  List<Widget> _buildGrid() {
+    final List<Widget> rows = [];
+    for (int i = 0; i < _fuelLogs.length; i += 2) {
+      rows.add(Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: _fuelCard(_fuelLogs[i])),
+          const SizedBox(width: 10),
+          if (i + 1 < _fuelLogs.length)
+            Expanded(child: _fuelCard(_fuelLogs[i + 1]))
+          else
+            const Expanded(child: SizedBox()),
+        ],
+      ));
+      rows.add(const SizedBox(height: 10));
+    }
+    return rows;
   }
 
-  Widget _stat(String title, String val) {
-    return Column(children: [
-      Text(title, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
-      const SizedBox(height: 4),
-      Text(val, style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-    ]);
-  }
+  Widget _fuelCard(Map<String, dynamic> log) {
+    final String vesselName = _vesselNameFromLog(log);
+    final num quantity = log['quantity'] ?? 0;
+    final String logType = (log['log_type'] ?? 'CARGA').toString().toUpperCase();
+    final DateTime date = DateTime.tryParse(log['logged_at'] ?? '') ?? DateTime.now();
+    final String dateStr = '${date.day.toString().padLeft(2, '0')} ${_monthName(date.month)} ${date.year}';
+    final bool isLoad = logType == 'CARGA' || logType == 'LOAD';
 
-  Widget _logItem(Map<String, dynamic> log) {
-    String type = (log['log_type'] ?? '').toString().toUpperCase();
-    bool isLoad = type == 'CARGA' || type == 'LOAD';
-    String prefix = isLoad ? '+' : '-';
-    DateTime date = DateTime.tryParse(log['logged_at'] ?? '') ?? DateTime.now();
-    String dateStr = '${date.day}/${date.month} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+    // Format quantity with dots for thousands
+    final String qtyStr = _formatNumber(quantity.toInt());
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.separator, width: 0.5),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 36, height: 36,
-            decoration: BoxDecoration(
-              color: AppColors.textPrimary.withValues(alpha: isLoad ? 0.08 : 0.04),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(child: Icon(
-              isLoad ? CupertinoIcons.arrow_down : CupertinoIcons.arrow_up,
-              size: 16, color: AppColors.textPrimary,
-            )),
-          ),
-          const SizedBox(width: 12),
-          Expanded(child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // Fuel icon
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(type, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-              Text('${log['location'] ?? 'N/D'} · $dateStr', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+              Container(
+                width: 34, height: 34,
+                decoration: BoxDecoration(
+                  color: isLoad ? AppColors.accent.withValues(alpha: 0.1) : AppColors.error.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(child: Icon(
+                  CupertinoIcons.drop_fill,
+                  size: 16,
+                  color: isLoad ? AppColors.accent : AppColors.error,
+                )),
+              ),
+              Icon(CupertinoIcons.delete, size: 14, color: AppColors.textTertiary),
             ],
-          )),
-          Text('$prefix${log['quantity']}L', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          ),
+          const SizedBox(height: 14),
+
+          // Vessel name with helm icon
+          Row(children: [
+            Icon(CupertinoIcons.helm, size: 12, color: AppColors.accent),
+            const SizedBox(width: 5),
+            Expanded(child: Text(
+              vesselName,
+              style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+              overflow: TextOverflow.ellipsis,
+            )),
+          ]),
+          const SizedBox(height: 8),
+
+          // Quantity — large number
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(qtyStr, style: GoogleFonts.newsreader(fontSize: 26, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1)),
+              const SizedBox(width: 4),
+              Text('litros', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // Fuel type badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: AppColors.accent.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              'DIESEL MARINE',
+              style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.accent, letterSpacing: 0.5),
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Date
+          Row(children: [
+            Icon(CupertinoIcons.calendar, size: 11, color: AppColors.textTertiary),
+            const SizedBox(width: 4),
+            Text(dateStr, style: GoogleFonts.inter(fontSize: 10, color: AppColors.textTertiary)),
+          ]),
         ],
       ),
     );
+  }
+
+  String _formatNumber(int n) {
+    final str = n.toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buffer.write('.');
+      buffer.write(str[i]);
+    }
+    return buffer.toString();
+  }
+
+  String _monthName(int m) {
+    const months = ['', 'ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    return months[m.clamp(1, 12)];
   }
 }

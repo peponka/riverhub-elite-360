@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:google_fonts/google_fonts.dart';
 import '../services/supabase_service.dart';
-import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../theme/app_colors.dart';
+import '../main.dart';
 import '../services/locale_service.dart';
 
 class CommercialScreen extends StatefulWidget {
@@ -51,56 +53,34 @@ class _CommercialScreenState extends State<CommercialScreen> {
     final totalValue = '\$2.83M';
 
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(
-          LocaleService.t('dyn_key_58'),
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
-          onPressed: () => Navigator.pop(context),
-        ),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: _showCreateOrderModal,
-          child: Row(
-            mainAxisSize: material.MainAxisSize.min,
-            children: [
-              Text(LocaleService.t('commercial_nuevo'), style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
-              const Icon(CupertinoIcons.add_circled, color: AppColors.accent, size: 22),
-            ],
-          ),
-        ),
-      ),
       backgroundColor: AppColors.backgroundPrimary,
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: const Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        leading: Navigator.of(context).canPop()
+            ? CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
+            : CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
+        middle: Text(LocaleService.t('dyn_key_58'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: _showCreateOrderModal, child: Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary)),
+      ),
       child: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           children: [
-            Row(
-              children: [
-                _kpi(LocaleService.t('dyn_key_56'), '$active', AppColors.success),
-                const SizedBox(width: 10),
-                _kpi(LocaleService.t('dyn_key_62'), totalValue, AppColors.blue),
-                const SizedBox(width: 10),
-                _kpi(LocaleService.t('dyn_key_4'), '4', AppColors.purple),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              LocaleService.t('dyn_key_2'),
-              style: TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ..._contracts.asMap().entries.map(
-              (e) => _contractCard(e.key, e.value),
-            ),
+            Text('Gestión', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+            Text('Comercial', style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+            const SizedBox(height: 6),
+            Text('ORDENES DE SERVICIO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+            const SizedBox(height: 20),
+            Row(children: [
+              _kpi(LocaleService.t('dyn_key_56'), '$active', AppColors.success),
+              const SizedBox(width: 8),
+              _kpi(LocaleService.t('dyn_key_62'), totalValue, AppColors.accent),
+              const SizedBox(width: 8),
+              _kpi(LocaleService.t('dyn_key_4'), '4', const Color(0xFF8B5CF6)),
+            ]),
+            const SizedBox(height: 24),
+            ..._contracts.asMap().entries.map((e) => _contractCard(e.key, e.value)),
           ],
         ),
       ),
@@ -210,34 +190,22 @@ class _CommercialScreenState extends State<CommercialScreen> {
   }
 
   Widget _kpi(String label, String val, Color color) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          children: [
-            Text(
-              val,
-              style: TextStyle(
-                color: color,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: const TextStyle(color: AppColors.textTertiary, fontSize: 10),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+    return Expanded(child: Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.separator, width: 0.5),
       ),
-    );
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(label, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+          Container(width: 6, height: 6, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        ]),
+        const SizedBox(height: 8),
+        Text(val, style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.textPrimary, height: 1)),
+      ]),
+    ));
   }
 
   Widget _contractCard(int idx, Map<String, dynamic> c) {

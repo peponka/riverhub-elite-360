@@ -3,7 +3,8 @@ import 'package:flutter/material.dart'
     show DragTarget, Divider, Material, MaterialType, LongPressDraggable;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:riverhub_mobile_v2/theme/app_colors.dart';
+import '../theme/app_colors.dart';
+import '../main.dart';
 import '../services/ai_service.dart';
 import '../services/locale_service.dart';
 
@@ -253,39 +254,21 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
     return CupertinoPageScaffold(
       backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: AppColors.backgroundPrimary.withValues(alpha: 0.95),
-        middle: Text(
-          LocaleService.t('convoy_title'),
-          style: GoogleFonts.inter(fontWeight: FontWeight.bold),
-        ),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: const Icon(CupertinoIcons.back, color: AppColors.accent),
-          onPressed: () => Navigator.pop(context),
-        ),
+        backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
+        border: const Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        leading: Navigator.of(context).canPop()
+            ? CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
+            : CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
+        middle: Text(LocaleService.t('convoy_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (assignedCount > 0)
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: _clearFormation,
-                child: const Icon(
-                  CupertinoIcons.trash,
-                  color: AppColors.error,
-                  size: 20,
-                ),
-              ),
+              CupertinoButton(padding: EdgeInsets.zero, onPressed: _clearFormation, child: const Icon(CupertinoIcons.trash, color: AppColors.error, size: 18)),
             CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: _isLoading ? null : _saveConvoy,
-              child: Text(
-                LocaleService.t('convoy_save'),
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.accent,
-                ),
-              ),
+              child: Text(LocaleService.t('convoy_save'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
             ),
           ],
         ),
