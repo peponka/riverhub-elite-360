@@ -570,7 +570,34 @@ async function loadCrew(){
     try{
         var r=await sb.from('crew_members').select('*').limit(200);var data=r.data;
         var l=document.getElementById('crew-list');var em=document.getElementById('crew-empty');l.innerHTML='';
-        if(data&&data.length>0){em.style.display='none';data.forEach(function(c){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+(c.full_name||c.name||'')+'</h4><p>'+trad(c.role||'')+' - '+(c.vessel_name||'')+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:var(--success)">'+(trad(c.status||'EMBARCADO')).toUpperCase()+'</span><button class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('crew_members',c.id,(c.full_name||c.name||'Tripulante'),loadCrew);});l.appendChild(d);});document.getElementById('crew-total').textContent=data.length;document.getElementById('crew-on').textContent=data.filter(function(c){return(c.status||'').toLowerCase()==='embarcado'}).length;}else{em.style.display='';}
+        if(data&&data.length>0){
+            em.style.display='none';
+            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px';
+            var roleIcons={'capitan':'fa-star','captain':'fa-star','timonel':'fa-compass','helmsman':'fa-compass','maquinista':'fa-gears','engineer':'fa-gears','marinero':'fa-anchor','deckhand':'fa-anchor','cocinero':'fa-utensils','cook':'fa-utensils','primer oficial':'fa-user-tie','jefe de maquinas':'fa-wrench'};
+            var roleColors={'capitan':'#F59E0B','captain':'#F59E0B','timonel':'#3B82F6','helmsman':'#3B82F6','maquinista':'#6B7280','engineer':'#6B7280','marinero':'#0EA5E9','deckhand':'#0EA5E9','cocinero':'#10B981','cook':'#10B981','primer oficial':'#8B5CF6','jefe de maquinas':'#DC2626'};
+            data.forEach(function(c){
+                var name=c.full_name||c.name||'Tripulante';
+                var initials=name.split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase();
+                var role=(c.role||'marinero').toLowerCase();
+                var icon=roleIcons[role]||'fa-user';
+                var color=roleColors[role]||'#94A3B8';
+                var st=(c.status||'embarcado').toLowerCase();
+                var isActive=st==='activo'||st==='active';
+                var isOnboard=st==='embarcado'||st==='onboard';
+                var stColor=isActive?'#3B82F6':isOnboard?'#2EA043':'#94A3B8';
+                var stBg=isActive?'rgba(59,130,246,0.08)':isOnboard?'rgba(46,160,67,0.08)':'rgba(148,163,184,0.08)';
+                var stLabel=trad(c.status||'Embarcado').toUpperCase();
+                var d=document.createElement('div');
+                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default';
+                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
+                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">'+'<div style="display:flex;align-items:center;gap:12px">'+'<div style="width:44px;height:44px;border-radius:12px;background:'+color+'14;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:'+color+'">'+initials+'</div>'+'<div>'+'<div style="font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.3">'+name+'</div>'+'<div style="display:flex;align-items:center;gap:5px;margin-top:3px"><i class="fa-solid '+icon+'" style="font-size:10px;color:'+color+'"></i><span style="font-size:11px;color:var(--text-secondary)">'+trad(c.role||'Marinero')+'</span></div>'+'</div>'+'</div>'+'<button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="font-size:10px;color:var(--text-tertiary)"></i>'+(c.vessel_name||'Sin asignar')+'</span>'+'<span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+stColor+';background:'+stBg+';padding:4px 10px;border-radius:6px;display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:'+stColor+'"></span>'+stLabel+'</span>'+'</div>';
+                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('crew_members',c.id,(c.full_name||c.name||'Tripulante'),loadCrew);});
+                l.appendChild(d);
+            });
+            document.getElementById('crew-total').textContent=data.length;
+            document.getElementById('crew-on').textContent=data.filter(function(c){var s=(c.status||'').toLowerCase();return s==='embarcado'||s==='onboard'}).length;
+        }else{em.style.display='';}
     }catch(e){/* Crew: */;}
 }
 
