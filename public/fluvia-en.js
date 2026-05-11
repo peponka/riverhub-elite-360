@@ -665,60 +665,24 @@ var _dashAutoRefresh=setInterval(function(){
 async function loadFleet(){
     try{
         var r=await sb.from('vessels').select('*').limit(100);var data=r.data;if(!data)return;
-        var tb=document.getElementById('fleet-tbody');
-        var table=tb.closest('table');if(table){table.querySelector('thead').style.display='none';table.style.border='none';table.style.background='transparent';}
-        tb.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px';
-        tb.innerHTML='';
-        var typeIcons={'remolcador':'fa-ship','tugboat':'fa-ship','empujador':'fa-truck-moving','pusher':'fa-truck-moving','barcaza':'fa-box-open','barge':'fa-box-open','tanque':'fa-droplet','tanker':'fa-droplet','lancha':'fa-ferry','patrol':'fa-shield-halved'};
-        var typeColors={'remolcador':'#3B82F6','tugboat':'#3B82F6','empujador':'#8B5CF6','pusher':'#8B5CF6','barcaza':'#F97316','barge':'#F97316','tanque':'#0EA5E9','tanker':'#0EA5E9','lancha':'#10B981','patrol':'#DC2626'};
-        var inService=0;var inDock=0;
+        var tb=document.getElementById('fleet-tbody');tb.innerHTML='';
         data.forEach(function(v){
-            var type=(v.type||v.vessel_type||'tugboat').toLowerCase();
-            var icon=typeIcons[type]||'fa-ship';
-            var color=typeColors[type]||'#94A3B8';
-            var st=(v.status||'active').toLowerCase();
-            var isActive=st==='activo'||st==='active'||st.indexOf('viaje')>=0||st.indexOf('transit')>=0;
-            var isDock=st.indexOf('dique')>=0||st.indexOf('dock')>=0||st.indexOf('manten')>=0;
-            if(isActive)inService++;if(isDock)inDock++;
-            var stColor=isActive?'#2EA043':isDock?'#F59E0B':'#94A3B8';
-            var stLabel=v.status||'Active';
-            var d=document.createElement('tr');
-            d.style.cssText='display:block;background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default';
-            d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
-            d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-            d.innerHTML='<td style="display:block;padding:0;border:none"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">'+'<div style="width:44px;height:44px;border-radius:12px;background:'+color+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid '+icon+'" style="font-size:18px;color:'+color+'"></i></div>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:3px;letter-spacing:0.3px">'+esc(v.name||v.vessel_name||'')+'</div>'+'<div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px;margin-bottom:12px">'+(v.type||v.vessel_type||'Vessel').toUpperCase()+'</div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-location-dot" style="font-size:10px;color:var(--text-tertiary)"></i>'+(v.location||v.current_position||'No location')+'</span>'+'<span style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:'+stColor+'"><span style="width:6px;height:6px;border-radius:50%;background:'+stColor+'"></span>'+stLabel+'</span>'+'</div></td>';
-            d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('vessels',v.id,v.name||v.vessel_name||'Vessel',loadFleet);});
-            tb.appendChild(d);
+            var s=(v.status||'').toLowerCase();
+            var c=s.indexOf('viaje')>=0||s==='active'?'var(--success)':s.indexOf('manten')>=0?'var(--warning)':'var(--accent)';
+            var tr=document.createElement('tr');
+            tr.innerHTML='<td>'+esc(v.name||v.vessel_name||'')+'</td><td>'+esc(v.type||v.vessel_type||'')+'</td><td><span class="status-dot" style="background:'+c+'"></span>'+esc(v.status||'')+'</td><td>'+esc(v.location||v.current_position||'')+'</td><td><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></td>';
+            tr.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('vessels',v.id,v.name||v.vessel_name||'Vessel',loadFleet);});
+            tb.appendChild(tr);
         });
         document.getElementById('fleet-total').textContent=data.length;
-        var elServ=document.getElementById('fleet-service');if(elServ)elServ.textContent=inService;
-        var elDock=document.getElementById('fleet-dock');if(elDock)elDock.textContent=inDock;
-catch(e){/* Fleet: */;}
+    }catch(e){/* Fleet: */;}
 }
 
 async function loadTrips(){
     try{
         var r=await sb.from('voyages').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('viajes-list');var em=document.getElementById('viajes-empty');l.innerHTML='';
-        if(data&&data.length>0){
-            em.style.display='none';
-            data.forEach(function(v){
-                var st=(v.status||'pending').toLowerCase();
-                var stColor=st==='completed'||st==='completado'||st==='finalizado'?'#2EA043':st.indexOf('transit')>=0||st.indexOf('navegando')>=0?'#3B82F6':st==='planned'||st==='planificado'?'#8B5CF6':'#F59E0B';
-                var stBg=st==='completed'||st==='completado'||st==='finalizado'?'rgba(46,160,67,0.08)':st.indexOf('transit')>=0||st.indexOf('navegando')>=0?'rgba(59,130,246,0.08)':st==='planned'||st==='planificado'?'rgba(139,92,246,0.08)':'rgba(245,158,11,0.08)';
-                var stIcon=st==='completed'||st==='completado'||st==='finalizado'?'fa-circle-check':st.indexOf('transit')>=0||st.indexOf('navegando')>=0?'fa-ship':st==='planned'||st==='planificado'?'fa-calendar-check':'fa-clock';
-                var stLabel=(v.status||'Pending').toUpperCase();
-                var tons=v.cargo_tons||v.cargo_tonss||0;
-                var t=v.created_at?new Date(v.created_at).toLocaleDateString('en',{day:'2-digit',month:'short'}):'-';
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:all 0.2s;cursor:default';
-                d.onmouseenter=function(){this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.04)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between">'+'<div style="display:flex;align-items:center;gap:14px;flex:1;min-width:0">'+'<div style="width:40px;height:40px;border-radius:10px;background:'+stBg+';display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+stIcon+'" style="font-size:16px;color:'+stColor+'"></i></div>'+'<div style="min-width:0">'+'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+'<span style="font-size:14px;font-weight:600;color:var(--text-primary)">'+esc(v.origin_port||'--')+'</span>'+'<i class="fa-solid fa-arrow-right" style="font-size:9px;color:var(--accent)"></i>'+'<span style="font-size:14px;font-weight:600;color:var(--text-primary)">'+esc(v.destination_port||'--')+'</span>'+'</div>'+'<div style="display:flex;align-items:center;gap:12px;margin-top:4px;font-size:11px;color:var(--text-secondary)">'+'<span><i class="fa-solid fa-ship" style="width:12px;color:var(--text-tertiary)"></i> '+esc(v.vessel_name||'--')+'</span>'+(tons?'<span><i class="fa-solid fa-box" style="width:12px;color:var(--text-tertiary)"></i> '+tons+' ton</span>':'')+'<span><i class="fa-regular fa-calendar" style="width:12px;color:var(--text-tertiary)"></i> '+t+'</span>'+'</div>'+'</div>'+'</div>'+'<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+'<span style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:'+stColor+';background:'+stBg+';padding:5px 12px;border-radius:6px;letter-spacing:0.3px"><i class="fa-solid '+stIcon+'" style="font-size:9px"></i>'+stLabel+'</span>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px 6px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'</div>';
-                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('voyages',v.id,(v.vessel_name||'Voyage'),loadViajes);});
-                l.appendChild(d);
-            });
-        }else{em.style.display='';}
+        if(data&&data.length>0){em.style.display='none';data.forEach(function(v){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+esc(v.vessel_name||'')+' &gt; '+esc(v.destination_port||'')+'</h4><p>'+esc(v.origin_port||'')+' - '+(v.cargo_tonss||'')+' tons</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge">'+esc((v.status||'PENDING').toUpperCase())+'</span><buttons class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('voyages',v.id,(v.vessel_name||'Trip'),loadTrips);});l.appendChild(d);});}else{em.style.display='';}
     }catch(e){/* Trips: */;}
 }
 
@@ -730,152 +694,50 @@ async function loadBitacora(){
         l.innerHTML='';
         if(data&&data.length>0){
             if(em)em.style.display='none';
-            var catIcons={'navegacion':'fa-route','navigation':'fa-route','combustible':'fa-gas-pump','fuel':'fa-gas-pump','clima':'fa-cloud-sun','weather':'fa-cloud-sun','tripulacion':'fa-users','crew':'fa-users','mantenimiento':'fa-wrench','maintenance':'fa-wrench','maniobra':'fa-anchor','maneuver':'fa-anchor','incidente':'fa-triangle-exclamation','incident':'fa-triangle-exclamation','observacion':'fa-eye','observation':'fa-eye','carga':'fa-box','cargo':'fa-box','seguridad':'fa-shield-halved','safety':'fa-shield-halved'};
-            var catColors={'navegacion':'#3B82F6','navigation':'#3B82F6','combustible':'#F97316','fuel':'#F97316','clima':'#0EA5E9','weather':'#0EA5E9','tripulacion':'#8B5CF6','crew':'#8B5CF6','mantenimiento':'#6B7280','maintenance':'#6B7280','maniobra':'#10B981','maneuver':'#10B981','incidente':'#DC2626','incident':'#DC2626','observacion':'#F59E0B','observation':'#F59E0B','carga':'#0EA5E9','cargo':'#0EA5E9','seguridad':'#EF4444','safety':'#EF4444'};
             data.forEach(function(row){
-                var cat=(row.title||row.action_type||'entry').toLowerCase();
-                var icon=catIcons[cat]||'fa-pen-to-square';
-                var color=catColors[cat]||'#94A3B8';
-                var t=row.created_at?new Date(row.created_at).toLocaleDateString('en',{day:'2-digit',month:'short'}):'-';
-                var tTime=row.created_at?new Date(row.created_at).toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}):'-';
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:all 0.2s;cursor:default;display:flex;align-items:flex-start;gap:14px';
-                d.onmouseenter=function(){this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.04)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="width:38px;height:38px;border-radius:10px;background:'+color+'12;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:15px;color:'+color+'"></i></div>'+'<div style="flex:1;min-width:0">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'+'<span style="display:inline-flex;align-items:center;gap:5px"><span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px">'+(row.title||row.action_type||'Entry').toUpperCase()+'</span>'+(row.vessel_name?'<span style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="font-size:9px;margin-right:3px;color:var(--text-tertiary)"></i>'+row.vessel_name+'</span>':'')+'</span>'+'<div style="display:flex;align-items:center;gap:8px">'+'<span style="font-size:10px;color:var(--text-tertiary);white-space:nowrap">'+t+', '+tTime+'</span>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:2px 4px;border-radius:6px;font-size:12px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'</div>'+'<div style="font-size:13px;color:var(--text-primary);line-height:1.5">'+(row.description||row.details||'No details')+'</div>'+'</div>';
+                var d=document.createElement('div');d.className='list-item';
+                var t=row.created_at?new Date(row.created_at).toLocaleString('en',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+                d.innerHTML='<div><h4>'+(row.title||row.action_type||'Entry')+'</h4><p>'+(row.vessel_name||'')+' - '+(row.description||row.details||'')+' - '+t+'</p></div><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons>';
                 if(row.id){
                     var btn=d.querySelector('.delete-btn');
                     if(btn)btn.addEventListener('click',function(){confirmDelete('logs',row.id,(row.title||'Entry'),loadBitacora);});
                 }
                 l.appendChild(d);
             });
-        }else{if(em)em.style.display='';}catch(e){/* Bitacora: */;}
+        }else{if(em)em.style.display='';}
+    }catch(e){/* Bitacora: */;}
 }
 
 async function loadCrew(){
     try{
         var r=await sb.from('crew_members').select('*').limit(200);var data=r.data;
         var l=document.getElementById('crew-list');var em=document.getElementById('crew-empty');l.innerHTML='';
-        if(data&&data.length>0){
-            em.style.display='none';
-            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px';
-            var roleIcons={'capitan':'fa-star','captain':'fa-star','timonel':'fa-compass','helmsman':'fa-compass','maquinista':'fa-gears','engineer':'fa-gears','marinero':'fa-anchor','deckhand':'fa-anchor','cocinero':'fa-utensils','cook':'fa-utensils','primer oficial':'fa-user-tie','jefe de maquinas':'fa-wrench'};
-            var roleColors={'capitan':'#F59E0B','captain':'#F59E0B','timonel':'#3B82F6','helmsman':'#3B82F6','maquinista':'#6B7280','engineer':'#6B7280','marinero':'#0EA5E9','deckhand':'#0EA5E9','cocinero':'#10B981','cook':'#10B981','primer oficial':'#8B5CF6','jefe de maquinas':'#DC2626'};
-            data.forEach(function(c){
-                var name=c.full_name||c.name||'Crew Member';
-                var initials=name.split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase();
-                var role=(c.role||'deckhand').toLowerCase();
-                var icon=roleIcons[role]||'fa-user';
-                var color=roleColors[role]||'#94A3B8';
-                var st=(c.status||'onboard').toLowerCase();
-                var isActive=st==='activo'||st==='active';
-                var isOnboard=st==='embarcado'||st==='onboard';
-                var stColor=isActive?'#3B82F6':isOnboard?'#2EA043':'#94A3B8';
-                var stBg=isActive?'rgba(59,130,246,0.08)':isOnboard?'rgba(46,160,67,0.08)':'rgba(148,163,184,0.08)';
-                var stLabel=(c.status||'Onboard').toUpperCase();
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default';
-                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">'+'<div style="display:flex;align-items:center;gap:12px">'+'<div style="width:44px;height:44px;border-radius:12px;background:'+color+'14;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:'+color+'">'+initials+'</div>'+'<div>'+'<div style="font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.3">'+name+'</div>'+'<div style="display:flex;align-items:center;gap:5px;margin-top:3px"><i class="fa-solid '+icon+'" style="font-size:10px;color:'+color+'"></i><span style="font-size:11px;color:var(--text-secondary)">'+(c.role||'Deckhand')+'</span></div>'+'</div>'+'</div>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="font-size:10px;color:var(--text-tertiary)"></i>'+(c.vessel_name||'Unassigned')+'</span>'+'<span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+stColor+';background:'+stBg+';padding:4px 10px;border-radius:6px;display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:'+stColor+'"></span>'+stLabel+'</span>'+'</div>';
-                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('crew_members',c.id,(c.full_name||c.name||'Crew'),loadCrew);});
-                l.appendChild(d);
-            });
-            document.getElementById('crew-total').textContent=data.length;
-            document.getElementById('crew-on').textContent=data.filter(function(c){var s=(c.status||'').toLowerCase();return s==='embarcado'||s==='onboard'}).length;
-        }else{em.style.display='';}catch(e){/* Crew: */;}
+        if(data&&data.length>0){em.style.display='none';data.forEach(function(c){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+(c.full_name||c.name||'')+'</h4><p>'+(c.role||'')+' - '+(c.vessel_name||'')+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:var(--success)">'+(c.status||'ONBOARD').toUpperCase()+'</span><buttons class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('crew_members',c.id,(c.full_name||c.name||'Crew member'),loadCrew);});l.appendChild(d);});document.getElementById('crew-total').textContent=data.length;document.getElementById('crew-on').textContent=data.filter(function(c){return(c.status||'').toLowerCase()==='embarcado'}).length;}else{em.style.display='';}
+    }catch(e){/* Crew: */;}
 }
 
 async function loadFuel(){
     try{
         var r=await sb.from('fuel_logs').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('fuel-list');var em=document.getElementById('fuel-empty');l.innerHTML='';
-        if(data&&data.length>0){
-            em.style.display='none';
-            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px';
-            var totalLiters=0;
-            data.forEach(function(f){
-                var liters=f.liters||f.quantity||0;
-                totalLiters+=liters;
-                var fType=(f.fuel_type||'Diesel').toLowerCase();
-                var typeColor=fType.indexOf('marine')>=0||fType.indexOf('mgo')>=0?'#0EA5E9':fType.indexOf('diesel')>=0||fType.indexOf('gasoil')>=0?'#F97316':'#8B5CF6';
-                var t=f.created_at?new Date(f.created_at).toLocaleDateString('en',{day:'2-digit',month:'short',year:'numeric'}):'-';
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default;position:relative;overflow:hidden';
-                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">'+'<div style="width:40px;height:40px;border-radius:10px;background:'+typeColor+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-gas-pump" style="font-size:16px;color:'+typeColor+'"></i></div>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:'+(f.vessel_name?'var(--text-primary)':'var(--text-tertiary)')+';margin-bottom:2px"><i class="fa-solid fa-ship" style="font-size:11px;color:'+(f.vessel_name?typeColor:'var(--text-tertiary)')+'"></i>'+(f.vessel_name||'No vessel')+'</div>'+'<div style="font-family:Newsreader,serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:8px">'+liters.toLocaleString()+' <span style="font-family:Inter,sans-serif;font-size:12px;color:var(--text-secondary);font-weight:500">liters</span></div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+typeColor+';background:'+typeColor+'10;padding:3px 8px;border-radius:5px">'+(f.fuel_type||'Diesel').toUpperCase()+'</span>'+'<span style="font-size:10px;color:var(--text-tertiary)"><i class="fa-regular fa-calendar" style="margin-right:4px"></i>'+t+'</span>'+'</div>';
-                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('fuel_logs',f.id,(f.vessel_name||'Record'),loadFuel);});
-                l.appendChild(d);
-            });
-            document.getElementById('fuel-count').textContent=data.length;
-        }else{em.style.display='';}catch(e){/* Fuel: */;}
+        if(data&&data.length>0){em.style.display='none';data.forEach(function(f){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+(f.vessel_name||'')+' -- '+(f.liters||f.quantity||0)+'L</h4><p>'+(f.fuel_type||'Diesel')+' - '+(f.created_at?new Date(f.created_at).toLocaleDateString('en'):'')+'</p></div><buttons class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('fuel_logs',f.id,(f.vessel_name||'Record'),loadFuel);});l.appendChild(d);});document.getElementById('fuel-count').textContent=data.length;}else{em.style.display='';}
+    }catch(e){/* Fuel: */;}
 }
 
 async function loadMaint(){
     try{
         var r=await sb.from('maintenance_tasks').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('maint-list');l.innerHTML='';
-        if(data&&data.length>0){
-            data.forEach(function(m){
-                var pri=(m.priority||'').toLowerCase();
-                var st=(m.status||'').toLowerCase();
-                var priColor=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'#DC2626':pri==='media'||pri==='medium'?'#F59E0B':'#94A3B8';
-                var priBg=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'rgba(220,38,38,0.08)':pri==='media'||pri==='medium'?'rgba(245,158,11,0.08)':'rgba(148,163,184,0.08)';
-                var priIcon=pri==='alta'||pri==='high'||pri==='critico'||pri==='critical'?'fa-triangle-exclamation':pri==='media'||pri==='medium'?'fa-exclamation':'fa-minus';
-                var stColor=st==='completed'||st==='completado'?'#2EA043':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'#3B82F6':'#F59E0B';
-                var stBg=st==='completed'||st==='completado'?'rgba(46,160,67,0.08)':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'rgba(59,130,246,0.08)':'rgba(245,158,11,0.08)';
-                var stIcon=st==='completed'||st==='completado'?'fa-circle-check':st.indexOf('progreso')>=0||st.indexOf('progress')>=0?'fa-spinner':'fa-clock';
-                var stLabel=(m.status||'Pending').toUpperCase();
-                var t=m.created_at?new Date(m.created_at).toLocaleDateString('en',{day:'2-digit',month:'short',year:'numeric'}):'-';
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-left:4px solid '+priColor+';border-radius:12px;padding:18px 20px;margin-bottom:10px;transition:all 0.2s;cursor:default';
-                d.onmouseenter=function(){this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.05)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">'+'<div style="flex:1;min-width:0">'+'<div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px;line-height:1.4">'+(m.description||m.title||'Maintenance order')+'</div>'+'<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">'+'<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-ship" style="color:var(--text-tertiary);font-size:10px"></i>'+(m.vessel_name||'--')+'</span>'+'<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)"><i class="fa-regular fa-calendar" style="color:var(--text-tertiary);font-size:10px"></i>'+t+'</span>'+'<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:'+priColor+';background:'+priBg+';padding:3px 8px;border-radius:5px;letter-spacing:0.3px"><i class="fa-solid '+priIcon+'" style="font-size:8px"></i>'+(m.priority||'Low').toUpperCase()+'</span>'+'</div>'+'</div>'+'<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+'<span style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:'+stColor+';background:'+stBg+';padding:5px 12px;border-radius:6px;letter-spacing:0.3px"><i class="fa-solid '+stIcon+'" style="font-size:9px"></i>'+stLabel+'</span>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px 6px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'</div>';
-                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('maintenance_tasks',m.id,(m.description||m.title||'Order'),loadMaint);});
-                l.appendChild(d);
-            });
-            var pending=data.filter(function(m){return(m.status||'').toLowerCase()!=='completed'&&(m.status||'').toLowerCase()!=='completado'}).length;
-            var inProg=data.filter(function(m){var s=(m.status||'').toLowerCase();return s.indexOf('progreso')>=0||s.indexOf('progress')>=0}).length;
-            var done=data.filter(function(m){var s=(m.status||'').toLowerCase();return s==='completed'||s==='completado'}).length;
-            document.getElementById('maint-pending').textContent=pending;
-            var elProg=document.getElementById('maint-progress');if(elProg)elProg.textContent=inProg;
-            var elDone=document.getElementById('maint-done');if(elDone)elDone.textContent=done;
-        }catch(e){/* Maint: */;}
+        if(data&&data.length>0){data.forEach(function(m){var d=document.createElement('div');d.className='list-item';var pc=m.priority==='High'||m.priority==='high'?'var(--error)':m.priority==='Medium'?'var(--warning)':'var(--text-secondary)';d.innerHTML='<div><h4>'+(m.description||m.title||'')+'</h4><p>'+String.fromCodePoint(0x1F6A2)+' '+(m.vessel_name||'')+'</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+pc+'">'+(m.status||m.priority||'').toUpperCase()+'</span><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('maintenance_tasks',m.id,(m.description||m.title||'Order'),loadMaint);});l.appendChild(d);});document.getElementById('maint-pending').textContent=data.filter(function(m){return(m.status||'').toLowerCase()!=='completed'}).length;}
+    }catch(e){/* Maint: */;}
 }
 
 async function loadPanol(){
     try{
         var r=await sb.from('inventory_items').select('*').limit(500);var data=r.data;
         var l=document.getElementById('panol-list');l.innerHTML='';
-        if(data&&data.length>0){
-            var catIcons={'lubricantes':'fa-oil-can','filtros':'fa-filter','pintura':'fa-paint-roller','seguridad':'fa-shield-halved','motor':'fa-gear','casco':'fa-ship','hidraulica':'fa-droplet','electrico':'fa-bolt','cabulleria':'fa-link','soldadura':'fa-fire'};
-            var catColors={'lubricantes':'#8B5CF6','filtros':'#3B82F6','pintura':'#F97316','seguridad':'#EF4444','motor':'#6B7280','casco':'#0EA5E9','hidraulica':'#06B6D4','electrico':'#F59E0B','cabulleria':'#10B981','soldadura':'#DC2626'};
-            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px';
-            data.forEach(function(i){
-                var q=i.quantity||i.stock||0;var mn=i.min_stock||5;var low=q<=mn;var critical=q===0;
-                var cat=(i.category||'general').toLowerCase();
-                var icon=catIcons[cat]||'fa-box';
-                var color=catColors[cat]||'var(--accent)';
-                var pct=Math.min(100,Math.round((q/Math.max(mn*3,1))*100));
-                var barColor=critical?'var(--error)':low?'var(--warning)':'var(--success)';
-                var statusLabel=critical?'OUT OF STOCK':low?'LOW STOCK':'IN STOCK';
-                var statusBg=critical?'rgba(220,38,38,0.08)':low?'rgba(245,158,11,0.08)':'rgba(46,160,67,0.08)';
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default;position:relative;overflow:hidden';
-                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">'+'<div style="width:42px;height:42px;border-radius:12px;background:'+color+'12;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:17px;color:'+color+'"></i></div>'+'<button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px;transition:all 0.15s"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px;line-height:1.3">'+(i.name||'')+'</div>'+'<div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px;margin-bottom:14px">'+(i.category||'General').toUpperCase()+'</div>'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'+'<span style="font-size:11px;color:var(--text-secondary);font-weight:500">Stock</span>'+'<span style="font-size:13px;font-weight:700;color:var(--text-primary)">'+q+' <span style="font-size:10px;font-weight:500;color:var(--text-secondary)">units</span></span>'+'</div>'+'<div style="width:100%;height:6px;background:var(--surface-low);border-radius:3px;overflow:hidden;margin-bottom:12px"><div style="width:'+pct+'%;height:100%;background:'+barColor+';border-radius:3px;transition:width 0.5s ease"></div></div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+barColor+';background:'+statusBg+';padding:4px 10px;border-radius:6px">'+statusLabel+'</span>'+'<span style="font-size:10px;color:var(--text-tertiary)">min: '+mn+'</span>'+'</div>';
-                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});
-                l.appendChild(d);
-            });
-            document.getElementById('panol-total').textContent=data.length;
-            var cats={};var lowCount=0;
-            data.forEach(function(i){cats[i.category||'General']=1;if((i.quantity||i.stock||0)<=(i.min_stock||0))lowCount++;});
-            var elLow=document.getElementById('panol-low');if(elLow)elLow.textContent=lowCount;
-            var elCats=document.getElementById('panol-cats');if(elCats)elCats.textContent=Object.keys(cats).length;
-        }    }catch(e){/* Panol: */;}
+        if(data&&data.length>0){data.forEach(function(i){var d=document.createElement('div');d.className='list-item';var q=i.quantity||i.stock||0;var mn=i.min_stock||0;var low=q<=mn;d.innerHTML='<div><h4>'+(i.name||'')+'</h4><p>'+(i.category||'')+' - Spare</p></div><div style="display:flex;align-items:center;gap:10px"><span class="badge" style="color:'+(low?'var(--warning)':'var(--success)')+'">'+(low?'LOW STOCK':'OK')+'<br>'+q+' units</span><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});l.appendChild(d);});document.getElementById('panol-total').textContent=data.length;}
+    }catch(e){/* Panol: */;}
 }
 
 async function loadComms(){
@@ -949,17 +811,44 @@ async function loadAISTraffic(){
 }
 function renderAISMarkers(data){
     data.forEach(function(v){
+        var key=v.mmsi;
+        var lat=v.latitude||v.lat;var lng=v.longitude||v.lon||v.lng;
+        if(!lat||!lng)return;
+        if(aisMarkers[key]){
+            aisMarkers[key].setLatLng([lat,lng]);
+            aisMarkers[key].setPopupContent('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Third-party traffic</small>');
+        }else{
+            var m=L.marker([lat,lng],{icon:_shipIcon('#10b981',40,v.course||0)}).addTo(map);
+            m.bindPopup('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Third-party traffic</small>');
+            aisMarkers[key]=m;
+        }
+    });
+    var legend=document.querySelector('.map-legend');
+    if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=data.length+' active';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=data.length+' active AIS';legend.appendChild(d);}}
+    updateHeatmap();
+}
+function updateHeatmap(){
+    var points=[];
+    Object.values(aisMarkers).forEach(function(m){
+        var ll=m.getLatLng();
+        points.push([ll.lat,ll.lng,0.7]);
+    });
+    if(points.length===0)return;
+    if(heatLayer){map.removeLayer(heatLayer);}
+    heatLayer=L.heatLayer(points,{radius:25,blur:20,maxZoom:10,max:1.0,gradient:{0.2:'#3B82F6',0.4:'#10b981',0.6:'#F59E0B',0.8:'#EF4444',1.0:'#DC2626'}}).addTo(map);
+}
+
 // MODAL
 var modalForms={
     fleet:{title:'Add Asset',fields:[{id:'fleet-name',label:'NAME',type:'text',placeholder:'Ej: R/M ATLAS'},{id:'fleet-type',label:'TYPE',type:'select',options:['Barge','Tugboat','Pontons']},{id:'fleet-status',label:'STATUS',type:'select',options:['In Transit','In Port','Maintenance']},{id:'fleet-location',label:'LOCATION',type:'text',placeholder:'Ej: Km 1420'}]},
-    viaje:{title:'New Trip Request',fields:[{id:'viaje-vessel',label:'VESSEL',type:'vessel-select'},{id:'viaje-origin',label:'ORIGIN',type:'text',placeholder:'Origin port'},{id:'viaje-dest',label:'DESTINATION',type:'text',placeholder:'Destination port'},{id:'viaje-cargo',label:'CARGO (TON)',type:'text',placeholder:'3500'},{id:'viaje-date',label:'DEPARTURE DATE',type:'date'}]},
-    bitacora:{title:'New Logbook Entry',fields:[{id:'bit-title',label:'TITLE',type:'text',placeholder:'Summary'},{id:'bit-vessel',label:'VESSEL',type:'vessel-select'},{id:'bit-type',label:'TYPE',type:'select',options:['Observation','Incident','Maneuver','Navigation']},{id:'bit-desc',label:'DESCRIPTION',type:'textarea',placeholder:'Details...'}]},
-    crew:{title:'Add Crew Member',fields:[{id:'crew-name',label:'NAME',type:'text',placeholder:'John Doe'},{id:'crew-role',label:'ROLE',type:'select',options:['Captain','Helmsman','Engineer','Seaman','Cook']},{id:'crew-vessel',label:'VESSEL',type:'vessel-select'},{id:'crew-doc',label:'DOCUMENT ID',type:'text',placeholder:'Document number'}]},
-    fuel:{title:'Record Fuel',fields:[{id:'fuel-vessel',label:'VESSEL',type:'vessel-select'},{id:'fuel-liters',label:'LITERS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TYPE',type:'select',options:['Diesel','IFO 380','MGO']},{id:'fuel-date',label:'DATE',type:'date'}]},
-    maint:{title:'New Maintenance Order',fields:[{id:'maint-title',label:'DESCRIPTION',type:'text',placeholder:'What to repair'},{id:'maint-vessel',label:'VESSEL',type:'vessel-select'},{id:'maint-priority',label:'PRIORITY',type:'select',options:['High','Medium','Low']},{id:'maint-notes',label:'NOTES',type:'textarea',placeholder:'Details...'}]},
+    viaje:{title:'New Trip Request',fields:[{id:'viaje-vessel',label:'VESSEL',type:'text',placeholder:'Nombre'},{id:'viaje-origin',label:'ORIGIN',type:'text',placeholder:'Origin port'},{id:'viaje-dest',label:'DESTINATION',type:'text',placeholder:'Destination port'},{id:'viaje-cargo',label:'CARGO (TON)',type:'text',placeholder:'3500'},{id:'viaje-date',label:'DEPARTURE DATE',type:'date'}]},
+    bitacora:{title:'New Logbook Entry',fields:[{id:'bit-title',label:'TITLE',type:'text',placeholder:'Summary'},{id:'bit-vessel',label:'VESSEL',type:'text',placeholder:'Vessel'},{id:'bit-type',label:'TYPE',type:'select',options:['Observation','Incident','Maneuver','Navigation']},{id:'bit-desc',label:'DESCRIPTION',type:'textarea',placeholder:'Details...'}]},
+    crew:{title:'Add Crew Member',fields:[{id:'crew-name',label:'NAME',type:'text',placeholder:'John Doe'},{id:'crew-role',label:'ROLE',type:'select',options:['Captain','Helmsman','Engineer','Seaman','Cook']},{id:'crew-vessel',label:'VESSEL',type:'text',placeholder:'Assign to...'},{id:'crew-doc',label:'DOCUMENT ID',type:'text',placeholder:'Document number'}]},
+    fuel:{title:'Record Fuel',fields:[{id:'fuel-vessel',label:'VESSEL',type:'text',placeholder:'Nombre'},{id:'fuel-liters',label:'LITERS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TYPE',type:'select',options:['Diesel','IFO 380','MGO']},{id:'fuel-date',label:'DATE',type:'date'}]},
+    maint:{title:'New Maintenance Order',fields:[{id:'maint-title',label:'DESCRIPTION',type:'text',placeholder:'What to repair'},{id:'maint-vessel',label:'VESSEL',type:'text',placeholder:'Vessel'},{id:'maint-priority',label:'PRIORITY',type:'select',options:['High','Medium','Low']},{id:'maint-notes',label:'NOTES',type:'textarea',placeholder:'Details...'}]},
     panol:{title:'Add Item',fields:[{id:'panol-name',label:'SPARE PART',type:'text',placeholder:'Oil filter'},{id:'panol-cat',label:'CATEGORY',type:'select',options:['Motor','Electric','Hydraulic','Hull','General']},{id:'panol-qty',label:'QUANTITY',type:'text',placeholder:'10'},{id:'panol-min',label:'MIN STOCK',type:'text',placeholder:'2'}]},
-    calado:{title:'Record Draft Reading',fields:[{id:'calado-vessel',label:'VESSEL',type:'vessel-select'},{id:'calado-value',label:'DRAFT (METERS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'MAX DRAFT (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVATIONS',type:'textarea',placeholder:'Conditions, location...'}]},
-    incidente:{title:'Report Incident',fields:[{id:'inc-title',label:'TITLE',type:'text',placeholder:'Brief incident description'},{id:'inc-vessel',label:'VESSEL',type:'vessel-select'},{id:'inc-severity',label:'SEVERITY',type:'select',options:['Critical','High','Medium','Low']},{id:'inc-type',label:'TYPE',type:'select',options:['Collision','Grounding','Spill','Mechanical failure','Fire','Medical','Other']},{id:'inc-desc',label:'DETAILED DESCRIPTION',type:'textarea',placeholder:'What happened, where, when, actions taken...'}]}
+    calado:{title:'Record Draft Reading',fields:[{id:'calado-vessel',label:'VESSEL',type:'text',placeholder:'Vessel name'},{id:'calado-value',label:'DRAFT (METERS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'MAX DRAFT (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVATIONS',type:'textarea',placeholder:'Conditions, location...'}]},
+    incidente:{title:'Report Incident',fields:[{id:'inc-title',label:'TITLE',type:'text',placeholder:'Brief incident description'},{id:'inc-vessel',label:'VESSEL',type:'text',placeholder:'Affected vessel'},{id:'inc-severity',label:'SEVERITY',type:'select',options:['Critical','High','Medium','Low']},{id:'inc-type',label:'TYPE',type:'select',options:['Collision','Grounding','Spill','Mechanical failure','Fire','Medical','Other']},{id:'inc-desc',label:'DETAILED DESCRIPTION',type:'textarea',placeholder:'What happened, where, when, actions taken...'}]}
 };
 var currentModal=null;
 // esc() defined at top of file (line 7)
