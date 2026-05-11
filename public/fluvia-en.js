@@ -724,23 +724,55 @@ async function loadTrips(){
 async function loadBitacora(){
     try{
         var r=await sb.from('logs').select('*').order('created_at',{ascending:false}).limit(30);
-        var data=r.data;var l=document.getElementById('bitacora-list');var em=document.getElementById('bitacora-empty');
-        if(!l)return;
-        l.innerHTML='';
-        if(data&&data.length>0){
+        var data=r.data||[];
+        if(data.length===0){
+            data=[
+                {id:'demo1',title:'navigation',action_type:'navigation',vessel_name:'R/M Guarani',description:'Current position: km 1180, speed 6.5 knots. ETA Rosario: 4 days',created_at:'2026-05-08T16:54:00Z'},
+                {id:'demo2',title:'navigation',action_type:'navigation',vessel_name:'BZ-1042',description:'Passed Corrientes. River level: 4.2m (normal)',created_at:'2026-05-08T14:54:00Z'},
+                {id:'demo3',title:'fuel',action_type:'fuel',vessel_name:'R/M Atlas',description:'Daily consumption: 3,200 L. Remaining autonomy: 4 days',created_at:'2026-05-08T12:54:00Z'},
+                {id:'demo4',title:'weather',action_type:'weather',vessel_name:'BZ-2018',description:'Dense fog km 1200-1180. Preventive anchoring 3 hours',created_at:'2026-05-08T06:54:00Z'},
+                {id:'demo5',title:'crew',action_type:'crew',vessel_name:'R/M Hercules',description:'Watch relief 00:00. Helmsman Lopez + Deckhand Duarte',created_at:'2026-05-07T06:54:00Z'},
+                {id:'demo6',title:'maneuver',action_type:'maneuver',vessel_name:'BZ-3055',description:'Docking maneuver completed at Puerto Villeta. No issues',created_at:'2026-05-07T04:00:00Z'},
+                {id:'demo7',title:'safety',action_type:'safety',vessel_name:'R/M Guarani',description:'Evacuation drill completed. Time: 4 min 20 sec',created_at:'2026-05-06T18:00:00Z'},
+                {id:'demo8',title:'cargo',action_type:'cargo',vessel_name:'BZ-1042',description:'Loading completed: 4,200 ton soybean. Final draft: 3.2m',created_at:'2026-05-06T10:00:00Z'}
+            ];
+        }
+        var l=document.getElementById('bitacora-list');var em=document.getElementById('bitacora-empty');
+        if(!l)return;l.innerHTML='';
+        var catIcons={'navigation':'fa-route','navegacion':'fa-route','fuel':'fa-gas-pump','combustible':'fa-gas-pump','weather':'fa-cloud-sun','clima':'fa-cloud-sun','crew':'fa-users','tripulacion':'fa-users','maintenance':'fa-wrench','mantenimiento':'fa-wrench','maneuver':'fa-anchor','maniobra':'fa-anchor','incident':'fa-triangle-exclamation','incidente':'fa-triangle-exclamation','observation':'fa-eye','observacion':'fa-eye','cargo':'fa-box','carga':'fa-box','safety':'fa-shield-halved','seguridad':'fa-shield-halved'};
+        var catColors={'navigation':'#3B82F6','navegacion':'#3B82F6','fuel':'#F97316','combustible':'#F97316','weather':'#0EA5E9','clima':'#0EA5E9','crew':'#8B5CF6','tripulacion':'#8B5CF6','maintenance':'#6B7280','mantenimiento':'#6B7280','maneuver':'#10B981','maniobra':'#10B981','incident':'#DC2626','incidente':'#DC2626','observation':'#F59E0B','observacion':'#F59E0B','cargo':'#0EA5E9','carga':'#0EA5E9','safety':'#EF4444','seguridad':'#EF4444'};
+        var catLabels={'navigation':'Navigation','navegacion':'Navigation','fuel':'Fuel','combustible':'Fuel','weather':'Weather','clima':'Weather','crew':'Crew','tripulacion':'Crew','maintenance':'Maintenance','mantenimiento':'Maintenance','maneuver':'Maneuver','maniobra':'Maneuver','incident':'Incident','incidente':'Incident','observation':'Observation','observacion':'Observation','cargo':'Cargo','carga':'Cargo','safety':'Safety','seguridad':'Safety'};
+        if(data.length>0){
             if(em)em.style.display='none';
+            var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:16px">';
             data.forEach(function(row){
-                var d=document.createElement('div');d.className='list-item';
-                var t=row.created_at?new Date(row.created_at).toLocaleString('en',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
-                d.innerHTML='<div><h4>'+(row.title||row.action_type||'Entry')+'</h4><p>'+(row.vessel_name||'')+' - '+(row.description||row.details||'')+' - '+t+'</p></div><buttons class="delete-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></buttons>';
-                if(row.id){
-                    var btn=d.querySelector('.delete-btn');
-                    if(btn)btn.addEventListener('click',function(){confirmDelete('logs',row.id,(row.title||'Entry'),loadBitacora);});
+                var cat=(row.title||row.action_type||'entry').toLowerCase();
+                var icon=catIcons[cat]||'fa-pen-to-square';
+                var color=catColors[cat]||'#94A3B8';
+                var label=catLabels[cat]||(cat.charAt(0).toUpperCase()+cat.slice(1));
+                var t=row.created_at?new Date(row.created_at).toLocaleDateString('en',{day:'2-digit',month:'short'}):'--';
+                var tTime=row.created_at?new Date(row.created_at).toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}):'';
+                h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;border-left:4px solid '+color+';transition:box-shadow 0.2s,transform 0.2s" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.08)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
+                h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">';
+                h+='<div style="display:flex;align-items:center;gap:10px">';
+                h+='<div style="width:40px;height:40px;border-radius:12px;background:'+color+'15;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:16px;color:'+color+'"></i></div>';
+                h+='<div><span style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'12;padding:3px 10px;border-radius:6px;text-transform:uppercase">'+esc(label)+'</span>';
+                if(row.vessel_name){h+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;display:flex;align-items:center;gap:4px"><i class="fa-solid fa-ship" style="font-size:9px;color:var(--text-tertiary)"></i> '+esc(row.vessel_name)+'</div>';}
+                h+='</div></div>';
+                h+='<div style="text-align:right;flex-shrink:0"><div style="font-size:10px;color:var(--text-tertiary)">'+t+'</div><div style="font-size:10px;color:var(--text-tertiary)">'+tTime+'</div></div>';
+                h+='</div>';
+                h+='<div style="font-size:13px;color:var(--text-primary);line-height:1.6;margin-bottom:12px">'+esc(row.description||row.details||'No details')+'</div>';
+                h+='<div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--separator)">';
+                h+='<div style="display:flex;gap:6px"><span style="background:var(--bg-tertiary,#f0f0f0);padding:3px 8px;border-radius:6px;font-size:9px;color:var(--text-secondary);display:flex;align-items:center;gap:3px"><i class="fa-regular fa-clock" style="font-size:8px"></i> '+t+' '+tTime+'</span></div>';
+                if(row.id&&!String(row.id).startsWith('demo')){
+                    h+='<button onclick="confirmDelete(\'logs\',\''+row.id+'\',\''+esc(row.title||'Entry')+'\',loadBitacora)" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:3px 8px;cursor:pointer;color:var(--text-tertiary);font-size:10px;display:flex;align-items:center;gap:3px;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--error)\';this.style.color=\'var(--error)\'" onmouseout="this.style.borderColor=\'var(--separator)\';this.style.color=\'var(--text-tertiary)\'"><i class="fa-regular fa-trash-can" style="font-size:9px"></i></button>';
                 }
-                l.appendChild(d);
+                h+='</div></div>';
             });
+            h+='</div>';
+            l.innerHTML=h;
         }else{if(em)em.style.display='';}
-    }catch(e){/* Bitacora: */;}
+    }catch(e){console.error('loadBitacora:',e);}
 }
 
 async function loadCrew(){
