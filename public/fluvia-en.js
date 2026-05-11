@@ -949,44 +949,17 @@ async function loadAISTraffic(){
 }
 function renderAISMarkers(data){
     data.forEach(function(v){
-        var key=v.mmsi;
-        var lat=v.latitude||v.lat;var lng=v.longitude||v.lon||v.lng;
-        if(!lat||!lng)return;
-        if(aisMarkers[key]){
-            aisMarkers[key].setLatLng([lat,lng]);
-            aisMarkers[key].setPopupContent('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Third-party traffic</small>');
-        }else{
-            var m=L.marker([lat,lng],{icon:_shipIcon('#10b981',40,v.course||0)}).addTo(map);
-            m.bindPopup('<strong>'+(v.ship_name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'<br><small>AIS - Third-party traffic</small>');
-            aisMarkers[key]=m;
-        }
-    });
-    var legend=document.querySelector('.map-legend');
-    if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=data.length+' active';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=data.length+' active AIS';legend.appendChild(d);}}
-    updateHeatmap();
-}
-function updateHeatmap(){
-    var points=[];
-    Object.values(aisMarkers).forEach(function(m){
-        var ll=m.getLatLng();
-        points.push([ll.lat,ll.lng,0.7]);
-    });
-    if(points.length===0)return;
-    if(heatLayer){map.removeLayer(heatLayer);}
-    heatLayer=L.heatLayer(points,{radius:25,blur:20,maxZoom:10,max:1.0,gradient:{0.2:'#3B82F6',0.4:'#10b981',0.6:'#F59E0B',0.8:'#EF4444',1.0:'#DC2626'}}).addTo(map);
-}
-
 // MODAL
 var modalForms={
     fleet:{title:'Add Asset',fields:[{id:'fleet-name',label:'NAME',type:'text',placeholder:'Ej: R/M ATLAS'},{id:'fleet-type',label:'TYPE',type:'select',options:['Barge','Tugboat','Pontons']},{id:'fleet-status',label:'STATUS',type:'select',options:['In Transit','In Port','Maintenance']},{id:'fleet-location',label:'LOCATION',type:'text',placeholder:'Ej: Km 1420'}]},
-    viaje:{title:'New Trip Request',fields:[{id:'viaje-vessel',label:'VESSEL',type:'text',placeholder:'Nombre'},{id:'viaje-origin',label:'ORIGIN',type:'text',placeholder:'Origin port'},{id:'viaje-dest',label:'DESTINATION',type:'text',placeholder:'Destination port'},{id:'viaje-cargo',label:'CARGO (TON)',type:'text',placeholder:'3500'},{id:'viaje-date',label:'DEPARTURE DATE',type:'date'}]},
-    bitacora:{title:'New Logbook Entry',fields:[{id:'bit-title',label:'TITLE',type:'text',placeholder:'Summary'},{id:'bit-vessel',label:'VESSEL',type:'text',placeholder:'Vessel'},{id:'bit-type',label:'TYPE',type:'select',options:['Observation','Incident','Maneuver','Navigation']},{id:'bit-desc',label:'DESCRIPTION',type:'textarea',placeholder:'Details...'}]},
-    crew:{title:'Add Crew Member',fields:[{id:'crew-name',label:'NAME',type:'text',placeholder:'John Doe'},{id:'crew-role',label:'ROLE',type:'select',options:['Captain','Helmsman','Engineer','Seaman','Cook']},{id:'crew-vessel',label:'VESSEL',type:'text',placeholder:'Assign to...'},{id:'crew-doc',label:'DOCUMENT ID',type:'text',placeholder:'Document number'}]},
-    fuel:{title:'Record Fuel',fields:[{id:'fuel-vessel',label:'VESSEL',type:'text',placeholder:'Nombre'},{id:'fuel-liters',label:'LITERS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TYPE',type:'select',options:['Diesel','IFO 380','MGO']},{id:'fuel-date',label:'DATE',type:'date'}]},
-    maint:{title:'New Maintenance Order',fields:[{id:'maint-title',label:'DESCRIPTION',type:'text',placeholder:'What to repair'},{id:'maint-vessel',label:'VESSEL',type:'text',placeholder:'Vessel'},{id:'maint-priority',label:'PRIORITY',type:'select',options:['High','Medium','Low']},{id:'maint-notes',label:'NOTES',type:'textarea',placeholder:'Details...'}]},
+    viaje:{title:'New Trip Request',fields:[{id:'viaje-vessel',label:'VESSEL',type:'vessel-select'},{id:'viaje-origin',label:'ORIGIN',type:'text',placeholder:'Origin port'},{id:'viaje-dest',label:'DESTINATION',type:'text',placeholder:'Destination port'},{id:'viaje-cargo',label:'CARGO (TON)',type:'text',placeholder:'3500'},{id:'viaje-date',label:'DEPARTURE DATE',type:'date'}]},
+    bitacora:{title:'New Logbook Entry',fields:[{id:'bit-title',label:'TITLE',type:'text',placeholder:'Summary'},{id:'bit-vessel',label:'VESSEL',type:'vessel-select'},{id:'bit-type',label:'TYPE',type:'select',options:['Observation','Incident','Maneuver','Navigation']},{id:'bit-desc',label:'DESCRIPTION',type:'textarea',placeholder:'Details...'}]},
+    crew:{title:'Add Crew Member',fields:[{id:'crew-name',label:'NAME',type:'text',placeholder:'John Doe'},{id:'crew-role',label:'ROLE',type:'select',options:['Captain','Helmsman','Engineer','Seaman','Cook']},{id:'crew-vessel',label:'VESSEL',type:'vessel-select'},{id:'crew-doc',label:'DOCUMENT ID',type:'text',placeholder:'Document number'}]},
+    fuel:{title:'Record Fuel',fields:[{id:'fuel-vessel',label:'VESSEL',type:'vessel-select'},{id:'fuel-liters',label:'LITERS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TYPE',type:'select',options:['Diesel','IFO 380','MGO']},{id:'fuel-date',label:'DATE',type:'date'}]},
+    maint:{title:'New Maintenance Order',fields:[{id:'maint-title',label:'DESCRIPTION',type:'text',placeholder:'What to repair'},{id:'maint-vessel',label:'VESSEL',type:'vessel-select'},{id:'maint-priority',label:'PRIORITY',type:'select',options:['High','Medium','Low']},{id:'maint-notes',label:'NOTES',type:'textarea',placeholder:'Details...'}]},
     panol:{title:'Add Item',fields:[{id:'panol-name',label:'SPARE PART',type:'text',placeholder:'Oil filter'},{id:'panol-cat',label:'CATEGORY',type:'select',options:['Motor','Electric','Hydraulic','Hull','General']},{id:'panol-qty',label:'QUANTITY',type:'text',placeholder:'10'},{id:'panol-min',label:'MIN STOCK',type:'text',placeholder:'2'}]},
-    calado:{title:'Record Draft Reading',fields:[{id:'calado-vessel',label:'VESSEL',type:'text',placeholder:'Vessel name'},{id:'calado-value',label:'DRAFT (METERS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'MAX DRAFT (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVATIONS',type:'textarea',placeholder:'Conditions, location...'}]},
-    incidente:{title:'Report Incident',fields:[{id:'inc-title',label:'TITLE',type:'text',placeholder:'Brief incident description'},{id:'inc-vessel',label:'VESSEL',type:'text',placeholder:'Affected vessel'},{id:'inc-severity',label:'SEVERITY',type:'select',options:['Critical','High','Medium','Low']},{id:'inc-type',label:'TYPE',type:'select',options:['Collision','Grounding','Spill','Mechanical failure','Fire','Medical','Other']},{id:'inc-desc',label:'DETAILED DESCRIPTION',type:'textarea',placeholder:'What happened, where, when, actions taken...'}]}
+    calado:{title:'Record Draft Reading',fields:[{id:'calado-vessel',label:'VESSEL',type:'vessel-select'},{id:'calado-value',label:'DRAFT (METERS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'MAX DRAFT (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVATIONS',type:'textarea',placeholder:'Conditions, location...'}]},
+    incidente:{title:'Report Incident',fields:[{id:'inc-title',label:'TITLE',type:'text',placeholder:'Brief incident description'},{id:'inc-vessel',label:'VESSEL',type:'vessel-select'},{id:'inc-severity',label:'SEVERITY',type:'select',options:['Critical','High','Medium','Low']},{id:'inc-type',label:'TYPE',type:'select',options:['Collision','Grounding','Spill','Mechanical failure','Fire','Medical','Other']},{id:'inc-desc',label:'DETAILED DESCRIPTION',type:'textarea',placeholder:'What happened, where, when, actions taken...'}]}
 };
 var currentModal=null;
 // esc() defined at top of file (line 7)
