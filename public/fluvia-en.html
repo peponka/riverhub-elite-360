@@ -68,10 +68,12 @@
             <div class="nav-section-label">MANAGEMENT</div>
             <a class="nav-item" data-view="tripulacion"><i class="fa-solid fa-users"></i>Crew &amp; Safety</a>
             <a class="nav-item" data-view="combustible"><i class="fa-solid fa-gas-pump"></i>Fuel</a>
+            <a class="nav-item" data-view="liquidos"><i class="fa-solid fa-droplet"></i>Liquids (Tanks)</a>
             <a class="nav-item" data-view="calado"><i class="fa-solid fa-ruler-vertical"></i>Drafts &amp; Hydrometry</a>
             <a class="nav-item" data-view="mantenimiento"><i class="fa-solid fa-wrench"></i>Maintenance</a>
             <a class="nav-item" data-view="panol"><i class="fa-solid fa-box-archive"></i>Inventory (Store)</a>
             <a class="nav-item" data-view="incidentes"><i class="fa-solid fa-triangle-exclamation"></i>Incidents</a>
+            <a class="nav-item" data-view="contratos"><i class="fa-solid fa-file-contract"></i>Freight Contracts</a>
             <div class="nav-section-label">INTELLIGENCE</div>
             <a class="nav-item" data-view="hidrologia"><i class="fa-solid fa-water"></i>Waterway Forecast</a>
             <a class="nav-item" data-view="reportes"><i class="fa-solid fa-chart-pie"></i>Reports &amp; Analytics</a>
@@ -398,6 +400,18 @@
                 <div class="search-wrapper" style="margin-top:16px"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="inc-search" placeholder="Search incident..." oninput="filterIncidents()"></div>
                 <div id="inc-list"></div>
                 <div class="empty-state" id="inc-empty"><i class="fa-solid fa-triangle-exclamation"></i><p>No incidents reported</p></div>
+            </div>
+            <!-- LIQUIDOS -->
+            <div class="view" id="view-liquidos">
+                <div class="view-header"><div><div class="fluvia-title">Liquids<br><em>& Tanks.</em></div><div class="fluvia-subtitle">TANK BARGES — OPERATIONAL CONTROL</div></div><div class="header-actions"><button class="btn-export" onclick="exportLiquidos('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportLiquidos('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="liq-total-en">6</div><div class="stat-lbl">Tank Barges</div></div><div class="stat-cell"><div class="stat-val" id="liq-cap-en">13,200</div><div class="stat-lbl">Total Capacity (m³)</div></div><div class="stat-cell"><div class="stat-val" id="liq-occ-en">78%</div><div class="stat-lbl">Avg Occupancy</div></div></div>
+                <div id="liq-list-en"></div>
+            </div>
+            <!-- CONTRATOS -->
+            <div class="view" id="view-contratos">
+                <div class="view-header"><div><div class="fluvia-title">Freight<br><em>Contracts.</em></div><div class="fluvia-subtitle">CONTRACT MANAGEMENT — OPERATIONAL LOGISTICS</div></div><div class="header-actions"><button class="btn-export" onclick="exportContratos('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportContratos('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('contrato')"><i class="fa-solid fa-plus"></i> New Contract</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="cont-active-en">0</div><div class="stat-lbl">Active</div></div><div class="stat-cell"><div class="stat-val" id="cont-tons-en">0</div><div class="stat-lbl">Contracted Tons</div></div><div class="stat-cell"><div class="stat-val" id="cont-revenue-en">$0</div><div class="stat-lbl">Revenue</div></div><div class="stat-cell"><div class="stat-val" id="cont-expiring-en">0</div><div class="stat-lbl">Expiring Soon</div></div></div>
+                <div id="cont-list-en"></div>
             </div>
             <!-- BRIEFING DIARIO -->
             <div class="view" id="view-briefing">
