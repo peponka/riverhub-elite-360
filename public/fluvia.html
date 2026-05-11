@@ -71,6 +71,7 @@
             <div class="nav-section-label">GESTION</div>
             <a class="nav-item" data-view="tripulacion"><i class="fa-solid fa-users"></i>Tripulacion &amp; Safety</a>
             <a class="nav-item" data-view="combustible"><i class="fa-solid fa-gas-pump"></i>Combustible</a>
+            <a class="nav-item" data-view="liquidos"><i class="fa-solid fa-droplet"></i>Líquidos (Tanques)</a>
             <a class="nav-item" data-view="calado"><i class="fa-solid fa-ruler-vertical"></i>Calados &amp; Hidrometria</a>
             <a class="nav-item" data-view="mantenimiento"><i class="fa-solid fa-wrench"></i>Mantenimiento</a>
             <a class="nav-item" data-view="panol"><i class="fa-solid fa-box-archive"></i>Panol (Inventario)</a>
@@ -352,6 +353,12 @@
                 <div class="view-header"><div><div class="fluvia-title">Bunker y<br><em>Combustible.</em></div><div class="fluvia-subtitle">GESTION DE CONSUMO - CONTROL OPERATIVO</div></div><div class="header-actions"><button class="btn-export" onclick="exportFuel('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFuel('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Registrar Carga</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fuel-count">0</div><div class="stat-lbl">Cargas Hoy</div></div><div class="stat-cell"><div class="stat-val" id="fuel-total">0L</div><div class="stat-lbl">Consumo</div></div><div class="stat-cell"><div class="stat-val">--</div><div class="stat-lbl">Eficiencia</div></div></div>
                 <div id="fuel-list"></div><div class="empty-state" id="fuel-empty"><i class="fa-solid fa-gas-pump"></i><p>Sin registros de consumo</p></div>
+            </div>
+            <!-- LIQUIDOS (TANQUES) -->
+            <div class="view" id="view-liquidos">
+                <div class="view-header"><div><div class="fluvia-title">Gestión de<br><em>Líquidos.</em></div><div class="fluvia-subtitle">BARCAZAS TANQUE - CONTROL DE CARGA LÍQUIDA</div></div><div class="header-actions"><button class="btn-primary" onclick="openModal('liquidos')"><i class="fa-solid fa-plus"></i> Registrar Operación</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="liq-count">6</div><div class="stat-lbl">Barcazas</div></div><div class="stat-cell"><div class="stat-val" id="liq-util">57%</div><div class="stat-lbl">Utilización</div></div><div class="stat-cell"><div class="stat-val" id="liq-transit">6.4k m³</div><div class="stat-lbl">En Tránsito</div></div><div class="stat-cell"><div class="stat-val" id="liq-ops">3</div><div class="stat-lbl">Ops Hoy</div></div></div>
+                <div id="liq-list"></div>
             </div>
             <!-- MANTENIMIENTO -->
             <div class="view" id="view-mantenimiento">
