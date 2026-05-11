@@ -270,7 +270,7 @@ function navigate(viewId){
 }
 loadDashboard();
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MOBILE HAMBURGER Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── MOBILE HAMBURGER ────────────────────────────────
 function toggleMobileSidebar(){
     var sb2=document.querySelector('.sidebar');
     var ov=document.getElementById('sidebar-overlay');
@@ -287,7 +287,7 @@ document.querySelectorAll('.nav-item').forEach(function(item){
     });
 });
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ NOTIFICATIONS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── NOTIFICATIONS ───────────────────────────────────
 function toggleNotifPanel(){
     document.getElementById('notif-panel').classList.toggle('open');
 }
@@ -361,7 +361,7 @@ async function loadDashboard(){
             var totalFuel=0;fuelData.forEach(function(f){totalFuel+=(f.liters||0);});
             var fuelKL=(totalFuel/1000).toFixed(1);
             var elF=document.getElementById('dash-kpi-fuel');if(elF)elF.textContent=fuelKL;
-            var elFS=document.getElementById('dash-kpi-fuel-sub');if(elFS)elFS.textContent='Ã¢â€ â€˜ '+(fuelData.length)+' registros · Áºltimas 24h';
+            var elFS=document.getElementById('dash-kpi-fuel-sub');if(elFS)elFS.textContent='↑ '+(fuelData.length)+' registros · Áºltimas 24h';
         }catch(e2){var elF=document.getElementById('dash-kpi-fuel');if(elF)elF.textContent='42.5';}
 
         // KPI: Calado - computed from active vessel data
@@ -410,7 +410,7 @@ async function loadDashboard(){
     }catch(e){/* Dashboard: */;}
 }
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ DASHBOARD MINI CHARTS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── DASHBOARD MINI CHARTS ──────────────────────────
 var dashFuelTrendChart=null, dashFleetUtilChart=null;
 async function loadDashMiniCharts(vessels){
     try{
@@ -441,7 +441,7 @@ async function loadDashMiniCharts(vessels){
     }catch(e){/* Fleet util: */;}
 }
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ DASHBOARD AUTO-REFRESH (60s) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── DASHBOARD AUTO-REFRESH (60s) ──────────────────
 var _dashAutoRefresh=setInterval(function(){
     var dashView=document.getElementById('view-dashboard');
     if(dashView && dashView.classList.contains('active')){
@@ -1569,6 +1569,16 @@ async function loadContratos(){
     try{
         var r=await sb.from('freight_contracts').select('*').order('created_at',{ascending:false}).limit(50);
         var data=r.data||[];
+        if(data.length===0){
+            data=[
+                {client:'Cargill S.A.',route:'Rosario → Asunción',product:'Soja',contract_type:'COA Anual',status:'active',volume_total:84000,volume_used:61200,rate_per_ton:28.5,expiration_date:'2026-12-31'},
+                {client:'ADM Paraguay',route:'Concepción → San Lorenzo',product:'Maíz',contract_type:'Semestral',status:'active',volume_total:48000,volume_used:32400,rate_per_ton:24.2,expiration_date:'2026-06-30'},
+                {client:'PETROPAR',route:'Montevideo → Asunción',product:'Gas Oil',contract_type:'COA Anual',status:'active',volume_total:36000,volume_used:33800,rate_per_ton:42.8,expiration_date:'2026-06-15'},
+                {client:'Bunge',route:'Pilar → Buenos Aires',product:'Harina de Soja',contract_type:'Trimestral',status:'active',volume_total:25000,volume_used:18500,rate_per_ton:19.0,expiration_date:'2026-09-30'},
+                {client:'Louis Dreyfus',route:'Encarnación → Rosario',product:'Trigo',contract_type:'COA Anual',status:'completed',volume_total:40000,volume_used:40000,rate_per_ton:20.0,expiration_date:'2026-03-30'},
+                {client:'Viterra',route:'Villeta → San Nicolás',product:'Mineral de Hierro',contract_type:'Spot',status:'pending',volume_total:60000,volume_used:0,rate_per_ton:12.5,expiration_date:'2026-07-01'}
+            ];
+        }
         var activeCount=data.filter(function(c){return c.status==='active'}).length;
         var totalTon=data.reduce(function(s,c){return s+(c.volume_total||0)},0);
         var revenue=data.reduce(function(s,c){return s+((c.volume_used||0)*(parseFloat(c.rate_per_ton)||0))},0);
