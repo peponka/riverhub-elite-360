@@ -185,9 +185,9 @@ window.fetch = async function(...args) {
 
 
 
-// ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // GLOBAL ERROR BOUNDARY ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Prevents UI crashes
-// ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 window.onerror = function(msg, src, line, col, err) {
     // Suppress Supabase auth noise
     if (typeof msg === 'string' && (msg.includes('refresh_token') || msg.includes('AuthApiException'))) return true;
@@ -479,7 +479,7 @@ async function loadDashboard(){
         // Week & date
         var now=new Date();
         var weekNum=Math.ceil((((now-new Date(now.getFullYear(),0,1))/86400000)+new Date(now.getFullYear(),0,1).getDay()+1)/7);
-        var el=document.getElementById('dash-week');if(el)el.textContent='WEEK '+weekNum+' Ãƒâ€šÃ‚Â· '+now.getFullYear();
+        var el=document.getElementById('dash-week');if(el)el.textContent='WEEK '+weekNum+' · '+now.getFullYear();
 
         // Fetch all vessels
         var r=await sb.from('vessels').select('*').limit(100);
@@ -503,7 +503,7 @@ async function loadDashboard(){
             var totalFuel=0;fuelData.forEach(function(f){totalFuel+=(f.liters||0);});
             var fuelKL=(totalFuel/1000).toFixed(1);
             var elF=document.getElementById('dash-kpi-fuel');if(elF)elF.textContent=fuelKL;
-            var elFS=document.getElementById('dash-kpi-fuel-sub');if(elFS)elFS.textContent='ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ '+(fuelData.length)+' logs Ãƒâ€šÃ‚Â· last 24h';
+            var elFS=document.getElementById('dash-kpi-fuel-sub');if(elFS)elFS.textContent='\u2191 '+(fuelData.length)+' logs · last 24h';
         }catch(e2){var elF=document.getElementById('dash-kpi-fuel');if(elF)elF.textContent='42.5';}
 
         // KPI: Calado - computed from active vessel data
@@ -532,7 +532,7 @@ async function loadDashboard(){
                 var type=v.type||v.vessel_type||'REM';
                 return '<div onclick="selectDashVessel('+i+')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.15s;border:1px solid transparent;background:var(--bg-primary)" onmouseover="this.style.borderColor=\'var(--separator)\'" onmouseout="this.style.borderColor=\'transparent\'">'+
                     '<div><div style="font-size:13px;font-weight:600;color:var(--text-primary)">'+(v.name||v.vessel_name||'Vessel')+'</div>'+
-                    '<div style="font-size:10px;color:var(--text-secondary);margin-top:2px">'+type.substring(0,3).toUpperCase()+' Ãƒâ€šÃ‚Â· '+loc.substring(0,3).toUpperCase()+' Ãƒâ€šÃ‚Â· '+speed+' KN</div></div>'+
+                    '<div style="font-size:10px;color:var(--text-secondary);margin-top:2px">'+type.substring(0,3).toUpperCase()+' · '+loc.substring(0,3).toUpperCase()+' · '+speed+' KN</div></div>'+
                     '<span style="font-size:9px;font-weight:700;letter-spacing:0.5px;padding:3px 8px;border-radius:4px;background:'+statusColor+'15;color:'+statusColor+'">'+statusLabel+'</span></div>';
             }).join('');
         }
@@ -557,7 +557,7 @@ function selectDashVessel(idx){
     var detail=document.getElementById('dash-vessel-detail');if(detail)detail.style.display='block';
     var elN=document.getElementById('dash-sel-name');if(elN)elN.textContent=v.name||v.vessel_name||'--';
     var elI=document.getElementById('dash-sel-imo');if(elI)elI.textContent='IMO '+(v.imo||v.id||'--');
-    var elR=document.getElementById('dash-sel-route');if(elR)elR.textContent=(v.location||'ASU')+' ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ '+(v.destination||'MPA');
+    var elR=document.getElementById('dash-sel-route');if(elR)elR.textContent=(v.location||'ASU')+' → '+(v.destination||'MPA');
     var s=(v.status||'').toLowerCase();
     var isActive=s==='en viaje'||s==='active'||s==='navegando'||s==='in_transit';
     var elC=document.getElementById('dash-sel-convoy');if(elC)elC.textContent=isActive?'4+1':'--';
@@ -573,7 +573,7 @@ async function loadDashWeather(){
             var w=d.current_weather;
             var el=document.getElementById('dash-temp');if(el)el.textContent=w.temperature;
             var el2=document.getElementById('dash-wind');if(el2)el2.textContent=w.windspeed;
-            var el3=document.getElementById('dash-weather2');if(el3)el3.textContent=w.temperature+'Ãƒâ€šÃ‚Â°C Ãƒâ€šÃ‚Â· '+(w.windspeed<20?'Optimal conditions':'Strong wind');
+            var el3=document.getElementById('dash-weather2');if(el3)el3.textContent=w.temperature+'°C · '+(w.windspeed<20?'Optimal conditions':'Strong wind');
         }
         if(d.hourly&&d.hourly.relativehumidity_2m){var h=d.hourly.relativehumidity_2m[new Date().getHours()];var el4=document.getElementById('dash-humidity');if(el4)el4.textContent=h;}
     }catch(e){/* Weather: */;}
@@ -597,7 +597,7 @@ function loadDashRecentVessels(vessels){
         var borderColor=isActive?'var(--success)':isMaint?'var(--warning)':'var(--accent)';
         return '<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:14px;border-left:3px solid '+borderColor+'">'+
             '<div style="font-size:13px;font-weight:600">'+(v.name||v.vessel_name||'')+'</div>'+
-            '<div style="font-size:11px;color:var(--text-secondary);margin-top:4px">'+(v.type||v.vessel_type||'')+' Ãƒâ€šÃ‚Â· '+(v.location||v.current_position||'--')+'</div>'+
+            '<div style="font-size:11px;color:var(--text-secondary);margin-top:4px">'+(v.type||v.vessel_type||'')+' · '+(v.location||v.current_position||'--')+'</div>'+
             '<div style="font-size:10px;margin-top:6px;color:'+borderColor+';font-weight:600">'+(v.status||'--').toUpperCase()+'</div></div>';
     }).join('');
 }
@@ -792,7 +792,7 @@ async function loadAISTraffic(){
                 }else{
                     var hdg=v.heading||v.course||0;
                     var m=L.marker([v.lat,v.lon],{icon:_shipIcon('#10b981',40,hdg)}).addTo(map);
-                    m.bindPopup('<strong>'+(v.name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'Ãƒâ€šÃ‚Â°<br><small>AIS Satellite</small>');
+                    m.bindPopup('<strong>'+(v.name||v.mmsi)+'</strong><br>MMSI: '+v.mmsi+'<br>SOG: '+(v.speed||0)+' kn | COG: '+(v.course||0)+'°<br><small>AIS Satellite</small>');
                     aisMarkers[key]=m;
                 }
             });
@@ -1041,10 +1041,10 @@ async function loadDashboardExtras(){
     if(el)el.innerHTML=greet+'<br><em>'+esc(userName)+'.</em>';
     // Week & date
     var now=new Date();var oneJan=new Date(now.getFullYear(),0,1);var weekNum=Math.ceil((((now-oneJan)/86400000)+oneJan.getDay()+1)/7);
-    var de=document.getElementById('dash-week');if(de)de.textContent='WEEK '+weekNum+' Ãƒâ€šÃ‚Â· '+now.getFullYear();
+    var de=document.getElementById('dash-week');if(de)de.textContent='WEEK '+weekNum+' · '+now.getFullYear();
     var dd=document.getElementById('dash-date');if(dd)dd.textContent=now.toLocaleDateString('en',{weekday:'long',day:'numeric',month:'long'});
     // Sync indicator
-    var sy=document.getElementById('dash-sync');if(sy)sy.textContent='FLEET SYNCHRONIZED Ãƒâ€šÃ‚Â· '+now.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
+    var sy=document.getElementById('dash-sync');if(sy)sy.textContent='FLEET SYNCHRONIZED · '+now.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
     // Weather
     try{
         var w=await fetch('https://api.open-meteo.com/v1/forecast?latitude=-25.286&longitude=-57.647&current=temperature_2m,wind_speed_10m,weather_code,relative_humidity_2m&timezone=America/Asuncion');
@@ -1067,7 +1067,7 @@ async function loadDashboardExtras(){
                 var sd=await sr.json();
                 var val=sd.daily&&sd.daily.river_discharge?sd.daily.river_discharge[0]:0;
                 var el2=document.getElementById(stations[i].id);
-                if(el2)el2.textContent=val?Math.round(val).toLocaleString()+' mÃƒâ€šÃ‚Â³/s':'--';
+                if(el2)el2.textContent=val?Math.round(val).toLocaleString()+' m³/s':'--';
                 if(i===0){
                     var kh=document.getElementById('dash-kpi-hidro');if(kh)kh.textContent=val?Math.round(val).toLocaleString():'--';
                     var hs=document.getElementById('dash-hidro-status');if(hs)hs.textContent='Navigable ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â flow '+( val>2000?'normal':'low');
@@ -1109,7 +1109,7 @@ async function loadDashboardExtras(){
                     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'+
                     '<span style="font-size:13px;font-weight:600">'+ves.name+'</span>'+
                     '<span style="display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:'+stColor+'"></span><span style="font-size:9px;font-weight:700;color:var(--text-secondary);letter-spacing:0.3px">'+stLabel+'</span></span></div>'+
-                    '<div style="font-size:11px;color:var(--text-secondary)">'+(ves.type||'Vessel')+' Ãƒâ€šÃ‚Â· '+(ves.location||'ASU')+'</div></div>';
+                    '<div style="font-size:11px;color:var(--text-secondary)">'+(ves.type||'Vessel')+' · '+(ves.location||'ASU')+'</div></div>';
             });
             document.getElementById('dash-vessels').innerHTML=vh;
         }
@@ -1136,7 +1136,7 @@ async function loadDashboardExtras(){
                 if(l.action_type==='DRAFT_READING')icon='fa-solid fa-ruler-vertical';
                 else if(l.action_type==='INCIDENT')icon='fa-solid fa-triangle-exclamation';
                 else if(l.action_type==='FUEL')icon='fa-solid fa-gas-pump';
-                ah+='<div class="info-card"><i class="'+icon+'"></i><div class="info-card-text"><h4>'+(l.title||l.action_type||'Activity')+'</h4><p>'+(l.vessel_name||'')+' Ãƒâ€šÃ‚Â·  '+ago+'</p></div></div>';
+                ah+='<div class="info-card"><i class="'+icon+'"></i><div class="info-card-text"><h4>'+(l.title||l.action_type||'Activity')+'</h4><p>'+(l.vessel_name||'')+' ·  '+ago+'</p></div></div>';
             });
             document.getElementById('dash-activity').innerHTML=ah;
             document.getElementById('dash-activity-empty').style.display='none';
@@ -1415,7 +1415,7 @@ async function runPredictiveMaintenance(){
             var prob=p.probability||0;
             html+='<div style="border:1px solid var(--border);border-left:4px solid '+sevColor+';border-radius:8px;padding:12px;margin-bottom:8px;">';
             html+='<div style="display:flex;justify-content:space-between;align-items:center;">';
-            html+='<div style="font-weight:700;font-size:13px;">ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¢ '+p.vessel+'</div>';
+            html+='<div style="font-weight:700;font-size:13px;">🚢 '+p.vessel+'</div>';
             html+='<span style="background:'+sevColor+';color:#fff;font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;">'+sevLabel+'</span>';
             html+='</div>';
             html+='<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">ÃƒÂ¢Ã…Â¡Ã¢â€žÂ¢ÃƒÂ¯Ã‚Â¸Ã‚Â '+p.component+'</div>';
@@ -1453,7 +1453,7 @@ async function runFuelAnomalies(){
         var html='';
         anomalies.forEach(function(a){
             var sevColor=a.severity==='critical'?'#ef4444':a.severity==='high'?'#f59e0b':a.severity==='medium'?'#3b82f6':'#10b981';
-            var icon=a.type==='theft_risk'?'ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨':a.type==='overconsumption'?'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‹â€ ':a.type==='spike'?'ÃƒÂ¢Ã…Â¡Ã‚Â¡':a.type==='trend'?'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â°':'ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦';
+            var icon=a.type==='theft_risk'?'🚨':a.type==='overconsumption'?'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‹â€ ':a.type==='spike'?'⚡':a.type==='trend'?'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â°':'ℹ';
             var typeLabel=a.type==='theft_risk'?'THEFT RISK':a.type==='overconsumption'?'OVERCONSUMPTION':a.type==='spike'?'ANOMALOUS SPIKE':a.type==='trend'?'TREND':'NORMAL';
             html+='<div style="border:1px solid var(--border);border-left:4px solid '+sevColor+';border-radius:8px;padding:12px;margin-bottom:8px;">';
             html+='<div style="display:flex;justify-content:space-between;align-items:center;">';
@@ -1462,7 +1462,7 @@ async function runFuelAnomalies(){
             html+='</div>';
             html+='<div style="font-size:12px;margin-top:6px;">'+a.description+'</div>';
             if(a.deviation_pct){html+='<div style="font-size:11px;color:'+sevColor+';margin-top:4px;font-weight:600;">Deviation: '+(a.deviation_pct>0?'+':'')+a.deviation_pct+'%</div>';}
-            html+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¡ '+a.recommendation+'</div>';
+            html+='<div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">💡 '+a.recommendation+'</div>';
             html+='</div>';
         });
         container.innerHTML=html;
