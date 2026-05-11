@@ -323,7 +323,7 @@
             <!-- VIAJES -->
             <div class="view" id="view-viajes">
                 <div class="view-header"><div><div class="fluvia-title">Trip<br><em>Management.</em></div><div class="fluvia-subtitle">TRANSIT CONTROL - ACTIVE DISPATCH</div></div><div class="header-actions"><button class="btn-export" onclick="exportViajes('pdf')" title="Export PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportViajes('excel')" title="Export Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('viaje')"><i class="fa-solid fa-plus"></i> New Request</button></div></div>
-                <div class="stat-row"><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">In Transit</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Pending</div></div><div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Tons</div></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="trips-transit">0</div><div class="stat-lbl">In Transit</div></div><div class="stat-cell"><div class="stat-val" id="trips-pending">0</div><div class="stat-lbl">Pending</div></div><div class="stat-cell"><div class="stat-val" id="trips-tons">0</div><div class="stat-lbl">Tons</div></div><div class="stat-cell"><div class="stat-val" id="trips-completed">0</div><div class="stat-lbl">Completed</div></div></div>
                 <div id="viajes-list"></div><div class="empty-state" id="viajes-empty"><i class="fa-solid fa-route"></i><p>No assets found in dispatch</p></div>
             </div>
             <!-- BITACORA -->
