@@ -578,7 +578,28 @@ async function loadFuel(){
     try{
         var r=await sb.from('fuel_logs').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('fuel-list');var em=document.getElementById('fuel-empty');l.innerHTML='';
-        if(data&&data.length>0){em.style.display='none';data.forEach(function(f){var d=document.createElement('div');d.className='list-item';d.innerHTML='<div><h4>'+(f.vessel_name||'')+' -- '+(f.liters||f.quantity||0)+'L</h4><p>'+(f.fuel_type||'Gasoil')+' - '+(f.created_at?new Date(f.created_at).toLocaleDateString('es'):'')+'</p></div><button class="delete-btn" style="background:none;border:none;color:var(--error);cursor:pointer;" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('fuel_logs',f.id,(f.vessel_name||'Registro'),loadFuel);});l.appendChild(d);});document.getElementById('fuel-count').textContent=data.length;}else{em.style.display='';}
+        if(data&&data.length>0){
+            em.style.display='none';
+            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px';
+            var totalLiters=0;
+            data.forEach(function(f){
+                var liters=f.liters||f.quantity||0;
+                totalLiters+=liters;
+                var fType=(f.fuel_type||'Gasoil').toLowerCase();
+                var typeColor=fType.indexOf('marine')>=0||fType.indexOf('mgo')>=0?'#0EA5E9':fType.indexOf('diesel')>=0||fType.indexOf('gasoil')>=0?'#F97316':'#8B5CF6';
+                var t=f.created_at?new Date(f.created_at).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}):'-';
+                var tShort=f.created_at?new Date(f.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}):'-';
+                var d=document.createElement('div');
+                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default;position:relative;overflow:hidden';
+                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
+                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
+                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">'+'<div style="width:40px;height:40px;border-radius:10px;background:'+typeColor+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-gas-pump" style="font-size:16px;color:'+typeColor+'"></i></div>'+'<button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:2px">'+(f.vessel_name||'--')+'</div>'+'<div style="font-family:Newsreader,serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:8px">'+liters.toLocaleString()+' <span style="font-family:Inter,sans-serif;font-size:12px;color:var(--text-secondary);font-weight:500">litros</span></div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+typeColor+';background:'+typeColor+'10;padding:3px 8px;border-radius:5px">'+(f.fuel_type||'Gasoil').toUpperCase()+'</span>'+'<span style="font-size:10px;color:var(--text-tertiary)"><i class="fa-regular fa-calendar" style="margin-right:4px"></i>'+t+'</span>'+'</div>';
+                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('fuel_logs',f.id,(f.vessel_name||'Registro'),loadFuel);});
+                l.appendChild(d);
+            });
+            document.getElementById('fuel-count').textContent=data.length;
+            var elTotal=document.getElementById('fuel-total-liters');if(elTotal)elTotal.textContent=totalLiters.toLocaleString()+'L';
+        }else{em.style.display='';}
     }catch(e){/* Fuel: */;}
 }
 
