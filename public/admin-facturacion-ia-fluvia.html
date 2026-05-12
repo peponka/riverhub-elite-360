@@ -6,111 +6,67 @@
     <title>Invoice Intelligence — FluviaFleet</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-        :root {
-            --bg:#FFFFFF; --bg-alt:#FAFAFA; --surface:#F5F5F5;
-            --text:#1A1A1A; --text-2:#6B6B6B; --sep:#E5E5E5;
-            --blue:#0066FF; --blue-bg:#E8F0FE; --teal:#00C2A8;
-            --red:#EF4444; --amber:#F59E0B; --green:#22C55E;
-            --font-sans:'Inter',-apple-system,sans-serif;
-            --font-serif:'Newsreader',Georgia,serif;
-            --radius:14px; --shadow:0 2px 12px rgba(0,0,0,0.06);
-        }
-        html { scroll-behavior:smooth; }
-        body { font-family:var(--font-sans); color:var(--text); background:var(--bg-alt); line-height:1.6; }
-
-        /* LAYOUT */
-        .page { display:flex; min-height:100vh; }
-        .sidebar { width:260px; background:var(--bg); border-right:1px solid var(--sep); padding:24px 0; position:fixed; top:0; left:0; bottom:0; overflow-y:auto; z-index:10; }
-        .sidebar-logo { padding:0 24px 24px; display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
-        .sidebar-logo img { width:32px; height:32px; border-radius:8px; }
-        .sidebar-logo span { font-family:var(--font-serif); font-size:1.3rem; font-weight:500; }
-        .sidebar-section { padding:0 16px; margin-bottom:8px; }
-        .sidebar-section-label { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-2); padding:8px 8px 4px; }
-        .sidebar-link { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; color:var(--text-2); text-decoration:none; font-size:0.85rem; font-weight:500; transition:all 0.2s; }
-        .sidebar-link:hover { background:var(--surface); color:var(--text); }
-        .sidebar-link.active { background:var(--blue-bg); color:var(--blue); font-weight:600; }
-        .sidebar-link i { width:18px; text-align:center; font-size:0.9rem; }
-        .main { margin-left:260px; flex:1; padding:32px 40px; min-height:100vh; }
-
-        /* HEADER */
-        .page-header { margin-bottom:32px; }
-        .page-header h1 { font-family:var(--font-serif); font-size:1.8rem; font-weight:500; margin-bottom:4px; }
-        .page-header p { color:var(--text-2); font-size:0.9rem; }
-        .badge-new { display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,var(--blue),var(--teal)); color:white; font-size:0.65rem; font-weight:700; padding:3px 10px; border-radius:20px; margin-left:8px; text-transform:uppercase; letter-spacing:0.5px; }
-
-        /* CARDS */
-        .card { background:var(--bg); border:1px solid var(--sep); border-radius:var(--radius); padding:28px; margin-bottom:24px; }
-        .card-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-2); margin-bottom:16px; }
-
-        /* TEXTAREA */
-        .invoice-input { width:100%; min-height:200px; border:1px solid var(--sep); border-radius:12px; padding:16px; font-family:var(--font-sans); font-size:0.88rem; color:var(--text); resize:vertical; outline:none; transition:border 0.2s; line-height:1.7; }
-        .invoice-input:focus { border-color:var(--blue); }
-        .invoice-input::placeholder { color:#B0B0B0; }
-
-        /* BUTTONS */
-        .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:10px; font-weight:600; font-size:0.88rem; border:none; cursor:pointer; transition:all 0.2s; text-decoration:none; }
-        .btn-primary { background:var(--text); color:white; }
-        .btn-primary:hover { background:#333; transform:translateY(-1px); }
-        .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-        .btn-outline { background:transparent; color:var(--text-2); border:1px solid var(--sep); }
-        .btn-outline:hover { border-color:var(--text); color:var(--text); }
-        .btn-row { display:flex; gap:12px; margin-top:16px; align-items:center; }
-
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#FFF;--bg2:#FAFAFA;--srf:#F5F5F5;--txt:#1A1A1A;--t2:#6B6B6B;--sep:#E5E5E5;--blue:#0066FF;--bbg:#E8F0FE;--teal:#00C2A8;--red:#EF4444;--amber:#F59E0B;--green:#22C55E;--purple:#7C3AED;--font:'Inter',sans-serif;--serif:'Newsreader',serif;--r:14px}
+        body{font-family:var(--font);color:var(--txt);background:var(--bg2);line-height:1.6}
+        .page{display:flex;min-height:100vh}
+        .sb{width:240px;background:var(--bg);border-right:1px solid var(--sep);padding:20px 0;position:fixed;top:0;left:0;bottom:0;z-index:10}
+        .sb-logo{padding:0 20px 20px;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--txt)}
+        .sb-logo img{width:28px;height:28px;border-radius:8px}.sb-logo span{font-family:var(--serif);font-size:1.2rem}
+        .sb-sec{padding:0 12px;margin-bottom:6px}.sb-lbl{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t2);padding:8px 8px 4px}
+        .sb-lk{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--t2);text-decoration:none;font-size:0.82rem;font-weight:500;transition:0.2s}
+        .sb-lk:hover{background:var(--srf);color:var(--txt)}.sb-lk.active{background:var(--bbg);color:var(--blue);font-weight:600}
+        .sb-lk i{width:16px;text-align:center;font-size:0.85rem}
+        .mn{margin-left:240px;flex:1;padding:28px 36px}
+        .hdr{margin-bottom:24px}.hdr h1{font-family:var(--serif);font-size:1.7rem;font-weight:500}.hdr p{color:var(--t2);font-size:0.88rem}
+        .badge{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font-size:0.6rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:8px;text-transform:uppercase}
+        .card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--r);padding:24px;margin-bottom:20px}
+        .card-t{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t2);margin-bottom:14px}
+        .banner{background:linear-gradient(135deg,#0f172a,#1a2744);border-radius:var(--r);padding:18px 20px;color:#fff;display:flex;align-items:center;gap:14px;margin-bottom:20px}
+        .banner i{font-size:1.3rem;color:var(--teal)}.banner p{font-size:0.82rem;color:rgba(255,255,255,0.7)}.banner strong{color:#fff}
+        .demo-link{color:var(--teal);cursor:pointer;text-decoration:underline;font-weight:600}
+        /* INPUT */
+        .inv-input{width:100%;min-height:160px;border:1px solid var(--sep);border-radius:10px;padding:14px;font-family:var(--font);font-size:0.85rem;resize:vertical;outline:none;line-height:1.6}
+        .inv-input:focus{border-color:var(--blue)}
+        /* UPLOAD */
+        .drop-zone{border:2px dashed var(--sep);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:0.2s;margin-bottom:14px}
+        .drop-zone:hover,.drop-zone.drag{border-color:var(--purple);background:var(--bbg)}
+        .drop-zone i{font-size:2rem;color:var(--purple);margin-bottom:8px}
+        .drop-zone p{font-size:0.85rem;color:var(--t2)}.drop-zone strong{color:var(--txt)}
+        .file-preview{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--srf);border-radius:8px;margin-bottom:12px;font-size:0.82rem}
+        .file-preview .remove{color:var(--red);cursor:pointer;margin-left:auto}
+        /* BTNS */
+        .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-weight:600;font-size:0.85rem;border:none;cursor:pointer;transition:0.2s}
+        .btn-p{background:var(--txt);color:#fff}.btn-p:hover{background:#333}.btn-p:disabled{opacity:0.5;cursor:not-allowed}
+        .btn-o{background:transparent;color:var(--t2);border:1px solid var(--sep)}.btn-o:hover{border-color:var(--txt)}
+        .btn-row{display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap}
+        /* TABS */
+        .inv-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+        .inv-tab{padding:6px 14px;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid var(--sep);background:var(--bg);transition:0.2s}
+        .inv-tab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+        .inv-tab .close{margin-left:6px;color:rgba(255,255,255,0.6);font-size:0.7rem}
         /* RESULTS */
-        .result-container { display:none; }
-        .result-container.show { display:block; }
-        .status-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 16px; border-radius:20px; font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
-        .status-badge.approved { background:#DCFCE7; color:#166534; }
-        .status-badge.review { background:#FEF3C7; color:#92400E; }
-        .status-badge.rejected { background:#FEE2E2; color:#991B1B; }
-
-        .result-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }
-        .result-stat { text-align:center; padding:20px; background:var(--surface); border-radius:12px; }
-        .result-stat .value { font-size:1.6rem; font-weight:800; color:var(--text); }
-        .result-stat .label { font-size:0.75rem; color:var(--text-2); text-transform:uppercase; letter-spacing:0.5px; margin-top:4px; }
-
-        /* TABLE */
-        .items-table { width:100%; border-collapse:collapse; margin-top:12px; }
-        .items-table th { text-align:left; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-2); padding:10px 12px; border-bottom:1px solid var(--sep); }
-        .items-table td { padding:12px; font-size:0.85rem; border-bottom:1px solid var(--surface); }
-        .items-table tr:last-child td { border-bottom:none; }
-        .items-table .number { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; }
-
-        /* DISCREPANCIES */
-        .disc-item { display:flex; align-items:flex-start; gap:12px; padding:14px; border-radius:10px; margin-bottom:8px; }
-        .disc-item.CRITICA { background:#FEE2E2; }
-        .disc-item.ADVERTENCIA { background:#FEF3C7; }
-        .disc-item.INFO { background:#E8F0FE; }
-        .disc-icon { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:0.75rem; }
-        .disc-item.CRITICA .disc-icon { background:var(--red); color:white; }
-        .disc-item.ADVERTENCIA .disc-icon { background:var(--amber); color:white; }
-        .disc-item.INFO .disc-icon { background:var(--blue); color:white; }
-        .disc-text strong { font-size:0.85rem; }
-        .disc-text p { font-size:0.8rem; color:var(--text-2); margin-top:2px; }
-
-        /* LOADING */
-        .loading { display:none; align-items:center; gap:12px; padding:20px; color:var(--text-2); font-size:0.9rem; }
-        .loading.show { display:flex; }
-        .spinner { width:24px; height:24px; border:3px solid var(--surface); border-top-color:var(--blue); border-radius:50%; animation:spin 0.8s linear infinite; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-
-        /* DEMO BANNER */
-        .demo-banner { background:linear-gradient(135deg,#0f172a,#1a2744); border-radius:var(--radius); padding:20px 24px; color:white; display:flex; align-items:center; gap:16px; margin-bottom:24px; }
-        .demo-banner i { font-size:1.4rem; color:var(--teal); }
-        .demo-banner p { font-size:0.85rem; color:rgba(255,255,255,0.7); }
-        .demo-banner strong { color:white; }
-        .demo-link { color:var(--teal); cursor:pointer; text-decoration:underline; font-weight:600; }
-
-        @media(max-width:900px) {
-            .sidebar { display:none; }
-            .main { margin-left:0; padding:20px; }
-            .result-grid { grid-template-columns:1fr; }
-        }
+        .result{display:none}.result.show{display:block}
+        .st-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
+        .st-badge.ok{background:#DCFCE7;color:#166534}.st-badge.rev{background:#FEF3C7;color:#92400E}.st-badge.rej{background:#FEE2E2;color:#991B1B}
+        .r-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+        .r-stat{text-align:center;padding:16px;background:var(--srf);border-radius:10px}
+        .r-stat .val{font-size:1.4rem;font-weight:800}.r-stat .lbl{font-size:0.7rem;color:var(--t2);text-transform:uppercase;margin-top:3px}
+        .i-table{width:100%;border-collapse:collapse;margin-top:10px}
+        .i-table th{text-align:left;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t2);padding:8px 10px;border-bottom:1px solid var(--sep)}
+        .i-table td{padding:10px;font-size:0.82rem;border-bottom:1px solid var(--srf)}.i-table .num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+        .disc{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:8px;margin-bottom:6px}
+        .disc.CRITICA{background:#FEE2E2}.disc.ADVERTENCIA{background:#FEF3C7}.disc.INFO{background:var(--bbg)}
+        .disc-ico{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.7rem;color:#fff}
+        .disc.CRITICA .disc-ico{background:var(--red)}.disc.ADVERTENCIA .disc-ico{background:var(--amber)}.disc.INFO .disc-ico{background:var(--blue)}
+        .loading{display:none;align-items:center;gap:10px;padding:16px;color:var(--t2);font-size:0.85rem}.loading.show{display:flex}
+        .spinner{width:20px;height:20px;border:3px solid var(--srf);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @media(max-width:900px){.sb{display:none}.mn{margin-left:0;padding:16px}.r-grid{grid-template-columns:1fr}}
     </style>
 <script data-id="auth-guard-v1">
 (function(){
@@ -119,245 +75,206 @@
   function check(){
     var _sb=supabase.createClient(SURL,SKEY);
     _sb.auth.getSession().then(function(r){
-      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';window._sbToken=r.data.session.access_token;}
       else{window.location.replace('fluvia.html');}
     }).catch(function(){document.documentElement.style.visibility='visible';});
   }
   if(window.supabase){check();}
-  else{
-    var s=document.createElement('script');
-    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-    s.onload=check;
-    s.onerror=function(){document.documentElement.style.visibility='visible';};
-    document.head.appendChild(s);
-  }
+  else{var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=check;s.onerror=function(){document.documentElement.style.visibility='visible';};document.head.appendChild(s);}
 })();
 </script>
 </head>
 <body>
 <div class="page">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <a href="fluvia.html" class="sidebar-logo">
-            <img src="img/fluvia-logo.jpg" alt="FF">
-            <span>FluviaFleet</span>
-        </a>
-        <div class="sidebar-section">
-            <div class="sidebar-section-label">PRINCIPAL</div>
-            <a href="fluvia.html" class="sidebar-link"><i class="fas fa-th-large"></i> Panel de Control</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-map"></i> Mapa de Flota</a>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-label">INTELIGENCIA</div>
-            <a href="#" class="sidebar-link active"><i class="fas fa-file-invoice-dollar"></i> Invoice Intelligence</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-robot"></i> Copiloto IA</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-calculator"></i> Cotizador IA</a>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-label">OPERATIVA</div>
-            <a href="#" class="sidebar-link"><i class="fas fa-anchor"></i> Convoyes</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-route"></i> Viajes</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-gas-pump"></i> Combustible</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-wrench"></i> Mantenimiento</a>
-        </div>
+    <aside class="sb">
+        <a href="fluvia.html" class="sb-logo"><img src="img/fluvia-logo.jpg" alt="FF"><span>FluviaFleet</span></a>
+        <div class="sb-sec"><div class="sb-lbl">PRINCIPAL</div>
+            <a href="fluvia.html" class="sb-lk"><i class="fas fa-th-large"></i> Panel de Control</a>
+            <a href="#" class="sb-lk"><i class="fas fa-map"></i> Mapa de Flota</a></div>
+        <div class="sb-sec"><div class="sb-lbl">INTELIGENCIA</div>
+            <a href="#" class="sb-lk active"><i class="fas fa-file-invoice-dollar"></i> Invoice Intelligence</a>
+            <a href="#" class="sb-lk"><i class="fas fa-robot"></i> Copiloto IA</a>
+            <a href="#" class="sb-lk"><i class="fas fa-calculator"></i> Cotizador IA</a></div>
+        <div class="sb-sec"><div class="sb-lbl">OPERATIVA</div>
+            <a href="#" class="sb-lk"><i class="fas fa-anchor"></i> Convoyes</a>
+            <a href="#" class="sb-lk"><i class="fas fa-route"></i> Viajes</a>
+            <a href="#" class="sb-lk"><i class="fas fa-gas-pump"></i> Combustible</a></div>
     </aside>
+    <main class="mn">
+        <div class="hdr"><h1>Invoice Intelligence <span class="badge"><i class="fas fa-sparkles"></i> IA + OCR</span></h1>
+            <p>Captura, valida y reconcilia facturas con Gemini AI. Soporta texto, imágenes y PDF.</p></div>
+        <div class="banner"><i class="fas fa-lightbulb"></i><div><strong>¿Cómo funciona?</strong>
+            <p>Pegá texto, arrastrá una imagen/PDF o subí un archivo. La IA extrae datos, valida montos y detecta discrepancias. <span class="demo-link" onclick="loadDemo()">Probar con factura demo →</span></p></div></div>
 
-    <!-- MAIN -->
-    <main class="main">
-        <div class="page-header">
-            <h1>Invoice Intelligence <span class="badge-new"><i class="fas fa-sparkles"></i> IA</span></h1>
-            <p>Captura, valida y reconcilia facturas de flete automáticamente con Gemini AI.</p>
+        <!-- TABS para batch -->
+        <div class="inv-tabs" id="invTabs">
+            <div class="inv-tab active" data-idx="0" onclick="switchTab(0)">Factura 1</div>
+            <div class="inv-tab" onclick="addInvoice()" style="background:var(--srf);border-style:dashed"><i class="fas fa-plus" style="font-size:0.7rem"></i> Agregar</div>
         </div>
 
-        <!-- DEMO BANNER -->
-        <div class="demo-banner">
-            <i class="fas fa-lightbulb"></i>
-            <div>
-                <strong>¿Cómo funciona?</strong>
-                <p>Pegá el texto de una factura de flete y la IA extrae los datos, valida montos y detecta discrepancias contra los viajes registrados. <span class="demo-link" onclick="loadDemo()">Probar con factura demo →</span></p>
+        <!-- INPUT AREA -->
+        <div id="inputArea">
+            <!-- Drop zone -->
+            <div class="drop-zone" id="dropZone" ondrop="handleDrop(event)" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p><strong>Arrastrá una imagen o PDF</strong> de factura aquí<br>o hacé click para seleccionar archivo</p>
+            </div>
+            <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none" onchange="handleFileSelect(this)">
+            <div id="filePreview"></div>
+            <div class="card">
+                <div class="card-t">TEXTO DE FACTURA (opcional si subís imagen)</div>
+                <textarea id="invoiceText" class="inv-input" placeholder="Pegá aquí el texto de la factura..."></textarea>
+                <div class="btn-row">
+                    <button class="btn btn-p" id="analyzeBtn" onclick="analyzeInvoice()"><i class="fas fa-brain"></i> Analizar con IA</button>
+                    <button class="btn btn-o" onclick="clearCurrent()"><i class="fas fa-eraser"></i> Limpiar</button>
+                    <button class="btn btn-o" onclick="analyzeAll()" title="Analizar todas las facturas"><i class="fas fa-layer-group"></i> Analizar Todas</button>
+                </div>
             </div>
         </div>
 
-        <!-- INPUT -->
-        <div class="card">
-            <div class="card-title">FACTURA A ANALIZAR</div>
-            <textarea id="invoiceText" class="invoice-input" placeholder="Pegá aquí el texto de la factura de flete...&#10;&#10;Ejemplo:&#10;FACTURA N° 0001-00004521&#10;Fecha: 15/04/2026&#10;Proveedor: Combustibles del Litoral S.A.&#10;Concepto: Suministro de combustible — Viaje ASU-ROE&#10;Cantidad: 12.500 litros de Gas Oil Grado 2&#10;Precio unitario: USD 0.85/litro&#10;Subtotal: USD 10,625.00&#10;IVA 21%: USD 2,231.25&#10;TOTAL: USD 12,856.25"></textarea>
-            <div class="btn-row">
-                <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeInvoice()">
-                    <i class="fas fa-brain"></i> Analizar con IA
-                </button>
-                <button class="btn btn-outline" onclick="document.getElementById('invoiceText').value=''; document.querySelector('.result-container').classList.remove('show');">
-                    <i class="fas fa-eraser"></i> Limpiar
-                </button>
-            </div>
-        </div>
-
-        <!-- LOADING -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <span>Gemini está analizando la factura...</span>
-        </div>
+        <div class="loading" id="loading"><div class="spinner"></div><span>Gemini está analizando la factura...</span></div>
 
         <!-- RESULTS -->
-        <div class="result-container" id="results">
-            <div class="card">
-                <div class="card-title">RESULTADO DEL ANÁLISIS</div>
-                <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-                    <span class="status-badge" id="statusBadge">APROBADA</span>
-                    <span style="font-size:0.85rem;color:var(--text-2)" id="confidenceText"></span>
-                </div>
-                <div id="summaryNotes" style="font-size:0.9rem;color:var(--text-2);margin-bottom:16px"></div>
-                <div class="result-grid" id="resultStats"></div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">ÍTEMS EXTRAÍDOS</div>
-                <table class="items-table">
-                    <thead><tr><th>Descripción</th><th>Cantidad</th><th>Unidad</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Subtotal</th></tr></thead>
-                    <tbody id="itemsBody"></tbody>
-                </table>
-            </div>
-
-            <div class="card" id="discCard" style="display:none">
-                <div class="card-title">DISCREPANCIAS DETECTADAS</div>
-                <div id="discList"></div>
-            </div>
+        <div class="result" id="results">
+            <div class="card"><div class="card-t">RESULTADO DEL ANÁLISIS</div>
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px"><span class="st-badge" id="statusBadge">APROBADA</span><span style="font-size:0.82rem;color:var(--t2)" id="confidenceText"></span></div>
+                <div id="summaryNotes" style="font-size:0.85rem;color:var(--t2);margin-bottom:14px"></div>
+                <div class="r-grid" id="resultStats"></div></div>
+            <div class="card"><div class="card-t">ÍTEMS EXTRAÍDOS</div>
+                <table class="i-table"><thead><tr><th>Descripción</th><th>Cantidad</th><th>Unidad</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Subtotal</th></tr></thead>
+                <tbody id="itemsBody"></tbody></table></div>
+            <div class="card" id="discCard" style="display:none"><div class="card-t">DISCREPANCIAS DETECTADAS</div><div id="discList"></div></div>
         </div>
     </main>
 </div>
 
 <script>
-const DEMO_INVOICE = `FACTURA DE FLETE FLUVIAL
-N° 0001-00004521
-Fecha: 15/04/2026
-Emisor: Transportes Fluviales del Paraná S.A.
-CUIT: 30-71234567-8
-Cliente: Cargill S.A.C.I.
+const DEMO = `FACTURA DE FLETE FLUVIAL\nN° 0001-00004521\nFecha: 15/04/2026\nEmisor: Transportes Fluviales del Paraná S.A.\nCUIT: 30-71234567-8\nCliente: Cargill S.A.C.I.\n\nDetalle del servicio:\n- Viaje: Convoy C-47 | Ruta: Asunción (PY) → Rosario (AR)\n- Embarcación: R/M HÉRCULES + 6 barcazas\n- Carga: 8.400 toneladas de soja a granel\n- Distancia: 1.580 km\n\nConceptos:\n1. Flete principal (8.400 ton x USD 12.50/ton)............ USD 105,000.00\n2. Sobrestadía puerto Rosario (3 días x USD 2,800/día).... USD   8,400.00\n3. Combustible adicional (2.100 lt x USD 0.92/lt)......... USD   1,932.00\n4. Seguro de carga (0.15% sobre valor declarado).......... USD   4,200.00\n5. Servicio de practicaje.................................. USD   1,500.00\n\nSubtotal:.............. USD 121,032.00\nIVA 21%:............... USD  25,416.72\nTOTAL:................. USD 146,448.72\n\nCondición de pago: 30 días fecha factura\nCuenta: Banco Nación — CBU 0110012340001234567890`;
 
-Detalle del servicio:
-- Viaje: Convoy C-47 | Ruta: Asunción (PY) → Rosario (AR)
-- Embarcación: R/M HÉRCULES + 6 barcazas
-- Carga: 8.400 toneladas de soja a granel
-- Distancia: 1.580 km
+// Batch state
+let invoices = [{ text: '', image: null, imageName: '', result: null }];
+let currentIdx = 0;
 
-Conceptos:
-1. Flete principal (8.400 ton x USD 12.50/ton)............ USD 105,000.00
-2. Sobrestadía puerto Rosario (3 días x USD 2,800/día).... USD   8,400.00
-3. Combustible adicional (2.100 lt x USD 0.92/lt)......... USD   1,932.00
-4. Seguro de carga (0.15% sobre valor declarado).......... USD   4,200.00
-5. Servicio de practicaje.................................. USD   1,500.00
+function loadDemo() { invoices[currentIdx].text = DEMO; document.getElementById('invoiceText').value = DEMO; document.querySelector('.result').classList.remove('show'); }
 
-Subtotal:.............. USD 121,032.00
-IVA 21%:............... USD  25,416.72
-TOTAL:................. USD 146,448.72
-
-Condición de pago: 30 días fecha factura
-Cuenta: Banco Nación — CBU 0110012340001234567890`;
-
-function loadDemo() {
-    document.getElementById('invoiceText').value = DEMO_INVOICE;
-    document.querySelector('.result-container').classList.remove('show');
+function switchTab(idx) {
+    saveCurrentState();
+    currentIdx = idx;
+    loadTabState();
+    document.querySelectorAll('.inv-tab[data-idx]').forEach(t => t.classList.toggle('active', parseInt(t.dataset.idx) === idx));
 }
 
-async function analyzeInvoice() {
-    const text = document.getElementById('invoiceText').value.trim();
-    if (!text) return alert('Pegá el texto de una factura primero.');
+function addInvoice() {
+    saveCurrentState();
+    invoices.push({ text: '', image: null, imageName: '', result: null });
+    currentIdx = invoices.length - 1;
+    renderTabs();
+    loadTabState();
+}
 
+function removeInvoice(idx, e) {
+    e.stopPropagation();
+    if (invoices.length <= 1) return;
+    invoices.splice(idx, 1);
+    if (currentIdx >= invoices.length) currentIdx = invoices.length - 1;
+    renderTabs();
+    loadTabState();
+}
+
+function renderTabs() {
+    const c = document.getElementById('invTabs');
+    c.innerHTML = invoices.map((_, i) => `<div class="inv-tab${i===currentIdx?' active':''}" data-idx="${i}" onclick="switchTab(${i})">Factura ${i+1}${invoices.length>1?`<span class="close" onclick="removeInvoice(${i},event)">✕</span>`:''}</div>`).join('') +
+        `<div class="inv-tab" onclick="addInvoice()" style="background:var(--srf);border-style:dashed"><i class="fas fa-plus" style="font-size:0.7rem"></i> Agregar</div>`;
+}
+
+function saveCurrentState() { invoices[currentIdx].text = document.getElementById('invoiceText').value; }
+
+function loadTabState() {
+    document.getElementById('invoiceText').value = invoices[currentIdx].text || '';
+    document.getElementById('filePreview').innerHTML = invoices[currentIdx].imageName ?
+        `<div class="file-preview"><i class="fas fa-file-image" style="color:var(--purple)"></i>${invoices[currentIdx].imageName}<span class="remove" onclick="removeFile()">✕</span></div>` : '';
+    if (invoices[currentIdx].result) { renderResult(invoices[currentIdx].result); document.querySelector('.result').classList.add('show'); }
+    else { document.querySelector('.result').classList.remove('show'); }
+}
+
+function clearCurrent() {
+    invoices[currentIdx] = { text: '', image: null, imageName: '', result: null };
+    loadTabState();
+}
+
+// File handling
+function handleDrop(e) { e.preventDefault(); e.target.classList.remove('drag'); if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]); }
+function handleFileSelect(input) { if (input.files.length) processFile(input.files[0]); input.value = ''; }
+
+function processFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const base64 = e.target.result.split(',')[1];
+        invoices[currentIdx].image = { data: base64, mimeType: file.type || 'image/jpeg' };
+        invoices[currentIdx].imageName = file.name;
+        document.getElementById('filePreview').innerHTML = `<div class="file-preview"><i class="fas fa-file-image" style="color:var(--purple)"></i>${file.name}<span class="remove" onclick="removeFile()">✕</span></div>`;
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeFile() { invoices[currentIdx].image = null; invoices[currentIdx].imageName = ''; document.getElementById('filePreview').innerHTML = ''; }
+
+async function analyzeInvoice() {
+    saveCurrentState();
+    const inv = invoices[currentIdx];
+    if (!inv.text.trim() && !inv.image) return alert('Pegá texto o subí una imagen primero.');
     const btn = document.getElementById('analyzeBtn');
     const loading = document.getElementById('loading');
-    btn.disabled = true;
-    loading.classList.add('show');
-    document.querySelector('.result-container').classList.remove('show');
-
+    btn.disabled = true; loading.classList.add('show'); document.querySelector('.result').classList.remove('show');
     try {
-        // Get real Supabase token for auth
-        const _sb = supabase.createClient('https://nfybnnpdrvyxucgpqmmo.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc');
-        const { data: sess } = await _sb.auth.getSession();
-        const token = sess?.session?.access_token || 'demo';
-
-        const res = await fetch('/api/ai/invoice', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-            body: JSON.stringify({ invoiceText: text })
-        });
+        const token = window._sbToken || 'demo';
+        const body = {};
+        if (inv.text.trim()) body.invoiceText = inv.text;
+        if (inv.image) body.invoiceImage = inv.image;
+        const res = await fetch('/api/ai/invoice', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(body) });
         const data = await res.json();
         if (data.apiError) renderFallback('⚠️ Gemini API: ' + data.apiError);
-        else if (data.result) renderResult(data.result);
-        else renderFallback(data.raw || 'No se pudo procesar la factura.');
-    } catch (e) {
-        renderFallback('Error de conexión. Verificá que el servidor esté corriendo.');
-    } finally {
-        btn.disabled = false;
-        loading.classList.remove('show');
+        else if (data.result) { invoices[currentIdx].result = data.result; renderResult(data.result); }
+        else renderFallback(data.raw || 'No se pudo procesar.');
+    } catch (e) { renderFallback('Error de conexión.'); }
+    finally { btn.disabled = false; loading.classList.remove('show'); }
+}
+
+async function analyzeAll() {
+    for (let i = 0; i < invoices.length; i++) {
+        if (!invoices[i].text.trim() && !invoices[i].image) continue;
+        switchTab(i);
+        await analyzeInvoice();
+        await new Promise(r => setTimeout(r, 1000));
     }
 }
 
 function renderResult(r) {
-    const inv = r.invoice || {};
-    const val = r.validation || {};
-    const sum = r.summary || {};
-
-    // Status badge
-    const badge = document.getElementById('statusBadge');
+    const inv = r.invoice || {}, val = r.validation || {}, sum = r.summary || {};
     const status = (sum.status || 'REVISAR').toUpperCase();
+    const badge = document.getElementById('statusBadge');
     badge.textContent = status;
-    badge.className = 'status-badge ' + (status.includes('APROB') ? 'approved' : status.includes('RECH') ? 'rejected' : 'review');
-
+    badge.className = 'st-badge ' + (status.includes('APROB') ? 'ok' : status.includes('RECH') ? 'rej' : 'rev');
     document.getElementById('confidenceText').textContent = sum.confidence ? `Confianza: ${sum.confidence}%` : '';
     document.getElementById('summaryNotes').textContent = sum.notes || '';
-
-    // Stats
-    const stats = document.getElementById('resultStats');
-    stats.innerHTML = `
-        <div class="result-stat"><div class="value">${inv.number || 'N/A'}</div><div class="label">N° Factura</div></div>
-        <div class="result-stat"><div class="value">${inv.currency || 'USD'} ${(inv.total || 0).toLocaleString('es-AR',{minimumFractionDigits:2})}</div><div class="label">Total</div></div>
-        <div class="result-stat"><div class="value">${inv.supplier || 'N/A'}</div><div class="label">Proveedor</div></div>
-        <div class="result-stat"><div class="value">${inv.date || 'N/A'}</div><div class="label">Fecha</div></div>
-    `;
-
-    // Items
-    const body = document.getElementById('itemsBody');
-    body.innerHTML = (inv.items || []).map(it => `
-        <tr>
-            <td>${it.description}</td>
-            <td class="number">${it.quantity}</td>
-            <td>${it.unit || '-'}</td>
-            <td class="number">${(it.unitPrice || 0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td>
-            <td class="number">${(it.subtotal || 0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td>
-        </tr>
-    `).join('');
-
-    // Discrepancies
+    document.getElementById('resultStats').innerHTML = `
+        <div class="r-stat"><div class="val">${inv.number||'N/A'}</div><div class="lbl">N° Factura</div></div>
+        <div class="r-stat"><div class="val">${inv.currency||'USD'} ${(inv.total||0).toLocaleString('es-AR',{minimumFractionDigits:2})}</div><div class="lbl">Total</div></div>
+        <div class="r-stat"><div class="val">${inv.supplier||'N/A'}</div><div class="lbl">Proveedor</div></div>
+        <div class="r-stat"><div class="val">${inv.date||'N/A'}</div><div class="lbl">Fecha</div></div>`;
+    document.getElementById('itemsBody').innerHTML = (inv.items||[]).map(it => `<tr><td>${it.description}</td><td class="num">${it.quantity}</td><td>${it.unit||'-'}</td><td class="num">${(it.unitPrice||0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td><td class="num">${(it.subtotal||0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td></tr>`).join('');
     const discs = val.discrepancies || [];
-    const discCard = document.getElementById('discCard');
-    const discList = document.getElementById('discList');
-    if (discs.length > 0) {
-        discCard.style.display = 'block';
-        discList.innerHTML = discs.map(d => `
-            <div class="disc-item ${d.severity}">
-                <div class="disc-icon"><i class="fas fa-${d.severity==='CRITICA'?'exclamation':d.severity==='ADVERTENCIA'?'exclamation-triangle':'info'}"></i></div>
-                <div class="disc-text">
-                    <strong>${d.field}: ${d.invoiceValue} vs ${d.systemValue}</strong>
-                    <p>${d.note || ''} (Diferencia: ${d.difference})</p>
-                </div>
-            </div>
-        `).join('');
-    } else {
-        discCard.style.display = 'none';
-    }
-
-    document.querySelector('.result-container').classList.add('show');
+    const dc = document.getElementById('discCard'), dl = document.getElementById('discList');
+    if (discs.length > 0) { dc.style.display = 'block'; dl.innerHTML = discs.map(d => `<div class="disc ${d.severity}"><div class="disc-ico"><i class="fas fa-${d.severity==='CRITICA'?'exclamation':d.severity==='ADVERTENCIA'?'exclamation-triangle':'info'}"></i></div><div><strong style="font-size:0.82rem">${d.field}: ${d.invoiceValue} vs ${d.systemValue}</strong><p style="font-size:0.78rem;color:var(--t2);margin-top:2px">${d.note||''} (Diferencia: ${d.difference})</p></div></div>`).join(''); }
+    else dc.style.display = 'none';
+    document.querySelector('.result').classList.add('show');
 }
-
 function renderFallback(text) {
-    document.getElementById('resultStats').innerHTML = `<div style="grid-column:span 2;padding:20px;background:var(--surface);border-radius:12px;font-size:0.85rem;white-space:pre-wrap">${text}</div>`;
-    document.getElementById('statusBadge').textContent = 'PROCESADO';
-    document.getElementById('statusBadge').className = 'status-badge review';
-    document.getElementById('confidenceText').textContent = '';
-    document.getElementById('summaryNotes').textContent = '';
-    document.getElementById('itemsBody').innerHTML = '';
-    document.getElementById('discCard').style.display = 'none';
-    document.querySelector('.result-container').classList.add('show');
+    document.getElementById('resultStats').innerHTML = `<div style="grid-column:span 2;padding:16px;background:var(--srf);border-radius:10px;font-size:0.82rem;white-space:pre-wrap">${text}</div>`;
+    document.getElementById('statusBadge').textContent = 'PROCESADO'; document.getElementById('statusBadge').className = 'st-badge rev';
+    document.getElementById('confidenceText').textContent = ''; document.getElementById('summaryNotes').textContent = '';
+    document.getElementById('itemsBody').innerHTML = ''; document.getElementById('discCard').style.display = 'none';
+    document.querySelector('.result').classList.add('show');
 }
 </script>
 </body>
