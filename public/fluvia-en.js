@@ -1,4 +1,4 @@
-﻿// Supabase Init
+// Supabase Init
 const SUPABASE_URL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -305,6 +305,18 @@ async function doLogin(){
             setTimeout(() => { errDiv.style.display='none'; toggleRegister(); }, 3000);
         }
     }catch(e){errDiv.style.color='var(--error)';errDiv.textContent='Connection error';errDiv.style.display='block';btn.disabled=false;btn.textContent=authMode==='login'?'Log In':'Sign Up';}
+}
+
+async function doGoogleLogin(){
+    try{
+        await sb.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin + '/fluvia-en.html' }
+        });
+    }catch(e){
+        var errDiv=document.getElementById('login-error');
+        if(errDiv){errDiv.style.color='var(--error)';errDiv.textContent='Error connecting to Google';errDiv.style.display='block';}
+    }
 }
 
 async function doResetPassword() {

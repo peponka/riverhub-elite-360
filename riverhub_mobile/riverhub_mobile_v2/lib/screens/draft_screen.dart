@@ -236,51 +236,71 @@ class _DraftScreenState extends State<DraftScreen> {
     if (maxD <= 0) maxD = 3.5;
     double percent = ((current / maxD) * 100).clamp(0, 100);
 
-    Color dotColor = AppColors.accent;
+    Color statusColor = AppColors.success;
     String status = LocaleService.t('draft_optimal');
-    if (percent > 90) { dotColor = AppColors.error; status = LocaleService.t('draft_critical'); }
-    else if (percent > 75) { dotColor = AppColors.warning; status = LocaleService.t('draft_alert_status'); }
+    IconData statusIcon = CupertinoIcons.checkmark_shield_fill;
+    if (percent > 90) { statusColor = AppColors.error; status = LocaleService.t('draft_critical'); statusIcon = CupertinoIcons.exclamationmark_triangle_fill; }
+    else if (percent > 75) { statusColor = AppColors.warning; status = LocaleService.t('draft_alert_status'); statusIcon = CupertinoIcons.exclamationmark_circle_fill; }
+    else if (current == 0) { statusColor = AppColors.textSecondary; status = LocaleService.t('draft_optimal'); statusIcon = CupertinoIcons.minus_circle; }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.separator, width: 0.5),
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 1),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(child: Text(vessel['name'] ?? '--', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis)),
-            Row(children: [
-              Container(width: 6, height: 6, decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle)),
-              const SizedBox(width: 6),
-              Text(status, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
-            ]),
-          ]),
-          const SizedBox(height: 14),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(LocaleService.t('draft_current_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
-              Text('${current.toStringAsFixed(2)}m', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-            ]),
-            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Text(LocaleService.t('draft_max_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
-              Text('${maxD.toStringAsFixed(2)}m', style: GoogleFonts.inter(fontSize: 14, color: AppColors.textSecondary)),
-            ]),
-          ]),
-          const SizedBox(height: 12),
-          Container(
-            height: 4, width: double.infinity,
-            decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(2)),
-            child: FractionallySizedBox(
-              alignment: Alignment.centerLeft, widthFactor: percent / 100,
-              child: Container(decoration: BoxDecoration(color: dotColor, borderRadius: BorderRadius.circular(2))),
-            ),
+      child: Row(children: [
+        // Color accent strip
+        Container(
+          width: 5,
+          height: 100,
+          decoration: BoxDecoration(
+            color: statusColor,
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
           ),
-        ],
-      ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(child: Text(vessel['name'] ?? '--', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis)),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(8)),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(statusIcon, size: 11, color: statusColor),
+                    const SizedBox(width: 4),
+                    Text(status, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: statusColor, letterSpacing: 0.5)),
+                  ]),
+                ),
+              ]),
+              const SizedBox(height: 14),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(LocaleService.t('draft_current_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: statusColor, letterSpacing: 0.5)),
+                  Text('${current.toStringAsFixed(2)}m', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                ]),
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  Text(LocaleService.t('draft_max_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
+                  Text('${maxD.toStringAsFixed(2)}m', style: GoogleFonts.inter(fontSize: 14, color: AppColors.textSecondary)),
+                ]),
+              ]),
+              const SizedBox(height: 10),
+              // Progress bar with status color
+              Container(
+                height: 6, width: double.infinity,
+                decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(3)),
+                child: FractionallySizedBox(
+                  alignment: Alignment.centerLeft, widthFactor: percent / 100,
+                  child: Container(decoration: BoxDecoration(color: statusColor, borderRadius: BorderRadius.circular(3))),
+                ),
+              ),
+            ]),
+          ),
+        ),
+      ]),
     );
   }
 

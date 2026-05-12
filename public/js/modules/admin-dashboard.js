@@ -164,7 +164,7 @@ const AdminDashboard = (() => {
                     <!-- HORIZONTAL NAV -->
                     <div class="admin-nav-horizontal" style="display:flex; gap:10px; overflow-x:auto; padding-bottom:5px; -webkit-overflow-scrolling: touch;">
                         <button class="nav-tab active" data-nav="dashboard" onclick="AdminDashboard.routeTo('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</button>
-                        <button class="nav-tab" data-nav="fleet" onclick="AdminDashboard.routeTo('fleet')"><i class="fas fa-anchor"></i> GESTIÃ“N FLOTA</button>
+                        <button class="nav-tab" data-nav="fleet" onclick="AdminDashboard.routeTo('fleet')"><i class="fas fa-anchor"></i> GESTI�N FLOTA</button>
                         <button class="nav-tab" data-nav="client-ships" onclick="AdminDashboard.routeTo('client-ships')"><i class="fas fa-ship"></i> Barcos (Clientes)</button>
                         <button class="nav-tab" data-nav="clients" onclick="AdminDashboard.routeTo('clients')"><i class="fas fa-users"></i> Clientes</button>
                          <button class="nav-tab" data-nav="orders" onclick="AdminDashboard.routeTo('orders')"><i class="fas fa-tasks"></i> Ordenes</button>
@@ -190,7 +190,7 @@ const AdminDashboard = (() => {
         if (!container) return; // View changed
 
         if (!window.sb) {
-            container.innerHTML = '<div style="padding:20px; color:#ef4444;">Error: Supabase no estÃ¡ conectado.</div>';
+            container.innerHTML = '<div style="padding:20px; color:#ef4444;">Error: Supabase no est� conectado.</div>';
             return;
         }
 
@@ -207,7 +207,7 @@ const AdminDashboard = (() => {
                 container.innerHTML = `
                     <div style="text-align:center; padding:40px; color:#64748b;">
                         <i class="fas fa-folder-open" style="font-size:2rem; margin-bottom:10px;"></i><br>
-                        No hay clientes registrados aÃºn.
+                        No hay clientes registrados a�n.
                     </div>`;
                 return;
             }
@@ -237,8 +237,8 @@ const AdminDashboard = (() => {
                         <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'general')" title="General" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#94a3b8; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-info-circle"></i></button>
                         <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'users')" title="Usuarios" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#00e5ff; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-users"></i></button>
                         <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'fleet')" title="Flota" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#f59e0b; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-ship"></i></button>
-                        <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'billing')" title="FacturaciÃ³n" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#10b981; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-file-invoice-dollar"></i></button>
-                        <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'audit')" title="AuditorÃ­a" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#ef4444; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-history"></i></button>
+                        <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'billing')" title="Facturaci�n" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#10b981; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-file-invoice-dollar"></i></button>
+                        <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'audit')" title="Auditor�a" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#ef4444; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-history"></i></button>
                     </div>
                     
                     <button class="btn-admin-primary" onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'general')" style="width:100%; margin-top:5px; cursor:pointer;">GESTIONAR EMPRESA</button>
@@ -256,7 +256,7 @@ const AdminDashboard = (() => {
     // VIEWS — Extracted to admin-views-clients.js and admin-views-ops.js
     // These functions are registered as mixins after admin-dashboard.js loads.
 
-                    <button class="btn-admin-primary" style="background:transparent; border:1px solid #334; width:100%;">CARGAR MÃS</button>
+                    <button class="btn-admin-primary" style="background:transparent; border:1px solid #334; width:100%;">CARGAR M�S</button>
                 </div>
             </div>
         `;
@@ -280,7 +280,7 @@ const AdminDashboard = (() => {
     };
 
     const impersonateUser = (name, role) => {
-        if (window.RiverToast) RiverToast.warning(`Iniciando sesiÃ³n remota como "${name}". PÃ©rdida temporal de root...`, 'Impersonate Activo', 'fas fa-user-secret');
+        if (window.RiverToast) RiverToast.warning(`Iniciando sesi�n remota como "${name}". P�rdida temporal de root...`, 'Impersonate Activo', 'fas fa-user-secret');
         void("Impersonating:", name);
         setTimeout(() => {
             AuthModule.login({
@@ -354,7 +354,7 @@ const AdminDashboard = (() => {
                         tension: 0.4,
                         fill: true
                     }, {
-                        label: 'Consumo BÃºnker (L)',
+                        label: 'Consumo B�nker (L)',
                         data: [800, 1200, 1500, 2200, 1800, 2000, 2500],
                         borderColor: '#f59e0b',
                         backgroundColor: 'rgba(245, 158, 11, 0.05)',

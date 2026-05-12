@@ -38,7 +38,7 @@ const AppConfig = {
 
     // 5. INTELIGENCIA ARTIFICIAL
     ai: {
-        provider: 'openai', // 'openai' | 'gemini'
+        provider: 'gemini', // 'gemini' (Gemini 2.5 via backend proxy)
         apiKey: '' // Dejar vacío para usar backend proxy si existe
     },
 
@@ -51,4 +51,4 @@ const AppConfig = {
 
 // Exponer al scope global
 window.AppConfig = AppConfig;
-void("⚙️ AppConfig Cargado: Datalastic DESACTIVADO, usando AISStream.");
+console.log("⚙️ AppConfig Cargado: Datalastic DESACTIVADO, usando AISStream.");

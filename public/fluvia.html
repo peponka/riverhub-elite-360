@@ -37,6 +37,15 @@
           <button type="button" onclick="var p=document.getElementById('login-password');var ico=this.querySelector('i');if(p.type==='password'){p.type='text';ico.className='fa-solid fa-eye-slash';}else{p.type='password';ico.className='fa-solid fa-eye';}" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-secondary);padding:4px;"><i class="fa-solid fa-eye"></i></button>
         </div>
         <button class="login-btn" id="login-btn" onclick="doLogin()">Iniciar Sesion</button>
+        <div style="display:flex;align-items:center;gap:12px;margin:16px 0 12px;">
+            <div style="flex:1;height:0.5px;background:var(--separator);"></div>
+            <span style="font-size:11px;color:var(--text-secondary);font-weight:600;">O</span>
+            <div style="flex:1;height:0.5px;background:var(--separator);"></div>
+        </div>
+        <button onclick="doGoogleLogin()" style="width:100%;padding:12px 0;border-radius:12px;border:1px solid var(--separator);background:var(--bg-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:var(--text-primary);transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.06)'" onmouseout="this.style.borderColor='var(--separator)';this.style.boxShadow='none'">
+            <img src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" alt="Google" style="width:20px;height:20px;">
+            Continuar con Google
+        </button>
         <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:12px;font-weight:600;">
             <a href="javascript:void(0)" onclick="toggleRegister()" id="toggle-register-btn" style="color:var(--accent);text-decoration:none;">Crear nueva cuenta</a>
             <a href="javascript:void(0)" onclick="doResetPassword()" style="color:var(--text-secondary);text-decoration:none;">¿Olvidaste tu contraseña?</a>

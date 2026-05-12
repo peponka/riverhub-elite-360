@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    void("FluviaFleet: Sistema Global Iniciado ⚓");
+    console.log("FluviaFleet: Sistema Global Iniciado \u26d3");
 
     // Init Auth
     if (window.AuthModule) window.AuthModule.init();
@@ -194,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.querySelector('.login-card');
             if (card) {
                 card.style.animation = 'shake 0.5s';
-                card.style.border = '1px solid red'; // Debug indicator
             }
         }
     }, 5000); // Increased to 5s to avoid fighting AuthModule

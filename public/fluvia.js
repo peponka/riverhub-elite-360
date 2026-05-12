@@ -165,6 +165,18 @@ async function doLogin(){
     }catch(e){errDiv.style.color='var(--error)';errDiv.textContent='Error de conexion';errDiv.style.display='block';btn.disabled=false;btn.textContent=authMode==='login'?'Iniciar Sesion':'Registrarse';}
 }
 
+async function doGoogleLogin(){
+    try{
+        await sb.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin + '/fluvia.html' }
+        });
+    }catch(e){
+        var errDiv=document.getElementById('login-error');
+        if(errDiv){errDiv.style.color='var(--error)';errDiv.textContent='Error al conectar con Google';errDiv.style.display='block';}
+    }
+}
+
 async function doResetPassword() {
     var email=document.getElementById('login-email').value.trim();
     var errDiv=document.getElementById('login-error');

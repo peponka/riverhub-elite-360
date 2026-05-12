@@ -54,33 +54,53 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Widget _notifCard(Map<String, dynamic> n) {
     IconData icon;
+    Color typeColor;
     switch (n['type']) {
-      case 'critical': icon = CupertinoIcons.exclamationmark_triangle; break;
-      case 'warning': icon = CupertinoIcons.exclamationmark_circle; break;
-      case 'success': icon = CupertinoIcons.checkmark_circle; break;
-      default: icon = CupertinoIcons.info_circle;
+      case 'critical': icon = CupertinoIcons.exclamationmark_triangle_fill; typeColor = AppColors.error; break;
+      case 'warning': icon = CupertinoIcons.exclamationmark_circle_fill; typeColor = AppColors.warning; break;
+      case 'success': icon = CupertinoIcons.checkmark_circle_fill; typeColor = AppColors.success; break;
+      default: icon = CupertinoIcons.info_circle_fill; typeColor = AppColors.accent;
     }
     final unread = !(n['read'] as bool);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: unread ? AppColors.surfaceContainerLow : AppColors.backgroundSecondary,
+        color: unread ? typeColor.withValues(alpha: 0.04) : AppColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.separator, width: 0.5),
+        border: Border.all(color: typeColor.withValues(alpha: unread ? 0.3 : 0.15), width: 1),
       ),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Icon(icon, color: AppColors.textSecondary, size: 20),
-        const SizedBox(width: 14),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(child: Text(n['title'], style: GoogleFonts.inter(fontWeight: unread ? FontWeight.w700 : FontWeight.w500, fontSize: 14, color: AppColors.textPrimary))),
-            Text(n['time'], style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
-          ]),
-          const SizedBox(height: 4),
-          Text(n['msg'], style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary, height: 1.4)),
-        ])),
+      child: Row(children: [
+        // Color accent strip
+        Container(
+          width: 5,
+          height: 80,
+          decoration: BoxDecoration(
+            color: typeColor,
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                width: 32, height: 32,
+                decoration: BoxDecoration(color: typeColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+                child: Icon(icon, color: typeColor, size: 17),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Expanded(child: Text(n['title'], style: GoogleFonts.inter(fontWeight: unread ? FontWeight.w700 : FontWeight.w500, fontSize: 14, color: AppColors.textPrimary))),
+                  Text(n['time'], style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
+                ]),
+                const SizedBox(height: 4),
+                Text(n['msg'], style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary, height: 1.4)),
+              ])),
+            ]),
+          ),
+        ),
       ]),
     );
   }

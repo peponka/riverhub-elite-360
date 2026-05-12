@@ -18,8 +18,7 @@ class AIService {
       Supabase.instance.client.auth.currentSession?.accessToken ?? '';
 
   static String get _companyId =>
-      Supabase.instance.client.auth.currentUser?.userMetadata?['company_id'] as String? ??
-      'a1b2c3d4-0001-4000-8000-000000000001';
+      Supabase.instance.client.auth.currentUser?.userMetadata?['company_id'] as String? ?? '';
 
   /// POST helper using dart:io HttpClient
   /// Render free tier cold-starts can take 60s, plus Gemini needs ~10s
@@ -93,6 +92,11 @@ class AIService {
   }
 
   static final List<Map<String, String>> _chatHistory = [];
+
+  /// Clear session data on logout to prevent data leaking between users
+  static void clearSession() {
+    _chatHistory.clear();
+  }
 
   // ── Conversational Chat (Gemini) ──
   static Future<String> chat(String message) async {

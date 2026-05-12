@@ -23,6 +23,17 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
   final _ebitda = TextEditingController(text: '300000');
   final _deuda = TextEditingController(text: '250000');
 
+  @override
+  void dispose() {
+    _activos.dispose();
+    _pasivos.dispose();
+    _activosT.dispose();
+    _pasivosT.dispose();
+    _ebitda.dispose();
+    _deuda.dispose();
+    super.dispose();
+  }
+
   void _analyze() {
     setState(() {
       _analyzed = true;

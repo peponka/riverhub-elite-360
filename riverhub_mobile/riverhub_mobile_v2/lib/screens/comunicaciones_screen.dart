@@ -28,6 +28,13 @@ class _ComunicacionesScreenState extends State<ComunicacionesScreen> {
     _loadMessages();
   }
 
+  @override
+  void dispose() {
+    _msgController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadMessages() async {
     final data = await SupabaseService.getComms(channel: _activeChannel);
     setState(() {
