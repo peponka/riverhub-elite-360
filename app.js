@@ -537,9 +537,9 @@ app.post('/api/ai/invoice', aiLimiter, authenticateUser, async (req, res) => {
         return res.status(503).json({ error: 'AI not configured' });
     }
 
-    const { invoiceText, voyageId } = req.body;
-    if (!invoiceText) {
-        return res.status(400).json({ error: 'Missing invoiceText' });
+    const { invoiceText, invoiceImage, voyageId } = req.body;
+    if (!invoiceText && !invoiceImage) {
+        return res.status(400).json({ error: 'Missing invoiceText or invoiceImage' });
     }
 
     // Fetch voyage data for validation if voyageId provided
@@ -596,11 +596,20 @@ ${voyageContext}`;
 
     try {
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
+        // Build parts: system prompt + text and/or image
+        const parts = [{ text: systemPrompt }];
+        if (invoiceText) parts.push({ text: `FACTURA A ANALIZAR:\n${invoiceText}` });
+        if (invoiceImage) {
+            const imgData = typeof invoiceImage === 'string' ? invoiceImage : invoiceImage.data;
+            const mimeType = (typeof invoiceImage === 'object' && invoiceImage.mimeType) || 'image/jpeg';
+            parts.push({ text: 'IMAGEN DE FACTURA — extraé todos los datos visibles:' });
+            parts.push({ inline_data: { mime_type: mimeType, data: imgData } });
+        }
         const response = await fetch(geminiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: systemPrompt }, { text: `FACTURA A ANALIZAR:\n${invoiceText}` }] }],
+                contents: [{ parts }],
                 generationConfig: { temperature: 0.2, maxOutputTokens: 4000, responseMimeType: 'application/json' }
             })
         });
