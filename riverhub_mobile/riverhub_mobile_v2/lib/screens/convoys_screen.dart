@@ -35,6 +35,13 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
     _fetchAssets();
   }
 
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _destController.dispose();
+    super.dispose();
+  }
+
   Future<void> _fetchAssets() async {
     setState(() => _isLoading = true);
     try {

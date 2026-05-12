@@ -43,40 +43,159 @@ class _LiquidosScreenState extends State<LiquidosScreen> {
         middle: Text(LocaleService.t('liquidos_liquidos'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          children: [
-            Text(LocaleService.t('liquidos_gestion_de'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
-            Text(LocaleService.t('liquidos_liquidos_1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
-            const SizedBox(height: 20),
+        child: Stack(children: [
+          ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            children: [
+              Text(LocaleService.t('liquidos_gestion_de'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
+              Text(LocaleService.t('liquidos_liquidos_1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
+              const SizedBox(height: 20),
 
-            // KPIs
-            Row(children: [
-              Expanded(child: _kpi('BARCAZAS', '${_tanks.length}', CupertinoIcons.drop_fill, AppColors.purple)),
-              const SizedBox(width: 8),
-              Expanded(child: _kpi(LocaleService.t('dyn_key_146'), '$_avgUtil%', CupertinoIcons.chart_bar_fill, AppColors.warning)),
-            ]),
-            const SizedBox(height: 8),
-            Row(children: [
-              Expanded(child: _kpi(LocaleService.t('dyn_key_161'), '${(_totalCurrent / 1000).toStringAsFixed(1)}k m³', CupertinoIcons.arrow_right_arrow_left, AppColors.accent)),
-              const SizedBox(width: 8),
-              Expanded(child: _kpi(LocaleService.t('dyn_key_149'), '${_ops.length}', CupertinoIcons.arrow_2_circlepath, AppColors.success)),
-            ]),
-            const SizedBox(height: 24),
+              // KPIs
+              Row(children: [
+                Expanded(child: _kpi('BARCAZAS', '${_tanks.length}', CupertinoIcons.drop_fill, AppColors.purple)),
+                const SizedBox(width: 8),
+                Expanded(child: _kpi(LocaleService.t('dyn_key_146'), '$_avgUtil%', CupertinoIcons.chart_bar_fill, AppColors.warning)),
+              ]),
+              const SizedBox(height: 8),
+              Row(children: [
+                Expanded(child: _kpi(LocaleService.t('dyn_key_161'), '${(_totalCurrent / 1000).toStringAsFixed(1)}k m³', CupertinoIcons.arrow_right_arrow_left, AppColors.accent)),
+                const SizedBox(width: 8),
+                Expanded(child: _kpi(LocaleService.t('dyn_key_149'), '${_ops.length}', CupertinoIcons.arrow_2_circlepath, AppColors.success)),
+              ]),
+              const SizedBox(height: 24),
 
-            // Tank Cards
-            _sectionTitle(LocaleService.t('dyn_key_148'), '${_tanks.length} monitoreadas'),
-            const SizedBox(height: 12),
-            ..._tanks.map((t) => _tankCard(t)),
+              // Tank Cards
+              _sectionTitle(LocaleService.t('dyn_key_148'), '${_tanks.length} monitoreadas'),
+              const SizedBox(height: 12),
+              ..._tanks.map((t) => _tankCard(t)),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Operations
-            _sectionTitle(LocaleService.t('dyn_key_153'), ''),
-            const SizedBox(height: 12),
-            ..._ops.map((o) => _opCard(o)),
-            const SizedBox(height: 30),
-          ],
+              // Operations
+              _sectionTitle(LocaleService.t('dyn_key_153'), ''),
+              const SizedBox(height: 12),
+              ..._ops.map((o) => _opCard(o)),
+              const SizedBox(height: 80),
+            ],
+          ),
+          // FAB — Register new operation
+          Positioned(
+            bottom: 20, right: 20,
+            child: CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: _showNewOperationForm,
+              child: Container(
+                width: 56, height: 56,
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [BoxShadow(color: AppColors.accent.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
+                ),
+                child: const Icon(CupertinoIcons.plus, color: CupertinoColors.white, size: 24),
+              ),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  void _showNewOperationForm() {
+    final volCtrl = TextEditingController();
+    final terminalCtrl = TextEditingController();
+    int selectedTank = 0;
+    String selectedOp = 'CARGA';
+
+    showCupertinoModalPopup(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModal) => Container(
+          height: MediaQuery.of(ctx).size.height * 0.65,
+          padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+          decoration: const BoxDecoration(
+            color: CupertinoColors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: Column(children: [
+            Container(margin: const EdgeInsets.only(top: 10, bottom: 6), width: 40, height: 4, decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2))),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                CupertinoButton(padding: EdgeInsets.zero, child: Text(LocaleService.t('common_cancel'), style: GoogleFonts.inter(color: AppColors.textSecondary)), onPressed: () => Navigator.pop(ctx)),
+                Text(LocaleService.t('liquidos_nueva_op'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16, color: AppColors.textPrimary)),
+                CupertinoButton(padding: EdgeInsets.zero, child: Text(LocaleService.t('common_save'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.accent)), onPressed: () {
+                  if (volCtrl.text.isNotEmpty) {
+                    setState(() {
+                      _ops.insert(0, {
+                        'date': '${DateTime.now().day.toString().padLeft(2, '0')}/${DateTime.now().month.toString().padLeft(2, '0')} ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}',
+                        'op': selectedOp == 'CARGA' ? LocaleService.t('dyn_key_158') : selectedOp == 'DESCARGA' ? LocaleService.t('dyn_key_144') : LocaleService.t('dyn_key_156'),
+                        'barge': _tanks[selectedTank]['name'],
+                        'product': _tanks[selectedTank]['product'],
+                        'vol': '${volCtrl.text} m³',
+                        'terminal': terminalCtrl.text.isEmpty ? 'Terminal' : terminalCtrl.text,
+                        'dur': '-',
+                      });
+                    });
+                    Navigator.pop(ctx);
+                  }
+                }),
+              ]),
+            ),
+            Container(height: 0.5, color: AppColors.separator),
+            Expanded(
+              child: ListView(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), children: [
+                Text('TIPO DE OPERACIÓN', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
+                const SizedBox(height: 6),
+                CupertinoSlidingSegmentedControl<String>(
+                  groupValue: selectedOp,
+                  children: {
+                    'CARGA': Text('Carga', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600)),
+                    'DESCARGA': Text('Descarga', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600)),
+                    'TRANSFER': Text('Transfer', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600)),
+                  },
+                  onValueChanged: (v) => setModal(() => selectedOp = v ?? 'CARGA'),
+                ),
+                const SizedBox(height: 18),
+                Text('BARCAZA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
+                const SizedBox(height: 6),
+                GestureDetector(
+                  onTap: () {
+                    showCupertinoModalPopup(context: ctx, builder: (pickerCtx) => Container(
+                      height: 250, color: CupertinoColors.white,
+                      child: Column(children: [
+                        SizedBox(height: 44, child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                          CupertinoButton(child: Text(LocaleService.t('common_done')), onPressed: () => Navigator.pop(pickerCtx)),
+                        ])),
+                        Expanded(child: CupertinoPicker(
+                          itemExtent: 36,
+                          scrollController: FixedExtentScrollController(initialItem: selectedTank),
+                          onSelectedItemChanged: (i) => setModal(() => selectedTank = i),
+                          children: _tanks.map((t) => Center(child: Text(t['name'], style: GoogleFonts.inter(fontSize: 15)))).toList(),
+                        )),
+                      ]),
+                    ));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5)),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                      Text(_tanks[selectedTank]['name'], style: GoogleFonts.inter(fontSize: 15, color: AppColors.textPrimary)),
+                      const Icon(CupertinoIcons.chevron_down, size: 14, color: AppColors.textSecondary),
+                    ]),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Text('VOLUMEN (M³)', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
+                const SizedBox(height: 6),
+                CupertinoTextField(controller: volCtrl, placeholder: '1,200', keyboardType: TextInputType.number, padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5))),
+                const SizedBox(height: 18),
+                Text('TERMINAL / DESTINO', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
+                const SizedBox(height: 6),
+                CupertinoTextField(controller: terminalCtrl, placeholder: 'Terminal San Lorenzo', padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5))),
+              ]),
+            ),
+          ]),
         ),
       ),
     );

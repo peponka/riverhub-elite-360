@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, Material;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/app_colors.dart';
@@ -20,21 +19,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() => _isLoading = true);
+    try {
+      await Supabase.instance.client.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: 'fluviafleet://login-callback',
+      );
+    } catch (e) {
+      if (mounted) _showErrorDialog('Error signing in with Google.');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _signUp() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     final confirm = _confirmController.text;
 
     if (email.isEmpty || password.isEmpty || confirm.isEmpty) {
-      _showErrorDialog('Please fill in all fields.');
+      _showErrorDialog(LocaleService.t('register_fill_all_fields'));
       return;
     }
     if (password != confirm) {
-      _showErrorDialog('Passwords do not match.');
+      _showErrorDialog(LocaleService.t('register_passwords_no_match'));
       return;
     }
     if (password.length < 6) {
-      _showErrorDialog('Password must be at least 6 characters.');
+      _showErrorDialog(LocaleService.t('register_password_min_length'));
       return;
     }
 
@@ -174,6 +195,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ]),
+                ),
+
+                const SizedBox(height: 24),
+
+                // ─── Divider ────────────────────────────────
+                Row(
+                  children: [
+                    Expanded(child: Container(height: 0.5, color: AppColors.separator)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        LocaleService.t('login_or'),
+                        style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
+                      ),
+                    ),
+                    Expanded(child: Container(height: 0.5, color: AppColors.separator)),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // ─── Google Button ───────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: CupertinoButton(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    borderRadius: BorderRadius.circular(12),
+                    color: AppColors.backgroundSecondary,
+                    onPressed: _isLoading ? null : _signInWithGoogle,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.network(
+                          'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png',
+                          height: 20, width: 20,
+                          errorBuilder: (c, e, s) => const Icon(CupertinoIcons.circle_grid_hex_fill, size: 20),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          LocaleService.t('login_google'),
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),

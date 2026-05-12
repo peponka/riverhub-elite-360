@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'theme/app_colors.dart';
 import 'screens/map_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -95,7 +95,13 @@ Future<void> main() async {
     defaultValue: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc',
   );
   try {
-    await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
+    await Supabase.initialize(
+      url: supabaseUrl,
+      anonKey: supabaseKey,
+      authOptions: const FlutterAuthClientOptions(
+        authFlowType: AuthFlowType.pkce,
+      ),
+    );
   } catch (e) {
     debugPrint('Supabase init error: $e');
   }
@@ -124,11 +130,19 @@ Future<void> main() async {
 
   PlatformDispatcher.instance.onError = (error, stack) {
     final errorStr = error.toString().toLowerCase();
+    // Only silence refresh token corruption — let real errors propagate
     if (errorStr.contains('refresh_token') || errorStr.contains('already_used') || errorStr.contains('invalid refresh token')) {
       SupabaseService.forceSignOutCorruptSession();
       return true;
     }
-    return true; // Consider handled to prevent red screen
+    // Silence network errors that are not actionable
+    if (errorStr.contains('socketexception') || errorStr.contains('timeoutexception') || errorStr.contains('connection refused')) {
+      if (kDebugMode) debugPrint('\u26a0\ufe0f Network error suppressed: $error');
+      return true;
+    }
+    // In release: swallow to prevent crash. In debug: propagate to see errors.
+    debugPrint('\u274c Unhandled error: $error');
+    return kDebugMode ? false : true;
   };
 
   ConnectivityService.startMonitoring();

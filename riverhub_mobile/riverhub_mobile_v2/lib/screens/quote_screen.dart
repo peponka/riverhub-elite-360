@@ -21,6 +21,14 @@ class _QuoteScreenState extends State<QuoteScreen> {
   bool _isCalculating = false;
   String _aiAnalysis = LocaleService.t('dyn_key_203');
 
+  @override
+  void dispose() {
+    _originController.dispose();
+    _destController.dispose();
+    _bunkerController.dispose();
+    super.dispose();
+  }
+
   Future<void> _calculateQuote() async {
     setState(() { _isCalculating = true; _finalPrice = null; _aiAnalysis = LocaleService.t('dyn_key_205'); });
     await Future.delayed(const Duration(milliseconds: 1500));

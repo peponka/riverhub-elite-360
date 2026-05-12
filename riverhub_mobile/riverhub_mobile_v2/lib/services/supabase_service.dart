@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'ai_service.dart';
 
 /// Centralized Supabase service for RiverHub Mobile.
 /// All modules should use this service to fetch/insert data.
@@ -21,6 +22,7 @@ class SupabaseService {
     _isForceSigningOut = true;
     debugPrint('🔴 forceSignOutCorruptSession: limpiando sesión corrupta...');
     try {
+      AIService.clearSession();
       await client.auth.signOut(scope: SignOutScope.local);
     } catch (e) {
       debugPrint('⚠️ forceSignOut fallback: $e');

@@ -47,6 +47,13 @@ class _NexoBotScreenState extends State<NexoBotScreen> {
     );
   }
 
+  @override
+  void dispose() {
+    _textController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   void _addMessage(String sender, String text, bool isAgent) {
     setState(() {
       _messages.add(Message(sender: sender, text: text, isAgent: isAgent));

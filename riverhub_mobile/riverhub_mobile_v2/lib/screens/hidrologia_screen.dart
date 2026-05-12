@@ -263,29 +263,49 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
     final pct = median > 0 ? ((flow - median) / median * 100) : 0.0;
     final trend = s['trend'] as String;
 
-    Color trendColor = AppColors.textSecondary;
-    if (trend == LocaleService.t('dyn_key_117')) trendColor = AppColors.accent;
-    if (trend == LocaleService.t('dyn_key_119')) trendColor = AppColors.error;
+    Color trendColor = AppColors.success;
+    IconData trendIcon = CupertinoIcons.equal_circle;
+    if (trend == LocaleService.t('dyn_key_117')) { trendColor = AppColors.accent; trendIcon = CupertinoIcons.arrow_up_circle_fill; }
+    if (trend == LocaleService.t('dyn_key_119')) { trendColor = AppColors.error; trendIcon = CupertinoIcons.arrow_down_circle_fill; }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: trendColor.withValues(alpha: 0.25), width: 1),
+      ),
       child: Row(children: [
-        Icon(CupertinoIcons.waveform_path, color: AppColors.textSecondary, size: 22),
-        const SizedBox(width: 14),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(s['name'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
-          Text(s['river'], style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
-        ])),
-        Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Text('${flow.toStringAsFixed(0)} m³/s', style: GoogleFonts.newsreader(fontWeight: FontWeight.w400, fontSize: 18, color: AppColors.textPrimary)),
-          Row(children: [
-            Container(width: 5, height: 5, decoration: BoxDecoration(color: trendColor, shape: BoxShape.circle)),
-            const SizedBox(width: 4),
-            Text('${pct >= 0 ? "+" : ""}${pct.toStringAsFixed(1)}%  ${_trendLabel(trend)}', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: trendColor)),
+        // Color accent strip
+        Container(
+          width: 5,
+          height: 80,
+          decoration: BoxDecoration(
+            color: trendColor,
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Icon(CupertinoIcons.waveform_path, color: trendColor.withValues(alpha: 0.6), size: 22),
+        const SizedBox(width: 12),
+        Expanded(child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(s['name'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+            Text(s['river'], style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
           ]),
-        ]),
+        )),
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            Text('${flow.toStringAsFixed(0)} m³/s', style: GoogleFonts.newsreader(fontWeight: FontWeight.w400, fontSize: 18, color: AppColors.textPrimary)),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              Icon(trendIcon, size: 12, color: trendColor),
+              const SizedBox(width: 3),
+              Text('${pct >= 0 ? "+" : ""}${pct.toStringAsFixed(1)}%  ${_trendLabel(trend)}', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: trendColor)),
+            ]),
+          ]),
+        ),
       ]),
     );
   }
