@@ -9,305 +9,139 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --bg:#FFFFFF;--bg-alt:#FAFAFA;--surface:#F5F5F5;
-            --text:#1A1A1A;--text-2:#6B6B6B;--sep:#E5E5E5;
-            --blue:#0066FF;--blue-bg:#E8F0FE;--teal:#00C2A8;
-            --green:#22C55E;--amber:#F59E0B;--red:#EF4444;
-            --font-sans:'Inter',-apple-system,sans-serif;
-            --font-serif:'Newsreader',Georgia,serif;
-            --radius:14px;--shadow:0 2px 12px rgba(0,0,0,0.06);
-        }
-        html{scroll-behavior:smooth}
-        body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);line-height:1.6}
-
-        /* TOP BAR */
-        .topbar{background:var(--bg);border-bottom:1px solid var(--sep);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-        .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
-        .topbar-logo img{width:28px;height:28px;border-radius:6px}
-        .topbar-logo span{font-family:var(--font-serif);font-size:1.15rem;font-weight:500}
-        .topbar-badge{background:linear-gradient(135deg,var(--teal),var(--blue));color:white;font-size:0.6rem;font-weight:700;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.5px;margin-left:8px}
-        .topbar-user{display:flex;align-items:center;gap:12px;color:var(--text-2);font-size:0.85rem}
-        .topbar-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem}
-
-        /* LAYOUT */
-        .main{max-width:1200px;margin:0 auto;padding:32px 40px}
-        .page-header{margin-bottom:32px}
-        .page-header h1{font-family:var(--font-serif);font-size:1.8rem;font-weight:500;margin-bottom:4px}
-        .page-header p{color:var(--text-2);font-size:0.9rem}
-
-        /* STATS ROW */
-        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
-        .stat-card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:20px 24px;transition:transform 0.2s}
-        .stat-card:hover{transform:translateY(-2px)}
-        .stat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;margin-bottom:12px}
-        .stat-icon.blue{background:var(--blue-bg);color:var(--blue)}
-        .stat-icon.green{background:#DCFCE7;color:var(--green)}
-        .stat-icon.amber{background:#FEF3C7;color:var(--amber)}
-        .stat-icon.teal{background:#CCFBF1;color:var(--teal)}
-        .stat-value{font-size:1.5rem;font-weight:800;margin-bottom:2px}
-        .stat-label{font-size:0.75rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px}
-
-        /* CARDS */
-        .card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:24px;margin-bottom:24px}
-        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-        .card-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2)}
-        .card-action{font-size:0.8rem;color:var(--blue);text-decoration:none;font-weight:600;cursor:pointer}
-
-        /* SHIPMENTS TABLE */
-        .shipments-table{width:100%;border-collapse:collapse}
-        .shipments-table th{text-align:left;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-2);padding:10px 12px;border-bottom:1px solid var(--sep)}
-        .shipments-table td{padding:14px 12px;font-size:0.85rem;border-bottom:1px solid var(--surface);vertical-align:middle}
-        .shipments-table tr:last-child td{border-bottom:none}
-        .shipments-table tr:hover{background:var(--surface)}
-
-        /* STATUS BADGES */
-        .status{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px}
-        .status.transit{background:#DBEAFE;color:#1E40AF}
-        .status.loading{background:#FEF3C7;color:#92400E}
-        .status.delivered{background:#DCFCE7;color:#166534}
-        .status.waiting{background:var(--surface);color:var(--text-2)}
-
-        .route-cell{display:flex;align-items:center;gap:8px}
-        .route-arrow{color:var(--text-2);font-size:0.7rem}
-        .route-port{font-weight:600;font-size:0.82rem}
-        .route-port.origin{color:var(--blue)}
-        .route-port.dest{color:var(--teal)}
-
-        .vessel-name{font-weight:600}
-        .vessel-type{font-size:0.75rem;color:var(--text-2)}
-        .cargo-tons{font-weight:700;font-variant-numeric:tabular-nums}
-        .eta-date{font-weight:600}
-        .eta-days{font-size:0.75rem;color:var(--text-2)}
-
-        /* PROGRESS BAR */
-        .progress-wrap{width:100%;max-width:120px}
-        .progress-bar{height:6px;background:var(--surface);border-radius:3px;overflow:hidden}
-        .progress-fill{height:100%;border-radius:3px;transition:width 0.5s}
-        .progress-fill.blue{background:var(--blue)}
-        .progress-fill.green{background:var(--green)}
-        .progress-fill.amber{background:var(--amber)}
-        .progress-pct{font-size:0.7rem;color:var(--text-2);margin-top:2px}
-
-        /* ACTIVITY FEED */
-        .activity-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--surface)}
-        .activity-item:last-child{border-bottom:none}
-        .activity-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
-        .activity-dot.blue{background:var(--blue)}
-        .activity-dot.green{background:var(--green)}
-        .activity-dot.amber{background:var(--amber)}
-        .activity-text{font-size:0.85rem}
-        .activity-text strong{font-weight:600}
-        .activity-time{font-size:0.75rem;color:var(--text-2);margin-top:2px}
-
-        /* GRID */
-        .grid-2{display:grid;grid-template-columns:2fr 1fr;gap:24px}
-
-        /* EMPTY */
-        .empty-state{text-align:center;padding:60px 20px;color:var(--text-2)}
-        .empty-state i{font-size:2.5rem;margin-bottom:16px;color:var(--sep)}
-        .empty-state h3{font-family:var(--font-serif);color:var(--text);margin-bottom:8px}
-
-        @media(max-width:900px){
-            .stats-row{grid-template-columns:repeat(2,1fr)}
-            .grid-2{grid-template-columns:1fr}
-            .main{padding:20px}
-            .topbar{padding:12px 20px}
-        }
-        @media(max-width:600px){
-            .stats-row{grid-template-columns:1fr}
-            .shipments-table{font-size:0.8rem}
-        }
-    </style>
+    <link rel="stylesheet" href="css/portal-cliente.css">
 </head>
 <body>
-    <!-- TOP BAR -->
-    <header class="topbar">
-        <a href="#" class="topbar-logo">
-            <img src="img/fluvia-logo.jpg" alt="FF">
-            <span>FluviaFleet</span>
-            <span class="topbar-badge">Portal Cliente</span>
-        </a>
-        <div class="topbar-user">
-            <span>Cargill S.A.C.I.</span>
-            <div class="topbar-avatar">CS</div>
+<!-- TOP BAR -->
+<header class="pc-topbar">
+    <a href="#" class="pc-logo"><img src="img/fluvia-logo.jpg" alt="FF"><span>FluviaFleet</span><span class="pc-badge">Portal Cliente</span></a>
+    <nav class="pc-tabs">
+        <a class="pc-tab active" data-tab="embarques" onclick="pcTab(this)"><i class="fas fa-ship"></i> Embarques</a>
+        <a class="pc-tab" data-tab="contratos" onclick="pcTab(this)"><i class="fas fa-file-contract"></i> Contratos</a>
+        <a class="pc-tab" data-tab="documentos" onclick="pcTab(this)"><i class="fas fa-folder-open"></i> Documentos</a>
+        <a class="pc-tab" data-tab="facturacion" onclick="pcTab(this)"><i class="fas fa-file-invoice-dollar"></i> Facturación</a>
+        <a class="pc-tab" data-tab="soporte" onclick="pcTab(this)"><i class="fas fa-headset"></i> Soporte</a>
+    </nav>
+    <div class="pc-user"><span>Cargill S.A.C.I.</span><div class="pc-avatar">CS</div></div>
+</header>
+
+<main class="pc-main">
+    <!-- EMBARQUES -->
+    <section class="pc-section active" id="tab-embarques">
+        <div class="pc-header"><h1>Mis Embarques</h1><p>Seguimiento en tiempo real de tus cargas</p></div>
+        <div class="pc-kpis">
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-em"><i class="fas fa-ship"></i></div><div class="pc-kpi-val">7</div><div class="pc-kpi-lbl">Embarques activos</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ok"><i class="fas fa-check-circle"></i></div><div class="pc-kpi-val">23</div><div class="pc-kpi-lbl">Entregados (mes)</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ton"><i class="fas fa-weight-hanging"></i></div><div class="pc-kpi-val">42.6K</div><div class="pc-kpi-lbl">Toneladas en tránsito</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-eta"><i class="fas fa-clock"></i></div><div class="pc-kpi-val">4.2d</div><div class="pc-kpi-lbl">ETA promedio</div></div>
         </div>
-    </header>
-
-    <main class="main">
-        <div class="page-header">
-            <h1>Mis Embarques</h1>
-            <p>Seguimiento en tiempo real de tus cargas en la Hidrovía Paraguay-Paraná.</p>
-        </div>
-
-        <!-- STATS -->
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="stat-icon blue"><i class="fas fa-ship"></i></div>
-                <div class="stat-value">7</div>
-                <div class="stat-label">Embarques activos</div>
+        <div class="pc-grid">
+            <div class="pc-card">
+                <div class="pc-card-h"><span>EMBARQUES EN CURSO</span><span class="pc-link"><i class="fas fa-download"></i> Exportar</span></div>
+                <table class="pc-table"><thead><tr><th>Ruta</th><th>Embarcación</th><th>Carga</th><th>Progreso</th><th>Estado</th><th>ETA</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="rt-o">ASU</span><span class="rt-a">→</span><span class="rt-d">ROE</span></td><td><strong>R/M Hércules</strong><br><small>Convoy 6 bz</small></td><td><strong>8,400</strong> ton</td><td><div class="pbar"><div class="pfill" style="width:72%"></div></div><small>72%</small></td><td><span class="st st-transit"><i class="fas fa-ship"></i> En tránsito</span></td><td><strong>10 May</strong><br><small>4 días</small></td></tr>
+                    <tr><td><span class="rt-o">VCO</span><span class="rt-a">→</span><span class="rt-d">SLO</span></td><td><strong>R/M Paraná I</strong><br><small>Convoy 4 bz</small></td><td><strong>5,200</strong> ton</td><td><div class="pbar"><div class="pfill" style="width:45%"></div></div><small>45%</small></td><td><span class="st st-transit"><i class="fas fa-ship"></i> En tránsito</span></td><td><strong>13 May</strong><br><small>7 días</small></td></tr>
+                    <tr><td><span class="rt-o">ROE</span><span class="rt-a">→</span><span class="rt-d">BHI</span></td><td><strong>R/M Guaraní</strong><br><small>Convoy 8 bz</small></td><td><strong>12,800</strong> ton</td><td><div class="pbar"><div class="pfill pf-am" style="width:15%"></div></div><small>15%</small></td><td><span class="st st-load"><i class="fas fa-anchor"></i> Cargando</span></td><td><strong>18 May</strong><br><small>12 días</small></td></tr>
+                    <tr><td><span class="rt-o">CDB</span><span class="rt-a">→</span><span class="rt-d">ROE</span></td><td><strong>R/M Itapúa</strong><br><small>Convoy 5 bz</small></td><td><strong>7,500</strong> ton</td><td><div class="pbar"><div class="pfill pf-gr" style="width:98%"></div></div><small>98%</small></td><td><span class="st st-ok"><i class="fas fa-check"></i> Llegando</span></td><td><strong>Hoy</strong><br><small>~3 horas</small></td></tr>
+                    <tr><td><span class="rt-o">ASU</span><span class="rt-a">→</span><span class="rt-d">SNI</span></td><td><strong>R/M Chaco</strong><br><small>Convoy 3 bz</small></td><td><strong>4,200</strong> ton</td><td><div class="pbar"><div class="pfill" style="width:0%"></div></div><small>0%</small></td><td><span class="st st-wait"><i class="fas fa-hourglass"></i> Programado</span></td><td><strong>20 May</strong><br><small>14 días</small></td></tr>
+                </tbody></table>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
-                <div class="stat-value">23</div>
-                <div class="stat-label">Entregados (mes)</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon amber"><i class="fas fa-weight-hanging"></i></div>
-                <div class="stat-value">42.6K</div>
-                <div class="stat-label">Toneladas en tránsito</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon teal"><i class="fas fa-clock"></i></div>
-                <div class="stat-value">4.2d</div>
-                <div class="stat-label">ETA promedio</div>
-            </div>
-        </div>
-
-        <div class="grid-2">
-            <!-- SHIPMENTS TABLE -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">EMBARQUES EN CURSO</span>
-                    <span class="card-action"><i class="fas fa-download"></i> Exportar</span>
-                </div>
-                <table class="shipments-table">
-                    <thead>
-                        <tr>
-                            <th>Ruta</th>
-                            <th>Embarcación</th>
-                            <th>Carga</th>
-                            <th>Progreso</th>
-                            <th>Estado</th>
-                            <th>ETA</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><div class="route-cell"><span class="route-port origin">ASU</span><span class="route-arrow">→</span><span class="route-port dest">ROE</span></div></td>
-                            <td><div class="vessel-name">R/M Hércules</div><div class="vessel-type">Convoy 6 barcazas</div></td>
-                            <td><span class="cargo-tons">8,400</span> ton</td>
-                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill blue" style="width:72%"></div></div><div class="progress-pct">72%</div></div></td>
-                            <td><span class="status transit"><i class="fas fa-ship"></i> En tránsito</span></td>
-                            <td><div class="eta-date">10 May</div><div class="eta-days">en 4 días</div></td>
-                        </tr>
-                        <tr>
-                            <td><div class="route-cell"><span class="route-port origin">VCO</span><span class="route-arrow">→</span><span class="route-port dest">SLO</span></div></td>
-                            <td><div class="vessel-name">R/M Paraná I</div><div class="vessel-type">Convoy 4 barcazas</div></td>
-                            <td><span class="cargo-tons">5,200</span> ton</td>
-                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill blue" style="width:45%"></div></div><div class="progress-pct">45%</div></div></td>
-                            <td><span class="status transit"><i class="fas fa-ship"></i> En tránsito</span></td>
-                            <td><div class="eta-date">13 May</div><div class="eta-days">en 7 días</div></td>
-                        </tr>
-                        <tr>
-                            <td><div class="route-cell"><span class="route-port origin">ROE</span><span class="route-arrow">→</span><span class="route-port dest">BHI</span></div></td>
-                            <td><div class="vessel-name">R/M Guaraní</div><div class="vessel-type">Convoy 8 barcazas</div></td>
-                            <td><span class="cargo-tons">12,800</span> ton</td>
-                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill amber" style="width:15%"></div></div><div class="progress-pct">15%</div></div></td>
-                            <td><span class="status loading"><i class="fas fa-crane"></i> Cargando</span></td>
-                            <td><div class="eta-date">18 May</div><div class="eta-days">en 12 días</div></td>
-                        </tr>
-                        <tr>
-                            <td><div class="route-cell"><span class="route-port origin">CDB</span><span class="route-arrow">→</span><span class="route-port dest">ROE</span></div></td>
-                            <td><div class="vessel-name">R/M Itapúa</div><div class="vessel-type">Convoy 5 barcazas</div></td>
-                            <td><span class="cargo-tons">7,500</span> ton</td>
-                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill green" style="width:98%"></div></div><div class="progress-pct">98%</div></div></td>
-                            <td><span class="status delivered"><i class="fas fa-check"></i> Llegando</span></td>
-                            <td><div class="eta-date">Hoy</div><div class="eta-days">~3 horas</div></td>
-                        </tr>
-                        <tr>
-                            <td><div class="route-cell"><span class="route-port origin">ASU</span><span class="route-arrow">→</span><span class="route-port dest">SNI</span></div></td>
-                            <td><div class="vessel-name">R/M Chaco</div><div class="vessel-type">Convoy 3 barcazas</div></td>
-                            <td><span class="cargo-tons">4,200</span> ton</td>
-                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill blue" style="width:0%"></div></div><div class="progress-pct">0%</div></div></td>
-                            <td><span class="status waiting"><i class="fas fa-hourglass"></i> Programado</span></td>
-                            <td><div class="eta-date">20 May</div><div class="eta-days">en 14 días</div></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- ACTIVITY FEED -->
             <div>
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">ACTIVIDAD RECIENTE</span>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot green"></div>
-                        <div>
-                            <div class="activity-text"><strong>R/M Itapúa</strong> llegó a zona de fondeo en Rosario</div>
-                            <div class="activity-time">Hace 23 minutos</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot blue"></div>
-                        <div>
-                            <div class="activity-text"><strong>R/M Hércules</strong> pasó km 1,180 — Santa Fe</div>
-                            <div class="activity-time">Hace 2 horas</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot amber"></div>
-                        <div>
-                            <div class="activity-text"><strong>R/M Guaraní</strong> — carga iniciada en Terminal ROE</div>
-                            <div class="activity-time">Hace 5 horas</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot blue"></div>
-                        <div>
-                            <div class="activity-text"><strong>R/M Paraná I</strong> pasó Confluencia (km 1,620)</div>
-                            <div class="activity-time">Hace 8 horas</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot green"></div>
-                        <div>
-                            <div class="activity-text"><strong>Convoy C-41</strong> — descarga completada en San Lorenzo</div>
-                            <div class="activity-time">Ayer, 18:30</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot green"></div>
-                        <div>
-                            <div class="activity-text">Factura <strong>#0001-004518</strong> disponible para descarga</div>
-                            <div class="activity-time">Ayer, 14:15</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">DOCUMENTOS RECIENTES</span>
-                        <span class="card-action">Ver todos</span>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot blue"></div>
-                        <div>
-                            <div class="activity-text"><i class="fas fa-file-pdf" style="color:var(--red);margin-right:6px"></i> BL-2026-04521.pdf</div>
-                            <div class="activity-time">Conocimiento de embarque — C-47</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot blue"></div>
-                        <div>
-                            <div class="activity-text"><i class="fas fa-file-pdf" style="color:var(--red);margin-right:6px"></i> FACTURA-004518.pdf</div>
-                            <div class="activity-time">Factura de flete — C-41</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-dot blue"></div>
-                        <div>
-                            <div class="activity-text"><i class="fas fa-file-pdf" style="color:var(--red);margin-right:6px"></i> CERT-CALIDAD-S204.pdf</div>
-                            <div class="activity-time">Certificado de calidad — Soja lote 204</div>
-                        </div>
-                    </div>
+                <div class="pc-card">
+                    <div class="pc-card-h"><span>ACTIVIDAD RECIENTE</span></div>
+                    <div class="pc-act"><div class="pc-dot dot-gr"></div><div><strong>R/M Itapúa</strong> llegó a zona de fondeo en Rosario<br><small>Hace 23 min</small></div></div>
+                    <div class="pc-act"><div class="pc-dot dot-em"></div><div><strong>R/M Hércules</strong> pasó km 1,180 — Santa Fe<br><small>Hace 2 horas</small></div></div>
+                    <div class="pc-act"><div class="pc-dot dot-am"></div><div><strong>R/M Guaraní</strong> — carga iniciada en Terminal ROE<br><small>Hace 5 horas</small></div></div>
+                    <div class="pc-act"><div class="pc-dot dot-em"></div><div><strong>R/M Paraná I</strong> pasó Confluencia (km 1,620)<br><small>Hace 8 horas</small></div></div>
+                    <div class="pc-act"><div class="pc-dot dot-gr"></div><div>Factura <strong>#0001-004518</strong> disponible para descarga<br><small>Ayer, 14:15</small></div></div>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
+
+    <!-- CONTRATOS -->
+    <section class="pc-section" id="tab-contratos">
+        <div class="pc-header"><h1>Mis Contratos</h1><p>Contratos de flete activos con FluviaFleet</p></div>
+        <div class="pc-kpis">
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ok"><i class="fas fa-check-circle"></i></div><div class="pc-kpi-val">4</div><div class="pc-kpi-lbl">Contratos activos</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ton"><i class="fas fa-weight-hanging"></i></div><div class="pc-kpi-val">340K</div><div class="pc-kpi-lbl">Ton contratadas</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-em"><i class="fas fa-percentage"></i></div><div class="pc-kpi-val">72%</div><div class="pc-kpi-lbl">Ejecución acumulada</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-eta"><i class="fas fa-calendar"></i></div><div class="pc-kpi-val">Jul 2026</div><div class="pc-kpi-lbl">Próximo vencimiento</div></div>
+        </div>
+        <div class="pc-card">
+            <div class="pc-card-h"><span>CONTRATOS VIGENTES</span></div>
+            <table class="pc-table"><thead><tr><th>Contrato</th><th>Ruta</th><th>Volumen</th><th>Ejecutado</th><th>Tarifa</th><th>Vence</th><th>Estado</th></tr></thead>
+            <tbody>
+                <tr><td><strong>CF-2026-001</strong></td><td><span class="rt-o">ASU</span><span class="rt-a">→</span><span class="rt-d">ROE</span></td><td>120,000 ton</td><td><div class="pbar"><div class="pfill" style="width:72%"></div></div><small>86,400 ton</small></td><td>$12.50/ton</td><td>15 Jul 2026</td><td><span class="st st-ok">Activo</span></td></tr>
+                <tr><td><strong>CF-2026-002</strong></td><td><span class="rt-o">CDB</span><span class="rt-a">→</span><span class="rt-d">SLO</span></td><td>80,000 ton</td><td><div class="pbar"><div class="pfill pf-am" style="width:55%"></div></div><small>44,000 ton</small></td><td>$11.80/ton</td><td>30 Jun 2026</td><td><span class="st st-load">Por vencer</span></td></tr>
+                <tr><td><strong>CF-2026-003</strong></td><td><span class="rt-o">VCO</span><span class="rt-a">→</span><span class="rt-d">BHI</span></td><td>60,000 ton</td><td><div class="pbar"><div class="pfill" style="width:88%"></div></div><small>52,800 ton</small></td><td>$14.20/ton</td><td>20 Ago 2026</td><td><span class="st st-ok">Activo</span></td></tr>
+                <tr><td><strong>CF-2026-004</strong></td><td><span class="rt-o">ASU</span><span class="rt-a">→</span><span class="rt-d">SNI</span></td><td>40,000 ton</td><td><div class="pbar"><div class="pfill pf-gr" style="width:30%"></div></div><small>12,000 ton</small></td><td>$13.00/ton</td><td>31 Dic 2026</td><td><span class="st st-ok">Activo</span></td></tr>
+            </tbody></table>
+        </div>
+    </section>
+
+    <!-- DOCUMENTOS -->
+    <section class="pc-section" id="tab-documentos">
+        <div class="pc-header"><h1>Documentos</h1><p>Conocimientos de embarque, certificados y reportes</p></div>
+        <div class="pc-card">
+            <div class="pc-card-h"><span>DOCUMENTOS DISPONIBLES</span><span class="pc-link"><i class="fas fa-filter"></i> Filtrar</span></div>
+            <table class="pc-table"><thead><tr><th>Documento</th><th>Tipo</th><th>Embarque</th><th>Fecha</th><th>Acción</th></tr></thead>
+            <tbody>
+                <tr><td><i class="fas fa-file-pdf" style="color:#EF4444;margin-right:8px"></i><strong>BL-2026-04521.pdf</strong></td><td><span class="doc-tag tag-bl">BL</span></td><td>C-47 (ASU→ROE)</td><td>6 May 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+                <tr><td><i class="fas fa-file-invoice" style="color:#7C3AED;margin-right:8px"></i><strong>FACTURA-004518.pdf</strong></td><td><span class="doc-tag tag-inv">Factura</span></td><td>C-41 (VCO→SLO)</td><td>5 May 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+                <tr><td><i class="fas fa-certificate" style="color:#059669;margin-right:8px"></i><strong>CERT-CALIDAD-S204.pdf</strong></td><td><span class="doc-tag tag-cert">Certificado</span></td><td>Lote Soja 204</td><td>4 May 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+                <tr><td><i class="fas fa-file-pdf" style="color:#EF4444;margin-right:8px"></i><strong>BL-2026-04499.pdf</strong></td><td><span class="doc-tag tag-bl">BL</span></td><td>C-38 (CDB→ROE)</td><td>1 May 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+                <tr><td><i class="fas fa-chart-bar" style="color:#0066FF;margin-right:8px"></i><strong>REPORTE-MENSUAL-ABR.pdf</strong></td><td><span class="doc-tag tag-rep">Reporte</span></td><td>Resumen Abril 2026</td><td>30 Abr 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+            </tbody></table>
+        </div>
+    </section>
+
+    <!-- FACTURACION -->
+    <section class="pc-section" id="tab-facturacion">
+        <div class="pc-header"><h1>Facturación</h1><p>Estado de cuenta y facturas emitidas</p></div>
+        <div class="pc-kpis">
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-em"><i class="fas fa-file-invoice-dollar"></i></div><div class="pc-kpi-val">$184,200</div><div class="pc-kpi-lbl">Facturado este mes</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ok"><i class="fas fa-check-double"></i></div><div class="pc-kpi-val">12</div><div class="pc-kpi-lbl">Facturas pagadas</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-am"><i class="fas fa-clock"></i></div><div class="pc-kpi-val">2</div><div class="pc-kpi-lbl">Pendientes de pago</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-eta"><i class="fas fa-calendar-alt"></i></div><div class="pc-kpi-val">$24,990</div><div class="pc-kpi-lbl">Próximo vencimiento</div></div>
+        </div>
+        <div class="pc-card">
+            <div class="pc-card-h"><span>HISTORIAL DE FACTURAS</span></div>
+            <table class="pc-table"><thead><tr><th>Factura</th><th>Concepto</th><th>Monto</th><th>Fecha</th><th>Estado</th></tr></thead>
+            <tbody>
+                <tr><td><strong>#0001-004520</strong></td><td>Flete C-47 ASU→ROE (8,400 ton)</td><td><strong>$105,000</strong></td><td>6 May 2026</td><td><span class="st st-load">Pendiente</span></td></tr>
+                <tr><td><strong>#0001-004518</strong></td><td>Flete C-41 VCO→SLO (5,200 ton)</td><td><strong>$61,360</strong></td><td>1 May 2026</td><td><span class="st st-ok">Pagada</span></td></tr>
+                <tr><td><strong>#0001-004510</strong></td><td>Flete C-38 CDB→ROE (7,500 ton)</td><td><strong>$88,500</strong></td><td>25 Abr 2026</td><td><span class="st st-ok">Pagada</span></td></tr>
+                <tr><td><strong>#0001-004502</strong></td><td>Plan Enterprise — Mayo 2026</td><td><strong>$24,990</strong></td><td>1 May 2026</td><td><span class="st st-ok">Pagada</span></td></tr>
+            </tbody></table>
+        </div>
+    </section>
+
+    <!-- SOPORTE -->
+    <section class="pc-section" id="tab-soporte">
+        <div class="pc-header"><h1>Soporte</h1><p>Centro de ayuda y contacto directo</p></div>
+        <div class="pc-grid-3">
+            <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-headset"></i></div><h3>Chat en vivo</h3><p>Hablá con un agente ahora</p><button class="pc-sup-btn">Iniciar Chat</button></div>
+            <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-envelope"></i></div><h3>Email</h3><p>soporte@fluviafleet.com</p><button class="pc-sup-btn">Enviar Email</button></div>
+            <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-phone"></i></div><h3>Teléfono</h3><p>+595 21 445 8800</p><button class="pc-sup-btn">Llamar</button></div>
+        </div>
+        <div class="pc-card">
+            <div class="pc-card-h"><span>TICKETS RECIENTES</span></div>
+            <div class="pc-act"><div class="pc-dot dot-gr"></div><div><strong>#T-0045</strong> — Consulta sobre ETA del convoy C-47<br><small>Resuelto · 8 May 2026</small></div></div>
+            <div class="pc-act"><div class="pc-dot dot-am"></div><div><strong>#T-0042</strong> — Solicitud de certificado de calidad lote 198<br><small>En proceso · 5 May 2026</small></div></div>
+            <div class="pc-act"><div class="pc-dot dot-gr"></div><div><strong>#T-0039</strong> — Actualización de datos de facturación<br><small>Resuelto · 28 Abr 2026</small></div></div>
+        </div>
+    </section>
+</main>
+
+<script>
+function pcTab(el){
+    document.querySelectorAll('.pc-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.pc-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('tab-'+el.dataset.tab).classList.add('active');
+}
+</script>
 </body>
 </html>
