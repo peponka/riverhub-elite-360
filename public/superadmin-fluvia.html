@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperAdmin — FluviaFleet</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/superadmin.css">
+</head>
+<body>
+<!-- LOGIN OVERLAY -->
+<div class="sa-login-overlay" id="saLogin">
+    <div class="sa-login-card">
+        <div class="sa-login-logo"><img src="img/fluvia-logo.jpg" alt="FF"><span>FluviaFleet</span></div>
+        <div class="sa-login-badge">SUPERADMIN</div>
+        <h2>Acceso Restringido</h2>
+        <p>Ingresá tus credenciales de administrador</p>
+        <label>EMAIL</label>
+        <input type="email" id="saEmail" placeholder="admin@fluviafleet.com">
+        <label>CONTRASEÑA</label>
+        <input type="password" id="saPass" placeholder="••••••••">
+        <div class="sa-login-error" id="saError"></div>
+        <button onclick="saDoLogin()" id="saBtn">Ingresar al Panel</button>
+        <a href="fluvia.html" class="sa-back">← Volver al portal</a>
+    </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="sa-layout" id="saLayout" style="display:none">
+    <!-- SIDEBAR -->
+    <aside class="sa-sidebar">
+        <div class="sa-sidebar-top">
+            <img src="img/fluvia-logo.jpg" alt="FF" class="sa-logo-img">
+            <span class="sa-logo-text">FluviaFleet</span>
+            <span class="sa-role-badge">SUPER</span>
+        </div>
+        <nav class="sa-nav">
+            <div class="sa-nav-label">OVERVIEW</div>
+            <a class="sa-nav-link active" data-section="dashboard" onclick="saNav(this)"><i class="fas fa-chart-pie"></i>Dashboard</a>
+            <a class="sa-nav-link" data-section="users" onclick="saNav(this)"><i class="fas fa-users-cog"></i>Usuarios</a>
+            <a class="sa-nav-link" data-section="fleet" onclick="saNav(this)"><i class="fas fa-ship"></i>Flota</a>
+            <div class="sa-nav-label">FINANZAS</div>
+            <a class="sa-nav-link" data-section="billing" onclick="saNav(this)"><i class="fas fa-dollar-sign"></i>Facturación</a>
+            <div class="sa-nav-label">SISTEMA</div>
+            <a class="sa-nav-link" data-section="logs" onclick="saNav(this)"><i class="fas fa-list-alt"></i>Logs</a>
+            <a class="sa-nav-link" data-section="config" onclick="saNav(this)"><i class="fas fa-cog"></i>Configuración</a>
+        </nav>
+        <div class="sa-sidebar-bottom">
+            <div class="sa-user-pill"><div class="sa-avatar">PA</div><span>Pedro Admin</span></div>
+            <a href="fluvia.html" class="sa-logout"><i class="fas fa-sign-out-alt"></i>Salir</a>
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="sa-main">
+        <!-- DASHBOARD -->
+        <section class="sa-section active" id="sec-dashboard">
+            <div class="sa-header"><h1>Dashboard Ejecutivo</h1><p>Vista general del sistema FluviaFleet</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-dollar-sign"></i></div><div class="sa-kpi-val">$287,450</div><div class="sa-kpi-label">Ingresos Mensuales</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +12.5%</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-users"></i></div><div class="sa-kpi-val">1,247</div><div class="sa-kpi-label">Usuarios Activos</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +8.3%</div></div>
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-ship"></i></div><div class="sa-kpi-val">34</div><div class="sa-kpi-label">Embarcaciones Activas</div><div class="sa-kpi-trend neutral"><i class="fas fa-minus"></i> 0%</div></div>
+                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="sa-kpi-val">3</div><div class="sa-kpi-label">Alertas Críticas</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> -25%</div></div>
+            </div>
+            <div class="sa-grid-2">
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>INGRESOS MENSUALES (USD)</span></div>
+                    <div class="sa-chart-bars">
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:45%"></div><span>Ene</span></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:55%"></div><span>Feb</span></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:50%"></div><span>Mar</span></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:65%"></div><span>Abr</span></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:72%"></div><span>May</span></div>
+                        <div class="sa-bar-col"><div class="sa-bar highlight" style="height:85%"></div><span>Jun</span></div>
+                    </div>
+                </div>
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>ACTIVIDAD RECIENTE</span></div>
+                    <div class="sa-activity"><div class="sa-act-dot green"></div><div><strong>Cargill S.A.</strong> renovó plan Enterprise<br><small>Hace 23 min</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot blue"></div><div><strong>R/M Hércules</strong> pasó checkpoint km 1,180<br><small>Hace 1 hora</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot amber"></div><div><strong>Alerta:</strong> Nivel bajo en río Paraguay km 780<br><small>Hace 3 horas</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot red"></div><div><strong>Sistema:</strong> Pico de CPU en servidor Render<br><small>Hace 5 horas</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot blue"></div><div><strong>Usuario nuevo:</strong> transportes.sur@gmail.com<br><small>Ayer 18:30</small></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- USERS -->
+        <section class="sa-section" id="sec-users">
+            <div class="sa-header"><h1>Gestión de Usuarios</h1><p>Administrar cuentas y permisos del sistema</p></div>
+            <div class="sa-toolbar"><input type="text" placeholder="Buscar usuario..." class="sa-search"><button class="sa-btn-add"><i class="fas fa-plus"></i> Nuevo Usuario</button></div>
+            <div class="sa-card sa-table-card">
+                <table class="sa-table">
+                    <thead><tr><th>Usuario</th><th>Email</th><th>Rol</th><th>Último Login</th><th>Estado</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-red">PA</div>Pedro Administrador</div></td><td>pedro@fluviafleet.com</td><td><span class="sa-role-chip role-super">SuperAdmin</span></td><td>Hoy, 13:40</td><td><span class="sa-status-dot online"></span>Online</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
+                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-blue">MG</div>María González</div></td><td>maria.g@cargill.com</td><td><span class="sa-role-chip role-admin">Admin</span></td><td>Hoy, 11:20</td><td><span class="sa-status-dot online"></span>Online</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
+                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-teal">JR</div>Juan Rodríguez</div></td><td>jrodriguez@naviera.py</td><td><span class="sa-role-chip role-op">Operador</span></td><td>Ayer, 18:45</td><td><span class="sa-status-dot offline"></span>Offline</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
+                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-gray">CL</div>Carlos López</div></td><td>clopez@dreyfus.com</td><td><span class="sa-role-chip role-client">Cliente</span></td><td>10 May, 09:15</td><td><span class="sa-status-dot online"></span>Online</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
+                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-blue">AS</div>Ana Sánchez</div></td><td>asanchez@bunge.com</td><td><span class="sa-role-chip role-client">Cliente</span></td><td>9 May, 14:30</td><td><span class="sa-status-dot offline"></span>Offline</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FLEET -->
+        <section class="sa-section" id="sec-fleet">
+            <div class="sa-header"><h1>Gestión de Flota</h1><p>Estado operativo de todas las embarcaciones</p></div>
+            <div class="sa-fleet-stats">
+                <div class="sa-fleet-stat"><div class="sa-fs-num">18</div><div class="sa-fs-label">Navegando</div><div class="sa-fs-bar blue-bar" style="width:53%"></div></div>
+                <div class="sa-fleet-stat"><div class="sa-fs-num">9</div><div class="sa-fs-label">En Puerto</div><div class="sa-fs-bar green-bar" style="width:26%"></div></div>
+                <div class="sa-fleet-stat"><div class="sa-fs-num">5</div><div class="sa-fs-label">Mantenimiento</div><div class="sa-fs-bar amber-bar" style="width:15%"></div></div>
+                <div class="sa-fleet-stat"><div class="sa-fs-num">2</div><div class="sa-fs-label">Fuera Servicio</div><div class="sa-fs-bar red-bar" style="width:6%"></div></div>
+            </div>
+            <div class="sa-fleet-grid" id="fleetGrid"></div>
+        </section>
+
+        <!-- BILLING -->
+        <section class="sa-section" id="sec-billing">
+            <div class="sa-header"><h1>Facturación y Revenue</h1><p>Resumen financiero del sistema</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-chart-line"></i></div><div class="sa-kpi-val">$287,450</div><div class="sa-kpi-label">MRR (Monthly Recurring)</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +12.5%</div></div>
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-file-invoice"></i></div><div class="sa-kpi-val">89</div><div class="sa-kpi-label">Suscripciones Activas</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +5</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-hand-holding-usd"></i></div><div class="sa-kpi-val">$3,230</div><div class="sa-kpi-label">ARPU</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +2.1%</div></div>
+                <div class="sa-kpi kpi-amber"><div class="sa-kpi-icon"><i class="fas fa-exclamation-circle"></i></div><div class="sa-kpi-val">4</div><div class="sa-kpi-label">Pagos Pendientes</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> -2</div></div>
+            </div>
+            <div class="sa-card">
+                <div class="sa-card-head"><span>SUSCRIPCIONES POR PLAN</span></div>
+                <div class="sa-plan-bars">
+                    <div class="sa-plan-row"><span class="sa-plan-name">Barcaza</span><div class="sa-plan-bar"><div class="sa-plan-fill" style="width:25%;background:var(--teal)"></div></div><span class="sa-plan-count">22</span></div>
+                    <div class="sa-plan-row"><span class="sa-plan-name">Convoy Combo</span><div class="sa-plan-bar"><div class="sa-plan-fill" style="width:45%;background:var(--blue)"></div></div><span class="sa-plan-count">40</span></div>
+                    <div class="sa-plan-row"><span class="sa-plan-name">Enterprise</span><div class="sa-plan-bar"><div class="sa-plan-fill" style="width:20%;background:var(--amber)"></div></div><span class="sa-plan-count">18</span></div>
+                    <div class="sa-plan-row"><span class="sa-plan-name">Ilimitado</span><div class="sa-plan-bar"><div class="sa-plan-fill" style="width:10%;background:var(--red)"></div></div><span class="sa-plan-count">9</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOGS -->
+        <section class="sa-section" id="sec-logs">
+            <div class="sa-header"><h1>Logs del Sistema</h1><p>Registro de actividad y eventos</p></div>
+            <div class="sa-toolbar">
+                <select class="sa-select"><option>Todos los tipos</option><option>Auth</option><option>Sistema</option><option>Operaciones</option><option>Errores</option></select>
+                <select class="sa-select"><option>Últimas 24h</option><option>Última semana</option><option>Último mes</option></select>
+            </div>
+            <div class="sa-card">
+                <div class="sa-log-item"><span class="sa-log-badge log-auth">AUTH</span><span class="sa-log-text">Login exitoso: pedro@fluviafleet.com</span><span class="sa-log-time">13:40</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-ops">OPS</span><span class="sa-log-text">R/M Hércules — reporte de posición recibido (km 1,180)</span><span class="sa-log-time">13:12</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-sys">SYS</span><span class="sa-log-text">Backup automático completado — 2.3 GB</span><span class="sa-log-time">12:00</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-error">ERROR</span><span class="sa-log-text">Gemini API rate limit (429) — reintentos: 3/5</span><span class="sa-log-time">11:45</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-auth">AUTH</span><span class="sa-log-text">Nuevo registro: transportes.sur@gmail.com via Google OAuth</span><span class="sa-log-time">10:30</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-ops">OPS</span><span class="sa-log-text">Convoy C-47 — carga completada en Terminal ROE (12,800 ton)</span><span class="sa-log-time">09:15</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-sys">SYS</span><span class="sa-log-text">SSL certificate renovado — fluviafleet.com (válido hasta 2027)</span><span class="sa-log-time">08:00</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-error">ERROR</span><span class="sa-log-text">FCM push delivery failed — token expirado (3 dispositivos)</span><span class="sa-log-time">07:22</span></div>
+            </div>
+        </section>
+
+        <!-- CONFIG -->
+        <section class="sa-section" id="sec-config">
+            <div class="sa-header"><h1>Configuración del Sistema</h1><p>Ajustes globales y estado de servicios</p></div>
+            <div class="sa-grid-2">
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>FUNCIONALIDADES</span></div>
+                    <div class="sa-toggle-row"><span>Modo Mantenimiento</span><label class="sa-switch"><input type="checkbox"><span class="sa-slider"></span></label></div>
+                    <div class="sa-toggle-row"><span>Copiloto IA (Gemini)</span><label class="sa-switch"><input type="checkbox" checked><span class="sa-slider"></span></label></div>
+                    <div class="sa-toggle-row"><span>Push Notifications</span><label class="sa-switch"><input type="checkbox" checked><span class="sa-slider"></span></label></div>
+                    <div class="sa-toggle-row"><span>Invoice Intelligence</span><label class="sa-switch"><input type="checkbox" checked><span class="sa-slider"></span></label></div>
+                    <div class="sa-toggle-row"><span>Registro público</span><label class="sa-switch"><input type="checkbox" checked><span class="sa-slider"></span></label></div>
+                </div>
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>HEALTH CHECK</span></div>
+                    <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Supabase Database</span><span class="sa-health-ms">23ms</span></div>
+                    <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Supabase Auth</span><span class="sa-health-ms">45ms</span></div>
+                    <div class="sa-health-row"><span class="sa-health-dot amber"></span><span>Gemini AI API</span><span class="sa-health-ms">890ms</span></div>
+                    <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Firebase FCM</span><span class="sa-health-ms">120ms</span></div>
+                    <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Render Server</span><span class="sa-health-ms">67ms</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+// SuperAdmin credentials (hardcoded for demo)
+const SA_EMAIL='pedro@fluviafleet.com', SA_PASS='fluvia2026super';
+
+function saDoLogin(){
+    var e=document.getElementById('saEmail').value.trim(),p=document.getElementById('saPass').value,err=document.getElementById('saError');
+    if(e===SA_EMAIL&&p===SA_PASS){document.getElementById('saLogin').style.display='none';document.getElementById('saLayout').style.display='flex';err.textContent='';}
+    else{err.textContent='Credenciales incorrectas. Contacte al administrador.';}
+}
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('saLogin').style.display!=='none')saDoLogin();});
+
+function saNav(el){
+    document.querySelectorAll('.sa-nav-link').forEach(l=>l.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.sa-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('sec-'+el.dataset.section).classList.add('active');
+}
+
+// Fleet grid
+var vessels=[
+    {name:'R/M Hércules',type:'Remolcador',status:'Navegando',loc:'km 1,180',color:'blue'},
+    {name:'R/M Paraná I',type:'Remolcador',status:'Navegando',loc:'km 1,620',color:'blue'},
+    {name:'R/M Guaraní',type:'Remolcador',status:'En Puerto',loc:'Rosario',color:'green'},
+    {name:'R/M Itapúa',type:'Remolcador',status:'Navegando',loc:'km 890',color:'blue'},
+    {name:'R/M Chaco',type:'Remolcador',status:'En Puerto',loc:'Asunción',color:'green'},
+    {name:'BZ-101',type:'Barcaza',status:'Navegando',loc:'Convoy C-47',color:'blue'},
+    {name:'BZ-102',type:'Barcaza',status:'Mantenimiento',loc:'Dique seco',color:'amber'},
+    {name:'BZ-103',type:'Barcaza',status:'Navegando',loc:'Convoy C-47',color:'blue'},
+    {name:'BZ-104',type:'Barcaza',status:'Fuera Servicio',loc:'Reparación mayor',color:'red'},
+    {name:'BZ-105',type:'Barcaza',status:'En Puerto',loc:'San Lorenzo',color:'green'},
+    {name:'BZ-106',type:'Barcaza',status:'Navegando',loc:'Convoy C-41',color:'blue'},
+    {name:'BZ-107',type:'Barcaza',status:'Mantenimiento',loc:'Inspección anual',color:'amber'},
+];
+var fg=document.getElementById('fleetGrid');
+if(fg)fg.innerHTML=vessels.map(v=>`<div class="sa-vessel-card vc-${v.color}"><div class="sa-vc-status ${v.color}"></div><div class="sa-vc-name">${v.name}</div><div class="sa-vc-type">${v.type}</div><div class="sa-vc-loc"><i class="fas fa-map-marker-alt"></i> ${v.loc}</div><span class="sa-vc-badge badge-${v.color}">${v.status}</span></div>`).join('');
+</script>
+</body>
+</html>
