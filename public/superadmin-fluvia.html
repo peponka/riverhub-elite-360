@@ -59,32 +59,111 @@
     <main class="sa-main">
         <!-- DASHBOARD -->
         <section class="sa-section active" id="sec-dashboard">
-            <div class="sa-header"><h1>Dashboard Ejecutivo</h1><p>Vista general del sistema FluviaFleet</p></div>
+            <div class="sa-header"><h1>Dashboard Ejecutivo <span style="background:linear-gradient(135deg,var(--red),var(--amber));color:white;font-size:0.5rem;font-weight:800;padding:4px 10px;border-radius:6px;vertical-align:middle;letter-spacing:1px">LIVE</span></h1><p>Centro de comando — FluviaFleet Platform</p></div>
+
+            <!-- ROW 1: KPIs principales -->
             <div class="sa-kpi-row">
-                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-dollar-sign"></i></div><div class="sa-kpi-val">$287,450</div><div class="sa-kpi-label">Ingresos Mensuales</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +12.5%</div></div>
-                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-users"></i></div><div class="sa-kpi-val">1,247</div><div class="sa-kpi-label">Usuarios Activos</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +8.3%</div></div>
-                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-ship"></i></div><div class="sa-kpi-val">34</div><div class="sa-kpi-label">Embarcaciones Activas</div><div class="sa-kpi-trend neutral"><i class="fas fa-minus"></i> 0%</div></div>
-                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="sa-kpi-val">3</div><div class="sa-kpi-label">Alertas Críticas</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> -25%</div></div>
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-dollar-sign"></i></div><div class="sa-kpi-val">$287,450</div><div class="sa-kpi-label">MRR (Ingresos Recurrentes)</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +12.5% vs mes ant.</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-users"></i></div><div class="sa-kpi-val">1,247</div><div class="sa-kpi-label">Usuarios Registrados</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +83 este mes</div></div>
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-ship"></i></div><div class="sa-kpi-val">34</div><div class="sa-kpi-label">Embarcaciones en Sistema</div><div class="sa-kpi-trend neutral"><i class="fas fa-check"></i> 18 navegando ahora</div></div>
+                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="sa-kpi-val">3</div><div class="sa-kpi-label">Alertas Críticas</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> -25% vs ayer</div></div>
             </div>
+
+            <!-- ROW 2: Platform Usage + Live Ops -->
+            <div class="sa-grid-2">
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>USO DE PLATAFORMA — HOY</span><span style="font-size:0.7rem;color:var(--green);font-weight:700"><i class="fas fa-circle" style="font-size:6px"></i> En vivo</span></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+                        <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center"><div style="font-size:1.4rem;font-weight:800;color:var(--blue)">342</div><div style="font-size:0.7rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px">Sesiones Web</div></div>
+                        <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center"><div style="font-size:1.4rem;font-weight:800;color:var(--teal)">189</div><div style="font-size:0.7rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px">Sesiones Mobile</div></div>
+                        <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center"><div style="font-size:1.4rem;font-weight:800;color:var(--green)">47</div><div style="font-size:0.7rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px">Usuarios Online</div></div>
+                        <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center"><div style="font-size:1.4rem;font-weight:800;color:var(--amber)">12.4min</div><div style="font-size:0.7rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px">Sesión Promedio</div></div>
+                    </div>
+                    <div style="font-size:0.75rem;color:var(--text-2)"><i class="fas fa-mobile-alt" style="margin-right:4px"></i> APK v6.3 · <i class="fas fa-globe" style="margin:0 4px"></i> Web v2.1 · Último deploy: hace 14min</div>
+                </div>
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>OPERACIONES EN VIVO</span></div>
+                    <div style="display:flex;flex-direction:column;gap:10px">
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#DBEAFE;border-radius:10px;border-left:4px solid var(--blue)"><i class="fas fa-ship" style="color:var(--blue)"></i><div style="flex:1;font-size:0.85rem"><strong>5 convoyes</strong> navegando en la hidrovía</div><span style="font-size:0.7rem;font-weight:700;color:var(--blue)">42,600 ton</span></div>
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#DCFCE7;border-radius:10px;border-left:4px solid var(--green)"><i class="fas fa-anchor" style="color:var(--green)"></i><div style="flex:1;font-size:0.85rem"><strong>3 embarques</strong> cargando en terminales</div><span style="font-size:0.7rem;font-weight:700;color:var(--green)">18,200 ton</span></div>
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#FEF3C7;border-radius:10px;border-left:4px solid var(--amber)"><i class="fas fa-water" style="color:var(--amber)"></i><div style="flex:1;font-size:0.85rem"><strong>Calado crítico</strong> km 780 río Paraguay</div><span style="font-size:0.7rem;font-weight:700;color:var(--amber)">2.8m</span></div>
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#FEE2E2;border-radius:10px;border-left:4px solid var(--red)"><i class="fas fa-bell" style="color:var(--red)"></i><div style="flex:1;font-size:0.85rem"><strong>2 alertas</strong> mantenimiento pendiente</div><span style="font-size:0.7rem;font-weight:700;color:var(--red)">URGENTE</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: Revenue Chart + Security -->
             <div class="sa-grid-2">
                 <div class="sa-card">
                     <div class="sa-card-head"><span>INGRESOS MENSUALES (USD)</span></div>
                     <div class="sa-chart-bars">
-                        <div class="sa-bar-col"><div class="sa-bar" style="height:45%"></div><span>Ene</span></div>
-                        <div class="sa-bar-col"><div class="sa-bar" style="height:55%"></div><span>Feb</span></div>
-                        <div class="sa-bar-col"><div class="sa-bar" style="height:50%"></div><span>Mar</span></div>
-                        <div class="sa-bar-col"><div class="sa-bar" style="height:65%"></div><span>Abr</span></div>
-                        <div class="sa-bar-col"><div class="sa-bar" style="height:72%"></div><span>May</span></div>
-                        <div class="sa-bar-col"><div class="sa-bar highlight" style="height:85%"></div><span>Jun</span></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:40%"></div><span>Ene</span><small style="font-size:0.6rem;color:var(--text-2)">$135K</small></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:48%"></div><span>Feb</span><small style="font-size:0.6rem;color:var(--text-2)">$165K</small></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:52%"></div><span>Mar</span><small style="font-size:0.6rem;color:var(--text-2)">$189K</small></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:65%"></div><span>Abr</span><small style="font-size:0.6rem;color:var(--text-2)">$234K</small></div>
+                        <div class="sa-bar-col"><div class="sa-bar" style="height:72%"></div><span>May</span><small style="font-size:0.6rem;color:var(--text-2)">$256K</small></div>
+                        <div class="sa-bar-col"><div class="sa-bar highlight" style="height:85%"></div><span>Jun</span><small style="font-size:0.6rem;color:var(--text-2)">$287K</small></div>
                     </div>
                 </div>
                 <div class="sa-card">
-                    <div class="sa-card-head"><span>ACTIVIDAD RECIENTE</span></div>
-                    <div class="sa-activity"><div class="sa-act-dot green"></div><div><strong>Cargill S.A.</strong> renovó plan Enterprise<br><small>Hace 23 min</small></div></div>
-                    <div class="sa-activity"><div class="sa-act-dot blue"></div><div><strong>R/M Hércules</strong> pasó checkpoint km 1,180<br><small>Hace 1 hora</small></div></div>
-                    <div class="sa-activity"><div class="sa-act-dot amber"></div><div><strong>Alerta:</strong> Nivel bajo en río Paraguay km 780<br><small>Hace 3 horas</small></div></div>
-                    <div class="sa-activity"><div class="sa-act-dot red"></div><div><strong>Sistema:</strong> Pico de CPU en servidor Render<br><small>Hace 5 horas</small></div></div>
-                    <div class="sa-activity"><div class="sa-act-dot blue"></div><div><strong>Usuario nuevo:</strong> transportes.sur@gmail.com<br><small>Ayer 18:30</small></div></div>
+                    <div class="sa-card-head"><span>SEGURIDAD Y ACCESOS</span><span style="font-size:0.65rem;font-weight:700;color:var(--green)"><i class="fas fa-shield-alt"></i> PROTEGIDO</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--surface);font-size:0.85rem"><span>Logins exitosos (24h)</span><strong style="color:var(--green)">234</strong></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--surface);font-size:0.85rem"><span>Intentos fallidos (24h)</span><strong style="color:var(--red)">7</strong></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--surface);font-size:0.85rem"><span>Registros Google OAuth</span><strong style="color:var(--blue)">18</strong></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--surface);font-size:0.85rem"><span>Tokens activos</span><strong>531</strong></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--surface);font-size:0.85rem"><span>SSL Certificate</span><strong style="color:var(--green)">Válido (327 días)</strong></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:0.85rem"><span>Último backup</span><strong>Hoy 12:00</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 4: Top Clients + API Metrics + Modules -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px">
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>TOP CLIENTES POR REVENUE</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem"><span style="width:18px;font-weight:800;color:var(--amber)">1</span><span style="flex:1;font-weight:600">Cargill S.A.C.I.</span><span style="font-weight:800">$24,990</span></div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem"><span style="width:18px;font-weight:800;color:var(--text-2)">2</span><span style="flex:1;font-weight:600">Louis Dreyfus</span><span style="font-weight:800">$18,750</span></div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem"><span style="width:18px;font-weight:800;color:var(--text-2)">3</span><span style="flex:1;font-weight:600">Bunge Paraguay</span><span style="font-weight:800">$14,990</span></div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem"><span style="width:18px;font-weight:800;color:var(--text-2)">4</span><span style="flex:1;font-weight:600">ADM Asunción</span><span style="font-weight:800">$11,200</span></div>
+                        <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem"><span style="width:18px;font-weight:800;color:var(--text-2)">5</span><span style="flex:1;font-weight:600">Naviera Sur S.R.L.</span><span style="font-weight:800">$8,990</span></div>
+                    </div>
+                </div>
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>APIs Y SERVICIOS</span></div>
+                    <div style="display:flex;flex-direction:column;gap:10px">
+                        <div style="display:flex;align-items:center;gap:8px;font-size:0.83rem"><span class="sa-health-dot green"></span><span style="flex:1">Supabase</span><span style="font-weight:700;color:var(--green)">99.9%</span><span style="font-size:0.7rem;color:var(--text-2)">23ms</span></div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:0.83rem"><span class="sa-health-dot green"></span><span style="flex:1">Firebase FCM</span><span style="font-weight:700;color:var(--green)">99.8%</span><span style="font-size:0.7rem;color:var(--text-2)">120ms</span></div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:0.83rem"><span class="sa-health-dot amber"></span><span style="flex:1">Gemini AI</span><span style="font-weight:700;color:var(--amber)">96.2%</span><span style="font-size:0.7rem;color:var(--text-2)">890ms</span></div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:0.83rem"><span class="sa-health-dot green"></span><span style="flex:1">Render CDN</span><span style="font-weight:700;color:var(--green)">99.9%</span><span style="font-size:0.7rem;color:var(--text-2)">67ms</span></div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:0.83rem"><span class="sa-health-dot green"></span><span style="flex:1">Google OAuth</span><span style="font-weight:700;color:var(--green)">100%</span><span style="font-size:0.7rem;color:var(--text-2)">45ms</span></div>
+                    </div>
+                </div>
+                <div class="sa-card">
+                    <div class="sa-card-head"><span>MÓDULOS MÁS USADOS</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        <div style="font-size:0.83rem"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Dashboard</span><strong>1,840</strong></div><div style="height:6px;background:var(--surface);border-radius:3px"><div style="height:100%;width:92%;background:var(--blue);border-radius:3px"></div></div></div>
+                        <div style="font-size:0.83rem"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Mapa de Flota</span><strong>1,230</strong></div><div style="height:6px;background:var(--surface);border-radius:3px"><div style="height:100%;width:68%;background:var(--teal);border-radius:3px"></div></div></div>
+                        <div style="font-size:0.83rem"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Convoyes</span><strong>890</strong></div><div style="height:6px;background:var(--surface);border-radius:3px"><div style="height:100%;width:48%;background:var(--green);border-radius:3px"></div></div></div>
+                        <div style="font-size:0.83rem"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Copiloto IA</span><strong>456</strong></div><div style="height:6px;background:var(--surface);border-radius:3px"><div style="height:100%;width:25%;background:var(--purple);border-radius:3px"></div></div></div>
+                        <div style="font-size:0.83rem"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Invoice IA</span><strong>234</strong></div><div style="height:6px;background:var(--surface);border-radius:3px"><div style="height:100%;width:13%;background:var(--amber);border-radius:3px"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 5: Activity Feed -->
+            <div class="sa-card">
+                <div class="sa-card-head"><span>TIMELINE DE ACTIVIDAD DEL SISTEMA</span><span style="font-size:0.7rem;color:var(--text-2)">Últimas 24 horas</span></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px">
+                    <div class="sa-activity"><div class="sa-act-dot green"></div><div><strong>Cargill S.A.</strong> renovó plan Enterprise ($24,990/mes)<br><small>Hace 23 min — BILLING</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot blue"></div><div><strong>R/M Hércules</strong> pasó checkpoint km 1,180 — Santa Fe<br><small>Hace 1 hora — OPS</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot amber"></div><div><strong>Alerta hidro:</strong> Nivel bajo río Paraguay km 780 (2.8m)<br><small>Hace 3 horas — ALERTA</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot red"></div><div><strong>Gemini API:</strong> Rate limit 429 — auto-retry 3/5 OK<br><small>Hace 4 horas — ERROR</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot green"></div><div><strong>Deploy:</strong> Web v2.1 publicado en Render (0 errores)<br><small>Hace 5 horas — DEPLOY</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot blue"></div><div><strong>Nuevo usuario:</strong> transportes.sur@gmail.com (Google OAuth)<br><small>Hace 6 horas — AUTH</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot green"></div><div><strong>Backup:</strong> DB snapshot completado — 2.3 GB<br><small>Hace 8 horas — SYS</small></div></div>
+                    <div class="sa-activity"><div class="sa-act-dot blue"></div><div><strong>Invoice IA:</strong> 12 facturas procesadas hoy ($184K total)<br><small>Hace 9 horas — IA</small></div></div>
                 </div>
             </div>
         </section>

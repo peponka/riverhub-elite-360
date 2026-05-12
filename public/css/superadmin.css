@@ -61,7 +61,7 @@ html{scroll-behavior:smooth}body{font-family:var(--font);color:var(--text);backg
 
 /* CARDS */
 .sa-card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:24px;margin-bottom:20px}
-.sa-card-head{margin-bottom:16px}.sa-card-head span{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2)}
+.sa-card-head{margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}.sa-card-head span{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2)}
 .sa-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 
 /* CHART BARS */
