@@ -43,10 +43,20 @@
             <a class="sa-nav-link active" data-section="dashboard" onclick="saNav(this)"><i class="fas fa-chart-pie"></i>Dashboard</a>
             <a class="sa-nav-link" data-section="users" onclick="saNav(this)"><i class="fas fa-users-cog"></i>Usuarios</a>
             <a class="sa-nav-link" data-section="fleet" onclick="saNav(this)"><i class="fas fa-ship"></i>Flota</a>
-            <div class="sa-nav-label">FINANZAS</div>
-            <a class="sa-nav-link" data-section="billing" onclick="saNav(this)"><i class="fas fa-dollar-sign"></i>Facturación</a>
+            <a class="sa-nav-link" data-section="ops" onclick="saNav(this)"><i class="fas fa-broadcast-tower"></i>Operaciones Live</a>
+            <div class="sa-nav-label">COMERCIAL</div>
+            <a class="sa-nav-link" data-section="billing" onclick="saNav(this)"><i class="fas fa-dollar-sign"></i>Revenue & Billing</a>
+            <a class="sa-nav-link" data-section="contracts" onclick="saNav(this)"><i class="fas fa-file-contract"></i>Contratos</a>
+            <a class="sa-nav-link" data-section="clients" onclick="saNav(this)"><i class="fas fa-building"></i>Clientes</a>
+            <div class="sa-nav-label">INTELIGENCIA</div>
+            <a class="sa-nav-link" data-section="ai" onclick="saNav(this)"><i class="fas fa-robot"></i>Copiloto IA</a>
+            <a class="sa-nav-link" data-section="invoiceai" onclick="saNav(this)"><i class="fas fa-file-invoice-dollar"></i>Invoice IA</a>
+            <a class="sa-nav-link" data-section="analytics" onclick="saNav(this)"><i class="fas fa-chart-bar"></i>Analytics</a>
             <div class="sa-nav-label">SISTEMA</div>
             <a class="sa-nav-link" data-section="logs" onclick="saNav(this)"><i class="fas fa-list-alt"></i>Logs</a>
+            <a class="sa-nav-link" data-section="security" onclick="saNav(this)"><i class="fas fa-shield-alt"></i>Seguridad</a>
+            <a class="sa-nav-link" data-section="database" onclick="saNav(this)"><i class="fas fa-database"></i>Base de Datos</a>
+            <a class="sa-nav-link" data-section="notifs" onclick="saNav(this)"><i class="fas fa-bell"></i>Notificaciones</a>
             <a class="sa-nav-link" data-section="config" onclick="saNav(this)"><i class="fas fa-cog"></i>Configuración</a>
         </nav>
         <div class="sa-sidebar-bottom">
@@ -257,6 +267,162 @@
                     <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Firebase FCM</span><span class="sa-health-ms">120ms</span></div>
                     <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Render Server</span><span class="sa-health-ms">67ms</span></div>
                 </div>
+            </div>
+        </section>
+
+        <!-- OPS LIVE -->
+        <section class="sa-section" id="sec-ops">
+            <div class="sa-header"><h1>Operaciones en Vivo <span style="background:linear-gradient(135deg,var(--red),var(--amber));color:white;font-size:0.5rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:1px">LIVE</span></h1><p>Monitoreo en tiempo real de toda la operación fluvial</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-ship"></i></div><div class="sa-kpi-val">5</div><div class="sa-kpi-label">Convoyes Navegando</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> 42,600 ton</div></div>
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-anchor"></i></div><div class="sa-kpi-val">3</div><div class="sa-kpi-label">En Carga/Descarga</div><div class="sa-kpi-trend neutral"><i class="fas fa-clock"></i> 18,200 ton</div></div>
+                <div class="sa-kpi kpi-amber"><div class="sa-kpi-icon"><i class="fas fa-water"></i></div><div class="sa-kpi-val">2.8m</div><div class="sa-kpi-label">Calado Mínimo</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> km 780</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-route"></i></div><div class="sa-kpi-val">1,580km</div><div class="sa-kpi-label">Ruta más larga activa</div><div class="sa-kpi-trend neutral"><i class="fas fa-check"></i> ASU→ROE</div></div>
+            </div>
+            <div class="sa-card">
+                <div class="sa-card-head"><span>CONVOYES EN MOVIMIENTO</span></div>
+                <table class="sa-table"><thead><tr><th>Convoy</th><th>Ruta</th><th>Embarcación</th><th>Carga</th><th>Progreso</th><th>ETA</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>C-47</strong></td><td>ASU → ROE</td><td>R/M Hércules (6 bz)</td><td>8,400 ton</td><td><div style="width:100px;height:6px;background:var(--surface);border-radius:3px"><div style="width:72%;height:100%;background:var(--blue);border-radius:3px"></div></div></td><td>10 May</td></tr>
+                    <tr><td><strong>C-41</strong></td><td>VCO → SLO</td><td>R/M Paraná I (4 bz)</td><td>5,200 ton</td><td><div style="width:100px;height:6px;background:var(--surface);border-radius:3px"><div style="width:45%;height:100%;background:var(--blue);border-radius:3px"></div></div></td><td>13 May</td></tr>
+                    <tr><td><strong>C-38</strong></td><td>CDB → ROE</td><td>R/M Itapúa (5 bz)</td><td>7,500 ton</td><td><div style="width:100px;height:6px;background:var(--surface);border-radius:3px"><div style="width:98%;height:100%;background:var(--green);border-radius:3px"></div></div></td><td>Hoy</td></tr>
+                    <tr><td><strong>C-52</strong></td><td>ROE → BHI</td><td>R/M Guaraní (8 bz)</td><td>12,800 ton</td><td><div style="width:100px;height:6px;background:var(--surface);border-radius:3px"><div style="width:15%;height:100%;background:var(--amber);border-radius:3px"></div></div></td><td>18 May</td></tr>
+                    <tr><td><strong>C-55</strong></td><td>ASU → SNI</td><td>R/M Chaco (3 bz)</td><td>4,200 ton</td><td><div style="width:100px;height:6px;background:var(--surface);border-radius:3px"><div style="width:0%;height:100%;background:var(--surface);border-radius:3px"></div></div></td><td>20 May</td></tr>
+                </tbody></table>
+            </div>
+        </section>
+
+        <!-- CONTRACTS -->
+        <section class="sa-section" id="sec-contracts">
+            <div class="sa-header"><h1>Contratos de Flete</h1><p>Gestión centralizada de contratos activos</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-check-circle"></i></div><div class="sa-kpi-val">24</div><div class="sa-kpi-label">Contratos Activos</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +3 este mes</div></div>
+                <div class="sa-kpi kpi-amber"><div class="sa-kpi-icon"><i class="fas fa-clock"></i></div><div class="sa-kpi-val">5</div><div class="sa-kpi-label">Por Vencer (30d)</div><div class="sa-kpi-trend neutral"><i class="fas fa-exclamation"></i> Renovar</div></div>
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-weight-hanging"></i></div><div class="sa-kpi-val">340K</div><div class="sa-kpi-label">Ton Contratadas</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +12%</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-percentage"></i></div><div class="sa-kpi-val">87%</div><div class="sa-kpi-label">Ejecución Promedio</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +4%</div></div>
+            </div>
+            <div class="sa-card"><div class="sa-card-head"><span>CONTRATOS RECIENTES</span></div>
+                <table class="sa-table"><thead><tr><th>Cliente</th><th>Ruta</th><th>Volumen</th><th>Tarifa</th><th>Vencimiento</th><th>Estado</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Cargill S.A.</strong></td><td>ASU → ROE</td><td>120,000 ton</td><td>$12.50/ton</td><td>15 Jul 2026</td><td><span class="sa-role-chip role-op">Activo</span></td></tr>
+                    <tr><td><strong>Bunge PY</strong></td><td>CDB → SLO</td><td>80,000 ton</td><td>$11.80/ton</td><td>30 Jun 2026</td><td><span class="sa-role-chip" style="background:#FEF3C7;color:#92400E">Por vencer</span></td></tr>
+                    <tr><td><strong>Dreyfus</strong></td><td>VCO → BHI</td><td>60,000 ton</td><td>$14.20/ton</td><td>20 Ago 2026</td><td><span class="sa-role-chip role-op">Activo</span></td></tr>
+                </tbody></table>
+            </div>
+        </section>
+
+        <!-- CLIENTS -->
+        <section class="sa-section" id="sec-clients">
+            <div class="sa-header"><h1>Gestión de Clientes</h1><p>Cartera de clientes corporativos</p></div>
+            <div class="sa-card"><div class="sa-card-head"><span>CLIENTES CORPORATIVOS</span><span style="font-size:0.7rem;color:var(--blue);cursor:pointer"><i class="fas fa-plus"></i> Nuevo Cliente</span></div>
+                <table class="sa-table"><thead><tr><th>Empresa</th><th>Contacto</th><th>Plan</th><th>Revenue Mensual</th><th>Contratos</th><th>Estado</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Cargill S.A.C.I.</strong></td><td>maria.g@cargill.com</td><td><span class="sa-role-chip" style="background:#FEF3C7;color:#92400E">Enterprise</span></td><td><strong>$24,990</strong></td><td>4</td><td><span class="sa-status-dot online"></span>Activo</td></tr>
+                    <tr><td><strong>Louis Dreyfus Co.</strong></td><td>clopez@dreyfus.com</td><td><span class="sa-role-chip role-admin">Enterprise</span></td><td><strong>$18,750</strong></td><td>3</td><td><span class="sa-status-dot online"></span>Activo</td></tr>
+                    <tr><td><strong>Bunge Paraguay</strong></td><td>asanchez@bunge.com</td><td><span class="sa-role-chip role-op">Combo</span></td><td><strong>$14,990</strong></td><td>2</td><td><span class="sa-status-dot online"></span>Activo</td></tr>
+                    <tr><td><strong>ADM Asunción</strong></td><td>rgarcia@adm.com</td><td><span class="sa-role-chip role-op">Combo</span></td><td><strong>$11,200</strong></td><td>2</td><td><span class="sa-status-dot online"></span>Activo</td></tr>
+                    <tr><td><strong>Naviera Sur S.R.L.</strong></td><td>info@navierasur.py</td><td><span class="sa-role-chip role-client">Barcaza</span></td><td><strong>$8,990</strong></td><td>1</td><td><span class="sa-status-dot offline"></span>Trial</td></tr>
+                </tbody></table>
+            </div>
+        </section>
+
+        <!-- AI COPILOT -->
+        <section class="sa-section" id="sec-ai">
+            <div class="sa-header"><h1>Copiloto IA — Control</h1><p>Uso y rendimiento del asistente Gemini</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-blue" style="border-left:4px solid var(--purple)"><div class="sa-kpi-icon" style="background:#EDE9FE;color:var(--purple)"><i class="fas fa-robot"></i></div><div class="sa-kpi-val">2,340</div><div class="sa-kpi-label">Consultas este mes</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +34%</div></div>
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-check"></i></div><div class="sa-kpi-val">96.2%</div><div class="sa-kpi-label">Respuestas exitosas</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +1.5%</div></div>
+                <div class="sa-kpi kpi-amber"><div class="sa-kpi-icon"><i class="fas fa-clock"></i></div><div class="sa-kpi-val">2.3s</div><div class="sa-kpi-label">Latencia promedio</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> -0.4s</div></div>
+                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-times-circle"></i></div><div class="sa-kpi-val">89</div><div class="sa-kpi-label">Errores 429 (Rate Limit)</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> -15%</div></div>
+            </div>
+            <div class="sa-card"><div class="sa-card-head"><span>TOP CONSULTAS</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge" style="background:#EDE9FE;color:var(--purple)">IA</span><span class="sa-log-text">"¿Cuál es el estado del convoy C-47?" — 342 consultas similares</span><span class="sa-log-time">Más frecuente</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge" style="background:#EDE9FE;color:var(--purple)">IA</span><span class="sa-log-text">"Pronóstico de calado para próxima semana" — 218 consultas</span><span class="sa-log-time">2do lugar</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge" style="background:#EDE9FE;color:var(--purple)">IA</span><span class="sa-log-text">"Calcular costo de flete ASU-Rosario 5000 ton" — 156 consultas</span><span class="sa-log-time">3er lugar</span></div>
+            </div>
+        </section>
+
+        <!-- INVOICE IA -->
+        <section class="sa-section" id="sec-invoiceai">
+            <div class="sa-header"><h1>Invoice Intelligence — Métricas</h1><p>Rendimiento del sistema de análisis de facturas</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-file-invoice"></i></div><div class="sa-kpi-val">487</div><div class="sa-kpi-label">Facturas procesadas</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +67 este mes</div></div>
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-dollar-sign"></i></div><div class="sa-kpi-val">$2.4M</div><div class="sa-kpi-label">Monto total analizado</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +$340K</div></div>
+                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-exclamation"></i></div><div class="sa-kpi-val">23</div><div class="sa-kpi-label">Discrepancias detectadas</div><div class="sa-kpi-trend neutral"><i class="fas fa-shield-alt"></i> $18K ahorrados</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-check-double"></i></div><div class="sa-kpi-val">94.7%</div><div class="sa-kpi-label">Precisión extracción</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +2.1%</div></div>
+            </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section class="sa-section" id="sec-analytics">
+            <div class="sa-header"><h1>Analytics Avanzado</h1><p>Métricas de uso y rendimiento de la plataforma</p></div>
+            <div class="sa-grid-2">
+                <div class="sa-card"><div class="sa-card-head"><span>USUARIOS POR PLATAFORMA</span></div>
+                    <div style="display:flex;gap:20px;align-items:center"><div style="flex:1"><div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.85rem"><span>Web Desktop</span><strong>58%</strong></div><div style="height:8px;background:var(--surface);border-radius:4px"><div style="width:58%;height:100%;background:var(--blue);border-radius:4px"></div></div></div><div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.85rem"><span>Mobile APK</span><strong>32%</strong></div><div style="height:8px;background:var(--surface);border-radius:4px"><div style="width:32%;height:100%;background:var(--teal);border-radius:4px"></div></div></div><div><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.85rem"><span>Web Mobile</span><strong>10%</strong></div><div style="height:8px;background:var(--surface);border-radius:4px"><div style="width:10%;height:100%;background:var(--amber);border-radius:4px"></div></div></div></div></div>
+                </div>
+                <div class="sa-card"><div class="sa-card-head"><span>RETENCIÓN DE USUARIOS</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        <div style="display:flex;justify-content:space-between;font-size:0.85rem;padding:8px 0;border-bottom:1px solid var(--surface)"><span>DAU (Daily Active)</span><strong style="color:var(--green)">342</strong></div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.85rem;padding:8px 0;border-bottom:1px solid var(--surface)"><span>WAU (Weekly Active)</span><strong style="color:var(--blue)">891</strong></div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.85rem;padding:8px 0;border-bottom:1px solid var(--surface)"><span>MAU (Monthly Active)</span><strong>1,247</strong></div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.85rem;padding:8px 0;border-bottom:1px solid var(--surface)"><span>Churn Rate</span><strong style="color:var(--green)">2.1%</strong></div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.85rem;padding:8px 0"><span>NPS Score</span><strong style="color:var(--green)">72</strong></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECURITY -->
+        <section class="sa-section" id="sec-security">
+            <div class="sa-header"><h1>Centro de Seguridad</h1><p>Monitoreo de accesos y amenazas</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-shield-alt"></i></div><div class="sa-kpi-val">234</div><div class="sa-kpi-label">Logins exitosos (24h)</div><div class="sa-kpi-trend up"><i class="fas fa-check"></i> Normal</div></div>
+                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-user-slash"></i></div><div class="sa-kpi-val">7</div><div class="sa-kpi-label">Intentos fallidos</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> -3 vs ayer</div></div>
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-key"></i></div><div class="sa-kpi-val">531</div><div class="sa-kpi-label">Tokens JWT activos</div><div class="sa-kpi-trend neutral"><i class="fas fa-lock"></i> PKCE</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-certificate"></i></div><div class="sa-kpi-val">327d</div><div class="sa-kpi-label">SSL válido</div><div class="sa-kpi-trend up"><i class="fas fa-check"></i> Auto-renew</div></div>
+            </div>
+            <div class="sa-card"><div class="sa-card-head"><span>ÚLTIMOS INTENTOS FALLIDOS</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-error">FAIL</span><span class="sa-log-text">admin@test.com — IP: 45.230.12.88 (Paraguay)</span><span class="sa-log-time">Hoy 11:22</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-error">FAIL</span><span class="sa-log-text">root@fluviafleet.com — IP: 103.21.44.12 (Desconocido)</span><span class="sa-log-time">Hoy 08:15</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-error">FAIL</span><span class="sa-log-text">test@gmail.com — IP: 186.9.201.45 (Argentina)</span><span class="sa-log-time">Ayer 22:40</span></div>
+            </div>
+        </section>
+
+        <!-- DATABASE -->
+        <section class="sa-section" id="sec-database">
+            <div class="sa-header"><h1>Base de Datos — Supabase</h1><p>Estado y métricas del storage</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-database"></i></div><div class="sa-kpi-val">2.3 GB</div><div class="sa-kpi-label">Tamaño DB</div><div class="sa-kpi-trend neutral"><i class="fas fa-hdd"></i> de 8 GB</div></div>
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-table"></i></div><div class="sa-kpi-val">18</div><div class="sa-kpi-label">Tablas activas</div><div class="sa-kpi-trend neutral"><i class="fas fa-check"></i> RLS ON</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-tachometer-alt"></i></div><div class="sa-kpi-val">23ms</div><div class="sa-kpi-label">Latencia promedio</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-down"></i> -5ms</div></div>
+                <div class="sa-kpi kpi-amber"><div class="sa-kpi-icon"><i class="fas fa-sync"></i></div><div class="sa-kpi-val">12:00</div><div class="sa-kpi-label">Último backup</div><div class="sa-kpi-trend up"><i class="fas fa-check"></i> Auto</div></div>
+            </div>
+            <div class="sa-card"><div class="sa-card-head"><span>TABLAS PRINCIPALES</span></div>
+                <table class="sa-table"><thead><tr><th>Tabla</th><th>Registros</th><th>Tamaño</th><th>RLS</th><th>Último write</th></tr></thead>
+                <tbody>
+                    <tr><td>user_profiles</td><td>1,247</td><td>12 MB</td><td><span style="color:var(--green)"><i class="fas fa-lock"></i> ON</span></td><td>Hace 3 min</td></tr>
+                    <tr><td>vessels</td><td>34</td><td>2 MB</td><td><span style="color:var(--green)"><i class="fas fa-lock"></i> ON</span></td><td>Hace 1h</td></tr>
+                    <tr><td>trips</td><td>8,432</td><td>340 MB</td><td><span style="color:var(--green)"><i class="fas fa-lock"></i> ON</span></td><td>Hace 15 min</td></tr>
+                    <tr><td>freight_contracts</td><td>156</td><td>8 MB</td><td><span style="color:var(--green)"><i class="fas fa-lock"></i> ON</span></td><td>Ayer</td></tr>
+                    <tr><td>ais_traffic</td><td>124,567</td><td>1.8 GB</td><td><span style="color:var(--green)"><i class="fas fa-lock"></i> ON</span></td><td>Hace 30s</td></tr>
+                </tbody></table>
+            </div>
+        </section>
+
+        <!-- NOTIFICATIONS -->
+        <section class="sa-section" id="sec-notifs">
+            <div class="sa-header"><h1>Centro de Notificaciones</h1><p>Push notifications y alertas del sistema</p></div>
+            <div class="sa-kpi-row">
+                <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-bell"></i></div><div class="sa-kpi-val">1,840</div><div class="sa-kpi-label">Push enviados (mes)</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +22%</div></div>
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-check-circle"></i></div><div class="sa-kpi-val">94.2%</div><div class="sa-kpi-label">Delivery rate</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +1.8%</div></div>
+                <div class="sa-kpi kpi-amber"><div class="sa-kpi-icon"><i class="fas fa-mobile-alt"></i></div><div class="sa-kpi-val">892</div><div class="sa-kpi-label">Dispositivos registrados</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +45</div></div>
+                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-times"></i></div><div class="sa-kpi-val">107</div><div class="sa-kpi-label">Tokens expirados</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> Limpiar</div></div>
+            </div>
+            <div class="sa-card"><div class="sa-card-head"><span>ÚLTIMAS NOTIFICACIONES ENVIADAS</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-ops">PUSH</span><span class="sa-log-text">Convoy C-47 llegó a zona de fondeo — 47 dispositivos</span><span class="sa-log-time">13:12</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge" style="background:#FEF3C7;color:#92400E">ALERTA</span><span class="sa-log-text">Calado crítico km 780 — 234 usuarios notificados</span><span class="sa-log-time">10:30</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-sys">SYS</span><span class="sa-log-text">Mantenimiento programado BZ-102 — 12 operadores</span><span class="sa-log-time">09:00</span></div>
+                <div class="sa-log-item"><span class="sa-log-badge log-auth">AUTH</span><span class="sa-log-text">Bienvenida nuevo usuario: transportes.sur@gmail.com</span><span class="sa-log-time">08:45</span></div>
             </div>
         </section>
     </main>
