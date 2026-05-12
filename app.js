@@ -601,13 +601,16 @@ ${voyageContext}`;
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: systemPrompt }, { text: `FACTURA A ANALIZAR:\n${invoiceText}` }] }],
-                generationConfig: { temperature: 0.2, maxOutputTokens: 4000 }
+                generationConfig: { temperature: 0.2, maxOutputTokens: 4000, responseMimeType: 'application/json' }
             })
         });
 
         const data = await response.json();
         console.log('[Invoice AI] HTTP:', response.status, JSON.stringify(data).substring(0, 300));
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        let aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+        // Strip markdown code fences if present
+        aiText = aiText.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
 
         // Try to parse JSON from AI response
         let parsed = null;
