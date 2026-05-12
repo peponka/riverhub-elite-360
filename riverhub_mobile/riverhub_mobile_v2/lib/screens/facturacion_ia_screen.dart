@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
-import '../services/locale_service.dart';
 
 /// Invoice Intelligence screen — paste text, take photo, or select from gallery.
 /// Uses Gemini Vision for OCR when image is provided.
@@ -17,30 +18,32 @@ class FacturacionIAScreen extends StatefulWidget {
 
 class _FacturacionIAScreenState extends State<FacturacionIAScreen> {
   final _controller = TextEditingController();
+  final _picker = ImagePicker();
   bool _loading = false;
   Map<String, dynamic>? _result;
   String? _error;
   File? _selectedImage;
   String? _imageBase64;
+  String? _imageMime;
 
   static const String _apiBase = 'https://riverhub-elite-360.onrender.com';
 
   static const String _demoInvoice = '''FACTURA DE FLETE FLUVIAL
-N° 0001-00004521
+N\u00B0 0001-00004521
 Fecha: 15/04/2026
-Emisor: Transportes Fluviales del Paraná S.A.
+Emisor: Transportes Fluviales del Paran\u00E1 S.A.
 CUIT: 30-71234567-8
 Cliente: Cargill S.A.C.I.
 
 Detalle del servicio:
-- Viaje: Convoy C-47 | Ruta: Asunción (PY) → Rosario (AR)
-- Embarcación: R/M HÉRCULES + 6 barcazas
+- Viaje: Convoy C-47 | Ruta: Asunci\u00F3n (PY) \u2192 Rosario (AR)
+- Embarcaci\u00F3n: R/M H\u00C9RCULES + 6 barcazas
 - Carga: 8.400 toneladas de soja a granel
 - Distancia: 1.580 km
 
 Conceptos:
 1. Flete principal (8.400 ton x USD 12.50/ton)............ USD 105,000.00
-2. Sobrestadía puerto Rosario (3 días x USD 2,800/día).... USD   8,400.00
+2. Sobrestad\u00EDa puerto Rosario (3 d\u00EDas x USD 2,800/d\u00EDa).... USD   8,400.00
 3. Combustible adicional (2.100 lt x USD 0.92/lt)......... USD   1,932.00
 4. Seguro de carga (0.15% sobre valor declarado).......... USD   4,200.00
 5. Servicio de practicaje.................................. USD   1,500.00
@@ -49,16 +52,32 @@ Subtotal:.............. USD 121,032.00
 IVA 21%:............... USD  25,416.72
 TOTAL:................. USD 146,448.72
 
-Condición de pago: 30 días fecha factura
-Cuenta: Banco Nación — CBU 0110012340001234567890''';
+Condici\u00F3n de pago: 30 d\u00EDas fecha factura
+Cuenta: Banco Naci\u00F3n \u2014 CBU 0110012340001234567890''';
 
-  Future<void> _pickImage(bool fromCamera) async {
+  Future<void> _pickImage(ImageSource source) async {
     try {
-      // Use platform channel for image picking since image_picker may not be installed
-      // For now, show a dialog explaining the feature
-      if (!mounted) return;
-      // Attempt dynamic import-style approach using file picker
-      _showImageSourceSheet();
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        imageQuality: 85,
+        maxWidth: 1920,
+      );
+      if (image == null) return;
+
+      final file = File(image.path);
+      final bytes = await file.readAsBytes();
+      final base64 = base64Encode(bytes);
+      final mime = image.mimeType ?? (image.path.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg');
+
+      if (mounted) {
+        setState(() {
+          _selectedImage = file;
+          _imageBase64 = base64;
+          _imageMime = mime;
+          _error = null;
+          _result = null;
+        });
+      }
     } catch (e) {
       if (mounted) setState(() => _error = 'Error al seleccionar imagen: $e');
     }
@@ -69,7 +88,7 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
       context: context,
       builder: (ctx) => CupertinoActionSheet(
         title: Text('Escanear Factura', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
-        message: Text('Seleccioná el origen de la imagen', style: GoogleFonts.inter(fontSize: 13)),
+        message: Text('Seleccion\u00E1 el origen de la imagen', style: GoogleFonts.inter(fontSize: 13)),
         actions: [
           CupertinoActionSheetAction(
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -77,65 +96,49 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
               const SizedBox(width: 8),
               Text('Tomar Foto', style: GoogleFonts.inter(fontWeight: FontWeight.w500)),
             ]),
-            onPressed: () { Navigator.pop(ctx); _captureImage(true); },
+            onPressed: () { Navigator.pop(ctx); _pickImage(ImageSource.camera); },
           ),
           CupertinoActionSheetAction(
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Icon(CupertinoIcons.photo_fill, size: 18),
               const SizedBox(width: 8),
-              Text('Galería', style: GoogleFonts.inter(fontWeight: FontWeight.w500)),
+              Text('Galer\u00EDa', style: GoogleFonts.inter(fontWeight: FontWeight.w500)),
             ]),
-            onPressed: () { Navigator.pop(ctx); _captureImage(false); },
+            onPressed: () { Navigator.pop(ctx); _pickImage(ImageSource.gallery); },
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
           isDestructiveAction: true,
-          child: Text('Cancelar'),
+          child: const Text('Cancelar'),
           onPressed: () => Navigator.pop(ctx),
         ),
       ),
     );
   }
 
-  Future<void> _captureImage(bool camera) async {
-    // We'll use a simple file picker approach that works without image_picker dependency
-    // For production, add image_picker to pubspec.yaml
-    try {
-      // Attempt to use the platform's built-in picker
-      final result = await Process.run('echo', ['image_picker_placeholder']);
-      // In a real implementation with image_picker:
-      // final picker = ImagePicker();
-      // final XFile? image = camera
-      //   ? await picker.pickImage(source: ImageSource.camera, imageQuality: 85)
-      //   : await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
-      // if (image != null) { ... }
-      if (mounted) {
-        setState(() => _error = 'Para usar la cámara, compilá el APK con image_picker. Usá texto por ahora.');
-      }
-    } catch (e) {
-      if (mounted) setState(() => _error = 'Cámara no disponible: $e');
-    }
-  }
-
   Future<void> _analyze() async {
     final text = _controller.text.trim();
-    if (text.isEmpty && _imageBase64 == null) return;
+    if (text.isEmpty && _imageBase64 == null) {
+      setState(() => _error = 'Peg\u00E1 texto o subi una imagen primero.');
+      return;
+    }
     setState(() { _loading = true; _error = null; _result = null; });
 
     try {
+      final token = Supabase.instance.client.auth.currentSession?.accessToken ?? 'demo';
       final client = HttpClient();
       client.connectionTimeout = const Duration(seconds: 90);
       final uri = Uri.parse('$_apiBase/api/ai/invoice');
       final request = await client.postUrl(uri);
       request.headers.set('Content-Type', 'application/json');
-      request.headers.set('Authorization', 'Bearer demo');
+      request.headers.set('Authorization', 'Bearer $token');
 
       final body = <String, dynamic>{};
       if (text.isNotEmpty) body['invoiceText'] = text;
       if (_imageBase64 != null) {
         body['invoiceImage'] = {
           'data': _imageBase64,
-          'mimeType': 'image/jpeg',
+          'mimeType': _imageMime ?? 'image/jpeg',
         };
       }
 
@@ -146,13 +149,13 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
 
       if (data.containsKey('result') && data['result'] != null) {
         setState(() => _result = data['result'] as Map<String, dynamic>);
-      } else if (data.containsKey('apiError')) {
+      } else if (data.containsKey('apiError') && data['apiError'] != null) {
         setState(() => _error = 'Gemini API: ${data['apiError']}');
       } else {
         setState(() => _error = data['raw']?.toString() ?? 'No se pudo procesar');
       }
     } catch (e) {
-      setState(() => _error = 'Error de conexión: $e');
+      setState(() => _error = 'Error de conexi\u00F3n: $e');
     } finally {
       setState(() => _loading = false);
     }
@@ -189,7 +192,7 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
                 const Icon(CupertinoIcons.lightbulb_fill, color: Color(0xFF00C2A8), size: 24),
                 const SizedBox(width: 12),
                 Expanded(child: Text(
-                  'Pegá texto, tomá una foto o seleccioná desde la galería. La IA extraerá datos y detectará discrepancias.',
+                  'Peg\u00E1 texto, tom\u00E1 una foto o seleccion\u00E1 desde la galer\u00EDa. La IA extrae datos y detecta discrepancias.',
                   style: GoogleFonts.inter(fontSize: 12, color: Colors.white70),
                 )),
               ]),
@@ -198,10 +201,10 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
 
             // OCR Buttons
             Row(children: [
-              Expanded(child: _actionBtn(CupertinoIcons.camera_fill, 'Escanear', const Color(0xFF7C3AED), () => _showImageSourceSheet())),
+              Expanded(child: _actionBtn(CupertinoIcons.camera_fill, 'Escanear', const Color(0xFF7C3AED), _showImageSourceSheet)),
               const SizedBox(width: 10),
-              Expanded(child: _actionBtn(CupertinoIcons.doc_text_fill, 'Texto', const Color(0xFF0066FF), () {
-                // Focus on text field
+              Expanded(child: _actionBtn(CupertinoIcons.doc_text_fill, 'Demo', const Color(0xFF0066FF), () {
+                setState(() { _controller.text = _demoInvoice; _result = null; _error = null; });
               })),
             ]),
             const SizedBox(height: 16),
@@ -214,15 +217,20 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
                 child: Stack(children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.file(_selectedImage!, height: 180, width: double.infinity, fit: BoxFit.cover),
+                    child: Image.file(_selectedImage!, height: 200, width: double.infinity, fit: BoxFit.cover),
                   ),
                   Positioned(top: 8, right: 8, child: GestureDetector(
-                    onTap: () => setState(() { _selectedImage = null; _imageBase64 = null; }),
+                    onTap: () => setState(() { _selectedImage = null; _imageBase64 = null; _imageMime = null; }),
                     child: Container(
                       padding: const EdgeInsets.all(6),
                       decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
                       child: const Icon(CupertinoIcons.xmark, color: Colors.white, size: 14),
                     ),
+                  )),
+                  Positioned(bottom: 8, left: 8, child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(color: const Color(0xFF7C3AED), borderRadius: BorderRadius.circular(6)),
+                    child: Text('OCR Listo', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
                   )),
                 ]),
               ),
@@ -233,7 +241,7 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
               child: Column(children: [
                 CupertinoTextField(
                   controller: _controller,
-                  placeholder: 'Pegá aquí el texto de la factura...',
+                  placeholder: 'Peg\u00E1 aqu\u00ED el texto de la factura...',
                   maxLines: 6,
                   style: GoogleFonts.inter(fontSize: 13, color: AppColors.textPrimary),
                   placeholderStyle: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary),
@@ -258,7 +266,10 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
                     padding: const EdgeInsets.all(12),
                     color: AppColors.separator,
                     child: const Icon(CupertinoIcons.trash, size: 16, color: Colors.black54),
-                    onPressed: () => setState(() { _controller.clear(); _result = null; _error = null; _selectedImage = null; _imageBase64 = null; }),
+                    onPressed: () => setState(() {
+                      _controller.clear(); _result = null; _error = null;
+                      _selectedImage = null; _imageBase64 = null; _imageMime = null;
+                    }),
                   ),
                 ]),
               ]),
@@ -270,7 +281,7 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
                 child: Center(child: Column(children: [
                   const CupertinoActivityIndicator(radius: 14),
                   const SizedBox(height: 8),
-                  Text('Gemini está analizando...', style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
+                  Text('Gemini est\u00E1 analizando...', style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
                 ])),
               ),
 
@@ -339,14 +350,14 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
           Text(sum['notes'].toString(), style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
         ],
         const SizedBox(height: 16),
-        _statRow('N° Factura', inv['number']?.toString() ?? 'N/A'),
+        _statRow('N\u00B0 Factura', inv['number']?.toString() ?? 'N/A'),
         _statRow('Proveedor', inv['supplier']?.toString() ?? 'N/A'),
         _statRow('Fecha', inv['date']?.toString() ?? 'N/A'),
         _statRow('Total', '${inv['currency'] ?? 'USD'} ${_formatNum(inv['total'])}'),
       ])),
 
       if ((inv['items'] as List?)?.isNotEmpty ?? false)
-        _card(title: 'ÍTEMS EXTRAÍDOS', child: Column(
+        _card(title: '\u00CDTEMS EXTRA\u00CDDOS', child: Column(
           children: (inv['items'] as List).map<Widget>((item) {
             final it = item as Map<String, dynamic>;
             return Container(
@@ -372,7 +383,7 @@ Cuenta: Banco Nación — CBU 0110012340001234567890''';
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(10)),
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                CircleAvatar(radius: 14, backgroundColor: color, child: Icon(CupertinoIcons.exclamationmark, size: 14, color: Colors.white)),
+                CircleAvatar(radius: 14, backgroundColor: color, child: const Icon(CupertinoIcons.exclamationmark, size: 14, color: Colors.white)),
                 const SizedBox(width: 10),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('${disc['field']}: ${disc['invoiceValue']} vs ${disc['systemValue']}', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
