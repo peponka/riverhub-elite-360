@@ -28,6 +28,7 @@ import '../screens/notifications_screen.dart';
 import '../screens/bitacora_screen.dart';
 import '../screens/liquidos_screen.dart';
 import '../screens/contratos_screen.dart';
+import '../screens/facturacion_ia_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -177,6 +178,7 @@ class AppDrawer extends StatelessWidget {
                   _drawerTile(context, CupertinoIcons.chart_pie_fill, LocaleService.t('drawer_reports'), const ReportesScreen()),
                   _drawerTile(context, CupertinoIcons.news_solid, LocaleService.t('drawer_daily'), const DailyReportScreen()),
                   _drawerTile(context, CupertinoIcons.location_fill, LocaleService.t('drawer_tracking'), const TrackingScreen()),
+                  _drawerTile(context, CupertinoIcons.doc_text_search, 'Invoice IA', const FacturacionIAScreen()),
 
                   _sectionHeader(LocaleService.t('drawer_commercial')),
                   _drawerTile(context, CupertinoIcons.doc_on_doc_fill, LocaleService.t('drawer_contracts'), const ContratosScreen()),
