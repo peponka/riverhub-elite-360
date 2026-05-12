@@ -142,7 +142,7 @@ Cuenta: Banco Naci\u00F3n \u2014 CBU 0110012340001234567890''';
         };
       }
 
-      request.write(jsonEncode(body));
+      request.add(utf8.encode(jsonEncode(body)));
       final response = await request.close().timeout(const Duration(seconds: 120));
       final responseBody = await response.transform(utf8.decoder).join();
       final data = jsonDecode(responseBody) as Map<String, dynamic>;
