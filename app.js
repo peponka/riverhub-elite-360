@@ -22,9 +22,10 @@ const apiLimiter = rateLimit({
 });
 const aiLimiter = rateLimit({
     windowMs: 60 * 1000,
-    max: 10, // 10 AI requests per minute per IP (protect Gemini quota)
+    max: 10, // 10 AI requests per minute per user/IP (protect Gemini quota)
     standardHeaders: true,
     legacyHeaders: false,
+    keyGenerator: (req) => req.user?.id || req.ip, // SECURITY: rate limit by userId when authenticated
     message: { error: 'Límite de consultas IA alcanzado. Espera un momento.' }
 });
 
@@ -345,7 +346,7 @@ app.post('/api/ai/optimize-convoy', aiLimiter, authenticateUser, async (req, res
     if (!GEMINI_KEY) return res.status(503).json({ error: 'AI not configured' });
 
     try {
-        const { companyId, destination, selectedVessels } = req.body;
+        const { destination, selectedVessels } = req.body;
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
         const userToken = req.headers.authorization?.split(' ')[1] || supabaseKey;
@@ -353,9 +354,15 @@ app.post('/api/ai/optimize-convoy', aiLimiter, authenticateUser, async (req, res
         if (!supabaseUrl || !supabaseKey) {
             return res.json({ suggestion: { config: 'Error', warnings: ['Supabase no configurado'], recommendation: 'Configurar SUPABASE_URL y SUPABASE_ANON_KEY' } });
         }
+
+        // SECURITY: extract companyId from user profile, not from client body
+        const sb = req.app.locals.supabase;
+        const { data: profile } = await sb.from('user_profiles').select('company_id').eq('user_id', req.user.id).single();
+        const safeCompanyId = profile?.company_id || req.body.companyId;
+        if (!safeCompanyId) return res.status(403).json({ error: 'Company ID required' });
         
         const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
-        const vesselsRes = await fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=id,name,type,status,draft,engine_power,fuel_capacity,current_lat,current_lng`, { headers });
+        const vesselsRes = await fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${safeCompanyId}&select=id,name,type,status,draft,engine_power,fuel_capacity,current_lat,current_lng`, { headers });
         const vessels = await vesselsRes.json();
         
         console.log(`[Convoy AI] vessels: ${Array.isArray(vessels) ? vessels.length : 'ERR'}, status: ${vesselsRes.status}`);

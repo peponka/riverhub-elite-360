@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -19,6 +20,17 @@ class AIService {
 
   static String get _companyId =>
       Supabase.instance.client.auth.currentUser?.userMetadata?['company_id'] as String? ?? '';
+
+  /// Check internet connectivity before making requests
+  static Future<bool> _isOnline() async {
+    try {
+      final result = await InternetAddress.lookup('supabase.co')
+          .timeout(const Duration(seconds: 3));
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
 
   /// POST helper using dart:io HttpClient
   /// Render free tier cold-starts can take 60s, plus Gemini needs ~10s
@@ -45,25 +57,54 @@ class AIService {
   }
 
   // ── Predictive Maintenance ──
-  // Returns predictions list, or throws on error
   static Future<List<Map<String, dynamic>>> predictMaintenance() async {
-    final data = await _post('/api/ai/predict-maintenance', {'companyId': _companyId});
-    return List<Map<String, dynamic>>.from(data['predictions'] ?? []);
+    if (!await _isOnline()) {
+      return [{'vessel': 'Sin conexion', 'component': 'N/A', 'probability': 0, 'days_until': 0, 'action': 'Conectate a internet para recibir predicciones', 'severity': 'low'}];
+    }
+    try {
+      final data = await _post('/api/ai/predict-maintenance', {'companyId': _companyId});
+      return List<Map<String, dynamic>>.from(data['predictions'] ?? []);
+    } on SocketException {
+      return [{'vessel': 'Error de red', 'component': 'N/A', 'probability': 0, 'days_until': 0, 'action': 'Verificar conexion a internet', 'severity': 'low'}];
+    } catch (e) {
+      debugPrint('[AIService] predictMaintenance error: $e');
+      return [];
+    }
   }
 
   // ── Fuel Anomalies ──
   static Future<List<Map<String, dynamic>>> fuelAnomalies() async {
-    final data = await _post('/api/ai/fuel-anomalies', {'companyId': _companyId});
-    return List<Map<String, dynamic>>.from(data['anomalies'] ?? []);
+    if (!await _isOnline()) {
+      return [{'vessel': 'Sin conexion', 'type': 'offline', 'severity': 'low', 'description': 'Conectate a internet'}];
+    }
+    try {
+      final data = await _post('/api/ai/fuel-anomalies', {'companyId': _companyId});
+      return List<Map<String, dynamic>>.from(data['anomalies'] ?? []);
+    } on SocketException {
+      return [{'vessel': 'Error de red', 'type': 'offline', 'severity': 'low', 'description': 'Verificar conexion'}];
+    } catch (e) {
+      debugPrint('[AIService] fuelAnomalies error: $e');
+      return [];
+    }
   }
 
   // ── Convoy Optimizer ──
   static Future<Map<String, dynamic>> optimizeConvoy({String destination = ''}) async {
-    final data = await _post('/api/ai/optimize-convoy', {
-      'companyId': _companyId,
-      'destination': destination,
-    });
-    return Map<String, dynamic>.from(data['suggestion'] ?? {});
+    if (!await _isOnline()) {
+      return {'config': 'Sin conexion', 'risk_score': 0, 'warnings': ['Sin conexion a internet'], 'recommendation': 'Conectate a internet para optimizar'};
+    }
+    try {
+      final data = await _post('/api/ai/optimize-convoy', {
+        'companyId': _companyId,
+        'destination': destination,
+      });
+      return Map<String, dynamic>.from(data['suggestion'] ?? {});
+    } on SocketException {
+      return {'config': 'Error de red', 'risk_score': 0, 'warnings': ['Verificar conexion'], 'recommendation': 'Sin conectividad'};
+    } catch (e) {
+      debugPrint('[AIService] optimizeConvoy error: $e');
+      return {};
+    }
   }
 
   // ── Gather Context Helper ──
@@ -71,19 +112,16 @@ class AIService {
     final sb = Supabase.instance.client;
     String ctx = '';
     try {
-      final v = await sb.from('vessels').select().limit(200);
+      final v = await sb.from('vessels').select('id,name,type,status').limit(50).timeout(const Duration(seconds: 10));
       if ((v as List).isNotEmpty) ctx += 'Flota: ${jsonEncode(v)}\n';
       
-      final ais = await sb.from('ais_traffic').select('ship_name,latitude,longitude,speed,course,updated_at').limit(200);
+      final ais = await sb.from('ais_traffic').select('ship_name,latitude,longitude,speed,course').limit(30).timeout(const Duration(seconds: 10));
       if ((ais as List).isNotEmpty) ctx += 'Posiciones AIS: ${jsonEncode(ais)}\n';
       
-      final vj = await sb.from('voyages').select().limit(100);
+      final vj = await sb.from('voyages').select('vessel_name,status,origin_port,destination_port').limit(10).timeout(const Duration(seconds: 10));
       if ((vj as List).isNotEmpty) ctx += 'Viajes: ${jsonEncode(vj)}\n';
       
-      final fl = await sb.from('fuel_logs').select().limit(50);
-      if ((fl as List).isNotEmpty) ctx += 'Combustible: ${jsonEncode(fl)}\n';
-      
-      final mt = await sb.from('maintenance_tasks').select().limit(50);
+      final mt = await sb.from('maintenance_tasks').select('vessel_name,description,status,priority').eq('status', 'pending').limit(10).timeout(const Duration(seconds: 10));
       if ((mt as List).isNotEmpty) ctx += 'Mantenimiento: ${jsonEncode(mt)}\n';
     } catch (e) {
       debugPrint('[AIService] _gatherContext error: $e');
@@ -100,11 +138,14 @@ class AIService {
 
   // ── Conversational Chat (Gemini) ──
   static Future<String> chat(String message) async {
+    if (!await _isOnline()) {
+      return 'Sin conexion a internet. Verifica tu WiFi o datos moviles e intenta de nuevo.';
+    }
     try {
       final contextData = await _gatherContext();
       final data = await _post('/api/ai/chat', {
         'message': message,
-        'context': 'Operador de flota, company_id: $_companyId\n$contextData',
+        'context': contextData,
         'history': _chatHistory,
       });
       
@@ -117,9 +158,13 @@ class AIService {
       }
       
       return answer;
+    } on SocketException {
+      return 'Error de red. Verifica tu conexion a internet.';
+    } on TimeoutException {
+      return 'El servidor tardo demasiado en responder. Intenta de nuevo.';
     } catch (e) {
       debugPrint('[AIService] chat error: $e');
-      return 'Error de conexión: $e';
+      return 'Error de conexion: $e';
     }
   }
 }
