@@ -250,16 +250,21 @@ router.get('/ina', apiLimiter, async (req, res) => {
     const timeend = today.toISOString().slice(0, 10);
 
     // Batch requests to avoid INA rate limiting (429)
-    // Process in groups of 6 with 500ms delay between batches
-    const BATCH_SIZE = 6;
-    const BATCH_DELAY = 500;
+    // Process in groups of 3 with 2s delay between batches
+    const BATCH_SIZE = 3;
+    const BATCH_DELAY = 2000;
     const allResults = [];
     for (let i = 0; i < INA_STATIONS.length; i += BATCH_SIZE) {
       const batch = INA_STATIONS.slice(i, i + BATCH_SIZE);
       const batchResults = await Promise.allSettled(
         batch.map(async (st) => {
           const url = `${INA_BASE}/obs/puntual/series/${st.seriesId}/observaciones?timestart=${timestart}&timeend=${timeend}`;
-          const resp = await fetch(url, { signal: AbortSignal.timeout(12000) });
+          let resp = await fetch(url, { signal: AbortSignal.timeout(12000) });
+          // Retry once on 429 with 3s backoff
+          if (resp.status === 429) {
+            await new Promise(r => setTimeout(r, 3000));
+            resp = await fetch(url, { signal: AbortSignal.timeout(12000) });
+          }
           if (!resp.ok) throw new Error(`INA ${st.name}: HTTP ${resp.status}`);
           const json = await resp.json();
 
