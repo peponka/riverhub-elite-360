@@ -393,7 +393,62 @@
                 <div id="hidro-ukc"></div>
                 <div id="hidro-ina"></div>
                 <div class="section-title" style="margin-top:24px">INA Forecast — 7-Day Water Levels</div>
-                <div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:24px;margin-top:12px" id="hidro-forecast-chart"></div>
+                <div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:24px;margin-top:12px" id="hidro-forecast-box"></div>
+                <script>
+                (function(){
+                    function renderForecast(){
+                        var box = document.getElementById('hidro-forecast-box');
+                        if(!box || box.dataset.loaded) return;
+                        box.dataset.loaded = '1';
+                        box.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b"><i class="fa-solid fa-spinner fa-spin"></i> Loading INA forecast...</div>';
+                        fetch('/api/hydrology/ina/forecast').then(function(r){ return r.json(); }).then(function(data){
+                            if(!data.forecasts || !data.forecasts.length){ box.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">No forecasts available</div>'; return; }
+                            var colors = ['#3B82F6','#10B981','#F59E0B','#8B5CF6','#EF4444','#06B6D4','#EC4899','#F97316','#14B8A6'];
+                            var allV = []; data.forecasts.forEach(function(fc){ (fc.forecast||[]).forEach(function(p){ if(p.v!=null) allV.push(p.v); }); });
+                            var mn = Math.min.apply(null,allV), mx = Math.max.apply(null,allV), rng = mx-mn||1;
+                            var h = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">';
+                            h += '<div><div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px">INA OFFICIAL FORECAST</div>';
+                            h += '<div style="font-size:12px;color:#94a3b8">' + data.stationsWithForecast + ' stations · Model: ' + (data.model||'tabprono') + '</div></div>';
+                            h += '<span style="font-size:9px;background:rgba(59,130,246,0.08);color:#3B82F6;padding:4px 10px;border-radius:6px;font-weight:700">Run #' + (data.corridaId||'--') + '</span></div>';
+                            h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">';
+                            data.forecasts.forEach(function(fc,i){
+                                var vals = (fc.forecast||[]).filter(function(p){ return p.v!=null; });
+                                if(!vals.length) return;
+                                var c = colors[i%colors.length], cur = vals[0].v, last = vals[vals.length-1].v, diff = last-cur;
+                                var tI = diff>0.1?'fa-arrow-trend-up':diff<-0.1?'fa-arrow-trend-down':'fa-minus';
+                                var tC = diff>0.1?'#EF4444':diff<-0.1?'#10B981':'#94A3B8';
+                                var tL = diff>0.1?'Rising +'+diff.toFixed(2)+'m':diff<-0.1?'Falling '+diff.toFixed(2)+'m':'Stable';
+                                h += '<div style="background:var(--bg-primary,#fff);border:1px solid var(--separator,#e2e8f0);border-radius:14px;padding:16px">';
+                                h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+                                h += '<div style="display:flex;align-items:center;gap:8px"><div style="width:10px;height:10px;border-radius:50%;background:'+c+'"></div>';
+                                h += '<span style="font-size:14px;font-weight:700">'+fc.station+'</span></div>';
+                                h += '<div style="display:flex;align-items:center;gap:4px;font-size:11px;color:'+tC+';font-weight:600"><i class="fa-solid '+tI+'" style="font-size:10px"></i> '+tL+'</div></div>';
+                                h += '<div style="display:flex;align-items:flex-end;gap:4px;height:80px;margin-bottom:8px">';
+                                vals.forEach(function(p){
+                                    var pct = Math.max(10,Math.round(((p.v-mn)/rng)*100));
+                                    var dl = new Date(p.t).toLocaleDateString('en',{day:'numeric',month:'short'});
+                                    h += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">';
+                                    h += '<span style="font-size:10px;font-weight:700">'+p.v.toFixed(1)+'</span>';
+                                    h += '<div style="width:100%;height:'+pct+'%;background:linear-gradient(180deg,'+c+','+c+'80);border-radius:6px 6px 2px 2px;min-height:8px"></div>';
+                                    h += '<span style="font-size:8px;color:#94a3b8;white-space:nowrap">'+dl+'</span></div>';
+                                });
+                                h += '</div>';
+                                h += '<div style="display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;border-top:1px solid var(--separator,#e2e8f0);padding-top:6px;margin-top:4px">';
+                                var vmn = Math.min.apply(null,vals.map(function(v){return v.v;})), vmx = Math.max.apply(null,vals.map(function(v){return v.v;}));
+                                h += '<span>Min: '+vmn.toFixed(2)+'m</span><span>Max: '+vmx.toFixed(2)+'m</span></div></div>';
+                            });
+                            h += '</div>';
+                            h += '<div style="text-align:center;margin-top:14px;font-size:9px;color:#94a3b8"><i class="fa-solid fa-shield-halved" style="margin-right:4px"></i>Source: INA Argentina SIyAH</div>';
+                            box.innerHTML = h;
+                        }).catch(function(e){ box.innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444">Error: '+e.message+'</div>'; });
+                    }
+                    document.addEventListener('click', function(e){
+                        var nav = e.target.closest('[data-view="hidrologia"]');
+                        if(nav) setTimeout(renderForecast, 1500);
+                    });
+                    setTimeout(function(){ var v = document.getElementById('view-hidrologia'); if(v && v.style.display !== 'none') renderForecast(); }, 3000);
+                })();
+                </script>
             </div>
             <!-- REPORTES -->
             <div class="view" id="view-reportes">
