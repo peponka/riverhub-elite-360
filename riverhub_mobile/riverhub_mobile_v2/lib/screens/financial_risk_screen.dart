@@ -35,15 +35,57 @@ class _FinancialRiskScreenState extends State<FinancialRiskScreen> {
   }
 
   void _analyze() {
+    final activosC = double.tryParse(_activos.text) ?? 0;
+    final pasivosC = double.tryParse(_pasivos.text) ?? 0;
+    final activosT = double.tryParse(_activosT.text) ?? 0;
+    final pasivosT = double.tryParse(_pasivosT.text) ?? 0;
+    final ebitda = double.tryParse(_ebitda.text) ?? 0;
+    final deuda = double.tryParse(_deuda.text) ?? 0;
+
+    // Financial ratios
+    final liquidez = pasivosC > 0 ? activosC / pasivosC : 0.0; // Current ratio
+    final endeudamiento = activosT > 0 ? (pasivosT / activosT) * 100 : 0.0; // Debt ratio %
+    final coberturaDeuda = deuda > 0 ? ebitda / deuda : 99.0; // EBITDA coverage
+    final patrimonioNeto = activosT - pasivosT;
+    final solvencia = pasivosT > 0 ? patrimonioNeto / pasivosT : 0.0;
+
+    // Weighted score (0-100)
+    double score = 50; // Base
+    // Liquidity (weight: 25)
+    if (liquidez >= 2.0) score += 25;
+    else if (liquidez >= 1.5) score += 20;
+    else if (liquidez >= 1.0) score += 10;
+    else score -= 10;
+    // Debt ratio (weight: 25)
+    if (endeudamiento < 40) score += 25;
+    else if (endeudamiento < 50) score += 15;
+    else if (endeudamiento < 60) score += 5;
+    else score -= 15;
+    // EBITDA coverage (weight: 25)
+    if (coberturaDeuda >= 3.0) score += 25;
+    else if (coberturaDeuda >= 2.0) score += 15;
+    else if (coberturaDeuda >= 1.0) score += 5;
+    else score -= 15;
+
+    score = score.clamp(0, 100).toDouble();
+
+    // Generate dynamic flags
+    List<String> dynamicFlags = [];
+    if (endeudamiento > 50) dynamicFlags.add('Endeudamiento alto (${endeudamiento.toStringAsFixed(0)}%) > 50%');
+    if (endeudamiento <= 50) dynamicFlags.add('Endeudamiento saludable (${endeudamiento.toStringAsFixed(0)}%)');
+    if (coberturaDeuda < 1.5) dynamicFlags.add('Cobertura de deuda ajustada (${coberturaDeuda.toStringAsFixed(1)}x)');
+    if (coberturaDeuda >= 1.5) dynamicFlags.add('Cobertura de deuda favorable (${coberturaDeuda.toStringAsFixed(1)}x)');
+    if (liquidez < 1.0) dynamicFlags.add('Liquidez corriente insuficiente (${liquidez.toStringAsFixed(2)}x) < 1.0x');
+    if (liquidez >= 1.0 && liquidez < 1.5) dynamicFlags.add('Liquidez corriente ajustada (${liquidez.toStringAsFixed(2)}x)');
+    if (liquidez >= 1.5) dynamicFlags.add('Liquidez corriente favorable (${liquidez.toStringAsFixed(2)}x)');
+    if (solvencia < 0.5) dynamicFlags.add('Solvencia baja: patrimonio neto \$${patrimonioNeto.toStringAsFixed(0)}');
+    if (patrimonioNeto < 0) dynamicFlags.add('PATRIMONIO NETO NEGATIVO (\$${patrimonioNeto.toStringAsFixed(0)})');
+
     setState(() {
       _analyzed = true;
-      _riskScore = 72;
-      _riskLevel = LocaleService.t('dyn_key_111');
-      _flags = [
-        'Endeudamiento alto (60%) > 50%',
-        'Cobertura de deuda ajustada (1.2x)',
-        'Liquidez corriente favorable (1.25x)',
-      ];
+      _riskScore = score.round();
+      _riskLevel = _riskScore >= 80 ? 'BAJO' : _riskScore >= 60 ? LocaleService.t('dyn_key_111') : 'ALTO';
+      _flags = dynamicFlags;
     });
   }
 

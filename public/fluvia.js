@@ -1507,6 +1507,8 @@ async function loadCalado(){
             h.querySelectorAll('.delete-btn').forEach(function(btn){btn.addEventListener('click',function(){confirmDelete('logs',this.dataset.id,'Lectura',loadCalado);});});
         }else{em.style.display='';}
     }catch(e){/* Calado: */;}
+    // Load INA gauges into calado view
+    if(typeof loadINA==='function') loadINA();
 }
 
 // INCIDENTES
