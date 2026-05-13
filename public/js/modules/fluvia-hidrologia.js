@@ -280,6 +280,10 @@ async function loadINA(){
         }
         if(inaEl) inaEl.innerHTML = html;
 
+        // Also populate calado-ina container if it exists
+        var caladoIna = document.getElementById('calado-ina');
+        if(caladoIna) caladoIna.innerHTML = html;
+
     }catch(e){
         console.error('INA:', e);
     }

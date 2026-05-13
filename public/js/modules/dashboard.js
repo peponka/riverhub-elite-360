@@ -303,7 +303,7 @@ const dashboardLogic = {
         });
     },
 
-    renderScadaCharts: function () {
+    renderScadaCharts: async function () {
         this.createChart('scada-chart-1', 'bar', {
             labels: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
             datasets: [{
@@ -335,20 +335,45 @@ const dashboardLogic = {
             });
         }
 
-        this.createChart('scada-chart-2', 'line', {
-            labels: ['Asu', 'Pil', 'Hum', 'Ros'],
-            datasets: [{
-                label: 'Nivel',
-                data: [4.2, 3.8, 2.1, 1.9],
-                borderColor: '#ff4444',
-                borderWidth: 3,
-                tension: 0.3,
-                pointRadius: 4,
-                pointBackgroundColor: '#1e293b',
-                pointBorderColor: '#ff4444',
-                pointBorderWidth: 2
-            }]
-        });
+        // REAL HYDROLOGY DATA: Fetch from /api/hydrology proxy
+        try {
+            const hydroRes = await fetch('/api/hydrology');
+            if (hydroRes.ok) {
+                const hydroData = await hydroRes.json();
+                const labels = hydroData.stations.slice(0, 6).map(s => s.name.substring(0, 4));
+                const values = hydroData.stations.slice(0, 6).map(s => s.discharge / 1000); // Show in thousands
+                this.createChart('scada-chart-2', 'line', {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Caudal (x1000 m³/s)',
+                        data: values,
+                        borderColor: '#3B82F6',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#1e293b',
+                        pointBorderColor: '#3B82F6',
+                        pointBorderWidth: 2
+                    }]
+                });
+            } else { throw new Error('HTTP ' + hydroRes.status); }
+        } catch (e) {
+            // Fallback to static data if proxy fails
+            this.createChart('scada-chart-2', 'line', {
+                labels: ['Asu', 'Pil', 'Cor', 'Ros'],
+                datasets: [{
+                    label: 'Nivel',
+                    data: [3.2, 2.8, 15.5, 12.8],
+                    borderColor: '#3B82F6',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#1e293b',
+                    pointBorderColor: '#3B82F6',
+                    pointBorderWidth: 2
+                }]
+            });
+        }
 
         this.createChart('doughnut-chart-tech', 'doughnut', {
             labels: ['OK', 'Mantenimiento', 'Inactivo'],
