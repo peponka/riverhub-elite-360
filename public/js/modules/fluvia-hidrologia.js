@@ -432,111 +432,99 @@ async function loadINADashboardKPI(){
 }
 
 // ═══════════════════════════════════════════
-// FEATURE 3: INA Forecast Chart (7-day)
+// FEATURE 3: INA Forecast — Pure HTML Visual
 // ═══════════════════════════════════════════
-var forecastChart = null;
 async function loadINAForecastChart(){
     try{
-        console.log('[INA Forecast] Fetching...');
+        var container = document.getElementById('hidro-forecast-chart');
+        if(!container){ return; }
+        container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-secondary)"><i class="fa-solid fa-spinner fa-spin"></i> Cargando pronóstico INA...</div>';
+
         var res = await fetch('/api/hydrology/ina/forecast');
-        if(!res.ok){ console.warn('[INA Forecast] HTTP', res.status); return; }
+        if(!res.ok){ container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-secondary)">Sin datos de pronóstico</div>'; return; }
         var data = await res.json();
-        console.log('[INA Forecast] Stations:', data.stationsWithForecast);
-        if(!data.forecasts || data.forecasts.length === 0){ console.warn('[INA Forecast] No forecasts'); return; }
-
-        var canvas = document.getElementById('hidro-forecast-chart');
-        if(!canvas){ console.warn('[INA Forecast] No canvas element'); return; }
-
-        // Collect all unique dates across all forecasts and sort them
-        var allDates = {};
-        data.forecasts.forEach(function(fc){
-            if(!fc.forecast) return;
-            fc.forecast.forEach(function(p){
-                var d = new Date(p.t);
-                var key = d.toISOString().slice(0,10);
-                allDates[key] = d;
-            });
-        });
-        var sortedKeys = Object.keys(allDates).sort();
-        var labels = sortedKeys.map(function(k){
-            var d = allDates[k];
-            return d.toLocaleDateString('es', { day: 'numeric', month: 'short' });
-        });
-
-        if(labels.length === 0){ console.warn('[INA Forecast] No date labels'); return; }
+        if(!data.forecasts || data.forecasts.length === 0){ container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-secondary)">Sin pronósticos disponibles</div>'; return; }
 
         var colors = ['#3B82F6','#10B981','#F59E0B','#8B5CF6','#EF4444','#06B6D4','#EC4899','#F97316','#14B8A6'];
-        var datasets = [];
+
+        // Find global min/max for scale
+        var allVals = [];
+        data.forecasts.forEach(function(fc){
+            if(!fc.forecast) return;
+            fc.forecast.forEach(function(p){ if(p.v != null) allVals.push(p.v); });
+        });
+        var minVal = Math.min.apply(null, allVals);
+        var maxVal = Math.max.apply(null, allVals);
+        var range = maxVal - minVal || 1;
+
+        var html = '';
+
+        // Header
+        html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">';
+        html += '<div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1.5px;text-transform:uppercase">PRONÓSTICO OFICIAL INA</div>';
+        html += '<div style="font-size:12px;color:var(--text-tertiary)">Modelo: ' + (data.model || 'tabprono_central') + ' · ' + data.stationsWithForecast + ' estaciones</div></div>';
+        html += '<span style="font-size:9px;background:rgba(59,130,246,0.08);color:#3B82F6;padding:4px 10px;border-radius:6px;font-weight:700">' + (data.forecastDate ? new Date(data.forecastDate).toLocaleDateString('es', {day:'numeric',month:'short',year:'numeric'}) : 'Reciente') + '</span>';
+        html += '</div>';
+
+        // Station forecast cards
+        html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">';
 
         data.forecasts.forEach(function(fc, i){
             if(!fc.forecast || fc.forecast.length === 0) return;
-            // Map each forecast point to the correct label index
-            var dataPoints = new Array(sortedKeys.length).fill(null);
-            fc.forecast.forEach(function(p){
-                var d = new Date(p.t);
-                var key = d.toISOString().slice(0,10);
-                var idx = sortedKeys.indexOf(key);
-                if(idx >= 0) dataPoints[idx] = p.v;
-            });
+            var color = colors[i % colors.length];
+            var vals = fc.forecast.filter(function(p){ return p.v != null; });
+            if(vals.length === 0) return;
 
-            datasets.push({
-                label: fc.station,
-                data: dataPoints,
-                borderColor: colors[i % colors.length],
-                backgroundColor: colors[i % colors.length] + '20',
-                borderWidth: 2.5,
-                pointRadius: 4,
-                pointBackgroundColor: colors[i % colors.length],
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                tension: 0.3,
-                fill: false
+            var current = vals[0].v;
+            var last = vals[vals.length - 1].v;
+            var diff = last - current;
+            var trendIcon = diff > 0.1 ? 'fa-arrow-trend-up' : diff < -0.1 ? 'fa-arrow-trend-down' : 'fa-minus';
+            var trendColor = diff > 0.1 ? '#EF4444' : diff < -0.1 ? '#10B981' : '#94A3B8';
+            var trendLabel = diff > 0.1 ? 'Sube +' + diff.toFixed(2) + 'm' : diff < -0.1 ? 'Baja ' + diff.toFixed(2) + 'm' : 'Estable';
+
+            html += '<div style="background:var(--bg-primary);border:1px solid var(--separator);border-radius:14px;padding:16px;transition:all 0.2s" onmouseover="this.style.borderColor=\'' + color + '40\'" onmouseout="this.style.borderColor=\'var(--separator)\'">';
+
+            // Station header
+            html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+            html += '<div style="display:flex;align-items:center;gap:8px">';
+            html += '<div style="width:10px;height:10px;border-radius:50%;background:' + color + '"></div>';
+            html += '<span style="font-size:14px;font-weight:700;color:var(--text-primary)">' + fc.station + '</span>';
+            html += '</div>';
+            html += '<div style="display:flex;align-items:center;gap:4px;font-size:11px;color:' + trendColor + ';font-weight:600"><i class="fa-solid ' + trendIcon + '" style="font-size:10px"></i> ' + trendLabel + '</div>';
+            html += '</div>';
+
+            // Bar chart for each date
+            html += '<div style="display:flex;align-items:flex-end;gap:4px;height:80px;margin-bottom:8px">';
+            vals.forEach(function(p){
+                var pct = Math.max(10, Math.round(((p.v - minVal) / range) * 100));
+                var dateLabel = new Date(p.t).toLocaleDateString('es', { day:'numeric', month:'short' });
+                html += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">';
+                html += '<span style="font-size:10px;font-weight:700;color:var(--text-primary)">' + p.v.toFixed(1) + '</span>';
+                html += '<div style="width:100%;height:' + pct + '%;background:linear-gradient(180deg,' + color + ',' + color + '80);border-radius:6px 6px 2px 2px;min-height:8px;transition:height 0.5s"></div>';
+                html += '<span style="font-size:8px;color:var(--text-tertiary);white-space:nowrap">' + dateLabel + '</span>';
+                html += '</div>';
             });
+            html += '</div>';
+
+            // Range indicator
+            html += '<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-tertiary);border-top:1px solid var(--separator);padding-top:6px;margin-top:4px">';
+            html += '<span>Mín: ' + Math.min.apply(null, vals.map(function(v){ return v.v; })).toFixed(2) + 'm</span>';
+            html += '<span>Máx: ' + Math.max.apply(null, vals.map(function(v){ return v.v; })).toFixed(2) + 'm</span>';
+            html += '</div>';
+
+            html += '</div>';
         });
 
-        if(datasets.length === 0) return;
-        console.log('[INA Forecast] Rendering chart with', datasets.length, 'datasets');
+        html += '</div>';
 
-        if(forecastChart) forecastChart.destroy();
-        forecastChart = new Chart(canvas, {
-            type: 'line',
-            data: { labels: labels, datasets: datasets },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 14, usePointStyle: true, pointStyle: 'circle' }
-                    },
-                    tooltip: {
-                        mode: 'index', intersect: false,
-                        backgroundColor: 'rgba(15,23,42,0.9)',
-                        titleFont: { family: 'Inter', size: 12, weight: '700' },
-                        bodyFont: { family: 'Inter', size: 11 },
-                        padding: 12,
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: function(ctx){ return ctx.dataset.label + ': ' + (ctx.parsed.y != null ? ctx.parsed.y.toFixed(2) + ' m' : 'sin datos'); }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { font: { family: 'Inter', size: 11, weight: '600' }, color: '#64748b' }
-                    },
-                    y: {
-                        title: { display: true, text: 'Nivel (m)', font: { family: 'Inter', size: 11, weight: '600' }, color: '#64748b' },
-                        grid: { color: 'rgba(0,0,0,0.04)' },
-                        ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
-                    }
-                },
-                interaction: { mode: 'nearest', axis: 'x', intersect: false }
-            }
-        });
+        // Source footer
+        html += '<div style="text-align:center;margin-top:14px;font-size:9px;color:var(--text-tertiary)"><i class="fa-solid fa-shield-halved" style="margin-right:4px"></i>Fuente: INA Argentina · Sistema de Información y Alerta Hidrológico (SIyAH) · Corrida #' + (data.corridaId || '--') + '</div>';
+
+        container.innerHTML = html;
 
     }catch(e){
-        console.error('INA Forecast Chart:', e);
+        console.error('INA Forecast:', e);
+        var c = document.getElementById('hidro-forecast-chart');
+        if(c) c.innerHTML = '<div style="text-align:center;padding:20px;color:var(--error)">Error cargando pronóstico</div>';
     }
 }
