@@ -419,6 +419,8 @@ async function loadDashboard(){
         loadDashRecentVessels(vessels);
         loadDashActivity();
         loadDashMiniCharts(vessels);
+        // INA KPIs on dashboard
+        loadINADashboardKPI();
     }catch(e){/* Dashboard: */;}
 }
 
@@ -900,6 +902,8 @@ function initMap(){
     loadFleetMarkers();
     // AIS third-party traffic
     loadAISTraffic();
+    // INA stations on map
+    loadINAMapMarkers();
     // Auto-refresh AIS every 30s (stored for cleanup)
     window._aisInterval = setInterval(loadAISTraffic, 30000);
     // Hidrovia route — polyline completa Paraguay-Paraná

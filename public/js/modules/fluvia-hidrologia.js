@@ -100,6 +100,9 @@ async function loadHidrologia(){
         // --- INA Argentina Real-Time Gauge Data ---
         await loadINA();
 
+        // --- INA Forecast Chart ---
+        await loadINAForecastChart();
+
     }catch(e){
         console.error('Hydro:', e);
     }
@@ -284,7 +287,215 @@ async function loadINA(){
         var caladoIna = document.getElementById('calado-ina');
         if(caladoIna) caladoIna.innerHTML = html;
 
+        // Store globally for map + dashboard use
+        window._inaStations = data.stations;
+
     }catch(e){
         console.error('INA:', e);
+    }
+}
+
+// ═══════════════════════════════════════════
+// FEATURE 1: INA Stations on Fleet Map
+// ═══════════════════════════════════════════
+var inaMapMarkers = [];
+async function loadINAMapMarkers(){
+    try{
+        if(!window.L || !window.map) return;
+        // Remove old markers
+        inaMapMarkers.forEach(function(m){ window.map.removeLayer(m); });
+        inaMapMarkers = [];
+
+        var res = await fetch('/api/hydrology/ina');
+        if(!res.ok) return;
+        var data = await res.json();
+        if(!data.stations) return;
+
+        var statusColors = {
+            'NORMAL': '#10B981', 'ALERTA': '#F59E0B',
+            'EVACUACION': '#DC2626', 'AGUAS_BAJAS': '#3B82F6', 'SIN_DATOS': '#94A3B8'
+        };
+        var statusLabels = {
+            'NORMAL': 'Normal', 'ALERTA': '⚠ Alerta',
+            'EVACUACION': '🔴 Evacuación', 'AGUAS_BAJAS': '↓ Aguas Bajas', 'SIN_DATOS': 'Sin datos'
+        };
+
+        data.stations.forEach(function(st){
+            if(!st.lat || !st.lon) return;
+            var color = statusColors[st.status] || '#94A3B8';
+            var label = statusLabels[st.status] || st.status;
+            var level = st.currentLevel != null ? st.currentLevel.toFixed(2) + 'm' : '--';
+
+            var icon = L.divIcon({
+                className: '',
+                iconSize: [28, 28],
+                iconAnchor: [14, 14],
+                popupAnchor: [0, -14],
+                html: '<div style="width:28px;height:28px;border-radius:50%;background:' + color + ';border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="fa-solid fa-water" style="font-size:11px;color:white"></i></div>'
+            });
+
+            var popup = '<div style="font-family:Inter,sans-serif;min-width:180px">' +
+                '<div style="font-weight:700;font-size:14px;margin-bottom:4px">' + st.name + '</div>' +
+                '<div style="font-size:11px;color:#666;margin-bottom:8px">Río ' + st.river + ' · Serie #' + st.seriesId + '</div>' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
+                '<span style="font-size:22px;font-weight:800">' + level + '</span>' +
+                '<span style="font-size:10px;font-weight:700;color:' + color + ';background:' + color + '18;padding:3px 8px;border-radius:6px">' + label + '</span>' +
+                '</div>';
+            if(st.alertLevel){
+                var pct = st.currentLevel ? Math.min(100, Math.round((st.currentLevel / st.alertLevel) * 100)) : 0;
+                popup += '<div style="height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden;margin-bottom:4px"><div style="height:100%;width:' + pct + '%;background:' + color + ';border-radius:3px"></div></div>';
+                popup += '<div style="display:flex;justify-content:space-between;font-size:9px;color:#999"><span>Bajo ' + (st.lowLevel || '--') + 'm</span><span>Alerta ' + st.alertLevel + 'm</span></div>';
+            }
+            popup += '<div style="margin-top:6px;font-size:9px;color:#aaa;text-align:center">Fuente: INA SIyAH Argentina</div></div>';
+
+            var m = L.marker([st.lat, st.lon], { icon: icon }).addTo(window.map).bindPopup(popup);
+            inaMapMarkers.push(m);
+        });
+
+        // Update map legend
+        var legend = document.querySelector('.map-legend');
+        if(legend){
+            var existing = legend.querySelector('.ina-count');
+            var alertCount = data.stations.filter(function(s){ return s.status === 'ALERTA' || s.status === 'EVACUACION'; }).length;
+            var txt = data.stationCount + ' estaciones INA' + (alertCount > 0 ? ' · ' + alertCount + ' en alerta' : '');
+            if(existing){ existing.textContent = txt; }
+            else{
+                var d = document.createElement('div');
+                d.className = 'map-legend-item ina-count';
+                d.style.cssText = 'margin-top:4px;font-size:10px;color:#3B82F6;font-weight:600';
+                d.textContent = txt;
+                legend.appendChild(d);
+            }
+        }
+    }catch(e){
+        console.error('INA Map:', e);
+    }
+}
+
+// ═══════════════════════════════════════════
+// FEATURE 2: Dashboard KPI — INA Alert Count
+// ═══════════════════════════════════════════
+async function loadINADashboardKPI(){
+    try{
+        var res = await fetch('/api/hydrology/ina');
+        if(!res.ok) return;
+        var data = await res.json();
+        if(!data.stations) return;
+
+        var alertas = data.stations.filter(function(s){ return s.status === 'ALERTA'; }).length;
+        var crecidas = data.stations.filter(function(s){ return s.status === 'EVACUACION'; }).length;
+        var bajas = data.stations.filter(function(s){ return s.status === 'AGUAS_BAJAS'; }).length;
+        var normales = data.stations.filter(function(s){ return s.status === 'NORMAL'; }).length;
+
+        // Update the CALADO MÍNIMO KPI card with INA data (more relevant)
+        var kpiCalado = document.getElementById('dash-kpi-calado');
+        var kpiCaladoSub = document.getElementById('dash-kpi-calado-sub');
+        if(kpiCalado){
+            // Find minimum water level among all stations
+            var levels = data.stations.filter(function(s){ return s.currentLevel != null; }).map(function(s){ return s.currentLevel; });
+            if(levels.length > 0){
+                var minLevel = Math.min.apply(null, levels);
+                kpiCalado.textContent = minLevel.toFixed(1);
+                kpiCalado.nextElementSibling.textContent = 'm';
+            }
+        }
+        if(kpiCaladoSub){
+            kpiCaladoSub.textContent = normales + ' normal · ' + (alertas + crecidas) + ' alerta';
+            kpiCaladoSub.style.color = (alertas + crecidas) > 0 ? 'var(--warning)' : 'var(--success)';
+        }
+
+        // Also populate the ALARMAS CRÍTICAS card with INA count
+        var kpiAlertas = document.getElementById('dash-kpi-alertas');
+        var kpiAlertasSub = document.getElementById('dash-kpi-alertas-sub');
+        if(kpiAlertas && (alertas + crecidas) > 0){
+            var current = parseInt(kpiAlertas.textContent) || 0;
+            kpiAlertas.textContent = current + alertas + crecidas;
+        }
+        if(kpiAlertasSub && (alertas + crecidas) > 0){
+            kpiAlertasSub.innerHTML = '<i class="fa-solid fa-water" style="margin-right:4px"></i>' + alertas + ' alerta + ' + crecidas + ' crecida INA';
+        }
+
+        // Populate hydro status
+        var hidroStatus = document.getElementById('dash-hidro-status');
+        if(hidroStatus){
+            if(crecidas > 0) hidroStatus.textContent = 'Crecida en ' + crecidas + ' estaciones INA';
+            else if(alertas > 0) hidroStatus.textContent = 'Alerta en ' + alertas + ' estaciones INA';
+            else if(bajas > 0) hidroStatus.textContent = 'Aguas bajas en ' + bajas + ' estaciones';
+            else hidroStatus.textContent = 'Navegable — ' + normales + ' estaciones normales';
+        }
+
+    }catch(e){
+        console.error('INA Dashboard KPI:', e);
+    }
+}
+
+// ═══════════════════════════════════════════
+// FEATURE 3: INA Forecast Chart (7-day)
+// ═══════════════════════════════════════════
+var forecastChart = null;
+async function loadINAForecastChart(){
+    try{
+        var res = await fetch('/api/hydrology/ina/forecast');
+        if(!res.ok) return;
+        var data = await res.json();
+        if(!data.forecasts || data.forecasts.length === 0) return;
+
+        var canvas = document.getElementById('hidro-forecast-chart');
+        if(!canvas) return;
+
+        var colors = ['#3B82F6','#10B981','#F59E0B','#8B5CF6','#EF4444','#06B6D4','#EC4899','#F97316','#14B8A6'];
+        var datasets = [];
+
+        data.forecasts.forEach(function(fc, i){
+            if(!fc.forecast || fc.forecast.length === 0) return;
+            datasets.push({
+                label: fc.station,
+                data: fc.forecast.map(function(p){ return { x: p.t, y: p.v }; }),
+                borderColor: colors[i % colors.length],
+                backgroundColor: colors[i % colors.length] + '15',
+                borderWidth: 2,
+                pointRadius: 1,
+                tension: 0.3,
+                fill: false
+            });
+        });
+
+        if(datasets.length === 0) return;
+
+        if(forecastChart) forecastChart.destroy();
+        forecastChart = new Chart(canvas, {
+            type: 'line',
+            data: { datasets: datasets },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 12, usePointStyle: true } },
+                    tooltip: {
+                        mode: 'index', intersect: false,
+                        callbacks: {
+                            title: function(items){ return items[0] ? new Date(items[0].parsed.x).toLocaleDateString('es', {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : ''; },
+                            label: function(ctx){ return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + ' m'; }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: { unit: 'day', displayFormats: { day: 'dd MMM' } },
+                        grid: { display: false },
+                        ticks: { font: { family: 'Inter', size: 10 } }
+                    },
+                    y: {
+                        title: { display: true, text: 'Nivel (m)', font: { family: 'Inter', size: 11 } },
+                        grid: { color: 'rgba(0,0,0,0.04)' },
+                        ticks: { font: { family: 'Inter', size: 10 } }
+                    }
+                },
+                interaction: { mode: 'nearest', axis: 'x', intersect: false }
+            }
+        });
+
+    }catch(e){
+        console.error('INA Forecast Chart:', e);
     }
 }
