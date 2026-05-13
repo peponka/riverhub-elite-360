@@ -184,10 +184,12 @@ async function loadUKC(draft){
 // ═══════════════════════════════════════════
 async function loadINA(){
     try{
+        console.log('[INA] Fetching /api/hydrology/ina...');
         var res = await fetch('/api/hydrology/ina');
-        if(!res.ok) return;
+        if(!res.ok){ console.warn('[INA] HTTP', res.status); return; }
         var data = await res.json();
-        if(!data.stations || !data.stations.length) return;
+        console.log('[INA] Got', data.stationCount, 'stations');
+        if(!data.stations || !data.stations.length){ console.warn('[INA] No stations in response'); return; }
 
         var riverColors = {
             'Paraguay': '#8B5CF6', 'Paraná': '#3B82F6', 'Paraná de las Palmas': '#0EA5E9',
