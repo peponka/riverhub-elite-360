@@ -158,7 +158,7 @@ class _IntegracionesScreenState extends State<IntegracionesScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(children: [
-                      Expanded(child: Text(_generatedKey, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textPrimary, fontFamily: 'monospace'), overflow: TextOverflow.ellipsis)),
+                      Expanded(child: Text(_generatedKey, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textPrimary, letterSpacing: -0.3), overflow: TextOverflow.ellipsis)),
                       CupertinoButton(
                         padding: EdgeInsets.zero,
                         child: Icon(CupertinoIcons.doc_on_clipboard, size: 16, color: AppColors.accent),

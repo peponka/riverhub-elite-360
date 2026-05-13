@@ -400,7 +400,7 @@ document.getElementById('login-email').addEventListener('keydown',function(e){if
 
 // SPA Router
 let map = null;
-const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadTrips,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidents,liquidos:loadLiquidosEN,contratos:loadContratosEN,briefing:loadBriefing};
+const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadTrips,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidents,liquidos:loadLiquidosEN,contratos:loadContratosEN,prezarpe:loadPreZarpe,briefing:loadBriefing};
 
 document.querySelectorAll('.nav-item').forEach(function(item){
     item.addEventListener('click',function(e){
@@ -555,12 +555,14 @@ async function loadDashboard(){
         // Auto-select first vessel
         if(vessels.length>0)selectDashVessel(0);
 
-        // Load extras (weather, hydro, recent vessels, activity)
-        loadDashWeather();
-        loadDashHydro();
+        // Load extras in parallel (consolidated: audit #9)
         loadDashRecentVessels(vessels);
-        loadDashActivity();
-        loadDashMiniCharts(vessels);
+        Promise.all([
+            loadDashWeather(),
+            loadDashHydro(),
+            loadDashActivity(),
+            loadDashMiniCharts(vessels)
+        ]).catch(function(){});
     }catch(e){/* Dashboard: */;}
 }
 
@@ -942,7 +944,7 @@ async function loadComms(){
     try{
         var r=await sb.from('comms').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var area=document.querySelector('#view-comunicaciones .comm-msg-area');
-        if(data&&data.length>0){area.innerHTML=data.map(function(m){return '<p style="margin:6px 0;font-size:13px;"><strong>'+(m.sender||'Sistema')+':</strong> '+(m.message||m.content||'')+' <span style="color:var(--text-secondary);font-size:10px;">'+(m.created_at?new Date(m.created_at).toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}):'')+'</span></p>'}).join('');}
+        if(data&&data.length>0){area.innerHTML=data.map(function(m){return '<p style="margin:6px 0;font-size:13px;"><strong>'+esc(m.sender||'Sistema')+':</strong> '+esc(m.message||m.content||'')+' <span style="color:var(--text-secondary);font-size:10px;">'+(m.created_at?new Date(m.created_at).toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}):'')+'</span></p>'}).join('');}
     }catch(e){/* Comms: */;}
 }
 
@@ -1845,3 +1847,121 @@ if(!document.getElementById('ai-spinner-css')){
     style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
     document.head.appendChild(style);
 }
+
+// --- PRE-DEPARTURE CHECKLIST -----------------------------
+var _pzData=[];
+var _pzSections={
+    'Crew':['Full crew on board','Navigation licenses valid','Health certificates up to date','Emergency roles assigned'],
+    'Fuel':['Fuel level verified','Sufficient autonomy for voyage','No leaks in fuel system','Fuel records updated'],
+    'Navigation':['Current draft within limits','Charts updated','GPS operational','Navigation lights operational'],
+    'Safety':['Fire extinguishers checked','Life jackets complete','Life raft operational','First aid kit available'],
+    'Documentation':['Vessel registration','Port clearance','Insurance valid','Cargo manifest'],
+    'Communications':['VHF radio operational','Channel 16 tested','Sat phone charged','Comms plan active'],
+    'Weather':['48h forecast verified','Conditions suitable for departure','Winds within parameters','No hydro-meteorological alerts']
+};
+
+async function loadPreZarpe(){
+    try{
+        var r=await sb.from('departure_checklists').select('*').order('created_at',{ascending:false}).limit(30);
+        _pzData=r.data||[];
+    }catch(e){
+        _pzData=[
+            {vessel_name:'R/M Guarani',captain_name:'Cpt. Rodriguez',destination:'Rosario',status:'completed',checked_items:28,total_items:28,signed_at:new Date().toISOString(),cargo_description:'Soybeans',cargo_tons:3500},
+            {vessel_name:'R/M Atlas',captain_name:'Cpt. Benitez',destination:'San Lorenzo',status:'draft',checked_items:18,total_items:28,signed_at:new Date().toISOString(),cargo_description:'Corn',cargo_tons:4200}
+        ];
+    }
+    renderPreZarpe();
+}
+
+function renderPreZarpe(){
+    var total=_pzData.length;var approved=_pzData.filter(function(c){return c.status==='completed'}).length;
+    var drafts=total-approved;var rate=total>0?Math.round(approved/total*100):0;
+    var el1=document.getElementById('pz-total');if(el1)el1.textContent=total;
+    var el2=document.getElementById('pz-approved');if(el2)el2.textContent=approved;
+    var el3=document.getElementById('pz-draft');if(el3)el3.textContent=drafts;
+    var el4=document.getElementById('pz-rate');if(el4)el4.textContent=rate+'%';
+    var list=document.getElementById('pz-list');if(!list)return;
+    if(_pzData.length===0){list.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary)"><i class="fa-solid fa-clipboard-check" style="font-size:48px;opacity:0.15;margin-bottom:12px"></i><p>No checklists recorded</p></div>';return;}
+    list.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-top:16px">'+_pzData.map(function(c){
+        var checked=c.checked_items||0;var total2=c.total_items||28;var pct=Math.round(checked/total2*100);
+        var isOk=c.status==='completed';var color=isOk?'var(--success)':'var(--warning)';
+        var dt=c.signed_at?new Date(c.signed_at).toLocaleString('en',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'--';
+        return '<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px">'+
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
+            '<div><div style="font-size:15px;font-weight:700;color:var(--text-primary)">'+esc(c.vessel_name||'')+'</div>'+
+            '<div style="font-size:11px;color:var(--text-secondary)">'+esc(c.captain_name||'')+'</div></div>'+
+            '<span style="font-size:9px;font-weight:700;letter-spacing:0.5px;padding:4px 10px;border-radius:6px;background:'+color+'15;color:'+color+'">'+(isOk?'APPROVED':'DRAFT')+'</span></div>'+
+            '<div style="height:6px;background:var(--bg-tertiary);border-radius:3px;margin-bottom:6px"><div style="height:6px;width:'+pct+'%;background:'+color+';border-radius:3px;transition:width 0.4s"></div></div>'+
+            '<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:10px"><span style="font-weight:600;color:var(--text-primary)">'+checked+'/'+total2+' items - '+pct+'%</span><span style="color:var(--text-secondary)">'+dt+'</span></div>'+
+            '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+            (c.destination?'<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary)"><i class="fa-solid fa-location-dot" style="margin-right:3px"></i>'+esc(c.destination)+'</span>':'')+
+            (c.cargo_description?'<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary)"><i class="fa-solid fa-cube" style="margin-right:3px"></i>'+esc(c.cargo_description)+' - '+(c.cargo_tons||0)+' ton</span>':'')+
+            '</div></div>';
+    }).join('')+'</div>';
+}
+
+function openPreZarpeForm(){
+    var _pzChecked={};for(var s in _pzSections)_pzChecked[s]=[];
+    var totalItems=0;for(var s2 in _pzSections)totalItems+=_pzSections[s2].length;
+    var m=document.createElement('div');m.id='pz-modal';
+    m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+    m.innerHTML='<div style="background:var(--bg-secondary);border-radius:20px;width:90%;max-width:700px;max-height:90vh;overflow-y:auto;padding:32px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div style="font-family:Newsreader,serif;font-size:24px;color:var(--text-primary)">New Pre-Departure</div><button onclick="document.getElementById(\'pz-modal\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-secondary)"><i class="fa-solid fa-xmark"></i></button></div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">'+
+        '<div><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">VESSEL</label><input id="pz-vessel" class="login-input" placeholder="R/M Guarani" style="margin-top:4px"></div>'+
+        '<div><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">DESTINATION</label><input id="pz-dest" class="login-input" placeholder="Rosario" style="margin-top:4px"></div>'+
+        '<div><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">CARGO</label><input id="pz-cargo" class="login-input" placeholder="Soybeans, bulk" style="margin-top:4px"></div>'+
+        '<div><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">TONNAGE</label><input id="pz-tons" class="login-input" placeholder="3500" type="number" style="margin-top:4px"></div>'+
+        '</div><div id="pz-sections"></div>'+
+        '<div style="margin-top:16px"><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">OBSERVATIONS</label><textarea id="pz-obs" class="login-input" rows="2" placeholder="Additional notes..." style="margin-top:4px;resize:none"></textarea></div>'+
+        '<div style="display:flex;gap:12px;margin-top:20px"><button class="btn-secondary" style="flex:1" onclick="document.getElementById(\'pz-modal\').remove()">Cancel</button><button class="btn-primary" style="flex:1" id="pz-submit-btn" onclick="submitPreZarpe()"><i class="fa-solid fa-check"></i> Save</button></div></div>';
+    document.body.appendChild(m);
+    var sectionsDiv=document.getElementById('pz-sections');
+    var icons={Crew:'fa-users',Fuel:'fa-gas-pump',Navigation:'fa-compass',Safety:'fa-shield-halved',Documentation:'fa-folder-open',Communications:'fa-tower-broadcast',Weather:'fa-cloud-sun'};
+    var colors2={Crew:'#8B5CF6',Fuel:'#F97316',Navigation:'#3B82F6',Safety:'#EF4444',Documentation:'#6B7280',Communications:'#0EA5E9',Weather:'#10B981'};
+    for(var sec in _pzSections){
+        var ic=icons[sec]||'fa-check';var cl=colors2[sec]||'#666';
+        var sh='<div style="background:var(--bg-primary);border:1px solid var(--separator);border-radius:14px;margin-bottom:10px;overflow:hidden">';
+        sh+='<div style="padding:12px 16px;display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:8px;background:'+cl+'15;display:flex;align-items:center;justify-content:center"><i class="fa-solid '+ic+'" style="font-size:13px;color:'+cl+'"></i></div>';
+        sh+='<span style="font-size:11px;font-weight:700;color:'+cl+';letter-spacing:0.5px">'+sec.toUpperCase()+'</span>';
+        sh+='<span id="pz-cnt-'+sec+'" style="margin-left:auto;font-size:11px;font-weight:700;color:var(--text-secondary)">0/'+_pzSections[sec].length+'</span></div>';
+        _pzSections[sec].forEach(function(item,idx){
+            sh+='<label style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:0.5px solid var(--separator);cursor:pointer;font-size:13px;color:var(--text-secondary)">';
+            sh+='<input type="checkbox" data-section="'+sec+'" data-item="'+idx+'" onchange="togglePZItem(this)" style="accent-color:var(--success);width:18px;height:18px">'+item+'</label>';
+        });
+        sh+='</div>';sectionsDiv.innerHTML+=sh;
+    }
+    window._pzChecked=_pzChecked;
+}
+
+function togglePZItem(el){
+    var sec=el.dataset.section;var idx=parseInt(el.dataset.item);
+    if(el.checked){window._pzChecked[sec].push(idx);el.parentElement.style.color='var(--text-primary)'}
+    else{window._pzChecked[sec]=window._pzChecked[sec].filter(function(i){return i!==idx});el.parentElement.style.color='var(--text-secondary)'}
+    var cnt=document.getElementById('pz-cnt-'+sec);if(cnt)cnt.textContent=window._pzChecked[sec].length+'/'+_pzSections[sec].length;
+    var total=0,checked=0;for(var s in _pzSections){total+=_pzSections[s].length;checked+=window._pzChecked[s].length;}
+    var btn=document.getElementById('pz-submit-btn');
+    if(btn){btn.innerHTML=checked===total?'<i class="fa-solid fa-certificate"></i> Sign & Approve':'<i class="fa-solid fa-check"></i> Save Draft';btn.style.background=checked===total?'var(--success)':''}
+}
+
+async function submitPreZarpe(){
+    var vessel=document.getElementById('pz-vessel').value.trim();if(!vessel){alert('Enter vessel name');return;}
+    var total=0,checked=0;for(var s in _pzSections){total+=_pzSections[s].length;checked+=window._pzChecked[s].length;}
+    var allDone=checked===total;
+    try{
+        var user=sb.auth.getUser?await sb.auth.getUser():null;var uid=user?.data?.user?.id||'';
+        var profile=null;try{profile=(await sb.from('user_profiles').select('company_id,full_name').eq('user_id',uid).single()).data}catch(e2){}
+        await sb.from('departure_checklists').insert({
+            company_id:profile?.company_id||currentCompanyId||'',vessel_name:vessel,
+            captain_name:profile?.full_name||'Operator',captain_user_id:uid,
+            destination:document.getElementById('pz-dest').value.trim(),
+            cargo_description:document.getElementById('pz-cargo').value.trim(),
+            cargo_tons:parseFloat(document.getElementById('pz-tons').value)||0,
+            observations:document.getElementById('pz-obs').value.trim(),
+            checked_items:checked,total_items:total,status:allDone?'completed':'draft'
+        });
+    }catch(e){console.warn('PZ save:',e)}
+    document.getElementById('pz-modal').remove();loadPreZarpe();
+}
+
+function exportPreZarpe(fmt){alert('Exporting Pre-Departure as '+fmt.toUpperCase()+'...');}

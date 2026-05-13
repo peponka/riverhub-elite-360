@@ -87,6 +87,7 @@
             <a class="nav-item" data-view="panol"><i class="fa-solid fa-box-archive"></i>Panol (Inventario)</a>
             <a class="nav-item" data-view="incidentes"><i class="fa-solid fa-triangle-exclamation"></i>Incidentes</a>
             <a class="nav-item" data-view="contratos"><i class="fa-solid fa-file-contract"></i>Contratos de Flete</a>
+            <a class="nav-item" data-view="prezarpe"><i class="fa-solid fa-clipboard-check"></i>Pre-Zarpe</a>
             <div class="nav-section-label">INTELIGENCIA</div>
             <a class="nav-item" data-view="hidrologia"><i class="fa-solid fa-water"></i>Pronostico Hidrovia</a>
             <a class="nav-item" data-view="reportes"><i class="fa-solid fa-chart-pie"></i>Reportes &amp; Analytics</a>
@@ -391,6 +392,12 @@
                 <div class="view-header"><div><div class="fluvia-title">Contratos de<br><em>Flete.</em></div><div class="fluvia-subtitle">GESTION COMERCIAL - CONTROL DE CONTRATOS</div></div><div class="header-actions"><button class="btn-export" onclick="exportContratos('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportContratos('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('contrato')"><i class="fa-solid fa-plus"></i> Nuevo Contrato</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="ctr-active">0</div><div class="stat-lbl">Activos</div></div><div class="stat-cell"><div class="stat-val" id="ctr-tonnage">0</div><div class="stat-lbl">Tonelaje</div></div><div class="stat-cell"><div class="stat-val" id="ctr-revenue">$0k</div><div class="stat-lbl">Revenue</div></div><div class="stat-cell"><div class="stat-val" id="ctr-expiring">0</div><div class="stat-lbl">Por Expirar</div></div></div>
                 <div id="ctr-list"></div>
+            </div>
+            <!-- PRE-ZARPE -->
+            <div class="view" id="view-prezarpe">
+                <div class="view-header"><div><div class="fluvia-title">Checklist<br><em>Pre-Zarpe.</em></div><div class="fluvia-subtitle">CONTROL PRE-PARTIDA - SEGURIDAD OPERATIVA</div></div><div class="header-actions"><button class="btn-export" onclick="exportPreZarpe('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-primary" onclick="openPreZarpeForm()"><i class="fa-solid fa-plus"></i> Nuevo Checklist</button></div></div>
+                <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="pz-total">0</div><div class="stat-lbl">Total</div></div><div class="stat-cell"><div class="stat-val" id="pz-approved">0</div><div class="stat-lbl">Aprobados</div></div><div class="stat-cell"><div class="stat-val" id="pz-draft">0</div><div class="stat-lbl">Borradores</div></div><div class="stat-cell"><div class="stat-val" id="pz-rate">0%</div><div class="stat-lbl">Tasa Aprobacion</div></div></div>
+                <div id="pz-list"></div>
             </div>
             <!-- HIDROLOGIA -->
             <div class="view" id="view-hidrologia">

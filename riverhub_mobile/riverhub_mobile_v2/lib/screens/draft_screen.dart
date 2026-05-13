@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 import '../services/locale_service.dart';
 
@@ -12,332 +13,336 @@ class DraftScreen extends StatefulWidget {
 }
 
 class _DraftScreenState extends State<DraftScreen> {
-  List<Map<String, dynamic>> _vessels = [];
-  List<Map<String, dynamic>> _draftHistory = [];
   bool _isLoading = true;
+  String _timestamp = '';
+  int _stationCount = 0;
+  Map<String, List<Map<String, dynamic>>> _grouped = {};
+  String _selectedRiver = 'ALL';
 
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    _fetchINA();
   }
 
-  Future<void> _fetchData() async {
+  Future<void> _fetchINA() async {
     setState(() => _isLoading = true);
     try {
-      final vesselResponse = await Supabase.instance.client.from('vessels')
-          .select('id, name, status').order('name');
-      _vessels = List<Map<String, dynamic>>.from(vesselResponse);
-
-      final logsResponse = await Supabase.instance.client.from('logs')
-          .select('*')
-          .eq('action_type', 'DRAFT_READING')
-          .order('created_at', ascending: false)
-          .limit(50);
-      _draftHistory = List<Map<String, dynamic>>.from(logsResponse);
-
-      for (var vessel in _vessels) {
-        final vName = vessel['name'] ?? '';
-        final recentLog = _draftHistory.cast<Map<String, dynamic>?>().firstWhere(
-          (l) => l != null && (l['vessel_name'] == vName),
-          orElse: () => null,
-        );
-        if (recentLog != null) {
-          try {
-            final details = recentLog['details'];
-            if (details is String) {
-              final parsed = Uri.splitQueryString(details.replaceAll('{', '').replaceAll('}', '').replaceAll('"', ''));
-              vessel['current_draft'] = double.tryParse(parsed['draft'] ?? '0') ?? 0.0;
-              vessel['max_draft'] = double.tryParse(parsed['max_draft'] ?? '3.5') ?? 3.5;
-            } else if (details is Map) {
-              vessel['current_draft'] = (details['draft'] ?? 0.0).toDouble();
-              vessel['max_draft'] = (details['max_draft'] ?? 3.5).toDouble();
-            }
-          } catch (_) {}
+      final url = Uri.parse('https://fluviafleet.com/api/hydrology/ina');
+      final res = await http.get(url).timeout(const Duration(seconds: 30));
+      if (res.statusCode == 200 && mounted) {
+        final data = json.decode(res.body);
+        final stations = (data['stations'] as List?) ?? [];
+        final Map<String, List<Map<String, dynamic>>> grouped = {};
+        for (final s in stations) {
+          final river = (s['river'] ?? 'Otro') as String;
+          grouped.putIfAbsent(river, () => []);
+          grouped[river]!.add({
+            'name': s['name'] ?? '',
+            'river': river,
+            'seriesId': s['seriesId'] ?? 0,
+            'level': s['currentLevel'] != null ? (s['currentLevel'] as num).toDouble() : null,
+            'status': s['status'] ?? 'SIN_DATOS',
+            'alertLevel': s['alertLevel'] != null ? (s['alertLevel'] as num).toDouble() : null,
+            'evacLevel': s['evacLevel'] != null ? (s['evacLevel'] as num).toDouble() : null,
+            'lowLevel': s['lowLevel'] != null ? (s['lowLevel'] as num).toDouble() : null,
+            'timestamp': s['timestamp'],
+            'obsCount': s['obsCount'] ?? 0,
+          });
         }
-        vessel['current_draft'] ??= 0.0;
-        vessel['max_draft'] ??= 3.5;
+        setState(() {
+          _grouped = grouped;
+          _timestamp = data['timestamp'] ?? '';
+          _stationCount = stations.length;
+          _isLoading = false;
+        });
       }
     } catch (e) {
-      debugPrint('Draft fetch error: $e');
+      debugPrint('INA fetch error: $e');
+      if (mounted) setState(() => _isLoading = false);
     }
-
-    if (_vessels.isEmpty) {
-      _vessels = [
-        {'id': 'demo-1', 'name': 'TB PARAGUAY 01', 'max_draft': 3.5, 'current_draft': 2.45},
-        {'id': 'demo-2', 'name': 'R/M HERCULES', 'max_draft': 4.0, 'current_draft': 3.80},
-      ];
-    }
-
-    if (mounted) setState(() => _isLoading = false);
   }
 
-  Future<void> _addDraftReading() async {
-    int selectedIndex = 0;
-    final draftCtrl = TextEditingController();
-    final maxDraftCtrl = TextEditingController(text: '3.50');
-    final notesCtrl = TextEditingController();
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'NORMAL': return const Color(0xFF10B981);
+      case 'ALERTA': return const Color(0xFFF59E0B);
+      case 'EVACUACION': return const Color(0xFFEF4444);
+      case 'AGUAS_BAJAS': return const Color(0xFF3B82F6);
+      default: return AppColors.textTertiary;
+    }
+  }
 
-    await showCupertinoModalPopup(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setModal) => Container(
-          height: MediaQuery.of(ctx).size.height * 0.65,
-          padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-          decoration: BoxDecoration(
-            color: AppColors.backgroundSecondary,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-          ),
-          child: Column(children: [
-            Container(
-              margin: const EdgeInsets.only(top: 10, bottom: 6),
-              width: 40, height: 4,
-              decoration: BoxDecoration(color: AppColors.separator, borderRadius: BorderRadius.circular(2)),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                CupertinoButton(padding: EdgeInsets.zero, child: Text(LocaleService.t('common_cancel'), style: GoogleFonts.inter(color: AppColors.textSecondary)), onPressed: () => Navigator.pop(ctx)),
-                Text(LocaleService.t('draft_register'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16, color: AppColors.textPrimary)),
-                CupertinoButton(padding: EdgeInsets.zero, child: Text(LocaleService.t('common_save'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.accent)), onPressed: () async {
-                  if (draftCtrl.text.isNotEmpty) {
-                    try {
-                      final vessel = _vessels[selectedIndex];
-                      final draftVal = double.tryParse(draftCtrl.text) ?? 0.0;
-                      final maxVal = double.tryParse(maxDraftCtrl.text) ?? 3.5;
-                      final companyId = Supabase.instance.client.auth.currentUser?.userMetadata?['company_id'];
+  IconData _statusIcon(String status) {
+    switch (status) {
+      case 'NORMAL': return CupertinoIcons.check_mark_circled_solid;
+      case 'ALERTA': return CupertinoIcons.exclamationmark_triangle_fill;
+      case 'EVACUACION': return CupertinoIcons.xmark_circle_fill;
+      case 'AGUAS_BAJAS': return CupertinoIcons.arrow_down_circle_fill;
+      default: return CupertinoIcons.question_circle_fill;
+    }
+  }
 
-                      await Supabase.instance.client.from('logs').insert({
-                        'title': 'Lectura de calado: ${vessel['name']}',
-                        'vessel_name': vessel['name'],
-                        'action_type': 'DRAFT_READING',
-                        'description': notesCtrl.text.isEmpty
-                            ? 'Calado: ${draftVal.toStringAsFixed(2)}m / Max: ${maxVal.toStringAsFixed(2)}m'
-                            : notesCtrl.text,
-                        'details': '{"draft": $draftVal, "max_draft": $maxVal}',
-                        'company_id': ?companyId,
-                      });
-                    } catch (e) {
-                      debugPrint('Draft save error: $e');
-                    }
-                    if (ctx.mounted) Navigator.pop(ctx);
-                    _fetchData();
-                  }
-                }),
-              ]),
-            ),
-            Container(height: 0.5, color: AppColors.separator),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                children: [
-                  Text(LocaleService.t('draft_vessel_section'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
-                  const SizedBox(height: 6),
-                  GestureDetector(
-                    onTap: () {
-                      showCupertinoModalPopup(
-                        context: ctx,
-                        builder: (pickerCtx) => Container(
-                          height: 250,
-                          color: AppColors.backgroundSecondary,
-                          child: Column(children: [
-                            SizedBox(
-                              height: 44,
-                              child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                                CupertinoButton(child: Text(LocaleService.t('common_done')), onPressed: () => Navigator.pop(pickerCtx)),
-                              ]),
-                            ),
-                            Expanded(
-                              child: CupertinoPicker(
-                                itemExtent: 36,
-                                scrollController: FixedExtentScrollController(initialItem: selectedIndex),
-                                onSelectedItemChanged: (i) => setModal(() => selectedIndex = i),
-                                children: _vessels.map((v) => Center(child: Text(v['name'] ?? '--', style: GoogleFonts.inter(fontSize: 16)))).toList(),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.separator, width: 0.5),
-                      ),
-                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                        Text(_vessels.isNotEmpty ? _vessels[selectedIndex]['name'] ?? '--' : '--', style: GoogleFonts.inter(fontSize: 15, color: AppColors.textPrimary)),
-                        Icon(CupertinoIcons.chevron_down, size: 14, color: AppColors.textSecondary),
-                      ]),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  Text(LocaleService.t('draft_current_reading'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
-                  const SizedBox(height: 6),
-                  CupertinoTextField(controller: draftCtrl, placeholder: '2.45', keyboardType: const TextInputType.numberWithOptions(decimal: true), padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5))),
-                  const SizedBox(height: 18),
-                  Text(LocaleService.t('draft_max_reading'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
-                  const SizedBox(height: 6),
-                  CupertinoTextField(controller: maxDraftCtrl, placeholder: '3.50', keyboardType: const TextInputType.numberWithOptions(decimal: true), padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5))),
-                  const SizedBox(height: 18),
-                  Text(LocaleService.t('draft_notes'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1)),
-                  const SizedBox(height: 6),
-                  CupertinoTextField(controller: notesCtrl, placeholder: LocaleService.t('draft_notes_hint'), padding: EdgeInsets.all(14), maxLines: 3, decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.separator, width: 0.5))),
-                ],
-              ),
-            ),
-          ]),
-        ),
-      ),
-    );
+  String _statusLabel(String status) {
+    switch (status) {
+      case 'NORMAL': return 'NORMAL';
+      case 'ALERTA': return 'ALERTA';
+      case 'EVACUACION': return 'EVACUACION';
+      case 'AGUAS_BAJAS': return 'AGUAS BAJAS';
+      default: return 'SIN DATOS';
+    }
+  }
+
+  String _timeAgo(String? ts) {
+    if (ts == null || ts.isEmpty) return '';
+    try {
+      final dt = DateTime.parse(ts);
+      final diff = DateTime.now().difference(dt);
+      if (diff.inMinutes < 60) return '${diff.inMinutes}m';
+      if (diff.inHours < 24) return '${diff.inHours}h';
+      return '${dt.day}/${dt.month}';
+    } catch (_) {
+      return '';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final all = _grouped.values.expand((l) => l).toList();
+    final withData = all.where((s) => s['level'] != null).length;
+    final alerts = all.where((s) => s['status'] == 'ALERTA' || s['status'] == 'EVACUACION').length;
+    final lowWater = all.where((s) => s['status'] == 'AGUAS_BAJAS').length;
+
+    // Filter stations
+    List<Map<String, dynamic>> displayStations;
+    if (_selectedRiver == 'ALL') {
+      displayStations = all;
+    } else {
+      displayStations = _grouped[_selectedRiver] ?? [];
+    }
+
     return CupertinoPageScaffold(
       backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
         border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        leading: CupertinoButton(padding: EdgeInsets.zero, child: Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
         middle: Text(LocaleService.t('draft_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero, onPressed: _addDraftReading,
-          child: Icon(CupertinoIcons.plus, size: 22, color: AppColors.textPrimary),
-        ),
+        trailing: CupertinoButton(padding: EdgeInsets.zero, onPressed: _fetchINA, child: Icon(CupertinoIcons.refresh, size: 20, color: AppColors.textPrimary)),
       ),
       child: SafeArea(
         child: _isLoading
             ? const Center(child: CupertinoActivityIndicator(radius: 14))
             : ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 children: [
+                  // Header
                   Text(LocaleService.t('draft_header1'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1)),
                   Text(LocaleService.t('draft_header2'), style: GoogleFonts.newsreader(fontSize: 34, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1)),
-                  const SizedBox(height: 24),
-                  ..._vessels.map((v) => _vesselDraftCard(v)),
-                  const SizedBox(height: 28),
-                  Text(LocaleService.t('draft_history_label'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
-                  const SizedBox(height: 12),
-                  ..._draftHistory.map((h) => _historyItem(h)),
-                  if (_draftHistory.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Center(child: Text(LocaleService.t('draft_no_data'), style: GoogleFonts.inter(color: AppColors.textSecondary))),
+                  const SizedBox(height: 20),
+
+                  // KPI Row
+                  Row(children: [
+                    _kpi('$withData', '/$_stationCount', 'Con datos', CupertinoIcons.antenna_radiowaves_left_right, const Color(0xFF10B981)),
+                    const SizedBox(width: 10),
+                    _kpi('$alerts', '', 'Alertas', CupertinoIcons.exclamationmark_triangle_fill, alerts > 0 ? const Color(0xFFEF4444) : AppColors.textTertiary),
+                    const SizedBox(width: 10),
+                    _kpi('$lowWater', '', 'Bajas', CupertinoIcons.arrow_down_circle_fill, lowWater > 0 ? const Color(0xFF3B82F6) : AppColors.textTertiary),
+                  ]),
+                  const SizedBox(height: 16),
+
+                  // River filter chips
+                  SizedBox(
+                    height: 34,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _filterChip('ALL', 'Todas ($_stationCount)'),
+                        ..._grouped.entries.map((e) => _filterChip(e.key, '${e.key.replaceAll("Río ", "")} (${e.value.length})')),
+                      ],
                     ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Station Grid — 2 columns
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.78,
+                    children: displayStations.map((s) => _stationCard(s)).toList(),
+                  ),
+
+                  if (displayStations.isEmpty)
+                    Padding(padding: const EdgeInsets.all(30), child: Center(child: Text('No hay estaciones', style: GoogleFonts.inter(color: AppColors.textSecondary)))),
+
+                  // Source footer
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF3B82F6).withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(children: [
+                      const Icon(CupertinoIcons.globe, size: 13, color: Color(0xFF3B82F6)),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text('INA Argentina \u2014 Sistema de Alerta Hidrologico', style: GoogleFonts.inter(fontSize: 10, color: const Color(0xFF3B82F6), fontWeight: FontWeight.w500))),
+                    ]),
+                  ),
+                  const SizedBox(height: 40),
                 ],
               ),
       ),
     );
   }
 
-  Widget _vesselDraftCard(Map<String, dynamic> vessel) {
-    double current = (vessel['current_draft'] ?? 0.0).toDouble();
-    double maxD = (vessel['max_draft'] ?? 3.5).toDouble();
-    if (maxD <= 0) maxD = 3.5;
-    double percent = ((current / maxD) * 100).clamp(0, 100);
-
-    Color statusColor = AppColors.success;
-    String status = LocaleService.t('draft_optimal');
-    IconData statusIcon = CupertinoIcons.checkmark_shield_fill;
-    if (percent > 90) { statusColor = AppColors.error; status = LocaleService.t('draft_critical'); statusIcon = CupertinoIcons.exclamationmark_triangle_fill; }
-    else if (percent > 75) { statusColor = AppColors.warning; status = LocaleService.t('draft_alert_status'); statusIcon = CupertinoIcons.exclamationmark_circle_fill; }
-    else if (current == 0) { statusColor = AppColors.textSecondary; status = LocaleService.t('draft_optimal'); statusIcon = CupertinoIcons.minus_circle; }
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: statusColor.withValues(alpha: 0.3), width: 1),
+  Widget _filterChip(String key, String label) {
+    final selected = _selectedRiver == key;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedRiver = key),
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.textPrimary : AppColors.backgroundSecondary,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: selected ? AppColors.textPrimary : AppColors.separator, width: 0.5),
+        ),
+        child: Text(label, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: selected ? AppColors.backgroundPrimary : AppColors.textSecondary)),
       ),
-      child: Row(children: [
-        // Color accent strip
-        Container(
-          width: 5,
-          height: 100,
-          decoration: BoxDecoration(
-            color: statusColor,
-            borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(child: Text(vessel['name'] ?? '--', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis)),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(8)),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(statusIcon, size: 11, color: statusColor),
-                    const SizedBox(width: 4),
-                    Text(status, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: statusColor, letterSpacing: 0.5)),
-                  ]),
-                ),
-              ]),
-              const SizedBox(height: 14),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(LocaleService.t('draft_current_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: statusColor, letterSpacing: 0.5)),
-                  Text('${current.toStringAsFixed(2)}m', style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
-                ]),
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  Text(LocaleService.t('draft_max_label'), style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 0.5)),
-                  Text('${maxD.toStringAsFixed(2)}m', style: GoogleFonts.inter(fontSize: 14, color: AppColors.textSecondary)),
-                ]),
-              ]),
-              const SizedBox(height: 10),
-              // Progress bar with status color
-              Container(
-                height: 6, width: double.infinity,
-                decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(3)),
-                child: FractionallySizedBox(
-                  alignment: Alignment.centerLeft, widthFactor: percent / 100,
-                  child: Container(decoration: BoxDecoration(color: statusColor, borderRadius: BorderRadius.circular(3))),
-                ),
-              ),
-            ]),
-          ),
-        ),
-      ]),
     );
   }
 
-  Widget _historyItem(Map<String, dynamic> log) {
-    DateTime date = DateTime.tryParse(log['created_at'] ?? '') ?? DateTime.now();
-    String dateStr = '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  Widget _kpi(String val, String suffix, String label, IconData icon, Color color) => Expanded(
+    child: Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.separator, width: 0.5)),
+      child: Column(children: [
+        Icon(icon, size: 18, color: color),
+        const SizedBox(height: 6),
+        RichText(text: TextSpan(children: [
+          TextSpan(text: val, style: GoogleFonts.newsreader(fontSize: 22, fontWeight: FontWeight.w400, color: color)),
+          if (suffix.isNotEmpty) TextSpan(text: suffix, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
+        ])),
+        Text(label, style: GoogleFonts.inter(fontSize: 9, color: AppColors.textSecondary)),
+      ]),
+    ),
+  );
 
-    double draft = 0.0;
-    String vName = log['vessel_name'] ?? LocaleService.t('map_unknown');
-    try {
-      final details = log['details'];
-      if (details is String && details.contains('draft')) {
-        final match = RegExp(r'"draft"\s*:\s*([\d.]+)').firstMatch(details);
-        if (match != null) draft = double.tryParse(match.group(1)!) ?? 0.0;
-      } else if (details is Map) {
-        draft = (details['draft'] ?? 0.0).toDouble();
-      }
-    } catch (_) {}
+  Widget _stationCard(Map<String, dynamic> s) {
+    final status = s['status'] as String;
+    final color = _statusColor(status);
+    final icon = _statusIcon(status);
+    final label = _statusLabel(status);
+    final level = s['level'] as double?;
+    final alert = s['alertLevel'] as double?;
+    final low = s['lowLevel'] as double?;
+    final name = s['name'] as String;
+    final river = s['river'] as String;
+    final ts = s['timestamp'] as String?;
+    final seriesId = s['seriesId'];
+
+    double alertPct = 0;
+    if (alert != null && level != null && alert > 0) {
+      alertPct = (level / alert).clamp(0.0, 1.0);
+    }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary, borderRadius: BorderRadius.circular(12),
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.separator, width: 0.5),
       ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(vName, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
-          const SizedBox(height: 2),
-          Text(log['description'] ?? '-', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
-        ])),
-        Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Text('${draft.toStringAsFixed(2)}m', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textPrimary)),
-          Text(dateStr, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
-        ]),
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top accent bar
+          Container(
+            height: 4,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Icon + name
+                  Row(children: [
+                    Container(
+                      width: 28, height: 28,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: Center(child: Icon(icon, size: 14, color: color)),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(name, style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.textPrimary), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                  ]),
+                  const SizedBox(height: 4),
+
+                  // River + series
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(5)),
+                    child: Text('Serie #$seriesId', style: GoogleFonts.inter(fontSize: 9, color: AppColors.textTertiary, fontWeight: FontWeight.w500)),
+                  ),
+                  const Spacer(),
+
+                  // Level value
+                  Text(
+                    level != null ? '${level.toStringAsFixed(2)} m' : '-- m',
+                    style: GoogleFonts.newsreader(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
+                  ),
+
+                  // Alert bar
+                  if (alert != null) ...[
+                    const SizedBox(height: 6),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(3),
+                      child: SizedBox(
+                        height: 4,
+                        child: Stack(children: [
+                          Container(color: AppColors.separator),
+                          FractionallySizedBox(widthFactor: alertPct, child: Container(color: color)),
+                        ]),
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                      Text('${low ?? "--"}m', style: GoogleFonts.inter(fontSize: 8, color: AppColors.textTertiary)),
+                      Text('${alert}m', style: GoogleFonts.inter(fontSize: 8, color: AppColors.textTertiary)),
+                    ]),
+                  ],
+                  const SizedBox(height: 6),
+
+                  // Status badge + time
+                  Row(children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4), border: Border.all(color: color.withValues(alpha: 0.3), width: 0.5)),
+                      child: Text(label, style: GoogleFonts.inter(fontSize: 7, fontWeight: FontWeight.w700, color: color, letterSpacing: 0.3)),
+                    ),
+                    const Spacer(),
+                    if (ts != null && _timeAgo(ts).isNotEmpty) ...[
+                      Icon(CupertinoIcons.clock, size: 9, color: AppColors.textTertiary),
+                      const SizedBox(width: 2),
+                      Text(_timeAgo(ts), style: GoogleFonts.inter(fontSize: 8, color: AppColors.textTertiary)),
+                    ],
+                  ]),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

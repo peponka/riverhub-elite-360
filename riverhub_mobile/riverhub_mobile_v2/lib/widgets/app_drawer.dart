@@ -29,6 +29,7 @@ import '../screens/bitacora_screen.dart';
 import '../screens/liquidos_screen.dart';
 import '../screens/contratos_screen.dart';
 import '../screens/facturacion_ia_screen.dart';
+import '../screens/pre_zarpe_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -164,6 +165,7 @@ class AppDrawer extends StatelessWidget {
                   _drawerTile(context, CupertinoIcons.doc_text_fill, LocaleService.t('drawer_trips'), const TripsScreen()),
                   _drawerTile(context, CupertinoIcons.book_fill, LocaleService.t('drawer_logbook'), const BitacoraScreen()),
                   _drawerTile(context, CupertinoIcons.radiowaves_right, LocaleService.t('drawer_comms'), const ComunicacionesScreen()),
+                  _drawerTile(context, CupertinoIcons.checkmark_seal_fill, 'Pre-Zarpe', const PreZarpeScreen()),
 
                   _sectionHeader(LocaleService.t('drawer_management')),
                   _drawerTile(context, CupertinoIcons.person_3_fill, LocaleService.t('drawer_crew'), const TripulacionScreen()),
