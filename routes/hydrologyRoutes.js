@@ -249,12 +249,19 @@ router.get('/ina', apiLimiter, async (req, res) => {
     const timestart = daysAgo.toISOString().slice(0, 10);
     const timeend = today.toISOString().slice(0, 10);
 
-    const results = await Promise.allSettled(
-      INA_STATIONS.map(async (st) => {
-        const url = `${INA_BASE}/obs/puntual/series/${st.seriesId}/observaciones?timestart=${timestart}&timeend=${timeend}`;
-        const resp = await fetch(url, { signal: AbortSignal.timeout(12000) });
-        if (!resp.ok) throw new Error(`INA ${st.name}: HTTP ${resp.status}`);
-        const json = await resp.json();
+    // Batch requests to avoid INA rate limiting (429)
+    // Process in groups of 6 with 500ms delay between batches
+    const BATCH_SIZE = 6;
+    const BATCH_DELAY = 500;
+    const allResults = [];
+    for (let i = 0; i < INA_STATIONS.length; i += BATCH_SIZE) {
+      const batch = INA_STATIONS.slice(i, i + BATCH_SIZE);
+      const batchResults = await Promise.allSettled(
+        batch.map(async (st) => {
+          const url = `${INA_BASE}/obs/puntual/series/${st.seriesId}/observaciones?timestart=${timestart}&timeend=${timeend}`;
+          const resp = await fetch(url, { signal: AbortSignal.timeout(12000) });
+          if (!resp.ok) throw new Error(`INA ${st.name}: HTTP ${resp.status}`);
+          const json = await resp.json();
 
         // Parse observations — INA returns array of { timestart, valor }
         let observations = [];
@@ -301,10 +308,16 @@ router.get('/ina', apiLimiter, async (req, res) => {
           series,
           obsCount: validObs.length
         };
-      })
-    );
+        })
+      );
+      allResults.push(...batchResults);
+      // Delay between batches (except last)
+      if (i + BATCH_SIZE < INA_STATIONS.length) {
+        await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
+      }
+    }
 
-    const stations = results.map((r, i) => {
+    const stations = allResults.map((r, i) => {
       if (r.status === 'fulfilled') return r.value;
       // Fallback for failed fetches
       const st = INA_STATIONS[i];
@@ -355,18 +368,22 @@ router.get('/ina/stations', apiLimiter, (req, res) => {
 // GET /api/hydrology/ina/forecast — Official INA forecasts for stations that have them
 const inaForecastCache = { data: null, expires: 0 };
 
-// Stations with known INA forecast series IDs (pronosticos field in catalog)
-const INA_FORECAST_SERIES = [
-  { stationName: 'Corrientes', seriesId: 1540 },
-  { stationName: 'Barranqueras', seriesId: 3523 },
-  { stationName: 'Goya', seriesId: 3524 },
-  { stationName: 'Reconquista', seriesId: 3526 },
-  { stationName: 'La Paz', seriesId: 3527 },
-  { stationName: 'Paraná', seriesId: 3408 },
-  { stationName: 'Santa Fe', seriesId: 1542 },
-  { stationName: 'Rosario', seriesId: 3412 },
-  { stationName: 'San Nicolás', seriesId: 3414 },
-];
+// Stations with known INA forecast calibration
+// cal_id 289 = tabprono_central (official daily level forecast)
+const INA_FORECAST_CAL_ID = 289;
+
+// Map series_id to station name
+const INA_FORECAST_MAP = {
+  1540: 'Corrientes',
+  3523: 'Barranqueras',
+  3524: 'Goya',
+  3526: 'Reconquista',
+  3527: 'La Paz',
+  3408: 'Paraná',
+  1542: 'Santa Fe',
+  3412: 'Rosario',
+  3414: 'San Nicolás',
+};
 
 router.get('/ina/forecast', apiLimiter, async (req, res) => {
   const now = Date.now();
@@ -375,43 +392,56 @@ router.get('/ina/forecast', apiLimiter, async (req, res) => {
   }
 
   try {
-    const results = await Promise.allSettled(
-      INA_FORECAST_SERIES.map(async (fc) => {
-        const url = `${INA_BASE}/sim/calibrados/${fc.seriesId}/corridas/last`;
-        const resp = await fetch(url, { signal: AbortSignal.timeout(10000) });
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const json = await resp.json();
+    // Fetch last corrida from the tabprono_central calibrated model with forecast values
+    const url = `${INA_BASE}/sim/calibrados/${INA_FORECAST_CAL_ID}/corridas?timestart=${new Date(Date.now() - 7 * 86400000).toISOString().slice(0,10)}&includeProno=true`;
+    const resp = await fetch(url, { signal: AbortSignal.timeout(15000) });
+    if (!resp.ok) throw new Error(`INA Forecast HTTP ${resp.status}`);
+    const corridas = await resp.json();
 
-        // Parse forecast series
-        let forecastSeries = [];
-        if (json.series && Array.isArray(json.series)) {
-          forecastSeries = json.series.map(p => ({
+    if (!Array.isArray(corridas) || corridas.length === 0) {
+      return res.json({
+        source: 'INA Argentina — Pronósticos hidrológicos oficiales',
+        forecasts: [],
+        stationsWithForecast: 0,
+        note: 'No hay corridas recientes disponibles',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Use the latest corrida
+    const lastCorrida = corridas[corridas.length - 1];
+    const forecasts = [];
+
+    if (lastCorrida.series && Array.isArray(lastCorrida.series)) {
+      for (const s of lastCorrida.series) {
+        const stationName = INA_FORECAST_MAP[s.series_id];
+        if (!stationName) continue;
+
+        // Parse pronosticos — filter for 'medio' qualifier (central forecast)
+        const pronosticos = (s.pronosticos || []).filter(p => p.qualifier === 'medio' || !p.qualifier);
+        if (pronosticos.length === 0) continue;
+
+        forecasts.push({
+          station: stationName,
+          seriesId: s.series_id,
+          beginDate: s.begin_date,
+          endDate: s.end_date,
+          forecast: pronosticos.map(p => ({
             t: p.timestart,
             v: parseFloat(p.valor)
-          })).filter(p => !isNaN(p.v));
-        } else if (json.pronosticos && Array.isArray(json.pronosticos)) {
-          forecastSeries = json.pronosticos.map(p => ({
-            t: p.timestart,
-            v: parseFloat(p.valor)
-          })).filter(p => !isNaN(p.v));
-        }
-
-        return {
-          station: fc.stationName,
-          forecastSeriesId: fc.seriesId,
-          forecast: forecastSeries,
-          forecastDate: json.forecast_date || json.fecha_pronostico || null,
-          pointCount: forecastSeries.length
-        };
-      })
-    );
-
-    const forecasts = results
-      .filter(r => r.status === 'fulfilled' && r.value.pointCount > 0)
-      .map(r => r.value);
+          })).filter(p => !isNaN(p.v)),
+          qualifiers: s.qualifiers || [],
+          pointCount: pronosticos.length
+        });
+      }
+    }
 
     const response = {
       source: 'INA Argentina — Pronósticos hidrológicos oficiales',
+      model: 'tabprono_central',
+      calibrationId: INA_FORECAST_CAL_ID,
+      corridaId: lastCorrida.id,
+      forecastDate: lastCorrida.forecast_date,
       forecasts,
       stationsWithForecast: forecasts.length,
       timestamp: new Date().toISOString()
