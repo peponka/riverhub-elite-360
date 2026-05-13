@@ -82,7 +82,7 @@ app.use(helmet({
             styleSrcElem: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             imgSrc: ["'self'", "data:", "blob:", "https://*.basemaps.cartocdn.com", "https://*.tile.openstreetmap.org", "https://cartodb-basemaps-a.global.ssl.fastly.net", "https://cartodb-basemaps-b.global.ssl.fastly.net", "https://cartodb-basemaps-c.global.ssl.fastly.net", "https://cartodb-basemaps-d.global.ssl.fastly.net", "https://a.basemaps.cartocdn.com", "https://b.basemaps.cartocdn.com", "https://c.basemaps.cartocdn.com", "https://d.basemaps.cartocdn.com", "https://tile.openstreetmap.org", "https://flagcdn.com"],
-            connectSrc: ["'self'", "wss:", "ws:", "https://*.supabase.co", "https://api.open-meteo.com", "https://flood-api.open-meteo.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
+            connectSrc: ["'self'", "wss:", "ws:", "https://*.supabase.co", "https://api.open-meteo.com", "https://flood-api.open-meteo.com", "https://alerta.ina.gob.ar", "https://unpkg.com", "https://cdn.jsdelivr.net"],
             frameAncestors: ["'self'"]
         }
     },
@@ -698,7 +698,6 @@ function startAISStream() {
                 if (msg.MetaData && msg.MetaData.ShipName) {
                     ship.ShipName = msg.MetaData.ShipName.trim();
                 }
-                io.emit('position_update', ship);
 
                 // Store position for n8n API access
                 const mmsi = ship.UserID || ship.mmsi;
@@ -714,8 +713,25 @@ function startAISStream() {
                         timestamp: new Date().toISOString()
                     };
 
-                    // Sincronización directa y silenciosa a Supabase para la App Móvil
+                    // TENANT-AWARE BROADCAST: emit to company rooms + global fallback
                     if (app.locals.supabase) {
+                        // Try to find which company owns this vessel by MMSI
+                        app.locals.supabase.from('vessels')
+                            .select('company_id')
+                            .eq('mmsi', mmsi.toString())
+                            .maybeSingle()
+                            .then(({ data: vessel }) => {
+                                if (vessel && vessel.company_id) {
+                                    // Emit only to the owning company's room
+                                    io.to('company_' + vessel.company_id).emit('position_update', ship);
+                                } else {
+                                    // No company match — broadcast to all (public AIS)
+                                    io.emit('position_update', ship);
+                                }
+                            })
+                            .catch(() => io.emit('position_update', ship));
+
+                        // Sync position to Supabase
                         app.locals.supabase.from('vessels')
                             .update({
                                 current_lat: ship.Latitude,
@@ -723,8 +739,10 @@ function startAISStream() {
                                 last_position_update: new Date().toISOString()
                             })
                             .eq('mmsi', mmsi.toString())
-                            .then() // Ignoramos silenciosamente si no afecta filas
-                            .catch(() => {}); // Evitamos bloqueos en el main thread
+                            .then()
+                            .catch(() => {});
+                    } else {
+                        io.emit('position_update', ship);
                     }
                 }
             }
@@ -749,6 +767,15 @@ function startAISStream() {
 // --- SOCKET.IO CONNECTIONS ---
 io.on('connection', (socket) => {
     console.log(`🔌 Cliente conectado: ${socket.id}`);
+
+    // TENANT ISOLATION: Client joins their company room
+    socket.on('join_company', (companyId) => {
+        if (companyId) {
+            socket.join('company_' + companyId);
+            console.log(`🏢 ${socket.id} joined company_${companyId}`);
+        }
+    });
+
     socket.on('disconnect', () => {
         console.log(`🔌 Cliente desconectado: ${socket.id}`);
     });
@@ -935,9 +962,13 @@ app.post('/api/n8n/ai-analyze', aiLimiter, authenticateUser, async (req, res) =>
 });
 
 // --- KEEP ALIVE (for Render free tier) ---
+// Real HTTP self-ping every 10 minutes to prevent sleep
 setInterval(() => {
-    // Prevent Render from sleeping
-}, 10000);
+    const port = process.env.PORT || 3000;
+    fetch(`http://localhost:${port}/api/health`)
+        .then(r => console.log(`[Keep-Alive] ${r.status}`))
+        .catch(() => {});
+}, 10 * 60 * 1000);
 
 // --- START SERVER ---
 const PORT = process.env.PORT || 3000;
