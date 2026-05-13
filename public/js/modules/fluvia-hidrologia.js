@@ -437,7 +437,23 @@ async function loadINADashboardKPI(){
 async function loadINAForecastChart(){
     try{
         var container = document.getElementById('hidro-forecast-chart');
-        if(!container){ return; }
+        if(!container){
+            // Fallback: create the container if it doesn't exist
+            var title = document.querySelector('.section-title');
+            if(!title) return;
+            container = document.createElement('div');
+            container.id = 'hidro-forecast-chart';
+            container.style.cssText = 'background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:24px;margin-top:12px';
+            title.parentNode.appendChild(container);
+        }
+        // If cached HTML has a <canvas>, replace it with a <div>
+        if(container.tagName === 'CANVAS'){
+            var newDiv = document.createElement('div');
+            newDiv.id = 'hidro-forecast-chart';
+            newDiv.style.cssText = container.parentElement ? container.parentElement.style.cssText : 'background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:24px;margin-top:12px';
+            container.parentElement.replaceChild(newDiv, container);
+            container = newDiv;
+        }
         container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-secondary)"><i class="fa-solid fa-spinner fa-spin"></i> Cargando pronóstico INA...</div>';
 
         var res = await fetch('/api/hydrology/ina/forecast');
