@@ -97,11 +97,11 @@ async function loadHidrologia(){
         // --- UKC (Under Keel Clearance) NAVIGATOR ---
         await loadUKC();
 
-        // --- INA Argentina Real-Time Gauge Data ---
-        await loadINA();
+        // --- INA Argentina Real-Time Gauge Data (fire-and-forget) ---
+        loadINA().catch(function(e){ console.error('INA Error:', e); });
 
-        // --- INA Forecast Chart ---
-        await loadINAForecastChart();
+        // --- INA Forecast (fire-and-forget, independent) ---
+        loadINAForecastChart().catch(function(e){ console.error('Forecast Error:', e); });
 
     }catch(e){
         console.error('Hydro:', e);
