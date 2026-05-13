@@ -437,60 +437,99 @@ async function loadINADashboardKPI(){
 var forecastChart = null;
 async function loadINAForecastChart(){
     try{
+        console.log('[INA Forecast] Fetching...');
         var res = await fetch('/api/hydrology/ina/forecast');
-        if(!res.ok) return;
+        if(!res.ok){ console.warn('[INA Forecast] HTTP', res.status); return; }
         var data = await res.json();
-        if(!data.forecasts || data.forecasts.length === 0) return;
+        console.log('[INA Forecast] Stations:', data.stationsWithForecast);
+        if(!data.forecasts || data.forecasts.length === 0){ console.warn('[INA Forecast] No forecasts'); return; }
 
         var canvas = document.getElementById('hidro-forecast-chart');
-        if(!canvas) return;
+        if(!canvas){ console.warn('[INA Forecast] No canvas element'); return; }
+
+        // Collect all unique dates across all forecasts and sort them
+        var allDates = {};
+        data.forecasts.forEach(function(fc){
+            if(!fc.forecast) return;
+            fc.forecast.forEach(function(p){
+                var d = new Date(p.t);
+                var key = d.toISOString().slice(0,10);
+                allDates[key] = d;
+            });
+        });
+        var sortedKeys = Object.keys(allDates).sort();
+        var labels = sortedKeys.map(function(k){
+            var d = allDates[k];
+            return d.toLocaleDateString('es', { day: 'numeric', month: 'short' });
+        });
+
+        if(labels.length === 0){ console.warn('[INA Forecast] No date labels'); return; }
 
         var colors = ['#3B82F6','#10B981','#F59E0B','#8B5CF6','#EF4444','#06B6D4','#EC4899','#F97316','#14B8A6'];
         var datasets = [];
 
         data.forecasts.forEach(function(fc, i){
             if(!fc.forecast || fc.forecast.length === 0) return;
+            // Map each forecast point to the correct label index
+            var dataPoints = new Array(sortedKeys.length).fill(null);
+            fc.forecast.forEach(function(p){
+                var d = new Date(p.t);
+                var key = d.toISOString().slice(0,10);
+                var idx = sortedKeys.indexOf(key);
+                if(idx >= 0) dataPoints[idx] = p.v;
+            });
+
             datasets.push({
                 label: fc.station,
-                data: fc.forecast.map(function(p){ return { x: p.t, y: p.v }; }),
+                data: dataPoints,
                 borderColor: colors[i % colors.length],
-                backgroundColor: colors[i % colors.length] + '15',
-                borderWidth: 2,
-                pointRadius: 1,
+                backgroundColor: colors[i % colors.length] + '20',
+                borderWidth: 2.5,
+                pointRadius: 4,
+                pointBackgroundColor: colors[i % colors.length],
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
                 tension: 0.3,
                 fill: false
             });
         });
 
         if(datasets.length === 0) return;
+        console.log('[INA Forecast] Rendering chart with', datasets.length, 'datasets');
 
         if(forecastChart) forecastChart.destroy();
         forecastChart = new Chart(canvas, {
             type: 'line',
-            data: { datasets: datasets },
+            data: { labels: labels, datasets: datasets },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 12, usePointStyle: true } },
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 14, usePointStyle: true, pointStyle: 'circle' }
+                    },
                     tooltip: {
                         mode: 'index', intersect: false,
+                        backgroundColor: 'rgba(15,23,42,0.9)',
+                        titleFont: { family: 'Inter', size: 12, weight: '700' },
+                        bodyFont: { family: 'Inter', size: 11 },
+                        padding: 12,
+                        cornerRadius: 8,
                         callbacks: {
-                            title: function(items){ return items[0] ? new Date(items[0].parsed.x).toLocaleDateString('es', {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : ''; },
-                            label: function(ctx){ return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + ' m'; }
+                            label: function(ctx){ return ctx.dataset.label + ': ' + (ctx.parsed.y != null ? ctx.parsed.y.toFixed(2) + ' m' : 'sin datos'); }
                         }
                     }
                 },
                 scales: {
                     x: {
-                        type: 'time',
-                        time: { unit: 'day', displayFormats: { day: 'dd MMM' } },
                         grid: { display: false },
-                        ticks: { font: { family: 'Inter', size: 10 } }
+                        ticks: { font: { family: 'Inter', size: 11, weight: '600' }, color: '#64748b' }
                     },
                     y: {
-                        title: { display: true, text: 'Nivel (m)', font: { family: 'Inter', size: 11 } },
+                        title: { display: true, text: 'Nivel (m)', font: { family: 'Inter', size: 11, weight: '600' }, color: '#64748b' },
                         grid: { color: 'rgba(0,0,0,0.04)' },
-                        ticks: { font: { family: 'Inter', size: 10 } }
+                        ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
                     }
                 },
                 interaction: { mode: 'nearest', axis: 'x', intersect: false }
