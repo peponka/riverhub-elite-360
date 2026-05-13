@@ -234,23 +234,19 @@ const INA_STATIONS = [
   { seriesId: 52, name: 'San Fernando', river: 'Río de la Plata', lat: -34.433, lon: -58.550, alertLevel: 3.0, evacLevel: 3.5, lowLevel: 0.33 },
 ];
 
-const inaCache = { data: null, expires: 0 };
+const inaCache = { data: null, expires: 0, refreshing: false };
+const INA_CACHE_TTL = 2 * 60 * 60 * 1000; // 2 hours
 
-// GET /api/hydrology/ina — Real-time gauge heights from INA
-router.get('/ina', apiLimiter, async (req, res) => {
-  const now = Date.now();
-  if (inaCache.data && inaCache.expires > now) {
-    return res.json(inaCache.data);
-  }
-
+// Background refresh function (reusable for pre-warm)
+async function refreshINAData() {
+  if (inaCache.refreshing) return; // prevent concurrent refreshes
+  inaCache.refreshing = true;
   try {
     const today = new Date();
     const daysAgo = new Date(today); daysAgo.setDate(daysAgo.getDate() - 7);
     const timestart = daysAgo.toISOString().slice(0, 10);
     const timeend = today.toISOString().slice(0, 10);
 
-    // Batch requests to avoid INA rate limiting (429)
-    // Process in groups of 3 with 2s delay between batches
     const BATCH_SIZE = 3;
     const BATCH_DELAY = 2000;
     const allResults = [];
@@ -260,63 +256,34 @@ router.get('/ina', apiLimiter, async (req, res) => {
         batch.map(async (st) => {
           const url = `${INA_BASE}/obs/puntual/series/${st.seriesId}/observaciones?timestart=${timestart}&timeend=${timeend}`;
           let resp = await fetch(url, { signal: AbortSignal.timeout(12000) });
-          // Retry once on 429 with 3s backoff
           if (resp.status === 429) {
             await new Promise(r => setTimeout(r, 3000));
             resp = await fetch(url, { signal: AbortSignal.timeout(12000) });
           }
           if (!resp.ok) throw new Error(`INA ${st.name}: HTTP ${resp.status}`);
           const json = await resp.json();
-
-        // Parse observations — INA returns array of { timestart, valor }
-        let observations = [];
-        if (Array.isArray(json)) {
-          observations = json;
-        } else if (json.observaciones) {
-          observations = json.observaciones;
-        }
-
-        // Get latest non-null reading
-        const validObs = observations.filter(o => o.valor != null && o.valor !== '');
-        const latest = validObs.length > 0 ? validObs[validObs.length - 1] : null;
-
-        // Determine status based on official INA alert levels
-        let status = 'NORMAL';
-        let value = null;
-        let timestamp = null;
-        if (latest) {
-          value = parseFloat(latest.valor);
-          timestamp = latest.timestart || latest.fecha;
-          if (st.evacLevel && value >= st.evacLevel) status = 'EVACUACION';
-          else if (st.alertLevel && value >= st.alertLevel) status = 'ALERTA';
-          else if (st.lowLevel && value <= st.lowLevel) status = 'AGUAS_BAJAS';
-        }
-
-        // Build 7-day series for chart
-        const series = validObs.slice(-168).map(o => ({  // last 168 readings (7 days hourly)
-          t: o.timestart || o.fecha,
-          v: parseFloat(o.valor)
-        }));
-
-        return {
-          seriesId: st.seriesId,
-          name: st.name,
-          river: st.river,
-          lat: st.lat, lon: st.lon,
-          currentLevel: value,
-          unit: 'm',
-          timestamp,
-          status,
-          alertLevel: st.alertLevel,
-          evacLevel: st.evacLevel,
-          lowLevel: st.lowLevel,
-          series,
-          obsCount: validObs.length
-        };
+          let observations = Array.isArray(json) ? json : (json.observaciones || []);
+          const validObs = observations.filter(o => o.valor != null && o.valor !== '');
+          const latest = validObs.length > 0 ? validObs[validObs.length - 1] : null;
+          let status = 'NORMAL', value = null, timestamp = null;
+          if (latest) {
+            value = parseFloat(latest.valor);
+            timestamp = latest.timestart || latest.fecha;
+            if (st.evacLevel && value >= st.evacLevel) status = 'EVACUACION';
+            else if (st.alertLevel && value >= st.alertLevel) status = 'ALERTA';
+            else if (st.lowLevel && value <= st.lowLevel) status = 'AGUAS_BAJAS';
+          }
+          const series = validObs.slice(-168).map(o => ({ t: o.timestart || o.fecha, v: parseFloat(o.valor) }));
+          return {
+            seriesId: st.seriesId, name: st.name, river: st.river,
+            lat: st.lat, lon: st.lon, currentLevel: value, unit: 'm',
+            timestamp, status, alertLevel: st.alertLevel,
+            evacLevel: st.evacLevel, lowLevel: st.lowLevel,
+            series, obsCount: validObs.length
+          };
         })
       );
       allResults.push(...batchResults);
-      // Delay between batches (except last)
       if (i + BATCH_SIZE < INA_STATIONS.length) {
         await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
       }
@@ -324,29 +291,55 @@ router.get('/ina', apiLimiter, async (req, res) => {
 
     const stations = allResults.map((r, i) => {
       if (r.status === 'fulfilled') return r.value;
-      // Fallback for failed fetches
       const st = INA_STATIONS[i];
       return {
         seriesId: st.seriesId, name: st.name, river: st.river,
-        lat: st.lat, lon: st.lon,
-        currentLevel: null, unit: 'm', timestamp: null,
-        status: 'SIN_DATOS', alertLevel: st.alertLevel,
+        lat: st.lat, lon: st.lon, currentLevel: null, unit: 'm',
+        timestamp: null, status: 'SIN_DATOS', alertLevel: st.alertLevel,
         evacLevel: st.evacLevel, lowLevel: st.lowLevel,
         series: [], obsCount: 0, error: r.reason?.message
       };
     });
 
-    const response = {
+    inaCache.data = {
       source: 'INA Argentina — Sistema de Información y Alerta Hidrológico',
       api: 'https://alerta.ina.gob.ar/a5/',
-      stationCount: stations.length,
-      stations,
+      stationCount: stations.length, stations,
       timestamp: new Date().toISOString()
     };
+    inaCache.expires = Date.now() + INA_CACHE_TTL;
+    console.log(`✅ INA data refreshed: ${stations.filter(s => s.currentLevel != null).length}/${stations.length} stations with data`);
+  } catch (e) {
+    console.error('INA refresh error:', e.message);
+  } finally {
+    inaCache.refreshing = false;
+  }
+}
 
-    inaCache.data = response;
-    inaCache.expires = now + 30 * 60 * 1000; // 30-min cache
-    res.json(response);
+// Pre-warm INA cache on startup (10s delay to let server stabilize)
+setTimeout(() => {
+  console.log('🔄 Pre-warming INA cache...');
+  refreshINAData();
+}, 10000);
+
+// GET /api/hydrology/ina — Real-time gauge heights from INA
+router.get('/ina', apiLimiter, async (req, res) => {
+  const now = Date.now();
+  // Serve fresh cache
+  if (inaCache.data && inaCache.expires > now) {
+    return res.json(inaCache.data);
+  }
+  // Stale-while-revalidate: serve stale data instantly, refresh in background
+  if (inaCache.data) {
+    refreshINAData(); // fire-and-forget background refresh
+    return res.json(inaCache.data);
+  }
+
+  // Cold start — no cache at all, must wait
+  try {
+    await refreshINAData();
+    if (inaCache.data) return res.json(inaCache.data);
+    res.status(503).json({ error: 'INA data not yet available, please retry in 30s' });
   } catch (e) {
     console.error('INA API error:', e.message);
     res.status(500).json({ error: 'Error fetching INA data', detail: e.message });
