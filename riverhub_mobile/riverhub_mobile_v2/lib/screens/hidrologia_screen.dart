@@ -27,6 +27,15 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
   List<double> _chartData = [];
   List<String> _chartLabels = [];
   List<Map<String, dynamic>> _stations = [];
+  
+  // UKC State
+  double _ukcDraft = 2.5;
+  String _ukcOverallStatus = '';
+  List<Map<String, dynamic>> _ukcStations = [];
+
+  // INA Argentina State
+  List<Map<String, dynamic>> _inaStations = [];
+  bool _inaLoading = false;
 
   @override
   void initState() {
@@ -41,10 +50,91 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
 
   Future<void> _fetchAllData() async {
     setState(() => _loading = true);
-    await Future.wait([_fetchWeather(), _fetchFloodData()]);
+    await Future.wait([_fetchWeather(), _fetchFloodData(), _fetchUKC(), _fetchINA()]);
     if (mounted) {
       setState(() => _loading = false);
       _animController.forward();
+    }
+  }
+
+  Future<void> _fetchUKC() async {
+    try {
+      // UKC is calculated locally from flood data using the same model as the backend
+      // Reference depths per station (meters)
+      final refDepths = {
+        'Asunción': 7.0, 'Pilar': 5.5, 'Concepción': 6.0, 'Rosario': 10.36,
+        'Corrientes': 10.0, 'Santa Fe': 8.5, 'Corumbá': 5.0,
+      };
+      final margin = 0.3;
+
+      // Wait for stations to be populated
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      List<Map<String, dynamic>> results = [];
+      for (final st in _stations) {
+        final name = st['name'] as String;
+        final flow = (st['flow'] as num).toDouble();
+        final refD = refDepths[name] ?? 6.0;
+        final fallbackQ = (st['median'] as num?)?.toDouble() ?? flow;
+
+        // Same formula as backend: depth = refDepth * (Q / baseQ)^0.3
+        final ratio = fallbackQ > 0 ? flow / fallbackQ : 1.0;
+        final estimatedDepth = refD * pow(ratio.clamp(0.3, 5.0), 0.3);
+        final ukc = estimatedDepth - _ukcDraft - margin;
+
+        String status = 'SAFE';
+        if (ukc < 0) status = 'BLOCKED';
+        else if (ukc < 0.5) status = 'CRITICAL';
+        else if (ukc < 1.0) status = 'CAUTION';
+
+        results.add({
+          'name': name,
+          'river': st['river'],
+          'estimatedDepth': (estimatedDepth * 100).round() / 100.0,
+          'ukc': (ukc * 100).round() / 100.0,
+          'status': status,
+        });
+      }
+
+      if (mounted) {
+        setState(() {
+          _ukcStations = results;
+          _ukcOverallStatus = results.any((r) => r['status'] == 'BLOCKED') ? 'BLOCKED'
+            : results.any((r) => r['status'] == 'CRITICAL') ? 'CRITICAL'
+            : results.any((r) => r['status'] == 'CAUTION') ? 'CAUTION' : 'SAFE';
+        });
+      }
+    } catch (e) {
+      debugPrint('UKC error: $e');
+    }
+  }
+
+  Future<void> _fetchINA() async {
+    try {
+      setState(() => _inaLoading = true);
+      final url = Uri.parse('https://fluviafleet.com/api/hydrology/ina');
+      final res = await http.get(url).timeout(const Duration(seconds: 15));
+      if (res.statusCode == 200 && mounted) {
+        final data = json.decode(res.body);
+        final stations = (data['stations'] as List?) ?? [];
+        setState(() {
+          _inaStations = stations.map<Map<String, dynamic>>((s) => {
+            'name': s['name'] ?? '',
+            'river': s['river'] ?? '',
+            'level': s['currentLevel'] != null ? (s['currentLevel'] as num).toDouble() : null,
+            'status': s['status'] ?? 'SIN_DATOS',
+            'alertLevel': s['alertLevel'] != null ? (s['alertLevel'] as num).toDouble() : null,
+            'evacLevel': s['evacLevel'] != null ? (s['evacLevel'] as num).toDouble() : null,
+            'lowLevel': s['lowLevel'] != null ? (s['lowLevel'] as num).toDouble() : null,
+            'timestamp': s['timestamp'],
+            'obsCount': s['obsCount'] ?? 0,
+          }).toList();
+          _inaLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('INA fetch error: $e');
+      if (mounted) setState(() => _inaLoading = false);
     }
   }
 
@@ -251,6 +341,88 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
                   Text(LocaleService.t('hydro_data_source'), style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
                   const SizedBox(height: 12),
                   ..._stations.map((s) => _stationCard(s)),
+                  const SizedBox(height: 28),
+
+                  // --- UKC NAVIGATOR ---
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text('NAVEGABILIDAD', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                      Text('Under Keel Clearance', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
+                    ]),
+                    if (_ukcOverallStatus.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: _ukcStatusColor(_ukcOverallStatus).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(_ukcOverallStatus, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: _ukcStatusColor(_ukcOverallStatus))),
+                      ),
+                  ]),
+                  const SizedBox(height: 14),
+
+                  // Draft slider
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppColors.separator, width: 0.5),
+                    ),
+                    child: Column(children: [
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        Text('Calado del buque', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary)),
+                        Text('${_ukcDraft.toStringAsFixed(1)} m', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                      ]),
+                      CupertinoSlider(
+                        value: _ukcDraft,
+                        min: 0.5,
+                        max: 8.0,
+                        divisions: 75,
+                        onChanged: (v) {
+                          setState(() => _ukcDraft = v);
+                          _fetchUKC();
+                        },
+                      ),
+                    ]),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // UKC Station Cards
+                  ..._ukcStations.map((u) => _ukcCard(u)),
+                  const SizedBox(height: 36),
+
+                  // --- INA ARGENTINA OFFICIAL DATA ---
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text('INA ARGENTINA', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
+                      Text('Alturas hidrométricas oficiales', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary)),
+                    ]),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text('${_inaStations.length} estaciones', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w600, color: const Color(0xFF3B82F6))),
+                    ),
+                  ]),
+                  const SizedBox(height: 14),
+                  if (_inaLoading)
+                    const Center(child: CupertinoActivityIndicator(radius: 10))
+                  else if (_inaStations.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundSecondary,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.separator, width: 0.5),
+                      ),
+                      child: Center(child: Text('Datos INA no disponibles', style: GoogleFonts.inter(fontSize: 13, color: AppColors.textTertiary))),
+                    )
+                  else
+                    ..._inaStations.map((s) => _inaCard(s)),
+                  const SizedBox(height: 40),
                 ],
               ),
       ),
@@ -307,6 +479,161 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
           ]),
         ),
       ]),
+    );
+  }
+
+  Color _ukcStatusColor(String status) {
+    switch (status) {
+      case 'SAFE': return AppColors.success;
+      case 'CAUTION': return AppColors.warning;
+      case 'CRITICAL': return AppColors.error;
+      case 'BLOCKED': return AppColors.error;
+      default: return AppColors.textSecondary;
+    }
+  }
+
+  Widget _ukcCard(Map<String, dynamic> u) {
+    final status = u['status'] as String;
+    final color = _ukcStatusColor(status);
+    final ukc = u['ukc'] as double;
+    final depth = u['estimatedDepth'] as double;
+
+    IconData statusIcon;
+    switch (status) {
+      case 'SAFE': statusIcon = CupertinoIcons.check_mark_circled_solid; break;
+      case 'CAUTION': statusIcon = CupertinoIcons.exclamationmark_triangle_fill; break;
+      default: statusIcon = CupertinoIcons.xmark_circle_fill;
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(children: [
+          Icon(statusIcon, color: color, size: 24),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(u['name'], style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+            Text('Prof. est: ${depth}m', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary)),
+          ])),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            Text('${ukc >= 0 ? "+" : ""}${ukc}m', style: GoogleFonts.newsreader(fontSize: 20, fontWeight: FontWeight.w700, color: color)),
+            Text(status, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: color, letterSpacing: 0.5)),
+          ]),
+        ]),
+      ),
+    );
+  }
+
+  Color _inaStatusColor(String status) {
+    switch (status) {
+      case 'NORMAL': return AppColors.success;
+      case 'ALERTA': return AppColors.warning;
+      case 'EVACUACION': return AppColors.error;
+      case 'AGUAS_BAJAS': return const Color(0xFF3B82F6);
+      default: return AppColors.textTertiary;
+    }
+  }
+
+  IconData _inaStatusIcon(String status) {
+    switch (status) {
+      case 'NORMAL': return CupertinoIcons.check_mark_circled_solid;
+      case 'ALERTA': return CupertinoIcons.exclamationmark_triangle_fill;
+      case 'EVACUACION': return CupertinoIcons.xmark_circle_fill;
+      case 'AGUAS_BAJAS': return CupertinoIcons.arrow_down_circle_fill;
+      default: return CupertinoIcons.question_circle_fill;
+    }
+  }
+
+  String _inaStatusLabel(String status) {
+    switch (status) {
+      case 'NORMAL': return 'Normal';
+      case 'ALERTA': return 'Alerta';
+      case 'EVACUACION': return 'Evacuación';
+      case 'AGUAS_BAJAS': return 'Aguas Bajas';
+      default: return 'Sin datos';
+    }
+  }
+
+  Widget _inaCard(Map<String, dynamic> s) {
+    final status = s['status'] as String;
+    final color = _inaStatusColor(status);
+    final icon = _inaStatusIcon(status);
+    final label = _inaStatusLabel(status);
+    final level = s['level'] as double?;
+    final alert = s['alertLevel'] as double?;
+    final low = s['lowLevel'] as double?;
+    final river = s['river'] as String;
+    final name = s['name'] as String;
+    final obsCount = s['obsCount'] as int;
+
+    double alertPct = 0;
+    if (alert != null && level != null && alert > 0) {
+      alertPct = (level / alert).clamp(0.0, 1.5);
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.separator, width: 0.5),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          // Header row
+          Row(children: [
+            Icon(icon, color: color, size: 22),
+            const SizedBox(width: 10),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(name, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+              Text('Río $river', style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
+            ])),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(label, style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.w700, color: color, letterSpacing: 0.3)),
+            ),
+          ]),
+          const SizedBox(height: 12),
+          // Level value
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(
+              level != null ? '${level.toStringAsFixed(2)} m' : '-- m',
+              style: GoogleFonts.newsreader(fontSize: 26, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
+            ),
+            if (obsCount > 0)
+              Text('$obsCount obs', style: GoogleFonts.inter(fontSize: 9, color: AppColors.textTertiary)),
+          ]),
+          if (alert != null) ...[
+            const SizedBox(height: 8),
+            // Alert gauge
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Text('${low ?? "--"} m', style: GoogleFonts.inter(fontSize: 9, color: AppColors.textTertiary)),
+              Text('Alerta: ${alert} m', style: GoogleFonts.inter(fontSize: 9, color: AppColors.textTertiary)),
+            ]),
+            const SizedBox(height: 3),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(3),
+              child: LinearProgressIndicator(
+                value: alertPct.clamp(0.0, 1.0),
+                minHeight: 5,
+                backgroundColor: AppColors.separator,
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+              ),
+            ),
+          ],
+        ]),
+      ),
     );
   }
 }
