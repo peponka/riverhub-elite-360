@@ -402,7 +402,65 @@
                     <div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;text-align:center"><div style="width:40px;height:40px;border-radius:12px;background:rgba(14,165,233,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 10px"><i class="fa-solid fa-ship" style="font-size:16px;color:#0EA5E9"></i></div><div class="stat-val" style="font-size:22px;font-weight:800;color:#2EA043;letter-spacing:-0.5px">OK</div><div class="stat-lbl" style="font-size:11px;color:var(--text-secondary);margin-top:4px">Navegabilidad</div></div>
                 </div>
                 <div class="section-title">Pronostico 7 Dias</div>
-                <div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:24px;margin-top:12px"><canvas id="hidro-chart" height="200"></canvas></div>
+                <div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:24px;margin-top:12px" id="hidro-openmeteo-box"></div>
+                <script>
+                (function(){
+                    function renderOpenMeteo(){
+                        var box = document.getElementById('hidro-openmeteo-box');
+                        if(!box || box.dataset.loaded) return;
+                        box.dataset.loaded = '1';
+                        box.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b"><i class="fa-solid fa-spinner fa-spin"></i> Cargando pronostico Open Meteo...</div>';
+                        fetch('/api/hydrology').then(function(r){ return r.json(); }).then(function(data){
+                            if(!data.stations || !data.stations.length){ box.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">Sin datos</div>'; return; }
+                            var withSeries = data.stations.filter(function(s){ return s.series && s.dates && s.series.length > 0; });
+                            if(withSeries.length === 0){
+                                // No series data — show a summary of current conditions instead
+                                var h = '<div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;margin-bottom:14px">CONDICIONES ACTUALES — OPEN METEO FLOOD API</div>';
+                                h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">';
+                                var colors = ['#3B82F6','#10B981','#F59E0B','#8B5CF6','#EF4444','#06B6D4','#EC4899','#F97316'];
+                                data.stations.forEach(function(s,i){
+                                    var c = colors[i%colors.length];
+                                    var isLow = s.discharge < 1500, isHigh = s.discharge > 4000;
+                                    var statusC = isLow?'#F59E0B':isHigh?'#EF4444':'#10B981';
+                                    var statusL = isLow?'BAJO':isHigh?'CRECIDA':'NORMAL';
+                                    h += '<div style="background:var(--bg-primary,#fff);border:1px solid var(--separator,#e2e8f0);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px">';
+                                    h += '<div style="width:8px;height:40px;border-radius:4px;background:'+c+'"></div>';
+                                    h += '<div style="flex:1"><div style="font-size:13px;font-weight:700">'+s.name+'</div>';
+                                    h += '<div style="font-size:11px;color:#94a3b8">'+s.river+'</div></div>';
+                                    h += '<div style="text-align:right"><div style="font-size:16px;font-weight:800">'+(s.discharge||0).toLocaleString()+'</div>';
+                                    h += '<div style="font-size:9px;font-weight:700;color:'+statusC+'">'+statusL+'</div></div></div>';
+                                });
+                                h += '</div>';
+                                h += '<div style="text-align:center;margin-top:12px;font-size:9px;color:#94a3b8"><i class="fa-solid fa-cloud" style="margin-right:4px"></i>Fuente: Open Meteo Flood API · Caudal en m³/s</div>';
+                                box.innerHTML = h;
+                                return;
+                            }
+                            // Has series data — render chart
+                            var colors = ['#3B82F6','#10B981','#F59E0B','#8B5CF6','#EF4444','#06B6D4','#EC4899','#F97316'];
+                            var labels = withSeries[0].dates.slice(-7).map(function(d){ return new Date(d).toLocaleDateString('es',{day:'numeric',month:'short'}); });
+                            var h = '<div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;margin-bottom:14px">PRONOSTICO 7 DIAS — OPEN METEO</div>';
+                            h += '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">';
+                            h += '<tr><th style="text-align:left;padding:6px 8px;border-bottom:2px solid var(--separator,#e2e8f0);font-weight:700;color:#64748b">Estacion</th>';
+                            labels.forEach(function(l){ h += '<th style="padding:6px 8px;border-bottom:2px solid var(--separator,#e2e8f0);font-weight:600;color:#94a3b8;text-align:center">'+l+'</th>'; });
+                            h += '</tr>';
+                            withSeries.forEach(function(s,i){
+                                var c = colors[i%colors.length];
+                                var vals = s.series.slice(-7);
+                                h += '<tr>';
+                                h += '<td style="padding:8px;border-bottom:1px solid var(--separator,#f1f5f9);font-weight:700;white-space:nowrap"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+c+';margin-right:6px"></span>'+s.name+'</td>';
+                                vals.forEach(function(v){ h += '<td style="padding:8px;text-align:center;border-bottom:1px solid var(--separator,#f1f5f9);font-weight:600">'+(v?Math.round(v).toLocaleString():'--')+'</td>'; });
+                                h += '</tr>';
+                            });
+                            h += '</table></div>';
+                            box.innerHTML = h;
+                        }).catch(function(e){ box.innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444">Error: '+e.message+'</div>'; });
+                    }
+                    document.addEventListener('click', function(e){
+                        if(e.target.closest('[data-view="hidrologia"]')) setTimeout(renderOpenMeteo, 1000);
+                    });
+                    setTimeout(function(){ var v = document.getElementById('view-hidrologia'); if(v && v.style.display !== 'none') renderOpenMeteo(); }, 3000);
+                })();
+                </script>
                 <div class="section-title" style="margin-top:20px">Estaciones de Monitoreo</div>
                 <div id="hidro-stations"></div>
                 <div id="hidro-ukc"></div>
