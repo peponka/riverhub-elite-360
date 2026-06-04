@@ -48,8 +48,8 @@
             Continuar con Google
         </button>
         <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:12px;font-weight:600;">
-            <a href="javascript:void(0)" onclick="toggleRegister()" id="toggle-register-btn" style="color:var(--accent);text-decoration:none;">Crear nueva cuenta</a>
-            <a href="javascript:void(0)" onclick="doResetPassword()" style="color:var(--text-secondary);text-decoration:none;">¿Olvidaste tu contraseña?</a>
+            <button type="button" onclick="toggleRegister()" id="toggle-register-btn" style="background:none;border:none;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:inherit;font-weight:inherit;font-family:inherit;">Crear nueva cuenta</button>
+            <button type="button" onclick="doResetPassword()" style="background:none;border:none;padding:0;color:var(--text-secondary);text-decoration:underline;cursor:pointer;font-size:inherit;font-weight:inherit;font-family:inherit;">¿Olvidaste tu contraseña?</button>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;">
             <p class="login-footer" style="margin:0;">Hidrovia Paraguay-Parana — FluviaFleet</p>
@@ -271,7 +271,7 @@
             </div>
             <!-- COPILOTO -->
             <div class="view" id="view-copiloto">
-                <div class="fluvia-title">Copiloto<br><em>IA.</em></div><div class="fluvia-subtitle">CENTRO DE INTELIGENCIA ARTIFICIAL — FLUVIAFLEET AI (GEMINI)</div>
+                <div class="fluvia-title">Copiloto<br><em>IA.</em></div><div class="fluvia-subtitle">CENTRO DE INTELIGENCIA ARTIFICIAL — FLUVIAFLEET AI</div>
                 
                 <!-- IA INTELLIGENCE CARDS -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
@@ -594,72 +594,50 @@
                 <div class="pricing-grid" id="pricing-grid">
                     <div class="pricing-card">
                         <div class="plan-icon"><i class="fa-solid fa-ship"></i></div>
-                        <h3 class="plan-name">Por Barcaza</h3>
-                        <p class="plan-desc">Control individual de cada embarcacion de tu flota</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="149" data-yearly="119">$149</span><span class="plan-unit">/barcaza/mes</span></div>
+                        <h3 class="plan-name">Starter</h3>
+                        <p class="plan-desc">Hasta 5 embarcaciones — Control esencial de tu flota</p>
+                        <div class="plan-price"><span class="plan-amount" data-monthly="149" data-yearly="119">$149</span><span class="plan-unit">/mes</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>1 embarcacion</li>
-                            <li><i class="fa-solid fa-check"></i>Tracking GPS en tiempo real</li>
-                            <li><i class="fa-solid fa-check"></i>Bitacora digital</li>
+                            <li><i class="fa-solid fa-check"></i>Hasta 5 embarcaciones</li>
+                            <li><i class="fa-solid fa-check"></i>Tracking AIS en tiempo real</li>
+                            <li><i class="fa-solid fa-check"></i>Bitácora digital</li>
                             <li><i class="fa-solid fa-check"></i>Control de combustible</li>
                             <li><i class="fa-solid fa-check"></i>Mantenimiento preventivo</li>
-                            <li><i class="fa-solid fa-check"></i>Control de calado</li>
                             <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>Copiloto IA</li>
-                            <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>API Integraciones</li>
+                            <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>Armador de convoyes</li>
                         </ul>
-                        <button class="plan-btn" onclick="selectPlan('barcaza')">Seleccionar</button>
+                        <button class="plan-btn" onclick="selectPlan('starter')">Solicitar Demo</button>
                     </div>
                     <div class="pricing-card popular">
-                        <div class="plan-badge">MAS POPULAR</div>
+                        <div class="plan-badge">MÁS POPULAR</div>
                         <div class="plan-icon"><i class="fa-solid fa-anchor"></i></div>
-                        <h3 class="plan-name">Combo Flota</h3>
-                        <p class="plan-desc">Gestion integral para flotas de hasta 50 embarcaciones</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="799" data-yearly="639">$799</span><span class="plan-unit">/mes (hasta 50 barcazas)</span></div>
+                        <h3 class="plan-name">Profesional</h3>
+                        <p class="plan-desc">Hasta 20 embarcaciones — Gestión integral de flota</p>
+                        <div class="plan-price"><span class="plan-amount" data-monthly="499" data-yearly="399">$499</span><span class="plan-unit">/mes</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Hasta 50 embarcaciones</li>
-                            <li><i class="fa-solid fa-check"></i>Todo de Por Barcaza</li>
+                            <li><i class="fa-solid fa-check"></i>Hasta 20 embarcaciones</li>
+                            <li><i class="fa-solid fa-check"></i>Todo de Starter</li>
                             <li><i class="fa-solid fa-check"></i>Armador de convoyes</li>
-                            <li><i class="fa-solid fa-check"></i>Gestion de tripulacion</li>
-                            <li><i class="fa-solid fa-check"></i>Comunicaciones</li>
-                            <li><i class="fa-solid fa-check"></i>Copiloto IA basico</li>
-                            <li><i class="fa-solid fa-check"></i>Reportes &amp; analytics</li>
-                            <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>API Integraciones</li>
+                            <li><i class="fa-solid fa-check"></i>Gestión de tripulación</li>
+                            <li><i class="fa-solid fa-check"></i>Pronóstico de hidrovía</li>
+                            <li><i class="fa-solid fa-check"></i>Copiloto IA</li>
                         </ul>
-                        <button class="plan-btn popular-btn" onclick="selectPlan('combo')">Seleccionar</button>
+                        <button class="plan-btn popular-btn" onclick="selectPlan('profesional')">Solicitar Demo</button>
                     </div>
                     <div class="pricing-card">
                         <div class="plan-icon"><i class="fa-solid fa-building"></i></div>
                         <h3 class="plan-name">Enterprise</h3>
-                        <p class="plan-desc">Solucion corporativa para flotas de hasta 150 embarcaciones</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="1999" data-yearly="1599">$1,999</span><span class="plan-unit">/mes (hasta 150 barcazas)</span></div>
-                        <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Hasta 150 embarcaciones</li>
-                            <li><i class="fa-solid fa-check"></i>Todo de Combo Flota</li>
-                            <li><i class="fa-solid fa-check"></i>Copiloto IA avanzado</li>
-                            <li><i class="fa-solid fa-check"></i>API integraciones</li>
-                            <li><i class="fa-solid fa-check"></i>Reportes avanzados</li>
-                            <li><i class="fa-solid fa-check"></i>Soporte prioritario 24/7</li>
-                            <li><i class="fa-solid fa-check"></i>SLA 99.9%</li>
-                            <li><i class="fa-solid fa-check"></i>Incidentes &amp; auditoria</li>
-                        </ul>
-                        <button class="plan-btn" onclick="selectPlan('enterprise')">Seleccionar</button>
-                    </div>
-                    <div class="pricing-card unlimited">
-                        <div class="plan-icon"><i class="fa-solid fa-infinity"></i></div>
-                        <h3 class="plan-name">Ilimitado</h3>
-                        <p class="plan-desc">Sin limites. Toda la hidrovia bajo tu control.</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="3999" data-yearly="3199">$3,999</span><span class="plan-unit">/mes</span></div>
+                        <p class="plan-desc">Embarcaciones ilimitadas — Solución corporativa a medida</p>
+                        <div class="plan-price"><span class="plan-amount">Contactar</span><span class="plan-unit"></span></div>
                         <ul class="plan-features">
                             <li><i class="fa-solid fa-check"></i>Embarcaciones ilimitadas</li>
-                            <li><i class="fa-solid fa-check"></i>Usuarios ilimitados</li>
-                            <li><i class="fa-solid fa-check"></i>Copiloto IA premium</li>
-                            <li><i class="fa-solid fa-check"></i>White-label disponible</li>
-                            <li><i class="fa-solid fa-check"></i>Onboarding dedicado</li>
-                            <li><i class="fa-solid fa-check"></i>Account manager exclusivo</li>
-                            <li><i class="fa-solid fa-check"></i>Integraciones custom</li>
-                            <li><i class="fa-solid fa-check"></i>Backups dedicados</li>
+                            <li><i class="fa-solid fa-check"></i>Todo de Profesional</li>
+                            <li><i class="fa-solid fa-check"></i>API e integraciones</li>
+                            <li><i class="fa-solid fa-check"></i>SLA 99.9% garantizado</li>
+                            <li><i class="fa-solid fa-check"></i>Soporte dedicado 24/7</li>
+                            <li><i class="fa-solid fa-check"></i>Onboarding personalizado</li>
                         </ul>
-                        <button class="plan-btn unlimited-btn" onclick="selectPlan('ilimitado')">Comenzar Ahora</button>
+                        <button class="plan-btn" onclick="selectPlan('enterprise')">Contactar Ventas</button>
                     </div>
                 </div>
                 <div class="plan-faq">

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Cookies — FluviaFleet</title>
+    <meta name="description" content="Política de cookies de FluviaFleet. Información sobre las cookies que utilizamos y cómo gestionarlas.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://fluviafleet.com/cookies.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,300;6..72,0,400;6..72,0,500;6..72,0,600;6..72,1,300;6..72,1,400;6..72,1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root{--bg:#F8F9FA;--white:#FFFFFF;--surface:#F1F5F9;--text:#1A1A2E;--text2:#94A3B8;--text3:#CBD5E1;--sep:#E2E8F0;--accent:#3B82F6;--success:#2EA043;--error:#DC2626;--warning:#F59E0B}
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
+
+        /* NAV */
+        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--sep);padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
+        .nav-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text)}
+        .nav-brand img.nav-logo{width:44px;height:44px;border-radius:50%;object-fit:cover}
+        .nav-back{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text2);font-size:13px;font-weight:500;transition:color 0.2s}
+        .nav-back:hover{color:var(--text)}
+        .nav-back i{font-size:12px}
+
+        /* LEGAL CONTENT */
+        .legal-container{max-width:760px;margin:0 auto;padding:120px 48px 80px}
+        .legal-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
+        .legal-container h1{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
+        .legal-container h1 em{font-weight:300;font-style:italic}
+        .legal-updated{font-size:13px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:0.5px solid var(--sep)}
+        .legal-section{margin-bottom:36px}
+        .legal-section h2{font-family:'Newsreader',serif;font-size:24px;font-weight:500;color:var(--text);margin-bottom:12px;padding-top:8px}
+        .legal-section p{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:12px}
+        .legal-section ul{list-style:none;padding:0;margin-bottom:12px}
+        .legal-section ul li{font-size:14px;color:var(--text2);line-height:1.8;padding:4px 0 4px 20px;position:relative}
+        .legal-section ul li::before{content:'';position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.5}
+
+        /* COOKIE TABLE */
+        .cookie-table{width:100%;border-collapse:collapse;margin:16px 0 12px;border-radius:12px;overflow:hidden;border:0.5px solid var(--sep)}
+        .cookie-table thead{background:var(--surface)}
+        .cookie-table th{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:0.5px;text-align:left;padding:12px 16px}
+        .cookie-table td{font-size:13px;color:var(--text2);line-height:1.6;padding:12px 16px;border-top:0.5px solid var(--sep)}
+        .cookie-table tr:hover td{background:var(--surface)}
+        .cookie-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.5px;padding:3px 10px;border-radius:100px}
+        .cookie-badge.essential{background:rgba(46,160,67,0.1);color:var(--success)}
+        .cookie-badge.analytics{background:rgba(59,130,246,0.1);color:var(--accent)}
+        .cookie-badge.functional{background:rgba(245,158,11,0.1);color:var(--warning)}
+
+        /* FOOTER */
+        .footer{border-top:0.5px solid var(--sep);padding:60px 48px 32px}
+        .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto}
+        .footer-brand{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+        .footer-desc{font-size:12px;color:var(--text2);line-height:1.6;max-width:280px}
+        .footer h4{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1.5px;margin-bottom:16px}
+        .footer a{display:block;font-size:13px;color:var(--text);text-decoration:none;margin-bottom:10px;transition:color 0.2s}
+        .footer a:hover{color:var(--accent)}
+        .footer-copy{text-align:center;font-size:11px;color:var(--text3);margin-top:48px;padding-top:24px;border-top:0.5px solid var(--sep);max-width:1200px;margin-left:auto;margin-right:auto}
+        .footer-socials{display:flex;gap:12px;margin-top:12px}
+        .footer-socials a{font-size:16px;color:var(--text2);margin-bottom:0}
+        .footer-socials a:hover{color:var(--text)}
+
+        @media(max-width:768px){
+            .nav{padding:0 20px}
+            .legal-container{padding:100px 24px 60px}
+            .legal-container h1{font-size:32px}
+            .cookie-table{font-size:12px}
+            .cookie-table th,.cookie-table td{padding:10px 12px}
+            .footer{padding:40px 24px 24px}
+            .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+    <a class="nav-brand" href="/">
+        <img class="nav-logo" src="img/fluvia-logo.jpg" alt="FluviaFleet">
+        <span style="font-family:'Newsreader',serif;font-size:2.1rem;font-weight:400;color:var(--text);letter-spacing:-0.01em">FluviaFleet</span>
+    </a>
+    <a class="nav-back" href="/">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver al inicio
+    </a>
+</nav>
+
+<!-- CONTENT -->
+<main class="legal-container">
+    <div class="legal-tag">COOKIES</div>
+    <h1>Política de <em>Cookies</em></h1>
+    <p class="legal-updated">Última actualización: Junio 2026</p>
+
+    <section class="legal-section">
+        <h2>1. Qué son las Cookies</h2>
+        <p>Las cookies son pequeños archivos de texto que se almacenan en su dispositivo (ordenador, tableta o teléfono móvil) cuando visita un sitio web. Son ampliamente utilizadas para hacer que los sitios web funcionen de manera más eficiente, así como para proporcionar información a los propietarios del sitio.</p>
+        <p>Las cookies no contienen programas, virus ni malware, y no pueden acceder a información de su dispositivo.</p>
+    </section>
+
+    <section class="legal-section">
+        <h2>2. Cookies que Utilizamos</h2>
+        <p>FluviaFleet utiliza las siguientes categorías de cookies:</p>
+
+        <h3 style="font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:var(--text);margin:20px 0 12px">Cookies Esenciales</h3>
+        <p>Son estrictamente necesarias para el funcionamiento de la plataforma. Sin ellas, no podría iniciar sesión ni utilizar las funcionalidades del servicio.</p>
+        <table class="cookie-table">
+            <thead>
+                <tr>
+                    <th>Cookie</th>
+                    <th>Propósito</th>
+                    <th>Duración</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>sb-access-token</td>
+                    <td>Token de autenticación de sesión (Supabase Auth)</td>
+                    <td>1 hora</td>
+                    <td><span class="cookie-badge essential">Esencial</span></td>
+                </tr>
+                <tr>
+                    <td>sb-refresh-token</td>
+                    <td>Token de renovación de sesión</td>
+                    <td>7 días</td>
+                    <td><span class="cookie-badge essential">Esencial</span></td>
+                </tr>
+                <tr>
+                    <td>sb-auth-token</td>
+                    <td>Estado de autenticación del usuario</td>
+                    <td>Sesión</td>
+                    <td><span class="cookie-badge essential">Esencial</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:var(--text);margin:20px 0 12px">Cookies Analíticas</h3>
+        <p>Nos permiten comprender cómo los usuarios interactúan con la plataforma, ayudándonos a mejorar el rendimiento y la experiencia de uso.</p>
+        <table class="cookie-table">
+            <thead>
+                <tr>
+                    <th>Cookie</th>
+                    <th>Propósito</th>
+                    <th>Duración</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>_ff_session</td>
+                    <td>Identificador anónimo de sesión para métricas de uso</td>
+                    <td>30 minutos</td>
+                    <td><span class="cookie-badge analytics">Analítica</span></td>
+                </tr>
+                <tr>
+                    <td>_ff_perf</td>
+                    <td>Datos de rendimiento de carga de páginas y módulos</td>
+                    <td>Sesión</td>
+                    <td><span class="cookie-badge analytics">Analítica</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:var(--text);margin:20px 0 12px">Cookies Funcionales</h3>
+        <p>Permiten recordar sus preferencias y personalizar su experiencia en la plataforma.</p>
+        <table class="cookie-table">
+            <thead>
+                <tr>
+                    <th>Cookie</th>
+                    <th>Propósito</th>
+                    <th>Duración</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ff_theme</td>
+                    <td>Preferencia de tema visual (claro/oscuro)</td>
+                    <td>1 año</td>
+                    <td><span class="cookie-badge functional">Funcional</span></td>
+                </tr>
+                <tr>
+                    <td>ff_lang</td>
+                    <td>Preferencia de idioma (ES/EN/PT)</td>
+                    <td>1 año</td>
+                    <td><span class="cookie-badge functional">Funcional</span></td>
+                </tr>
+                <tr>
+                    <td>ff_map_prefs</td>
+                    <td>Configuración del mapa (zoom, capas, centro)</td>
+                    <td>30 días</td>
+                    <td><span class="cookie-badge functional">Funcional</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="legal-section">
+        <h2>3. Cookies de Terceros</h2>
+        <p>Algunos servicios de terceros que utilizamos pueden establecer sus propias cookies:</p>
+        <ul>
+            <li><strong>Google Fonts:</strong> para la carga de tipografías (Inter, Newsreader). Google puede recopilar datos técnicos anónimos sobre el uso de fuentes. Consulte la <a href="https://policies.google.com/privacy" style="color:var(--accent);display:inline;text-decoration:none" target="_blank" rel="noopener">Política de Privacidad de Google</a></li>
+            <li><strong>Supabase Auth:</strong> gestiona la autenticación y sesiones de usuario. Las cookies de Supabase son estrictamente necesarias para el funcionamiento del sistema de login. Consulte la <a href="https://supabase.com/privacy" style="color:var(--accent);display:inline;text-decoration:none" target="_blank" rel="noopener">Política de Privacidad de Supabase</a></li>
+        </ul>
+    </section>
+
+    <section class="legal-section">
+        <h2>4. Cómo Controlar las Cookies</h2>
+        <p>Usted puede gestionar o eliminar las cookies según sus preferencias. Las opciones disponibles son:</p>
+        <ul>
+            <li><strong>Configuración del navegador:</strong> la mayoría de los navegadores permiten bloquear o eliminar cookies desde su configuración. Consulte la documentación de su navegador para instrucciones específicas</li>
+            <li><strong>Cookies esenciales:</strong> tenga en cuenta que si bloquea las cookies esenciales, no podrá iniciar sesión ni utilizar la plataforma FluviaFleet</li>
+            <li><strong>Cookies funcionales y analíticas:</strong> puede desactivarlas sin afectar el funcionamiento básico del servicio, aunque su experiencia podría verse limitada</li>
+        </ul>
+        <p>A continuación, enlaces directos a la configuración de cookies de los navegadores más comunes:</p>
+        <ul>
+            <li><a href="https://support.google.com/chrome/answer/95647" style="color:var(--accent);display:inline;text-decoration:none" target="_blank" rel="noopener">Google Chrome</a></li>
+            <li><a href="https://support.mozilla.org/es/kb/cookies-informacion-que-los-sitios-web-guardan-en-" style="color:var(--accent);display:inline;text-decoration:none" target="_blank" rel="noopener">Mozilla Firefox</a></li>
+            <li><a href="https://support.apple.com/es-es/guide/safari/sfri11471" style="color:var(--accent);display:inline;text-decoration:none" target="_blank" rel="noopener">Safari</a></li>
+            <li><a href="https://support.microsoft.com/es-es/microsoft-edge/eliminar-cookies-en-microsoft-edge" style="color:var(--accent);display:inline;text-decoration:none" target="_blank" rel="noopener">Microsoft Edge</a></li>
+        </ul>
+    </section>
+
+    <section class="legal-section">
+        <h2>5. Contacto</h2>
+        <p>Si tiene alguna pregunta sobre nuestra Política de Cookies, puede contactarnos:</p>
+        <ul>
+            <li>Email: <a href="mailto:info@fluviafleet.com" style="color:var(--accent);display:inline;text-decoration:none">info@fluviafleet.com</a></li>
+            <li>También puede consultar nuestra <a href="privacidad.html" style="color:var(--accent);display:inline;text-decoration:none">Política de Privacidad</a> y nuestros <a href="terminos.html" style="color:var(--accent);display:inline;text-decoration:none">Términos de Servicio</a> para más información</li>
+        </ul>
+    </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div>
+            <div class="footer-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:36px;height:36px;border-radius:50%;object-fit:cover"><span style="font-family:'Newsreader',serif;font-size:1.7rem;font-weight:400;color:var(--text)">FluviaFleet</span></div>
+            <p class="footer-desc">Gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná. Tecnología al servicio del transporte fluvial.</p>
+            <div class="footer-socials">
+                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
+        </div>
+        <div>
+            <h4>PRODUCTO</h4>
+            <a href="/#modulos">Módulos</a>
+            <a href="/#precios">Precios</a>
+            <a href="/#como-funciona">Cómo Funciona</a>
+        </div>
+        <div>
+            <h4>EMPRESA</h4>
+            <a href="/#nosotros">Nosotros</a>
+            <a href="mailto:info@fluviafleet.com">info@fluviafleet.com</a>
+        </div>
+        <div>
+            <h4>LEGAL</h4>
+            <a href="terminos.html">Términos de Servicio</a>
+            <a href="privacidad.html">Política de Privacidad</a>
+            <a href="cookies.html">Política de Cookies</a>
+        </div>
+    </div>
+    <div class="footer-copy">&copy; 2026 FluviaFleet. Todos los derechos reservados.</div>
+</footer>
+
+</body>
+</html>

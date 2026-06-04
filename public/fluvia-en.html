@@ -45,8 +45,8 @@
             Continue with Google
         </button>
         <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:12px;font-weight:600;">
-            <a href="javascript:void(0)" onclick="toggleRegister()" id="toggle-register-btn" style="color:var(--accent);text-decoration:none;">Create new account</a>
-            <a href="javascript:void(0)" onclick="doResetPassword()" style="color:var(--text-secondary);text-decoration:none;">Forgot your password?</a>
+            <button type="button" onclick="toggleRegister()" id="toggle-register-btn" style="background:none;border:none;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:inherit;font-weight:inherit;font-family:inherit;">Create new account</button>
+            <button type="button" onclick="doResetPassword()" style="background:none;border:none;padding:0;color:var(--text-secondary);text-decoration:underline;cursor:pointer;font-size:inherit;font-weight:inherit;font-family:inherit;">Forgot your password?</button>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;">
             <p class="login-footer" style="margin:0;">Paraguay-Parana Waterway — FluviaFleet</p>
@@ -268,7 +268,7 @@
             </div>
             <!-- COPILOTO -->
             <div class="view" id="view-copiloto">
-                <div class="fluvia-title">AI<br><em>Copilot.</em></div><div class="fluvia-subtitle">ARTIFICIAL INTELLIGENCE CENTER — FLUVIAFLEET AI (GEMINI)</div>
+                <div class="fluvia-title">AI<br><em>Copilot.</em></div><div class="fluvia-subtitle">ARTIFICIAL INTELLIGENCE CENTER — FLUVIAFLEET AI</div>
                 
                 <!-- IA INTELLIGENCE CARDS -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
@@ -587,72 +587,50 @@
                 <div class="pricing-grid" id="pricing-grid">
                     <div class="pricing-card">
                         <div class="plan-icon"><i class="fa-solid fa-ship"></i></div>
-                        <h3 class="plan-name">Per Barge</h3>
-                        <p class="plan-desc">Individual control of each vessel in your fleet</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="149" data-yearly="119">$149</span><span class="plan-unit">/barge/month</span></div>
+                        <h3 class="plan-name">Starter</h3>
+                        <p class="plan-desc">Up to 5 vessels — Essential fleet control</p>
+                        <div class="plan-price"><span class="plan-amount" data-monthly="149" data-yearly="119">$149</span><span class="plan-unit">/mo</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>1 vessel</li>
-                            <li><i class="fa-solid fa-check"></i>Real-time GPS tracking</li>
+                            <li><i class="fa-solid fa-check"></i>Up to 5 vessels</li>
+                            <li><i class="fa-solid fa-check"></i>Real-time AIS tracking</li>
                             <li><i class="fa-solid fa-check"></i>Digital logbook</li>
                             <li><i class="fa-solid fa-check"></i>Fuel management</li>
                             <li><i class="fa-solid fa-check"></i>Preventive maintenance</li>
-                            <li><i class="fa-solid fa-check"></i>Draft control</li>
                             <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>AI Copilot</li>
-                            <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>API Integrations</li>
+                            <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>Convoy builder</li>
                         </ul>
-                        <button class="plan-btn" onclick="selectPlan('barcaza')">Select</button>
+                        <button class="plan-btn" onclick="selectPlan('starter')">Request Demo</button>
                     </div>
                     <div class="pricing-card popular">
                         <div class="plan-badge">MOST POPULAR</div>
                         <div class="plan-icon"><i class="fa-solid fa-anchor"></i></div>
-                        <h3 class="plan-name">Fleet Combo</h3>
-                        <p class="plan-desc">Comprehensive management for fleets up to 50 vessels</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="799" data-yearly="639">$799</span><span class="plan-unit">/month (up to 50 barges)</span></div>
+                        <h3 class="plan-name">Professional</h3>
+                        <p class="plan-desc">Up to 20 vessels — Comprehensive fleet management</p>
+                        <div class="plan-price"><span class="plan-amount" data-monthly="499" data-yearly="399">$499</span><span class="plan-unit">/mo</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Up to 50 vessels</li>
-                            <li><i class="fa-solid fa-check"></i>Everything in Per Barge</li>
+                            <li><i class="fa-solid fa-check"></i>Up to 20 vessels</li>
+                            <li><i class="fa-solid fa-check"></i>Everything in Starter</li>
                             <li><i class="fa-solid fa-check"></i>Convoy builder</li>
                             <li><i class="fa-solid fa-check"></i>Crew management</li>
-                            <li><i class="fa-solid fa-check"></i>Communications</li>
-                            <li><i class="fa-solid fa-check"></i>AI Copilot basic</li>
-                            <li><i class="fa-solid fa-check"></i>Reports &amp; analytics</li>
-                            <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>API Integrations</li>
+                            <li><i class="fa-solid fa-check"></i>Waterway forecast</li>
+                            <li><i class="fa-solid fa-check"></i>AI Copilot</li>
                         </ul>
-                        <button class="plan-btn popular-btn" onclick="selectPlan('combo')">Select</button>
+                        <button class="plan-btn popular-btn" onclick="selectPlan('professional')">Request Demo</button>
                     </div>
                     <div class="pricing-card">
                         <div class="plan-icon"><i class="fa-solid fa-building"></i></div>
                         <h3 class="plan-name">Enterprise</h3>
-                        <p class="plan-desc">Corporate solution for fleets up to 150 vessels</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="1999" data-yearly="1599">$1,999</span><span class="plan-unit">/month (up to 150 barges)</span></div>
-                        <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Up to 150 vessels</li>
-                            <li><i class="fa-solid fa-check"></i>Everything in Fleet Combo</li>
-                            <li><i class="fa-solid fa-check"></i>AI Copilot advanced</li>
-                            <li><i class="fa-solid fa-check"></i>API integrations</li>
-                            <li><i class="fa-solid fa-check"></i>Advanced reports</li>
-                            <li><i class="fa-solid fa-check"></i>Priority support 24/7</li>
-                            <li><i class="fa-solid fa-check"></i>SLA 99.9%</li>
-                            <li><i class="fa-solid fa-check"></i>Incidents &amp; auditing</li>
-                        </ul>
-                        <button class="plan-btn" onclick="selectPlan('enterprise')">Select</button>
-                    </div>
-                    <div class="pricing-card unlimited">
-                        <div class="plan-icon"><i class="fa-solid fa-infinity"></i></div>
-                        <h3 class="plan-name">Unlimited</h3>
-                        <p class="plan-desc">No limits. The entire waterway under your control.</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="3999" data-yearly="3199">$3,999</span><span class="plan-unit">/month</span></div>
+                        <p class="plan-desc">Unlimited vessels — Custom corporate solution</p>
+                        <div class="plan-price"><span class="plan-amount">Contact</span><span class="plan-unit"></span></div>
                         <ul class="plan-features">
                             <li><i class="fa-solid fa-check"></i>Unlimited vessels</li>
-                            <li><i class="fa-solid fa-check"></i>Unlimited users</li>
-                            <li><i class="fa-solid fa-check"></i>AI Copilot premium</li>
-                            <li><i class="fa-solid fa-check"></i>White-label available</li>
-                            <li><i class="fa-solid fa-check"></i>Dedicated onboarding</li>
-                            <li><i class="fa-solid fa-check"></i>Exclusive account manager</li>
-                            <li><i class="fa-solid fa-check"></i>Custom integrations</li>
-                            <li><i class="fa-solid fa-check"></i>Dedicated backups</li>
+                            <li><i class="fa-solid fa-check"></i>Everything in Professional</li>
+                            <li><i class="fa-solid fa-check"></i>API & integrations</li>
+                            <li><i class="fa-solid fa-check"></i>SLA 99.9% guaranteed</li>
+                            <li><i class="fa-solid fa-check"></i>Dedicated 24/7 support</li>
+                            <li><i class="fa-solid fa-check"></i>Personalized onboarding</li>
                         </ul>
-                        <button class="plan-btn unlimited-btn" onclick="selectPlan('ilimitado')">Start Now</button>
+                        <button class="plan-btn" onclick="selectPlan('enterprise')">Contact Sales</button>
                     </div>
                 </div>
                 <div class="plan-faq">

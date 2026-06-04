@@ -1,15 +1,18 @@
 /*
  * MAPA MODULE (FLUVIAFLEET / MAPLIBRE GL JS)
+ * Real AIS data via Socket.IO + REST API
  */
 
 const MapLogicFluvia = (() => {
 
     let map = null;
     let aisMarkers = {};
-    let isDemo = true;
+    let isConnected = false;
+    let socket = null;
+    let vesselCount = 0;
 
     const init = () => {
-        void("🗺️ MapLogic (MapLibre) Iniciando...");
+        console.log("🗺️ MapLogic (MapLibre) Iniciando con AIS real...");
         
         if (typeof maplibregl === 'undefined') {
             console.error("MapLibre no cargado.");
@@ -19,7 +22,6 @@ const MapLogicFluvia = (() => {
         const container = document.getElementById('maplibre-canvas');
         if (!container) return;
 
-        // Use Carto Light Raster to prevent Localhost/CORS blocking
         map = new maplibregl.Map({
             container: 'maplibre-canvas',
             style: {
@@ -45,9 +47,10 @@ const MapLogicFluvia = (() => {
             attributionControl: false
         });
 
-        // Add river path overlay
+        map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
         map.on('load', () => {
-            // Simulated river path geojson
+            // Add Hidrovía route overlay
             map.addSource('route', {
                 'type': 'geojson',
                 'data': {
@@ -56,9 +59,13 @@ const MapLogicFluvia = (() => {
                     'geometry': {
                         'type': 'LineString',
                         'coordinates': [
-                            [-58.8, -27.5], // Corrientes
-                            [-60.6, -32.8], // Rosario
-                            [-58.3, -34.6]  // BsAs
+                            [-57.65, -25.28],  // Asunción
+                            [-57.53, -27.45],  // Corrientes
+                            [-59.64, -29.15],  // Santa Fe
+                            [-60.63, -32.95],  // Rosario
+                            [-59.65, -33.75],  // San Nicolás
+                            [-58.22, -33.90],  // Zárate
+                            [-58.37, -34.60]   // Buenos Aires
                         ]
                     }
                 }
@@ -73,116 +80,241 @@ const MapLogicFluvia = (() => {
                 },
                 'paint': {
                     'line-color': '#3b82f6',
-                    'line-width': 3,
-                    'line-dasharray': [2, 4]
+                    'line-width': 2.5,
+                    'line-dasharray': [2, 4],
+                    'line-opacity': 0.6
                 }
             });
 
-            // Start Mock Engine immediately for Demo
-            startMockAIS();
+            // Auto-connect to AIS
+            connectAIS();
         });
     };
 
-    const startMockAIS = () => {
-        const ships = [
-            { id: '1', name: 'TB PARAGUAY 01', lat: -27.5, lon: -58.8, speed: 0.05 },
-            { id: '2', name: 'R/M HERCULES', lat: -32.8, lon: -60.6, speed: -0.03 },
-            { id: '3', name: 'Itaipú 07', lat: -33.5, lon: -59.5, speed: 0.02 }
-        ];
+    const connectAIS = () => {
+        // 1. Fetch initial positions via REST
+        fetchInitialPositions();
 
-        const updatePositions = () => {
-            if (!isDemo) return;
-
-            ships.forEach(v => {
-                v.lat += (Math.random() - 0.5) * 0.02 + (v.speed * 0.1);
-                v.lon += (Math.random() - 0.5) * 0.02;
-
-                if (aisMarkers[v.id]) {
-                    aisMarkers[v.id].setLngLat([v.lon, v.lat]);
-                } else {
-                    // Create minimal custom marker element
-                    const el = document.createElement('div');
-                    el.style.width = '12px';
-                    el.style.height = '12px';
-                    el.style.backgroundColor = 'var(--status-ok)';
-                    el.style.borderRadius = '50%';
-                    el.style.border = '2px solid #FFFFFF';
-                    el.style.boxShadow = '0 0 10px rgba(0,0,0,0.2)';
-                    el.style.cursor = 'pointer';
-
-                    const marker = new maplibregl.Marker({ element: el })
-                        .setLngLat([v.lon, v.lat])
-                        .setPopup(new maplibregl.Popup({ offset: 15 })
-                            .setHTML(`
-                                <strong style="font-family:var(--font-brand); font-size:1rem; color:var(--text-main); display:block; margin-bottom:5px;">${v.name}</strong>
-                                <span style="color:var(--text-sec); font-family:var(--font-data); font-size:0.75rem;">MMSI: ${v.id}0000</span>
-                                <div style="margin-top:10px; background:rgba(46,160,67,0.1); color:var(--status-ok); padding:3px 6px; border-radius:4px; font-size:0.65rem; font-weight:700; display:inline-block;">EN VIVO</div>
-                            `))
-                        .addTo(map);
-
-                    aisMarkers[v.id] = marker;
-                }
-            });
-            setTimeout(updatePositions, 3000);
-        };
-        
-        updatePositions();
+        // 2. Connect Socket.IO for real-time updates
+        connectSocketIO();
     };
 
-    const toggleConnection = () => {
-        const key = document.getElementById('ais-apikey').value;
-        const btn = document.getElementById('btn-connect');
-        
-        if (!key && btn.innerText === 'CONECTAR') {
-            if(window.RiverToast) window.RiverToast.warning("Ingrese una API Key válida primero.");
+    const fetchInitialPositions = async () => {
+        try {
+            const resp = await fetch('/api/ais-positions');
+            const data = await resp.json();
+            
+            if (Array.isArray(data)) {
+                data.forEach(vessel => addOrUpdateVessel(vessel));
+            } else if (typeof data === 'object') {
+                // Object keyed by MMSI
+                Object.values(data).forEach(vessel => addOrUpdateVessel(vessel));
+            }
+            
+            updateVesselCounter();
+            console.log(`📡 AIS: ${vesselCount} embarcaciones cargadas desde API`);
+            
+            if (window.RiverToast) {
+                window.RiverToast.success(`${vesselCount} embarcaciones AIS cargadas en tiempo real`);
+            }
+        } catch (err) {
+            console.warn('⚠️ No se pudo cargar posiciones AIS iniciales:', err.message);
+        }
+    };
+
+    const connectSocketIO = () => {
+        if (typeof io === 'undefined') {
+            console.warn('Socket.IO no disponible, usando solo REST API');
+            // Poll every 15 seconds as fallback
+            setInterval(fetchInitialPositions, 15000);
             return;
         }
 
-        if (btn.innerText === 'CONECTAR') {
-            // Disconnect mock, pretend to connect real
-            btn.innerText = 'DESCONECTAR';
-            btn.style.background = 'var(--status-err)';
-            btn.style.borderColor = 'var(--status-err)';
-            document.getElementById('ais-apikey').disabled = true;
-            isDemo = false;
-            
-            // Clear markers
-            Object.values(aisMarkers).forEach(m => m.remove());
-            aisMarkers = {};
-            
-            if(window.RiverToast) window.RiverToast.success("Conectado a AISStream. Esperando paquetes WSS...");
-            
-            // Wait 2 sec, throw error (mocking failure of real connection without proper keys)
-            setTimeout(() => {
-                if(window.RiverToast) window.RiverToast.error("WSS Error: API Key Inválida o Límite de Cuota");
-                toggleConnection(); // auto disconnect
-            }, 3000);
+        socket = io();
+        
+        socket.on('connect', () => {
+            isConnected = true;
+            console.log('🔌 Socket.IO conectado para AIS real-time');
+            updateConnectionUI(true);
+        });
 
+        socket.on('position_update', (data) => {
+            addOrUpdateVessel(data);
+            updateVesselCounter();
+        });
+
+        socket.on('disconnect', () => {
+            isConnected = false;
+            console.log('🔌 Socket.IO desconectado');
+            updateConnectionUI(false);
+        });
+    };
+
+    const addOrUpdateVessel = (vessel) => {
+        // Normalize field names (handle both formats)
+        const mmsi = vessel.mmsi || vessel.UserID || vessel.MMSI;
+        const lat = vessel.lat || vessel.Latitude || vessel.latitude;
+        const lon = vessel.lon || vessel.Longitude || vessel.longitude;
+        const name = vessel.name || vessel.ShipName || vessel.ship_name || 'Unknown';
+        const speed = vessel.speed || vessel.Sog || vessel.sog || 0;
+        const course = vessel.course || vessel.Cog || vessel.cog || 0;
+        const heading = vessel.heading || vessel.TrueHeading || 0;
+
+        if (!mmsi || lat === undefined || lon === undefined) return;
+        if (isNaN(lat) || isNaN(lon)) return;
+
+        const id = String(mmsi);
+
+        // Determine vessel status based on speed
+        const isMoving = speed > 0.5;
+        const statusColor = isMoving ? '#2EA043' : '#94A3B8';
+        const statusText = isMoving ? 'EN NAVEGACIÓN' : 'FONDEADO';
+
+        if (aisMarkers[id]) {
+            // Update existing marker position
+            aisMarkers[id].marker.setLngLat([lon, lat]);
+            // Update popup content
+            aisMarkers[id].marker.setPopup(
+                new maplibregl.Popup({ offset: 15, closeButton: false })
+                    .setHTML(buildPopupHTML(name, mmsi, lat, lon, speed, course, statusText, statusColor))
+            );
+            // Update dot color
+            aisMarkers[id].el.style.backgroundColor = statusColor;
         } else {
-            btn.innerText = 'CONECTAR';
-            btn.style.background = 'var(--text-main)';
-            btn.style.borderColor = 'var(--text-main)';
-            document.getElementById('ais-apikey').disabled = false;
+            // Create new marker
+            const el = document.createElement('div');
+            el.style.width = '10px';
+            el.style.height = '10px';
+            el.style.backgroundColor = statusColor;
+            el.style.borderRadius = '50%';
+            el.style.border = '2px solid rgba(255,255,255,0.9)';
+            el.style.boxShadow = `0 0 6px ${statusColor}80`;
+            el.style.cursor = 'pointer';
+            el.style.transition = 'all 0.3s ease';
+
+            const marker = new maplibregl.Marker({ element: el })
+                .setLngLat([lon, lat])
+                .setPopup(
+                    new maplibregl.Popup({ offset: 15, closeButton: false })
+                        .setHTML(buildPopupHTML(name, mmsi, lat, lon, speed, course, statusText, statusColor))
+                )
+                .addTo(map);
+
+            aisMarkers[id] = { marker, el };
+            vesselCount++;
+        }
+    };
+
+    const buildPopupHTML = (name, mmsi, lat, lon, speed, course, statusText, statusColor) => {
+        return `
+            <div style="font-family:'Inter',sans-serif; min-width:200px;">
+                <strong style="font-size:0.9rem; color:#1a1a2e; display:block; margin-bottom:6px;">
+                    🚢 ${name}
+                </strong>
+                <div style="font-size:0.7rem; color:#64748b; line-height:1.6;">
+                    <div>MMSI: <strong>${mmsi}</strong></div>
+                    <div>Lat: ${Number(lat).toFixed(4)}° | Lon: ${Number(lon).toFixed(4)}°</div>
+                    <div>Vel: <strong>${Number(speed).toFixed(1)} kn</strong> | Rumbo: ${Number(course).toFixed(0)}°</div>
+                </div>
+                <div style="margin-top:8px; background:${statusColor}15; color:${statusColor}; 
+                    padding:3px 8px; border-radius:4px; font-size:0.65rem; font-weight:700; 
+                    display:inline-block; border: 1px solid ${statusColor}30;">
+                    ${statusText}
+                </div>
+            </div>
+        `;
+    };
+
+    const updateVesselCounter = () => {
+        vesselCount = Object.keys(aisMarkers).length;
+        // Update any counter elements in the UI
+        const counter = document.getElementById('vessel-count') || document.getElementById('ais-count');
+        if (counter) counter.textContent = vesselCount;
+        
+        // Also update the panel title if exists
+        const panel = document.querySelector('.mfc-status');
+        if (panel) panel.textContent = `${vesselCount} embarcaciones AIS en vivo`;
+    };
+
+    const updateConnectionUI = (connected) => {
+        const btn = document.getElementById('btn-connect');
+        const apiInput = document.getElementById('ais-apikey');
+        
+        if (btn) {
+            if (connected) {
+                btn.innerText = 'CONECTADO';
+                btn.style.background = '#2EA043';
+                btn.style.borderColor = '#2EA043';
+            } else {
+                btn.innerText = 'RECONECTANDO...';
+                btn.style.background = '#F59E0B';
+                btn.style.borderColor = '#F59E0B';
+            }
+        }
+        if (apiInput) {
+            apiInput.value = 'Conectado via servidor — datos AIS en tiempo real';
+            apiInput.disabled = true;
+        }
+    };
+
+    const toggleConnection = () => {
+        if (isConnected && socket) {
+            // Disconnect
+            socket.disconnect();
+            isConnected = false;
             
-            // Reactivate Mock
-            isDemo = true;
-            startMockAIS();
-            if(window.RiverToast) window.RiverToast.info("Desconectado de WSS. Restaurando telemetría interna (Mock).");
+            // Clear all markers
+            Object.values(aisMarkers).forEach(({ marker }) => marker.remove());
+            aisMarkers = {};
+            vesselCount = 0;
+            updateVesselCounter();
+            
+            const btn = document.getElementById('btn-connect');
+            if (btn) {
+                btn.innerText = 'CONECTAR';
+                btn.style.background = 'var(--text-main)';
+                btn.style.borderColor = 'var(--text-main)';
+            }
+            const apiInput = document.getElementById('ais-apikey');
+            if (apiInput) {
+                apiInput.value = '';
+                apiInput.disabled = false;
+            }
+            
+            if (window.RiverToast) window.RiverToast.info('Desconectado de AIS Stream');
+        } else {
+            // Reconnect
+            connectAIS();
+            if (window.RiverToast) window.RiverToast.success('Reconectando a AIS Stream...');
         }
     };
 
     const setLayer = (layerName) => {
         document.querySelectorAll('.mfc-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-        // MapLibre layer swapping logic goes here in full implementation
-        if(window.RiverToast) window.RiverToast.info(`Capa ${layerName} activada (Simulada)`);
+        if (event && event.target) event.target.classList.add('active');
+
+        const tileUrls = {
+            'light': 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            'dark': 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+            'satellite': 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+        };
+
+        const url = tileUrls[layerName];
+        if (url && map) {
+            map.getSource('carto-light').tiles = [url];
+            map.style.sourceCaches['carto-light'].clearTiles();
+            map.style.sourceCaches['carto-light'].update(map.transform);
+            map.triggerRepaint();
+            if (window.RiverToast) window.RiverToast.info(`Capa ${layerName} activada`);
+        }
     };
 
     const toggleTweaks = () => {
         const p = document.getElementById('tweaks-panel');
-        p.style.display = p.style.display === 'none' ? 'block' : 'none';
+        if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
     };
 
+    // Public API
     return { init, toggleConnection, setLayer, toggleTweaks };
 })();
 

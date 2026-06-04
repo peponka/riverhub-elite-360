@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FluviaFleet — Intelligent River Fleet Management</title>
-    <meta name="description" content="Leading platform for intelligent river fleet management. Satellite tracking, fuel control, predictive AI. Paraguay-Paraná Waterway.">
+    <meta name="description" content="The first AI-powered platform designed for the Paraguay-Paraná Waterway. AIS tracking, fuel control, smart convoys and AI Copilot.">
     <meta name="keywords" content="fluviafleet, river fleet management, waterway, Paraguay-Paraná, satellite tracking, barges, tugboats, predictive AI, convoy optimizer">
     <meta name="author" content="FluviaFleet">
     <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://fluviafleet.com/index-en.html">
     <meta property="og:title" content="FluviaFleet — Intelligent River Fleet Management">
-    <meta property="og:description" content="The first AI-powered platform designed for the Paraguay-Paraná Waterway. Satellite tracking, fuel control, convoy optimizer, and AI Copilot.">
+    <meta property="og:description" content="The first AI-powered platform designed for the Paraguay-Paraná Waterway. AIS tracking, fuel control, smart convoys and AI Copilot.">
     <meta property="og:image" content="https://fluviafleet.com/img/fluvia-convoy.jpg">
     <meta property="og:locale" content="en_US">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="FluviaFleet — Intelligent River Fleet Management">
-    <meta name="twitter:description" content="AI-powered satellite tracking for the Paraguay-Paraná Waterway. 500+ monitored assets.">
+    <meta name="twitter:description" content="AI-powered AIS tracking for the Paraguay-Paraná Waterway. Complete fleet management.">
     <meta name="twitter:image" content="https://fluviafleet.com/img/fluvia-convoy.jpg">
     <link rel="manifest" href="/manifest.json">
     <!-- Preconnect for performance -->
@@ -29,7 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,300;6..72,0,400;6..72,0,500;6..72,0,600;6..72,1,300;6..72,1,400;6..72,1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root{--bg:#F8F9FA;--white:#FFFFFF;--surface:#F1F5F9;--text:#1A1A2E;--text2:#94A3B8;--text3:#CBD5E1;--sep:#E2E8F0;--accent:#3B82F6;--success:#2EA043;--error:#DC2626;--warning:#F59E0B}
+        :root{--bg:#F8FAFF;--white:#FFFFFF;--surface:#EFF6FF;--surface2:#DBEAFE;--text:#0F172A;--text2:#64748B;--text3:#94A3B8;--sep:#E2E8F0;--accent:#2563EB;--accent-light:#3B82F6;--accent-bg:#EFF6FF;--success:#059669;--error:#DC2626;--warning:#F59E0B}
         *{margin:0;padding:0;box-sizing:border-box}
         html{scroll-behavior:smooth}
         body{font-family:'Inter',-apple-system,sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
@@ -50,73 +50,60 @@
         .lang-btn img { width: 14px; height: 14px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px rgba(0,0,0,0.1); }
         .lang-sep { color: var(--sep); font-size: 10px; }
         .btn-ghost{background:none;border:none;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;padding:8px 16px;font-family:'Inter',sans-serif}
-        .btn-solid{background:var(--text);color:white;border:none;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.2s}
-        .btn-solid:hover{opacity:0.85}
+        .btn-solid{background:var(--accent);color:white;border:none;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+        .btn-solid:hover{opacity:0.9;transform:translateY(-1px)}
 
-        /* HERO */
-        .hero{position:relative;min-height:90vh;display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
-        .hero-bg{position:absolute;inset:0;z-index:0}
-        .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center}
-        .hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,15,30,0.85) 0%,rgba(10,15,30,0.4) 40%,rgba(10,15,30,0.15) 100%);z-index:1}
-        .hero-content{position:relative;z-index:2;padding:0 64px 80px;max-width:700px}
-        .hero-tag{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:2px;margin-bottom:16px}
-        .hero h1{font-family:'Newsreader',serif;font-size:64px;font-weight:400;line-height:1.05;color:white;margin-bottom:8px}
-        .hero h1 em{font-weight:300;font-style:italic}
-        .hero-desc{font-size:16px;color:rgba(255,255,255,0.7);line-height:1.7;margin:24px 0 36px;max-width:500px}
+        /* HERO — 3.0 two-column white layout */
+        .hero{position:relative;background:var(--white);overflow:hidden;padding:120px 48px 80px}
+        .hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,0.08) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+        .hero::after{content:'';position:absolute;bottom:-150px;left:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(59,130,246,0.06) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+        .hero-bg{display:none}
+        .hero-overlay{display:none}
+        .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:2}
+        .hero-text{}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);border:1px solid var(--surface2);border-radius:100px;padding:8px 20px;margin-bottom:24px;font-size:10px;font-weight:800;letter-spacing:2px;color:var(--accent)}
+        .hero-badge i{font-size:10px}
+        .hero h1{font-family:'Newsreader',serif;font-size:56px;font-weight:400;line-height:1.08;color:var(--text);margin-bottom:8px}
+        .hero h1 em{font-weight:300;font-style:italic;color:var(--accent)}
+        .hero-desc{font-size:16px;color:var(--text2);line-height:1.7;margin:20px 0 32px;max-width:500px}
         .hero-cta{display:flex;gap:12px;align-items:center}
-        .btn-hero{background:white;color:var(--text);border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
-        .btn-hero:hover{opacity:0.9;transform:translateY(-1px)}
-        .btn-outline{background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.25);color:white;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
-        .btn-outline:hover{background:rgba(255,255,255,0.2)}
-        .hero-features{display:flex;gap:24px;margin-top:40px}
-        .hero-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.6);font-weight:500}
-        .hero-feat i{color:rgba(147,197,253,1);font-size:11px}
-        .hero-visual{position:relative}
-        .hero-card{background:var(--white);border:0.5px solid var(--sep);border-radius:20px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.06)}
-        .hero-card-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-        .hero-card-dot{width:10px;height:10px;border-radius:50%;background:var(--success)}
-        .hero-card-title{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1px}
-        .hero-card-big{font-family:'Newsreader',serif;font-size:48px;font-weight:400;color:var(--text)}
-        .hero-card-label{font-size:12px;color:var(--text2);margin-top:4px}
-        .hero-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;padding-top:20px;border-top:0.5px solid var(--sep)}
-        .hcg-item .hcg-val{font-family:'Newsreader',serif;font-size:24px;font-weight:400}
-        .hcg-item .hcg-lbl{font-size:10px;color:var(--text2);font-weight:600;letter-spacing:0.5px}
-        .float-card{position:absolute;background:var(--white);border:0.5px solid var(--sep);border-radius:14px;padding:16px 20px;box-shadow:0 8px 24px rgba(0,0,0,0.06);animation:float 3s ease-in-out infinite}
-        .float-card-1{top:-20px;right:-30px}
-        .float-card-2{bottom:40px;left:-40px;animation-delay:1.5s}
-        .float-card .fc-row{display:flex;align-items:center;gap:8px}
-        .float-card .fc-dot{width:8px;height:8px;border-radius:50%}
-        .float-card .fc-text{font-size:12px;font-weight:600}
-        .float-card .fc-sub{font-size:10px;color:var(--text2)}
-        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-        /* SHIP ILLUSTRATION */
-        .hero-ship-bg{position:absolute;bottom:-30px;right:-40px;width:420px;opacity:0.18;z-index:0;pointer-events:none}
+        .btn-primary{background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 16px rgba(37,99,235,0.3)}
+        .btn-primary:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,0.35)}
+        .btn-secondary{background:var(--accent-bg);color:var(--accent);border:1px solid var(--surface2);padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+        .btn-secondary:hover{background:var(--surface2)}
+        .btn-secondary i{font-size:12px}
+        .hero-features{display:flex;gap:24px;margin-top:32px}
+        .hero-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);font-weight:500}
+        .hero-feat i{color:var(--accent);font-size:13px}
         .hero-visual{position:relative;z-index:1}
-        .hero-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(59,130,246,0.1) 0%,transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none}
-        .hero-img{width:100%;border-radius:20px;box-shadow:0 24px 60px rgba(26,26,46,0.12),0 0 0 0.5px var(--sep);position:relative;z-index:2;transition:transform 0.3s ease}
-        .hero-img:hover{transform:translateY(-6px) scale(1.01)}
-        /* WAVE DIVIDER */
-        .wave-divider{position:relative;height:80px;overflow:hidden;background:var(--bg)}
-        .wave-divider svg{position:absolute;bottom:0;width:100%;height:80px}
-        .wave-path{animation:wave-move 4s ease-in-out infinite alternate}
-        @keyframes wave-move{0%{d:path('M0,40 Q250,10 500,40 T1000,40 L1000,80 L0,80 Z')}100%{d:path('M0,40 Q250,70 500,40 T1000,40 L1000,80 L0,80 Z')}}
+        .hero-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(37,99,235,0.1) 0%,transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none}
+        .hero-img-card{position:relative;z-index:2;transform:rotate(2deg);transition:transform 0.4s ease}
+        .hero-img-card:hover{transform:rotate(0deg) translateY(-6px)}
+        .hero-img-card img{width:100%;border-radius:20px;box-shadow:0 24px 60px rgba(37,99,235,0.15),0 0 0 1px rgba(37,99,235,0.08)}
+        /* Legacy btn classes kept for other sections */
+        .btn-hero{background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 16px rgba(37,99,235,0.3)}
+        .btn-hero:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,0.35)}
+        .btn-outline{background:var(--accent-bg);color:var(--accent);border:1px solid var(--surface2);padding:14px 32px;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-outline:hover{background:var(--surface2)}
+        /* WAVE DIVIDER — hidden in 3.0 */
+        .wave-divider{display:none}
 
         /* HOW IT WORKS */
         .section{padding:100px 48px;max-width:1200px;margin:0 auto}
         .section-alt{background:var(--bg)}
-        .section-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
+        .section-tag{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:2px;margin-bottom:12px}
         .section h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
-        .section h2 em{font-weight:300;font-style:italic}
+        .section h2 em{font-weight:300;font-style:italic;color:var(--accent)}
         .section-desc{font-size:15px;color:var(--text2);line-height:1.6;max-width:520px;margin-bottom:48px}
 
         .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-        .step-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:32px;transition:all 0.2s}
-        .step-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.06)}
-        .step-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400;color:var(--text3);line-height:1}
+        .step-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:32px;transition:all 0.2s;border-top:3px solid transparent}
+        .step-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(37,99,235,0.08);border-top-color:var(--accent)}
+        .step-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400;color:var(--accent-light);line-height:1}
         .step-card h3{font-family:'Newsreader',serif;font-size:22px;font-weight:500;margin:16px 0 8px}
         .step-card p{font-size:13px;color:var(--text2);line-height:1.6}
-        .step-icon{width:48px;height:48px;background:var(--surface);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-top:20px}
-        .step-icon i{font-size:20px;color:var(--text)}
+        .step-icon{width:48px;height:48px;background:var(--accent-bg);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-top:20px}
+        .step-icon i{font-size:20px;color:var(--accent)}
 
         /* FEATURES */
         .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -127,20 +114,20 @@
         .feat-card p{font-size:12px;color:var(--text2);line-height:1.5}
 
         /* STATS BANNER */
-        .stats-banner{background:var(--text);color:white;padding:80px 48px;text-align:center}
-        .stats-banner .section-tag{color:rgba(255,255,255,0.5)}
+        .stats-banner{background:linear-gradient(135deg,#1E40AF 0%,#2563EB 50%,#3B82F6 100%);color:white;padding:80px 48px;text-align:center}
+        .stats-banner .section-tag{color:rgba(255,255,255,0.6)}
         .stats-banner h2{color:white;font-family:'Newsreader',serif;font-size:42px;font-weight:400}
-        .stats-banner h2 em{font-weight:300;font-style:italic}
+        .stats-banner h2 em{font-weight:300;font-style:italic;color:rgba(255,255,255,0.9)}
         .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;max-width:1000px;margin:48px auto 0}
         .stat-item .stat-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400}
-        .stat-item .stat-lbl{font-size:11px;color:rgba(255,255,255,0.5);font-weight:600;letter-spacing:1px;margin-top:4px}
+        .stat-item .stat-lbl{font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:1px;margin-top:4px}
 
         /* PRICING */
         .pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
         .price-card{background:var(--white);border:0.5px solid var(--sep);border-radius:20px;padding:36px;position:relative;transition:all 0.2s}
         .price-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.06)}
-        .price-card.featured{border-color:var(--text);border-width:2px}
-        .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:9px;font-weight:800;letter-spacing:1px;padding:5px 16px;border-radius:20px}
+        .price-card.featured{border-color:var(--accent);border-width:2px}
+        .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;font-size:9px;font-weight:800;letter-spacing:1px;padding:5px 16px;border-radius:20px}
         .price-card h3{font-family:'Newsreader',serif;font-size:24px;font-weight:500;margin-bottom:4px}
         .price-card .price-desc{font-size:12px;color:var(--text2);margin-bottom:20px}
         .price-amount{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text)}
@@ -152,8 +139,8 @@
         .price-list li.disabled i{color:var(--text3)}
         .price-btn{width:100%;padding:13px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;border:0.5px solid var(--sep);background:var(--surface);color:var(--text)}
         .price-btn:hover{background:var(--sep)}
-        .price-btn.dark{background:var(--text);color:white;border-color:var(--text)}
-        .price-btn.dark:hover{opacity:0.85}
+        .price-btn.dark{background:var(--accent);color:white;border-color:var(--accent)}
+        .price-btn.dark:hover{opacity:0.9;transform:translateY(-1px)}
 
         /* CTA FINAL */
         .cta-section{text-align:center;padding:100px 48px;max-width:700px;margin:0 auto}
@@ -162,7 +149,7 @@
         .cta-section p{font-size:15px;color:var(--text2);line-height:1.6;margin-bottom:36px}
 
         /* FOOTER */
-        .footer{border-top:0.5px solid var(--sep);padding:60px 48px 32px}
+        .footer{background:var(--white);border-top:0.5px solid var(--sep);padding:60px 48px 32px}
         .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto}
         .footer-brand{display:flex;align-items:center;gap:8px;margin-bottom:12px}
         .footer-brand i{font-size:16px;color:var(--text)}
@@ -174,7 +161,7 @@
         .footer-copy{text-align:center;font-size:11px;color:var(--text3);margin-top:48px;padding-top:24px;border-top:0.5px solid var(--sep);max-width:1200px;margin-left:auto;margin-right:auto}
         .footer-socials{display:flex;gap:12px;margin-top:12px}
         .footer-socials a{font-size:16px;color:var(--text2);margin-bottom:0}
-        .footer-socials a:hover{color:var(--text)}
+        .footer-socials a:hover{color:var(--accent)}
 
         /* ANIMATIONS */
         .reveal{opacity:0;transform:translateY(24px);transition:all 0.6s ease}
@@ -184,13 +171,14 @@
         @media(max-width:768px){
             .nav{padding:0 20px}
             .nav-links{display:none}
-            .hero{min-height:70vh}
-            .hero-content{padding:0 24px 48px}
+            .hero{padding:100px 24px 48px}
+            .hero-inner{grid-template-columns:1fr;gap:32px}
             .hero h1{font-size:40px}
             .hero-desc{margin:16px 0 28px}
             .hero-features{flex-wrap:wrap;gap:12px}
+            .hero-img-card{transform:rotate(0deg)}
             .section{padding:60px 24px}
-            .steps-grid{grid-template-columns:1fr}
+            .steps-grid{grid-template-columns:1fr 1fr}
             .feat-grid{grid-template-columns:1fr}
             .stats-banner{padding:60px 24px}
             .stats-row{grid-template-columns:1fr 1fr;gap:24px}
@@ -207,16 +195,16 @@
 
 <!-- NAV -->
 <nav class="nav">
-    <a class="nav-brand" href="#">
+    <a class="nav-brand" href="/">
         <img class="nav-logo" src="img/fluvia-logo.jpg" alt="FluviaFleet">
         <span style="font-family:'Newsreader',serif;font-size:2.1rem;font-weight:400;color:var(--text);letter-spacing:-0.01em">FluviaFleet</span>
     </a>
     <div class="nav-links">
-        <a href="#hidrovia" style="color:var(--accent);font-weight:700">Waterway</a>
-        <a href="#como-funciona">How it Works</a>
-        <a href="#modulos">Modules</a>
+        <a href="#modulos" style="color:var(--accent);font-weight:700">Platform</a>
+        <a href="#hidrovia">Waterway</a>
         <a href="#precios">Pricing</a>
-        <a href="#nosotros">About Us</a>
+        <a href="#nosotros">About</a>
+        <a href="#contacto">Contact</a>
     </div>
     <div class="nav-actions">
         <div class="lang-toggle">
@@ -225,25 +213,34 @@
             <a href="index.html" class="lang-btn"><img src="https://flagcdn.com/w40/es.png" alt="ES"> ES</a>
         </div>
         <a href="fluvia-en.html" class="btn-ghost">Log In</a>
-        <a href="#precios" class="btn-solid">Try for Free</a>
+        <a href="#contacto" class="btn-solid">Request Demo</a>
     </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-    <div class="hero-bg"><img src="img/fluvia-convoy.jpg" alt="Convoy de barcazas en la Paraguay-Parana Waterway"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <div class="hero-tag">LEADING PLATFORM ON THE PARANÁ — PARAGUAY WATERWAY</div>
-        <h1>Master the<br><em>Paraná-Paraguay Waterway.</em></h1>
-        <p class="hero-desc">The most strategic waterway in South America, now with artificial intelligence. Manage convoys, barges, and tugboats across 3,442 km of navigable route — in real time.</p>
-            <a href="#precios" class="btn-hero">Start for Free</a>
-            <a href="#hidrovia" class="btn-outline">Discover the Waterway</a>
+    <div class="hero-inner">
+        <div class="hero-text">
+            <div class="hero-badge"><i class="fa-solid fa-water"></i> THE FIRST AI-POWERED PLATFORM FOR THE WATERWAY</div>
+            <h1>Know where your<br><em>vessels are.</em></h1>
+            <p class="hero-desc">AIS tracking, smart convoys, fuel management, maintenance and artificial intelligence in one platform. No hardware. No installations. Operational in 5 minutes.</p>
+            <div class="hero-cta">
+                <a href="#contacto" class="btn-primary">Request Demo</a>
+                <a href="fluvia-en.html" class="btn-secondary">See Platform <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="hero-features">
+                <div class="hero-feat"><i class="fa-solid fa-check-circle"></i>No hardware needed</div>
+                <div class="hero-feat"><i class="fa-solid fa-check-circle"></i>Predictive AI</div>
+                <div class="hero-feat"><i class="fa-solid fa-check-circle"></i>Operational in 5 minutes</div>
+            </div>
         </div>
-        <div class="hero-features">
-            <div class="hero-feat"><i class="fa-solid fa-check"></i>3.442 km monitored</div>
-            <div class="hero-feat"><i class="fa-solid fa-check"></i>Predictive AI</div>
-            <div class="hero-feat"><i class="fa-solid fa-check"></i>5 connected countries</div>
+        <div class="hero-visual">
+            <div class="hero-glow"></div>
+            <div class="hero-img-card">
+                <video autoplay muted loop playsinline style="width:100%;display:block;border-radius:20px;box-shadow:0 24px 60px rgba(37,99,235,0.15),0 0 0 1px rgba(37,99,235,0.08)">
+                    <source src="img/fluviafleet-demo.mp4" type="video/mp4">
+                </video>
+            </div>
         </div>
     </div>
 </section>
@@ -260,79 +257,81 @@
 <!-- HIDROVÍA PARANÁ-PARAGUAY — MARKETING SHOWCASE  -->
 <!-- ═══════════════════════════════════════════════ -->
 <style>
-    .hidrovia-showcase{position:relative;overflow:hidden;background:#0A0F1E}
+    .hidrovia-showcase{position:relative;overflow:hidden;background:var(--accent-bg)}
     .hidrovia-showcase *{position:relative;z-index:2}
 
     /* Background image layer */
     .hidrovia-bg{position:absolute;inset:0;z-index:0}
-    .hidrovia-bg img{width:100%;height:100%;object-fit:cover;opacity:0.25;filter:brightness(0.7)}
-    .hidrovia-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,15,30,0.95) 0%,rgba(10,15,30,0.5) 40%,rgba(10,15,30,0.85) 100%)}
+    .hidrovia-bg img{width:100%;height:100%;object-fit:cover;opacity:0.08;filter:brightness(1.2) saturate(0.5)}
+    .hidrovia-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(239,246,255,0.95) 0%,rgba(239,246,255,0.7) 40%,rgba(239,246,255,0.95) 100%)}
 
     /* Animated water shimmer */
-    .hidrovia-shimmer{position:absolute;bottom:0;left:0;right:0;height:200px;z-index:1;background:linear-gradient(180deg,transparent,rgba(59,130,246,0.06));overflow:hidden}
-    .hidrovia-shimmer::before{content:'';position:absolute;bottom:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse,rgba(59,130,246,0.08) 0%,transparent 60%);animation:shimmer-move 8s ease-in-out infinite}
+    .hidrovia-shimmer{position:absolute;bottom:0;left:0;right:0;height:200px;z-index:1;background:linear-gradient(180deg,transparent,rgba(59,130,246,0.04));overflow:hidden}
+    .hidrovia-shimmer::before{content:'';position:absolute;bottom:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse,rgba(59,130,246,0.06) 0%,transparent 60%);animation:shimmer-move 8s ease-in-out infinite}
     @keyframes shimmer-move{0%,100%{transform:translateX(-20%) translateY(0)}50%{transform:translateX(20%) translateY(-10%)}}
 
     /* Header */
     .hidrovia-header{text-align:center;padding:80px 48px 0;max-width:900px;margin:0 auto}
-    .hidrovia-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:100px;padding:8px 20px;margin-bottom:24px;animation:pulse-badge 3s ease-in-out infinite}
-    .hidrovia-badge i{color:#60A5FA;font-size:10px}
-    .hidrovia-badge span{font-size:10px;font-weight:800;letter-spacing:2.5px;color:#93C5FD;font-family:'Inter',sans-serif}
-    @keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,0.2)}50%{box-shadow:0 0 20px 4px rgba(59,130,246,0.15)}}
+    .hidrovia-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);border-radius:100px;padding:8px 20px;margin-bottom:24px;animation:pulse-badge 3s ease-in-out infinite}
+    .hidrovia-badge i{color:var(--accent);font-size:10px}
+    .hidrovia-badge span{font-size:10px;font-weight:800;letter-spacing:2.5px;color:var(--accent);font-family:'Inter',sans-serif}
+    @keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.15)}50%{box-shadow:0 0 20px 4px rgba(37,99,235,0.1)}}
 
-    .hidrovia-header h2{font-family:'Newsreader',serif;font-size:56px;font-weight:400;color:white;line-height:1.08;margin-bottom:20px}
-    .hidrovia-header h2 em{font-weight:300;font-style:italic;background:linear-gradient(135deg,#60A5FA,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .hidrovia-header p{font-size:17px;color:rgba(255,255,255,0.6);line-height:1.7;max-width:640px;margin:0 auto}
+    .hidrovia-header h2{font-family:'Newsreader',serif;font-size:56px;font-weight:400;color:var(--text);line-height:1.08;margin-bottom:20px}
+    .hidrovia-header h2 em{font-weight:300;font-style:italic;color:var(--accent)}
+    .hidrovia-header p{font-size:17px;color:var(--text2);line-height:1.7;max-width:640px;margin:0 auto}
 
     /* Route Visual */
     .hidrovia-route{padding:60px 48px 0;max-width:1200px;margin:0 auto}
     .hidrovia-route-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
-    .hidrovia-map-wrap{position:relative;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 24px 80px rgba(0,0,0,0.4)}
+    .hidrovia-map-wrap{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--sep);box-shadow:0 24px 80px rgba(37,99,235,0.1)}
     .hidrovia-map-wrap img{width:100%;display:block;transition:transform 6s ease}
     .hidrovia-map-wrap:hover img{transform:scale(1.05)}
-    .hidrovia-map-glow{position:absolute;top:50%;left:50%;width:60%;height:60%;background:radial-gradient(circle,rgba(59,130,246,0.2),transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:3}
+    .hidrovia-map-glow{position:absolute;top:50%;left:50%;width:60%;height:60%;background:radial-gradient(circle,rgba(59,130,246,0.1),transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:3}
 
     /* Route Info */
-    .route-info h3{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:white;margin-bottom:16px}
-    .route-info h3 em{font-weight:300;font-style:italic;color:#93C5FD}
-    .route-info>p{font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:32px}
+    .route-info h3{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:var(--text);margin-bottom:16px}
+    .route-info h3 em{font-weight:300;font-style:italic;color:var(--accent)}
+    .route-info>p{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:32px}
 
     /* Port list */
     .port-list{display:flex;flex-direction:column;gap:12px}
-    .port-item{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px 20px;transition:all 0.3s ease;cursor:default}
-    .port-item:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.2);transform:translateX(6px)}
+    .port-item{display:flex;align-items:center;gap:16px;background:var(--white);border:1px solid var(--sep);border-radius:14px;padding:16px 20px;transition:all 0.3s ease;cursor:default}
+    .port-item:hover{background:var(--surface);border-color:var(--accent-light);transform:translateX(6px)}
     .port-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;position:relative}
     .port-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid;opacity:0.3}
-    .port-dot.argentina{background:#60A5FA}.port-dot.argentina::after{border-color:#60A5FA}
-    .port-dot.paraguay{background:#F87171}.port-dot.paraguay::after{border-color:#F87171}
-    .port-dot.brasil{background:#34D399}.port-dot.brasil::after{border-color:#34D399}
-    .port-dot.uruguay{background:#FBBF24}.port-dot.uruguay::after{border-color:#FBBF24}
-    .port-name{font-size:14px;font-weight:600;color:white;flex:1}
-    .port-country{font-size:11px;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.5px}
-    .port-km{font-size:12px;color:rgba(255,255,255,0.35);font-family:'Newsreader',serif;font-style:italic}
+    .port-dot.argentina{background:#2563EB}.port-dot.argentina::after{border-color:#2563EB}
+    .port-dot.paraguay{background:#EF4444}.port-dot.paraguay::after{border-color:#EF4444}
+    .port-dot.brasil{background:#059669}.port-dot.brasil::after{border-color:#059669}
+    .port-dot.uruguay{background:#D97706}.port-dot.uruguay::after{border-color:#D97706}
+    .port-name{font-size:14px;font-weight:600;color:var(--text);flex:1}
+    .port-country{font-size:11px;color:var(--text2);font-weight:600;letter-spacing:0.5px}
+    .port-km{font-size:12px;color:var(--accent);font-family:'Newsreader',serif;font-style:italic}
+    .port-connector{display:flex;align-items:center;gap:8px;padding:4px 0 4px 28px;font-size:10px;color:var(--text3);font-style:italic}
+    .port-connector::before{content:'';width:1px;height:16px;background:var(--sep);margin-right:8px}
 
     /* Mega Stats */
     .hidrovia-stats{padding:80px 48px 80px;max-width:1200px;margin:0 auto}
     .hidrovia-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-    .hv-stat{text-align:center;padding:36px 20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:20px;transition:all 0.3s ease}
-    .hv-stat:hover{background:rgba(59,130,246,0.06);border-color:rgba(59,130,246,0.15);transform:translateY(-4px)}
-    .hv-stat-icon{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(52,211,153,0.1));display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
-    .hv-stat-icon i{font-size:22px;color:#60A5FA}
-    .hv-stat-num{font-family:'Newsreader',serif;font-size:44px;font-weight:400;color:white;line-height:1}
-    .hv-stat-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);margin-top:8px}
+    .hv-stat{text-align:center;padding:36px 20px;background:var(--white);border:1px solid var(--sep);border-radius:20px;transition:all 0.3s ease}
+    .hv-stat:hover{background:var(--surface);border-color:var(--accent-light);transform:translateY(-4px)}
+    .hv-stat-icon{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,rgba(37,99,235,0.1),rgba(5,150,105,0.06));display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+    .hv-stat-icon i{font-size:22px;color:var(--accent)}
+    .hv-stat-num{font-family:'Newsreader',serif;font-size:44px;font-weight:400;color:var(--text);line-height:1}
+    .hv-stat-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text2);margin-top:8px}
 
     /* CTA in hidrovia */
     .hidrovia-cta{text-align:center;padding:0 48px 80px}
-    .hidrovia-cta-inner{max-width:700px;margin:0 auto;padding:48px;background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(52,211,153,0.05));border:1px solid rgba(59,130,246,0.15);border-radius:24px}
-    .hidrovia-cta-inner h3{font-family:'Newsreader',serif;font-size:28px;font-weight:400;color:white;margin-bottom:12px}
-    .hidrovia-cta-inner p{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:24px}
+    .hidrovia-cta-inner{max-width:700px;margin:0 auto;padding:48px;background:var(--white);border:1px solid var(--sep);border-radius:24px;box-shadow:0 8px 32px rgba(37,99,235,0.06)}
+    .hidrovia-cta-inner h3{font-family:'Newsreader',serif;font-size:28px;font-weight:400;color:var(--text);margin-bottom:12px}
+    .hidrovia-cta-inner p{font-size:14px;color:var(--text2);margin-bottom:24px}
     .btn-hidrovia{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:white;border:none;padding:15px 36px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s;text-decoration:none;box-shadow:0 8px 32px rgba(59,130,246,0.3)}
     .btn-hidrovia:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(59,130,246,0.4)}
     .btn-hidrovia i{font-size:12px}
 
     /* Country flags row */
     .country-flags{display:flex;justify-content:center;gap:32px;margin-top:20px}
-    .country-flag{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.4);font-weight:500}
+    .country-flag{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);font-weight:500}
     .flag-dot{width:8px;height:8px;border-radius:50%}
 
     @media(max-width:768px){
@@ -363,7 +362,7 @@
         </div>
         <h2>The Paraná-Paraguay Waterway:<br>the river highway of <em>South America.</em></h2>
         <p>3,442 km of strategic navigable route connecting five countries and moving over 100 million tons per year. Soy, minerals, fuels, containers — everything flows through the Paraná-Paraguay system. FluviaFleet is the first AI-powered platform designed exclusively for this route.</p>
-        <p style="font-size:14px;color:rgba(255,255,255,0.45);margin-top:12px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7">From the iron mines of Corumbá to the deepwater ports of Rosario and Buenos Aires, the Paraná-Paraguay is the logistics corridor sustaining the Mercosur economy. However, 80% of fleets still operate with paper spreadsheets and VHF radio.</p>
+        <p style="font-size:14px;color:var(--text2);margin-top:12px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7">From the iron mines of Corumbá to the deepwater ports of Rosario and Buenos Aires, the Paraná-Paraguay is the logistics corridor sustaining the Mercosur economy. However, 80% of fleets still operate with paper spreadsheets and VHF radio.</p>
         <div class="country-flags" style="margin-top:24px">
             <div class="country-flag"><div class="flag-dot" style="background:#60A5FA"></div>Argentina</div>
             <div class="country-flag"><div class="flag-dot" style="background:#F87171"></div>Paraguay</div>
@@ -390,42 +389,49 @@
                         <div class="port-country">Brasil</div>
                         <div class="port-km">Km 2.770</div>
                     </div>
+                    <div class="port-connector">760 km · ~3-4 days</div>
                     <div class="port-item">
                         <div class="port-dot paraguay"></div>
                         <div class="port-name">Concepción</div>
                         <div class="port-country">Paraguay</div>
                         <div class="port-km">Km 2.010</div>
                     </div>
+                    <div class="port-connector">380 km · ~2 days</div>
                     <div class="port-item">
                         <div class="port-dot paraguay"></div>
                         <div class="port-name">Asunción</div>
                         <div class="port-country">Paraguay</div>
                         <div class="port-km">Km 1.630</div>
                     </div>
+                    <div class="port-connector">430 km · ~2-3 days</div>
                     <div class="port-item">
                         <div class="port-dot argentina"></div>
                         <div class="port-name">Barranqueras</div>
                         <div class="port-country">Argentina</div>
                         <div class="port-km">Km 1.200</div>
                     </div>
+                    <div class="port-connector">620 km · ~3 days</div>
                     <div class="port-item">
                         <div class="port-dot argentina"></div>
                         <div class="port-name">Santa Fe</div>
                         <div class="port-country">Argentina</div>
                         <div class="port-km">Km 580</div>
                     </div>
+                    <div class="port-connector">160 km · ~1 day</div>
                     <div class="port-item">
                         <div class="port-dot argentina"></div>
                         <div class="port-name">Rosario (Hub Sojero)</div>
                         <div class="port-country">Argentina</div>
                         <div class="port-km">Km 420</div>
                     </div>
+                    <div class="port-connector">180 km · ~1 day</div>
                     <div class="port-item">
                         <div class="port-dot argentina"></div>
                         <div class="port-name">Buenos Aires</div>
                         <div class="port-country">Argentina</div>
                         <div class="port-km">Km 240</div>
                     </div>
+                    <div class="port-connector">240 km · ~1-2 days</div>
                     <div class="port-item">
                         <div class="port-dot uruguay"></div>
                         <div class="port-name">New Palmira</div>
@@ -466,26 +472,26 @@
     <!-- Why Hidrovia subsection -->
     <style>
         .hidrovia-why{padding:0 48px 60px;max-width:1200px;margin:0 auto}
-        .hidrovia-why h3{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:white;text-align:center;margin-bottom:12px}
-        .hidrovia-why h3 em{font-weight:300;font-style:italic;color:#93C5FD}
-        .hidrovia-why>p{text-align:center;font-size:14px;color:rgba(255,255,255,0.45);max-width:600px;margin:0 auto 36px;line-height:1.7}
+        .hidrovia-why h3{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:var(--text);text-align:center;margin-bottom:12px}
+        .hidrovia-why h3 em{font-weight:300;font-style:italic;color:var(--accent)}
+        .hidrovia-why>p{text-align:center;font-size:14px;color:var(--text2);max-width:600px;margin:0 auto 36px;line-height:1.7}
         .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-        .why-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:28px;transition:all 0.3s}
-        .why-card:hover{background:rgba(59,130,246,0.06);border-color:rgba(59,130,246,0.15);transform:translateY(-4px)}
-        .why-card-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(52,211,153,0.08));display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-        .why-card-icon i{font-size:18px;color:#60A5FA}
-        .why-card h4{font-size:15px;font-weight:600;color:white;margin-bottom:6px}
-        .why-card p{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6}
+        .why-card{background:var(--white);border:1px solid var(--sep);border-radius:18px;padding:28px;transition:all 0.3s}
+        .why-card:hover{background:var(--surface);border-color:var(--accent-light);transform:translateY(-4px)}
+        .why-card-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(37,99,235,0.1),rgba(5,150,105,0.06));display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+        .why-card-icon i{font-size:18px;color:var(--accent)}
+        .why-card h4{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+        .why-card p{font-size:12px;color:var(--text2);line-height:1.6}
         .cargo-types{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:0 48px;max-width:1000px;margin:0 auto 60px}
-        .cargo-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:100px;padding:8px 18px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:0.5px;transition:all 0.2s}
-        .cargo-chip:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.2);color:rgba(255,255,255,0.7)}
-        .cargo-chip i{font-size:12px;color:#60A5FA}
+        .cargo-chip{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--sep);border-radius:100px;padding:8px 18px;font-size:11px;font-weight:600;color:var(--text2);letter-spacing:0.5px;transition:all 0.2s}
+        .cargo-chip:hover{background:var(--surface);border-color:var(--accent-light);color:var(--text)}
+        .cargo-chip i{font-size:12px;color:var(--accent)}
         @media(max-width:768px){.why-grid{grid-template-columns:1fr}.hidrovia-why{padding:0 24px 40px}.cargo-types{padding:0 24px}}
     </style>
 
     <!-- Cargo types strip -->
     <div style="text-align:center;padding:0 48px 16px;max-width:900px;margin:0 auto">
-        <p style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.3);margin-bottom:16px">CARGOS TRANSITING THE PARANÁ-PARAGUAY</p>
+        <p style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text3);margin-bottom:16px">CARGOS TRANSITING THE PARANÁ-PARAGUAY</p>
     </div>
     <div class="cargo-types reveal">
         <div class="cargo-chip"><i class="fa-solid fa-wheat-awn"></i>Soy & Cereals</div>
@@ -527,11 +533,11 @@
         <div class="hidrovia-cta-inner">
             <h3>The Paraná-Paraguay needed<br>a platform at its level</h3>
             <p>FluviaFleet digitalizes every kilometer of the waterway. AI satellite tracking, 40,000-ton convoy management, fuel control saving millions, and a smart Copilot knowing every river stretch — from Corumbá to New Palmira.</p>
-            <a href="#precios" class="btn-hidrovia">
+            <a href="#contacto" class="btn-hidrovia">
                 <i class="fa-solid fa-ship"></i>
-                Digitalize my Fleet — 14 days free
+                Request a Personalized Demo
             </a>
-            <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:16px;margin-bottom:0">No credit card required · 5-minute setup · 24/7 Support</p>
+            <p style="font-size:11px;color:var(--text3);margin-top:16px;margin-bottom:0">No commitment · Response in 24hrs · Support in English & Spanish</p>
         </div>
     </div>
 </section>
@@ -540,57 +546,151 @@
 <div class="section-alt">
 <section class="section" id="como-funciona">
     <div class="section-tag">HOW IT WORKS</div>
-    <h2>Three steps to<br><em>digitalize your fleet.</em></h2>
+    <h2>Four steps to<br><em>digitalize your fleet.</em></h2>
     <p class="section-desc">No complex installations. No expensive hardware. Start operating your fleet smartly in minutes.</p>
     <div class="steps-grid">
         <div class="step-card reveal">
             <div class="step-num">01</div>
-            <h3>Register your fleet</h3>
-            <p>Load your vessels, barges, and tugboats in minutes. The system automatically detects AIS data from your fleet on the waterway.</p>
-            <div class="step-icon"><i class="fa-solid fa-anchor"></i></div>
+            <h3>Load your fleet in minutes</h3>
+            <p>Import your barges and tugboats. The system detects existing AIS data. No hardware. No field technicians.</p>
+            <div class="step-icon"><i class="fa-solid fa-ship"></i></div>
         </div>
         <div class="step-card reveal">
             <div class="step-num">02</div>
-            <h3>Operate from anywhere</h3>
-            <p>Build convoys, log fuel, manage crew and logbooks. All from the web or mobile app with real-time synchronization.</p>
-            <div class="step-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+            <h3>The river talks, you listen</h3>
+            <p>Real-time water levels, draft alerts, weather conditions. The Copilot warns you before problems happen.</p>
+            <div class="step-icon"><i class="fa-solid fa-water"></i></div>
         </div>
         <div class="step-card reveal">
             <div class="step-num">03</div>
-            <h3>Make data-driven decisions</h3>
-            <p>Smart reports, waterway forecasts, automatic alerts, and an AI Copilot that analyzes your operation and suggests optimizations.</p>
-            <div class="step-icon"><i class="fa-solid fa-robot"></i></div>
+            <h3>Convoys built with data, not calls</h3>
+            <p>Automatic draft validation based on river level. Optimal formation suggested by AI. No more endless phone calls.</p>
+            <div class="step-icon"><i class="fa-solid fa-link"></i></div>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num">04</div>
+            <h3>Your operation, in real numbers</h3>
+            <p>Automatic reports on fuel, cost per voyage, efficiency per sector. Fully exportable. Fully auditable.</p>
+            <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
         </div>
     </div>
 </section>
 </div>
 
-<!-- MODULOS -->
+<!-- MODULOS — 12-MODULE GRID -->
+<style>
+    .modules-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .module-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:28px;transition:all 0.3s ease;cursor:default}
+    .module-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(37,99,235,0.08);border-color:var(--accent)}
+    .module-card-icon{width:48px;height:48px;border-radius:14px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+    .module-card-icon i{font-size:20px;color:var(--accent)}
+    .module-card h4{font-size:15px;font-weight:600;margin-bottom:6px}
+    .module-card p{font-size:12px;color:var(--text2);line-height:1.5}
+    @media(max-width:1024px){.modules-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:480px){.modules-grid{grid-template-columns:1fr}}
+</style>
 <section class="section" id="modulos">
     <div class="section-tag">COMPLETE ECOSYSTEM</div>
-    <h2>Everything you need<br><em>in one platform.</em></h2>
-    <p class="section-desc">15+ integrated modules covering every aspect of river operations, from dispatch to billing.</p>
-    <div class="feat-grid">
-        <div class="feat-card reveal"><i class="fa-solid fa-map"></i><div><h4>Live Fleet Map</h4><p>AIS tracking + proprietary GPS. View each vessel on the Paraguay-Paraná waterway in real time.</p></div></div>
-        <div class="feat-card reveal"><i class="fa-solid fa-link"></i><div><h4>Convoy Builder</h4><p>Build formations of up to 18 barges with capacity validation directly from your registered fleet.</p></div></div>
-        <div class="feat-card reveal"><i class="fa-solid fa-gas-pump"></i><div><h4>Fuel Control</h4><p>Bunker log, trip consumption, and sector efficiency. Your highest cost, secured.</p></div></div>
-        <div class="feat-card reveal"><i class="fa-solid fa-wrench"></i><div><h4>Preventive Maintenance</h4><p>Work orders, equipment history, and expiration alerts for every asset in your fleet.</p></div></div>
-        <div class="feat-card reveal"><i class="fa-solid fa-book"></i><div><h4>Digital Logbook</h4><p>Operational log with photos, automatic classification, and event auditing per vessel.</p></div></div>
-        <div class="feat-card reveal"><i class="fa-solid fa-robot"></i><div><h4>AI Copilot</h4><p>Smart assistant powered by Gemini that analyzes your database and answers operational questions.</p></div></div>
-        <div class="feat-card reveal"><i class="fa-solid fa-users"></i><div><h4>Crew & Safety</h4><p>Crewing, certifications, watches, and regulatory compliance management for each crew member.</p></div></div>
-        <div class="feat-card reveal"><i class="fa-solid fa-water"></i><div><h4>Waterway Forecast</h4><p>Water levels, trends, and weather conditions of the waterway with Open Meteo data.</p></div></div>
+    <h2>Everything your fleet<br><em>needs in one place.</em></h2>
+    <p class="section-desc">12 integrated modules covering every aspect of fluvial operations.</p>
+    <div class="modules-grid">
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-ship"></i></div><h4>Fleet Management</h4><p>Total asset control and operational status</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-map-location-dot"></i></div><h4>AIS Tracking</h4><p>Real-time satellite positioning</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-link"></i></div><h4>Convoy Builder</h4><p>Smart convoy assembly with draft validation</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-wrench"></i></div><h4>Maintenance</h4><p>Preventive and corrective maintenance</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-gas-pump"></i></div><h4>Fuel Analytics</h4><p>Bunker control and sector efficiency</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-book"></i></div><h4>Documents & Logbook</h4><p>Operational records with photos and audit</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-users"></i></div><h4>Crew Management</h4><p>Crews, certifications, and watch schedules</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-anchor"></i></div><h4>Port Operations</h4><p>Port operations management</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-route"></i></div><h4>Voyage Planning</h4><p>Voyage planning and dispatch</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-robot"></i></div><h4>FluviaFleet AI</h4><p>Smart copilot for operations</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-chart-bar"></i></div><h4>Reports & Analytics</h4><p>KPIs, trends and exportable reports</p></div>
+        <div class="module-card reveal"><div class="module-card-icon"><i class="fa-solid fa-bell"></i></div><h4>Alerts & Incidents</h4><p>Automatic alerts and incident tracking</p></div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- COPILOTO IA — SHOWCASE                         -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .copiloto-section{background:var(--white);padding:100px 48px;position:relative;overflow:hidden}
+    .copiloto-section::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,0.06),transparent 70%);pointer-events:none}
+    .copiloto-inner{max-width:1200px;margin:0 auto;position:relative;z-index:2}
+    .copiloto-header{text-align:center;margin-bottom:48px}
+    .copiloto-header .section-tag{color:var(--accent)}
+    .copiloto-header h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
+    .copiloto-header h2 em{font-weight:300;font-style:italic;color:var(--accent)}
+    .copiloto-header p{font-size:15px;color:var(--text2);line-height:1.6;max-width:520px;margin:12px auto 0}
+    .copiloto-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:32px;flex-wrap:wrap}
+    .copiloto-tab{padding:10px 24px;border-radius:100px;border:1px solid var(--sep);background:var(--white);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s}
+    .copiloto-tab:hover{background:var(--surface);color:var(--text)}
+    .copiloto-tab.active{background:var(--accent);border-color:var(--accent);color:white}
+    .copiloto-chat{max-width:700px;margin:0 auto;background:var(--surface);border:1px solid var(--sep);border-radius:20px;padding:32px;min-height:240px}
+    .copiloto-chat-panel{display:none}
+    .copiloto-chat-panel.active{display:block}
+    .chat-msg{display:flex;gap:12px;margin-bottom:20px}
+    .chat-msg:last-child{margin-bottom:0}
+    .chat-avatar{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+    .chat-avatar.user{background:var(--accent);color:white}
+    .chat-avatar.ai{background:linear-gradient(135deg,rgba(37,99,235,0.12),rgba(5,150,105,0.08));color:var(--accent)}
+    .chat-bubble{background:var(--white);border:1px solid var(--sep);border-radius:14px;padding:16px 20px;font-size:13px;line-height:1.7;flex:1}
+    .chat-bubble.user-bubble{background:var(--accent);color:white;border-color:var(--accent)}
+    .chat-bubble.ai-bubble{color:var(--text2);border-color:var(--surface2)}
+    .copiloto-cta-wrap{text-align:center;margin-top:36px}
+    @media(max-width:768px){
+        .copiloto-section{padding:60px 24px}
+        .copiloto-header h2{font-size:32px}
+        .copiloto-tabs{gap:6px}
+        .copiloto-tab{padding:8px 16px;font-size:12px}
+        .copiloto-chat{padding:20px}
+    }
+</style>
+<section class="copiloto-section" id="copiloto">
+    <div class="copiloto-inner">
+        <div class="copiloto-header reveal">
+            <div class="section-tag">ARTIFICIAL INTELLIGENCE</div>
+            <h2>The first smart copilot<br><em>for fluvial operations.</em></h2>
+            <p>Ask in plain language. We answer with your real operational data.</p>
+        </div>
+        <div class="copiloto-tabs reveal">
+            <button class="copiloto-tab active" data-tab="fuel">Fuel</button>
+            <button class="copiloto-tab" data-tab="maintenance">Maintenance</button>
+            <button class="copiloto-tab" data-tab="tracking">Tracking</button>
+            <button class="copiloto-tab" data-tab="costs">Costs</button>
+        </div>
+        <div class="copiloto-chat reveal">
+            <div class="copiloto-chat-panel active" data-panel="fuel">
+                <div class="chat-msg"><div class="chat-avatar user"><i class="fa-solid fa-user"></i></div><div class="chat-bubble user-bubble">Which convoy has the highest consumption this week?</div></div>
+                <div class="chat-msg"><div class="chat-avatar ai"><i class="fa-solid fa-robot"></i></div><div class="chat-bubble ai-bubble">Convoy ASU-ROS-03 averages 12.4 kL/day, 23% above average. Probable causes: adverse current in Corrientes-Resistencia sector and cruising speed above optimal.</div></div>
+            </div>
+            <div class="copiloto-chat-panel" data-panel="maintenance">
+                <div class="chat-msg"><div class="chat-avatar user"><i class="fa-solid fa-user"></i></div><div class="chat-bubble user-bubble">Which vessels need urgent maintenance?</div></div>
+                <div class="chat-msg"><div class="chat-avatar ai"><i class="fa-solid fa-robot"></i></div><div class="chat-bubble ai-bubble">3 vessels with active alerts:<br>· Tugboat Guaraní II — main engine, due in 3 days<br>· Barge PY-0047 — hull inspection, 5 days overdue<br>· Barge PY-0089 — navigation certificate, due this week</div></div>
+            </div>
+            <div class="copiloto-chat-panel" data-panel="tracking">
+                <div class="chat-msg"><div class="chat-avatar user"><i class="fa-solid fa-user"></i></div><div class="chat-bubble user-bubble">Show me vessels arriving at Rosario this week.</div></div>
+                <div class="chat-msg"><div class="chat-avatar ai"><i class="fa-solid fa-robot"></i></div><div class="chat-bubble ai-bubble">4 vessels with confirmed Rosario ETA:<br>· ASU-Convoy-03: Wednesday 2pm (no alerts)<br>· Tugboat Delta I: Thursday 9am (4hr delay, low water)<br>· Barge AR-112: Friday 4pm<br>· Convoy PY-Norte-07: Saturday 11am</div></div>
+            </div>
+            <div class="copiloto-chat-panel" data-panel="costs">
+                <div class="chat-msg"><div class="chat-avatar user"><i class="fa-solid fa-user"></i></div><div class="chat-bubble user-bubble">What are the biggest operational costs this month?</div></div>
+                <div class="chat-msg"><div class="chat-avatar ai"><i class="fa-solid fa-robot"></i></div><div class="chat-bubble ai-bubble">Fuel accounts for 67% of total cost this month. Asunción-Corrientes sector has highest relative consumption. Recommendation: review cruising speed on that stretch.</div></div>
+            </div>
+        </div>
+        <div class="copiloto-cta-wrap reveal">
+            <a href="#contacto" class="btn-hidrovia"><i class="fa-solid fa-robot"></i> Request Demo</a>
+        </div>
     </div>
 </section>
 
 <!-- STATS -->
 <div class="stats-banner">
-    <div class="section-tag" style="color:rgba(255,255,255,0.4)">REAL IMPACT</div>
-    <h2>Numbers that<br><em>speak for themselves.</em></h2>
+    <div class="section-tag" style="color:rgba(255,255,255,0.4)">THE PLATFORM</div>
+    <h2>Designed for<br><em>the Waterway.</em></h2>
     <div class="stats-row">
-        <div class="stat-item reveal"><div class="stat-num">+500</div><div class="stat-lbl">MONITORED ASSETS</div></div>
-        <div class="stat-item reveal"><div class="stat-num">1.2M</div><div class="stat-lbl">MANAGED TONS</div></div>
-        <div class="stat-item reveal"><div class="stat-num">-18%</div><div class="stat-lbl">FUEL REDUCTION</div></div>
-        <div class="stat-item reveal"><div class="stat-num">99.9%</div><div class="stat-lbl">SYSTEM UPTIME</div></div>
+        <div class="stat-item reveal"><div class="stat-num">3,442</div><div class="stat-lbl">KM OF WATERWAY COVERED</div></div>
+        <div class="stat-item reveal"><div class="stat-num">12</div><div class="stat-lbl">INTEGRATED MODULES</div></div>
+        <div class="stat-item reveal"><div class="stat-num">5</div><div class="stat-lbl">COUNTRIES CONNECTED</div></div>
+        <div class="stat-item reveal"><div class="stat-num">&lt;5 min</div><div class="stat-lbl">INITIAL SETUP</div></div>
     </div>
 </div>
 
@@ -599,60 +699,447 @@
     <div style="text-align:center;margin-bottom:48px">
         <div class="section-tag">SCALABLE PLANS</div>
         <h2>Power for fleets<br><em>of all sizes.</em></h2>
+        <div style="display:inline-flex;background:var(--surface);border-radius:10px;border:0.5px solid var(--sep);padding:4px;margin-top:16px">
+            <button class="pricing-toggle-btn active" data-period="monthly" style="padding:8px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;background:var(--accent);color:white;transition:all 0.2s">Monthly</button>
+            <button class="pricing-toggle-btn" data-period="yearly" style="padding:8px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;background:transparent;color:var(--text2);transition:all 0.2s">Annual <span style="color:var(--success);font-size:11px">(Save 20%)</span></button>
+        </div>
     </div>
     <div class="pricing-cards">
         <div class="price-card reveal">
-            <h3>Per Barge</h3>
-            <p class="price-desc">Individual control of each asset</p>
-            <div><span class="price-amount">$149</span><span class="price-unit"> /barge/month</span></div>
+            <h3>Starter</h3>
+            <p class="price-desc">Up to 5 vessels</p>
+            <div><span class="price-amount" data-monthly="149" data-yearly="119">$149</span><span class="price-unit"> /month</span></div>
             <ul class="price-list">
-                <li><i class="fa-solid fa-check"></i>Real-time GPS tracking</li>
-                <li><i class="fa-solid fa-check"></i>Digital logbook</li>
-                <li><i class="fa-solid fa-check"></i>Fuel control</li>
-                <li><i class="fa-solid fa-check"></i>Preventive maintenance</li>
+                <li><i class="fa-solid fa-check"></i>AIS Tracking</li>
+                <li><i class="fa-solid fa-check"></i>Digital Logbook</li>
+                <li><i class="fa-solid fa-check"></i>Fuel Control</li>
+                <li><i class="fa-solid fa-check"></i>Preventive Maintenance</li>
+                <li class="disabled"><i class="fa-solid fa-xmark"></i>Convoy Builder</li>
                 <li class="disabled"><i class="fa-solid fa-xmark"></i>AI Copilot</li>
             </ul>
-            <a href="fluvia-en.html" class="price-btn">Select</a>
+            <a href="#contacto" class="price-btn">Request Demo</a>
         </div>
         <div class="price-card featured reveal">
             <div class="price-badge">MOST POPULAR</div>
-            <h3>Fleet Combo</h3>
-            <p class="price-desc">Up to 10 vessels with discount</p>
-            <div><span class="price-amount">$899</span><span class="price-unit"> /month</span></div>
+            <h3>Professional</h3>
+            <p class="price-desc">Up to 20 vessels</p>
+            <div><span class="price-amount" data-monthly="499" data-yearly="399">$499</span><span class="price-unit"> /month</span></div>
             <ul class="price-list">
-                <li><i class="fa-solid fa-check"></i>Everything in Per Barge</li>
-                <li><i class="fa-solid fa-check"></i>Convoy builder</li>
-                <li><i class="fa-solid fa-check"></i>Crew management</li>
-                <li><i class="fa-solid fa-check"></i>Satellite communications</li>
-                <li><i class="fa-solid fa-check"></i>Basic AI Copilot</li>
+                <li><i class="fa-solid fa-check"></i>Everything in Starter</li>
+                <li><i class="fa-solid fa-check"></i>Convoy Builder</li>
+                <li><i class="fa-solid fa-check"></i>Crew Management</li>
+                <li><i class="fa-solid fa-check"></i>AI Copilot</li>
+                <li><i class="fa-solid fa-check"></i>Priority Support</li>
             </ul>
-            <a href="fluvia.html" class="price-btn dark">Start for Free</a>
+            <a href="#contacto" class="price-btn dark">Request Demo</a>
         </div>
         <div class="price-card reveal">
             <h3>Enterprise</h3>
-            <p class="price-desc">Unlimited corporate solution</p>
-            <div><span class="price-amount">$1,499</span><span class="price-unit"> /month</span></div>
+            <p class="price-desc">Unlimited vessels</p>
+            <div><span class="price-amount">Contact</span><span class="price-unit"> Sales</span></div>
             <ul class="price-list">
-                <li><i class="fa-solid fa-check"></i>Unlimited vessels</li>
-                <li><i class="fa-solid fa-check"></i>Advanced AI Copilot</li>
-                <li><i class="fa-solid fa-check"></i>API integrations</li>
-                <li><i class="fa-solid fa-check"></i>24/7 Priority support</li>
+                <li><i class="fa-solid fa-check"></i>Everything in Professional</li>
+                <li><i class="fa-solid fa-check"></i>API Integrations</li>
                 <li><i class="fa-solid fa-check"></i>SLA 99.9%</li>
+                <li><i class="fa-solid fa-check"></i>24/7 Dedicated Support</li>
+                <li><i class="fa-solid fa-check"></i>Custom Onboarding</li>
             </ul>
             <a href="mailto:info@fluviafleet.com" class="price-btn">Contact Sales</a>
         </div>
     </div>
 </section>
 
-<!-- CTA FINAL -->
-<div class="section-alt">
-<section class="cta-section" id="nosotros">
-    <div class="section-tag">READY TO SET SAIL?</div>
-    <h2>Digitalize your fleet<br><em>today.</em></h2>
-    <p>We combine the experience of veteran captains with cutting-edge technology. Our mission is to transform the Paraná-Paraguay Waterway into the most efficient navigable route in South America.</p>
-    <a href="fluvia-en.html" class="btn-hero">Try 14 Days Free →</a>
+<!-- ═══════════════════════════════════════════════ -->
+<!-- ROI CALCULATOR                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .roi-section{background:var(--bg);padding:100px 48px}
+    .roi-inner{max-width:1000px;margin:0 auto}
+    .roi-header{text-align:center;margin-bottom:48px}
+    .roi-header .section-tag{color:var(--text2)}
+    .roi-header h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
+    .roi-header h2 em{font-weight:300;font-style:italic}
+    .roi-header p{font-size:15px;color:var(--text2);line-height:1.6;max-width:520px;margin:12px auto 0}
+    .roi-sliders{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px}
+    .roi-slider-group{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:24px}
+    .roi-slider-group label{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px}
+    .roi-slider-group label span{font-family:'Newsreader',serif;font-size:20px;font-weight:400;color:var(--accent)}
+    .roi-slider-group input[type=range]{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:var(--sep);border-radius:3px;outline:none;cursor:pointer}
+    .roi-slider-group input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid var(--white);box-shadow:0 2px 8px rgba(37,99,235,0.3)}
+    .roi-slider-group input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid var(--white);box-shadow:0 2px 8px rgba(37,99,235,0.3)}
+    .roi-results{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+    .roi-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:24px;text-align:center;transition:all 0.3s}
+    .roi-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+    .roi-card-value{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:var(--text);margin-bottom:4px}
+    .roi-card-value.green{color:var(--success)}
+    .roi-card-value.red{color:var(--error)}
+    .roi-card-label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:0.5px}
+    .roi-disclaimer{text-align:center;font-size:12px;color:var(--text2);line-height:1.7;max-width:600px;margin:0 auto 24px}
+    .roi-cta-wrap{text-align:center;margin-bottom:24px}
+    .roi-anchor{text-align:center;font-family:'Newsreader',serif;font-size:16px;font-style:italic;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.6}
+    @media(max-width:768px){
+        .roi-section{padding:60px 24px}
+        .roi-sliders{grid-template-columns:1fr}
+        .roi-results{grid-template-columns:1fr 1fr}
+        .roi-card-value{font-size:24px}
+    }
+</style>
+<section class="roi-section" id="roi">
+    <div class="roi-inner">
+        <div class="roi-header reveal">
+            <div class="section-tag">RETURN ON INVESTMENT</div>
+            <h2>Calculate how much<br><em>FluviaFleet can save you.</em></h2>
+            <p>Enter your fleet data and see the projected impact in real time. No registration required.</p>
+        </div>
+        <div class="roi-sliders reveal">
+            <div class="roi-slider-group">
+                <label>Number of barges <span id="roi-barges-val">10</span></label>
+                <input type="range" id="roi-barges" min="1" max="150" value="10" oninput="calculateROI()">
+            </div>
+            <div class="roi-slider-group">
+                <label>Number of tugboats <span id="roi-tugs-val">3</span></label>
+                <input type="range" id="roi-tugs" min="1" max="30" value="3" oninput="calculateROI()">
+            </div>
+            <div class="roi-slider-group">
+                <label>Monthly fuel consumption (kL) <span id="roi-fuel-val">500</span></label>
+                <input type="range" id="roi-fuel" min="10" max="5000" value="500" step="10" oninput="calculateROI()">
+            </div>
+            <div class="roi-slider-group">
+                <label>Cost per liter (USD) <span id="roi-cost-val">$1.20</span></label>
+                <input type="range" id="roi-cost" min="0.5" max="3.0" value="1.2" step="0.1" oninput="calculateROI()">
+            </div>
+        </div>
+        <div class="roi-results reveal">
+            <div class="roi-card">
+                <div class="roi-card-value green" id="roi-savings">$0</div>
+                <div class="roi-card-label">Estimated annual savings</div>
+            </div>
+            <div class="roi-card">
+                <div class="roi-card-value" id="roi-monthly-cost">$149</div>
+                <div class="roi-card-label">Monthly FluviaFleet cost</div>
+            </div>
+            <div class="roi-card">
+                <div class="roi-card-value" id="roi-months">0</div>
+                <div class="roi-card-label">Estimated ROI</div>
+            </div>
+            <div class="roi-card">
+                <div class="roi-card-value green" id="roi-net">$0</div>
+                <div class="roi-card-label">Year 1 net savings</div>
+            </div>
+        </div>
+        <p class="roi-disclaimer reveal">These figures are projections based on an estimated 18% fuel consumption reduction. For a personalized analysis with your real operations:</p>
+        <div class="roi-cta-wrap reveal">
+            <a href="#contacto" class="btn-hero" style="display:inline-block">Talk to a Specialist →</a>
+        </div>
+        <p class="roi-anchor reveal">A barge sitting idle for one day due to lack of information costs more than a month of FluviaFleet.</p>
+    </div>
 </section>
-</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CASE STUDY                                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .caso-section{padding:100px 48px;max-width:1200px;margin:0 auto}
+    .caso-card{background:var(--white);border:0.5px solid var(--sep);border-radius:20px;padding:48px;box-shadow:0 12px 40px rgba(0,0,0,0.04)}
+    .caso-badge{display:inline-block;background:var(--surface);border:0.5px solid var(--sep);border-radius:100px;padding:6px 18px;font-size:10px;font-weight:800;letter-spacing:2px;color:var(--text2);margin-bottom:24px}
+    .caso-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:32px}
+    .caso-step{position:relative}
+    .caso-step-num{font-family:'Newsreader',serif;font-size:14px;font-weight:600;color:var(--accent);margin-bottom:8px;letter-spacing:0.5px}
+    .caso-step h4{font-size:14px;font-weight:700;margin-bottom:8px;color:var(--text)}
+    .caso-step p{font-size:12px;color:var(--text2);line-height:1.6}
+    .caso-note{font-size:11px;color:var(--text3);margin-top:24px;font-style:italic;line-height:1.6}
+    .caso-cta{margin-top:24px}
+    @media(max-width:768px){
+        .caso-section{padding:60px 24px}
+        .caso-card{padding:28px}
+        .caso-steps{grid-template-columns:1fr 1fr;gap:20px}
+    }
+    @media(max-width:480px){
+        .caso-steps{grid-template-columns:1fr}
+    }
+</style>
+<section class="caso-section" id="caso-exito">
+    <div class="section-tag reveal">CASE STUDY</div>
+    <h2 class="reveal" style="font-family:'Newsreader',serif;font-size:42px;font-weight:400;line-height:1.1;margin-bottom:8px">Real results with<br><em style="font-weight:300;font-style:italic">real operators.</em></h2>
+    <div class="caso-card reveal" style="margin-top:48px">
+        <div class="caso-badge">PILOT PROGRAM — PARAGUAY-PARANÁ WATERWAY</div>
+        <div class="caso-steps">
+            <div class="caso-step">
+                <div class="caso-step-num">1. SITUATION</div>
+                <h4>Initial Scenario</h4>
+                <p>Mid-size operator with 12 barges and 3 tugboats. 100% manual management with Excel, VHF radio and paper forms.</p>
+            </div>
+            <div class="caso-step">
+                <div class="caso-step-num">2. CHALLENGE</div>
+                <h4>Key Problems</h4>
+                <p>No real-time position visibility. Rising fuel costs without data to diagnose cause. 3 incidents without sufficient documentation.</p>
+            </div>
+            <div class="caso-step">
+                <div class="caso-step-num">3. IMPLEMENTATION</div>
+                <h4>Quick Deployment</h4>
+                <p>5-day onboarding. Integration with existing AIS data. Remote team training. No additional hardware.</p>
+            </div>
+            <div class="caso-step">
+                <div class="caso-step-num">4. RESULT</div>
+                <h4>Measurable Impact</h4>
+                <p>Full fleet visibility. Projected 18% fuel reduction. Digital logbook eliminated 3 daily follow-up calls per vessel.</p>
+            </div>
+        </div>
+        <p class="caso-note">Based on pilot program data. Results may vary. Full case available under NDA.</p>
+        <div class="caso-cta">
+            <a href="#contacto" class="btn-hero" style="display:inline-block">Learn more → Request Demo</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PARTNERS / TECHNOLOGY                           -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .partners-section{background:var(--bg);padding:80px 48px}
+    .partners-inner{max-width:1200px;margin:0 auto;text-align:center}
+    .partners-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:40px}
+    .partner-badge{display:inline-flex;align-items:center;gap:10px;background:var(--white);border:0.5px solid var(--sep);border-radius:14px;padding:16px 28px;font-size:14px;font-weight:600;color:var(--text);transition:all 0.2s}
+    .partner-badge:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+    .partner-badge i{font-size:18px;color:var(--accent)}
+    .partners-sub{font-size:13px;color:var(--text2);margin-top:24px}
+    @media(max-width:768px){.partners-section{padding:60px 24px}}
+</style>
+<section class="partners-section">
+    <div class="partners-inner">
+        <div class="section-tag reveal">TECHNOLOGY</div>
+        <h2 class="reveal" style="font-family:'Newsreader',serif;font-size:42px;font-weight:400;line-height:1.1;margin-bottom:8px">Integrated with<br><em style="font-weight:300;font-style:italic">world-class technology.</em></h2>
+        <div class="partners-grid reveal">
+            <div class="partner-badge"><i class="fa-solid fa-map-location-dot"></i>Google Maps Platform</div>
+            <div class="partner-badge"><i class="fa-solid fa-satellite-dish"></i>AIS Stream</div>
+            <div class="partner-badge"><i class="fa-solid fa-cloud-sun"></i>Open Meteo</div>
+            <div class="partner-badge"><i class="fa-solid fa-database"></i>Supabase</div>
+            <div class="partner-badge"><i class="fa-solid fa-credit-card"></i>Stripe</div>
+            <div class="partner-badge"><i class="fa-solid fa-bell"></i>Firebase Cloud Messaging</div>
+        </div>
+        <p class="partners-sub reveal">Cloud infrastructure with data encrypted in transit and at rest.</p>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- FAQ                                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .faq-section{padding:100px 48px;max-width:900px;margin:0 auto}
+    .faq-header{text-align:center;margin-bottom:48px}
+    .faq-header .section-tag{color:var(--text2)}
+    .faq-header h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
+    .faq-header h2 em{font-weight:300;font-style:italic}
+    .faq-item{border-bottom:0.5px solid var(--sep)}
+    .faq-item:first-child{border-top:0.5px solid var(--sep)}
+    .faq-question{width:100%;background:none;border:none;padding:20px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;gap:16px;transition:color 0.2s}
+    .faq-question:hover{color:var(--accent)}
+    .faq-icon{width:28px;height:28px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:var(--text2);transition:all 0.3s;font-family:'Inter',sans-serif;font-weight:300}
+    .faq-item.active .faq-icon{background:var(--accent);color:white;transform:rotate(45deg)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.4s ease}
+    .faq-answer-inner{padding:0 0 20px;font-size:14px;color:var(--text2);line-height:1.7}
+    @media(max-width:768px){.faq-section{padding:60px 24px}.faq-question{font-size:14px}}
+</style>
+<section class="faq-section" id="faq">
+    <div class="faq-header reveal">
+        <div class="section-tag">FREQUENTLY ASKED QUESTIONS</div>
+        <h2>Answers to what<br><em>everyone asks.</em></h2>
+    </div>
+    <div class="faq-list reveal">
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFAQ(this)">Do I need to install hardware on my vessels? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><div class="faq-answer-inner">No. FluviaFleet is 100% cloud-based. We use your existing AIS data and standard GPS. No physical installation or field technicians required. You're operational in minutes.</div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFAQ(this)">Does it work without internet on the river? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><div class="faq-answer-inner">FluviaFleet requires internet to sync real-time data. However, AIS data is captured continuously and syncs when connection is restored. The mobile app works offline for logbook and incident recording, syncing when back in coverage.</div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFAQ(this)">Is my data private? Who can see it? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><div class="faq-answer-inner">Your data is 100% private, encrypted in transit and at rest. Each company has an isolated environment (multi-tenancy). No other user or competitor can see your information. We comply with LGPD (Brazil) and GDPR standards.</div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFAQ(this)">Can competitors see my position? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><div class="faq-answer-inner">No. Your vessel positions are only visible to authorized users in your company. Public AIS data (already visible on platforms like MarineTraffic) doesn't change, but your internal operational data is 100% private.</div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFAQ(this)">How long does onboarding take? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><div class="faq-answer-inner">Full onboarding takes 1-5 days depending on fleet size. For small fleets (up to 10 vessels), you can be operational the same day. Includes remote training for your team.</div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFAQ(this)">What happens if I cancel? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><div class="faq-answer-inner">You can cancel anytime with no penalties. Your data remains available for export for 30 days after cancellation. No minimum commitment contracts.</div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFAQ(this)">What countries does FluviaFleet operate in? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><div class="faq-answer-inner">FluviaFleet is designed for the Paraguay-Paraná Waterway and covers operations in Argentina, Paraguay, Brazil, Uruguay and Bolivia. The platform is available in Spanish and English.</div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFAQ(this)">What support do you offer? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><div class="faq-answer-inner">Starter: email support during business hours. Professional: priority support with under 4-hour response. Enterprise: dedicated 24/7 support with assigned account manager and guaranteed SLA.</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- ABOUT US                                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .about-section{padding:100px 48px;max-width:900px;margin:0 auto}
+    .about-section .about-story{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:24px}
+    .about-section .about-mission{font-family:'Newsreader',serif;font-size:22px;font-weight:400;font-style:italic;color:var(--text);margin-bottom:24px;padding:20px 0;border-top:0.5px solid var(--sep);border-bottom:0.5px solid var(--sep)}
+    .about-meta{display:flex;flex-wrap:wrap;gap:32px;font-size:13px;color:var(--text2)}
+    .about-meta i{color:var(--accent);margin-right:6px}
+    @media(max-width:768px){.about-section{padding:60px 24px}.about-meta{flex-direction:column;gap:12px}}
+</style>
+<section class="about-section" id="nosotros">
+    <div class="section-tag reveal">ABOUT US</div>
+    <h2 class="reveal" style="font-family:'Newsreader',serif;font-size:42px;font-weight:400;line-height:1.1;margin-bottom:24px">Who we are</h2>
+    <p class="about-story reveal">FluviaFleet was born from a real frustration: managing fluvial operations on the Paraguay-Paraná Waterway with last-century tools. Paper forms, VHF radio, and endless phone calls just to know where a barge is. We built the first AI-powered platform designed exclusively for this route — because we know it, because we navigate it, and because it deserves technology that matches its scale.</p>
+    <div class="about-mission reveal">Our mission: digitalize every kilometer of the Paraguay-Paraná Waterway.</div>
+    <div class="about-meta reveal">
+        <div><i class="fa-solid fa-location-dot"></i>Asunción, Paraguay · Regional operations in 5 countries</div>
+        <div><i class="fa-solid fa-envelope"></i><a href="mailto:info@fluviafleet.com" style="color:var(--accent);text-decoration:none">info@fluviafleet.com</a></div>
+    </div>
+</section>
+
+<!-- CLOSING CTA -->
+<style>
+    #cierre{background:linear-gradient(135deg,#1E40AF 0%,#2563EB 50%,#3B82F6 100%);text-align:center;padding:100px 48px;max-width:100%;margin:0}
+    #cierre .section-tag{color:rgba(255,255,255,0.6)}
+    #cierre h2{font-family:'Newsreader',serif;font-size:48px;font-weight:400;line-height:1.1;margin-bottom:16px;color:white}
+    #cierre h2 em{font-weight:300;font-style:italic;color:rgba(255,255,255,0.9)}
+    #cierre p{font-size:15px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:36px;max-width:600px;margin-left:auto;margin-right:auto}
+    #cierre .cta-buttons{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap}
+    #cierre .btn-cta-white{background:white;color:var(--accent);border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none;display:inline-block}
+    #cierre .btn-cta-white:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+    #cierre .btn-cta-ghost{background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.3);color:white;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+    #cierre .btn-cta-ghost:hover{background:rgba(255,255,255,0.25)}
+    @media(max-width:768px){#cierre{padding:60px 24px}#cierre h2{font-size:36px}}
+</style>
+<section id="cierre">
+    <div style="max-width:700px;margin:0 auto">
+        <div class="section-tag">READY TO SET SAIL?</div>
+        <h2>Your competition still uses<br><em>VHF radio and spreadsheets.</em></h2>
+        <p>While other operators manage their fleet with phone calls, Excel and paper, you can know where every barge is, how much fuel it burned and what needs maintenance — in real time. The Waterway doesn't wait. Your fleet shouldn't either.</p>
+        <div class="cta-buttons">
+            <a href="#contacto" class="btn-cta-white">Request Demo →</a>
+            <a href="mailto:info@fluviafleet.com" class="btn-cta-ghost">info@fluviafleet.com</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CONTACT FORM                                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .contact-section{padding:100px 48px;max-width:1200px;margin:0 auto}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+    .contact-form{display:flex;flex-direction:column;gap:16px}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-group label{font-size:12px;font-weight:600;color:var(--text2);letter-spacing:0.5px}
+    .form-group input,.form-group select,.form-group textarea{padding:12px 16px;border:0.5px solid var(--sep);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;background:var(--white);color:var(--text);transition:border-color 0.2s;outline:none}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+    .form-group textarea{resize:vertical;min-height:100px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-submit{background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;margin-top:8px}
+    .form-submit:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,0.3)}
+    .contact-alt{display:flex;flex-direction:column;gap:16px}
+    .contact-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:24px;display:flex;align-items:center;gap:16px;transition:all 0.2s}
+    .contact-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+    .contact-card-icon{width:48px;height:48px;border-radius:14px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .contact-card-icon i{font-size:20px;color:var(--accent)}
+    .contact-card h4{font-size:14px;font-weight:600;margin-bottom:2px}
+    .contact-card p{font-size:12px;color:var(--text2)}
+    .contact-card a{font-size:13px;color:var(--accent);text-decoration:none;font-weight:500}
+    @media(max-width:768px){
+        .contact-section{padding:60px 24px}
+        .contact-grid{grid-template-columns:1fr;gap:32px}
+        .form-row{grid-template-columns:1fr}
+    }
+</style>
+<section class="contact-section" id="contacto">
+    <div class="section-tag reveal">CONTACT</div>
+    <h2 class="reveal" style="font-family:'Newsreader',serif;font-size:42px;font-weight:400;line-height:1.1;margin-bottom:8px">Let's talk about<br><em style="font-weight:300;font-style:italic">your fleet.</em></h2>
+    <p class="reveal" style="font-size:15px;color:var(--text2);line-height:1.6;max-width:520px;margin-bottom:0">Want to see FluviaFleet with your data? Fill out the form or reach out directly.</p>
+    <div class="contact-grid">
+        <form class="contact-form reveal" id="contact-form" onsubmit="submitContactForm(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="contact-name">Name</label>
+                    <input type="text" id="contact-name" name="name" required placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label for="contact-company">Company</label>
+                    <input type="text" id="contact-company" name="company" placeholder="Company name">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="contact-country">Country</label>
+                    <select id="contact-country" name="country">
+                        <option value="">Select</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Paraguay">Paraguay</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="Uruguay">Uruguay</option>
+                        <option value="Bolivia">Bolivia</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="contact-fleet">Fleet Size</label>
+                    <select id="contact-fleet" name="fleet_size">
+                        <option value="">Select</option>
+                        <option value="1-5">1–5 vessels</option>
+                        <option value="6-20">6–20 vessels</option>
+                        <option value="21-50">21–50 vessels</option>
+                        <option value="51-100">51–100 vessels</option>
+                        <option value="100+">100+ vessels</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="contact-email">Email</label>
+                <input type="email" id="contact-email" name="email" required placeholder="you@company.com">
+            </div>
+            <div class="form-group">
+                <label for="contact-message">Message</label>
+                <textarea id="contact-message" name="message" placeholder="Tell us about your fleet and needs..."></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send Request</button>
+        </form>
+        <div class="contact-alt reveal">
+            <div class="contact-card">
+                <div class="contact-card-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                <div>
+                    <h4>WhatsApp</h4>
+                    <p>Quick response during business hours</p>
+                    <!-- REPLACE WHATSAPP NUMBER -->
+                    <a href="https://wa.me/595994207248" target="_blank">+595 994 207 248</a>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-icon"><i class="fa-solid fa-envelope"></i></div>
+                <div>
+                    <h4>Email</h4>
+                    <p>Response within 24 hours</p>
+                    <a href="mailto:info@fluviafleet.com">info@fluviafleet.com</a>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-icon"><i class="fa-solid fa-calendar"></i></div>
+                <div>
+                    <h4>Schedule Demo</h4>
+                    <p>Book a personalized walkthrough</p>
+                    <!-- REPLACE CALENDAR LINK -->
+                    <a href="#contacto">Schedule a call</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -660,11 +1147,6 @@
         <div>
             <div class="footer-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:36px;height:36px;border-radius:50%;object-fit:cover"><span style="font-family:'Newsreader',serif;font-size:1.7rem;font-weight:400;color:var(--text)">FluviaFleet</span></div>
             <p class="footer-desc">Intelligent river fleet management for the Paraguay-Paraná Waterway. Technology serving river transport.</p>
-            <div class="footer-socials">
-                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-            </div>
         </div>
         <div>
             <h4>PRODUCT</h4>
@@ -676,14 +1158,14 @@
         <div>
             <h4>COMPANY</h4>
             <a href="#nosotros">About Us</a>
-            <a href="#">Work with Us</a>
-            <a href="#">Blog</a>
-            <a href="#">Press</a>
+            <a href="#contacto">Contact</a>
+            <a href="blog-fluvia-en.html">Blog</a>
         </div>
         <div>
             <h4>LEGAL</h4>
-            <a href="#">Terms of Service</a>
-            <a href="#">Privacy Policy</a>
+            <a href="terminos.html">Terms of Service</a>
+            <a href="privacidad.html">Privacy Policy</a>
+            <a href="cookies.html">Cookie Policy</a>
             <a href="mailto:info@fluviafleet.com">info@fluviafleet.com</a>
         </div>
     </div>
@@ -694,29 +1176,61 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "FluviaFleet",
-  "description": "Leading platform for intelligent river fleet management on the Paraguay-Paraná Waterway.",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web, Android",
-  "url": "https://fluviafleet.com",
-  "offers": {
-    "@type": "AggregateOffer",
-    "lowPrice": "149",
-    "highPrice": "1499",
-    "priceCurrency": "USD",
-    "offerCount": "3"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "ratingCount": "127"
-  },
-  "provider": {
-    "@type": "Organization",
-    "name": "FluviaFleet",
-    "url": "https://fluviafleet.com"
-  }
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "FluviaFleet",
+      "url": "https://fluviafleet.com",
+      "logo": "https://fluviafleet.com/img/fluvia-logo.jpg",
+      "description": "The first AI-powered platform designed for river fleet management on the Paraguay-Paraná Waterway.",
+      "email": "info@fluviafleet.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Asunción",
+        "addressCountry": "PY"
+      },
+      "areaServed": [
+        {"@type": "Country", "name": "Paraguay"},
+        {"@type": "Country", "name": "Argentina"},
+        {"@type": "Country", "name": "Brazil"},
+        {"@type": "Country", "name": "Uruguay"},
+        {"@type": "Country", "name": "Bolivia"}
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "FluviaFleet",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "Intelligent SaaS platform for river fleet management with AIS tracking, fuel control, convoy builder and AI Copilot.",
+      "url": "https://fluviafleet.com",
+      "offers": {
+        "@type": "AggregateOffer",
+        "lowPrice": "149",
+        "highPrice": "499",
+        "priceCurrency": "USD",
+        "offerCount": "3"
+      },
+      "featureList": [
+        "Real-time AIS Tracking",
+        "Smart Convoy Builder",
+        "Fuel Control",
+        "Preventive Maintenance",
+        "AI Copilot",
+        "Crew Management",
+        "Reports & Analytics"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Do I need to install hardware on my vessels?", "acceptedAnswer": {"@type": "Answer", "text": "No. FluviaFleet works 100% in the cloud using existing AIS data."}},
+        {"@type": "Question", "name": "Is my data private?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Encrypted data, isolated environments per company, LGPD and GDPR compliant."}},
+        {"@type": "Question", "name": "How long does onboarding take?", "acceptedAnswer": {"@type": "Answer", "text": "Between 1 and 5 days depending on fleet size."}},
+        {"@type": "Question", "name": "In which countries does FluviaFleet operate?", "acceptedAnswer": {"@type": "Answer", "text": "Argentina, Paraguay, Brazil, Uruguay and Bolivia."}}
+      ]
+    }
+  ]
 }
 </script>
 
@@ -809,7 +1323,114 @@ document.addEventListener('DOMContentLoaded',function(){
     },{threshold:0.3});
     var statsBanner=document.querySelector('.stats-banner');
     if(statsBanner)statsObs2.observe(statsBanner);
+
+    // Pricing toggle
+    var toggleBtns=document.querySelectorAll('.pricing-toggle-btn');
+    toggleBtns.forEach(function(btn){
+        btn.addEventListener('click',function(){
+            toggleBtns.forEach(function(b){
+                b.style.background='transparent';
+                b.style.color='var(--text2)';
+                b.classList.remove('active');
+            });
+            this.style.background='var(--accent)';
+            this.style.color='white';
+            this.classList.add('active');
+            var period=this.getAttribute('data-period');
+            document.querySelectorAll('.price-amount[data-monthly]').forEach(function(el){
+                var val=period==='yearly'?el.getAttribute('data-yearly'):el.getAttribute('data-monthly');
+                el.textContent='$'+val;
+            });
+        });
+    // Copiloto IA tab switching
+    document.querySelectorAll('.copiloto-tab').forEach(function(tab){
+        tab.addEventListener('click',function(){
+            document.querySelectorAll('.copiloto-tab').forEach(function(t){t.classList.remove('active');});
+            this.classList.add('active');
+            var target=this.getAttribute('data-tab');
+            document.querySelectorAll('.copiloto-chat-panel').forEach(function(p){p.classList.remove('active');});
+            var panel=document.querySelector('.copiloto-chat-panel[data-panel="'+target+'"]');
+            if(panel)panel.classList.add('active');
+        });
+    });
 });
+
+// ROI Calculator
+function calculateROI(){
+    var barges=parseInt(document.getElementById('roi-barges').value);
+    var tugs=parseInt(document.getElementById('roi-tugs').value);
+    var fuel=parseInt(document.getElementById('roi-fuel').value);
+    var cost=parseFloat(document.getElementById('roi-cost').value);
+    document.getElementById('roi-barges-val').textContent=barges;
+    document.getElementById('roi-tugs-val').textContent=tugs;
+    document.getElementById('roi-fuel-val').textContent=fuel.toLocaleString('en-US');
+    document.getElementById('roi-cost-val').textContent='$'+cost.toFixed(2);
+    var annualSavings=fuel*1000*cost*0.18*12;
+    var totalVessels=barges+tugs;
+    var monthlyCost=0;var monthlyCostLabel='';
+    if(totalVessels<=5){monthlyCost=149;monthlyCostLabel='$149';}
+    else if(totalVessels<=20){monthlyCost=499;monthlyCostLabel='$499';}
+    else{monthlyCost=0;monthlyCostLabel='Contact';}
+    var annualCost=monthlyCost*12;
+    var roiMonths=monthlyCost>0?Math.ceil(annualCost/annualSavings*12):0;
+    var netSavings=annualSavings-annualCost;
+    document.getElementById('roi-savings').textContent='$'+Math.round(annualSavings).toLocaleString('en-US');
+    document.getElementById('roi-monthly-cost').textContent=monthlyCostLabel;
+    if(monthlyCost>0){document.getElementById('roi-months').textContent=roiMonths+' months';}
+    else{document.getElementById('roi-months').textContent='Contact';}
+    var netEl=document.getElementById('roi-net');
+    if(monthlyCost>0){
+        netEl.textContent=(netSavings>=0?'+':'-')+' $'+Math.abs(Math.round(netSavings)).toLocaleString('en-US');
+        netEl.className='roi-card-value '+(netSavings>=0?'green':'red');
+    }else{
+        netEl.textContent='Contact';netEl.className='roi-card-value';
+    }
+}
+document.addEventListener('DOMContentLoaded',function(){calculateROI();});
+
+// FAQ Accordion
+function toggleFAQ(btn){
+    var item=btn.parentElement;
+    var wasActive=item.classList.contains('active');
+    document.querySelectorAll('.faq-item').forEach(function(el){
+        el.classList.remove('active');
+        el.querySelector('.faq-answer').style.maxHeight=null;
+    });
+    if(!wasActive){
+        item.classList.add('active');
+        var answer=item.querySelector('.faq-answer');
+        answer.style.maxHeight=answer.scrollHeight+'px';
+    }
+}
+
+// Contact form submission
+function submitContactForm(e){
+    e.preventDefault();
+    var form=document.getElementById('contact-form');
+    var data={
+        name:form.querySelector('#contact-name').value,
+        company:form.querySelector('#contact-company').value,
+        country:form.querySelector('#contact-country').value,
+        fleet_size:form.querySelector('#contact-fleet').value,
+        email:form.querySelector('#contact-email').value,
+        message:form.querySelector('#contact-message').value,
+        lang:'en'
+    };
+    var btn=form.querySelector('.form-submit');
+    btn.textContent='Sending...';btn.disabled=true;
+    fetch('/api/contact',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(data)
+    }).then(function(r){
+        if(r.ok){btn.textContent='✓ Sent!';btn.style.background='var(--success)';form.reset();}
+        else{btn.textContent='Error — try again';btn.style.background='var(--error)';}
+        setTimeout(function(){btn.textContent='Send Request';btn.style.background='var(--accent)';btn.disabled=false;},3000);
+    }).catch(function(){
+        btn.textContent='Error — try again';btn.style.background='var(--error)';
+        setTimeout(function(){btn.textContent='Send Request';btn.style.background='var(--accent)';btn.disabled=false;},3000);
+    });
+}
 </script>
 </body>
 </html>
