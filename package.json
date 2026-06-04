@@ -17,7 +17,7 @@
     "helmet": "^8.1.0",
     "socket.io": "^4.8.3",
     "stripe": "^20.4.1",
-    "ws": "^8.20.0",
+    "ws": "^8.21.0",
     "@google/genai": "^1.0.0"
   },
   "devDependencies": {
