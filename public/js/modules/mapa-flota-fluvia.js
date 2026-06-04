@@ -1,20 +1,16 @@
 /*
  * MAPA FLOTA MODULE (FLUVIAFLEET / MAPLIBRE GL JS)
+ * Real AIS data via REST API for fleet overview
  */
 
 const MapLogicFlota = (() => {
 
     let map = null;
     let markers = {};
-
-    const ships = [
-        { id: '1', name: 'TB PARAGUAY 01', lat: -27.5, lon: -58.8, status: 'stop' }, // Pilar
-        { id: '2', name: 'R/M HERCULES', lat: -32.8, lon: -60.6, status: 'nav' }, // Rosario
-        { id: '3', name: 'Itaipú 07', lat: -25.28, lon: -57.64, status: 'nav' } // Asuncion
-    ];
+    let vessels = [];
 
     const init = () => {
-        void("🗺️ MapLogicFlota (MapLibre) Iniciando...");
+        console.log("🗺️ MapLogicFlota (MapLibre) Iniciando con AIS real...");
         
         if (typeof maplibregl === 'undefined') {
             console.error("MapLibre no cargado.");
@@ -24,7 +20,6 @@ const MapLogicFlota = (() => {
         const container = document.getElementById('maplibre-canvas');
         if (!container) return;
 
-        // Use Carto Light Raster to prevent Localhost/CORS blocking
         map = new maplibregl.Map({
             container: 'maplibre-canvas',
             style: {
@@ -50,8 +45,10 @@ const MapLogicFlota = (() => {
             attributionControl: false
         });
 
+        map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
         map.on('load', () => {
-            // Simulated river path geojson
+            // Add Hidrovía route overlay
             map.addSource('route', {
                 'type': 'geojson',
                 'data': {
@@ -60,9 +57,13 @@ const MapLogicFlota = (() => {
                     'geometry': {
                         'type': 'LineString',
                         'coordinates': [
-                            [-58.8, -27.5], // Corrientes
-                            [-57.64, -25.28], // Asuncion
-                            [-60.6, -32.8] // Rosario (unordered for visual)
+                            [-57.65, -25.28],
+                            [-57.53, -27.45],
+                            [-59.64, -29.15],
+                            [-60.63, -32.95],
+                            [-59.65, -33.75],
+                            [-58.22, -33.90],
+                            [-58.37, -34.60]
                         ]
                     }
                 }
@@ -76,52 +77,123 @@ const MapLogicFlota = (() => {
                     'line-cap': 'round'
                 },
                 'paint': {
-                    'line-color': '#94a3b8',
+                    'line-color': '#3b82f6',
                     'line-width': 2,
-                    'line-dasharray': [2, 4]
+                    'line-dasharray': [2, 4],
+                    'line-opacity': 0.5
                 }
             });
 
-            plotShips();
+            // Load real AIS data
+            loadAISData();
+            // Refresh every 30 seconds
+            setInterval(loadAISData, 30000);
         });
     };
 
-    const plotShips = () => {
-        ships.forEach(v => {
-            const el = document.createElement('div');
-            el.className = 'flota-marker';
-            el.style.width = '14px';
-            el.style.height = '14px';
-            el.style.backgroundColor = v.status === 'nav' ? 'var(--status-ok)' : 'var(--status-warn)';
-            el.style.borderRadius = '50%';
-            el.style.border = '3px solid #FFFFFF';
-            el.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-            el.style.cursor = 'pointer';
+    const loadAISData = async () => {
+        try {
+            const resp = await fetch('/api/ais-positions');
+            const data = await resp.json();
+            
+            const newVessels = Array.isArray(data) ? data : Object.values(data);
+            vessels = newVessels;
+            
+            // Update or create markers
+            const seenIds = new Set();
+            
+            newVessels.forEach(v => {
+                const id = String(v.mmsi || v.UserID);
+                const lat = v.lat || v.Latitude;
+                const lon = v.lon || v.Longitude;
+                const name = v.name || v.ShipName || 'Unknown';
+                const speed = v.speed || v.Sog || 0;
+                const course = v.course || v.Cog || 0;
+                
+                if (!id || isNaN(lat) || isNaN(lon)) return;
+                seenIds.add(id);
+                
+                const isMoving = speed > 0.5;
+                const statusColor = isMoving ? '#2EA043' : '#94A3B8';
+                const statusText = isMoving ? 'nav' : 'stop';
 
-            el.addEventListener('click', () => focus(v.id));
+                if (markers[id]) {
+                    markers[id].marker.setLngLat([lon, lat]);
+                    markers[id].el.style.backgroundColor = statusColor;
+                } else {
+                    const el = document.createElement('div');
+                    el.className = 'flota-marker';
+                    el.style.width = '12px';
+                    el.style.height = '12px';
+                    el.style.backgroundColor = statusColor;
+                    el.style.borderRadius = '50%';
+                    el.style.border = '2px solid rgba(255,255,255,0.9)';
+                    el.style.boxShadow = `0 0 6px ${statusColor}80`;
+                    el.style.cursor = 'pointer';
+                    el.style.transition = 'all 0.3s ease';
 
-            const marker = new maplibregl.Marker({ element: el })
-                .setLngLat([v.lon, v.lat])
-                .addTo(map);
+                    el.addEventListener('click', () => focus(id));
 
-            markers[v.id] = marker;
-        });
+                    const marker = new maplibregl.Marker({ element: el })
+                        .setLngLat([lon, lat])
+                        .setPopup(
+                            new maplibregl.Popup({ offset: 15, closeButton: false })
+                                .setHTML(`
+                                    <div style="font-family:'Inter',sans-serif; min-width:180px;">
+                                        <strong style="font-size:0.85rem; color:#1a1a2e;">🚢 ${name}</strong>
+                                        <div style="font-size:0.7rem; color:#64748b; margin-top:4px;">
+                                            MMSI: ${id}<br>
+                                            Vel: ${Number(speed).toFixed(1)} kn | Rumbo: ${Number(course).toFixed(0)}°
+                                        </div>
+                                        <div style="margin-top:6px; background:${statusColor}15; color:${statusColor}; 
+                                            padding:2px 6px; border-radius:4px; font-size:0.6rem; font-weight:700; 
+                                            display:inline-block; border:1px solid ${statusColor}30;">
+                                            ${isMoving ? 'EN NAVEGACIÓN' : 'FONDEADO'}
+                                        </div>
+                                    </div>
+                                `)
+                        )
+                        .addTo(map);
+
+                    markers[id] = { marker, el, name, lat, lon };
+                }
+                
+                // Update stored data
+                markers[id].name = name;
+                markers[id].lat = lat;
+                markers[id].lon = lon;
+            });
+
+            // Remove markers for vessels no longer present
+            Object.keys(markers).forEach(id => {
+                if (!seenIds.has(id)) {
+                    markers[id].marker.remove();
+                    delete markers[id];
+                }
+            });
+
+            console.log(`🗺️ Flota: ${seenIds.size} embarcaciones actualizadas`);
+        } catch (err) {
+            console.warn('⚠️ Error cargando datos AIS:', err.message);
+        }
     };
 
     const focus = (id) => {
-        const v = ships.find(s => s.id === id);
+        const v = markers[id];
         if (v && map) {
+            const lngLat = v.marker.getLngLat();
             map.flyTo({
-                center: [v.lon, v.lat],
+                center: [lngLat.lng, lngLat.lat],
                 zoom: 12,
                 speed: 1.5,
                 curve: 1,
                 easing(t) { return t; }
             });
             
-            // Highlight list selection (mock)
-            // UI update for Right Sidebar could go here.
-            if(window.RiverToast) window.RiverToast.info(`Enfocando a ${v.name}`);
+            // Open popup
+            v.marker.togglePopup();
+            
+            if (window.RiverToast) window.RiverToast.info(`Enfocando: ${v.name || id}`);
         }
     };
 

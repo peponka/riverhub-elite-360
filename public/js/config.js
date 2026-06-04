@@ -12,7 +12,7 @@ const AppConfig = {
 
         // AISStream (Websocket Gratuito/Pago)
         // Se conecta al servidor local (server.js) que hace de puente con AISStream
-        socketUrl: window.location.hostname === 'localhost' ? 'ws://localhost:3000' : 'wss://' + window.location.host,
+        socketUrl: window.location.hostname === 'localhost' ? 'ws://localhost:' + window.location.port : 'wss://' + window.location.host,
 
         // Datalastic (DESACTIVADO - YA NO SE USA)
         datalasticKey: null,

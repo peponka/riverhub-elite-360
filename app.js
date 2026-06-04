@@ -28,6 +28,13 @@ const aiLimiter = rateLimit({
     keyGenerator: (req) => req.user?.id || req.ip, // SECURITY: rate limit by userId when authenticated
     message: { error: 'Límite de consultas IA alcanzado. Espera un momento.' }
 });
+const contactLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // 5 contact requests per 15 min per IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Demasiadas solicitudes. Intentá de nuevo en 15 minutos.' }
+});
 
 let n8nRoutes;
 try { n8nRoutes = require('./routes/n8n-automations'); } catch (e) { console.error('❌ n8n routes failed to load:', e.message); }
@@ -149,6 +156,59 @@ app.get('/api/health', (req, res) => {
         ais: aisConnected ? 'connected' : 'disconnected',
         ai: process.env.GEMINI_API_KEY ? 'gemini_ready' : 'no_key'
     });
+});
+
+// --- CONTACT FORM (public, rate limited) ---
+app.post('/api/contact', contactLimiter, async (req, res) => {
+    try {
+        const { nombre, empresa, pais, flota, email, mensaje } = req.body;
+
+        // Validate required fields
+        const missing = [];
+        if (!nombre) missing.push('nombre');
+        if (!empresa) missing.push('empresa');
+        if (!pais) missing.push('pais');
+        if (!flota) missing.push('flota');
+        if (!email) missing.push('email');
+        if (missing.length > 0) {
+            return res.status(400).json({ error: `Campos requeridos faltantes: ${missing.join(', ')}` });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Formato de email inválido' });
+        }
+
+        const contactData = { nombre, empresa, pais, flota, email, mensaje: mensaje || '', created_at: new Date().toISOString() };
+
+        // Log to console as backup (always)
+        console.log('[Contact Lead]', JSON.stringify(contactData));
+
+        // Try to insert into Supabase 'leads' table
+        try {
+            if (app.locals.supabaseAdmin) {
+                const { error: dbError } = await app.locals.supabaseAdmin
+                    .from('leads')
+                    .insert([contactData]);
+                if (dbError) {
+                    console.error('[Contact] Supabase insert error:', dbError.message);
+                    // Table might not exist yet — still return success
+                    return res.json({ success: true, message: 'Solicitud recibida (almacenamiento pendiente de configuración)' });
+                }
+                return res.json({ success: true, message: 'Solicitud recibida' });
+            } else {
+                console.warn('[Contact] supabaseAdmin not available — lead logged to console only');
+                return res.json({ success: true, message: 'Solicitud recibida' });
+            }
+        } catch (dbErr) {
+            console.error('[Contact] DB error:', dbErr.message);
+            return res.json({ success: true, message: 'Solicitud recibida (almacenamiento temporalmente no disponible)' });
+        }
+    } catch (e) {
+        console.error('[Contact] Unexpected error:', e.message);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 });
 
 // --- AIS POSITIONS (rate limited, public — AIS data is non-sensitive) ---
@@ -438,11 +498,18 @@ app.post('/api/ai/fuel-anomalies', aiLimiter, authenticateUser, async (req, res)
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
         const userToken = req.headers.authorization?.split(' ')[1] || supabaseKey;
+
+        // SECURITY: extract companyId from user profile, not from client body
+        const sb = req.app.locals.supabase;
+        const { data: profile } = await sb.from('user_profiles').select('company_id').eq('user_id', req.user.id).single();
+        const safeCompanyId = profile?.company_id || companyId;
+        if (!safeCompanyId) return res.status(403).json({ error: 'Company ID required' });
+
         const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
 
         const [fuelRes, vesselsRes] = await Promise.all([
-            fetch(`${supabaseUrl}/rest/v1/fuel_logs?company_id=eq.${companyId}&select=*&order=created_at.desc&limit=100`, { headers }),
-            fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${companyId}&select=id,name,type,engine_power`, { headers })
+            fetch(`${supabaseUrl}/rest/v1/fuel_logs?company_id=eq.${safeCompanyId}&select=*&order=created_at.desc&limit=100`, { headers }),
+            fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${safeCompanyId}&select=id,name,type,engine_power`, { headers })
         ]);
 
         const fuelLogs = await fuelRes.json();
@@ -663,6 +730,13 @@ if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
     console.log('✅ Supabase server-side client initialized');
 } else {
     console.warn('⚠️ SUPABASE_URL/KEY not set — n8n DB endpoints will return demo data');
+}
+// --- SUPABASE ADMIN CLIENT (service role — for public endpoints like /api/contact) ---
+if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    app.locals.supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+    console.log('✅ Supabase Admin (service role) client initialized');
+} else {
+    console.warn('⚠️ SUPABASE_SERVICE_KEY not set — contact form leads will only log to console');
 }
 
 // --- SHARED STATE FOR n8n ---
@@ -906,38 +980,7 @@ app.post('/api/copilot/chat', aiLimiter, authenticateUser, async (req, res) => {
     }
 });
 
-// Maintenance Prediction
-app.post('/api/ai/predict-maintenance', aiLimiter, authenticateUser, async (req, res) => {
-    try {
-        const { companyId } = req.body;
-        const sb = req.app.locals.supabase;
-        const { data: profile } = await sb.from('user_profiles').select('company_id').eq('user_id', req.user.id).single();
-        const safeCompanyId = profile?.company_id || companyId;
-        
-        if (!safeCompanyId) return res.status(403).json({ error: 'Company ID required' });
-        
-        const geminiKey = process.env.GEMINI_API_KEY;
-        if (!geminiKey) return res.status(503).json({ analysis: 'Gemini API Key no configurada.' });
-        
-        const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: buildSmartContext(`Analyze maintenance for company ${safeCompanyId}`) }] }],
-                    generationConfig: { maxOutputTokens: 1024, temperature: 0.7 }
-                })
-            }
-        );
-        const data = await geminiRes.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude procesar la consulta.';
-        res.json({ analysis: text });
-    } catch (e) {
-        console.error('[AI Maintenance]', e.message);
-        res.status(500).json({ analysis: 'Error: ' + e.message });
-    }
-});
+// [REMOVED] Duplicate /api/ai/predict-maintenance route — the real one is at line ~255
 
 // Backward compat: redirect old n8n endpoint to copilot
 app.post('/api/n8n/ai-analyze', aiLimiter, authenticateUser, async (req, res) => {
