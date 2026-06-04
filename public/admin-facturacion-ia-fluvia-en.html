@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -133,6 +133,7 @@
   }
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 </head>
 <body>
 <div class="page">
@@ -303,16 +304,16 @@ function renderResult(r) {
 
     // Stats
     const stats = document.getElementById('resultStats');
-    stats.innerHTML = `
+    stats.innerHTML = DOMPurify.sanitize(`
         <div class="result-stat"><div class="value">${inv.number || 'N/A'}</div><div class="label">N° Factura</div></div>
         <div class="result-stat"><div class="value">${inv.currency || 'USD'} ${(inv.total || 0).toLocaleString('es-AR',{minimumFractionDigits:2})}</div><div class="label">Total</div></div>
         <div class="result-stat"><div class="value">${inv.supplier || 'N/A'}</div><div class="label">Proveedor</div></div>
         <div class="result-stat"><div class="value">${inv.date || 'N/A'}</div><div class="label">Date</div></div>
-    `;
+    `);
 
     // Items
     const body = document.getElementById('itemsBody');
-    body.innerHTML = (inv.items || []).map(it => `
+    body.innerHTML = DOMPurify.sanitize((inv.items || []).map(it => `
         <tr>
             <td>${it.description}</td>
             <td class="number">${it.quantity}</td>
@@ -320,7 +321,7 @@ function renderResult(r) {
             <td class="number">${(it.unitPrice || 0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td>
             <td class="number">${(it.subtotal || 0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td>
         </tr>
-    `).join('');
+    `).join(''));
 
     // Discrepancies
     const discs = val.discrepancies || [];
@@ -328,7 +329,7 @@ function renderResult(r) {
     const discList = document.getElementById('discList');
     if (discs.length > 0) {
         discCard.style.display = 'block';
-        discList.innerHTML = discs.map(d => `
+        discList.innerHTML = DOMPurify.sanitize(discs.map(d => `
             <div class="disc-item ${d.severity}">
                 <div class="disc-icon"><i class="fas fa-${d.severity==='CRITICA'?'exclamation':d.severity==='ADVERTENCIA'?'exclamation-triangle':'info'}"></i></div>
                 <div class="disc-text">
@@ -336,7 +337,7 @@ function renderResult(r) {
                     <p>${d.note || ''} (Diferencia: ${d.difference})</p>
                 </div>
             </div>
-        `).join('');
+        `).join(''));
     } else {
         discCard.style.display = 'none';
     }
@@ -345,7 +346,7 @@ function renderResult(r) {
 }
 
 function renderFallback(text) {
-    document.getElementById('resultStats').innerHTML = `<div style="grid-column:span 2;padding:20px;background:var(--surface);border-radius:12px;font-size:0.85rem;white-space:pre-wrap">${text}</div>`;
+    document.getElementById('resultStats').innerHTML = DOMPurify.sanitize(`<div style="grid-column:span 2;padding:20px;background:var(--surface);border-radius:12px;font-size:0.85rem;white-space:pre-wrap">${text}</div>`);
     document.getElementById('statusBadge').textContent = 'PROCESADO';
     document.getElementById('statusBadge').className = 'status-badge review';
     document.getElementById('confidenceText').textContent = '';

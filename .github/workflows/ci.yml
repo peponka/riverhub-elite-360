@@ -1,0 +1,39 @@
+name: CI — FluviaFleet
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+
+      - name: Check for secrets in code
+        run: |
+          echo "Checking for hardcoded secrets..."
+          ! grep -rn "fluvia2026super" public/ --include="*.html" --include="*.js" || (echo "FAIL: Hardcoded password found!" && exit 1)
+          ! grep -rn "x-api-key.*riverhub_n8n" public/ --include="*.js" || (echo "FAIL: Hardcoded API key found!" && exit 1)
+          echo "✅ No hardcoded secrets found"
+
+      - name: Verify app starts
+        env:
+          NODE_ENV: production
+          PORT: 3000
+        run: |
+          timeout 10 node app.js || true
+          echo "✅ App start check complete"

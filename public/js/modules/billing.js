@@ -309,7 +309,7 @@ const BillingModule = (() => {
                 const timeoutId = setTimeout(() => controller.abort(), 8000);
                 const res = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'x-api-key': 'RH_Secure_n8n_X9fL!2026' },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
                     signal: controller.signal
                 });
@@ -358,7 +358,7 @@ const BillingModule = (() => {
             }
 
             try {
-                await sendWebhookWithRetry('/api/n8n/webhook', {
+                await sendWebhookWithRetry('/api/n8n/proxy', {
                     event: 'PAYMENT_COMPLETED',
                     company: name,
                     email: email,

@@ -67,3 +67,12 @@ riverhub_mobile/**/build/
 
 # Supabase CLI temp
 supabase/.temp/
+
+# Security: private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+*-backup.js

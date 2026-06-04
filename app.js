@@ -25,7 +25,8 @@ const aiLimiter = rateLimit({
     max: 10, // 10 AI requests per minute per user/IP (protect Gemini quota)
     standardHeaders: true,
     legacyHeaders: false,
-    keyGenerator: (req) => req.user?.id || req.ip, // SECURITY: rate limit by userId when authenticated
+    keyGenerator: (req) => req.user?.id || req.ip,
+    validate: false, // Disable validation — custom keyGenerator handles IPv6 via trust proxy
     message: { error: 'Límite de consultas IA alcanzado. Espera un momento.' }
 });
 const contactLimiter = rateLimit({
@@ -40,6 +41,8 @@ let n8nRoutes;
 try { n8nRoutes = require('./routes/n8n-automations'); } catch (e) { console.error('❌ n8n routes failed to load:', e.message); }
 let hydrologyRoutes;
 try { hydrologyRoutes = require('./routes/hydrologyRoutes'); } catch (e) { console.error('❌ hydrology routes failed to load:', e.message); }
+let authRoutes;
+try { authRoutes = require('./routes/authRoutes'); } catch (e) { console.error('❌ Auth routes failed:', e.message); }
 
 // ============================================
 // FLUVIAFLEET — Servidor Unificado
@@ -47,6 +50,7 @@ try { hydrologyRoutes = require('./routes/hydrologyRoutes'); } catch (e) { conso
 // ============================================
 
 const app = express();
+app.set('trust proxy', 1);
 const cors = require('cors');
 
 const server = http.createServer(app);
@@ -84,7 +88,7 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://cdn.sheetjs.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://cdn.sheetjs.com"],
             scriptSrcAttr: ["'unsafe-inline'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             styleSrcElem: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
@@ -97,7 +101,7 @@ app.use(helmet({
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     hsts: { maxAge: 31536000, includeSubDomains: true },
     crossOriginEmbedderPolicy: false, // Required for CDN resources
-    crossOriginResourcePolicy: false  // Required for CDN resources
+    crossOriginResourcePolicy: { policy: 'cross-origin' }  // Required for CDN resources
 }));
 
 // --- ROOT REDIRECT TO LANDING ---
@@ -129,11 +133,7 @@ const authenticateUser = async (req, res, next) => {
         // Verify token with Supabase
         const sb = req.app.locals.supabase;
         if (!sb) {
-            // If no Supabase configured, allow in dev mode only
-            if (process.env.NODE_ENV === 'production') {
-                return res.status(503).json({ error: 'Auth service unavailable' });
-            }
-            return next();
+            return res.status(503).json({ error: 'Auth service unavailable' });
         }
         const { data: { user }, error } = await sb.auth.getUser(token);
         if (error || !user) {
@@ -325,7 +325,7 @@ app.post('/api/ai/predict-maintenance', aiLimiter, authenticateUser, async (req,
         // EXTRAER COMPANY_ID SEGURO
         const sb = req.app.locals.supabase;
         const { data: profile } = await sb.from('user_profiles').select('company_id').eq('user_id', req.user.id).single();
-        const safeCompanyId = profile?.company_id || companyId;
+        const safeCompanyId = profile?.company_id;
         
         if (!safeCompanyId) return res.status(403).json({ error: 'Company ID required' });
 
@@ -396,7 +396,7 @@ Si no hay suficientes datos para una embarcación, estimá basándote en el tipo
         res.json({ predictions });
     } catch (e) {
         console.error('Predict maintenance error:', e.message);
-        res.status(500).json({ error: e.message, predictions: [] });
+        res.status(500).json({ error: 'Error interno del servidor', predictions: [] });
     }
 });
 
@@ -418,7 +418,7 @@ app.post('/api/ai/optimize-convoy', aiLimiter, authenticateUser, async (req, res
         // SECURITY: extract companyId from user profile, not from client body
         const sb = req.app.locals.supabase;
         const { data: profile } = await sb.from('user_profiles').select('company_id').eq('user_id', req.user.id).single();
-        const safeCompanyId = profile?.company_id || req.body.companyId;
+        const safeCompanyId = profile?.company_id;
         if (!safeCompanyId) return res.status(403).json({ error: 'Company ID required' });
         
         const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
@@ -502,7 +502,7 @@ app.post('/api/ai/fuel-anomalies', aiLimiter, authenticateUser, async (req, res)
         // SECURITY: extract companyId from user profile, not from client body
         const sb = req.app.locals.supabase;
         const { data: profile } = await sb.from('user_profiles').select('company_id').eq('user_id', req.user.id).single();
-        const safeCompanyId = profile?.company_id || companyId;
+        const safeCompanyId = profile?.company_id;
         if (!safeCompanyId) return res.status(403).json({ error: 'Company ID required' });
 
         const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
@@ -551,7 +551,7 @@ Si todo parece normal, devolvé un array con al menos 1 item tipo "normal" con s
         res.json({ anomalies });
     } catch (e) {
         console.error('Fuel anomalies error:', e.message);
-        res.status(500).json({ error: e.message, anomalies: [] });
+        res.status(500).json({ error: 'Error interno del servidor', anomalies: [] });
     }
 });
 
@@ -600,7 +600,7 @@ app.post('/api/create-checkout', authenticateUser, async (req, res) => {
         res.json({ url: session.url });
     } catch (e) {
         console.error("Stripe Checkout Error:", e.message);
-        res.status(500).json({ error: e.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
@@ -723,6 +723,10 @@ if (n8nRoutes) {
     app.use('/api/n8n', n8nRoutes);
     console.log('✅ n8n Automation API mounted at /api/n8n');
 }
+if (authRoutes) {
+    app.use('/api/auth', authRoutes);
+    console.log('✅ Auth API mounted at /api/auth');
+}
 
 // --- SUPABASE SERVER-SIDE CLIENT ---
 if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
@@ -827,7 +831,7 @@ function startAISStream() {
                     }
                 }
             }
-        } catch (e) { }
+        } catch (e) { console.warn('[AIS parse error]', e.message); }
     });
 
     ws.on('error', (e) => {
@@ -846,14 +850,38 @@ function startAISStream() {
 }
 
 // --- SOCKET.IO CONNECTIONS ---
-io.on('connection', (socket) => {
-    console.log(`🔌 Cliente conectado: ${socket.id}`);
+io.use(async (socket, next) => {
+    try {
+        const token = socket.handshake.auth?.token;
+        if (!token) return next(new Error('Authentication required'));
+        const sb = app.locals.supabase;
+        if (!sb) return next(new Error('Auth service unavailable'));
+        const { data: { user }, error } = await sb.auth.getUser(token);
+        if (error || !user) return next(new Error('Invalid token'));
+        socket.user = user;
+        // Get company_id from profile
+        const { data: profile } = await sb.from('user_profiles').select('company_id').eq('user_id', user.id).single();
+        socket.companyId = profile?.company_id;
+        next();
+    } catch (e) {
+        next(new Error('Authentication failed'));
+    }
+});
 
-    // TENANT ISOLATION: Client joins their company room
-    socket.on('join_company', (companyId) => {
-        if (companyId) {
-            socket.join('company_' + companyId);
-            console.log(`🏢 ${socket.id} joined company_${companyId}`);
+io.on('connection', (socket) => {
+    console.log(`🔌 Cliente conectado: ${socket.id} (user: ${socket.user?.id})`);
+
+    // TENANT ISOLATION: Auto-join company room from verified profile
+    if (socket.companyId) {
+        socket.join('company_' + socket.companyId);
+        console.log(`🏢 ${socket.id} joined company_${socket.companyId}`);
+    }
+
+    // Ignore client-provided companyId — use server-verified one
+    socket.on('join_company', () => {
+        // Already joined via middleware — this is now a no-op for backward compat
+        if (socket.companyId) {
+            socket.join('company_' + socket.companyId);
         }
     });
 
@@ -883,7 +911,12 @@ app.use((err, req, res, next) => {
 let firebaseAdmin;
 try {
     firebaseAdmin = require('firebase-admin');
-    const serviceAccount = require('./firebase-service-account.json');
+    let serviceAccount;
+    try {
+        serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    } catch(parseErr) {
+        throw new Error('FIREBASE_SERVICE_ACCOUNT env var missing or invalid JSON');
+    }
     if (!firebaseAdmin.apps.length) {
         firebaseAdmin.initializeApp({
             credential: firebaseAdmin.credential.cert(serviceAccount)
@@ -902,7 +935,7 @@ app.post('/api/notifications/send', authenticateUser, async (req, res) => {
         if (!userId || !title) return res.status(400).json({ error: 'userId y title requeridos' });
         
         // Get FCM token from user_profiles
-        const { data: profile } = await supabaseServer.from('user_profiles').select('fcm_token').eq('user_id', userId).single();
+        const { data: profile } = await req.app.locals.supabase.from('user_profiles').select('fcm_token').eq('user_id', userId).single();
         if (!profile?.fcm_token) return res.status(404).json({ error: 'Usuario sin token FCM' });
         
         const message = {
@@ -915,13 +948,20 @@ app.post('/api/notifications/send', authenticateUser, async (req, res) => {
         res.json({ success: true, messageId: result });
     } catch (e) {
         console.error('[Push Send]', e.message);
-        res.status(500).json({ error: e.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
 // Broadcast push to all users
 app.post('/api/notifications/broadcast', authenticateUser, async (req, res) => {
     try {
+        // Verify admin/superadmin role
+        const sb = req.app.locals.supabase;
+        const { data: profile } = await sb.from('user_profiles').select('role').eq('user_id', req.user.id).single();
+        if (!profile || !['admin', 'superadmin'].includes(profile.role)) {
+            return res.status(403).json({ error: 'Insufficient permissions' });
+        }
+
         if (!firebaseAdmin) return res.status(503).json({ error: 'Firebase no configurado' });
         const { title, body, data } = req.body;
         if (!title) return res.status(400).json({ error: 'title requerido' });
@@ -939,12 +979,12 @@ app.post('/api/notifications/broadcast', authenticateUser, async (req, res) => {
         res.json({ success: true, sent: result.successCount, failed: result.failureCount });
     } catch (e) {
         console.error('[Push Broadcast]', e.message);
-        res.status(500).json({ error: e.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
 // Test push endpoint
-app.get('/api/notifications/test', async (req, res) => {
+app.get('/api/notifications/test', authenticateUser, async (req, res) => {
     res.json({ 
         firebaseReady: !!firebaseAdmin, 
         status: firebaseAdmin ? 'Push notifications operativas' : 'Firebase Admin no configurado'
@@ -976,7 +1016,7 @@ app.post('/api/copilot/chat', aiLimiter, authenticateUser, async (req, res) => {
         res.json({ analysis: text });
     } catch (e) {
         console.error('[Copilot Chat]', e.message);
-        res.status(500).json({ error: e.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
@@ -1007,7 +1047,7 @@ app.post('/api/n8n/ai-analyze', aiLimiter, authenticateUser, async (req, res) =>
         res.json({ analysis: text });
     } catch (e) {
         console.error('[AI Analyze]', e.message);
-        res.status(500).json({ analysis: 'Error al procesar consulta IA: ' + e.message });
+        res.status(500).json({ analysis: 'Error al procesar la consulta IA.' });
     }
 });
 
