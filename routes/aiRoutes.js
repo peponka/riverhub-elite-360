@@ -24,7 +24,7 @@ module.exports = (aiLimiter, authenticateUser) => {
         }
     });
 
-    router.post('/predict-maintenance', aiLimiter, async (req, res) => {
+    router.post('/predict-maintenance', aiLimiter, authenticateUser, async (req, res) => {
         try {
             const aiService = new AIService(req.app.locals.supabase);
             const { companyId } = req.body;
@@ -32,11 +32,11 @@ module.exports = (aiLimiter, authenticateUser) => {
             res.json({ predictions });
         } catch (e) {
             console.error('Predict maintenance error:', e.message);
-            res.status(e.message === 'AI not configured' ? 503 : 500).json({ error: e.message, predictions: [] });
+            res.status(e.message === 'AI not configured' ? 503 : 500).json({ error: 'Error interno del servidor', predictions: [] });
         }
     });
 
-    router.post('/optimize-convoy', aiLimiter, async (req, res) => {
+    router.post('/optimize-convoy', aiLimiter, authenticateUser, async (req, res) => {
         try {
             const aiService = new AIService(req.app.locals.supabase);
             const { companyId, destination, selectedVessels } = req.body;
@@ -44,11 +44,11 @@ module.exports = (aiLimiter, authenticateUser) => {
             res.json({ suggestion });
         } catch (e) {
             console.error('Optimize convoy error:', e.message);
-            res.status(e.message === 'AI not configured' ? 503 : 500).json({ error: e.message, suggestion: {} });
+            res.status(e.message === 'AI not configured' ? 503 : 500).json({ error: 'Error interno del servidor', suggestion: {} });
         }
     });
 
-    router.post('/fuel-anomalies', aiLimiter, async (req, res) => {
+    router.post('/fuel-anomalies', aiLimiter, authenticateUser, async (req, res) => {
         try {
             const aiService = new AIService(req.app.locals.supabase);
             const { companyId } = req.body;
@@ -56,7 +56,7 @@ module.exports = (aiLimiter, authenticateUser) => {
             res.json({ anomalies });
         } catch (e) {
             console.error('Fuel anomalies error:', e.message);
-            res.status(e.message === 'AI not configured' ? 503 : 500).json({ error: e.message, anomalies: [] });
+            res.status(e.message === 'AI not configured' ? 503 : 500).json({ error: 'Error interno del servidor', anomalies: [] });
         }
     });
 

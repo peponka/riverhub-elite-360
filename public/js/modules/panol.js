@@ -288,9 +288,9 @@ const panolLogic = (() => {
         } else {
             void("Inventario Actualizado. Restando 1.");
             // Also notify N8N about stock update logic inside brain (Optional but good)
-            fetch('/api/n8n/webhook', {
+            fetch('/api/n8n/proxy', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-api-key': 'RH_Secure_n8n_X9fL!2026' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'stock_update', payload: { item_id: itemId, left: newStock } })
             }).catch(()=>{});
 

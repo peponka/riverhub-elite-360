@@ -25,11 +25,7 @@
         <input type="password" id="saPass" placeholder="••••••••">
         <div class="sa-login-error" id="saError"></div>
         <button onclick="saDoLogin()" id="saBtn">Ingresar al Panel</button>
-        <div style="margin-top:20px;padding:14px;background:#F8FAFC;border-radius:10px;border:1px solid #E2E8F0;text-align:left">
-            <div style="font-size:0.6rem;font-weight:700;letter-spacing:1.5px;color:#64748B;margin-bottom:8px">CREDENCIALES DE ACCESO</div>
-            <div style="font-size:0.8rem;color:#1A1A1A;margin-bottom:4px"><strong>Email:</strong> pedro@fluviafleet.com</div>
-            <div style="font-size:0.8rem;color:#1A1A1A"><strong>Password:</strong> fluvia2026super</div>
-        </div>
+
         <a href="fluvia.html" class="sa-back">← Volver al portal</a>
     </div>
 </div>
@@ -434,15 +430,30 @@
 </div>
 
 <script>
-// SuperAdmin credentials (hardcoded for demo)
-const SA_EMAIL='pedro@fluviafleet.com', SA_PASS='fluvia2026super';
-
-function saDoLogin(){
-    var e=document.getElementById('saEmail').value.trim(),p=document.getElementById('saPass').value,err=document.getElementById('saError');
-    if(e===SA_EMAIL&&p===SA_PASS){document.getElementById('saLogin').style.display='none';document.getElementById('saLayout').style.display='flex';err.textContent='';}
-    else{err.textContent='Credenciales incorrectas. Contacte al administrador.';}
+// SuperAdmin auth — delegates to backend JWT endpoint
+async function saDoLogin(){
+    const emailEl=document.getElementById('saEmail'), passEl=document.getElementById('saPass'), err=document.getElementById('saError'), btn=document.getElementById('saBtn');
+    const email=emailEl.value.trim(), password=passEl.value;
+    if(!email||!password){err.textContent='Ingresá email y contraseña.';return;}
+    btn.disabled=true;btn.textContent='Verificando...';
+    try{
+        const res=await fetch('/api/auth/superadmin-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+        const data=await res.json();
+        if(res.ok&&data.token){
+            sessionStorage.setItem('sa_token',data.token);
+            sessionStorage.setItem('sa_user',JSON.stringify(data.user));
+            document.getElementById('saLogin').style.display='none';
+            document.getElementById('saLayout').style.display='flex';
+            err.textContent='';
+        } else {
+            err.textContent=data.error||'Credenciales inválidas.';
+        }
+    }catch(e){err.textContent='Error de conexión con el servidor.';}
+    btn.disabled=false;btn.textContent='Ingresar al Panel';
 }
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('saLogin').style.display!=='none')saDoLogin();});
+// Check existing session
+(function(){const t=sessionStorage.getItem('sa_token');if(t){document.getElementById('saLogin').style.display='none';document.getElementById('saLayout').style.display='flex';}})();
 
 function saNav(el){
     document.querySelectorAll('.sa-nav-link').forEach(l=>l.classList.remove('active'));

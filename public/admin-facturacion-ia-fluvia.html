@@ -83,6 +83,7 @@
   else{var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=check;s.onerror=function(){document.documentElement.style.visibility='visible';};document.head.appendChild(s);}
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 </head>
 <body>
 <div class="page">
@@ -257,20 +258,20 @@ function renderResult(r) {
     badge.className = 'st-badge ' + (status.includes('APROB') ? 'ok' : status.includes('RECH') ? 'rej' : 'rev');
     document.getElementById('confidenceText').textContent = sum.confidence ? `Confianza: ${sum.confidence}%` : '';
     document.getElementById('summaryNotes').textContent = sum.notes || '';
-    document.getElementById('resultStats').innerHTML = `
+    document.getElementById('resultStats').innerHTML = DOMPurify.sanitize(`
         <div class="r-stat"><div class="val">${inv.number||'N/A'}</div><div class="lbl">N° Factura</div></div>
         <div class="r-stat"><div class="val">${inv.currency||'USD'} ${(inv.total||0).toLocaleString('es-AR',{minimumFractionDigits:2})}</div><div class="lbl">Total</div></div>
         <div class="r-stat"><div class="val">${inv.supplier||'N/A'}</div><div class="lbl">Proveedor</div></div>
-        <div class="r-stat"><div class="val">${inv.date||'N/A'}</div><div class="lbl">Fecha</div></div>`;
-    document.getElementById('itemsBody').innerHTML = (inv.items||[]).map(it => `<tr><td>${it.description}</td><td class="num">${it.quantity}</td><td>${it.unit||'-'}</td><td class="num">${(it.unitPrice||0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td><td class="num">${(it.subtotal||0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td></tr>`).join('');
+        <div class="r-stat"><div class="val">${inv.date||'N/A'}</div><div class="lbl">Fecha</div></div>`);
+    document.getElementById('itemsBody').innerHTML = DOMPurify.sanitize((inv.items||[]).map(it => `<tr><td>${it.description}</td><td class="num">${it.quantity}</td><td>${it.unit||'-'}</td><td class="num">${(it.unitPrice||0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td><td class="num">${(it.subtotal||0).toLocaleString('es-AR',{minimumFractionDigits:2})}</td></tr>`).join(''));
     const discs = val.discrepancies || [];
     const dc = document.getElementById('discCard'), dl = document.getElementById('discList');
-    if (discs.length > 0) { dc.style.display = 'block'; dl.innerHTML = discs.map(d => `<div class="disc ${d.severity}"><div class="disc-ico"><i class="fas fa-${d.severity==='CRITICA'?'exclamation':d.severity==='ADVERTENCIA'?'exclamation-triangle':'info'}"></i></div><div><strong style="font-size:0.82rem">${d.field}: ${d.invoiceValue} vs ${d.systemValue}</strong><p style="font-size:0.78rem;color:var(--t2);margin-top:2px">${d.note||''} (Diferencia: ${d.difference})</p></div></div>`).join(''); }
+    if (discs.length > 0) { dc.style.display = 'block'; dl.innerHTML = DOMPurify.sanitize(discs.map(d => `<div class="disc ${d.severity}"><div class="disc-ico"><i class="fas fa-${d.severity==='CRITICA'?'exclamation':d.severity==='ADVERTENCIA'?'exclamation-triangle':'info'}"></i></div><div><strong style="font-size:0.82rem">${d.field}: ${d.invoiceValue} vs ${d.systemValue}</strong><p style="font-size:0.78rem;color:var(--t2);margin-top:2px">${d.note||''} (Diferencia: ${d.difference})</p></div></div>`).join('')); }
     else dc.style.display = 'none';
     document.querySelector('.result').classList.add('show');
 }
 function renderFallback(text) {
-    document.getElementById('resultStats').innerHTML = `<div style="grid-column:span 2;padding:16px;background:var(--srf);border-radius:10px;font-size:0.82rem;white-space:pre-wrap">${text}</div>`;
+    document.getElementById('resultStats').innerHTML = DOMPurify.sanitize(`<div style="grid-column:span 2;padding:16px;background:var(--srf);border-radius:10px;font-size:0.82rem;white-space:pre-wrap">${text}</div>`);
     document.getElementById('statusBadge').textContent = 'PROCESADO'; document.getElementById('statusBadge').className = 'st-badge rev';
     document.getElementById('confidenceText').textContent = ''; document.getElementById('summaryNotes').textContent = '';
     document.getElementById('itemsBody').innerHTML = ''; document.getElementById('discCard').style.display = 'none';

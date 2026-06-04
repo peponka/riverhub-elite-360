@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -31,6 +31,7 @@
   }
 })();
 </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 </head>
 <body>
   <!-- SIDEBAR -->
@@ -247,14 +248,14 @@
 
       const msgEl = document.createElement('div');
       msgEl.className = `msg ${type}`;
-      msgEl.innerHTML = `
+      msgEl.innerHTML = DOMPurify.sanitize(`
         <div class="msg-avatar">${avatarContent}</div>
         <div class="msg-body">
           <span class="msg-name">${name}</span>
           <div class="msg-text">${html}</div>
           <span class="msg-time">${timeStr}</span>
         </div>
-      `;
+      `);
 
       chatMessages.appendChild(msgEl);
       chatMessages.scrollTop = chatMessages.scrollHeight;

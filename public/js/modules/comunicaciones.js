@@ -150,9 +150,9 @@ var CommsModule = (() => {
         // N8N Alert Trigger if distress words
         const lowText = text.toLowerCase();
         if (lowText.includes('sos') || lowText.includes('mayday') || lowText.includes('emergencia')) {
-            fetch('/api/n8n/webhook', {
+            fetch('/api/n8n/proxy', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-api-key': 'RH_Secure_n8n_X9fL!2026' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'distress', payload: { channel: state.activeChannel, user: senderName, message: text } })
             }).catch(()=>{});
         }

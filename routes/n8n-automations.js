@@ -13,7 +13,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // ============================================
 // MIDDLEWARE: API Key Authentication
-// n8n debe enviar header: x-api-key: FluviaFleet_n8n_2026
+// n8n debe enviar header: x-api-key: <valor de N8N_API_KEY>
 // ============================================
 
 const admin = require('firebase-admin');
@@ -21,13 +21,18 @@ const admin = require('firebase-admin');
 // Inicializar Firebase Admin si no está inicializado ya
 if (!admin.apps.length) {
     try {
-        const serviceAccount = require(require('path').join(__dirname, '..', 'firebase-service-account.json'));
+        let serviceAccount;
+        try {
+            serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        } catch(parseErr) {
+            throw new Error('FIREBASE_SERVICE_ACCOUNT env var missing or invalid JSON');
+        }
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount)
         });
         console.log('🔥 Firebase Admin FCM activado para push notifications.');
     } catch (e) {
-        console.warn('⚠️ No se encontró firebase-service-account.json para FCM (Firebase Admin):', e.message);
+        console.warn('⚠️ Firebase Admin no disponible para FCM:', e.message);
     }
 }
 
@@ -602,8 +607,9 @@ router.post('/webhook', async (req, res) => {
         try {
             console.log(`🚀 Front-End Event detected: ${req.body.event}. Forwarding to n8n local webhook...`);
             // Se envía al webhook de test/producción de n8n. 
-            // URL: http://localhost:5678/webhook-test/FluviaFleet-events (para probar) o /webhook/FluviaFleet-events
-            const n8nUrl = 'http://localhost:5678/webhook-test/FluviaFleet-events';
+            const n8nUrl = process.env.N8N_WEBHOOK_URL
+                ? `${process.env.N8N_WEBHOOK_URL}/webhook-test/FluviaFleet-events`
+                : 'http://localhost:5678/webhook-test/FluviaFleet-events';
             await fetch(n8nUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -751,7 +757,7 @@ Instrucción: Escribe un resumen ejecutivo de un párrafo, en tono profesional p
         });
     } catch (e) {
         console.error("AI Analysis Error:", e);
-        res.status(500).json({ error: e.message, hint: "Check GEMINI_API_KEY environment variable" });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
