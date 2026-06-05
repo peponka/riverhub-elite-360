@@ -749,49 +749,68 @@ function switchCopilotoTab(idx) {
     </div>
 </div>
 
-<!-- PRECIOS -->
+<!-- PLANES -->
 <section class="section" id="precios">
-    <div style="text-align:center;margin-bottom:48px">
+    <div style="text-align:center;margin-bottom:16px">
         <div class="section-tag">PLANES ESCALABLES</div>
-        <h2>Potencia para flotas<br><em>de todos los tamaños.</em></h2>
-        <div id="pricing-toggle" style="display:inline-flex;align-items:center;gap:0;background:var(--surface);border-radius:12px;padding:4px;margin-top:24px;border:1px solid var(--sep)">
-            <button id="toggle-monthly" onclick="setPricing('monthly')" style="padding:10px 24px;border-radius:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;background:var(--accent);color:white">Mensual</button>
-            <button id="toggle-yearly" onclick="setPricing('yearly')" style="padding:10px 24px;border-radius:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;background:transparent;color:var(--text2)">Anual (Ahorrá 20%)</button>
-        </div>
+        <h2>El tamaño de tu flota<br><em>determina tu plan.</em></h2>
+        <p style="color:var(--text2);font-size:16px;margin-top:16px;max-width:520px;margin-inline:auto;line-height:1.7">Empezá con lo que necesitás hoy. Escalá cuando tu operación crezca. Sin contratos largos, sin sorpresas.</p>
     </div>
+
+    <!-- GARANTÍA STRIP -->
+    <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-bottom:48px;padding:20px;background:var(--surface);border-radius:16px;max-width:700px;margin-inline:auto">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-shield-halved" style="color:var(--success)"></i> 14 días de prueba gratis</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-bolt" style="color:var(--accent)"></i> Operativo en 5 minutos</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-credit-card" style="color:var(--warning)"></i> Sin tarjeta para empezar</div>
+    </div>
+
     <div class="pricing-cards">
+        <!-- STARTER -->
         <div class="price-card reveal">
             <h3>Starter</h3>
             <p class="price-desc">Hasta 5 embarcaciones</p>
-            <div><span class="price-amount" data-monthly="$149" data-yearly="$119">$149</span><span class="price-unit"> /mes</span></div>
+            <div style="margin:20px 0 8px">
+                <div style="font-size:15px;font-weight:700;color:var(--success);letter-spacing:0.5px">✦ COMENZÁ HOY</div>
+                <div style="font-size:13px;color:var(--text2);margin-top:4px">Tu primera flota inteligente en minutos</div>
+            </div>
             <ul class="price-list">
                 <li><i class="fa-solid fa-check"></i>Tracking AIS en tiempo real</li>
                 <li><i class="fa-solid fa-check"></i>Bitácora digital</li>
                 <li><i class="fa-solid fa-check"></i>Control de combustible</li>
                 <li><i class="fa-solid fa-check"></i>Mantenimiento preventivo</li>
                 <li class="disabled"><i class="fa-solid fa-xmark"></i>Copiloto IA</li>
-                <li class="disabled"><i class="fa-solid fa-xmark"></i>Convoyes</li>
+                <li class="disabled"><i class="fa-solid fa-xmark"></i>Convoyes inteligentes</li>
             </ul>
-            <a href="#contacto" class="price-btn">Solicitar Demo</a>
+            <a href="#contacto" class="price-btn">Empezar gratis →</a>
         </div>
+
+        <!-- PROFESIONAL -->
         <div class="price-card featured reveal">
-            <div class="price-badge">MÁS POPULAR</div>
+            <div class="price-badge">MÁS ELEGIDO</div>
             <h3>Profesional</h3>
             <p class="price-desc">Hasta 20 embarcaciones</p>
-            <div><span class="price-amount" data-monthly="$499" data-yearly="$399">$499</span><span class="price-unit"> /mes</span></div>
+            <div style="margin:20px 0 8px">
+                <div style="font-size:15px;font-weight:700;color:white;letter-spacing:0.5px">✦ LA ELECCIÓN INTELIGENTE</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px">IA + datos reales de tu hidrovía</div>
+            </div>
             <ul class="price-list">
                 <li><i class="fa-solid fa-check"></i>Todo de Starter</li>
                 <li><i class="fa-solid fa-check"></i>Armador de convoyes</li>
                 <li><i class="fa-solid fa-check"></i>Gestión de tripulación</li>
                 <li><i class="fa-solid fa-check"></i>Pronóstico de hidrovía</li>
-                <li><i class="fa-solid fa-check"></i>Copiloto IA</li>
+                <li><i class="fa-solid fa-check"></i>Copiloto IA con datos reales</li>
             </ul>
-            <a href="#contacto" class="price-btn dark">Solicitar Demo</a>
+            <a href="#contacto" class="price-btn dark">Solicitar Demo →</a>
         </div>
+
+        <!-- ENTERPRISE -->
         <div class="price-card reveal">
             <h3>Enterprise</h3>
             <p class="price-desc">Embarcaciones ilimitadas</p>
-            <div><span class="price-amount">Contactar</span><span class="price-unit"></span></div>
+            <div style="margin:20px 0 8px">
+                <div style="font-size:15px;font-weight:700;color:var(--accent);letter-spacing:0.5px">✦ OPERACIÓN TOTAL</div>
+                <div style="font-size:13px;color:var(--text2);margin-top:4px">Para grandes armadores y operadores</div>
+            </div>
             <ul class="price-list">
                 <li><i class="fa-solid fa-check"></i>Embarcaciones ilimitadas</li>
                 <li><i class="fa-solid fa-check"></i>Copiloto IA avanzado</li>
@@ -799,26 +818,10 @@ function switchCopilotoTab(idx) {
                 <li><i class="fa-solid fa-check"></i>Soporte 24/7 dedicado</li>
                 <li><i class="fa-solid fa-check"></i>SLA 99.9% garantizado</li>
             </ul>
-            <a href="mailto:info@fluviafleet.com" class="price-btn">Contactar Ventas</a>
+            <a href="mailto:info@fluviafleet.com" class="price-btn">Hablar con nosotros →</a>
         </div>
     </div>
 </section>
-<script>
-function setPricing(mode) {
-    var monthly = document.getElementById('toggle-monthly');
-    var yearly = document.getElementById('toggle-yearly');
-    var amounts = document.querySelectorAll('.price-amount[data-monthly]');
-    if (mode === 'yearly') {
-        yearly.style.background = 'var(--accent)'; yearly.style.color = 'white';
-        monthly.style.background = 'transparent'; monthly.style.color = 'var(--text2)';
-        amounts.forEach(function(el) { el.textContent = el.getAttribute('data-yearly'); });
-    } else {
-        monthly.style.background = 'var(--accent)'; monthly.style.color = 'white';
-        yearly.style.background = 'transparent'; yearly.style.color = 'var(--text2)';
-        amounts.forEach(function(el) { el.textContent = el.getAttribute('data-monthly'); });
-    }
-}
-</script>
 
 <!-- ═══════════════════════════════════════════════ -->
 <!-- ROI CALCULATOR                                  -->
