@@ -214,19 +214,36 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
 });
 
 // --- AIS POSITIONS (rate limited, public — AIS data is non-sensitive) ---
+const cache = require('./services/cache');
 app.get('/api/ais-positions', apiLimiter, (req, res) => {
+    // Paginación: ?page=1&limit=50
+    const page  = Math.max(1, parseInt(req.query.page)  || 1);
+    const limit = Math.min(200, Math.max(1, parseInt(req.query.limit) || 100));
+    const offset = (page - 1) * limit;
+
+    // Cache de 15 segundos para no recalcular en cada request
+    const cacheKey = `ais:page${page}:limit${limit}`;
+    const cached = cache.get(cacheKey);
+    if (cached) return res.json({ ...cached, cached: true });
+
     const aisPositions = req.app.locals.aisPositions || {};
-    const vessels = Object.values(aisPositions);
-    res.json({
-        total: vessels.length,
+    const allVessels = Object.values(aisPositions);
+    const vessels = allVessels.slice(offset, offset + limit).map(v => ({
+        mmsi: v.mmsi, name: v.name,
+        lat: v.lat, lon: v.lon,
+        speed: v.speed, course: v.course,
+        heading: v.heading
+    }));
+
+    const result = {
+        total: allVessels.length,
+        page, limit,
+        pages: Math.ceil(allVessels.length / limit),
         connected: aisConnected,
-        vessels: vessels.map(v => ({
-            mmsi: v.mmsi, name: v.name,
-            lat: v.lat, lon: v.lon,
-            speed: v.speed, course: v.course,
-            heading: v.heading
-        }))
-    });
+        vessels
+    };
+    cache.set(cacheKey, result, 15);
+    res.json(result);
 });
 
 
