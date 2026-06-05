@@ -43,6 +43,8 @@ let hydrologyRoutes;
 try { hydrologyRoutes = require('./routes/hydrologyRoutes'); } catch (e) { console.error('❌ hydrology routes failed to load:', e.message); }
 let authRoutes;
 try { authRoutes = require('./routes/authRoutes'); } catch (e) { console.error('❌ Auth routes failed:', e.message); }
+let onboardingRoutes;
+try { onboardingRoutes = require('./routes/onboardingRoutes'); } catch (e) { console.error('❌ Onboarding routes failed:', e.message); }
 
 // ============================================
 // FLUVIAFLEET — Servidor Unificado
@@ -726,6 +728,13 @@ if (n8nRoutes) {
 if (authRoutes) {
     app.use('/api/auth', authRoutes);
     console.log('✅ Auth API mounted at /api/auth');
+}
+// --- ONBOARDING API ---
+if (onboardingRoutes) {
+    const obRouter = onboardingRoutes(authenticateUser, app.locals.supabase, app.locals.supabaseAdmin);
+    app.use('/api/onboarding', obRouter);
+    app.use('/api/vessels', obRouter); // bulk-import-vessels también en /api/vessels
+    console.log('✅ Onboarding API mounted at /api/onboarding');
 }
 
 // --- SUPABASE SERVER-SIDE CLIENT ---
