@@ -225,6 +225,15 @@
         }
     </style>
 </head>
+<script>
+// Redirigir al reset de contraseña si hay token de recovery en la URL
+(function(){
+    var hash = window.location.hash;
+    if (hash && hash.includes('access_token') && hash.includes('type=recovery')) {
+        window.location.href = '/reset-password.html' + hash;
+    }
+})();
+</script>
 <body>
 
 <!-- NAV -->
