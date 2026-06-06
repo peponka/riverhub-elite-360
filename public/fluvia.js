@@ -132,6 +132,43 @@ function togglePwVis(inputId, btn) {
 }
 
 let authMode = 'login';
+var loginCardTemplate = document.querySelector('.login-card') ? document.querySelector('.login-card').innerHTML : '';
+
+function showLoginView() {
+    var card = document.querySelector('.login-card');
+    if (!card || !loginCardTemplate) return;
+    authMode = 'login';
+    card.innerHTML = loginCardTemplate;
+    var errDiv = document.getElementById('login-error');
+    if (errDiv) errDiv.style.display = 'none';
+    var btn = document.getElementById('login-btn');
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Iniciar Sesion';
+    }
+}
+
+function showForgotPasswordView() {
+    var card = document.querySelector('.login-card');
+    if (!card) return;
+    authMode = 'forgotPassword';
+    card.innerHTML =
+        '<div class="login-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:64px;height:64px;border-radius:50%;object-fit:cover"><span style="font-family:Newsreader,serif;font-size:3.2rem;font-weight:400;color:var(--text-primary);letter-spacing:-0.01em">FluviaFleet</span></div>'+
+        '<h1 class="login-title">Recuperar<br><em>contrase&ntilde;a.</em></h1>'+
+        '<p class="login-sub" style="line-height:1.5;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;">Ingres&aacute; tu email y te enviaremos un enlace para restablecer tu contrase&ntilde;a.</p>'+
+        '<div id="forgot-error" style="display:none;color:var(--error);font-size:12px;margin:12px 0;font-weight:600;"></div>'+
+        '<div id="forgot-success" style="display:none;color:var(--success,#10b981);font-size:12px;margin:12px 0;font-weight:700;line-height:1.5;"></div>'+
+        '<label class="login-label">EMAIL</label>'+
+        '<input type="email" id="forgot-email" class="login-input" placeholder="usuario@empresa.com" autocomplete="email">'+
+        '<button class="login-btn" id="forgot-submit-btn" onclick="sendPasswordResetLink()">Enviar enlace</button>'+
+        '<button type="button" onclick="showLoginView()" style="width:100%;margin-top:14px;background:none;border:1px solid var(--separator);border-radius:12px;padding:12px;color:var(--text-secondary);cursor:pointer;font-size:13px;font-weight:700;font-family:Inter,sans-serif;">Volver al inicio de sesi&oacute;n</button>'+
+        '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Hidrovia Paraguay-Parana - FluviaFleet</p></div>';
+    setTimeout(function(){
+        var input = document.getElementById('forgot-email');
+        if (input) input.focus();
+    }, 0);
+}
+
 function toggleRegister() {
     authMode = authMode === 'login' ? 'register' : 'login';
     document.querySelector('.login-title').innerHTML = authMode === 'login' ? 'Bienvenido<br><em>de vuelta.</em>' : 'Crear<br><em>cuenta nueva.</em>';
@@ -157,7 +194,7 @@ async function doLogin(){
             var r=await sb.auth.signUp({email:email,password:pass});
             if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';btn.disabled=false;btn.textContent='Registrarse';return;}
             errDiv.style.color = 'var(--success, #10b981)';
-            errDiv.textContent = 'Registro exitoso. Inicia sesión para continuar.';
+            errDiv.textContent = 'Registro exitoso. Inicia sesi\u00f3n para continuar.';
             errDiv.style.display='block';
             btn.disabled=false;btn.textContent='Registrarse';
             setTimeout(() => { errDiv.style.display='none'; toggleRegister(); }, 3000);
@@ -178,27 +215,40 @@ async function doGoogleLogin(){
 }
 
 async function doResetPassword() {
-    var email=document.getElementById('login-email').value.trim();
-    var errDiv=document.getElementById('login-error');
-    if(!email){
-        errDiv.style.color = 'var(--error)';
-        errDiv.textContent='Ingresa tu email arriba para recuperar la contraseña';
-        errDiv.style.display='block';
-        return;
-    }
-    try {
-        var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/fluvia.html' });
-        if(r.error){errDiv.style.color='var(--error)';errDiv.textContent=r.error.message;errDiv.style.display='block';return;}
-        errDiv.style.color = 'var(--success, #10b981)';
-        errDiv.textContent='Se ha enviado un enlace a tu correo.';
-        errDiv.style.display='block';
-    } catch(e) {
-        errDiv.style.color='var(--error)';
-        errDiv.textContent='Error al enviar correo.';
-        errDiv.style.display='block';
-    }
+    showForgotPasswordView();
 }
 
+async function sendPasswordResetLink() {
+    var emailInput = document.getElementById('forgot-email');
+    var email = emailInput ? emailInput.value.trim() : '';
+    var errDiv = document.getElementById('forgot-error');
+    var successDiv = document.getElementById('forgot-success');
+    var btn = document.getElementById('forgot-submit-btn');
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (errDiv) errDiv.style.display = 'none';
+    if (successDiv) successDiv.style.display = 'none';
+    if(!email){
+        if(errDiv){errDiv.textContent='Ingres\u00e1 tu email para continuar.';errDiv.style.display='block';}
+        return;
+    }
+    if(!emailPattern.test(email)){
+        if(errDiv){errDiv.textContent='Ingres\u00e1 un email v\u00e1lido.';errDiv.style.display='block';}
+        return;
+    }
+    if(btn){btn.disabled=true;btn.textContent='Enviando...';}
+    try {
+        var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/fluvia.html' });
+        if(r.error){
+            if(errDiv){errDiv.textContent=r.error.message || 'No pudimos enviar el enlace. Intenta nuevamente.';errDiv.style.display='block';}
+            return;
+        }
+        if(successDiv){successDiv.textContent='Listo. Revis\u00e1 tu correo para restablecer tu contrase\u00f1a.';successDiv.style.display='block';}
+    } catch(e) {
+        if(errDiv){errDiv.textContent='No pudimos enviar el enlace. Intenta nuevamente.';errDiv.style.display='block';}
+    } finally {
+        if(btn){btn.disabled=false;btn.textContent='Enviar enlace';}
+    }
+}
 async function doLogout(){
     // Cleanup timers and realtime subscriptions
     if(window._dashSyncInterval) clearInterval(window._dashSyncInterval);

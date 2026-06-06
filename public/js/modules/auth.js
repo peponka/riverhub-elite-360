@@ -387,14 +387,25 @@ var AuthModule = (() => {
         }
     };
 
-    const showForgotPassword = () => {
+    const showForgotPassword = (event) => {
+        if (event) event.preventDefault();
         const modal = document.getElementById('modal-forgot-pass');
+        const loginError = document.getElementById('login-error-msg');
+        const emailInput = document.getElementById('forgot-email');
+        if (loginError) loginError.style.display = 'none';
         if (modal) modal.style.display = 'flex';
+        if (emailInput) {
+            emailInput.value = '';
+            setTimeout(() => emailInput.focus(), 50);
+        }
+        return false;
     };
 
     const sendPasswordReset = async () => {
-        const email = document.getElementById('forgot-email').value;
-        if (!email) return RiverToast.warning("Por favor ingresa tu email para la recuperación.", "Email Requerido");
+        const email = document.getElementById('forgot-email').value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) return RiverToast.warning("Ingresá tu email para continuar.", "Email requerido");
+        if (!emailPattern.test(email)) return RiverToast.warning("Ingresá un email válido.", "Email inválido");
 
         const btn = document.querySelector('#modal-forgot-pass .btn-primary');
         const oldText = btn.innerText;
@@ -403,10 +414,10 @@ var AuthModule = (() => {
 
         try {
             const { error } = await window.sb.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin, // Just send them to root, listener will pick up event
+                redirectTo: `${window.location.origin}/reset-password.html`,
             });
             if (error) throw error;
-            RiverToast.success("¡Enlace de recuperación enviado! Revisa tu bandeja de correo (y spam).", "Recuperación Iniciada");
+            RiverToast.success("Listo. Revisá tu correo para restablecer tu contraseña.", "Recuperación iniciada");
             document.getElementById('modal-forgot-pass').style.display = 'none';
         } catch (e) {
             RiverToast.error("Error al enviar enlace: " + e.message, "Fallo de Sistema");

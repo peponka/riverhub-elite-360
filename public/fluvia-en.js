@@ -274,6 +274,43 @@ function togglePwVis(inputId, btn) {
 }
 
 let authMode = 'login';
+var loginCardTemplate = document.querySelector('.login-card') ? document.querySelector('.login-card').innerHTML : '';
+
+function showLoginView() {
+    var card = document.querySelector('.login-card');
+    if (!card || !loginCardTemplate) return;
+    authMode = 'login';
+    card.innerHTML = loginCardTemplate;
+    var errDiv = document.getElementById('login-error');
+    if (errDiv) errDiv.style.display = 'none';
+    var btn = document.getElementById('login-btn');
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Log In';
+    }
+}
+
+function showForgotPasswordView() {
+    var card = document.querySelector('.login-card');
+    if (!card) return;
+    authMode = 'forgotPassword';
+    card.innerHTML =
+        '<div class="login-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:64px;height:64px;border-radius:50%;object-fit:cover"><span style="font-family:Newsreader,serif;font-size:3.2rem;font-weight:400;color:var(--text-primary);letter-spacing:-0.01em">FluviaFleet</span></div>'+
+        '<h1 class="login-title">Recover<br><em>password.</em></h1>'+
+        '<p class="login-sub" style="line-height:1.5;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;">Enter your email and we will send you a link to reset your password.</p>'+
+        '<div id="forgot-error" style="display:none;color:var(--error);font-size:12px;margin:12px 0;font-weight:600;"></div>'+
+        '<div id="forgot-success" style="display:none;color:var(--success,#10b981);font-size:12px;margin:12px 0;font-weight:700;line-height:1.5;"></div>'+
+        '<label class="login-label">EMAIL</label>'+
+        '<input type="email" id="forgot-email" class="login-input" placeholder="user@company.com" autocomplete="email">'+
+        '<button class="login-btn" id="forgot-submit-btn" onclick="sendPasswordResetLink()">Send link</button>'+
+        '<button type="button" onclick="showLoginView()" style="width:100%;margin-top:14px;background:none;border:1px solid var(--separator);border-radius:12px;padding:12px;color:var(--text-secondary);cursor:pointer;font-size:13px;font-weight:700;font-family:Inter,sans-serif;">Back to sign in</button>'+
+        '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Paraguay-Parana Waterway - FluviaFleet</p></div>';
+    setTimeout(function(){
+        var input = document.getElementById('forgot-email');
+        if (input) input.focus();
+    }, 0);
+}
+
 function toggleRegister() {
     authMode = authMode === 'login' ? 'register' : 'login';
     document.querySelector('.login-title').innerHTML = authMode === 'login' ? 'Welcome<br><em>back.</em>' : 'Create<br><em>new account.</em>';
@@ -320,27 +357,40 @@ async function doGoogleLogin(){
 }
 
 async function doResetPassword() {
-    var email=document.getElementById('login-email').value.trim();
-    var errDiv=document.getElementById('login-error');
-    if(!email){
-        errDiv.style.color = 'var(--error)';
-        errDiv.textContent='Enter your email above to recover your password';
-        errDiv.style.display='block';
-        return;
-    }
-    try {
-        var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/fluvia-en.html' });
-        if(r.error){errDiv.style.color='var(--error)';errDiv.textContent=r.error.message;errDiv.style.display='block';return;}
-        errDiv.style.color = 'var(--success, #10b981)';
-        errDiv.textContent='A recovery link has been sent to your email.';
-        errDiv.style.display='block';
-    } catch(e) {
-        errDiv.style.color='var(--error)';
-        errDiv.textContent='Error sending email.';
-        errDiv.style.display='block';
-    }
+    showForgotPasswordView();
 }
 
+async function sendPasswordResetLink() {
+    var emailInput = document.getElementById('forgot-email');
+    var email = emailInput ? emailInput.value.trim() : '';
+    var errDiv = document.getElementById('forgot-error');
+    var successDiv = document.getElementById('forgot-success');
+    var btn = document.getElementById('forgot-submit-btn');
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (errDiv) errDiv.style.display = 'none';
+    if (successDiv) successDiv.style.display = 'none';
+    if(!email){
+        if(errDiv){errDiv.textContent='Enter your email to continue.';errDiv.style.display='block';}
+        return;
+    }
+    if(!emailPattern.test(email)){
+        if(errDiv){errDiv.textContent='Enter a valid email.';errDiv.style.display='block';}
+        return;
+    }
+    if(btn){btn.disabled=true;btn.textContent='Sending...';}
+    try {
+        var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/fluvia-en.html' });
+        if(r.error){
+            if(errDiv){errDiv.textContent=r.error.message || 'We could not send the link. Please try again.';errDiv.style.display='block';}
+            return;
+        }
+        if(successDiv){successDiv.textContent='Done. Check your email to reset your password.';successDiv.style.display='block';}
+    } catch(e) {
+        if(errDiv){errDiv.textContent='We could not send the link. Please try again.';errDiv.style.display='block';}
+    } finally {
+        if(btn){btn.disabled=false;btn.textContent='Send link';}
+    }
+}
 async function doLogout(){
     // Cleanup timers and realtime subscriptions
     if(window._dashSyncInterval) clearInterval(window._dashSyncInterval);
