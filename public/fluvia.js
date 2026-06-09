@@ -1036,7 +1036,7 @@ function updateHeatmap(){
 
 // MODAL
 var modalForms={
-    fleet:{title:'Agregar Activo',fields:[{id:'fleet-name',label:'NOMBRE',type:'text',placeholder:'Ej: R/M ATLAS'},{id:'fleet-type',label:'TIPO',type:'select',options:['Barcaza','Remolcador','Ponton']},{id:'fleet-status',label:'ESTADO',type:'select',options:['En Viaje','En Puerto','Mantenimiento']},{id:'fleet-location',label:'UBICACION',type:'text',placeholder:'Ej: Km 1420'}]},
+    fleet:{title:'Agregar Activo',fields:[{id:'fleet-mmsi',label:'MMSI (9 dÃ­gitos â€” requerido para tracking AIS)',type:'text',placeholder:'Ej: 760123456'},{id:'fleet-name',label:'NOMBRE',type:'text',placeholder:'Ej: R/M ATLAS'},{id:'fleet-type',label:'TIPO',type:'select',options:['Barcaza','Remolcador','Empujador','Barcaza Tanque','Barcaza Contenedor','Ponton','Lancha']},{id:'fleet-status',label:'ESTADO',type:'select',options:['Activo','En Viaje','En Puerto','Mantenimiento']},{id:'fleet-location',label:'UBICACION',type:'text',placeholder:'Ej: Km 1420'}]},
     viaje:{title:'Nueva Solicitud de Viaje',fields:[{id:'viaje-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'viaje-origin',label:'ORIGEN',type:'text',placeholder:'Puerto origen'},{id:'viaje-dest',label:'DESTINO',type:'text',placeholder:'Puerto destino'},{id:'viaje-cargo',label:'CARGA (TON)',type:'text',placeholder:'3500'},{id:'viaje-date',label:'FECHA SALIDA',type:'date'}]},
     bitacora:{title:'Nueva Entrada de Bitacora',fields:[{id:'bit-title',label:'TITULO',type:'text',placeholder:'Resumen'},{id:'bit-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'bit-type',label:'TIPO',type:'select',options:['Observacion','Incidente','Maniobra','Navegacion']},{id:'bit-desc',label:'DESCRIPCION',type:'textarea',placeholder:'Detalle...'}]},
     crew:{title:'Agregar Tripulante',fields:[{id:'crew-name',label:'NOMBRE',type:'text',placeholder:'Juan Perez'},{id:'crew-role',label:'ROL',type:'select',options:['Capitan','Timonel','Maquinista','Marinero','Cocinero']},{id:'crew-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'crew-doc',label:'DOCUMENTO',type:'text',placeholder:'Nro documento'}]},
@@ -1072,7 +1072,7 @@ document.getElementById('modal-submit').addEventListener('click',async function(
     var t=currentModal;if(!t)return;var c=modalForms[t];var d={};c.fields.forEach(function(f){d[f.id]=document.getElementById(f.id).value;});
     try{
         var cid=currentCompanyId;
-        if(t==='fleet'&&d['fleet-name']){await sb.from('vessels').insert({name:d['fleet-name'],type:d['fleet-type'],status:d['fleet-status'],location:d['fleet-location'],company_id:cid});loadFleet();}
+        if(t==='fleet'&&d['fleet-name']){await sb.from('vessels').insert({name:d['fleet-name'],type:d['fleet-type'],status:d['fleet-status'],location:d['fleet-location'],mmsi:d['fleet-mmsi']||null,company_id:cid});loadFleet();}
         else if(t==='viaje'&&d['viaje-vessel']){await sb.from('voyages').insert({vessel_name:d['viaje-vessel'],origin_port:d['viaje-origin'],destination_port:d['viaje-dest'],cargo_tons:parseInt(d['viaje-cargo'])||0,departure_date:d['viaje-date']||null,status:'pendiente',company_id:cid});loadViajes();}
         else if(t==='bitacora'&&d['bit-title']){await sb.from('logs').insert({title:d['bit-title'],vessel_name:d['bit-vessel'],action_type:d['bit-type'].toLowerCase(),description:d['bit-desc'],company_id:cid});loadBitacora();}
         else if(t==='crew'&&d['crew-name']){await sb.from('crew_members').insert({full_name:d['crew-name'],role:d['crew-role'],vessel_name:d['crew-vessel'],document_number:d['crew-doc'],status:'embarcado',company_id:cid});loadCrew();}
@@ -1976,10 +1976,10 @@ function renderPreZarpe(){
             '<div style="font-size:11px;color:var(--text-secondary)">'+esc(c.captain_name||'')+'</div></div>'+
             '<span style="font-size:9px;font-weight:700;letter-spacing:0.5px;padding:4px 10px;border-radius:6px;background:'+color+'15;color:'+color+'">'+(isOk?'APROBADO':'BORRADOR')+'</span></div>'+
             '<div style="height:6px;background:var(--bg-tertiary);border-radius:3px;margin-bottom:6px"><div style="height:6px;width:'+pct+'%;background:'+color+';border-radius:3px;transition:width 0.4s"></div></div>'+
-            '<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:10px"><span style="font-weight:600;color:var(--text-primary)">'+checked+'/'+total2+' items · '+pct+'%</span><span style="color:var(--text-secondary)">'+dt+'</span></div>'+
+            '<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:10px"><span style="font-weight:600;color:var(--text-primary)">'+checked+'/'+total2+' items ï¿½ '+pct+'%</span><span style="color:var(--text-secondary)">'+dt+'</span></div>'+
             '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
             (c.destination?'<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary)"><i class="fa-solid fa-location-dot" style="margin-right:3px"></i>'+esc(c.destination)+'</span>':'')+
-            (c.cargo_description?'<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary)"><i class="fa-solid fa-cube" style="margin-right:3px"></i>'+esc(c.cargo_description)+' · '+(c.cargo_tons||0)+' ton</span>':'')+
+            (c.cargo_description?'<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary)"><i class="fa-solid fa-cube" style="margin-right:3px"></i>'+esc(c.cargo_description)+' ï¿½ '+(c.cargo_tons||0)+' ton</span>':'')+
             '</div></div>';
     }).join('')+'</div>';
 }
