@@ -159,7 +159,8 @@ const MapLogicFlota = (() => {
             const resp = await fetch('/api/ais-positions');
             const data = await resp.json();
 
-            const newVessels = Array.isArray(data) ? data : Object.values(data);
+            // API returns paginated object {total, page, limit, vessels:[...]} — extract vessels array
+            const newVessels = data.vessels || (Array.isArray(data) ? data : Object.values(data));
             vessels = newVessels;
 
             const seenIds = new Set();
