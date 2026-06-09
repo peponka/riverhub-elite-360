@@ -1072,7 +1072,7 @@ document.getElementById('modal-submit').addEventListener('click',async function(
     var t=currentModal;if(!t)return;var c=modalForms[t];var d={};c.fields.forEach(function(f){d[f.id]=document.getElementById(f.id).value;});
     try{
         var cid=currentCompanyId;
-        if(t==='fleet'&&d['fleet-name']){var fr=await sb.from('vessels').insert({name:d['fleet-name'],type:d['fleet-type'],status:d['fleet-status'],location:d['fleet-location'],mmsi:d['fleet-mmsi']||null,company_id:cid});if(fr.error){alert('Error al guardar embarcación: '+fr.error.message);return;}loadFleet();}
+        if(t==='fleet'&&d['fleet-name']){var fr=await sb.from('vessels').insert({name:d['fleet-name'],type:d['fleet-type'],status:d['fleet-status'],mmsi:d['fleet-mmsi']||null,company_id:cid});if(fr.error){alert('Error al guardar embarcación: '+fr.error.message);return;}loadFleet();}
         else if(t==='viaje'&&d['viaje-vessel']){await sb.from('voyages').insert({vessel_name:d['viaje-vessel'],origin_port:d['viaje-origin'],destination_port:d['viaje-dest'],cargo_tons:parseInt(d['viaje-cargo'])||0,departure_date:d['viaje-date']||null,status:'pendiente',company_id:cid});loadViajes();}
         else if(t==='bitacora'&&d['bit-title']){await sb.from('logs').insert({title:d['bit-title'],vessel_name:d['bit-vessel'],action_type:d['bit-type'].toLowerCase(),description:d['bit-desc'],company_id:cid});loadBitacora();}
         else if(t==='crew'&&d['crew-name']){await sb.from('crew_members').insert({full_name:d['crew-name'],role:d['crew-role'],vessel_name:d['crew-vessel'],document_number:d['crew-doc'],status:'embarcado',company_id:cid});loadCrew();}
