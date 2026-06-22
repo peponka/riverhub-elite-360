@@ -139,7 +139,7 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 
 <main class="main">
 <div class="page-header">
-  <h1>WhatsApp Alerts <span class="badge-wa"><i class="fab fa-whatsapp"></i> CallMeBot</span></h1>
+  <h1>WhatsApp Alerts <span class="badge-wa"><i class="fab fa-whatsapp"></i> Meta API</span></h1>
   <p>Notificaciones automáticas a capitanes y gerentes — calado, compliance, mantenimiento y contratos.</p>
 </div>
 
@@ -170,7 +170,7 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
     <div class="send-box">
       <div class="sandbox-notice">
         <i class="fab fa-whatsapp" style="margin-top:1px;color:#25D366"></i>
-        <span><strong>CallMeBot:</strong> Para recibir mensajes, el contacto debe activar su API key una sola vez mandando <strong>"I allow callmebot to send me messages"</strong> al <strong>+34 644 64 55 30</strong> por WhatsApp. Recibirá su API key en respuesta.</span>
+        <span><strong>Meta WhatsApp API:</strong> Los mensajes se envían desde el número de negocio de FluviaFleet. Los destinatarios no necesitan hacer ninguna activación.</span>
       </div>
       <div class="form-group">
         <label>Destinatario</label>
@@ -219,11 +219,6 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 <div class="form-group"><label>Nombre</label><input type="text" id="c-name" placeholder="Ej: Juan Pérez"></div>
 <div class="form-group"><label>Teléfono (con código de país)</label><input type="text" id="c-phone" placeholder="Ej: +595981234567"></div>
 <div class="form-group"><label>Rol / Cargo</label><input type="text" id="c-role" placeholder="Ej: Capitán, Gerente de Operaciones"></div>
-<div class="form-group">
-  <label>API Key de CallMeBot <span style="font-weight:400;color:var(--text-2)">(opcional — se puede agregar después)</span></label>
-  <input type="text" id="c-apikey" placeholder="Ej: 123456">
-  <div style="font-size:.72rem;color:var(--text-2);margin-top:4px">El contacto obtiene su API key mandando <em>"I allow callmebot to send me messages"</em> al +34 644 64 55 30 por WhatsApp.</div>
-</div>
 <div class="form-group">
   <label>Recibir alertas de</label>
   <div class="alert-type-grid">
@@ -294,14 +289,11 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
         var a = ALERT_LABELS[t] || { label: t, cls: '' };
         return '<span class="chip ' + a.cls + '">' + a.label + '</span>';
       }).join('');
-      var keyBadge = c.callmebot_api_key
-        ? '<span style="font-size:.68rem;color:#16A34A;font-weight:600"><i class="fas fa-check-circle"></i> API key activa</span>'
-        : '<span style="font-size:.68rem;color:var(--amber);font-weight:600"><i class="fas fa-exclamation-circle"></i> Sin API key</span>';
       return '<div class="contact-card">' +
         '<div class="contact-avatar">' + initials + '</div>' +
         '<div class="contact-info">' +
           '<div class="contact-name">' + c.name + '</div>' +
-          '<div class="contact-phone">' + c.phone + ' &nbsp;' + keyBadge + '</div>' +
+          '<div class="contact-phone">' + c.phone + '</div>' +
           (c.role ? '<div class="contact-role">' + c.role + '</div>' : '') +
           (chips ? '<div class="alert-chips">' + chips + '</div>' : '') +
         '</div>' +
@@ -312,11 +304,9 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 
   function updateContactSelect(contacts) {
     var sel = document.getElementById('send-to');
-    // encode id in value so we can look up api_key at send time
     sel.innerHTML = '<option value="">Seleccionar contacto...</option>' +
       contacts.filter(function (c) { return c.active; }).map(function (c) {
-        var label = c.name + ' (' + c.phone + ')' + (c.callmebot_api_key ? '' : ' ⚠️ sin key');
-        return '<option value="' + c.id + '">' + label + '</option>';
+        return '<option value="' + c.id + '">' + c.name + ' (' + c.phone + ')</option>';
       }).join('');
   }
 
@@ -365,7 +355,6 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
     var name = document.getElementById('c-name').value.trim();
     var phone = document.getElementById('c-phone').value.trim();
     var role = document.getElementById('c-role').value.trim();
-    var apikey = document.getElementById('c-apikey').value.trim();
     var alertTypes = Array.from(document.querySelectorAll('#newContactModal input[type=checkbox]:checked')).map(function (cb) { return cb.value; });
 
     if (!name || !phone) { showToast('Nombre y teléfono son requeridos', false); return; }
@@ -377,12 +366,11 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
       var res = await fetch('/api/whatsapp/contacts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ company_id: companyId, name, phone, role, alert_types: alertTypes, callmebot_api_key: apikey || null }),
+        body: JSON.stringify({ company_id: companyId, name, phone, role, alert_types: alertTypes }),
       });
       if (!res.ok) throw new Error(await res.text());
       document.getElementById('newContactModal').classList.remove('show');
-      // reset form
-      ['c-name','c-phone','c-role','c-apikey'].forEach(function(id){ document.getElementById(id).value=''; });
+      ['c-name','c-phone','c-role'].forEach(function(id){ document.getElementById(id).value=''; });
       document.querySelectorAll('#newContactModal input[type=checkbox]').forEach(function(cb){ cb.checked=false; });
       showToast('Contacto agregado');
       await loadContacts();
@@ -407,10 +395,6 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
 
     var contact = contactsMap[contactId];
     if (!contact) { showToast('Contacto no encontrado', false); return; }
-    if (!contact.callmebot_api_key) {
-      showToast('Este contacto no tiene API key de CallMeBot. Agregá la key primero.', false);
-      return;
-    }
 
     var btn = document.getElementById('btn-send');
     btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
@@ -419,7 +403,7 @@ body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);lin
       var payload, endpoint;
       if (type === 'custom') {
         endpoint = '/api/whatsapp/send';
-        payload = { to: contact.phone, api_key: contact.callmebot_api_key, message, company_id: companyId };
+        payload = { to: contact.phone, message, company_id: companyId };
       } else {
         endpoint = '/api/whatsapp/alert';
         payload = { type, company_id: companyId, payload: {} };

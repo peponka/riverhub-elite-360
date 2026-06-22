@@ -1,6 +1,6 @@
 // routes/whatsappRoutes.js
-// Notificaciones WhatsApp via CallMeBot (gratuito, sin tarjeta)
-// Cada contacto necesita activar su API key una sola vez.
+// Notificaciones WhatsApp via Meta WhatsApp Cloud API
+// Docs: https://developers.facebook.com/docs/whatsapp/cloud-api/messages
 
 const express = require('express');
 const router = express.Router();
@@ -17,17 +17,36 @@ function getAdmin() {
   );
 }
 
-// Enviar mensaje via CallMeBot
-// Cada contacto tiene su propio apikey (se obtiene activando con CallMeBot una vez)
-async function sendWhatsApp(phone, apiKey, body) {
-  if (!apiKey) return { ok: false, reason: 'API key no configurada para este contacto' };
+// Enviar mensaje via Meta WhatsApp Cloud API
+async function sendWhatsApp(phone, message) {
+  const phoneId = process.env.META_PHONE_NUMBER_ID;
+  const token   = process.env.META_ACCESS_TOKEN;
 
-  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(body)}&apikey=${encodeURIComponent(apiKey)}`;
+  if (!phoneId || !token) {
+    return { ok: false, reason: 'META_PHONE_NUMBER_ID o META_ACCESS_TOKEN no configurados' };
+  }
+
+  // Meta espera el número sin '+', en formato E.164: 595981234567
+  const to = phone.replace(/^\+/, '');
+
   try {
-    const res = await fetch(url);
-    const text = await res.text();
-    const ok = res.ok && !text.toLowerCase().includes('error');
-    return { ok, response: text.slice(0, 200) };
+    const res = await fetch(`https://graph.facebook.com/v20.0/${phoneId}/messages`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to,
+        type: 'text',
+        text: { body: message },
+      }),
+    });
+
+    const data = await res.json();
+    if (data.error) return { ok: false, reason: data.error.message };
+    return { ok: true, message_id: data.messages?.[0]?.id };
   } catch (e) {
     return { ok: false, reason: e.message };
   }
@@ -35,11 +54,11 @@ async function sendWhatsApp(phone, apiKey, body) {
 
 // ── POST /api/whatsapp/send ─────────────────────────────────────────────────
 router.post('/send', async (req, res) => {
-  const { to, api_key, message, company_id } = req.body;
+  const { to, message, company_id } = req.body;
   if (!to || !message) return res.status(400).json({ error: 'to y message son requeridos' });
 
   try {
-    const result = await sendWhatsApp(to, api_key, message);
+    const result = await sendWhatsApp(to, message);
 
     const db = getAdmin();
     if (db && company_id) {
@@ -48,7 +67,7 @@ router.post('/send', async (req, res) => {
         to_number: to,
         message,
         status: result.ok ? 'sent' : 'failed',
-        error_message: result.ok ? null : (result.reason || result.response),
+        error_message: result.ok ? null : result.reason,
       });
     }
 
@@ -68,12 +87,11 @@ router.post('/alert', async (req, res) => {
 
   const { data: contacts } = await db
     .from('whatsapp_contacts')
-    .select('phone, callmebot_api_key, alert_types')
+    .select('phone, alert_types')
     .eq('company_id', company_id)
-    .eq('active', true)
-    .not('callmebot_api_key', 'is', null);
+    .eq('active', true);
 
-  if (!contacts?.length) return res.json({ ok: true, sent: 0, note: 'No hay contactos con API key configurada' });
+  if (!contacts?.length) return res.json({ ok: true, sent: 0, note: 'No hay contactos configurados' });
 
   const messages = {
     draft_alert:
@@ -94,7 +112,7 @@ router.post('/alert', async (req, res) => {
     const types = contact.alert_types || [];
     if (type !== 'custom' && types.length && !types.includes(type)) continue;
 
-    const result = await sendWhatsApp(contact.phone, contact.callmebot_api_key, body);
+    const result = await sendWhatsApp(contact.phone, body);
     if (result.ok) sent++;
 
     await db.from('whatsapp_log').insert({
@@ -103,7 +121,7 @@ router.post('/alert', async (req, res) => {
       message: body,
       alert_type: type,
       status: result.ok ? 'sent' : 'failed',
-      error_message: result.ok ? null : (result.reason || result.response),
+      error_message: result.ok ? null : result.reason,
     });
   }
 
@@ -180,12 +198,12 @@ router.get('/contacts', async (req, res) => {
 
 // ── POST /api/whatsapp/contacts ─────────────────────────────────────────────
 router.post('/contacts', async (req, res) => {
-  const { company_id, name, phone, role, alert_types, callmebot_api_key } = req.body;
+  const { company_id, name, phone, role, alert_types } = req.body;
   if (!company_id || !phone) return res.status(400).json({ error: 'company_id y phone requeridos' });
   const db = getAdmin();
   const { data, error } = await db
     .from('whatsapp_contacts')
-    .insert({ company_id, name, phone, role, alert_types: alert_types || [], callmebot_api_key: callmebot_api_key || null, active: true })
+    .insert({ company_id, name, phone, role, alert_types: alert_types || [], active: true })
     .select().single();
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
