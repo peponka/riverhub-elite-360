@@ -23,10 +23,6 @@ create policy "wa_contacts_insert" on whatsapp_contacts
 create policy "wa_contacts_delete" on whatsapp_contacts
   for delete using (company_id = (select company_id from user_profiles where user_id = auth.uid()));
 
--- Si ya existe la tabla (migraciones previas), agregar la columna sola:
-alter table whatsapp_contacts
-  add column if not exists callmebot_api_key text;
-
 -- whatsapp_log: historial de mensajes enviados
 create table if not exists whatsapp_log (
   id            uuid primary key default gen_random_uuid(),
