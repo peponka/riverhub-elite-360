@@ -1,13 +1,9 @@
 // routes/whatsappRoutes.js
-// Notificaciones WhatsApp via Twilio para FluviaFleet
-// Alertas: calado, compliance, mantenimiento, contratos
+// Notificaciones WhatsApp via CallMeBot (gratuito, sin tarjeta)
+// Cada contacto necesita activar su API key una sola vez.
 
 const express = require('express');
 const router = express.Router();
-
-const TWILIO_SID  = process.env.TWILIO_ACCOUNT_SID;
-const TWILIO_AUTH = process.env.TWILIO_AUTH_TOKEN;
-const FROM_WA     = process.env.TWILIO_WHATSAPP_FROM || 'whatsapp:+14155238886'; // sandbox por defecto
 
 let createClient;
 try { createClient = require('@supabase/supabase-js').createClient; } catch {}
@@ -21,40 +17,30 @@ function getAdmin() {
   );
 }
 
-// Enviar mensaje via Twilio API (sin SDK — solo fetch nativo de Node 18+)
-async function sendWhatsApp(to, body) {
-  if (!TWILIO_SID || !TWILIO_AUTH) {
-    console.warn('⚠️ Twilio no configurado — mensaje no enviado:', body);
-    return { ok: false, reason: 'Twilio not configured' };
+// Enviar mensaje via CallMeBot
+// Cada contacto tiene su propio apikey (se obtiene activando con CallMeBot una vez)
+async function sendWhatsApp(phone, apiKey, body) {
+  if (!apiKey) return { ok: false, reason: 'API key no configurada para este contacto' };
+
+  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(body)}&apikey=${encodeURIComponent(apiKey)}`;
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    const ok = res.ok && !text.toLowerCase().includes('error');
+    return { ok, response: text.slice(0, 200) };
+  } catch (e) {
+    return { ok: false, reason: e.message };
   }
-
-  const toWa = to.startsWith('whatsapp:') ? to : `whatsapp:${to}`;
-  const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
-  const encoded = Buffer.from(`${TWILIO_SID}:${TWILIO_AUTH}`).toString('base64');
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Basic ${encoded}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({ From: FROM_WA, To: toWa, Body: body }).toString(),
-  });
-
-  const data = await res.json();
-  return { ok: res.ok, sid: data.sid, error: data.message };
 }
 
 // ── POST /api/whatsapp/send ─────────────────────────────────────────────────
-// Envío manual desde el panel (admin)
 router.post('/send', async (req, res) => {
-  const { to, message, company_id } = req.body;
+  const { to, api_key, message, company_id } = req.body;
   if (!to || !message) return res.status(400).json({ error: 'to y message son requeridos' });
 
   try {
-    const result = await sendWhatsApp(to, message);
+    const result = await sendWhatsApp(to, api_key, message);
 
-    // Guardar en historial
     const db = getAdmin();
     if (db && company_id) {
       await db.from('whatsapp_log').insert({
@@ -62,8 +48,7 @@ router.post('/send', async (req, res) => {
         to_number: to,
         message,
         status: result.ok ? 'sent' : 'failed',
-        twilio_sid: result.sid || null,
-        error_message: result.error || null,
+        error_message: result.ok ? null : (result.reason || result.response),
       });
     }
 
@@ -74,7 +59,6 @@ router.post('/send', async (req, res) => {
 });
 
 // ── POST /api/whatsapp/alert ────────────────────────────────────────────────
-// Alerta automática (llamado desde otros módulos o n8n)
 router.post('/alert', async (req, res) => {
   const { type, company_id, payload } = req.body;
   if (!type || !company_id) return res.status(400).json({ error: 'type y company_id requeridos' });
@@ -82,26 +66,25 @@ router.post('/alert', async (req, res) => {
   const db = getAdmin();
   if (!db) return res.status(503).json({ error: 'DB no disponible' });
 
-  // Obtener contactos configurados para este tipo de alerta
   const { data: contacts } = await db
     .from('whatsapp_contacts')
-    .select('phone, alert_types')
+    .select('phone, callmebot_api_key, alert_types')
     .eq('company_id', company_id)
-    .eq('active', true);
+    .eq('active', true)
+    .not('callmebot_api_key', 'is', null);
 
-  if (!contacts?.length) return res.json({ ok: true, sent: 0, note: 'No contacts configured' });
+  if (!contacts?.length) return res.json({ ok: true, sent: 0, note: 'No hay contactos con API key configurada' });
 
   const messages = {
     draft_alert:
       `⚠️ *Alerta de Calado — FluviaFleet*\n\nEstación: ${payload?.station || '—'}\nNivel actual: ${payload?.level || '—'}m\nEmbarcación en riesgo: ${payload?.vessel || '—'}\n\nVerificá la situación antes de zarpar.`,
     compliance_expiry:
-      `🚨 *Documento por Vencer — FluviaFleet*\n\n📄 ${payload?.document_type || 'Certificado'}\n🚢 Embarcación: ${payload?.vessel || '—'}\n🏛️ Autoridad: ${payload?.authority || '—'}\n📅 Vence: ${payload?.expiry_date || '—'} (${payload?.days_left || '—'} días)\n\nRenovar antes de operar en aguas reguladas.`,
+      `🚨 *Documento por Vencer — FluviaFleet*\n\n📄 ${payload?.document_type || 'Certificado'}\n🚢 ${payload?.vessel || '—'}\n🏛️ ${payload?.authority || '—'}\n📅 Vence: ${payload?.expiry_date || '—'} (${payload?.days_left || '—'} días)\n\nRenovar antes de operar en aguas reguladas.`,
     maintenance_overdue:
       `🔧 *Mantenimiento Vencido — FluviaFleet*\n\n🚢 ${payload?.vessel || '—'}\n⚙️ ${payload?.task || '—'}\n📅 Venció: ${payload?.overdue_date || '—'}\n\nProgramar intervención urgente.`,
     new_contract:
-      `📄 *Nuevo Contrato — FluviaFleet*\n\n🤝 Cliente: ${payload?.client || '—'}\n🗺️ Ruta: ${payload?.route || '—'}\n📦 Producto: ${payload?.product || '—'}\n💰 Tarifa: ${payload?.rate || '—'}\n\nRevisá los detalles en el panel.`,
-    custom:
-      payload?.text || '📣 Notificación de FluviaFleet',
+      `📄 *Nuevo Contrato — FluviaFleet*\n\n🤝 ${payload?.client || '—'}\n🗺️ ${payload?.route || '—'}\n📦 ${payload?.product || '—'}\n💰 ${payload?.rate || '—'}\n\nRevisá los detalles en el panel.`,
+    custom: payload?.text || '📣 Notificación de FluviaFleet',
   };
 
   const body = messages[type] || messages.custom;
@@ -111,7 +94,7 @@ router.post('/alert', async (req, res) => {
     const types = contact.alert_types || [];
     if (type !== 'custom' && types.length && !types.includes(type)) continue;
 
-    const result = await sendWhatsApp(contact.phone, body);
+    const result = await sendWhatsApp(contact.phone, contact.callmebot_api_key, body);
     if (result.ok) sent++;
 
     await db.from('whatsapp_log').insert({
@@ -120,8 +103,7 @@ router.post('/alert', async (req, res) => {
       message: body,
       alert_type: type,
       status: result.ok ? 'sent' : 'failed',
-      twilio_sid: result.sid || null,
-      error_message: result.error || null,
+      error_message: result.ok ? null : (result.reason || result.response),
     });
   }
 
@@ -129,8 +111,6 @@ router.post('/alert', async (req, res) => {
 });
 
 // ── POST /api/whatsapp/daily-check ─────────────────────────────────────────
-// Revisión diaria: compliance vencimientos + mantenimiento
-// Llamar desde pg_cron o un cron externo
 router.post('/daily-check', async (req, res) => {
   const db = getAdmin();
   if (!db) return res.status(503).json({ error: 'DB no disponible' });
@@ -139,27 +119,24 @@ router.post('/daily-check', async (req, res) => {
   if (!companies?.length) return res.json({ ok: true, processed: 0 });
 
   let alerts = 0;
+  const base = process.env.BACKEND_URL || 'http://localhost:3000';
 
   for (const company of companies) {
-    const cid = company.id;
-
-    // Compliance: documentos que vencen en 30 días o ya vencieron
     const { data: docs } = await db
       .from('compliance_documents')
       .select('vessel_name, document_type, authority, expiry_date')
-      .eq('company_id', cid)
+      .eq('company_id', company.id)
       .in('status', ['expiring', 'expired']);
 
     for (const doc of docs || []) {
       const daysLeft = Math.ceil((new Date(doc.expiry_date) - Date.now()) / 864e5);
       if (daysLeft > 30) continue;
-
-      await fetch(`${process.env.BACKEND_URL || 'http://localhost:3000'}/api/whatsapp/alert`, {
+      await fetch(`${base}/api/whatsapp/alert`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'compliance_expiry',
-          company_id: cid,
+          company_id: company.id,
           payload: {
             vessel: doc.vessel_name,
             document_type: doc.document_type,
@@ -180,17 +157,11 @@ router.post('/daily-check', async (req, res) => {
 router.get('/log', async (req, res) => {
   const { company_id } = req.query;
   if (!company_id) return res.status(400).json({ error: 'company_id requerido' });
-
   const db = getAdmin();
-  if (!db) return res.status(503).json({ error: 'DB no disponible' });
-
   const { data, error } = await db
-    .from('whatsapp_log')
-    .select('*')
+    .from('whatsapp_log').select('*')
     .eq('company_id', company_id)
-    .order('created_at', { ascending: false })
-    .limit(50);
-
+    .order('created_at', { ascending: false }).limit(50);
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
@@ -199,30 +170,23 @@ router.get('/log', async (req, res) => {
 router.get('/contacts', async (req, res) => {
   const { company_id } = req.query;
   if (!company_id) return res.status(400).json({ error: 'company_id requerido' });
-
   const db = getAdmin();
   const { data, error } = await db
-    .from('whatsapp_contacts')
-    .select('*')
-    .eq('company_id', company_id)
-    .order('created_at', { ascending: false });
-
+    .from('whatsapp_contacts').select('*')
+    .eq('company_id', company_id).order('created_at', { ascending: false });
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
 
 // ── POST /api/whatsapp/contacts ─────────────────────────────────────────────
 router.post('/contacts', async (req, res) => {
-  const { company_id, name, phone, role, alert_types } = req.body;
+  const { company_id, name, phone, role, alert_types, callmebot_api_key } = req.body;
   if (!company_id || !phone) return res.status(400).json({ error: 'company_id y phone requeridos' });
-
   const db = getAdmin();
   const { data, error } = await db
     .from('whatsapp_contacts')
-    .insert({ company_id, name, phone, role, alert_types: alert_types || [], active: true })
-    .select()
-    .single();
-
+    .insert({ company_id, name, phone, role, alert_types: alert_types || [], callmebot_api_key: callmebot_api_key || null, active: true })
+    .select().single();
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
