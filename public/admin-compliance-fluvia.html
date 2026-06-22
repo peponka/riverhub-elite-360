@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compliance Regulatorio — FluviaFleet</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#FFF;--bg-alt:#FAFAFA;--surface:#F5F5F5;--text:#1A1A1A;--text-2:#6B6B6B;--sep:#E5E5E5;--blue:#0066FF;--blue-bg:#E8F0FE;--teal:#00C2A8;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--purple:#8B5CF6;--font-sans:'Inter',-apple-system,sans-serif;--font-serif:'Newsreader',Georgia,serif;--radius:14px}
+body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);line-height:1.6}
+.page{display:flex;min-height:100vh}
+.sidebar{width:260px;background:var(--bg);border-right:1px solid var(--sep);padding:24px 0;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:10}
+.sidebar-logo{padding:0 24px 24px;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.sidebar-logo img{width:32px;height:32px;border-radius:8px}
+.sidebar-logo span{font-family:var(--font-serif);font-size:1.3rem;font-weight:500}
+.sidebar-section{padding:0 16px;margin-bottom:8px}
+.sidebar-section-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2);padding:8px 8px 4px}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--text-2);text-decoration:none;font-size:.85rem;font-weight:500;transition:all .2s}
+.sidebar-link:hover{background:var(--surface);color:var(--text)}
+.sidebar-link.active{background:var(--blue-bg);color:var(--blue);font-weight:600}
+.sidebar-link i{width:18px;text-align:center;font-size:.9rem}
+.main{margin-left:260px;flex:1;padding:32px 40px;min-height:100vh}
+.page-header{margin-bottom:28px}
+.page-header h1{font-family:var(--font-serif);font-size:1.8rem;font-weight:500;margin-bottom:4px}
+.page-header p{color:var(--text-2);font-size:.9rem}
+.badge-mod{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#8B5CF6,#0066FF);color:white;font-size:.6rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:8px;text-transform:uppercase;letter-spacing:.5px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:18px 22px}
+.stat-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-bottom:10px}
+.stat-icon.green{background:#DCFCE7;color:var(--green)}
+.stat-icon.amber{background:#FEF3C7;color:var(--amber)}
+.stat-icon.red{background:#FEE2E2;color:var(--red)}
+.stat-icon.blue{background:var(--blue-bg);color:var(--blue)}
+.stat-value{font-size:1.4rem;font-weight:800}
+.stat-label{font-size:.72rem;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px}
+.card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.card-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-weight:600;font-size:.82rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;font-family:var(--font-sans)}
+.btn-primary{background:var(--text);color:white}
+.btn-primary:hover{background:#333}
+.btn-sm{padding:6px 14px;font-size:.75rem;border-radius:8px}
+.btn-outline{background:transparent;border:1px solid var(--sep);color:var(--text)}
+.btn-outline:hover{border-color:var(--text)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+table{width:100%;border-collapse:collapse}
+th{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-2);padding:8px 12px;text-align:left;border-bottom:2px solid var(--sep)}
+td{padding:12px 12px;border-bottom:1px solid var(--sep);font-size:.85rem;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg-alt)}
+.authority-tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:600;background:var(--blue-bg);color:var(--blue)}
+.authority-tag.prefectura{background:#EDE9FE;color:var(--purple)}
+.authority-tag.comar{background:#DCFCE7;color:var(--green)}
+.authority-tag.annp{background:#FEF3C7;color:var(--amber)}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:600}
+.pill.valid{background:#DCFCE7;color:var(--green)}
+.pill.expiring{background:#FEF3C7;color:var(--amber)}
+.pill.expired{background:#FEE2E2;color:var(--red)}
+.pill.pending{background:var(--blue-bg);color:var(--blue)}
+.days-badge{font-size:.72rem;font-weight:700;color:var(--text-2)}
+.days-badge.warn{color:var(--amber)}
+.days-badge.danger{color:var(--red)}
+.alert-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--sep)}
+.alert-row:last-child{border-bottom:none}
+.alert-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.alert-icon.danger{background:#FEE2E2;color:var(--red)}
+.alert-icon.warn{background:#FEF3C7;color:var(--amber)}
+.alert-icon.info{background:var(--blue-bg);color:var(--blue)}
+.alert-text{flex:1;font-size:.83rem}
+.alert-time{font-size:.72rem;color:var(--text-2);white-space:nowrap;margin-top:2px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
+.modal h2{font-family:var(--font-serif);font-size:1.3rem;font-weight:500;margin-bottom:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:.75rem;font-weight:600;color:var(--text-2)}
+.form-group input,.form-group select,.form-group textarea{padding:9px 12px;border:1px solid var(--sep);border-radius:9px;font-size:.85rem;font-family:var(--font-sans);color:var(--text);background:#fff;outline:none;transition:border .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue)}
+.form-group textarea{resize:vertical;min-height:72px}
+.expiry-warning{background:#FEF3C7;border:1px solid #F59E0B44;border-radius:10px;padding:12px 16px;font-size:.8rem;color:#92400E;display:flex;align-items:center;gap:8px;margin-bottom:20px}
+#compliance-tbody tr.no-data td{text-align:center;color:var(--text-2);font-size:.85rem;padding:32px}
+</style>
+<script data-id="auth-guard-v1">
+(function(){
+  var SURL='https://nfybnnpdrvyxucgpqmmo.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  document.documentElement.style.visibility='hidden';
+  function check(){
+    var _sb=supabase.createClient(SURL,SKEY);
+    _sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      else{window.location.replace('fluvia.html');}
+    }).catch(function(){document.documentElement.style.visibility='visible';});
+  }
+  if(window.supabase){check();}
+  else{
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload=check;
+    s.onerror=function(){document.documentElement.style.visibility='visible';};
+    document.head.appendChild(s);
+  }
+})();
+</script>
+<script src="sw-register.js" defer></script>
+</head>
+<body>
+<div class="page">
+<aside class="sidebar">
+<a href="fluvia.html" class="sidebar-logo"><img src="img/fluvia-logo.jpg" alt="FF"><span>FluviaFleet</span></a>
+<div class="sidebar-section">
+<div class="sidebar-section-label">PRINCIPAL</div>
+<a href="fluvia.html" class="sidebar-link"><i class="fas fa-th-large"></i> Panel de Control</a>
+<a href="admin-mapa-flota-fluvia.html" class="sidebar-link"><i class="fas fa-map"></i> Mapa de Flota</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">OPERATIVA</div>
+<a href="admin-convoys-fluvia.html" class="sidebar-link"><i class="fas fa-anchor"></i> Convoyes</a>
+<a href="admin-viajes-fluvia.html" class="sidebar-link"><i class="fas fa-route"></i> Viajes</a>
+<a href="admin-combustible-fluvia.html" class="sidebar-link"><i class="fas fa-gas-pump"></i> Combustible</a>
+<a href="admin-mantenimiento-fluvia.html" class="sidebar-link"><i class="fas fa-wrench"></i> Mantenimiento</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">COMERCIAL</div>
+<a href="admin-contratos-fluvia.html" class="sidebar-link"><i class="fas fa-file-contract"></i> Contratos de Flete</a>
+<a href="admin-facturacion-ia-fluvia.html" class="sidebar-link"><i class="fas fa-file-invoice-dollar"></i> Invoice Intelligence</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">INTELIGENCIA</div>
+<a href="admin-copiloto-fluvia.html" class="sidebar-link"><i class="fas fa-robot"></i> Copiloto IA</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">REGULATORIO</div>
+<a href="admin-compliance-fluvia.html" class="sidebar-link active"><i class="fas fa-shield-alt"></i> Compliance / Permisos</a>
+</div>
+</aside>
+
+<main class="main">
+<div class="page-header">
+  <h1>Compliance Regulatorio <span class="badge-mod"><i class="fas fa-shield-alt"></i> Legal</span></h1>
+  <p>Permisos de navegación, inspecciones y certificados — ANNP Paraguay · Prefectura Naval Argentina · COMAR Brasil</p>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div><div class="stat-value" id="stat-valid">—</div><div class="stat-label">Documentos vigentes</div></div>
+  <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-clock"></i></div><div class="stat-value" id="stat-expiring">—</div><div class="stat-label">Vencen en 60 días</div></div>
+  <div class="stat-card"><div class="stat-icon red"><i class="fas fa-times-circle"></i></div><div class="stat-value" id="stat-expired">—</div><div class="stat-label">Vencidos</div></div>
+  <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-hourglass-half"></i></div><div class="stat-value" id="stat-pending">—</div><div class="stat-label">Trámite pendiente</div></div>
+</div>
+
+<!-- EXPIRY BANNER (shown dynamically) -->
+<div class="expiry-warning" id="expiry-banner" style="display:none">
+  <i class="fas fa-exclamation-triangle"></i>
+  <span id="expiry-banner-text"></span>
+</div>
+
+<!-- DOCUMENTS TABLE -->
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">PERMISOS Y CERTIFICADOS</span>
+    <div style="display:flex;gap:8px">
+      <select id="filter-authority" class="btn btn-outline btn-sm" style="padding:6px 12px;font-size:.75rem;border-radius:8px;cursor:pointer">
+        <option value="">Todas las autoridades</option>
+        <option value="ANNP">ANNP Paraguay</option>
+        <option value="Prefectura">Prefectura Naval Argentina</option>
+        <option value="COMAR">COMAR Brasil</option>
+        <option value="DINAC">DINAC</option>
+        <option value="Otro">Otro</option>
+      </select>
+      <button class="btn btn-primary btn-sm" onclick="document.getElementById('newDocModal').classList.add('show')">
+        <i class="fas fa-plus"></i> Nuevo Documento
+      </button>
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Embarcación</th>
+        <th>Tipo de documento</th>
+        <th>Autoridad</th>
+        <th>N° de documento</th>
+        <th>Emisión</th>
+        <th>Vencimiento</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="compliance-tbody">
+      <tr class="no-data"><td colspan="8">Cargando documentos...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- BOTTOM GRID -->
+<div class="grid-2">
+  <!-- ALERTS -->
+  <div class="card">
+    <div class="card-header"><span class="card-title">ALERTAS DE VENCIMIENTO</span></div>
+    <div id="alerts-container">
+      <div style="color:var(--text-2);font-size:.83rem;padding:12px 0">Cargando alertas...</div>
+    </div>
+  </div>
+
+  <!-- INSPECTIONS -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">INSPECCIONES RECIENTES</span>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('newInspModal').classList.add('show')">
+        <i class="fas fa-plus"></i> Registrar
+      </button>
+    </div>
+    <div id="inspections-container">
+      <div style="color:var(--text-2);font-size:.83rem;padding:12px 0">Cargando inspecciones...</div>
+    </div>
+  </div>
+</div>
+</main>
+</div>
+
+<!-- NEW DOCUMENT MODAL -->
+<div class="modal-overlay" id="newDocModal">
+<div class="modal">
+<h2>Nuevo Permiso / Certificado</h2>
+<div class="form-row">
+  <div class="form-group"><label>Embarcación</label><input type="text" id="doc-vessel" placeholder="Ej: M/B Guaraní II"></div>
+  <div class="form-group"><label>Tipo de documento</label><select id="doc-type">
+    <option>Permiso de navegación</option>
+    <option>Certificado de seguridad</option>
+    <option>Matrícula fluvial</option>
+    <option>Certificado de arqueo</option>
+    <option>Certificado de francobordo</option>
+    <option>Habilitación sanitaria</option>
+    <option>Seguro de casco</option>
+    <option>Seguro de responsabilidad civil</option>
+    <option>Licencia de radio</option>
+    <option>Certificado SOPEP</option>
+    <option>Otro</option>
+  </select></div>
+</div>
+<div class="form-row">
+  <div class="form-group"><label>Autoridad emisora</label><select id="doc-authority">
+    <option value="ANNP">ANNP — Paraguay</option>
+    <option value="Prefectura">Prefectura Naval Argentina</option>
+    <option value="COMAR">COMAR — Brasil</option>
+    <option value="DINAC">DINAC — Paraguay</option>
+    <option value="Otro">Otro</option>
+  </select></div>
+  <div class="form-group"><label>N° de documento</label><input type="text" id="doc-number" placeholder="Ej: ANNP-2026-04821"></div>
+</div>
+<div class="form-row">
+  <div class="form-group"><label>Fecha de emisión</label><input type="date" id="doc-issued"></div>
+  <div class="form-group"><label>Fecha de vencimiento</label><input type="date" id="doc-expiry"></div>
+</div>
+<div class="form-row" style="grid-template-columns:1fr">
+  <div class="form-group"><label>Observaciones</label><textarea id="doc-notes" placeholder="Condiciones especiales, restricciones, notas..."></textarea></div>
+</div>
+<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+  <button class="btn btn-outline" onclick="document.getElementById('newDocModal').classList.remove('show')">Cancelar</button>
+  <button class="btn btn-primary" id="btn-save-doc">Guardar Documento</button>
+</div>
+</div>
+</div>
+
+<!-- NEW INSPECTION MODAL -->
+<div class="modal-overlay" id="newInspModal">
+<div class="modal">
+<h2>Registrar Inspección</h2>
+<div class="form-row">
+  <div class="form-group"><label>Embarcación</label><input type="text" id="insp-vessel" placeholder="Ej: M/B Guaraní II"></div>
+  <div class="form-group"><label>Tipo de inspección</label><select id="insp-type">
+    <option>Inspección de seguridad</option>
+    <option>Inspección de casco</option>
+    <option>Inspección de maquinaria</option>
+    <option>Inspección sanitaria</option>
+    <option>Inspección ambiental</option>
+    <option>Inspección de carga</option>
+  </select></div>
+</div>
+<div class="form-row">
+  <div class="form-group"><label>Autoridad / Inspector</label><input type="text" id="insp-authority" placeholder="Ej: Prefectura Naval Argentina"></div>
+  <div class="form-group"><label>Fecha</label><input type="date" id="insp-date"></div>
+</div>
+<div class="form-row">
+  <div class="form-group"><label>Resultado</label><select id="insp-result">
+    <option value="approved">Aprobado</option>
+    <option value="conditional">Aprobado con condiciones</option>
+    <option value="failed">No aprobado</option>
+    <option value="scheduled">Programado</option>
+  </select></div>
+  <div class="form-group"><label>Próxima inspección</label><input type="date" id="insp-next"></div>
+</div>
+<div class="form-row" style="grid-template-columns:1fr">
+  <div class="form-group"><label>Observaciones</label><textarea id="insp-notes" placeholder="Hallazgos, condiciones, acciones requeridas..."></textarea></div>
+</div>
+<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+  <button class="btn btn-outline" onclick="document.getElementById('newInspModal').classList.remove('show')">Cancelar</button>
+  <button class="btn btn-primary" id="btn-save-insp">Guardar Inspección</button>
+</div>
+</div>
+</div>
+
+<script>
+(function () {
+  var SURL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
+  var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  var sb, companyId;
+  var allDocs = [];
+
+  async function waitSb() {
+    var n = 0;
+    while (!window.supabase && n++ < 30) await new Promise(r => setTimeout(r, 200));
+    if (!window.supabase) return false;
+    sb = window.supabase.createClient(SURL, SKEY);
+    return true;
+  }
+
+  async function getCompanyId() {
+    var { data: s } = await sb.auth.getSession();
+    if (!s?.session) return null;
+    var { data: p } = await sb.from('user_profiles').select('company_id').eq('user_id', s.session.user.id).single();
+    return p?.company_id || null;
+  }
+
+  function daysUntil(dateStr) {
+    if (!dateStr) return 9999;
+    return Math.ceil((new Date(dateStr) - Date.now()) / 864e5);
+  }
+
+  function fmtDate(d) {
+    if (!d) return '—';
+    return new Date(d).toLocaleDateString('es', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function docStatus(expiry) {
+    var d = daysUntil(expiry);
+    if (d < 0) return 'expired';
+    if (d <= 60) return 'expiring';
+    return 'valid';
+  }
+
+  function statusPill(status) {
+    if (status === 'valid') return '<span class="pill valid"><i class="fas fa-circle" style="font-size:.35rem"></i> Vigente</span>';
+    if (status === 'expiring') return '<span class="pill expiring"><i class="fas fa-circle" style="font-size:.35rem"></i> Por vencer</span>';
+    if (status === 'expired') return '<span class="pill expired"><i class="fas fa-circle" style="font-size:.35rem"></i> Vencido</span>';
+    return '<span class="pill pending"><i class="fas fa-circle" style="font-size:.35rem"></i> Pendiente</span>';
+  }
+
+  function authorityTag(auth) {
+    var cls = auth === 'Prefectura' ? 'prefectura' : auth === 'COMAR' ? 'comar' : auth === 'ANNP' ? 'annp' : '';
+    return '<span class="authority-tag ' + cls + '">' + auth + '</span>';
+  }
+
+  function renderTable(docs) {
+    var tbody = document.getElementById('compliance-tbody');
+    if (!docs.length) {
+      tbody.innerHTML = '<tr class="no-data"><td colspan="8">No hay documentos registrados. Agregá el primero.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = docs.map(function (d) {
+      var st = d.status || docStatus(d.expiry_date);
+      var days = daysUntil(d.expiry_date);
+      var daysBadge = days < 0
+        ? '<span class="days-badge danger">Vencido hace ' + Math.abs(days) + 'd</span>'
+        : days <= 60
+          ? '<span class="days-badge warn">Vence en ' + days + 'd</span>'
+          : '<span class="days-badge">Vence en ' + days + 'd</span>';
+      return '<tr>' +
+        '<td><strong>' + (d.vessel_name || '—') + '</strong></td>' +
+        '<td>' + (d.document_type || '—') + '</td>' +
+        '<td>' + authorityTag(d.authority || 'Otro') + '</td>' +
+        '<td style="font-family:monospace;font-size:.8rem">' + (d.document_number || '—') + '</td>' +
+        '<td>' + fmtDate(d.issued_date) + '</td>' +
+        '<td>' + fmtDate(d.expiry_date) + '<br>' + daysBadge + '</td>' +
+        '<td>' + statusPill(st) + '</td>' +
+        '<td><button class="btn btn-outline btn-sm" onclick="deleteDoc(\'' + d.id + '\')"><i class="fas fa-trash" style="font-size:.7rem"></i></button></td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  function renderStats(docs) {
+    var valid = docs.filter(function (d) { return docStatus(d.expiry_date) === 'valid'; }).length;
+    var expiring = docs.filter(function (d) { return docStatus(d.expiry_date) === 'expiring'; }).length;
+    var expired = docs.filter(function (d) { return docStatus(d.expiry_date) === 'expired'; }).length;
+    var pending = docs.filter(function (d) { return d.status === 'pending'; }).length;
+    document.getElementById('stat-valid').textContent = valid;
+    document.getElementById('stat-expiring').textContent = expiring;
+    document.getElementById('stat-expired').textContent = expired;
+    document.getElementById('stat-pending').textContent = pending;
+
+    // Expiry banner
+    if (expired > 0 || expiring > 0) {
+      var banner = document.getElementById('expiry-banner');
+      var msgs = [];
+      if (expired > 0) msgs.push(expired + ' documento' + (expired > 1 ? 's' : '') + ' vencido' + (expired > 1 ? 's' : ''));
+      if (expiring > 0) msgs.push(expiring + ' por vencer en 60 días');
+      document.getElementById('expiry-banner-text').textContent = msgs.join(' · ') + '. Renovar antes de operar en aguas reguladas.';
+      banner.style.display = 'flex';
+    }
+  }
+
+  function renderAlerts(docs) {
+    var cont = document.getElementById('alerts-container');
+    var urgent = docs.filter(function (d) {
+      var s = docStatus(d.expiry_date);
+      return s === 'expired' || s === 'expiring';
+    }).sort(function (a, b) { return daysUntil(a.expiry_date) - daysUntil(b.expiry_date); }).slice(0, 5);
+
+    if (!urgent.length) {
+      cont.innerHTML = '<div style="color:var(--green);font-size:.83rem;padding:12px 0"><i class="fas fa-check-circle"></i> Todos los documentos están vigentes.</div>';
+      return;
+    }
+    cont.innerHTML = urgent.map(function (d) {
+      var days = daysUntil(d.expiry_date);
+      var cls = days < 0 ? 'danger' : 'warn';
+      var icon = days < 0 ? 'exclamation' : 'bell';
+      var msg = days < 0
+        ? '<strong>' + d.vessel_name + ' — ' + d.document_type + '</strong> vencido hace ' + Math.abs(days) + ' días. Renovación urgente.'
+        : '<strong>' + d.vessel_name + ' — ' + d.document_type + '</strong> vence en ' + days + ' días (' + fmtDate(d.expiry_date) + ').';
+      return '<div class="alert-row"><div class="alert-icon ' + cls + '"><i class="fas fa-' + icon + '"></i></div><div class="alert-text">' + msg + '<br><small style="color:var(--text-2)">' + (d.authority || '') + ' · ' + (d.document_number || '') + '</small></div></div>';
+    }).join('');
+  }
+
+  function renderInspections(inspections) {
+    var cont = document.getElementById('inspections-container');
+    if (!inspections?.length) {
+      cont.innerHTML = '<div style="color:var(--text-2);font-size:.83rem;padding:12px 0">No hay inspecciones registradas.</div>';
+      return;
+    }
+    var RESULT_LABELS = { approved: 'Aprobado', conditional: 'Con condiciones', failed: 'No aprobado', scheduled: 'Programado' };
+    var RESULT_COLORS = { approved: 'var(--green)', conditional: 'var(--amber)', failed: 'var(--red)', scheduled: 'var(--blue)' };
+    cont.innerHTML = inspections.slice(0, 5).map(function (ins) {
+      var color = RESULT_COLORS[ins.result] || 'var(--text-2)';
+      var label = RESULT_LABELS[ins.result] || ins.result;
+      return '<div class="alert-row">' +
+        '<div class="alert-icon info"><i class="fas fa-clipboard-check"></i></div>' +
+        '<div class="alert-text"><strong>' + ins.vessel_name + '</strong> — ' + ins.inspection_type + '<br>' +
+        '<small style="color:var(--text-2)">' + ins.authority + ' · ' + fmtDate(ins.inspection_date) + '</small></div>' +
+        '<div><span style="font-size:.72rem;font-weight:700;color:' + color + '">' + label + '</span></div>' +
+        '</div>';
+    }).join('');
+  }
+
+  async function loadAll(authorityFilter) {
+    if (!companyId) return;
+    var query = sb.from('compliance_documents').select('*').eq('company_id', companyId).order('expiry_date', { ascending: true });
+    if (authorityFilter) query = query.eq('authority', authorityFilter);
+    var { data: docs } = await query;
+    var { data: inspections } = await sb.from('compliance_inspections').select('*').eq('company_id', companyId).order('inspection_date', { ascending: false });
+
+    allDocs = docs || [];
+    renderTable(allDocs);
+    renderStats(allDocs);
+    renderAlerts(allDocs);
+    renderInspections(inspections || []);
+  }
+
+  window.deleteDoc = async function (id) {
+    if (!confirm('¿Eliminar este documento?')) return;
+    await sb.from('compliance_documents').delete().eq('id', id);
+    await loadAll();
+  };
+
+  function showToast(msg, ok) {
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:' + (ok !== false ? '#22C55E' : '#EF4444') + ';color:#fff;padding:12px 20px;border-radius:10px;font-size:.83rem;font-weight:600;z-index:9999;box-shadow:0 4px 14px rgba(0,0,0,.18)';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 3000);
+  }
+
+  async function saveDoc() {
+    var payload = {
+      company_id: companyId,
+      vessel_name: document.getElementById('doc-vessel').value.trim(),
+      document_type: document.getElementById('doc-type').value,
+      authority: document.getElementById('doc-authority').value,
+      document_number: document.getElementById('doc-number').value.trim(),
+      issued_date: document.getElementById('doc-issued').value || null,
+      expiry_date: document.getElementById('doc-expiry').value || null,
+      notes: document.getElementById('doc-notes').value.trim(),
+      status: 'valid',
+    };
+    if (!payload.vessel_name) { showToast('Ingresá el nombre de la embarcación', false); return; }
+    if (!payload.expiry_date) { showToast('Ingresá la fecha de vencimiento', false); return; }
+
+    var btn = document.getElementById('btn-save-doc');
+    btn.disabled = true; btn.textContent = 'Guardando...';
+    try {
+      var { error } = await sb.from('compliance_documents').insert(payload);
+      if (error) throw error;
+      document.getElementById('newDocModal').classList.remove('show');
+      showToast('Documento guardado');
+      await loadAll();
+    } catch (e) {
+      showToast('Error: ' + (e.message || 'intentá de nuevo'), false);
+    } finally { btn.disabled = false; btn.textContent = 'Guardar Documento'; }
+  }
+
+  async function saveInsp() {
+    var payload = {
+      company_id: companyId,
+      vessel_name: document.getElementById('insp-vessel').value.trim(),
+      inspection_type: document.getElementById('insp-type').value,
+      authority: document.getElementById('insp-authority').value.trim(),
+      inspection_date: document.getElementById('insp-date').value || null,
+      result: document.getElementById('insp-result').value,
+      next_inspection_date: document.getElementById('insp-next').value || null,
+      notes: document.getElementById('insp-notes').value.trim(),
+    };
+    if (!payload.vessel_name) { showToast('Ingresá el nombre de la embarcación', false); return; }
+    if (!payload.inspection_date) { showToast('Ingresá la fecha de inspección', false); return; }
+
+    var btn = document.getElementById('btn-save-insp');
+    btn.disabled = true; btn.textContent = 'Guardando...';
+    try {
+      var { error } = await sb.from('compliance_inspections').insert(payload);
+      if (error) throw error;
+      document.getElementById('newInspModal').classList.remove('show');
+      showToast('Inspección registrada');
+      await loadAll();
+    } catch (e) {
+      showToast('Error: ' + (e.message || 'intentá de nuevo'), false);
+    } finally { btn.disabled = false; btn.textContent = 'Guardar Inspección'; }
+  }
+
+  async function init() {
+    var ok = await waitSb();
+    if (!ok) return;
+    companyId = await getCompanyId();
+    await loadAll();
+
+    document.getElementById('btn-save-doc').addEventListener('click', saveDoc);
+    document.getElementById('btn-save-insp').addEventListener('click', saveInsp);
+    document.getElementById('filter-authority').addEventListener('change', function () {
+      loadAll(this.value);
+    });
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
