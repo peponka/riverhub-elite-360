@@ -39,6 +39,8 @@ const contactLimiter = rateLimit({
 
 let n8nRoutes;
 try { n8nRoutes = require('./routes/n8n-automations'); } catch (e) { console.error('❌ n8n routes failed to load:', e.message); }
+let whatsappRoutes;
+try { whatsappRoutes = require('./routes/whatsappRoutes'); } catch (e) { console.error('❌ WhatsApp routes failed to load:', e.message); }
 let hydrologyRoutes;
 try { hydrologyRoutes = require('./routes/hydrologyRoutes'); } catch (e) { console.error('❌ hydrology routes failed to load:', e.message); }
 let authRoutes;
@@ -746,6 +748,11 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 
+// --- WHATSAPP NOTIFICATIONS ---
+if (whatsappRoutes) {
+    app.use('/api/whatsapp', whatsappRoutes);
+    console.log('✅ WhatsApp API mounted at /api/whatsapp');
+}
 // --- n8n AUTOMATION API ---
 if (n8nRoutes) {
     app.use('/api/n8n', n8nRoutes);

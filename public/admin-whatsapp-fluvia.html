@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notificaciones WhatsApp — FluviaFleet</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#FFF;--bg-alt:#FAFAFA;--surface:#F5F5F5;--text:#1A1A1A;--text-2:#6B6B6B;--sep:#E5E5E5;--green:#25D366;--green-bg:#DCFCE7;--blue:#0066FF;--blue-bg:#E8F0FE;--amber:#F59E0B;--red:#EF4444;--font-sans:'Inter',-apple-system,sans-serif;--font-serif:'Newsreader',Georgia,serif;--radius:14px}
+body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);line-height:1.6}
+.page{display:flex;min-height:100vh}
+.sidebar{width:260px;background:var(--bg);border-right:1px solid var(--sep);padding:24px 0;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:10}
+.sidebar-logo{padding:0 24px 24px;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.sidebar-logo img{width:32px;height:32px;border-radius:8px}
+.sidebar-logo span{font-family:var(--font-serif);font-size:1.3rem;font-weight:500}
+.sidebar-section{padding:0 16px;margin-bottom:8px}
+.sidebar-section-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2);padding:8px 8px 4px}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--text-2);text-decoration:none;font-size:.85rem;font-weight:500;transition:all .2s}
+.sidebar-link:hover{background:var(--surface);color:var(--text)}
+.sidebar-link.active{background:var(--green-bg);color:#16A34A;font-weight:600}
+.sidebar-link i{width:18px;text-align:center;font-size:.9rem}
+.main{margin-left:260px;flex:1;padding:32px 40px;min-height:100vh}
+.page-header{margin-bottom:28px}
+.page-header h1{font-family:var(--font-serif);font-size:1.8rem;font-weight:500;margin-bottom:4px}
+.page-header p{color:var(--text-2);font-size:.9rem}
+.badge-wa{display:inline-flex;align-items:center;gap:4px;background:#25D366;color:white;font-size:.6rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:8px;text-transform:uppercase;letter-spacing:.5px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:18px 22px}
+.stat-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-bottom:10px}
+.stat-icon.green{background:var(--green-bg);color:#16A34A}
+.stat-icon.red{background:#FEE2E2;color:var(--red)}
+.stat-icon.blue{background:var(--blue-bg);color:var(--blue)}
+.stat-icon.amber{background:#FEF3C7;color:var(--amber)}
+.stat-value{font-size:1.4rem;font-weight:800}
+.stat-label{font-size:.72rem;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.card-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-weight:600;font-size:.82rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;font-family:var(--font-sans)}
+.btn-primary{background:var(--text);color:white}
+.btn-primary:hover{background:#333}
+.btn-wa{background:#25D366;color:white}
+.btn-wa:hover{background:#1ebe5d}
+.btn-sm{padding:6px 14px;font-size:.75rem;border-radius:8px}
+.btn-outline{background:transparent;border:1px solid var(--sep);color:var(--text)}
+.btn-outline:hover{border-color:var(--text)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.contact-card{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--sep);border-radius:12px;margin-bottom:10px;background:var(--bg)}
+.contact-avatar{width:40px;height:40px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.95rem;flex-shrink:0}
+.contact-info{flex:1}
+.contact-name{font-weight:600;font-size:.88rem}
+.contact-phone{font-size:.78rem;color:var(--text-2)}
+.contact-role{font-size:.72rem;color:var(--text-2);margin-top:1px}
+.alert-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.chip{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.65rem;font-weight:600;background:var(--blue-bg);color:var(--blue)}
+.chip.draft{background:#FEF3C7;color:#92400E}
+.chip.compliance{background:#EDE9FE;color:#5B21B6}
+.chip.maintenance{background:#FEE2E2;color:#991B1B}
+.chip.contract{background:var(--green-bg);color:#166534}
+.log-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--sep)}
+.log-row:last-child{border-bottom:none}
+.log-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
+.log-icon.sent{background:var(--green-bg);color:#16A34A}
+.log-icon.failed{background:#FEE2E2;color:var(--red)}
+.log-msg{flex:1;font-size:.78rem;color:var(--text);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.log-meta{font-size:.68rem;color:var(--text-2);white-space:nowrap;margin-top:2px}
+.send-box{background:var(--bg-alt);border-radius:12px;padding:18px;border:1px solid var(--sep)}
+.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.form-group label{font-size:.75rem;font-weight:600;color:var(--text-2)}
+.form-group input,.form-group select,.form-group textarea{padding:9px 12px;border:1px solid var(--sep);border-radius:9px;font-size:.85rem;font-family:var(--font-sans);color:var(--text);background:#fff;outline:none;transition:border .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#25D366}
+.form-group textarea{resize:vertical;min-height:80px}
+.alert-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.alert-type-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--sep);border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s}
+.alert-type-item input{accent-color:#25D366}
+.alert-type-item:hover{border-color:#25D366;background:var(--green-bg)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:480px}
+.modal h2{font-family:var(--font-serif);font-size:1.3rem;font-weight:500;margin-bottom:20px}
+.sandbox-notice{background:#FEF3C7;border:1px solid #F59E0B44;border-radius:10px;padding:12px 16px;font-size:.8rem;color:#92400E;margin-bottom:20px;display:flex;align-items:flex-start;gap:8px}
+</style>
+<script data-id="auth-guard-v1">
+(function(){
+  var SURL='https://nfybnnpdrvyxucgpqmmo.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  document.documentElement.style.visibility='hidden';
+  function check(){
+    var _sb=supabase.createClient(SURL,SKEY);
+    _sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      else{window.location.replace('fluvia.html');}
+    }).catch(function(){document.documentElement.style.visibility='visible';});
+  }
+  if(window.supabase){check();}else{var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=check;s.onerror=function(){document.documentElement.style.visibility='visible';};document.head.appendChild(s);}
+})();
+</script>
+<script src="sw-register.js" defer></script>
+</head>
+<body>
+<div class="page">
+<aside class="sidebar">
+<a href="fluvia.html" class="sidebar-logo"><img src="img/fluvia-logo.jpg" alt="FF"><span>FluviaFleet</span></a>
+<div class="sidebar-section">
+<div class="sidebar-section-label">PRINCIPAL</div>
+<a href="fluvia.html" class="sidebar-link"><i class="fas fa-th-large"></i> Panel de Control</a>
+<a href="admin-mapa-flota-fluvia.html" class="sidebar-link"><i class="fas fa-map"></i> Mapa de Flota</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">OPERATIVA</div>
+<a href="admin-convoys-fluvia.html" class="sidebar-link"><i class="fas fa-anchor"></i> Convoyes</a>
+<a href="admin-viajes-fluvia.html" class="sidebar-link"><i class="fas fa-route"></i> Viajes</a>
+<a href="admin-combustible-fluvia.html" class="sidebar-link"><i class="fas fa-gas-pump"></i> Combustible</a>
+<a href="admin-mantenimiento-fluvia.html" class="sidebar-link"><i class="fas fa-wrench"></i> Mantenimiento</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">COMERCIAL</div>
+<a href="admin-contratos-fluvia.html" class="sidebar-link"><i class="fas fa-file-contract"></i> Contratos de Flete</a>
+<a href="admin-facturacion-ia-fluvia.html" class="sidebar-link"><i class="fas fa-file-invoice-dollar"></i> Invoice Intelligence</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">INTELIGENCIA</div>
+<a href="admin-copiloto-fluvia.html" class="sidebar-link"><i class="fas fa-robot"></i> Copiloto IA</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">REGULATORIO</div>
+<a href="admin-compliance-fluvia.html" class="sidebar-link"><i class="fas fa-shield-alt"></i> Compliance / Permisos</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-section-label">NOTIFICACIONES</div>
+<a href="admin-whatsapp-fluvia.html" class="sidebar-link active"><i class="fab fa-whatsapp"></i> WhatsApp Alerts</a>
+</div>
+</aside>
+
+<main class="main">
+<div class="page-header">
+  <h1>WhatsApp Alerts <span class="badge-wa"><i class="fab fa-whatsapp"></i> Twilio</span></h1>
+  <p>Notificaciones automáticas a capitanes y gerentes — calado, compliance, mantenimiento y contratos.</p>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-icon green"><i class="fas fa-paper-plane"></i></div><div class="stat-value" id="stat-sent">—</div><div class="stat-label">Enviados hoy</div></div>
+  <div class="stat-card"><div class="stat-icon red"><i class="fas fa-times-circle"></i></div><div class="stat-value" id="stat-failed">—</div><div class="stat-label">Fallidos hoy</div></div>
+  <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-users"></i></div><div class="stat-value" id="stat-contacts">—</div><div class="stat-label">Contactos activos</div></div>
+  <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-bell"></i></div><div class="stat-value" id="stat-total">—</div><div class="stat-label">Total enviados</div></div>
+</div>
+
+<div class="grid-2">
+  <!-- CONTACTS -->
+  <div class="card" style="margin-bottom:0">
+    <div class="card-header">
+      <span class="card-title">CONTACTOS CONFIGURADOS</span>
+      <button class="btn btn-wa btn-sm" onclick="document.getElementById('newContactModal').classList.add('show')">
+        <i class="fas fa-plus"></i> Agregar
+      </button>
+    </div>
+    <div id="contacts-container">
+      <div style="color:var(--text-2);font-size:.83rem;padding:12px 0">Cargando contactos...</div>
+    </div>
+  </div>
+
+  <!-- SEND MANUAL -->
+  <div class="card" style="margin-bottom:0">
+    <div class="card-header"><span class="card-title">ENVIAR MENSAJE</span></div>
+    <div class="send-box">
+      <div class="sandbox-notice">
+        <i class="fas fa-info-circle" style="margin-top:1px"></i>
+        <span>En modo sandbox de Twilio, el destinatario debe haber enviado primero <strong>"join [código]"</strong> al número de sandbox.</span>
+      </div>
+      <div class="form-group">
+        <label>Destinatario</label>
+        <select id="send-to">
+          <option value="">Seleccionar contacto...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tipo de alerta</label>
+        <select id="send-type">
+          <option value="custom">Mensaje personalizado</option>
+          <option value="draft_alert">⚠️ Alerta de calado</option>
+          <option value="compliance_expiry">🚨 Documento por vencer</option>
+          <option value="maintenance_overdue">🔧 Mantenimiento vencido</option>
+          <option value="new_contract">📄 Nuevo contrato</option>
+        </select>
+      </div>
+      <div class="form-group" id="custom-msg-group">
+        <label>Mensaje</label>
+        <textarea id="send-message" placeholder="Escribí el mensaje..."></textarea>
+      </div>
+      <button class="btn btn-wa" id="btn-send" style="width:100%;justify-content:center">
+        <i class="fab fa-whatsapp"></i> Enviar WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- LOG -->
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">HISTORIAL DE MENSAJES</span>
+    <button class="btn btn-outline btn-sm" onclick="loadLog()"><i class="fas fa-sync"></i> Actualizar</button>
+  </div>
+  <div id="log-container">
+    <div style="color:var(--text-2);font-size:.83rem;padding:12px 0">Cargando historial...</div>
+  </div>
+</div>
+</main>
+</div>
+
+<!-- NEW CONTACT MODAL -->
+<div class="modal-overlay" id="newContactModal">
+<div class="modal">
+<h2>Agregar Contacto WhatsApp</h2>
+<div class="form-group"><label>Nombre</label><input type="text" id="c-name" placeholder="Ej: Juan Pérez"></div>
+<div class="form-group"><label>Teléfono (con código de país)</label><input type="text" id="c-phone" placeholder="Ej: +595981234567"></div>
+<div class="form-group"><label>Rol / Cargo</label><input type="text" id="c-role" placeholder="Ej: Capitán, Gerente de Operaciones"></div>
+<div class="form-group">
+  <label>Recibir alertas de</label>
+  <div class="alert-type-grid">
+    <label class="alert-type-item"><input type="checkbox" value="draft_alert"> ⚠️ Calado del río</label>
+    <label class="alert-type-item"><input type="checkbox" value="compliance_expiry"> 🚨 Docs por vencer</label>
+    <label class="alert-type-item"><input type="checkbox" value="maintenance_overdue"> 🔧 Mantenimiento</label>
+    <label class="alert-type-item"><input type="checkbox" value="new_contract"> 📄 Nuevos contratos</label>
+  </div>
+</div>
+<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">
+  <button class="btn btn-outline" onclick="document.getElementById('newContactModal').classList.remove('show')">Cancelar</button>
+  <button class="btn btn-wa" id="btn-save-contact"><i class="fab fa-whatsapp"></i> Guardar</button>
+</div>
+</div>
+</div>
+
+<script>
+(function () {
+  var SURL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
+  var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  var sb, companyId;
+
+  var ALERT_LABELS = {
+    draft_alert: { label: '⚠️ Calado', cls: 'draft' },
+    compliance_expiry: { label: '🚨 Compliance', cls: 'compliance' },
+    maintenance_overdue: { label: '🔧 Mant.', cls: 'maintenance' },
+    new_contract: { label: '📄 Contrato', cls: 'contract' },
+  };
+
+  async function waitSb() {
+    var n = 0;
+    while (!window.supabase && n++ < 30) await new Promise(r => setTimeout(r, 200));
+    if (!window.supabase) return false;
+    sb = window.supabase.createClient(SURL, SKEY);
+    return true;
+  }
+
+  async function getCompanyId() {
+    var { data: s } = await sb.auth.getSession();
+    if (!s?.session) return null;
+    var { data: p } = await sb.from('user_profiles').select('company_id').eq('user_id', s.session.user.id).single();
+    return p?.company_id || null;
+  }
+
+  async function loadContacts() {
+    var res = await fetch('/api/whatsapp/contacts?company_id=' + encodeURIComponent(companyId));
+    var contacts = await res.json();
+    renderContacts(contacts);
+    updateContactSelect(contacts);
+    document.getElementById('stat-contacts').textContent = contacts.filter(function (c) { return c.active; }).length;
+    return contacts;
+  }
+
+  function renderContacts(contacts) {
+    var cont = document.getElementById('contacts-container');
+    if (!contacts.length) {
+      cont.innerHTML = '<div style="color:var(--text-2);font-size:.83rem;padding:12px 0">No hay contactos configurados. Agregá el primero.</div>';
+      return;
+    }
+    cont.innerHTML = contacts.map(function (c) {
+      var initials = (c.name || '?').split(' ').map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase();
+      var chips = (c.alert_types || []).map(function (t) {
+        var a = ALERT_LABELS[t] || { label: t, cls: '' };
+        return '<span class="chip ' + a.cls + '">' + a.label + '</span>';
+      }).join('');
+      return '<div class="contact-card">' +
+        '<div class="contact-avatar">' + initials + '</div>' +
+        '<div class="contact-info">' +
+          '<div class="contact-name">' + c.name + '</div>' +
+          '<div class="contact-phone">' + c.phone + '</div>' +
+          (c.role ? '<div class="contact-role">' + c.role + '</div>' : '') +
+          (chips ? '<div class="alert-chips">' + chips + '</div>' : '') +
+        '</div>' +
+        '<button class="btn btn-outline btn-sm" onclick="deleteContact(\'' + c.id + '\')" style="flex-shrink:0"><i class="fas fa-trash" style="font-size:.7rem"></i></button>' +
+        '</div>';
+    }).join('');
+  }
+
+  function updateContactSelect(contacts) {
+    var sel = document.getElementById('send-to');
+    sel.innerHTML = '<option value="">Seleccionar contacto...</option>' +
+      contacts.filter(function (c) { return c.active; }).map(function (c) {
+        return '<option value="' + c.phone + '">' + c.name + ' (' + c.phone + ')</option>';
+      }).join('');
+  }
+
+  window.loadLog = async function () {
+    var res = await fetch('/api/whatsapp/log?company_id=' + encodeURIComponent(companyId));
+    var log = await res.json();
+    renderLog(log);
+
+    var today = new Date().toDateString();
+    var todaySent = log.filter(function (l) { return l.status === 'sent' && new Date(l.created_at).toDateString() === today; }).length;
+    var todayFailed = log.filter(function (l) { return l.status === 'failed' && new Date(l.created_at).toDateString() === today; }).length;
+    document.getElementById('stat-sent').textContent = todaySent;
+    document.getElementById('stat-failed').textContent = todayFailed;
+    document.getElementById('stat-total').textContent = log.length;
+  };
+
+  function renderLog(log) {
+    var cont = document.getElementById('log-container');
+    if (!log.length) {
+      cont.innerHTML = '<div style="color:var(--text-2);font-size:.83rem;padding:12px 0">Sin mensajes enviados todavía.</div>';
+      return;
+    }
+    cont.innerHTML = log.slice(0, 20).map(function (l) {
+      var dt = new Date(l.created_at).toLocaleString('es', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      return '<div class="log-row">' +
+        '<div class="log-icon ' + l.status + '"><i class="fas fa-' + (l.status === 'sent' ? 'check' : 'times') + '"></i></div>' +
+        '<div style="flex:1">' +
+          '<div style="font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:3px">' + l.to_number + (l.alert_type ? ' · <span style="color:var(--text-2)">' + (ALERT_LABELS[l.alert_type]?.label || l.alert_type) + '</span>' : '') + '</div>' +
+          '<div class="log-msg">' + l.message.slice(0, 120) + (l.message.length > 120 ? '...' : '') + '</div>' +
+          (l.error_message ? '<div style="color:var(--red);font-size:.72rem;margin-top:2px">' + l.error_message + '</div>' : '') +
+        '</div>' +
+        '<div class="log-meta">' + dt + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function showToast(msg, ok) {
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:' + (ok !== false ? '#25D366' : '#EF4444') + ';color:#fff;padding:12px 20px;border-radius:10px;font-size:.83rem;font-weight:600;z-index:9999;box-shadow:0 4px 14px rgba(0,0,0,.18)';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 3000);
+  }
+
+  async function saveContact() {
+    var name = document.getElementById('c-name').value.trim();
+    var phone = document.getElementById('c-phone').value.trim();
+    var role = document.getElementById('c-role').value.trim();
+    var alertTypes = Array.from(document.querySelectorAll('#newContactModal input[type=checkbox]:checked')).map(function (cb) { return cb.value; });
+
+    if (!name || !phone) { showToast('Nombre y teléfono son requeridos', false); return; }
+    if (!phone.startsWith('+')) { showToast('El teléfono debe incluir código de país (+595...)', false); return; }
+
+    var btn = document.getElementById('btn-save-contact');
+    btn.disabled = true;
+    try {
+      var res = await fetch('/api/whatsapp/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company_id: companyId, name, phone, role, alert_types: alertTypes }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      document.getElementById('newContactModal').classList.remove('show');
+      showToast('Contacto agregado');
+      await loadContacts();
+    } catch (e) {
+      showToast('Error: ' + e.message, false);
+    } finally { btn.disabled = false; }
+  }
+
+  window.deleteContact = async function (id) {
+    if (!confirm('¿Eliminar contacto?')) return;
+    await fetch('/api/whatsapp/contacts/' + id, { method: 'DELETE' });
+    await loadContacts();
+  };
+
+  async function sendMessage() {
+    var to = document.getElementById('send-to').value;
+    var type = document.getElementById('send-type').value;
+    var message = document.getElementById('send-message').value.trim();
+
+    if (!to) { showToast('Seleccioná un contacto', false); return; }
+    if (type === 'custom' && !message) { showToast('Escribí un mensaje', false); return; }
+
+    var btn = document.getElementById('btn-send');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+    try {
+      var body = type === 'custom'
+        ? { to, message, company_id: companyId }
+        : { type, company_id: companyId, payload: {} };
+
+      var endpoint = type === 'custom' ? '/api/whatsapp/send' : '/api/whatsapp/alert';
+      if (type !== 'custom') body.payload = {};
+
+      var res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      var data = await res.json();
+      if (data.ok || data.sid) {
+        showToast('¡Mensaje enviado!');
+        await loadLog();
+      } else {
+        showToast('Error: ' + (data.error || 'intentá de nuevo'), false);
+      }
+    } catch (e) {
+      showToast('Error: ' + e.message, false);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar WhatsApp';
+    }
+  }
+
+  document.getElementById('send-type').addEventListener('change', function () {
+    document.getElementById('custom-msg-group').style.display = this.value === 'custom' ? 'flex' : 'none';
+  });
+
+  async function init() {
+    var ok = await waitSb();
+    if (!ok) return;
+    companyId = await getCompanyId();
+    await Promise.all([loadContacts(), loadLog()]);
+    document.getElementById('btn-save-contact').addEventListener('click', saveContact);
+    document.getElementById('btn-send').addEventListener('click', sendMessage);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
