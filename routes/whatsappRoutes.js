@@ -61,8 +61,15 @@ async function sendWhatsApp(phone, message) {
       body: JSON.stringify({
         messaging_product: 'whatsapp',
         to,
-        type: 'text',
-        text: { body: message },
+        type: 'template',
+        template: {
+          name: 'fluviafleet_alerta',
+          language: { code: 'es' },
+          components: [{
+            type: 'body',
+            parameters: [{ type: 'text', text: message }],
+          }],
+        },
       }),
     });
 
