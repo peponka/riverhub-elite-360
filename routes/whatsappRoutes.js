@@ -17,6 +17,28 @@ function getAdmin() {
   );
 }
 
+// Obtener company_id del usuario a partir de su JWT (service key bypass RLS)
+async function companyFromToken(authHeader) {
+  if (!authHeader?.startsWith('Bearer ')) return null;
+  try {
+    const token = authHeader.slice(7);
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const userId = payload.sub;
+    if (!userId) return null;
+    const db = getAdmin();
+    if (!db) return null;
+    const { data } = await db.from('user_profiles').select('company_id').eq('user_id', userId).single();
+    return data?.company_id || null;
+  } catch { return null; }
+}
+
+// GET /api/whatsapp/my-company — el frontend llama esto para obtener su company_id
+router.get('/my-company', async (req, res) => {
+  const company_id = await companyFromToken(req.headers.authorization);
+  if (!company_id) return res.status(401).json({ error: 'No se pudo resolver company_id' });
+  res.json({ company_id });
+});
+
 // Enviar mensaje via Meta WhatsApp Cloud API
 async function sendWhatsApp(phone, message) {
   const phoneId = process.env.META_PHONE_NUMBER_ID;
