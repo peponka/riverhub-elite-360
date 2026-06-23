@@ -63,12 +63,8 @@ async function sendWhatsApp(phone, message) {
         to,
         type: 'template',
         template: {
-          name: 'fluviafleet_alerta',
-          language: { code: 'es' },
-          components: [{
-            type: 'body',
-            parameters: [{ type: 'text', text: message }],
-          }],
+          name: 'hello_world',
+          language: { code: 'en_US' },
         },
       }),
     });
