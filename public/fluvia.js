@@ -473,6 +473,37 @@ async function loadDashboard(){
             loadINADashboardKPI()
         ]).catch(function(){});
     }catch(e){/* Dashboard: */;}
+
+    // WhatsApp stats for banner card
+    try {
+        var sess = await sb.auth.getSession();
+        var token = sess?.data?.session?.access_token;
+        if (token) {
+            var mcRes = await fetch('/api/whatsapp/my-company', { headers: { 'Authorization': 'Bearer ' + token } });
+            if (mcRes.ok) {
+                var mcData = await mcRes.json();
+                var cid = mcData.company_id;
+                if (cid) {
+                    var cRes = await fetch('/api/whatsapp/contacts?company_id=' + cid);
+                    var contacts = cRes.ok ? await cRes.json() : [];
+                    var activeCount = contacts.filter(function(c){ return c.active; }).length;
+                    var badge = document.getElementById('nav-wa-badge');
+                    var waEl = document.getElementById('dash-wa-contacts');
+                    if (waEl) waEl.textContent = activeCount;
+                    if (badge) { badge.textContent = activeCount; badge.style.display = activeCount > 0 ? '' : 'none'; }
+
+                    var lRes = await fetch('/api/whatsapp/log?company_id=' + cid);
+                    if (lRes.ok) {
+                        var log = await lRes.json();
+                        var today = new Date().toDateString();
+                        var sent = log.filter(function(l){ return new Date(l.created_at).toDateString() === today && l.status === 'sent'; }).length;
+                        var waSent = document.getElementById('dash-wa-sent');
+                        if (waSent) waSent.textContent = sent;
+                    }
+                }
+            }
+        }
+    } catch(e) { /* wa stats */ }
 }
 
 // ─── DASHBOARD MINI CHARTS ──────────────────────────
