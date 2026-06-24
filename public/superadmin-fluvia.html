@@ -75,9 +75,9 @@
             <!-- ROW 1: KPIs principales -->
             <div class="sa-kpi-row">
                 <div class="sa-kpi kpi-blue"><div class="sa-kpi-icon"><i class="fas fa-dollar-sign"></i></div><div class="sa-kpi-val">$287,450</div><div class="sa-kpi-label">MRR (Ingresos Recurrentes)</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +12.5% vs mes ant.</div></div>
-                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-users"></i></div><div class="sa-kpi-val">1,247</div><div class="sa-kpi-label">Usuarios Registrados</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +83 este mes</div></div>
-                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-ship"></i></div><div class="sa-kpi-val">34</div><div class="sa-kpi-label">Embarcaciones en Sistema</div><div class="sa-kpi-trend neutral"><i class="fas fa-check"></i> 18 navegando ahora</div></div>
-                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="sa-kpi-val">3</div><div class="sa-kpi-label">Alertas Críticas</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> -25% vs ayer</div></div>
+                <div class="sa-kpi kpi-teal"><div class="sa-kpi-icon"><i class="fas fa-users"></i></div><div class="sa-kpi-val" id="kpi-total-users">—</div><div class="sa-kpi-label">Usuarios Registrados</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> <span id="kpi-new-users">—</span> este mes</div></div>
+                <div class="sa-kpi kpi-green"><div class="sa-kpi-icon"><i class="fas fa-ship"></i></div><div class="sa-kpi-val" id="kpi-total-vessels">—</div><div class="sa-kpi-label">Embarcaciones en Sistema</div><div class="sa-kpi-trend neutral"><i class="fas fa-check"></i> <span id="kpi-active-users">—</span> activos</div></div>
+                <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-building"></i></div><div class="sa-kpi-val" id="kpi-total-companies">—</div><div class="sa-kpi-label">Empresas en Sistema</div><div class="sa-kpi-trend neutral"><i class="fas fa-check"></i> <span id="kpi-total-leads">—</span> leads</div></div>
             </div>
 
             <!-- ROW 2: Platform Usage + Live Ops -->
@@ -186,12 +186,8 @@
             <div class="sa-card sa-table-card">
                 <table class="sa-table">
                     <thead><tr><th>Usuario</th><th>Email</th><th>Rol</th><th>Último Login</th><th>Estado</th><th>Acciones</th></tr></thead>
-                    <tbody>
-                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-red">PA</div>Pedro Administrador</div></td><td>pedro@fluviafleet.com</td><td><span class="sa-role-chip role-super">SuperAdmin</span></td><td>Hoy, 13:40</td><td><span class="sa-status-dot online"></span>Online</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
-                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-blue">MG</div>María González</div></td><td>maria.g@cargill.com</td><td><span class="sa-role-chip role-admin">Admin</span></td><td>Hoy, 11:20</td><td><span class="sa-status-dot online"></span>Online</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
-                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-teal">JR</div>Juan Rodríguez</div></td><td>jrodriguez@naviera.py</td><td><span class="sa-role-chip role-op">Operador</span></td><td>Ayer, 18:45</td><td><span class="sa-status-dot offline"></span>Offline</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
-                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-gray">CL</div>Carlos López</div></td><td>clopez@dreyfus.com</td><td><span class="sa-role-chip role-client">Cliente</span></td><td>10 May, 09:15</td><td><span class="sa-status-dot online"></span>Online</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
-                        <tr><td><div class="sa-user-cell"><div class="sa-tbl-avatar bg-blue">AS</div>Ana Sánchez</div></td><td>asanchez@bunge.com</td><td><span class="sa-role-chip role-client">Cliente</span></td><td>9 May, 14:30</td><td><span class="sa-status-dot offline"></span>Offline</td><td><button class="sa-act-btn"><i class="fas fa-ellipsis-h"></i></button></td></tr>
+                    <tbody id="users-tbody">
+                        <tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-2)"><i class="fas fa-spinner fa-spin"></i> Cargando usuarios...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -236,15 +232,8 @@
                 <select class="sa-select"><option>Todos los tipos</option><option>Auth</option><option>Sistema</option><option>Operaciones</option><option>Errores</option></select>
                 <select class="sa-select"><option>Últimas 24h</option><option>Última semana</option><option>Último mes</option></select>
             </div>
-            <div class="sa-card">
-                <div class="sa-log-item"><span class="sa-log-badge log-auth">AUTH</span><span class="sa-log-text">Login exitoso: pedro@fluviafleet.com</span><span class="sa-log-time">13:40</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-ops">OPS</span><span class="sa-log-text">R/M Hércules — reporte de posición recibido (km 1,180)</span><span class="sa-log-time">13:12</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-sys">SYS</span><span class="sa-log-text">Backup automático completado — 2.3 GB</span><span class="sa-log-time">12:00</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-error">ERROR</span><span class="sa-log-text">Gemini API rate limit (429) — reintentos: 3/5</span><span class="sa-log-time">11:45</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-auth">AUTH</span><span class="sa-log-text">Nuevo registro: transportes.sur@gmail.com via Google OAuth</span><span class="sa-log-time">10:30</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-ops">OPS</span><span class="sa-log-text">Convoy C-47 — carga completada en Terminal ROE (12,800 ton)</span><span class="sa-log-time">09:15</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-sys">SYS</span><span class="sa-log-text">SSL certificate renovado — fluviafleet.com (válido hasta 2027)</span><span class="sa-log-time">08:00</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-error">ERROR</span><span class="sa-log-text">FCM push delivery failed — token expirado (3 dispositivos)</span><span class="sa-log-time">07:22</span></div>
+            <div class="sa-card" id="audit-log-card">
+                <div style="text-align:center;padding:30px;color:var(--text-2)"><i class="fas fa-spinner fa-spin"></i> Cargando audit log...</div>
             </div>
         </section>
 
@@ -261,12 +250,10 @@
                     <div class="sa-toggle-row"><span>Registro público</span><label class="sa-switch"><input type="checkbox" checked><span class="sa-slider"></span></label></div>
                 </div>
                 <div class="sa-card">
-                    <div class="sa-card-head"><span>HEALTH CHECK</span></div>
-                    <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Supabase Database</span><span class="sa-health-ms">23ms</span></div>
-                    <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Supabase Auth</span><span class="sa-health-ms">45ms</span></div>
-                    <div class="sa-health-row"><span class="sa-health-dot amber"></span><span>Gemini AI API</span><span class="sa-health-ms">890ms</span></div>
-                    <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Firebase FCM</span><span class="sa-health-ms">120ms</span></div>
-                    <div class="sa-health-row"><span class="sa-health-dot green"></span><span>Render Server</span><span class="sa-health-ms">67ms</span></div>
+                    <div class="sa-card-head"><span>HEALTH CHECK</span><button onclick="saLoadHealth()" style="background:none;border:none;color:var(--blue);cursor:pointer;font-size:0.75rem"><i class="fas fa-sync"></i> Actualizar</button></div>
+                    <div id="health-list">
+                        <div class="sa-health-row"><span class="sa-health-dot amber"></span><span>Cargando servicios...</span><span class="sa-health-ms">—</span></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -317,12 +304,8 @@
             <div class="sa-header"><h1>Gestión de Clientes</h1><p>Cartera de clientes corporativos</p></div>
             <div class="sa-card"><div class="sa-card-head"><span>CLIENTES CORPORATIVOS</span><span style="font-size:0.7rem;color:var(--blue);cursor:pointer"><i class="fas fa-plus"></i> Nuevo Cliente</span></div>
                 <table class="sa-table"><thead><tr><th>Empresa</th><th>Contacto</th><th>Plan</th><th>Revenue Mensual</th><th>Contratos</th><th>Estado</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>Cargill S.A.C.I.</strong></td><td>maria.g@cargill.com</td><td><span class="sa-role-chip" style="background:#FEF3C7;color:#92400E">Enterprise</span></td><td><strong>$24,990</strong></td><td>4</td><td><span class="sa-status-dot online"></span>Activo</td></tr>
-                    <tr><td><strong>Louis Dreyfus Co.</strong></td><td>clopez@dreyfus.com</td><td><span class="sa-role-chip role-admin">Enterprise</span></td><td><strong>$18,750</strong></td><td>3</td><td><span class="sa-status-dot online"></span>Activo</td></tr>
-                    <tr><td><strong>Bunge Paraguay</strong></td><td>asanchez@bunge.com</td><td><span class="sa-role-chip role-op">Combo</span></td><td><strong>$14,990</strong></td><td>2</td><td><span class="sa-status-dot online"></span>Activo</td></tr>
-                    <tr><td><strong>ADM Asunción</strong></td><td>rgarcia@adm.com</td><td><span class="sa-role-chip role-op">Combo</span></td><td><strong>$11,200</strong></td><td>2</td><td><span class="sa-status-dot online"></span>Activo</td></tr>
-                    <tr><td><strong>Naviera Sur S.R.L.</strong></td><td>info@navierasur.py</td><td><span class="sa-role-chip role-client">Barcaza</span></td><td><strong>$8,990</strong></td><td>1</td><td><span class="sa-status-dot offline"></span>Trial</td></tr>
+                <tbody id="clients-tbody">
+                    <tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-2)"><i class="fas fa-spinner fa-spin"></i> Cargando empresas...</td></tr>
                 </tbody></table>
             </div>
         </section>
@@ -419,11 +402,31 @@
                 <div class="sa-kpi kpi-amber"><div class="sa-kpi-icon"><i class="fas fa-mobile-alt"></i></div><div class="sa-kpi-val">892</div><div class="sa-kpi-label">Dispositivos registrados</div><div class="sa-kpi-trend up"><i class="fas fa-arrow-up"></i> +45</div></div>
                 <div class="sa-kpi kpi-red"><div class="sa-kpi-icon"><i class="fas fa-times"></i></div><div class="sa-kpi-val">107</div><div class="sa-kpi-label">Tokens expirados</div><div class="sa-kpi-trend down"><i class="fas fa-arrow-down"></i> Limpiar</div></div>
             </div>
+            <div class="sa-card" style="margin-bottom:20px">
+                <div class="sa-card-head"><span>ENVIAR BROADCAST</span></div>
+                <div style="display:flex;flex-direction:column;gap:12px;padding:4px 0">
+                    <div style="display:flex;gap:12px;flex-wrap:wrap">
+                        <input id="bc-title" type="text" placeholder="Título de la notificación" class="sa-search" style="flex:1;min-width:200px">
+                        <select id="bc-segment" class="sa-select" style="min-width:160px">
+                            <option value="all">Todos los usuarios</option>
+                            <option value="admin">Solo Admins</option>
+                            <option value="operator">Solo Operadores</option>
+                            <option value="client">Solo Clientes</option>
+                        </select>
+                    </div>
+                    <textarea id="bc-message" placeholder="Mensaje de la notificación..." style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:0.88rem;resize:vertical;min-height:70px;font-family:inherit;outline:none"></textarea>
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <button onclick="saSendBroadcast()" id="bc-btn" style="background:var(--blue);color:white;border:none;border-radius:8px;padding:10px 22px;font-size:0.88rem;font-weight:600;cursor:pointer"><i class="fas fa-paper-plane"></i> Enviar</button>
+                        <span id="bc-result" style="font-size:0.82rem;color:var(--text-2)"></span>
+                    </div>
+                </div>
+            </div>
             <div class="sa-card"><div class="sa-card-head"><span>ÚLTIMAS NOTIFICACIONES ENVIADAS</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-ops">PUSH</span><span class="sa-log-text">Convoy C-47 llegó a zona de fondeo — 47 dispositivos</span><span class="sa-log-time">13:12</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge" style="background:#FEF3C7;color:#92400E">ALERTA</span><span class="sa-log-text">Calado crítico km 780 — 234 usuarios notificados</span><span class="sa-log-time">10:30</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-sys">SYS</span><span class="sa-log-text">Mantenimiento programado BZ-102 — 12 operadores</span><span class="sa-log-time">09:00</span></div>
-                <div class="sa-log-item"><span class="sa-log-badge log-auth">AUTH</span><span class="sa-log-text">Bienvenida nuevo usuario: transportes.sur@gmail.com</span><span class="sa-log-time">08:45</span></div>
+                <div id="notif-log-list">
+                    <div class="sa-log-item"><span class="sa-log-badge log-ops">PUSH</span><span class="sa-log-text">Convoy C-47 llegó a zona de fondeo — 47 dispositivos</span><span class="sa-log-time">13:12</span></div>
+                    <div class="sa-log-item"><span class="sa-log-badge" style="background:#FEF3C7;color:#92400E">ALERTA</span><span class="sa-log-text">Calado crítico km 780 — 234 usuarios notificados</span><span class="sa-log-time">10:30</span></div>
+                    <div class="sa-log-item"><span class="sa-log-badge log-sys">SYS</span><span class="sa-log-text">Mantenimiento programado BZ-102 — 12 operadores</span><span class="sa-log-time">09:00</span></div>
+                </div>
             </div>
         </section>
     </main>
@@ -445,6 +448,7 @@ async function saDoLogin(){
             document.getElementById('saLogin').style.display='none';
             document.getElementById('saLayout').style.display='flex';
             err.textContent='';
+            saLoadDashboard();
         } else {
             err.textContent=data.error||'Credenciales inválidas.';
         }
@@ -453,13 +457,19 @@ async function saDoLogin(){
 }
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('saLogin').style.display!=='none')saDoLogin();});
 // Check existing session
-(function(){const t=sessionStorage.getItem('sa_token');if(t){document.getElementById('saLogin').style.display='none';document.getElementById('saLayout').style.display='flex';}})();
+(function(){const t=sessionStorage.getItem('sa_token');if(t){document.getElementById('saLogin').style.display='none';document.getElementById('saLayout').style.display='flex';setTimeout(saLoadDashboard,100);}})();
 
 function saNav(el){
     document.querySelectorAll('.sa-nav-link').forEach(l=>l.classList.remove('active'));
     el.classList.add('active');
     document.querySelectorAll('.sa-section').forEach(s=>s.classList.remove('active'));
-    document.getElementById('sec-'+el.dataset.section).classList.add('active');
+    const sec=el.dataset.section;
+    document.getElementById('sec-'+sec).classList.add('active');
+    if(sec==='dashboard')saLoadDashboard();
+    else if(sec==='users')saLoadUsers();
+    else if(sec==='clients')saLoadClients();
+    else if(sec==='logs')saLoadAuditLog();
+    else if(sec==='config')saLoadHealth();
 }
 
 // Fleet grid
@@ -479,6 +489,163 @@ var vessels=[
 ];
 var fg=document.getElementById('fleetGrid');
 if(fg)fg.innerHTML=vessels.map(v=>`<div class="sa-vessel-card vc-${v.color}"><div class="sa-vc-status ${v.color}"></div><div class="sa-vc-name">${v.name}</div><div class="sa-vc-type">${v.type}</div><div class="sa-vc-loc"><i class="fas fa-map-marker-alt"></i> ${v.loc}</div><span class="sa-vc-badge badge-${v.color}">${v.status}</span></div>`).join('');
+
+// ── API Integration ─────────────────────────────────────────
+function saToken(){return sessionStorage.getItem('sa_token');}
+async function saFetch(path,opts={}){
+    const res=await fetch(path,{...opts,headers:{'Content-Type':'application/json','Authorization':'Bearer '+saToken(),...(opts.headers||{})}});
+    if(res.status===401){sessionStorage.clear();location.reload();}
+    return res.json();
+}
+function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+function fmtDate(d){if(!d)return '—';const dt=new Date(d);return dt.toLocaleDateString('es-PY',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'});}
+
+async function saLoadDashboard(){
+    try{
+        const d=await saFetch('/api/admin/stats');
+        setText('kpi-total-users',d.total_users??'—');
+        setText('kpi-new-users',d.new_users_30d!=null?'+'+d.new_users_30d:'—');
+        setText('kpi-total-vessels',d.total_vessels??'—');
+        setText('kpi-active-users',d.active_users!=null?d.active_users+' activos':'—');
+        setText('kpi-total-companies',d.total_companies??'—');
+        setText('kpi-total-leads',d.total_leads??'—');
+    }catch(e){console.warn('Dashboard stats error:',e);}
+}
+
+async function saLoadUsers(){
+    const tbody=document.getElementById('users-tbody');
+    if(!tbody)return;
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-2)"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>';
+    try{
+        const d=await saFetch('/api/admin/users?limit=50');
+        const users=d.users||d||[];
+        if(!users.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-2)">Sin usuarios</td></tr>';return;}
+        const roleChip=(r)=>{const m={superadmin:'role-super',admin:'role-admin',operator:'role-op',client:'role-client'};return`<span class="sa-role-chip ${m[r]||''}">${r||'usuario'}</span>`;};
+        const initials=(n)=>(n||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+        const colors=['bg-red','bg-blue','bg-teal','bg-gray'];
+        tbody.innerHTML=users.map((u,i)=>`
+            <tr>
+                <td><div class="sa-user-cell"><div class="sa-tbl-avatar ${colors[i%4]}">${initials(u.full_name||u.user_id)}</div>${u.full_name||u.user_id||'—'}</div></td>
+                <td>${u.company_id||'—'}</td>
+                <td>${roleChip(u.role)}</td>
+                <td>${fmtDate(u.last_login||u.created_at)}</td>
+                <td><span class="sa-status-dot ${u.is_active!==false?'online':'offline'}"></span>${u.is_active!==false?'Activo':'Inactivo'}</td>
+                <td>
+                    <select onchange="saChangeRole('${u.user_id}',this)" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 8px;font-size:0.78rem;cursor:pointer">
+                        ${['superadmin','admin','operator','client'].map(r=>`<option value="${r}"${u.role===r?' selected':''}>${r}</option>`).join('')}
+                    </select>
+                    <button onclick="saToggleUser('${u.user_id}',${u.is_active!==false})" style="margin-left:6px;background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--text-2);cursor:pointer;font-size:0.78rem">
+                        ${u.is_active!==false?'Desactivar':'Activar'}
+                    </button>
+                </td>
+            </tr>`).join('');
+    }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--red)">Error al cargar usuarios</td></tr>`;}
+}
+
+async function saChangeRole(uid,sel){
+    const role=sel.value;
+    try{
+        await saFetch(`/api/admin/users/${uid}/role`,{method:'PUT',body:JSON.stringify({role})});
+        sel.style.outline='2px solid var(--green)';
+        setTimeout(()=>sel.style.outline='',1500);
+    }catch(e){sel.style.outline='2px solid var(--red)';setTimeout(()=>sel.style.outline='',1500);}
+}
+
+async function saToggleUser(uid,currentlyActive){
+    try{
+        await saFetch(`/api/admin/users/${uid}/status`,{method:'PUT',body:JSON.stringify({is_active:!currentlyActive})});
+        saLoadUsers();
+    }catch(e){alert('Error al cambiar estado del usuario');}
+}
+
+async function saLoadClients(){
+    const tbody=document.getElementById('clients-tbody');
+    if(!tbody)return;
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-2)"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>';
+    try{
+        const d=await saFetch('/api/admin/companies?limit=50');
+        const companies=d.companies||d||[];
+        if(!companies.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-2)">Sin empresas</td></tr>';return;}
+        const planChip=(p)=>{const m={enterprise:'role-admin',convoy_combo:'role-op',barcaza:'role-client',ilimitado:'role-super'};return`<span class="sa-role-chip ${m[p]||''}">${p||'—'}</span>`;};
+        tbody.innerHTML=companies.map(c=>`
+            <tr>
+                <td><strong>${c.name||c.company_name||'—'}</strong></td>
+                <td>${c.contact_email||c.owner_email||'—'}</td>
+                <td>${planChip(c.plan||c.subscription_plan)}</td>
+                <td><strong>${c.monthly_revenue!=null?'$'+Number(c.monthly_revenue).toLocaleString():'—'}</strong></td>
+                <td>${c.vessel_count||c.vessels||'—'}</td>
+                <td><span class="sa-status-dot ${c.is_active!==false?'online':'offline'}"></span>${c.is_active!==false?'Activo':'Inactivo'}</td>
+            </tr>`).join('');
+    }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--red)">Error al cargar empresas</td></tr>`;}
+}
+
+async function saLoadAuditLog(){
+    const card=document.getElementById('audit-log-card');
+    if(!card)return;
+    card.innerHTML='<div style="text-align:center;padding:20px;color:var(--text-2)"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+    try{
+        const d=await saFetch('/api/admin/audit?limit=50');
+        const logs=d.logs||d||[];
+        if(!logs.length){card.innerHTML='<div style="padding:20px;color:var(--text-2)">Sin entradas en el audit log.</div>';return;}
+        const badgeColor=(a)=>{if(a.includes('login'))return'log-auth';if(a.includes('error'))return'log-error';if(a.includes('vessel')||a.includes('trip'))return'log-ops';return'log-sys';};
+        card.innerHTML=logs.map(l=>`
+            <div class="sa-log-item">
+                <span class="sa-log-badge ${badgeColor(l.action)}">${l.action.toUpperCase().substring(0,6)}</span>
+                <span class="sa-log-text">${l.details?.description||l.action} ${l.entity_type?'['+l.entity_type+']':''}</span>
+                <span class="sa-log-time">${fmtDate(l.created_at)}</span>
+            </div>`).join('');
+    }catch(e){card.innerHTML=`<div style="padding:20px;color:var(--red)">Error al cargar audit log</div>`;}
+}
+
+async function saLoadHealth(){
+    const list=document.getElementById('health-list');
+    if(!list)return;
+    list.innerHTML='<div class="sa-health-row"><span class="sa-health-dot amber"></span><span>Verificando servicios...</span><span class="sa-health-ms">—</span></div>';
+    try{
+        const d=await saFetch('/api/admin/health');
+        const dot=(s)=>s==='ok'||s==='configured'?'green':s==='error'||s==='missing'?'red':'amber';
+        const uptimeH=d.uptime_seconds?Math.floor(d.uptime_seconds/3600)+'h uptime':'—';
+        const services=[
+            {name:'Supabase DB',status:d.supabase,val:d.supabase},
+            {name:'WhatsApp / Meta',status:d.whatsapp,val:d.whatsapp},
+            {name:'Gemini AI API',status:d.gemini,val:d.gemini},
+            {name:'Meta Token',status:d.meta_token,val:d.meta_token},
+            {name:'Render Server',status:'ok',val:uptimeH},
+        ];
+        list.innerHTML=services.map(s=>`
+            <div class="sa-health-row">
+                <span class="sa-health-dot ${dot(s.status)}"></span>
+                <span>${s.name}</span>
+                <span class="sa-health-ms">${s.val||'—'}</span>
+            </div>`).join('');
+    }catch(e){list.innerHTML=`<div class="sa-health-row"><span class="sa-health-dot red"></span><span>Error al verificar</span><span class="sa-health-ms">—</span></div>`;}
+}
+
+async function saSendBroadcast(){
+    const title=document.getElementById('bc-title').value.trim();
+    const message=document.getElementById('bc-message').value.trim();
+    const segment=document.getElementById('bc-segment').value;
+    const result=document.getElementById('bc-result');
+    const btn=document.getElementById('bc-btn');
+    if(!title||!message){result.textContent='Completá título y mensaje.';result.style.color='var(--red)';return;}
+    btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Enviando...';result.textContent='';
+    try{
+        const body={title,message};
+        if(segment&&segment!=='all')body.target_role=segment;
+        const d=await saFetch('/api/admin/notifications/broadcast',{method:'POST',body:JSON.stringify(body)});
+        if(d.success){
+            const n=d.recipients??0;
+            result.textContent=`✓ Enviado a ${n} usuario${n!==1?'s':''}.`;
+            result.style.color='var(--green)';
+            document.getElementById('bc-title').value='';
+            document.getElementById('bc-message').value='';
+        } else {
+            result.textContent=d.error||'Error al enviar.';
+            result.style.color='var(--red)';
+        }
+    }catch(e){result.textContent='Error de conexión.';result.style.color='var(--red)';}
+    btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> Enviar';
+}
 </script>
 </body>
 </html>
