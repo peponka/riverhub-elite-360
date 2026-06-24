@@ -47,6 +47,8 @@ let authRoutes;
 try { authRoutes = require('./routes/authRoutes'); } catch (e) { console.error('❌ Auth routes failed:', e.message); }
 let onboardingRoutes;
 try { onboardingRoutes = require('./routes/onboardingRoutes'); } catch (e) { console.error('❌ Onboarding routes failed:', e.message); }
+let adminRoutes;
+try { adminRoutes = require('./routes/adminRoutes'); } catch (e) { console.error('❌ Admin routes failed to load:', e.message); }
 
 // ============================================
 // FLUVIAFLEET — Servidor Unificado
@@ -761,6 +763,11 @@ if (n8nRoutes) {
 if (authRoutes) {
     app.use('/api/auth', authRoutes);
     console.log('✅ Auth API mounted at /api/auth');
+}
+// --- ADMIN API ---
+if (adminRoutes) {
+    app.use('/api/admin', authenticateUser, adminRoutes.router);
+    console.log('✅ Admin API mounted at /api/admin');
 }
 // --- ONBOARDING API ---
 if (onboardingRoutes) {
