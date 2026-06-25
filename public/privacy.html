@@ -6,25 +6,57 @@
 <title>Política de Privacidad — FluviaFleet</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,1,400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--text:#1A1A1A;--text-2:#6B6B6B;--sep:#E5E5E5;--bg:#FAFAFA;--font-sans:'Inter',-apple-system,sans-serif;--font-serif:'Newsreader',Georgia,serif}
-body{font-family:var(--font-sans);color:var(--text);background:var(--bg);line-height:1.7;padding:0 20px}
-.wrap{max-width:720px;margin:0 auto;padding:60px 0 80px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);margin-bottom:48px}
-.logo span{font-family:var(--font-serif);font-size:1.4rem;font-weight:500}
-h1{font-family:var(--font-serif);font-size:2.2rem;font-weight:400;line-height:1.15;margin-bottom:8px}
-.subtitle{color:var(--text-2);font-size:.9rem;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--sep)}
-h2{font-size:1rem;font-weight:700;margin:32px 0 10px;text-transform:uppercase;letter-spacing:.5px}
+:root{--text:#1A1A1A;--text-2:#555;--sep:#E5E5E5;--bg:#FAFAFA;--accent:#0066FF;--green:#059669;--font-sans:'Inter',-apple-system,sans-serif;--font-serif:'Newsreader',Georgia,serif}
+body{font-family:var(--font-sans);color:var(--text);background:var(--bg);line-height:1.75;padding:0 20px}
+.wrap{max-width:760px;margin:0 auto;padding:56px 0 100px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);margin-bottom:40px}
+.logo-icon{width:30px;height:30px;background:#1A1A1A;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.logo span{font-family:var(--font-serif);font-size:1.3rem;font-weight:500}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:.83rem;color:var(--text-2);text-decoration:none;margin-bottom:28px;padding:6px 12px;border:1px solid var(--sep);border-radius:8px}
+.back:hover{background:#f0f0f0}
+h1{font-family:var(--font-serif);font-size:2.6rem;font-weight:400;line-height:1.1;margin-bottom:10px}
+h1 em{font-style:italic}
+.meta{display:flex;flex-wrap:wrap;gap:16px;font-size:.8rem;color:var(--text-2);margin-bottom:36px;padding-bottom:32px;border-bottom:1px solid var(--sep)}
+.meta span{display:flex;align-items:center;gap:5px}
+.toc{background:#fff;border:1px solid var(--sep);border-radius:14px;padding:20px 24px;margin-bottom:40px}
+.toc-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-2);margin-bottom:12px}
+.toc ol{padding-left:18px;font-size:.85rem}
+.toc ol li{margin-bottom:5px}
+.toc ol li a{color:var(--accent);text-decoration:none}
+.toc ol li a:hover{text-decoration:underline}
+h2{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-2);margin:40px 0 12px;padding-top:12px;border-top:1px solid var(--sep)}
+h3{font-size:.95rem;font-weight:600;color:var(--text);margin:20px 0 8px}
 p{font-size:.9rem;color:#333;margin-bottom:12px}
-ul{font-size:.9rem;color:#333;padding-left:20px;margin-bottom:12px}
-ul li{margin-bottom:6px}
-a{color:#0066FF;text-decoration:none}
+ul,ol{font-size:.9rem;color:#333;padding-left:22px;margin-bottom:14px}
+li{margin-bottom:7px}
+a{color:var(--accent)}
 a:hover{text-decoration:underline}
-.back{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;color:var(--text-2);text-decoration:none;margin-bottom:32px}
-.back:hover{color:var(--text)}
-footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--sep);font-size:.8rem;color:var(--text-2)}
+.highlight{background:#F0F7FF;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;font-size:.88rem}
+.highlight strong{display:block;margin-bottom:4px;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;color:var(--accent)}
+.permissions-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.perm-card{background:#fff;border:1px solid var(--sep);border-radius:10px;padding:14px}
+.perm-icon{font-size:1.1rem;margin-bottom:6px}
+.perm-name{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.perm-why{font-size:.78rem;color:var(--text-2);line-height:1.5}
+.providers-table{width:100%;border-collapse:collapse;font-size:.84rem;margin:14px 0}
+.providers-table th{text-align:left;padding:9px 12px;background:#f5f5f5;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-2);border-bottom:1px solid var(--sep)}
+.providers-table td{padding:10px 12px;border-bottom:1px solid var(--sep);vertical-align:top}
+.providers-table tr:last-child td{border-bottom:none}
+.rights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.right-card{background:#fff;border:1px solid var(--sep);border-radius:10px;padding:14px}
+.right-title{font-size:.83rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.right-desc{font-size:.78rem;color:var(--text-2);line-height:1.5}
+.retention-table{width:100%;border-collapse:collapse;font-size:.84rem;margin:14px 0}
+.retention-table th{text-align:left;padding:9px 12px;background:#f5f5f5;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-2);border-bottom:1px solid var(--sep)}
+.retention-table td{padding:10px 12px;border-bottom:1px solid var(--sep)}
+.retention-table tr:last-child td{border-bottom:none}
+.contact-box{background:#fff;border:1px solid var(--sep);border-radius:14px;padding:24px;margin:16px 0}
+.contact-box p{margin-bottom:6px}
+footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--sep);font-size:.78rem;color:var(--text-2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media(max-width:600px){.permissions-grid,.rights-grid{grid-template-columns:1fr}footer{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -33,78 +65,338 @@ footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--sep);font-siz
   <a href="fluvia.html" class="back">← Volver a FluviaFleet</a>
 
   <div class="logo">
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#1A1A1A"/><path d="M14 7c0 0-5 4-5 8a5 5 0 0010 0c0-4-5-8-5-8z" fill="white"/></svg>
+    <div class="logo-icon">
+      <svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M8 0C8 0 2 5 2 10a6 6 0 0012 0C14 5 8 0 8 0z" fill="white"/></svg>
+    </div>
     <span>FluviaFleet</span>
   </div>
 
   <h1>Política de<br><em>Privacidad.</em></h1>
-  <p class="subtitle">Última actualización: 25 de junio de 2026 &nbsp;·&nbsp; Aplicable a la app móvil y plataforma web FluviaFleet</p>
 
-  <h2>1. Quiénes somos</h2>
-  <p>FluviaFleet es una plataforma de gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná. Esta política describe cómo recopilamos, usamos y protegemos la información de los usuarios de nuestra aplicación móvil y sitio web (<a href="https://fluviafleet.com">fluviafleet.com</a>).</p>
-  <p>Para consultas sobre privacidad, contactanos en: <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a></p>
+  <div class="meta">
+    <span>📅 Última actualización: 25 de junio de 2026</span>
+    <span>🌐 Aplica a: app móvil Android e iOS + plataforma web</span>
+    <span>📍 Jurisdicción: Paraguay</span>
+  </div>
 
-  <h2>2. Información que recopilamos</h2>
-  <p>Recopilamos la siguiente información para brindar nuestros servicios:</p>
+  <div class="toc">
+    <div class="toc-title">Contenido</div>
+    <ol>
+      <li><a href="#quienes">Quiénes somos</a></li>
+      <li><a href="#que-recopilamos">Qué información recopilamos</a></li>
+      <li><a href="#permisos">Permisos del dispositivo</a></li>
+      <li><a href="#como-usamos">Cómo usamos la información</a></li>
+      <li><a href="#proveedores">Proveedores de servicios terceros</a></li>
+      <li><a href="#transferencias">Transferencias internacionales de datos</a></li>
+      <li><a href="#retencion">Retención de datos</a></li>
+      <li><a href="#seguridad">Seguridad</a></li>
+      <li><a href="#derechos">Derechos del usuario</a></li>
+      <li><a href="#cookies">Cookies y tecnologías de seguimiento</a></li>
+      <li><a href="#menores">Menores de edad</a></li>
+      <li><a href="#notificaciones-push">Notificaciones push y WhatsApp</a></li>
+      <li><a href="#brechas">Notificación de brechas de seguridad</a></li>
+      <li><a href="#cambios">Cambios a esta política</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ol>
+  </div>
+
+  <!-- 1 -->
+  <h2 id="quienes">1. Quiénes somos</h2>
+  <p>FluviaFleet es una plataforma SaaS de gestión inteligente de flotas fluviales diseñada para operadores navieros, capitanes y empresas de la Hidrovía Paraguay-Paraná. Ofrecemos herramientas de tracking, control de combustible, gestión de tripulación, mantenimiento preventivo, hidrología en tiempo real y comunicaciones operativas.</p>
+  <p>Al utilizar nuestra aplicación móvil (Android / iOS) o nuestro sitio web (<a href="https://fluviafleet.com">fluviafleet.com</a>), aceptás los términos de esta Política de Privacidad.</p>
+  <p><strong>Responsable del tratamiento:</strong> FluviaFleet<br>
+  <strong>Contacto:</strong> <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a></p>
+
+  <!-- 2 -->
+  <h2 id="que-recopilamos">2. Qué información recopilamos</h2>
+
+  <h3>2.1 Información que el usuario proporciona directamente</h3>
   <ul>
-    <li><strong>Datos de cuenta:</strong> nombre, correo electrónico y contraseña al registrarse.</li>
-    <li><strong>Datos de uso:</strong> información sobre embarcaciones, viajes, combustible, tripulación y mantenimiento que el usuario ingresa en la plataforma.</li>
-    <li><strong>Ubicación:</strong> coordenadas GPS del dispositivo para mostrar posición en el mapa de flota (solo con permiso explícito del usuario).</li>
-    <li><strong>Cámara y fotos:</strong> acceso para escanear documentos y adjuntar imágenes a reportes (solo cuando el usuario lo solicita).</li>
-    <li><strong>Notificaciones push:</strong> token del dispositivo para enviar alertas operativas (combustible, mantenimiento, hidrologí­a).</li>
-    <li><strong>Datos técnicos:</strong> versión del sistema operativo, modelo de dispositivo e identificadores anónimos para diagnóstico de errores.</li>
+    <li><strong>Datos de registro:</strong> nombre completo, dirección de correo electrónico, contraseña (almacenada con hash bcrypt, nunca en texto plano).</li>
+    <li><strong>Perfil profesional:</strong> cargo, empresa a la que pertenece, rol operativo (capitán, gerente, tripulante, etc.).</li>
+    <li><strong>Datos operativos:</strong> información sobre embarcaciones (nombre, tipo, capacidad, matrícula), viajes, manifiestos de carga, registros de combustible y líquidos, incidentes, pre-zarpes, contratos de flete y documentos de compliance.</li>
+    <li><strong>Comunicaciones:</strong> mensajes enviados dentro del módulo de comunicaciones de la plataforma.</li>
+    <li><strong>Imágenes y archivos:</strong> fotos de documentos, facturas y evidencias adjuntadas por el usuario.</li>
   </ul>
 
-  <h2>3. Cómo usamos la información</h2>
+  <h3>2.2 Información recopilada automáticamente</h3>
   <ul>
-    <li>Proveer y mantener los servicios de la plataforma.</li>
-    <li>Enviar notificaciones operativas relevantes para la gestión de la flota.</li>
-    <li>Mejorar la experiencia del usuario y corregir errores.</li>
-    <li>Cumplir con obligaciones legales aplicables.</li>
+    <li><strong>Datos de ubicación:</strong> coordenadas GPS del dispositivo cuando el usuario activa el módulo de mapa o tracking (únicamente con permiso explícito).</li>
+    <li><strong>Datos técnicos:</strong> dirección IP, tipo y versión de navegador o sistema operativo, modelo de dispositivo, identificadores de sesión anónimos.</li>
+    <li><strong>Datos de uso:</strong> funciones utilizadas, frecuencia de acceso, tiempo en cada módulo (con fines de mejora del producto, sin identificar individualmente al usuario).</li>
+    <li><strong>Tokens de notificaciones push:</strong> identificador del dispositivo para el servicio de notificaciones Firebase Cloud Messaging (FCM).</li>
+    <li><strong>Registros de errores:</strong> stack traces y logs de fallos para diagnóstico técnico, sin datos personales sensibles.</li>
   </ul>
-  <p>No vendemos, alquilamos ni compartimos datos personales con terceros con fines comerciales.</p>
 
-  <h2>4. Compartición de datos</h2>
-  <p>Podemos compartir datos únicamente con los siguientes proveedores de servicios, estrictamente para operar la plataforma:</p>
+  <h3>2.3 Información de terceros</h3>
   <ul>
-    <li><strong>Supabase</strong> — base de datos y autenticación (servidores en EE.UU.).</li>
-    <li><strong>Firebase / Google</strong> — notificaciones push (FCM).</li>
-    <li><strong>Meta</strong> — envío de alertas vía WhatsApp Business API.</li>
-    <li><strong>Render</strong> — hosting del servidor de la aplicación web.</li>
+    <li><strong>Google Sign-In:</strong> si el usuario elige autenticarse con Google, recibimos nombre, email y foto de perfil públicos de la cuenta Google.</li>
+    <li><strong>Datos de hidrología:</strong> niveles de río e información meteorológica obtenidos de APIs públicas (INA, Open-Meteo) para mostrarlos en la plataforma.</li>
+    <li><strong>Posiciones AIS:</strong> datos de identificación automática de embarcaciones (AIS) disponibles públicamente para el módulo de mapa.</li>
   </ul>
-  <p>Todos los proveedores están sujetos a sus respectivas políticas de privacidad y estándares de seguridad.</p>
 
-  <h2>5. Almacenamiento y seguridad</h2>
-  <p>Los datos se almacenan en servidores seguros con cifrado en tránsito (HTTPS/TLS) y en reposo. Implementamos medidas técnicas y organizativas razonables para proteger la información contra acceso no autorizado, pérdida o alteración.</p>
+  <!-- 3 -->
+  <h2 id="permisos">3. Permisos del dispositivo</h2>
+  <p>La app móvil solicita los siguientes permisos. Todos son opcionales en el sentido de que la app funciona con funcionalidad reducida si el usuario los deniega:</p>
 
-  <h2>6. Retención de datos</h2>
-  <p>Conservamos los datos mientras la cuenta esté activa. Al eliminar la cuenta, los datos personales se borran dentro de los 30 días siguientes, salvo que la ley requiera conservarlos por más tiempo.</p>
+  <div class="permissions-grid">
+    <div class="perm-card">
+      <div class="perm-icon">📍</div>
+      <div class="perm-name">Ubicación (en uso y en segundo plano)</div>
+      <div class="perm-why">Para mostrar la posición de embarcaciones en el mapa de flota y el tracking en tiempo real. El segundo plano es opcional y solo para flotas con seguimiento continuo activado.</div>
+    </div>
+    <div class="perm-card">
+      <div class="perm-icon">📷</div>
+      <div class="perm-name">Cámara</div>
+      <div class="perm-why">Para escanear documentos, facturas de flete y capturar evidencias de incidentes o mantenimiento directamente desde la app.</div>
+    </div>
+    <div class="perm-card">
+      <div class="perm-icon">🖼️</div>
+      <div class="perm-name">Galería / Fotos</div>
+      <div class="perm-why">Para adjuntar imágenes existentes del dispositivo a reportes, documentos de compliance y registros de mantenimiento.</div>
+    </div>
+    <div class="perm-card">
+      <div class="perm-icon">🎤</div>
+      <div class="perm-name">Micrófono</div>
+      <div class="perm-why">Para las videollamadas de coordinación operativa entre tripulación y gerencia a través del módulo de comunicaciones Agora.</div>
+    </div>
+    <div class="perm-card">
+      <div class="perm-icon">🔔</div>
+      <div class="perm-name">Notificaciones push</div>
+      <div class="perm-why">Para recibir alertas operativas críticas: combustible bajo, mantenimiento vencido, cambios en niveles del río, incidentes sin resolver.</div>
+    </div>
+    <div class="perm-card">
+      <div class="perm-icon">📁</div>
+      <div class="perm-name">Almacenamiento</div>
+      <div class="perm-why">Para guardar reportes exportados (PDF, Excel) y documentos descargados en el dispositivo del usuario.</div>
+    </div>
+  </div>
 
-  <h2>7. Derechos del usuario</h2>
-  <p>El usuario tiene derecho a:</p>
+  <div class="highlight">
+    <strong>Importante</strong>
+    El usuario puede revocar cualquier permiso en cualquier momento desde Ajustes → FluviaFleet en su dispositivo. La revocación no afecta el acceso a la cuenta ni a los datos ya almacenados.
+  </div>
+
+  <!-- 4 -->
+  <h2 id="como-usamos">4. Cómo usamos la información</h2>
   <ul>
-    <li>Acceder a sus datos personales almacenados.</li>
-    <li>Corregir información inexacta.</li>
-    <li>Solicitar la eliminación de su cuenta y datos.</li>
-    <li>Revocar permisos (ubicación, cámara, notificaciones) desde la configuración del dispositivo en cualquier momento.</li>
+    <li><strong>Prestación del servicio:</strong> operar los módulos de la plataforma (tracking, combustible, mantenimiento, hidrología, etc.).</li>
+    <li><strong>Autenticación y seguridad:</strong> verificar la identidad del usuario y proteger la cuenta.</li>
+    <li><strong>Notificaciones operativas:</strong> alertar sobre condiciones críticas de la flota (combustible, mantenimiento, calado, incidentes) vía push y WhatsApp.</li>
+    <li><strong>Mejora del producto:</strong> analizar patrones de uso agregados y anónimos para priorizar mejoras.</li>
+    <li><strong>Soporte técnico:</strong> diagnosticar y resolver problemas reportados por el usuario.</li>
+    <li><strong>Comunicaciones de servicio:</strong> enviar notificaciones sobre cambios importantes en la plataforma, actualizaciones de seguridad o cambios en esta política.</li>
+    <li><strong>Cumplimiento legal:</strong> responder a solicitudes legítimas de autoridades competentes según la ley aplicable.</li>
   </ul>
-  <p>Para ejercer estos derechos, escribí a <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a>.</p>
+  <p><strong>No utilizamos los datos para:</strong> publicidad dirigida, perfilado con fines comerciales, venta a terceros, ni ningún propósito no declarado en esta política.</p>
 
-  <h2>8. Menores de edad</h2>
-  <p>FluviaFleet es una plataforma profesional destinada a mayores de 18 años. No recopilamos intencionalmente datos de menores.</p>
+  <!-- 5 -->
+  <h2 id="proveedores">5. Proveedores de servicios terceros</h2>
+  <p>Para operar la plataforma trabajamos con los siguientes proveedores. Cada uno actúa como encargado del tratamiento bajo sus propias políticas de privacidad:</p>
 
-  <h2>9. Cambios a esta política</h2>
-  <p>Podemos actualizar esta política ocasionalmente. Notificaremos cambios importantes mediante un aviso en la aplicación o por correo electrónico. El uso continuado de la plataforma implica aceptación de la política vigente.</p>
+  <table class="providers-table">
+    <tr>
+      <th>Proveedor</th>
+      <th>Función</th>
+      <th>Datos compartidos</th>
+      <th>Sede</th>
+    </tr>
+    <tr>
+      <td><strong>Supabase</strong></td>
+      <td>Base de datos, autenticación, almacenamiento de archivos</td>
+      <td>Todos los datos operativos y de cuenta</td>
+      <td>EE.UU. (AWS us-east-1)</td>
+    </tr>
+    <tr>
+      <td><strong>Firebase / Google</strong></td>
+      <td>Notificaciones push (FCM), autenticación Google</td>
+      <td>Token del dispositivo, email (si usa Google Sign-In)</td>
+      <td>EE.UU.</td>
+    </tr>
+    <tr>
+      <td><strong>Meta (WhatsApp Business API)</strong></td>
+      <td>Envío de alertas operativas vía WhatsApp</td>
+      <td>Número de teléfono del contacto, texto del mensaje</td>
+      <td>EE.UU. / UE</td>
+    </tr>
+    <tr>
+      <td><strong>Agora.io</strong></td>
+      <td>Videollamadas y comunicaciones en tiempo real</td>
+      <td>Audio/video durante la llamada (no almacenado)</td>
+      <td>EE.UU.</td>
+    </tr>
+    <tr>
+      <td><strong>Render</strong></td>
+      <td>Hosting del servidor backend y web</td>
+      <td>Datos en tránsito a través del servidor</td>
+      <td>EE.UU.</td>
+    </tr>
+    <tr>
+      <td><strong>Google Fonts</strong></td>
+      <td>Tipografías en la interfaz web</td>
+      <td>Dirección IP (solicitud de fuentes)</td>
+      <td>EE.UU.</td>
+    </tr>
+    <tr>
+      <td><strong>Open-Meteo / INA</strong></td>
+      <td>Datos de hidrología y meteorología</td>
+      <td>Ninguno (solo consultas de datos públicos)</td>
+      <td>UE / Argentina</td>
+    </tr>
+  </table>
 
-  <h2>10. Contacto</h2>
-  <p>Para cualquier consulta sobre privacidad o protección de datos:</p>
-  <p><strong>FluviaFleet</strong><br>
-  Email: <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a><br>
-  Web: <a href="https://fluviafleet.com">fluviafleet.com</a></p>
+  <!-- 6 -->
+  <h2 id="transferencias">6. Transferencias internacionales de datos</h2>
+  <p>Dado que nuestros proveedores principales (Supabase, Firebase, Render) operan en servidores ubicados en Estados Unidos, los datos pueden ser transferidos y almacenados fuera de Paraguay. Estas transferencias se realizan bajo mecanismos de protección adecuados según las políticas de privacidad de cada proveedor y los estándares internacionales aplicables.</p>
+  <p>Al usar FluviaFleet, el usuario acepta expresamente esta transferencia internacional.</p>
+
+  <!-- 7 -->
+  <h2 id="retencion">7. Retención de datos</h2>
+  <table class="retention-table">
+    <tr>
+      <th>Tipo de dato</th>
+      <th>Período de retención</th>
+    </tr>
+    <tr>
+      <td>Datos de cuenta (email, perfil)</td>
+      <td>Hasta que la cuenta sea eliminada + 30 días</td>
+    </tr>
+    <tr>
+      <td>Datos operativos (viajes, combustible, etc.)</td>
+      <td>Duración de la suscripción activa + 90 días</td>
+    </tr>
+    <tr>
+      <td>Registros de comunicaciones</td>
+      <td>90 días desde el envío</td>
+    </tr>
+    <tr>
+      <td>Imágenes y archivos adjuntos</td>
+      <td>Hasta que el usuario los elimine o la cuenta sea cerrada</td>
+    </tr>
+    <tr>
+      <td>Logs técnicos y de errores</td>
+      <td>30 días (rotación automática)</td>
+    </tr>
+    <tr>
+      <td>Tokens de notificaciones push</td>
+      <td>Mientras la app esté instalada y activa</td>
+    </tr>
+    <tr>
+      <td>Historial de mensajes WhatsApp</td>
+      <td>60 días desde el envío</td>
+    </tr>
+    <tr>
+      <td>Datos de facturación</td>
+      <td>5 años (obligación legal fiscal)</td>
+    </tr>
+  </table>
+  <p>Tras los períodos indicados, los datos son eliminados de forma permanente o anonimizados de manera irreversible.</p>
+
+  <!-- 8 -->
+  <h2 id="seguridad">8. Seguridad</h2>
+  <p>Implementamos las siguientes medidas técnicas y organizativas para proteger los datos:</p>
+  <ul>
+    <li><strong>Cifrado en tránsito:</strong> todas las comunicaciones usan HTTPS/TLS 1.2 o superior.</li>
+    <li><strong>Cifrado en reposo:</strong> los datos almacenados en Supabase están cifrados a nivel de disco (AES-256).</li>
+    <li><strong>Contraseñas:</strong> nunca almacenamos contraseñas en texto plano; se utiliza hash con salt (bcrypt).</li>
+    <li><strong>Autenticación:</strong> soporte de JWT con expiración configurable; opción de Google Sign-In con OAuth 2.0.</li>
+    <li><strong>Control de acceso:</strong> políticas Row Level Security (RLS) en la base de datos para aislar datos entre empresas.</li>
+    <li><strong>Auditoría:</strong> módulo de auditoría interno que registra acciones administrativas críticas.</li>
+    <li><strong>Actualizaciones:</strong> aplicamos parches de seguridad de forma regular en todos los componentes del sistema.</li>
+  </ul>
+  <p>Ningún sistema es 100% seguro. En caso de detectar una vulnerabilidad, te recomendamos reportarla a <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a>.</p>
+
+  <!-- 9 -->
+  <h2 id="derechos">9. Derechos del usuario</h2>
+  <p>El usuario tiene los siguientes derechos sobre sus datos personales. Para ejercerlos, escribí a <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a> con el asunto "Solicitud de privacidad". Respondemos en un plazo máximo de 30 días.</p>
+
+  <div class="rights-grid">
+    <div class="right-card">
+      <div class="right-title">📋 Acceso</div>
+      <div class="right-desc">Solicitar una copia de todos los datos personales que almacenamos sobre vos.</div>
+    </div>
+    <div class="right-card">
+      <div class="right-title">✏️ Rectificación</div>
+      <div class="right-desc">Corregir datos inexactos o incompletos en tu perfil o cuenta.</div>
+    </div>
+    <div class="right-card">
+      <div class="right-title">🗑️ Eliminación</div>
+      <div class="right-desc">Solicitar la eliminación de tu cuenta y todos los datos asociados (derecho al olvido).</div>
+    </div>
+    <div class="right-card">
+      <div class="right-title">📦 Portabilidad</div>
+      <div class="right-desc">Recibir tus datos en formato estructurado y legible por máquina (JSON/CSV).</div>
+    </div>
+    <div class="right-card">
+      <div class="right-title">🚫 Oposición</div>
+      <div class="right-desc">Oponerte al tratamiento de tus datos para fines distintos a los estrictamente necesarios para el servicio.</div>
+    </div>
+    <div class="right-card">
+      <div class="right-title">⏸️ Limitación</div>
+      <div class="right-desc">Solicitar que limitemos el tratamiento mientras se resuelve una disputa sobre exactitud o legitimidad.</div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <strong>Cómo eliminar tu cuenta</strong>
+    Podés solicitar la eliminación completa de tu cuenta y datos escribiendo a <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a> con el asunto "Eliminar mi cuenta". Procesamos la solicitud en 30 días. Los datos de facturación se conservan por obligación legal.
+  </div>
+
+  <!-- 10 -->
+  <h2 id="cookies">10. Cookies y tecnologías de seguimiento</h2>
+  <p>La plataforma web utiliza las siguientes tecnologías:</p>
+  <ul>
+    <li><strong>Cookies de sesión:</strong> necesarias para mantener la sesión autenticada del usuario. Se eliminan al cerrar el navegador.</li>
+    <li><strong>LocalStorage:</strong> para guardar preferencias de interfaz (tema, idioma, estado de onboarding) de forma local en el dispositivo.</li>
+    <li><strong>No utilizamos:</strong> cookies de publicidad, píxeles de seguimiento, Google Analytics ni ninguna herramienta de analítica de terceros con fines de marketing.</li>
+  </ul>
+  <p>La aplicación móvil no utiliza cookies. Utiliza almacenamiento local del dispositivo (SharedPreferences) para guardar la sesión activa y preferencias del usuario.</p>
+
+  <!-- 11 -->
+  <h2 id="menores">11. Menores de edad</h2>
+  <p>FluviaFleet es una plataforma profesional destinada exclusivamente a mayores de 18 años. No recopilamos intencionalmente datos personales de menores. Si detectamos que un usuario menor de edad ha creado una cuenta, la eliminaremos de inmediato junto con todos sus datos.</p>
+  <p>Si sos padre o tutor y creés que tu hijo menor proporcionó información a FluviaFleet, contactanos en <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a>.</p>
+
+  <!-- 12 -->
+  <h2 id="notificaciones-push">12. Notificaciones push y WhatsApp</h2>
+  <p>FluviaFleet puede enviarte notificaciones de dos tipos:</p>
+  <ul>
+    <li><strong>Notificaciones push (Firebase FCM):</strong> alertas operativas enviadas al dispositivo móvil. Podés desactivarlas desde Ajustes del dispositivo → FluviaFleet → Notificaciones.</li>
+    <li><strong>Mensajes WhatsApp (Meta Business API):</strong> alertas críticas enviadas al número de WhatsApp registrado por el administrador de la empresa. Solo se envían a contactos que fueron explícitamente agregados por un administrador autorizado de la organización. Para darte de baja, solicitalo al administrador de tu empresa o escribinos.</li>
+  </ul>
+  <p>No enviamos comunicaciones de marketing ni spam. Todos los mensajes son operativos y relacionados directamente con la actividad de tu flota.</p>
+
+  <!-- 13 -->
+  <h2 id="brechas">13. Notificación de brechas de seguridad</h2>
+  <p>En el caso de una brecha de seguridad que afecte datos personales, nos comprometemos a:</p>
+  <ul>
+    <li>Notificar a los usuarios afectados por correo electrónico dentro de las <strong>72 horas</strong> de haberla detectado.</li>
+    <li>Describir la naturaleza de la brecha, los datos comprometidos y las medidas tomadas para mitigar el impacto.</li>
+    <li>Proporcionar recomendaciones concretas para que el usuario proteja su información.</li>
+  </ul>
+
+  <!-- 14 -->
+  <h2 id="cambios">14. Cambios a esta política</h2>
+  <p>Podemos actualizar esta Política de Privacidad para reflejar cambios en nuestras prácticas, en la plataforma o en la legislación aplicable. Cuando realicemos cambios importantes, lo notificaremos mediante:</p>
+  <ul>
+    <li>Un aviso destacado en la aplicación móvil y el sitio web.</li>
+    <li>Un correo electrónico a la dirección registrada en la cuenta.</li>
+  </ul>
+  <p>La fecha de "última actualización" al inicio de este documento indica cuándo se realizó la revisión más reciente. El uso continuado de FluviaFleet después de la notificación implica la aceptación de los cambios.</p>
+
+  <!-- 15 -->
+  <h2 id="contacto">15. Contacto</h2>
+  <div class="contact-box">
+    <p><strong>FluviaFleet</strong></p>
+    <p>📧 Email: <a href="mailto:pepeq68@gmail.com">pepeq68@gmail.com</a></p>
+    <p>🌐 Web: <a href="https://fluviafleet.com">fluviafleet.com</a></p>
+    <p>📍 Paraguay</p>
+    <p style="margin-top:12px;font-size:.82rem;color:var(--text-2)">Respondemos solicitudes de privacidad en un plazo máximo de 30 días hábiles.</p>
+  </div>
 
   <footer>
-    © 2026 FluviaFleet. Todos los derechos reservados. &nbsp;·&nbsp;
-    <a href="fluvia.html">Volver a la app</a>
+    <span>© 2026 FluviaFleet. Todos los derechos reservados.</span>
+    <span><a href="fluvia.html">Volver a la app</a></span>
   </footer>
 
 </div>
