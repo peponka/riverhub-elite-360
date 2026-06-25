@@ -308,7 +308,7 @@ document.getElementById('login-email').addEventListener('keydown',function(e){if
 
 // SPA Router
 let map = null;
-const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,liquidos:loadLiquidos,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidentes,briefing:loadBriefing,contratos:loadContratos,prezarpe:loadPreZarpe};
+const loaders = {dashboard:loadDashboard,fleet:loadFleet,mapa:function(){if(!map)initMap();else setTimeout(function(){map.invalidateSize()},100)},admin:loadAdmin,viajes:loadViajes,bitacora:loadBitacora,tripulacion:loadCrew,combustible:loadFuel,liquidos:loadLiquidos,mantenimiento:loadMaint,panol:loadPanol,comunicaciones:loadComms,hidrologia:loadHidrologia,reportes:loadReportes,copiloto:function(){},convoy:loadConvoy,tracking:loadTracking,planes:function(){},calado:loadCalado,incidentes:loadIncidentes,briefing:loadBriefing,contratos:loadContratos,prezarpe:loadPreZarpe,'whatsapp-alerts':loadWhatsAppAlerts};
 
 document.querySelectorAll('.nav-item').forEach(function(item){
     item.addEventListener('click',function(e){
@@ -2091,6 +2091,65 @@ async function submitPreZarpe(){
     }catch(e){console.warn('PZ save:',e)}
     document.getElementById('pz-modal').remove();
     loadPreZarpe();
+}
+
+// ─── WHATSAPP ALERTS ─────────────────────────────────
+async function loadWhatsAppAlerts(){
+    var list=document.getElementById('wa-alerts-list');
+    var summary=document.getElementById('wa-alerts-summary');
+    if(!list)return;
+    list.innerHTML='<div style="color:var(--text-secondary);font-size:13px;padding:12px">Cargando alertas...</div>';
+    var alerts=[],unread=0;
+    try{
+        var r=await sb.from('system_alerts').select('*').eq('source','n8n').order('created_at',{ascending:false}).limit(20);
+        alerts=r.data||[];
+        unread=alerts.filter(function(a){return !a.read;}).length;
+    }catch(e){
+        // Fallback: fuel alerts from fleet_assets
+        try{
+            var fr=await sb.from('fleet_assets').select('name,tank_status,status').lt('tank_status',25).order('tank_status',{ascending:true});
+            var flow=fr.data||[];
+            unread=flow.length;
+            _renderWaBadge(unread);
+            if(summary)summary.innerHTML='<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:10px;padding:12px 16px;display:inline-block"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">ALERTAS COMBUSTIBLE BAJO</div><div style="font-size:28px;font-weight:600;color:'+(flow.length>0?'var(--error)':'var(--success)')+';font-family:Newsreader,serif;margin-top:4px">'+flow.length+'</div></div>';
+            if(flow.length===0){list.innerHTML='<div style="text-align:center;padding:32px;color:var(--text-secondary)"><i class="fa-brands fa-whatsapp" style="font-size:32px;color:#059669;display:block;margin-bottom:8px"></i>Sin alertas. Combustible OK en toda la flota.</div>';return;}
+            list.innerHTML=flow.map(function(v){
+                var sev=v.tank_status<15?'var(--error)':'var(--warning)';
+                return '<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-left:3px solid '+sev+';border-radius:10px;padding:14px 16px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600;color:var(--text-primary)"><i class="fa-solid fa-gas-pump" style="color:#F97316;margin-right:6px"></i>'+esc(v.name)+'</span><span style="background:'+sev+';color:white;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700">'+(v.tank_status<15?'CRÍTICO':'BAJO')+'</span></div><div style="font-size:12px;color:var(--text-secondary);margin-top:4px">Combustible: <strong>'+v.tank_status+'%</strong> · Bunkering requerido</div></div>';
+            }).join('');
+            return;
+        }catch(e2){list.innerHTML='<div style="color:var(--error);font-size:13px;padding:16px">Error: '+e2.message+'</div>';return;}
+    }
+    _renderWaBadge(unread);
+    if(summary)summary.innerHTML='<div style="display:flex;gap:12px;flex-wrap:wrap">'
+        +'<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:10px;padding:12px 16px;flex:1;min-width:120px"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">TOTAL ALERTAS</div><div style="font-size:28px;font-weight:600;color:var(--text-primary);font-family:Newsreader,serif;margin-top:4px">'+alerts.length+'</div></div>'
+        +'<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:10px;padding:12px 16px;flex:1;min-width:120px"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">SIN LEER</div><div style="font-size:28px;font-weight:600;color:'+(unread>0?'var(--error)':'var(--success)')+';font-family:Newsreader,serif;margin-top:4px">'+unread+'</div></div>'
+        +'</div>';
+    if(alerts.length===0){
+        list.innerHTML='<div style="text-align:center;padding:32px;color:var(--text-secondary)"><i class="fa-brands fa-whatsapp" style="font-size:32px;color:#059669;display:block;margin-bottom:8px"></i>Sin alertas registradas. El sistema monitoreará y enviará vía WhatsApp automáticamente.</div>';
+        return;
+    }
+    list.innerHTML=alerts.map(function(a){
+        var sev=a.severity==='critical'?'var(--error)':a.severity==='warning'?'var(--warning)':'var(--accent)';
+        var t=a.created_at?new Date(a.created_at).toLocaleString('es-PY',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+        return '<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-left:3px solid '+sev+';border-radius:10px;padding:14px 16px;margin-bottom:8px">'
+            +'<div style="display:flex;justify-content:space-between;align-items:center">'
+            +'<span style="font-size:13px;font-weight:600;color:var(--text-primary)"><i class="fa-brands fa-whatsapp" style="color:#059669;margin-right:6px"></i>'+esc(a.title||a.type||'Alerta')+'</span>'
+            +'<span style="font-size:10px;color:var(--text-secondary)">'+t+'</span>'
+            +'</div>'
+            +'<div style="font-size:12px;color:var(--text-secondary);margin-top:4px">'+esc(a.message||'')+(a.vessel_name?' · <strong>'+esc(a.vessel_name)+'</strong>':'')+'</div>'
+            +(!a.read?'<button onclick="markWaAlertRead(\''+a.id+'\')" style="margin-top:8px;background:none;border:0.5px solid var(--separator);border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer;color:var(--text-secondary)">Marcar leído</button>':'')
+            +'</div>';
+    }).join('');
+}
+function _renderWaBadge(count){
+    var b=document.getElementById('wa-badge');
+    if(!b)return;
+    if(count>0){b.textContent=count;b.style.display='inline';}
+    else{b.style.display='none';}
+}
+async function markWaAlertRead(id){
+    try{await sb.from('system_alerts').update({read:true}).eq('id',id);loadWhatsAppAlerts();}catch(e){}
 }
 
 function exportPreZarpe(fmt){alert('Exportando Pre-Zarpe en '+fmt.toUpperCase()+'...');}
