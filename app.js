@@ -752,8 +752,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // --- WHATSAPP NOTIFICATIONS ---
 if (whatsappRoutes) {
-    app.use('/api/whatsapp', whatsappRoutes);
-    console.log('✅ WhatsApp API mounted at /api/whatsapp');
+    // daily-check is called by cron jobs — protected with CRON_SECRET header
+    // all other endpoints require a valid user JWT
+    const whatsappAuth = (req, res, next) => {
+        if (req.path === '/daily-check') {
+            const secret = req.headers['x-cron-secret'];
+            if (secret && secret === process.env.CRON_SECRET) return next();
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        return authenticateUser(req, res, next);
+    };
+    app.use('/api/whatsapp', whatsappAuth, whatsappRoutes);
+    console.log('✅ WhatsApp API mounted at /api/whatsapp (auth required)');
 }
 // --- n8n AUTOMATION API ---
 if (n8nRoutes) {

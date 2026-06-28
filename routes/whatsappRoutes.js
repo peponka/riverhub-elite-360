@@ -17,24 +17,17 @@ function getAdmin() {
   );
 }
 
-// Obtener company_id del usuario a partir de su JWT (service key bypass RLS)
-async function companyFromToken(authHeader) {
-  if (!authHeader?.startsWith('Bearer ')) return null;
-  try {
-    const token = authHeader.slice(7);
-    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-    const userId = payload.sub;
-    if (!userId) return null;
-    const db = getAdmin();
-    if (!db) return null;
-    const { data } = await db.from('user_profiles').select('company_id').eq('user_id', userId).single();
-    return data?.company_id || null;
-  } catch { return null; }
+// Obtener company_id del usuario autenticado (req.user viene del middleware authenticateUser)
+async function getCompanyId(userId) {
+  const db = getAdmin();
+  if (!db || !userId) return null;
+  const { data } = await db.from('user_profiles').select('company_id').eq('user_id', userId).single();
+  return data?.company_id || null;
 }
 
 // GET /api/whatsapp/my-company — el frontend llama esto para obtener su company_id
 router.get('/my-company', async (req, res) => {
-  const company_id = await companyFromToken(req.headers.authorization);
+  const company_id = await getCompanyId(req.user?.id);
   if (!company_id) return res.status(401).json({ error: 'No se pudo resolver company_id' });
   res.json({ company_id });
 });
@@ -108,8 +101,11 @@ router.post('/send', async (req, res) => {
 
 // ── POST /api/whatsapp/alert ────────────────────────────────────────────────
 router.post('/alert', async (req, res) => {
-  const { type, company_id, payload } = req.body;
-  if (!type || !company_id) return res.status(400).json({ error: 'type y company_id requeridos' });
+  const { type, payload } = req.body;
+  if (!type) return res.status(400).json({ error: 'type requerido' });
+  // company_id siempre viene del usuario autenticado, nunca del body (previene IDOR)
+  const company_id = await getCompanyId(req.user?.id);
+  if (!company_id) return res.status(403).json({ error: 'No se pudo resolver company_id del usuario' });
 
   const db = getAdmin();
   if (!db) return res.status(503).json({ error: 'DB no disponible' });
