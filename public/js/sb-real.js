@@ -41,6 +41,16 @@
 
       get client() { return getClient(); },
 
+      /* Paso directo al cliente de Supabase.
+         Varios módulos (comunicaciones.js, admin-cliente.js) no usan
+         fetchMine sino la cadena completa `sb.from(t).select().eq()...`,
+         así que el shim tiene que soportar ambas formas. */
+      from: function (table) {
+        var c = getClient();
+        if (!c) throw new Error('supabase-js no disponible');
+        return c.from(table);
+      },
+
       /* fetchMine(tabla, columnas) -> { data, error }
          `columnas` se pasa tal cual a .select(), así que admite joins del
          estilo '*, profiles:user_id(full_name)'. */

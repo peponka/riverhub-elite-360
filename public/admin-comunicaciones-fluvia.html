@@ -227,6 +227,10 @@
     }
   </script>
 
+  <!-- window.sb REAL antes del módulo: si no, el bloque `if (!window.sb)` de
+       más arriba instalaba un cliente falso con 3 mensajes hardcodeados y la
+       pantalla nunca mostraba las comunicaciones reales de `comms`. -->
+  <script src="./js/sb-real.js"></script>
   <script src="./js/modules/comunicaciones.js"></script>
   <script>
      document.addEventListener('DOMContentLoaded', () => {
