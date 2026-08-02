@@ -1,5 +1,19 @@
 // js/modules/dashboard.js
 // Updated: 2026-02-06 07:36 - Dark Map + AIS Integration
+/* La tabla `vessels` guarda los estados en español ('Activo', 'Mantenimiento',
+   'Inactivo'), pero este módulo los comparaba contra 'active'/'maintenance'.
+   Resultado: FLOTA ACTIVA mostraba 0 de 15 y el mapa no pintaba ningún barco.
+   Estos helpers aceptan ambos vocabularios. */
+function esActivo(estado) {
+    const s = String(estado || '').toLowerCase().trim();
+    return s === 'active' || s === 'activo' || s === 'en viaje' ||
+           s === 'navegando' || s === 'en_viaje' || s === 'transito' || s === 'tránsito';
+}
+function esMantenimiento(estado) {
+    const s = String(estado || '').toLowerCase().trim();
+    return s === 'maintenance' || s.indexOf('manten') >= 0;
+}
+
 const dashboardLogic = {
     ships: [],
     dashMap: null,
@@ -89,7 +103,7 @@ const dashboardLogic = {
 
             // PROCESS VESSELS
             const myVessels = vesselsRes.data || [];
-            const activeCount = myVessels.filter(v => v.status === 'active').length;
+            const activeCount = myVessels.filter(v => esActivo(v.status)).length;
             const totalVessels = myVessels.length;
 
             // PROCESS CREW
@@ -132,8 +146,8 @@ const dashboardLogic = {
     },
 
     updateFleetStatusChart: function (vessels) {
-        const active = vessels.filter(v => v.status === 'active').length;
-        const maint = vessels.filter(v => v.status === 'maintenance').length;
+        const active = vessels.filter(v => esActivo(v.status)).length;
+        const maint = vessels.filter(v => esMantenimiento(v.status)).length;
         const idle = vessels.length - active - maint;
 
         const ctx = document.getElementById('doughnut-chart-tech');
@@ -217,7 +231,7 @@ const dashboardLogic = {
                     let lat = hasLoc ? v.current_location.lat : -27.1 + (Math.random() - 0.5);
                     let lng = hasLoc ? v.current_location.lng : -58.55 + (Math.random() - 0.5);
 
-                    if (v.status !== 'active') return;
+                    if (!esActivo(v.status)) return;
 
                     const feature = new ol.Feature({
                         geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat])),

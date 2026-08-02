@@ -1,3 +1,11 @@
+/* `vessels.status` está en español ('Activo'), pero este módulo comparaba
+   contra 'active'. Sin esto el copiloto respondía "0 unidades operativas". */
+function esActivoAg(estado) {
+    const s = String(estado || '').toLowerCase().trim();
+    return s === 'active' || s === 'activo' || s === 'en viaje' ||
+           s === 'navegando' || s === 'en_viaje' || s === 'transito';
+}
+
 const AgentChatModule = (() => {
 
     let chatHistory = [];
@@ -126,12 +134,12 @@ const AgentChatModule = (() => {
                 const { data } = await window.sb.fetchMine('vessels', 'name, status, cargo_percent');
                 if (!data || data.length === 0) return "No encuentro embarcaciones registradas en tu flota activa.";
 
-                const actives = data.filter(v => v.status === 'active').length;
+                const actives = data.filter(v => esActivoAg(v.status)).length;
                 const total = data.length;
                 let msg = `📊 **Estado de Flota:**\nTienes **${activeCount(data)} unidades operativas** de un total de ${total}.\n`;
 
                 // Add detail of first 3 active
-                const preview = data.filter(v => v.status === 'active').slice(0, 3).map(v => `- 🚢 ${v.name} (${v.cargo_percent}% Carga)`).join('\n');
+                const preview = data.filter(v => esActivoAg(v.status)).slice(0, 3).map(v => `- 🚢 ${v.name} (${v.cargo_percent}% Carga)`).join('\n');
                 if (preview) msg += `\nUnidades destacadas:\n${preview}`;
                 return msg;
             }
@@ -141,8 +149,11 @@ const AgentChatModule = (() => {
                 const { data } = await window.sb.fetchMine('crew_members', 'full_name, role, status');
                 if (!data || data.length === 0) return "No hay personal registrado en el sistema.";
 
-                const active = data.filter(c => c.status === 'active').length;
-                const onLeave = data.filter(c => c.status === 'leave').length;
+                // crew_members guarda 'embarcado' / 'franco' (español), no
+                // 'active' / 'leave'. Sin esto el copiloto decía 0 embarcados.
+                const estadoTrip = (x) => String(x.status || '').toLowerCase().trim();
+                const active = data.filter(c => ['active', 'embarcado', 'activo'].includes(estadoTrip(c))).length;
+                const onLeave = data.filter(c => ['leave', 'franco', 'descanso'].includes(estadoTrip(c))).length;
 
                 return `👥 **Reporte de RRHH:**\nActualmente hay **${active} tripulantes embarcados** y ${onLeave} de franco.\n\nRoles destacados: ${countRoles(data)}`;
             }
@@ -182,7 +193,7 @@ const AgentChatModule = (() => {
     };
 
     // Helpers
-    const activeCount = (list) => list.filter(x => x.status === 'active').length;
+    const activeCount = (list) => list.filter(x => esActivoAg(x.status)).length;
     const countRoles = (list) => {
         const captains = list.filter(x => x.role.includes('apit')).length;
         const engineers = list.filter(x => x.role.includes('qui')).length;

@@ -406,7 +406,7 @@ async function loadDashboard(){
         var vessels=r.data||[];
         var total=vessels.length;
         var active=0,docked=0,maint=0;
-        vessels.forEach(function(v){var s=(trad(v.status||'')).toLowerCase();if(s==='en viaje'||s==='active'||s==='navegando'||s==='en_viaje')active++;else if(s.indexOf('manten')>=0)maint++;else docked++;});
+        vessels.forEach(function(v){var s=(trad(v.status||'')).toLowerCase();if(s==='en viaje'||s==='active'||s==='activo'||s==='navegando'||s==='en_viaje')active++;else if(s.indexOf('manten')>=0)maint++;else docked++;});
 
         // KPI: Fleet Active
         var el1=document.getElementById('dash-kpi-viaje');if(el1)el1.textContent=active;
@@ -443,7 +443,7 @@ async function loadDashboard(){
         if(liveContainer){
             liveContainer.innerHTML=vessels.slice(0,8).map(function(v,i){
                 var s=(trad(v.status||'')).toLowerCase();
-                var isActive=s==='en viaje'||s==='active'||s==='navegando'||s==='en_viaje';
+                var isActive=s==='en viaje'||s==='active'||s==='activo'||s==='navegando'||s==='en_viaje';
                 var isMaint=s.indexOf('manten')>=0;
                 var statusColor=isActive?'var(--success)':isMaint?'var(--warning)':'var(--accent)';
                 var statusLabel=isActive?'NAVEGANDO':isMaint?'ATENCIÓN':'EN PUERTO';
@@ -528,7 +528,7 @@ async function loadDashMiniCharts(vessels){
     }catch(e){/* Fuel trend: */;}
     try{
         var active=0,docked=0,maint=0;
-        (vessels||[]).forEach(function(v){var s=(trad(v.status||'')).toLowerCase();if(s==='en viaje'||s==='active'||s==='navegando'||s==='en_viaje')active++;else if(s.indexOf('manten')>=0)maint++;else docked++;});
+        (vessels||[]).forEach(function(v){var s=(trad(v.status||'')).toLowerCase();if(s==='en viaje'||s==='active'||s==='activo'||s==='navegando'||s==='en_viaje')active++;else if(s.indexOf('manten')>=0)maint++;else docked++;});
         var ctx2=document.getElementById('dash-fleet-util');
         if(ctx2){
             if(dashFleetUtilChart)dashFleetUtilChart.destroy();
@@ -552,7 +552,7 @@ function selectDashVessel(idx){
     var elI=document.getElementById('dash-sel-imo');if(elI)elI.textContent='IMO '+(v.imo||v.id||'--');
     var elR=document.getElementById('dash-sel-route');if(elR)elR.textContent=(v.location||'ASU')+' → '+(v.destination||'MPA');
     var s=(trad(v.status||'')).toLowerCase();
-    var isActive=s==='en viaje'||s==='active'||s==='navegando'||s==='en_viaje';
+    var isActive=s==='en viaje'||s==='active'||s==='activo'||s==='navegando'||s==='en_viaje';
     var elC=document.getElementById('dash-sel-convoy');if(elC)elC.textContent=isActive?'4+1':'--';
     var elF=document.getElementById('dash-sel-fuel');if(elF)elF.textContent=isActive?'—':'—';
     var elE=document.getElementById('dash-sel-eta');if(elE)elE.textContent=isActive?'—':'En puerto';
@@ -585,7 +585,7 @@ function loadDashRecentVessels(vessels){
     var container=document.getElementById('dash-vessels');if(!container)return;
     container.innerHTML=vessels.slice(0,4).map(function(v){
         var s=(trad(v.status||'')).toLowerCase();
-        var isActive=s==='en viaje'||s==='active'||s==='navegando'||s==='en_viaje';
+        var isActive=s==='en viaje'||s==='active'||s==='activo'||s==='navegando'||s==='en_viaje';
         var isMaint=s.indexOf('manten')>=0;
         var borderColor=isActive?'var(--success)':isMaint?'var(--warning)':'var(--accent)';
         return '<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:14px;border-left:3px solid '+borderColor+'">'+

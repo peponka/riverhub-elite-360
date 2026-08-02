@@ -43,7 +43,8 @@ async function loadBriefing(){
         ]);
 
         var total  = v.data  ? v.data.length  : 0;
-        var active = v.data  ? v.data.filter(function(x){var s=(x.status||'').toLowerCase();return s.indexOf('viaje')>=0||s==='active';}).length : 0;
+        // 'activo' incluido: vessels.status está en español ('Activo').
+        var active = v.data  ? v.data.filter(function(x){var s=(x.status||'').toLowerCase();return s.indexOf('viaje')>=0||s==='active'||s==='activo';}).length : 0;
         var trips  = vj.data ? vj.data.filter(function(x){var s=(x.status||'').toLowerCase();return s==='navegando'||s==='en_curso';}).length : 0;
         var totalFuel = fl.data ? fl.data.reduce(function(s,x){return s+(x.liters||0);},0) : 0;
         var emb    = cr.data ? cr.data.filter(function(x){return(x.status||'').toLowerCase()==='embarcado'||x.status==='active';}).length : 0;
