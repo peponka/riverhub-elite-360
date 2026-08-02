@@ -402,6 +402,87 @@ router.post('/audit', requireAdmin, async (req, res) => {
 });
 
 // ============================================================
+// LEADS — Solicitudes del formulario de contacto de la web
+// ============================================================
+// El formulario público (POST /api/contact) guarda en `leads`, pero no había
+// ninguna pantalla para leerlos: entraban y quedaban invisibles. Estos dos
+// endpoints alimentan la sección "Leads" del panel superadmin.
+
+// GET /api/admin/leads  — listado, opcionalmente filtrado por estado
+router.get('/leads', requireSuperAdmin, async (req, res) => {
+  try {
+    const db = getAdmin(req.app);
+    const { status, limit = 100, offset = 0 } = req.query;
+
+    let query = db
+      .from('leads')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .range(Number(offset), Number(offset) + Number(limit) - 1);
+
+    if (status) query = query.eq('status', status);
+
+    const { data, error } = await query;
+    if (error) throw error;
+
+    // Contadores por estado para las tarjetas del panel
+    const { data: all } = await db.from('leads').select('status');
+    const porEstado = (all || []).reduce((acc, l) => {
+      const k = l.status || 'nuevo';
+      acc[k] = (acc[k] || 0) + 1;
+      return acc;
+    }, {});
+
+    res.json({
+      leads: data || [],
+      total: (all || []).length,
+      porEstado,
+      limit: Number(limit),
+      offset: Number(offset),
+    });
+  } catch (e) {
+    console.error('[Admin Leads]', e.message);
+    res.status(500).json({ error: 'Error obteniendo leads' });
+  }
+});
+
+// PATCH /api/admin/leads/:id  — cambiar estado (nuevo → contactado → cerrado)
+router.patch('/leads/:id', requireSuperAdmin, async (req, res) => {
+  try {
+    const db = getAdmin(req.app);
+    const { status } = req.body;
+    const permitidos = ['nuevo', 'contactado', 'cerrado', 'descartado'];
+    if (!permitidos.includes(status)) {
+      return res.status(400).json({ error: `status debe ser uno de: ${permitidos.join(', ')}` });
+    }
+
+    const { data, error } = await db
+      .from('leads')
+      .update({ status })
+      .eq('id', req.params.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    if (!data) return res.status(404).json({ error: 'Lead no encontrado' });
+
+    await logAudit(db, {
+      actor_id: req.user.id,
+      action: 'lead_status_change',
+      entity_type: 'lead',
+      entity_id: req.params.id,
+      details: { status },
+      company_id: req.adminProfile.company_id,
+    });
+
+    res.json({ success: true, lead: data });
+  } catch (e) {
+    console.error('[Admin Leads PATCH]', e.message);
+    res.status(500).json({ error: 'Error actualizando lead' });
+  }
+});
+
+// ============================================================
 // COMPLIANCE — Vista global de cumplimiento
 // ============================================================
 

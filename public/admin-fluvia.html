@@ -105,7 +105,7 @@
       <div class="kpi-row">
         <div class="kpi-card">
           <div class="kpi-title">FLOTA ACTIVA</div>
-          <div class="kpi-value">12<span>/14</span></div>
+          <div class="kpi-value" id="kpi-fleet">—<span></span></div>
           <div class="kpi-footer positive">
             <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,8 L6,4 L12,8 L24,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
             ↑ 86% disp. +2 vs. ayer
@@ -113,15 +113,15 @@
         </div>
         <div class="kpi-card">
           <div class="kpi-title">ALARMAS CRÍTICAS <i class="fa-solid fa-circle-exclamation" style="color:var(--status-err);"></i></div>
-          <div class="kpi-value alert">02</div>
+          <div class="kpi-value alert" id="kpi-alarms">—</div>
           <div class="kpi-footer negative">
             <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,4 L6,8 L12,4 L24,10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
             Atención requerida
           </div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">CONSUMO TOTAL <span>KL/24H</span></div>
-          <div class="kpi-value">42.5<span>kL</span></div>
+          <div class="kpi-title">CONSUMO REGISTRADO <span>ACUMULADO</span></div>
+          <div class="kpi-value" id="kpi-fuel">—<span>kL</span></div>
           <div class="kpi-footer positive" style="color:var(--status-ok);">
             <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,0 L6,4 L12,2 L24,8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
             ↓ 4.2% vs. promedio · estable
@@ -129,14 +129,14 @@
         </div>
         <div class="kpi-card">
           <div class="kpi-title">CALADO MÍNIMO <span>PILAR</span></div>
-          <div class="kpi-value">10.2<span>pies</span></div>
+          <div class="kpi-value" id="kpi-draft">—<span>pies</span></div>
           <div class="kpi-footer" style="color:var(--status-warn);">
             Navegable · margen 0.4'
           </div>
         </div>
         <div class="kpi-card">
           <div class="kpi-title">EFICIENCIA OTP <span>ON TIME</span></div>
-          <div class="kpi-value ok">92<span>%</span></div>
+          <div class="kpi-value ok" id="kpi-otp">—<span>%</span></div>
           <div class="kpi-footer positive">
             <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,10 L6,4 L12,6 L24,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
             ↑ Mejor mes del Q
@@ -326,5 +326,84 @@
       </div>
     </div>
   </div>
+<!-- ── KPIs REALES ────────────────────────────────────────────────────────────
+     Estos 5 KPIs estaban escritos a mano en el HTML (FLOTA=12, ALARMAS=02,
+     CONSUMO=42.5, CALADO=10.2, OTP=92) y nunca cambiaban. Ahora salen de la
+     base. Cada uno se resuelve por separado: si una consulta falla, ese KPI
+     queda en "—" en vez de romper el resto o mostrar un número inventado.
+     Las políticas RLS siguen aplicando, así que un admin de empresa ve los
+     números de SU flota y un superadmin ve los de todas. -->
+<script>
+(function(){
+  var SB_URL='https://nfybnnpdrvyxucgpqmmo.supabase.co',
+      SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+
+  function setKpi(id, valor, sufijo, pie){
+    var el=document.getElementById(id); if(!el) return;
+    el.innerHTML = valor + (sufijo?'<span>'+sufijo+'</span>':'');
+    if(pie!=null){
+      var f=el.parentElement && el.parentElement.querySelector('.kpi-footer');
+      if(f) f.textContent=pie;
+    }
+  }
+
+  function cargar(sb){
+    // FLOTA ACTIVA — ojo: conviven 'Activo' y 'active' en vessels.status
+    sb.from('vessels').select('status').then(function(r){
+      if(r.error||!r.data) return;
+      var total=r.data.length;
+      var act=r.data.filter(function(v){
+        return String(v.status||'').toLowerCase()==='activo'||String(v.status||'').toLowerCase()==='active';
+      }).length;
+      var disp = total? Math.round(act/total*100) : 0;
+      setKpi('kpi-fleet', act, '/'+total, disp+'% de disponibilidad');
+    });
+
+    // ALARMAS CRÍTICAS — severidad ALTA sin resolver
+    sb.from('alerts').select('severity,resolved_at').then(function(r){
+      if(r.error||!r.data) return;
+      var n=r.data.filter(function(a){return a.severity==='ALTA'&&!a.resolved_at;}).length;
+      setKpi('kpi-alarms', (n<10?'0':'')+n, null, n?'Atención requerida':'Sin alarmas críticas');
+    });
+
+    // CONSUMO — suma de fuel_logs (litros → kL).
+    // Es el ACUMULADO registrado, no "las últimas 24h": hoy todas las cargas
+    // son del mismo día y no hay ninguna en las últimas 24h, así que rotularlo
+    // por día daría 0 o sería directamente falso. El pie aclara el período.
+    sb.from('fuel_logs').select('quantity,logged_at').then(function(r){
+      if(r.error||!r.data||!r.data.length) return;
+      var litros=r.data.reduce(function(s,f){return s+(Number(f.quantity)||0);},0);
+      var fechas=r.data.map(function(f){return f.logged_at;}).filter(Boolean).sort();
+      var ult=fechas.length?new Date(fechas[fechas.length-1]).toLocaleDateString('es-PY'):null;
+      setKpi('kpi-fuel', (litros/1000).toFixed(1), 'kL',
+             r.data.length+' cargas'+(ult?' · última '+ult:''));
+    });
+
+    // CALADO MÍNIMO — la lectura más restrictiva registrada
+    sb.from('readings').select('draft_value,location_name').then(function(r){
+      if(r.error||!r.data||!r.data.length) return;
+      var min=r.data.reduce(function(m,x){return (Number(x.draft_value)<Number(m.draft_value))?x:m;});
+      setKpi('kpi-draft', Number(min.draft_value).toFixed(1), 'pies', 'Punto crítico: '+(min.location_name||'—'));
+    });
+
+    // OTP — viajes cerrados que llegaron dentro de la ETA
+    sb.from('voyages').select('eta,actual_arrival').then(function(r){
+      if(r.error||!r.data) return;
+      var cerr=r.data.filter(function(v){return v.actual_arrival&&v.eta;});
+      if(!cerr.length){ setKpi('kpi-otp','—','','Sin viajes cerrados aún'); return; }
+      var ok=cerr.filter(function(v){return new Date(v.actual_arrival)<=new Date(v.eta);}).length;
+      setKpi('kpi-otp', Math.round(ok/cerr.length*100), '%', ok+' de '+cerr.length+' viajes en fecha');
+    });
+  }
+
+  function init(){ try{ cargar(supabase.createClient(SB_URL,SB_KEY)); }catch(e){} }
+  if(window.supabase) init();
+  else{
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload=init; document.head.appendChild(s);
+  }
+})();
+</script>
 </body>
 </html>

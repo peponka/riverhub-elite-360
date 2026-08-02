@@ -74,8 +74,18 @@ const CrewModuleFluvia = (() => {
             let aptoMed = 'VIGENTE';
             let aptoColor = 'var(--status-ok)';
 
-            if (c.status === 'leave') { stClass = 'st-leave'; stText = 'FRANCO'; }
-            if (c.status === 'medical') { stClass = 'st-medical'; stText = 'MÉDICO'; aptoMed = 'RESTRINGIDO'; aptoColor = 'var(--status-err)'; }
+            // La tabla `crew_members` guarda los estados en español
+            // ('embarcado', 'franco') y los datos demo de este módulo en inglés
+            // ('leave', 'medical'). Sin normalizar, los tripulantes en franco se
+            // mostraban como ACTIVO (a bordo), que es justo lo contrario.
+            const st = String(c.status || '').toLowerCase().trim();
+            if (st === 'leave' || st === 'franco' || st === 'descanso') {
+                stClass = 'st-leave'; stText = 'FRANCO';
+            }
+            if (st === 'medical' || st === 'medico' || st === 'médico' || st === 'baja') {
+                stClass = 'st-medical'; stText = 'MÉDICO';
+                aptoMed = 'RESTRINGIDO'; aptoColor = 'var(--status-err)';
+            }
 
             const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.full_name || 'NN')}&background=f8fafc&color=0f172a&bold=true`;
 

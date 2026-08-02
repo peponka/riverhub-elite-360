@@ -4370,13 +4370,17 @@
 
                     grid.innerHTML = "";
 
-                    // AUTO-SEED IF EMPTY (To restore visuals for the User)
+                    // AUTO-SEED DESACTIVADO.
+                    // Antes, si la consulta volvía vacía, esto insertaba 4
+                    // embarcaciones inventadas (TB PARAGUAY 01, R/M HERCULES,
+                    // R/M CENTAURO, R/M ORION STAR) directo en la base. Como
+                    // también se disparaba cuando RLS filtraba todo (usuario sin
+                    // empresa asignada, sesión a medias), fue una de las causas
+                    // de los duplicados de flota que hubo que limpiar.
+                    // `fleet_assets` ahora se sincroniza desde `vessels` por SQL
+                    // (sql/PATCH_SYNC_FLEET_ASSETS.sql), no desde el navegador.
                     if (!data || data.length === 0) {
-                        console.log("⚠️ DB Empty. Seeding Demo Data...");
-                        await this.seedDemoData();
-                        // Re-fetch
-                        const res = await window.sb.from('fleet_assets').select('*').order('created_at', { ascending: false });
-                        data = res.data;
+                        console.warn("Flota vacía: puede ser que el usuario no tenga empresa asignada (RLS).");
                     }
 
                     if (data && data.length > 0) {

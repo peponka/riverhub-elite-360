@@ -389,8 +389,8 @@ const FleetManagerFluvia = (() => {
 
     const updateStats = () => {
         const total = vessels.length;
-        const active = vessels.filter(v => v.status === 'active' || v.status === 'transito').length;
-        const maint = vessels.filter(v => v.status === 'maintenance').length;
+        const active = vessels.filter(v => ['active', 'transito'].includes(normStatus(v.status))).length;
+        const maint = vessels.filter(v => ['maintenance', 'inactive'].includes(normStatus(v.status))).length;
 
         const stTotal = document.getElementById('stat-total');
         const stActive = document.getElementById('stat-active');
@@ -399,6 +399,20 @@ const FleetManagerFluvia = (() => {
         if(stTotal) stTotal.innerText = total;
         if(stActive) stActive.innerText = active;
         if(stMaint) stMaint.innerText = maint;
+    };
+
+    /* Normaliza el estado a los 4 valores que entiende la UI.
+       Hace falta porque conviven dos vocabularios: los datos demo de este
+       módulo usan 'active'/'maintenance'/'transito' (inglés, minúscula) y la
+       tabla `vessels` usa 'Activo'/'Mantenimiento'/'Inactivo' (español,
+       capitalizado). Sin esto, con datos reales TODO se mostraba como
+       "OPERATIVO" —incluido un barco en taller— y los contadores daban 0. */
+    const normStatus = (s) => {
+        const v = String(s || '').toLowerCase().trim();
+        if (v === 'maintenance' || v === 'mantenimiento') return 'maintenance';
+        if (v === 'transito' || v === 'tránsito' || v === 'en_transito' || v === 'en ruta') return 'transito';
+        if (v === 'inactive' || v === 'inactivo' || v === 'fuera de servicio') return 'inactive';
+        return 'active';
     };
 
     const renderView = () => {
@@ -426,11 +440,13 @@ const FleetManagerFluvia = (() => {
         `;
 
         const gridHTML = vessels.map(v => {
+            const st = normStatus(v.status);
             let statusText = 'OPERATIVO';
             let statusClass = 'active';
 
-            if (v.status === 'maintenance') { statusClass = 'maintenance'; statusText = 'TALLER'; }
-            if (v.status === 'transito') { statusClass = 'transito'; statusText = 'EN RUTA'; }
+            if (st === 'maintenance') { statusClass = 'maintenance'; statusText = 'TALLER'; }
+            if (st === 'transito')    { statusClass = 'transito';    statusText = 'EN RUTA'; }
+            if (st === 'inactive')    { statusClass = 'maintenance'; statusText = 'INACTIVO'; }
 
             const mmsiTag = v.mmsi
                 ? `<span style="font-size:0.65rem; color:#3B82F6; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:4px; padding:2px 6px;">AIS: ${v.mmsi}</span>`

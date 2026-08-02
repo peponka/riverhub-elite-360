@@ -49,6 +49,7 @@
             <a class="sa-nav-link" data-section="billing" onclick="saNav(this)"><i class="fas fa-dollar-sign"></i>Revenue & Billing</a>
             <a class="sa-nav-link" data-section="contracts" onclick="saNav(this)"><i class="fas fa-file-contract"></i>Contratos</a>
             <a class="sa-nav-link" data-section="clients" onclick="saNav(this)"><i class="fas fa-building"></i>Clientes</a>
+            <a class="sa-nav-link" data-section="leads" onclick="saNav(this)"><i class="fas fa-inbox"></i>Leads<span id="sa-leads-badge" class="sa-badge-count" style="display:none"></span></a>
             <div class="sa-nav-label">INTELIGENCIA</div>
             <a class="sa-nav-link" data-section="ai" onclick="saNav(this)"><i class="fas fa-robot"></i>Copiloto IA</a>
             <a class="sa-nav-link" data-section="invoiceai" onclick="saNav(this)"><i class="fas fa-file-invoice-dollar"></i>Invoice IA</a>
@@ -226,6 +227,24 @@
         </section>
 
         <!-- LOGS -->
+        <!-- LEADS — solicitudes del formulario de contacto de la web -->
+        <section class="sa-section" id="sec-leads">
+            <div class="sa-header"><h1>Leads</h1><p>Solicitudes recibidas desde el formulario de contacto de la web</p></div>
+            <div class="sa-toolbar">
+                <select class="sa-select" id="leads-filter" onchange="saLoadLeads()">
+                    <option value="">Todos los estados</option>
+                    <option value="nuevo">Nuevos</option>
+                    <option value="contactado">Contactados</option>
+                    <option value="cerrado">Cerrados</option>
+                    <option value="descartado">Descartados</option>
+                </select>
+                <button class="sa-btn" onclick="saLoadLeads()"><i class="fas fa-sync"></i> Actualizar</button>
+            </div>
+            <div class="sa-card" id="leads-card">
+                <div style="text-align:center;padding:30px;color:var(--text-2)"><i class="fas fa-spinner fa-spin"></i> Cargando leads...</div>
+            </div>
+        </section>
+
         <section class="sa-section" id="sec-logs">
             <div class="sa-header"><h1>Logs del Sistema</h1><p>Registro de actividad y eventos</p></div>
             <div class="sa-toolbar">
@@ -468,8 +487,74 @@ function saNav(el){
     if(sec==='dashboard')saLoadDashboard();
     else if(sec==='users')saLoadUsers();
     else if(sec==='clients')saLoadClients();
+    else if(sec==='leads')saLoadLeads();
     else if(sec==='logs')saLoadAuditLog();
     else if(sec==='config')saLoadHealth();
+}
+
+// ── LEADS ──────────────────────────────────────────────────────────────────
+// El formulario público guardaba leads pero no había dónde verlos.
+const LEAD_ESTADOS=['nuevo','contactado','cerrado','descartado'];
+const leadColor=s=>({nuevo:'var(--green,#10b981)',contactado:'var(--amber,#f59e0b)',cerrado:'var(--text-2)',descartado:'var(--red,#ef4444)'}[s]||'var(--text-2)');
+
+async function saLoadLeads(){
+    const card=document.getElementById('leads-card');
+    if(!card)return;
+    card.innerHTML='<div style="text-align:center;padding:20px;color:var(--text-2)"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+    try{
+        const f=document.getElementById('leads-filter')?.value||'';
+        const d=await saFetch('/api/admin/leads?limit=100'+(f?'&status='+f:''));
+        const leads=d.leads||[];
+
+        // Badge con la cantidad de leads nuevos sin atender
+        const badge=document.getElementById('sa-leads-badge');
+        const nuevos=(d.porEstado&&d.porEstado.nuevo)||0;
+        if(badge){badge.textContent=nuevos;badge.style.display=nuevos>0?'inline-block':'none';}
+
+        if(!leads.length){
+            card.innerHTML='<div style="padding:24px;color:var(--text-2);text-align:center">'
+              +'<i class="fas fa-inbox" style="font-size:28px;opacity:.4;display:block;margin-bottom:10px"></i>'
+              +(f?'No hay leads con ese estado.':'Todavía no llegó ningún lead desde el formulario de la web.')+'</div>';
+            return;
+        }
+
+        const resumen=LEAD_ESTADOS.filter(s=>d.porEstado&&d.porEstado[s])
+            .map(s=>`<span style="margin-right:14px;font-size:12px;color:${leadColor(s)}">
+                <b>${d.porEstado[s]}</b> ${s}</span>`).join('');
+
+        card.innerHTML=`<div style="padding:12px 16px;border-bottom:1px solid var(--border,#222)">${resumen||''}
+            <span style="float:right;font-size:12px;color:var(--text-2)">${d.total} en total</span></div>`
+          + leads.map(l=>`
+            <div class="sa-log-item" style="align-items:flex-start;gap:12px">
+                <span style="width:8px;height:8px;border-radius:50%;background:${leadColor(l.status)};margin-top:7px;flex:none"></span>
+                <div style="flex:1;min-width:0">
+                    <div style="font-weight:600">${esc(l.nombre)} <span style="color:var(--text-2);font-weight:400">— ${esc(l.empresa)}</span></div>
+                    <div style="font-size:12px;color:var(--text-2);margin-top:2px">
+                        <a href="mailto:${esc(l.email)}" style="color:var(--accent,#3b82f6)">${esc(l.email)}</a>
+                        &nbsp;·&nbsp;${esc(l.pais)}&nbsp;·&nbsp;flota: ${esc(l.flota)}
+                    </div>
+                    ${l.mensaje?`<div style="font-size:12px;margin-top:6px;color:var(--text-1);white-space:pre-wrap">${esc(l.mensaje)}</div>`:''}
+                </div>
+                <select class="sa-select" style="width:auto;font-size:11px;padding:4px 6px"
+                        onchange="saSetLeadStatus('${l.id}',this.value)">
+                    ${LEAD_ESTADOS.map(s=>`<option value="${s}"${l.status===s?' selected':''}>${s}</option>`).join('')}
+                </select>
+                <span class="sa-log-time" style="flex:none">${fmtDate(l.created_at)}</span>
+            </div>`).join('');
+    }catch(e){card.innerHTML='<div style="padding:20px;color:var(--red)">Error al cargar leads</div>';}
+}
+
+async function saSetLeadStatus(id,status){
+    try{
+        await saFetch('/api/admin/leads/'+id,{method:'PATCH',body:JSON.stringify({status})});
+        saLoadLeads();
+    }catch(e){alert('No se pudo actualizar el lead');}
+}
+
+// Escapa HTML: los leads son texto que carga un desconocido desde internet,
+// así que no puede inyectarse en el panel del superadmin sin sanitizar.
+function esc(s){
+    return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 // Fleet grid
