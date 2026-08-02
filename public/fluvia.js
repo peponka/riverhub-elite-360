@@ -418,20 +418,43 @@ async function loadDashboard(){
 
         // KPI: Fuel - try to get real data
         try{
-            var fuelR=await sb.from('fuel_records').select('liters').limit(50);
+            // Antes consultaba 'fuel_records'.'liters' — ni la tabla ni la
+            // columna existen (son 'fuel_logs'.'quantity'). supabase-js no
+            // lanza excepción, devuelve {data:null}, así que el catch no se
+            // activaba y el KPI mostraba 0.0 kL en silencio.
+            var fuelR=await sb.from('fuel_logs').select('quantity, logged_at').limit(200);
             var fuelData=fuelR.data||[];
-            var totalFuel=0;fuelData.forEach(function(f){totalFuel+=(f.liters||0);});
+            var totalFuel=0;fuelData.forEach(function(f){totalFuel+=(Number(f.quantity)||0);});
             var fuelKL=(totalFuel/1000).toFixed(1);
             var elF=document.getElementById('dash-kpi-fuel');if(elF)elF.textContent=fuelKL;
-            var elFS=document.getElementById('dash-kpi-fuel-sub');if(elFS)elFS.textContent='↑ '+(fuelData.length)+' registros · Áºltimas 24h';
+            // Es el acumulado registrado, no las últimas 24h: hoy no hay ninguna
+            // carga en ese rango y rotularlo así era directamente falso.
+            var elFS=document.getElementById('dash-kpi-fuel-sub');if(elFS)elFS.textContent=fuelData.length+' cargas registradas';
         }catch(e2){var elF=document.getElementById('dash-kpi-fuel');if(elF)elF.textContent='42.5';}
 
-        // KPI: Calado - computed from active vessel data
-        var elC=document.getElementById('dash-kpi-calado');if(elC)elC.textContent='--';
-        var elCS=document.getElementById('dash-kpi-calado-sub');if(elCS)elCS.textContent='sin lectura reciente';
+        // KPI: Calado mínimo — antes estaba fijo en '--'. Sale de la lectura
+        // más restrictiva registrada en `readings` (valores en pies).
+        try{
+            var rd=await sb.from('readings').select('draft_value, location_name');
+            var lect=(rd.data||[]).filter(function(x){return x.draft_value!=null;});
+            if(lect.length){
+                var min=lect.reduce(function(m,x){return Number(x.draft_value)<Number(m.draft_value)?x:m;});
+                var elC=document.getElementById('dash-kpi-calado');
+                if(elC)elC.textContent=Number(min.draft_value).toFixed(1);
+                var elCS=document.getElementById('dash-kpi-calado-sub');
+                if(elCS)elCS.textContent='Punto crítico: '+(min.location_name||'—');
+            }else{
+                var elC0=document.getElementById('dash-kpi-calado');if(elC0)elC0.textContent='--';
+                var elCS0=document.getElementById('dash-kpi-calado-sub');if(elCS0)elCS0.textContent='sin lectura reciente';
+            }
+        }catch(e3){}
 
-        // KPI: Efficiency - computed from fleet utilization
+        // KPI: disponibilidad de flota (activas / total).
+        // La tarjeta se rotula "EFICIENCIA RUTA", pero esto NO mide
+        // puntualidad de rutas — mide qué porcentaje de la flota está
+        // operativo. El sub-texto lo aclara para no prometer otra cosa.
         var elE=document.getElementById('dash-kpi-efficiency');if(elE)elE.textContent=total>0?Math.round((active/Math.max(total,1))*100):'--';
+        var elES=document.getElementById('dash-kpi-efficiency-sub');if(elES)elES.textContent=active+' de '+total+' operativas';
 
         // Sync timer reset
         dashSyncTimer=0;
@@ -484,7 +507,10 @@ async function loadDashboard(){
                 var mcData = await mcRes.json();
                 var cid = mcData.company_id;
                 if (cid) {
-                    var cRes = await fetch('/api/whatsapp/contacts?company_id=' + cid);
+                    // Faltaba el Authorization: /api/whatsapp/* está detrás del
+                    // middleware whatsappAuth, así que sin token devolvía 401 y
+                    // la tarjeta mostraba siempre "0 contactos activos".
+                    var cRes = await fetch('/api/whatsapp/contacts?company_id=' + cid, { headers: { 'Authorization': 'Bearer ' + token } });
                     var contacts = cRes.ok ? await cRes.json() : [];
                     var activeCount = contacts.filter(function(c){ return c.active; }).length;
                     var badge = document.getElementById('nav-wa-badge');
@@ -492,7 +518,7 @@ async function loadDashboard(){
                     if (waEl) waEl.textContent = activeCount;
                     if (badge) { badge.textContent = activeCount; badge.style.display = activeCount > 0 ? '' : 'none'; }
 
-                    var lRes = await fetch('/api/whatsapp/log?company_id=' + cid);
+                    var lRes = await fetch('/api/whatsapp/log?company_id=' + cid, { headers: { 'Authorization': 'Bearer ' + token } });
                     if (lRes.ok) {
                         var log = await lRes.json();
                         var today = new Date().toDateString();
@@ -1314,9 +1340,12 @@ async function loadDashboardExtras(){
     }catch(e){}
     // Fuel KPI
     try{
-        var f=await sb.from('fuel_logs').select('liters').limit(200);
+        // La columna es 'quantity', no 'liters'. Con 'liters' el select no
+        // fallaba pero cada x.liters daba undefined -> el total quedaba en 0 y
+        // este bloque PISABA con 0.0 el valor correcto calculado más arriba.
+        var f=await sb.from('fuel_logs').select('quantity').limit(200);
         if(f.data&&f.data.length>0){
-            var total=f.data.reduce(function(s,x){return s+(x.liters||0)},0);
+            var total=f.data.reduce(function(s,x){return s+(Number(x.quantity)||0)},0);
             var kf=document.getElementById('dash-kpi-fuel');if(kf)kf.textContent=(total/1000).toFixed(1);
             var kfs=document.getElementById('dash-kpi-fuel-sub');if(kfs)kfs.textContent=f.data.length+' cargas registradas';
         }
@@ -1351,13 +1380,22 @@ async function loadDashboardExtras(){
             document.getElementById('dash-vessels').innerHTML=vh;
         }
     }catch(e){}
-    // Viajes alertas KPI
+    // ALARMAS CRÍTICAS — alertas reales sin resolver.
+    // Antes esta tarjeta contaba VIAJES en estado 'pendiente', que no tiene
+    // nada que ver con la etiqueta "ALARMAS CRÍTICAS" (y más arriba, otro
+    // bloque le escribía la cantidad de barcos en mantenimiento). Ahora sale
+    // de la tabla `alerts`, que es lo que la etiqueta promete.
     try{
-        var vj=await sb.from('voyages').select('status');
-        if(vj.data){
-            var pending=vj.data.filter(function(x){return x.status==='pendiente'}).length;
-            document.getElementById('dash-kpi-alertas').textContent=pending;
-            document.getElementById('dash-kpi-alertas-sub').textContent=vj.data.length+' viajes total';
+        var al=await sb.from('alerts').select('severity, resolved_at');
+        if(al.data){
+            var criticas=al.data.filter(function(x){
+                var s=String(x.severity||'').toLowerCase();
+                return !x.resolved_at && (s==='alta'||s==='critica'||s==='crítica'||s==='high'||s==='critical');
+            }).length;
+            var ka=document.getElementById('dash-kpi-alertas');
+            if(ka)ka.textContent=criticas<10?('0'+criticas):String(criticas);
+            var kas=document.getElementById('dash-kpi-alertas-sub');
+            if(kas)kas.textContent=criticas>0?'Atención requerida':'Sin alarmas críticas';
         }
     }catch(e){}
     // Activity feed (recent logs)

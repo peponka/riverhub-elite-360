@@ -160,13 +160,20 @@ const AgentChatModule = (() => {
 
             // INTENT 3: MANTENIMIENTO / ALERTAS
             if (lower.includes('mantenimiento') || lower.includes('alerta') || lower.includes('roto') || lower.includes('falla')) {
-                const { data } = await window.sb.fetchMine('maintenance_logs', 'title, priority, status');
-                const pending = data ? data.filter(l => l.status !== 'closed') : [];
+                // 'maintenance_logs' no existe: la tabla real es
+                // 'maintenance_tasks', y no tiene columna 'title' (usa
+                // 'component' / 'description'). Además guarda estado y
+                // prioridad en español ('pendiente', 'crítica'), no en inglés.
+                const { data } = await window.sb.fetchMine('maintenance_tasks', 'component, description, priority, status');
+                const cerrada = (s) => ['closed', 'completada', 'completado', 'cerrada'].includes(String(s || '').toLowerCase().trim());
+                const urgente = (p) => ['critical', 'high', 'crítica', 'critica', 'alta'].includes(String(p || '').toLowerCase().trim());
+                const pending = data ? data.filter(l => !cerrada(l.status)) : [];
 
                 if (pending.length === 0) return "✅ **Todo en orden.** No hay alertas de mantenimiento activas.";
 
-                const critical = pending.filter(p => p.priority === 'critical' || p.priority === 'high').length;
-                return `🛠️ **Atención Requerida:**\nTienes **${pending.length} órdenes abiertas** (${critical} de alta prioridad).\n\nÚltima: "${pending[0].title}"`;
+                const critical = pending.filter(p => urgente(p.priority)).length;
+                const ultima = pending[0].component || pending[0].description || 'sin detalle';
+                return `🛠️ **Atención Requerida:**\nTienes **${pending.length} órdenes abiertas** (${critical} de alta prioridad).\n\nÚltima: "${ultima}"`;
             }
 
             // INTENT 4: INVENTARIO / PAÑOL

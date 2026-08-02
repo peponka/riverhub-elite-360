@@ -176,14 +176,18 @@
                     </div>
                     <div class="kpi-card" style="position:relative;overflow:hidden">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                            <div class="kpi-label">EFICIENCIA RUTA</div>
-                            <i class="fa-solid fa-route" style="color:var(--success);font-size:14px;opacity:0.5"></i>
+                            <!-- Decía "EFICIENCIA RUTA", pero el valor se calcula
+                                 como activas/total: es disponibilidad de flota, no
+                                 puntualidad de rutas. Se renombra para no prometer
+                                 una métrica que el sistema todavía no calcula. -->
+                            <div class="kpi-label">DISPONIBILIDAD FLOTA</div>
+                            <i class="fa-solid fa-ship" style="color:var(--success);font-size:14px;opacity:0.5"></i>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
                             <span class="kpi-value" id="dash-kpi-efficiency" style="font-size:32px;color:var(--success)">--</span>
                             <span style="font-size:13px;color:var(--text-secondary)">%</span>
                         </div>
-                        <div style="font-size:11px;color:var(--success);margin-top:6px"><i class="fa-solid fa-arrow-up"></i> Mejor mes del Q</div>
+                        <div style="font-size:11px;color:var(--success);margin-top:6px" id="dash-kpi-efficiency-sub">operativas sobre el total</div>
                     </div>
                 </div>
 

@@ -101,7 +101,7 @@ const AdminCliente = (() => {
                 const [compRes, usrRes, vesRes] = await Promise.all([
                     window.sb.from('clients').select('*').eq('id', tenantId).single(),
                     window.sb.from('profiles').select('*').eq('company_id', tenantId),
-                    window.sb.from('fleet').select('*').eq('company_id', tenantId)
+                    window.sb.from('vessels').select('*').eq('company_id', tenantId)
                 ]);
                 if (compRes.data) company = compRes.data;
                 if (usrRes.data) users = usrRes.data;
@@ -301,7 +301,7 @@ const AdminCliente = (() => {
         let vessels = [];
         if (window.sb && tenantId) {
             try {
-                const { data } = await window.sb.from('fleet').select('*').eq('company_id', tenantId);
+                const { data } = await window.sb.from('vessels').select('*').eq('company_id', tenantId);
                 if (data) vessels = data;
             } catch (e) { console.warn("AC Fleet:", e); }
         }

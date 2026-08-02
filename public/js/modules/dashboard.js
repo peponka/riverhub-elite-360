@@ -98,7 +98,8 @@ const dashboardLogic = {
                 // 2. My Active Crew
                 window.sb.fetchMine('crew_members', 'id'),
                 // 3. My Open Incidents/Maintenance
-                window.sb.fetchMine('maintenance_logs', 'id')
+                // 'maintenance_logs' no existe; la tabla real es 'maintenance_tasks'.
+                window.sb.fetchMine('maintenance_tasks', 'id')
             ]);
 
             // PROCESS VESSELS

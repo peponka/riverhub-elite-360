@@ -560,9 +560,10 @@ async function loadDashboard(){
 
         // KPI: Fuel - try to get real data
         try{
-            var fuelR=await sb.from('fuel_records').select('liters').limit(50);
+            // 'fuel_records'.'liters' no existe; la real es 'fuel_logs'.'quantity'
+            var fuelR=await sb.from('fuel_logs').select('quantity, logged_at').limit(200);
             var fuelData=fuelR.data||[];
-            var totalFuel=0;fuelData.forEach(function(f){totalFuel+=(f.liters||0);});
+            var totalFuel=0;fuelData.forEach(function(f){totalFuel+=(Number(f.quantity)||0);});
             var fuelKL=(totalFuel/1000).toFixed(1);
             var elF=document.getElementById('dash-kpi-fuel');if(elF)elF.textContent=fuelKL;
             var elFS=document.getElementById('dash-kpi-fuel-sub');if(elFS)elFS.textContent='ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ '+(fuelData.length)+' logs Ãƒâ€šÃ‚Â· last 24h';
