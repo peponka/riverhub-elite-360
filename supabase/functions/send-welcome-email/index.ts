@@ -17,7 +17,7 @@ serve(async (req) => {
     const actionType = emailData?.email_action_type ?? 'signup'
 
     if (!email) {
-      return new Response(JSON.stringify({ error: 'No email found' }), { status: 400 })
+      return new Response(JSON.stringify({ error: 'No email found' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
     // Build confirmation link
@@ -185,13 +185,13 @@ serve(async (req) => {
 
     if (!resendRes.ok) {
       console.error('[send-welcome-email] Resend error:', data)
-      return new Response(JSON.stringify({ error: data }), { status: 500 })
+      return new Response(JSON.stringify({ error: data }), { status: 500, headers: { 'Content-Type': 'application/json' } })
     }
 
-    return new Response(JSON.stringify({ success: true, id: data.id }), { status: 200 })
+    return new Response(JSON.stringify({ success: true, id: data.id }), { status: 200, headers: { 'Content-Type': 'application/json' } })
 
   } catch (e) {
     console.error('[send-welcome-email]', e.message)
-    return new Response(JSON.stringify({ error: e.message }), { status: 500 })
+    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 })
