@@ -2,7 +2,14 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const FROM_EMAIL = 'FluviaFleet <bienvenida@fluviafleet.com>'
-const APP_URL = 'https://fluviafleet.com'
+// La raiz (fluviafleet.com) es la landing de marketing: no carga auth.js ni
+// escucha el evento PASSWORD_RECOVERY. La pantalla que de verdad procesa el
+// link y muestra "poner contraseña nueva" vive en /app.html.
+const APP_URL = 'https://fluviafleet.com/app.html'
+// Clave publica (anon), pensada para ir embebida en clientes. La necesita
+// el link de abajo porque pega directo contra /auth/v1/verify, que exige
+// apikey igual que el resto de la API de Supabase.
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc'
 
 serve(async (req) => {
   try {
@@ -23,7 +30,10 @@ serve(async (req) => {
     // Build confirmation link
     let confirmUrl = APP_URL
     if (emailData?.site_url && emailData?.token_hash) {
-      confirmUrl = `${emailData.site_url}/auth/v1/verify?token=${emailData.token_hash}&type=${actionType}&redirect_to=${emailData.redirect_to || APP_URL}`
+      const redirectTarget = emailData.redirect_to || APP_URL
+      // site_url que manda el hook YA incluye /auth/v1 (no es el dominio pelado)
+      const authBase = emailData.site_url.replace(/\/+$/, '')
+      confirmUrl = `${authBase}/verify?token=${encodeURIComponent(emailData.token_hash)}&type=${actionType}&redirect_to=${encodeURIComponent(redirectTarget)}&apikey=${ANON_KEY}`
     } else if (emailData?.redirect_to) {
       confirmUrl = emailData.redirect_to
     }

@@ -41,6 +41,8 @@ let n8nRoutes;
 try { n8nRoutes = require('./routes/n8n-automations'); } catch (e) { console.error('❌ n8n routes failed to load:', e.message); }
 let whatsappRoutes;
 try { whatsappRoutes = require('./routes/whatsappRoutes'); } catch (e) { console.error('❌ WhatsApp routes failed to load:', e.message); }
+let fuelReferenceRoutes;
+try { fuelReferenceRoutes = require('./routes/fuelReferenceRoutes'); } catch (e) { console.error('❌ Fuel reference routes failed to load:', e.message); }
 let hydrologyRoutes;
 try { hydrologyRoutes = require('./routes/hydrologyRoutes'); } catch (e) { console.error('❌ hydrology routes failed to load:', e.message); }
 let authRoutes;
@@ -100,7 +102,7 @@ app.use(helmet({
             styleSrcElem: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             imgSrc: ["'self'", "data:", "blob:", "https://*.basemaps.cartocdn.com", "https://*.tile.openstreetmap.org", "https://cartodb-basemaps-a.global.ssl.fastly.net", "https://cartodb-basemaps-b.global.ssl.fastly.net", "https://cartodb-basemaps-c.global.ssl.fastly.net", "https://cartodb-basemaps-d.global.ssl.fastly.net", "https://a.basemaps.cartocdn.com", "https://b.basemaps.cartocdn.com", "https://c.basemaps.cartocdn.com", "https://d.basemaps.cartocdn.com", "https://tile.openstreetmap.org", "https://flagcdn.com"],
-            connectSrc: ["'self'", "wss:", "ws:", "https://*.supabase.co", "https://api.open-meteo.com", "https://flood-api.open-meteo.com", "https://alerta.ina.gob.ar", "https://unpkg.com", "https://cdn.jsdelivr.net"],
+            connectSrc: ["'self'", "wss:", "ws:", "https://*.supabase.co", "https://api.open-meteo.com", "https://flood-api.open-meteo.com", "https://alerta.ina.gob.ar", "https://open.er-api.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
             frameAncestors: ["'self'"]
         }
     },
@@ -773,6 +775,10 @@ if (n8nRoutes) {
 if (authRoutes) {
     app.use('/api/auth', authRoutes);
     console.log('✅ Auth API mounted at /api/auth');
+}
+if (fuelReferenceRoutes) {
+    app.use('/api/fuel-reference', apiLimiter, fuelReferenceRoutes);
+    console.log('✅ Fuel reference API mounted at /api/fuel-reference');
 }
 // --- ADMIN API ---
 if (adminRoutes) {

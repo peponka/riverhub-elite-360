@@ -897,8 +897,8 @@ async function loadFuel(){
             em.style.display='none';
             l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px';
             var totalLiters=0;
-            var _vnames=['TB PARAGUAY 01','R/M HERCULES','B/M TITAN','R/M CENTAURO','TB PARAGUAY 01'];data.forEach(function(f,_vi){
-                if(!f.vessel_name)f.vessel_name=_vnames[_vi%_vnames.length];var liters=f.liters||f.quantity||0;
+            data.forEach(function(f){
+                var liters=f.liters||f.quantity||0;
                 totalLiters+=liters;
                 var fType=(f.fuel_type||'Gasoil').toLowerCase();
                 var typeColor=fType.indexOf('marine')>=0||fType.indexOf('mgo')>=0?'#0EA5E9':fType.indexOf('diesel')>=0||fType.indexOf('gasoil')>=0?'#F97316':'#8B5CF6';
@@ -913,9 +913,24 @@ async function loadFuel(){
                 l.appendChild(d);
             });
             document.getElementById('fuel-count').textContent=data.length;
-            var elTotal=document.getElementById('fuel-total-liters');if(elTotal)elTotal.textContent=totalLiters.toLocaleString()+'L';
+            var elTotal=document.getElementById('fuel-total');if(elTotal)elTotal.textContent=totalLiters.toLocaleString()+'L';
         }else{em.style.display='';}
     }catch(e){/* Fuel: */;}
+    loadFuelReference();
+}
+
+// Precio real de gasoil (Santa Fe, Sec. de Energia) para comparar contra
+// el consumo interno. Mismo endpoint que usa la app movil.
+async function loadFuelReference(){
+    var el=document.getElementById('fuel-reference');
+    if(!el)return;
+    try{
+        var r=await fetch('/api/fuel-reference/gasoil');
+        var d=await r.json();
+        if(d.promedio_ars_litro){
+            el.innerHTML='<i class="fa-solid fa-chart-line" style="margin-right:6px;color:var(--accent)"></i>Precio de referencia Gas Oil (Santa Fe): <strong>$'+d.promedio_ars_litro.toLocaleString('es-AR')+' ARS/L</strong> · '+d.mes+' · Fuente: Sec. de Energía';
+        }
+    }catch(e){console.error('loadFuelReference:',e);}
 }
 
 async function loadMaint(){
@@ -1853,6 +1868,23 @@ if(!document.getElementById('ai-spinner-css')){
 
 // ─── CONTRATOS DE FLETE ────────────────────────────────────
 function exportContratos(fmt){alert('Exportar contratos en '+fmt+' - próximamente');}
+// Los contratos se pactan en USD/ton; convertir a ARS/PYG con el tipo de
+// cambio real (open.er-api.com, gratis, sin key) para saber cuanto es eso
+// en la moneda que de verdad va a entrar.
+async function loadContratosFx(revenueUsd){
+    var el=document.getElementById('ctr-revenue-fx');
+    if(!el)return;
+    try{
+        var r=await fetch('https://open.er-api.com/v6/latest/USD');
+        var d=await r.json();
+        var ars=d.rates&&d.rates.ARS, pyg=d.rates&&d.rates.PYG;
+        var parts=[];
+        if(ars)parts.push('≈ $'+Math.round(revenueUsd*ars).toLocaleString('es-AR')+' ARS');
+        if(pyg)parts.push('₲'+Math.round(revenueUsd*pyg).toLocaleString('es-AR'));
+        el.textContent=parts.length?parts.join('  ·  ')+'  (tipo de cambio en vivo)':'';
+    }catch(e){console.error('loadContratosFx:',e);}
+}
+
 async function loadContratos(){
     try{
         var r=await sb.from('freight_contracts').select('*').order('created_at',{ascending:false}).limit(50);
@@ -1876,6 +1908,7 @@ async function loadContratos(){
         var te=document.getElementById('ctr-tonnage');if(te)te.textContent=totalTon>=1000?(totalTon/1000).toFixed(0)+'k':totalTon;
         var re=document.getElementById('ctr-revenue');if(re)re.textContent='$'+(revenue>=1000?(revenue/1000).toFixed(0)+'k':revenue.toFixed(0));
         var ee=document.getElementById('ctr-expiring');if(ee)ee.textContent=expiringCount;
+        loadContratosFx(revenue);
 
         var container=document.getElementById('ctr-list');
         if(!container)return;

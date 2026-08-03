@@ -382,6 +382,7 @@
             <div class="view" id="view-combustible">
                 <div class="view-header"><div><div class="fluvia-title">Bunker y<br><em>Combustible.</em></div><div class="fluvia-subtitle">GESTION DE CONSUMO - CONTROL OPERATIVO</div></div><div class="header-actions"><button class="btn-export" onclick="exportFuel('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportFuel('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Registrar Carga</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="fuel-count">0</div><div class="stat-lbl">Cargas Hoy</div></div><div class="stat-cell"><div class="stat-val" id="fuel-total">0L</div><div class="stat-lbl">Consumo</div></div><div class="stat-cell"><div class="stat-val">--</div><div class="stat-lbl">Eficiencia</div></div></div>
+                <div id="fuel-reference" style="font-size:12px;color:var(--text-secondary);margin:-6px 0 14px 2px;"></div>
                 <div id="fuel-list"></div><div class="empty-state" id="fuel-empty"><i class="fa-solid fa-gas-pump"></i><p>Sin registros de consumo</p></div>
             </div>
             <!-- LIQUIDOS (TANQUES) -->
@@ -407,6 +408,7 @@
             <div class="view" id="view-contratos">
                 <div class="view-header"><div><div class="fluvia-title">Contratos de<br><em>Flete.</em></div><div class="fluvia-subtitle">GESTION COMERCIAL - CONTROL DE CONTRATOS</div></div><div class="header-actions"><button class="btn-export" onclick="exportContratos('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportContratos('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('contrato')"><i class="fa-solid fa-plus"></i> Nuevo Contrato</button></div></div>
                 <div class="stat-row"><div class="stat-cell"><div class="stat-val" id="ctr-active">0</div><div class="stat-lbl">Activos</div></div><div class="stat-cell"><div class="stat-val" id="ctr-tonnage">0</div><div class="stat-lbl">Tonelaje</div></div><div class="stat-cell"><div class="stat-val" id="ctr-revenue">$0k</div><div class="stat-lbl">Revenue</div></div><div class="stat-cell"><div class="stat-val" id="ctr-expiring">0</div><div class="stat-lbl">Por Expirar</div></div></div>
+                <div id="ctr-revenue-fx" style="font-size:11px;color:var(--text-tertiary);margin:-8px 0 14px 2px;"></div>
                 <div id="ctr-list"></div>
             </div>
             <!-- PRE-ZARPE -->
