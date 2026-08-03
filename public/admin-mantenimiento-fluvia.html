@@ -188,6 +188,9 @@
     };
   </script>
 
+  <!-- window.sb REAL antes del módulo: sin esto el tablero se armaba con 4
+       órdenes de mantenimiento inventadas en vez de las de la base. -->
+  <script src="./js/sb-real.js"></script>
   <script src="./js/modules/mantenimiento-fluvia.js"></script>
   <script>
      document.addEventListener('DOMContentLoaded', () => {

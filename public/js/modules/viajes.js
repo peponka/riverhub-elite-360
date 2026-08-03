@@ -39,7 +39,7 @@ const viajesLogic = (() => {
                 origin_port: origin,
                 destination_port: dest,
                 cargo_type: cargo,
-                total_cargo_tons: cargoTons,
+                cargo_weight: cargoTons,
                 eta: eta ? new Date(eta).toISOString() : null,
                 status: 'planned'
             });
@@ -53,7 +53,7 @@ const viajesLogic = (() => {
                     origin_port: origin,
                     destination_port: dest,
                     cargo_type: cargo,
-                    total_cargo_tons: cargoTons,
+                    cargo_weight: cargoTons,
                     eta: eta ? new Date(eta).toISOString() : null,
                     status: 'planned'
                  }]);
@@ -102,11 +102,14 @@ const viajesLogic = (() => {
             // If voyages is empty or errors, we might want to fail gracefully
             if (tripsError) throw tripsError;
 
-            // Fetch fleet_assets
+            // Los nombres se buscan en `vessels`, NO en `fleet_assets`:
+            // voyages.vessel_id referencia a vessels (verificado: 7 de 7
+            // matchean con vessels y 0 con fleet_assets). Con fleet_assets
+            // todas las tarjetas mostraban "Buque Desconocido".
             let { data: vesselsData } = await window.sb
-                .fetchMine('fleet_assets', 'id, name, type');
+                .fetchMine('vessels', 'id, name, type');
             if (!vesselsData) {
-                let res = await window.sb.from('fleet_assets').select('id, name, type');
+                let res = await window.sb.from('vessels').select('id, name, type');
                 vesselsData = res.data;
             }
 
@@ -120,7 +123,9 @@ const viajesLogic = (() => {
                     origin: trip.origin_port,
                     destination: trip.destination_port,
                     cargo_type: trip.cargo_type,
-                    total_cargo_tons: trip.total_cargo_tons || 0,
+                    // La columna real es `cargo_weight`; con 'total_cargo_tons'
+                    // (que no existe) todos los viajes mostraban 0 toneladas.
+                    total_cargo_tons: trip.cargo_weight ?? trip.total_cargo_tons ?? 0,
                     progress: 0, // Calculate based on status/dates if needed
                     status: trip.status,
                     estimated_arrival: trip.eta,
@@ -153,7 +158,9 @@ const viajesLogic = (() => {
         if (window.sb) {
             window.sb
                 .channel('trips-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'trips' }, payload => {
+                // Escuchaba la tabla `trips` (vacía y sin uso); los viajes
+                // viven en `voyages`, así que el realtime nunca disparaba.
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'voyages' }, payload => {
                     void('Cambio en viajes detectado:', payload);
                     loadTrips();
                 })

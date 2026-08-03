@@ -164,6 +164,10 @@
     };
   </script>
 
+  <!-- window.sb REAL antes del módulo: init() iba directo a los datos de demo
+       (3 barcos y 3 movimientos fijos) aunque la base tenga 15 embarcaciones
+       y 16 cargas registradas. -->
+  <script src="./js/sb-real.js"></script>
   <script src="./js/modules/combustible-fluvia.js"></script>
   <script>
      document.addEventListener('DOMContentLoaded', () => {

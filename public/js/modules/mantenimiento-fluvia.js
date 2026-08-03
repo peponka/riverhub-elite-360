@@ -15,10 +15,64 @@ const MaintenanceModuleFluvia = (() => {
         simInterval: null
     };
 
+    /* La base guarda estado y prioridad en español ('pendiente', 'en progreso',
+       'completada', 'crítica', 'alta'...) mientras el tablero trabaja con
+       'pending' / 'in_progress' / 'completed' y 'critical' / 'high' / 'medium'
+       / 'low'. Sin normalizar, las tarjetas no caían en ninguna columna. */
+    const normStatus = (s) => {
+        const v = String(s || '').toLowerCase().trim();
+        if (v === 'completada' || v === 'completado' || v === 'completed') return 'completed';
+        if (v === 'en progreso' || v === 'en_progreso' || v === 'in_progress' || v === 'en curso') return 'in_progress';
+        return 'pending';
+    };
+    const normPriority = (p) => {
+        const v = String(p || '').toLowerCase().trim();
+        if (v === 'crítica' || v === 'critica' || v === 'critical') return 'critical';
+        if (v === 'alta' || v === 'high') return 'high';
+        if (v === 'baja' || v === 'low') return 'low';
+        return 'medium';
+    };
+
     const init = () => {
         void("🛠️ Mantenimiento (FLUVIAFLEETFleet) Iniciando...");
-        loadDemoData();
+        loadData();
         initCharts();
+    };
+
+    /* Trae las órdenes reales de `maintenance_tasks` y la flota de `vessels`.
+       Si no hay datos o falla la consulta cae a los de demostración, para que
+       el tablero nunca quede en blanco. */
+    const loadData = async () => {
+        try {
+            if (!window.sb || !window.sb.fetchMine) { loadDemoData(); return; }
+
+            const [vRes, tRes] = await Promise.all([
+                window.sb.fetchMine('vessels', 'id, name'),
+                window.sb.fetchMine('maintenance_tasks', 'id, vessel_id, component, description, priority, status, created_at')
+            ]);
+
+            if (vRes && vRes.data && vRes.data.length) state.vessels = vRes.data;
+
+            if (tRes && tRes.data && tRes.data.length) {
+                state.tasks = tRes.data.map(t => ({
+                    id: t.id,
+                    vessel_id: t.vessel_id,
+                    // `maintenance_tasks` no tiene 'title': se usa el componente
+                    // y si no la descripción.
+                    description: t.component || t.description || 'Sin detalle',
+                    priority: normPriority(t.priority),
+                    status: normStatus(t.status),
+                    created_at: t.created_at || new Date().toISOString()
+                }));
+                renderBoard();
+                updateKPIs();
+                return;
+            }
+            loadDemoData();
+        } catch (e) {
+            console.warn('Mantenimiento: error cargando datos reales, se usan los de demo.', e);
+            loadDemoData();
+        }
     };
 
     const loadDemoData = () => {

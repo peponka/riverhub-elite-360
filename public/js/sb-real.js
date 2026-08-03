@@ -51,6 +51,19 @@
         return c.from(table);
       },
 
+      /* Realtime. viajes.js hace sb.channel(...).on(...).subscribe(); sin esto
+         el módulo reventaba al suscribirse. Si el cliente no está listo se
+         devuelve un objeto inerte encadenable en vez de tirar excepción: que
+         falle el tiempo real no debe impedir que la pantalla cargue. */
+      channel: function (name) {
+        var c = getClient();
+        if (!c) {
+          var inerte = { on: function () { return inerte; }, subscribe: function () { return inerte; } };
+          return inerte;
+        }
+        return c.channel(name);
+      },
+
       /* fetchMine(tabla, columnas) -> { data, error }
          `columnas` se pasa tal cual a .select(), así que admite joins del
          estilo '*, profiles:user_id(full_name)'. */

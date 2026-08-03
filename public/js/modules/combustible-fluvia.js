@@ -12,7 +12,69 @@ const CombustibleModuleFluvia = (() => {
 
     const init = async () => {
         void("⛽ Combustible (FLUVIAFLEETFleet) Iniciando...");
-        loadFallbackData(); // Direct to demo data for isolated UI preview
+        await loadData();
+    };
+
+    /* Carga la flota y las cargas de combustible REALES.
+       Antes init() llamaba directo a loadFallbackData() — el comentario decía
+       "Direct to demo data for isolated UI preview" — así que la pantalla
+       siempre mostraba 3 barcos y 3 movimientos inventados, aunque la base
+       tuviera 15 embarcaciones y 16 cargas registradas.
+       Si la consulta falla o vuelve vacía se cae al demo, para no dejar la
+       pantalla en blanco. */
+    const loadData = async () => {
+        try {
+            if (!window.sb || !window.sb.fetchMine) { loadFallbackData(); return; }
+
+            const [vRes, fRes] = await Promise.all([
+                window.sb.fetchMine('vessels', 'id, name, fuel_capacity'),
+                window.sb.fetchMine('fuel_logs', 'vessel_id, log_type, quantity, location, logged_at')
+            ]);
+
+            const vessels = (vRes && vRes.data) || [];
+            if (!vessels.length) { loadFallbackData(); return; }
+
+            const logs = (fRes && fRes.data) || [];
+
+            // Nivel estimado del tanque = ÚLTIMA carga sobre la capacidad.
+            //
+            // No se suman todas las cargas a propósito: `fuel_logs` solo tiene
+            // movimientos de tipo 'carga' (no hay consumos registrados), así que
+            // el acumulado supera la capacidad — p.ej. 64.000 L cargados en un
+            // tanque de 38.000 daría 100%, que es falso. La última carga es lo
+            // más cercano a un nivel real con los datos que hay.
+            state.vessels = vessels.map(v => {
+                const cap = Number(v.fuel_capacity) || 0;
+                const mios = logs
+                    .filter(l => l.vessel_id === v.id)
+                    .sort((a, b) => new Date(b.logged_at || 0) - new Date(a.logged_at || 0));
+                const ultima = mios.length ? Math.abs(Number(mios[0].quantity) || 0) : 0;
+                const nivel = cap > 0 ? Math.max(0, Math.min(100, Math.round((ultima / cap) * 100))) : 0;
+                return {
+                    id: v.id,
+                    name: v.name,
+                    capacity: cap,
+                    level: nivel,
+                    // Sin registros de consumo no se puede calcular autonomía
+                    // ni eficiencia reales: van en 0 en vez de inventarlas.
+                    autonomy: 0,
+                    efficiency: 0
+                };
+            });
+
+            // La base guarda 'carga' en minúscula y la UI muestra el tipo tal
+            // cual junto a etiquetas como CARGA/CONSUMO/ANOMALÍA.
+            state.fuelLogs = logs.map(l => ({
+                ...l,
+                log_type: String(l.log_type || 'carga').toUpperCase()
+            }));
+            state.activeVesselId = state.vessels[0].id;
+            renderVesselList();
+            updateDashboard(state.vessels[0]);
+        } catch (e) {
+            console.warn('Combustible: error cargando datos reales, se usan los de demo.', e);
+            loadFallbackData();
+        }
     };
 
     // Pre-loaded realistic data
