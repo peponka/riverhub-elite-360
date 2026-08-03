@@ -1818,15 +1818,20 @@ async function suggestConvoyIA(){
 
 // ─── LIQUIDOS EN ────────────────────────────────────
 function exportLiquidos(fmt){alert('Export tanks in '+fmt+' — coming soon');}
-function loadLiquidosEN(){
-    var tanks=[
-        {name:'BT-001 Petrobras',type:'Double hull tank',cap:2200,cur:1870,pct:85,product:'Diesel Marine',temp:'32°C',status:'Loading',route:'ASU → PIL'},
-        {name:'BT-002 Shell',type:'Chemical tanker',cap:1800,cur:1260,pct:70,product:'Naphtha',temp:'28°C',status:'In transit',route:'PIL → ROS'},
-        {name:'BT-003 YPF',type:'Single hull tank',cap:2500,cur:2125,pct:85,product:'Gasoline',temp:'30°C',status:'At port',route:'ROS → BUE'},
-        {name:'BT-004 Axion',type:'Double hull tank',cap:2000,cur:800,pct:40,product:'Fuel Oil',temp:'45°C',status:'Discharging',route:'BUE → MVD'},
-        {name:'BT-005 Total',type:'IMO II tanker',cap:2200,cur:2090,pct:95,product:'Methanol',temp:'22°C',status:'In transit',route:'ASU → ROS'},
-        {name:'BT-006 Repsol',type:'Chemical tanker',cap:2500,cur:1250,pct:50,product:'Ethanol',temp:'26°C',status:'Waiting',route:'PIL → BUE'}
-    ];
+async function loadLiquidosEN(){
+    // Same source as the Spanish view and the mobile app: liquid_tanks.
+    var TYPE={'Tanque doble casco':'Double hull tank','Tanque simple':'Single hull tank'};
+    var ST={'En tránsito':'In transit','Fondeada':'At anchor','Descargando':'Discharging','Mantenimiento':'Maintenance'};
+    var tanks=[];
+    try{
+        var r=await sb.from('liquid_tanks').select('*').order('name');
+        tanks=(r.data||[]).map(function(t){
+            var cap=Number(t.capacity_m3)||0, cur=Number(t.current_m3)||0;
+            return {name:t.name,type:TYPE[t.tank_type]||t.tank_type,cap:cap,cur:cur,
+                    pct:cap>0?Math.round(cur/cap*100):0,product:t.product||'-',
+                    temp:(Number(t.temperature_c)||0)+'°C',status:ST[t.status]||t.status,route:t.route||'-'};
+        });
+    }catch(e){console.error('loadLiquidosEN:',e);}
     var el=document.getElementById('liq-list-en');
     if(!el) return;
     var h='<div style="font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--text-secondary);margin:20px 0 12px">TANK BARGES · '+tanks.length+'</div>';

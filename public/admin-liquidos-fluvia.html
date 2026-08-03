@@ -173,23 +173,23 @@
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-icon purple"><i class="fas fa-oil-can"></i></div>
-                <div class="stat-value">12</div>
+                <div class="stat-value" id="liq-count">—</div>
                 <div class="stat-label">Barcazas tanque</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon amber"><i class="fas fa-fill-drip"></i></div>
-                <div class="stat-value">68%</div>
+                <div class="stat-value" id="liq-util">—</div>
                 <div class="stat-label">Utilización promedio</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon blue"><i class="fas fa-water"></i></div>
-                <div class="stat-value">4.8M</div>
-                <div class="stat-label">Litros en tránsito</div>
+                <div class="stat-value" id="liq-transit">—</div>
+                <div class="stat-label">Volumen en tránsito</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon green"><i class="fas fa-arrows-rotate"></i></div>
-                <div class="stat-value">3</div>
-                <div class="stat-label">Operaciones hoy</div>
+                <div class="stat-value" id="liq-ops">—</div>
+                <div class="stat-label">Operaciones registradas</div>
             </div>
         </div>
 
@@ -197,170 +197,25 @@
         <div class="card">
             <div class="card-header">
                 <span class="card-title">BARCAZAS TANQUE — NIVEL EN TIEMPO REAL</span>
-                <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Nueva Barcaza</button>
+                <button class="btn btn-primary btn-sm" id="liq-new-tank"><i class="fas fa-plus"></i> Nueva Barcaza</button>
             </div>
-            <div class="tanks-grid">
-                <div class="tank-card">
-                    <div class="tank-header">
-                        <div><div class="tank-name">BT-001 Petrobras</div><div class="tank-type">Tanque doble casco — 2,200 m³</div></div>
-                        <span class="tank-product-badge fuel">Gas Oil</span>
-                    </div>
-                    <div class="tank-gauge">
-                        <div class="tank-fill fuel" style="height:82%"></div>
-                        <div class="tank-pct light">82%</div>
-                    </div>
-                    <div class="tank-capacity"><span>Actual: <strong>1,804 m³</strong></span><span>Cap: 2,200 m³</span></div>
-                    <div class="tank-meta">
-                        <span class="tank-meta-item"><i class="fas fa-temperature-half"></i> 23°C</span>
-                        <span class="tank-meta-item"><i class="fas fa-ship"></i> En tránsito</span>
-                        <span class="tank-meta-item"><i class="fas fa-route"></i> ASU → ROE</span>
-                    </div>
-                </div>
-
-                <div class="tank-card">
-                    <div class="tank-header">
-                        <div><div class="tank-name">BT-002 Copetrol</div><div class="tank-type">Tanque simple — 1,800 m³</div></div>
-                        <span class="tank-product-badge chemical">Metanol</span>
-                    </div>
-                    <div class="tank-gauge">
-                        <div class="tank-fill chemical" style="height:45%"></div>
-                        <div class="tank-pct">45%</div>
-                    </div>
-                    <div class="tank-capacity"><span>Actual: <strong>810 m³</strong></span><span>Cap: 1,800 m³</span></div>
-                    <div class="tank-meta">
-                        <span class="tank-meta-item"><i class="fas fa-temperature-half"></i> 19°C</span>
-                        <span class="tank-meta-item"><i class="fas fa-anchor"></i> Fondeada</span>
-                        <span class="tank-meta-item"><i class="fas fa-location-dot"></i> Rosario</span>
-                    </div>
-                </div>
-
-                <div class="tank-card">
-                    <div class="tank-header">
-                        <div><div class="tank-name">BT-003 YPF</div><div class="tank-type">Tanque doble casco — 2,500 m³</div></div>
-                        <span class="tank-product-badge oil">Crudo</span>
-                    </div>
-                    <div class="tank-gauge">
-                        <div class="tank-fill oil" style="height:95%"></div>
-                        <div class="tank-pct light">95%</div>
-                    </div>
-                    <div class="tank-capacity"><span>Actual: <strong>2,375 m³</strong></span><span>Cap: 2,500 m³</span></div>
-                    <div class="tank-meta">
-                        <span class="tank-meta-item"><i class="fas fa-temperature-half"></i> 28°C</span>
-                        <span class="tank-meta-item"><i class="fas fa-ship"></i> En tránsito</span>
-                        <span class="tank-meta-item"><i class="fas fa-route"></i> CDB → BHI</span>
-                    </div>
-                </div>
-
-                <div class="tank-card">
-                    <div class="tank-header">
-                        <div><div class="tank-name">BT-004 Axion</div><div class="tank-type">Tanque simple — 1,500 m³</div></div>
-                        <span class="tank-product-badge fuel">Nafta</span>
-                    </div>
-                    <div class="tank-gauge">
-                        <div class="tank-fill fuel" style="height:12%"></div>
-                        <div class="tank-pct">12%</div>
-                    </div>
-                    <div class="tank-capacity"><span>Actual: <strong>180 m³</strong></span><span>Cap: 1,500 m³</span></div>
-                    <div class="tank-meta">
-                        <span class="tank-meta-item"><i class="fas fa-temperature-half"></i> 21°C</span>
-                        <span class="tank-meta-item"><i class="fas fa-crane-tower"></i> Descargando</span>
-                        <span class="tank-meta-item"><i class="fas fa-location-dot"></i> San Lorenzo</span>
-                    </div>
-                </div>
-
-                <div class="tank-card">
-                    <div class="tank-header">
-                        <div><div class="tank-name">BT-005 Shell</div><div class="tank-type">Tanque doble casco — 2,000 m³</div></div>
-                        <span class="tank-product-badge water">Aceite Veg.</span>
-                    </div>
-                    <div class="tank-gauge">
-                        <div class="tank-fill water" style="height:60%"></div>
-                        <div class="tank-pct light">60%</div>
-                    </div>
-                    <div class="tank-capacity"><span>Actual: <strong>1,200 m³</strong></span><span>Cap: 2,000 m³</span></div>
-                    <div class="tank-meta">
-                        <span class="tank-meta-item"><i class="fas fa-temperature-half"></i> 25°C</span>
-                        <span class="tank-meta-item"><i class="fas fa-ship"></i> En tránsito</span>
-                        <span class="tank-meta-item"><i class="fas fa-route"></i> VCO → SLO</span>
-                    </div>
-                </div>
-
-                <div class="tank-card">
-                    <div class="tank-header">
-                        <div><div class="tank-name">BT-006 Reserva</div><div class="tank-type">Tanque simple — 1,200 m³</div></div>
-                        <span class="tank-product-badge fuel">Gas Oil</span>
-                    </div>
-                    <div class="tank-gauge">
-                        <div class="tank-fill fuel" style="height:0%"></div>
-                        <div class="tank-pct">0%</div>
-                    </div>
-                    <div class="tank-capacity"><span>Actual: <strong>0 m³</strong></span><span>Cap: 1,200 m³</span></div>
-                    <div class="tank-meta">
-                        <span class="tank-meta-item"><i class="fas fa-wrench"></i> En mantenimiento</span>
-                        <span class="tank-meta-item"><i class="fas fa-location-dot"></i> Astillero ASU</span>
-                    </div>
-                </div>
-            </div>
+            <div class="tanks-grid" id="liq-grid"></div>
         </div>
 
         <!-- OPERATIONS LOG -->
         <div class="card">
             <div class="card-header">
                 <span class="card-title">ÚLTIMAS OPERACIONES DE CARGA / DESCARGA</span>
-                <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Registrar Operación</button>
+                <button class="btn btn-primary btn-sm" id="liq-new-op"><i class="fas fa-plus"></i> Registrar Operación</button>
             </div>
             <table class="liq-table">
                 <thead><tr><th>Fecha</th><th>Operación</th><th>Barcaza</th><th>Producto</th><th>Volumen</th><th>Terminal</th><th>Duración</th></tr></thead>
-                <tbody>
-                    <tr>
-                        <td>06/05 08:30</td>
-                        <td><span class="op-type unload"><i class="fas fa-arrow-down"></i> Descarga</span></td>
-                        <td>BT-004 Axion</td>
-                        <td>Nafta</td>
-                        <td style="font-weight:700">1,320 m³</td>
-                        <td>Terminal San Lorenzo</td>
-                        <td>6h 45m</td>
-                    </tr>
-                    <tr>
-                        <td>05/05 14:00</td>
-                        <td><span class="op-type load"><i class="fas fa-arrow-up"></i> Carga</span></td>
-                        <td>BT-001 Petrobras</td>
-                        <td>Gas Oil</td>
-                        <td style="font-weight:700">1,804 m³</td>
-                        <td>PETROPAR Asunción</td>
-                        <td>8h 20m</td>
-                    </tr>
-                    <tr>
-                        <td>05/05 06:00</td>
-                        <td><span class="op-type transfer"><i class="fas fa-arrows-left-right"></i> Trasvasije</span></td>
-                        <td>BT-002 → BT-005</td>
-                        <td>Aceite Vegetal</td>
-                        <td style="font-weight:700">400 m³</td>
-                        <td>Zona fondeo Rosario</td>
-                        <td>3h 10m</td>
-                    </tr>
-                    <tr>
-                        <td>04/05 22:15</td>
-                        <td><span class="op-type load"><i class="fas fa-arrow-up"></i> Carga</span></td>
-                        <td>BT-003 YPF</td>
-                        <td>Crudo</td>
-                        <td style="font-weight:700">2,375 m³</td>
-                        <td>Terminal CDB</td>
-                        <td>10h 05m</td>
-                    </tr>
-                    <tr>
-                        <td>04/05 10:00</td>
-                        <td><span class="op-type unload"><i class="fas fa-arrow-down"></i> Descarga</span></td>
-                        <td>BT-005 Shell</td>
-                        <td>Aceite Vegetal</td>
-                        <td style="font-weight:700">800 m³</td>
-                        <td>Molinos Río de la Plata</td>
-                        <td>4h 30m</td>
-                    </tr>
-                </tbody>
+                <tbody id="liq-ops-body"></tbody>
             </table>
         </div>
     </main>
 </div>
+<script src="./js/sb-real.js"></script>
+<script src="./js/modules/liquidos-fluvia.js"></script>
 </body>
 </html>

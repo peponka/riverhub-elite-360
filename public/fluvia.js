@@ -1928,15 +1928,19 @@ async function loadContratos(){
 }
 
 // ─── LIQUIDOS (TANQUES) ────────────────────────────────────
-function loadLiquidos(){
-    var tanks=[
-        {name:'BT-001 Petrobras',type:'Tanque doble casco',cap:2200,current:1804,product:'Gas Oil',color:'#F97316',temp:23,status:'En tránsito',route:'ASU → ROE'},
-        {name:'BT-002 Copetrol',type:'Tanque simple',cap:1800,current:810,product:'Metanol',color:'#8B5CF6',temp:19,status:'Fondeada',route:'Rosario'},
-        {name:'BT-003 YPF',type:'Tanque doble casco',cap:2500,current:2375,product:'Crudo Pesado',color:'#1E293B',temp:28,status:'En tránsito',route:'CDB → BHI'},
-        {name:'BT-004 Axion',type:'Tanque simple',cap:1500,current:180,product:'Nafta',color:'#F97316',temp:21,status:'En descarga',route:'San Lorenzo'},
-        {name:'BT-005 Shell',type:'Tanque doble casco',cap:2000,current:1200,product:'Agua Destilada',color:'#3B82F6',temp:25,status:'En tránsito',route:'VCO → SLO'},
-        {name:'BT-006 Reserva',type:'Tanque simple',cap:1200,current:0,product:'Gas Oil',color:'#F97316',temp:0,status:'En astillero',route:'Astillero ASU'}
-    ];
+async function loadLiquidos(){
+    // Antes: 6 barcazas escritas a mano acá. Ahora salen de liquid_tanks, la
+    // misma tabla que lee la app movil (sql/PATCH_LIQUIDOS_TANQUES.sql).
+    var COLORS={fuel:'#F97316',chemical:'#8B5CF6',oil:'#1E293B',water:'#3B82F6'};
+    var tanks=[];
+    try{
+        var r=await sb.from('liquid_tanks').select('*').order('name');
+        tanks=(r.data||[]).map(function(t){
+            return {name:t.name,type:t.tank_type,cap:Number(t.capacity_m3)||0,current:Number(t.current_m3)||0,
+                    product:t.product||'-',color:COLORS[t.product_type]||'#6B7280',temp:Number(t.temperature_c)||0,
+                    status:t.status||'-',route:t.route||'-'};
+        });
+    }catch(e){console.error('loadLiquidos:',e);}
     var totalCur=tanks.reduce(function(s,t){return s+t.current;},0);
     var totalCap=tanks.reduce(function(s,t){return s+t.cap;},0);
     var util=totalCap>0?Math.round((totalCur/totalCap)*100):0;
@@ -1957,7 +1961,7 @@ function loadLiquidos(){
     for(var i=0;i<tanks.length;i++){
         var t=tanks[i];
         var pct=t.cap>0?Math.round(t.current/t.cap*100):0;
-        var sc=t.status==='En tránsito'?'#3B82F6':t.status==='Fondeada'?'#10B981':t.status==='En descarga'?'#F97316':'#6B7280';
+        var sc=t.status==='En tránsito'?'#3B82F6':t.status==='Fondeada'?'#10B981':(t.status==='Descargando'||t.status==='En descarga')?'#F97316':'#6B7280';
         var barBg=t.color+'30';
 
         h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;transition:box-shadow 0.2s;cursor:default;" onmouseover="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,0.08)\'" onmouseout="this.style.boxShadow=\'none\'">';
