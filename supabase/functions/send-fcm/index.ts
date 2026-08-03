@@ -10,7 +10,7 @@ serve(async (req) => {
   try {
     const { type, title, body, user_id, data } = await req.json();
 
-    // Get FCM token from user_profiles
+    // fcm_token vive en profiles (id = auth.uid()), no en user_profiles
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
@@ -18,14 +18,14 @@ serve(async (req) => {
 
     if (user_id) {
       // Send to specific user
-      const res = await fetch(`${supabaseUrl}/rest/v1/user_profiles?user_id=eq.${user_id}&select=fcm_token`, {
+      const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user_id}&select=fcm_token`, {
         headers: { "apikey": supabaseKey, "Authorization": `Bearer ${supabaseKey}` },
       });
       const profiles = await res.json();
       tokens = profiles.filter((p: any) => p.fcm_token).map((p: any) => p.fcm_token);
     } else {
       // Broadcast to all users with tokens
-      const res = await fetch(`${supabaseUrl}/rest/v1/user_profiles?fcm_token=not.is.null&select=fcm_token`, {
+      const res = await fetch(`${supabaseUrl}/rest/v1/profiles?fcm_token=not.is.null&select=fcm_token`, {
         headers: { "apikey": supabaseKey, "Authorization": `Bearer ${supabaseKey}` },
       });
       const profiles = await res.json();
@@ -46,7 +46,18 @@ serve(async (req) => {
       });
     }
 
-    const serviceAccount = JSON.parse(serviceAccountJson);
+    let serviceAccount;
+    try {
+      serviceAccount = JSON.parse(serviceAccountJson);
+    } catch {
+      // No se imprime el secreto entero: solo el largo y el arranque, para
+      // poder distinguir "no configurado / valor placeholder" de un JSON real
+      // sin filtrar la private_key.
+      return new Response(JSON.stringify({
+        success: false,
+        error: `FIREBASE_SERVICE_ACCOUNT no es JSON valido (largo=${serviceAccountJson.length}, empieza_con="${serviceAccountJson.slice(0, 6)}")`,
+      }), { headers: { "Content-Type": "application/json" }, status: 200 });
+    }
     const accessToken = await getFirebaseAccessToken(serviceAccount);
 
     // Send in chunks of 200 to avoid FCM rate limits
@@ -100,7 +111,7 @@ serve(async (req) => {
     // Clean up invalid/unregistered tokens from DB
     if (invalidTokens.length > 0) {
       for (const deadToken of invalidTokens) {
-        await fetch(`${supabaseUrl}/rest/v1/user_profiles?fcm_token=eq.${encodeURIComponent(deadToken)}`, {
+        await fetch(`${supabaseUrl}/rest/v1/profiles?fcm_token=eq.${encodeURIComponent(deadToken)}`, {
           method: "PATCH",
           headers: {
             "apikey": supabaseKey,

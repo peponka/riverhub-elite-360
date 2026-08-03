@@ -158,20 +158,25 @@ router.get('/maintenance-due', async (req, res) => {
         const now = new Date();
         const futureDate = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
 
-        // Get maintenance logs
+        // 'maintenance_logs' no existe: la tabla real es 'maintenance_tasks'
+        // (misma que usa la app y la web). El estado se guarda en español
+        // ('completada'), no 'completed'.
         const { data, error } = await sb
-            .from('maintenance_logs')
-            .select('*')
+            .from('maintenance_tasks')
+            .select('*, vessels(name)')
             .order('scheduled_date', { ascending: true });
 
         if (error) throw error;
 
-        const overdue = (data || []).filter(m =>
-            m.status !== 'completed' && new Date(m.scheduled_date) < now
+        const items = (data || []).map(m => ({ ...m, vessel_name: m.vessels?.name || null }));
+        const isDone = (m) => ['completada', 'completed'].includes((m.status || '').toLowerCase());
+
+        const overdue = items.filter(m =>
+            !isDone(m) && m.scheduled_date && new Date(m.scheduled_date) < now
         );
 
-        const upcoming = (data || []).filter(m =>
-            m.status !== 'completed' &&
+        const upcoming = items.filter(m =>
+            !isDone(m) && m.scheduled_date &&
             new Date(m.scheduled_date) >= now &&
             new Date(m.scheduled_date) <= futureDate
         );
@@ -869,17 +874,29 @@ router.post('/create-maintenance', async (req, res) => {
         const sb = req.app.locals.supabase;
         if (!sb) return res.status(500).json({ error: 'Supabase desconectado' });
 
+        // 'maintenance_logs' no existe: la tabla real es 'maintenance_tasks',
+        // que referencia el buque por vessel_id (uuid), no por nombre.
+        const { data: vessel, error: vesselErr } = await sb
+            .from('vessels')
+            .select('id, company_id')
+            .ilike('name', vessel_name)
+            .limit(1)
+            .maybeSingle();
+        if (vesselErr) throw vesselErr;
+        if (!vessel) return res.status(404).json({ error: `Buque "${vessel_name}" no encontrado` });
+
+        const PRIORIDAD = { low: 'baja', medium: 'media', high: 'alta', critical: 'crítica' };
         const newTask = {
-            vessel_name,
-            task_name,
-            description: description || 'Generado automáticamente por sistema IA/n8n',
-            urgency: urgency || 'Medium',
-            status: 'pending',
-            scheduled_date: new Date().toISOString().split('T')[0],
-            created_at: new Date().toISOString()
+            vessel_id: vessel.id,
+            company_id: vessel.company_id,
+            task_type: 'preventivo',
+            description: `${task_name}${description ? ' — ' + description : ''} (generado automáticamente por sistema IA/n8n)`,
+            priority: PRIORIDAD[(urgency || 'medium').toLowerCase()] || 'media',
+            status: 'pendiente',
+            scheduled_date: new Date().toISOString().split('T')[0]
         };
 
-        const { error } = await sb.from('maintenance_logs').insert([newTask]);
+        const { error } = await sb.from('maintenance_tasks').insert([newTask]);
         if (error) throw error;
 
         res.json({ success: true, message: 'Orden de mantenimiento creada', task: newTask });

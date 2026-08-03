@@ -949,24 +949,11 @@ io.on('connection', (socket) => {
     });
 });
 
-// --- 404 HANDLER ---
-app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-});
-
-// --- EXPRESS GLOBAL ERROR HANDLER ---
-// Must be AFTER all routes to catch unhandled errors
-app.use((err, req, res, next) => {
-    console.error('[Express Error]', req.method, req.path, err.message);
-    // Never leak stack traces in production
-    const isProd = process.env.NODE_ENV === 'production';
-    res.status(err.status || 500).json({
-        error: isProd ? 'Error interno del servidor' : err.message,
-        ...(isProd ? {} : { stack: err.stack })
-    });
-});
-
 // --- PUSH NOTIFICATIONS (Firebase Admin SDK) ---
+// Estas rutas (y Copiloto IA / n8n ai-analyze de aqui abajo) ANTES estaban
+// despues del 404 handler: como es un app.use() sin path, intercepta
+// cualquier ruta registrada despues, asi que quedaban 100% inalcanzables
+// (confirmado con curl a produccion: 404 real en todas). Se movieron antes.
 let firebaseAdmin;
 try {
     firebaseAdmin = require('firebase-admin');
@@ -992,11 +979,11 @@ app.post('/api/notifications/send', authenticateUser, async (req, res) => {
         if (!firebaseAdmin) return res.status(503).json({ error: 'Firebase no configurado' });
         const { userId, title, body, data } = req.body;
         if (!userId || !title) return res.status(400).json({ error: 'userId y title requeridos' });
-        
-        // Get FCM token from user_profiles
-        const { data: profile } = await req.app.locals.supabase.from('user_profiles').select('fcm_token').eq('user_id', userId).single();
+
+        // fcm_token vive en profiles (por id = auth.uid()), no en user_profiles
+        const { data: profile } = await req.app.locals.supabase.from('profiles').select('fcm_token').eq('id', userId).single();
         if (!profile?.fcm_token) return res.status(404).json({ error: 'Usuario sin token FCM' });
-        
+
         const message = {
             token: profile.fcm_token,
             notification: { title, body: body || '' },
@@ -1024,11 +1011,11 @@ app.post('/api/notifications/broadcast', authenticateUser, async (req, res) => {
         if (!firebaseAdmin) return res.status(503).json({ error: 'Firebase no configurado' });
         const { title, body, data } = req.body;
         if (!title) return res.status(400).json({ error: 'title requerido' });
-        
-        const { data: profiles } = await req.app.locals.supabase.from('user_profiles').select('fcm_token').not('fcm_token', 'is', null);
+
+        const { data: profiles } = await req.app.locals.supabase.from('profiles').select('fcm_token').not('fcm_token', 'is', null);
         const tokens = (profiles || []).map(p => p.fcm_token).filter(t => t && t.length > 10);
         if (tokens.length === 0) return res.json({ success: true, sent: 0, message: 'No hay tokens FCM registrados' });
-        
+
         const message = {
             notification: { title, body: body || '' },
             data: data || {},
@@ -1044,8 +1031,8 @@ app.post('/api/notifications/broadcast', authenticateUser, async (req, res) => {
 
 // Test push endpoint
 app.get('/api/notifications/test', authenticateUser, async (req, res) => {
-    res.json({ 
-        firebaseReady: !!firebaseAdmin, 
+    res.json({
+        firebaseReady: !!firebaseAdmin,
         status: firebaseAdmin ? 'Push notifications operativas' : 'Firebase Admin no configurado'
     });
 });
@@ -1055,10 +1042,10 @@ app.post('/api/copilot/chat', aiLimiter, authenticateUser, async (req, res) => {
     try {
         const { prompt } = req.body;
         if (!prompt) return res.status(400).json({ error: 'prompt requerido' });
-        
+
         const geminiKey = process.env.GEMINI_API_KEY;
         if (!geminiKey) return res.status(503).json({ error: 'GEMINI_API_KEY no configurada' });
-        
+
         const geminiRes = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiKey}`,
             {
@@ -1086,10 +1073,10 @@ app.post('/api/n8n/ai-analyze', aiLimiter, authenticateUser, async (req, res) =>
     try {
         const { prompt } = req.body;
         if (!prompt) return res.status(400).json({ error: 'prompt requerido' });
-        
+
         const geminiKey = process.env.GEMINI_API_KEY;
         if (!geminiKey) return res.status(503).json({ analysis: 'Gemini API Key no configurada.' });
-        
+
         const geminiRes = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
             {
@@ -1108,6 +1095,25 @@ app.post('/api/n8n/ai-analyze', aiLimiter, authenticateUser, async (req, res) =>
         console.error('[AI Analyze]', e.message);
         res.status(500).json({ analysis: 'Error al procesar la consulta IA.' });
     }
+});
+
+// --- 404 HANDLER ---
+// Debe ser lo ULTIMO antes del error handler: cualquier ruta agregada
+// despues de esto queda inalcanzable (ya paso una vez, ver comentario arriba).
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+});
+
+// --- EXPRESS GLOBAL ERROR HANDLER ---
+// Must be AFTER all routes to catch unhandled errors
+app.use((err, req, res, next) => {
+    console.error('[Express Error]', req.method, req.path, err.message);
+    // Never leak stack traces in production
+    const isProd = process.env.NODE_ENV === 'production';
+    res.status(err.status || 500).json({
+        error: isProd ? 'Error interno del servidor' : err.message,
+        ...(isProd ? {} : { stack: err.stack })
+    });
 });
 
 // --- KEEP ALIVE (for Render free tier) ---
