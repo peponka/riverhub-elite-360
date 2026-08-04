@@ -85,11 +85,43 @@ BEGIN
 END;
 $function$;
 
+-- Viaje y alerta ademas se enriquecen con el contexto real del evento: antes
+-- decian solo "Nuevo Viaje Iniciado" / "Viaje registrado", que no le sirve a
+-- nadie sin abrir la app. Ahora:
+--   "Nuevo viaje V-001" / "B/M TITAN: Rosario -> Asuncion - Soja (5.000 t)"
+--   "Alerta: B/M TITAN" / "Nivel de combustible critico: 8%"
+-- Todos los campos son opcionales: si falta la ruta o la carga, el mensaje se
+-- arma igual con lo que haya (probado con viajes sin puertos ni cargo_type).
+
 CREATE OR REPLACE FUNCTION public.trigger_new_voyage()
  RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
 AS $function$
+DECLARE
+  v_vessel text;
+  v_titulo text;
+  v_cuerpo text;
+  v_peso   text;
 BEGIN
-  PERFORM notify_push('voyage', 'Nuevo Viaje Iniciado', 'Viaje registrado', NULL, NEW.company_id::text);
+  SELECT name INTO v_vessel FROM vessels WHERE id = NEW.vessel_id;
+
+  v_titulo := 'Nuevo viaje' || COALESCE(' ' || NEW.voyage_number, '');
+  v_cuerpo := COALESCE(v_vessel, 'Embarcacion sin asignar');
+
+  IF NEW.origin_port IS NOT NULL OR NEW.destination_port IS NOT NULL THEN
+    v_cuerpo := v_cuerpo || ': ' || COALESCE(NEW.origin_port, '?') || ' -> ' || COALESCE(NEW.destination_port, '?');
+  END IF;
+
+  IF NEW.cargo_type IS NOT NULL THEN
+    v_cuerpo := v_cuerpo || ' - ' || NEW.cargo_type;
+    IF NEW.cargo_weight IS NOT NULL AND NEW.cargo_weight > 0 THEN
+      -- El locale de la base agrupa con coma (5,000) y en espanol eso se lee
+      -- como "5 toneladas". Se fuerza el punto como separador de miles.
+      v_peso := replace(to_char(NEW.cargo_weight, 'FM999G999G999'), ',', '.');
+      v_cuerpo := v_cuerpo || ' (' || v_peso || ' t)';
+    END IF;
+  END IF;
+
+  PERFORM notify_push('voyage', v_titulo, v_cuerpo, NULL, NEW.company_id::text);
   RETURN NEW;
 END;
 $function$;
@@ -97,9 +129,14 @@ $function$;
 CREATE OR REPLACE FUNCTION public.trigger_alert_notification()
  RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
 AS $function$
+DECLARE
+  v_vessel text;
+  v_titulo text;
 BEGIN
   IF NEW.action_type = 'alert' THEN
-    PERFORM notify_push('alert', 'Alerta en Fluvia',
+    SELECT name INTO v_vessel FROM vessels WHERE id = NEW.vessel_id;
+    v_titulo := 'Alerta' || COALESCE(': ' || v_vessel, ' en Fluvia');
+    PERFORM notify_push('alert', v_titulo,
       COALESCE(NEW.description, 'Nueva alerta registrada'), NULL, NEW.company_id::text);
   END IF;
   RETURN NEW;
