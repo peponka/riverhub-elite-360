@@ -1,4 +1,4 @@
-// admin-views-ops.js � Extracted from admin-dashboard.js
+// admin-views-ops.js � Extracted from admin-dashboard.js
 // Operations views: Ships, Orders, Fleet, Users, Tenants, Billing, Audit
 // Mixin: registers on AdminDashboard after load
 
@@ -206,15 +206,12 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
         `;
     };
 
+    // Flota REAL: lee la tabla vessels. Antes eran 5 buques escritos a mano
+    // (R/M HERCULES, B-2045, R/M ORION...) con estados y ubicaciones fijas,
+    // mientras la base ya tenia 15 embarcaciones reales.
     function renderFleetView() {
-        // MOCK DATA
-        const fleets = [
-            { name: "R/M HERCULES", type: "REMOLCADOR", status: "active", zone: "Km 450", last_update: "2 min" },
-            { name: "R/M TITAN", type: "REMOLCADOR", status: "active", zone: "Km 1200", last_update: "5 min" },
-            { name: "B-2045", type: "BARCAZA", status: "maintenance", zone: "Astillero", last_update: "1 día" },
-            { name: "R/M ORION", type: "REMOLCADOR", status: "warning", zone: "Puerto", last_update: "10 min" },
-            { name: "T-001", type: "TANQUE", status: "active", zone: "Km 600", last_update: "12 min" },
-        ];
+        setTimeout(loadFleetAdminData, 0);
+        const fleets = [];
 
         let cards = fleets.map(f => `
             <div class="fleet-card" data-status="${f.status}">
@@ -256,21 +253,19 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                     </div>
                     <button class="btn-admin-primary" onclick="AdminDashboard.openNewFleetModal()"><i class="fas fa-plus"></i> NUEVO ACTIVO</button>
                 </div>
-                 <div class="fleet-grid">
+                 <div class="fleet-grid" id="fleet-admin-grid">
                     ${cards}
+                    <div style="color:var(--text-muted); padding:20px;">Cargando flota...</div>
                 </div>
             </div>
         `;
     };
 
+    // Usuarios REALES: profiles + su empresa. Antes eran 5 personas inventadas
+    // ("Juan Perez", "Ana Gomez"...) con empresas que no existen.
     function renderUsersView() {
-        const users = [
-            { name: "Carlos Martínez", role: "Super Admin", company: "FluviaFleet HQ", last: "Ahora", status: "active", avatar: "CM" },
-            { name: "Juan Pérez", role: "Admin", company: "Naviera del Sur", last: "2h", status: "active", avatar: "JP" },
-            { name: "Ana Gomez", role: "Dispatcher", company: "Naviera del Sur", last: "5h", status: "busy", avatar: "AG" },
-            { name: "Roberto Diaz", role: "Captain", company: "Trans. Fluvial X", last: "1d", status: "offline", avatar: "RD" },
-            { name: "Maria L.", role: "Viewer", company: "Logística Yhaguy", last: "3d", status: "active", avatar: "ML" }
-        ];
+        setTimeout(loadUsersAdminData, 0);
+        const users = [];
 
         let cards = users.map(u => `
             <div style="background:#1e293b; border:1px solid #334; border-radius:12px; padding:15px; display:flex; flex-direction:column; gap:10px;">
@@ -303,20 +298,67 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                     <h3 style="margin:0;">Usuarios y Permisos</h3>
                     <button class="btn-admin-primary" onclick="AdminDashboard.openNewUserModalGlobal()"><i class="fas fa-user-plus"></i> NUEVO USUARIO</button>
                 </div>
-                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+                 <div id="users-admin-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
                     ${cards}
+                    <div style="color:#94a3b8; padding:20px;">Cargando usuarios...</div>
                 </div>
             </div>
         `;
     };
 
+    async function loadUsersAdminData() {
+        const grid = document.getElementById('users-admin-grid');
+        if (!grid || !window.sb) return;
+        try {
+            const res = await Promise.all([
+                window.sb.from('profiles').select('id, full_name, email, role, is_active, last_login, company_id'),
+                window.sb.from('companies').select('id, name')
+            ]);
+            const usuarios = res[0].data || [];
+            const empresas = {};
+            (res[1].data || []).forEach(function (c) { empresas[c.id] = c.name; });
+            if (!usuarios.length) {
+                grid.innerHTML = '<div style="color:#94a3b8; padding:20px;">Sin usuarios registrados.</div>';
+                return;
+            }
+            const iniciales = function (n, e) {
+                const base = (n || e || '?').trim();
+                const p = base.split(/[\s@.]+/).filter(Boolean);
+                return ((p[0] || '?')[0] + (p[1] ? p[1][0] : '')).toUpperCase();
+            };
+            const desde = function (iso) {
+                if (!iso) return 'Nunca';
+                const min = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+                if (isNaN(min)) return 'Sin dato';
+                if (min < 60) return min + ' min';
+                if (min < 1440) return Math.floor(min / 60) + ' h';
+                return Math.floor(min / 1440) + ' d';
+            };
+            grid.innerHTML = usuarios.map(function (u) {
+                const nombre = u.full_name || u.email || 'Sin nombre';
+                const activo = u.is_active !== false;
+                return '<div style="background:#1e293b; border:1px solid #334; border-radius:12px; padding:15px; display:flex; flex-direction:column; gap:10px;">'
+                    + '<div style="display:flex; justify-content:space-between; align-items:center;">'
+                    + '<div style="display:flex; align-items:center; gap:10px;">'
+                    + '<div class="admin-avatar" style="width:35px; height:35px; font-size:0.8em;">' + escB(iniciales(u.full_name, u.email)) + '</div>'
+                    + '<div><h4 style="margin:0; color:#fff; font-size:1rem;">' + escB(nombre) + '</h4>'
+                    + '<div style="font-size:0.75rem; color:#94a3b8;">' + escB(u.role || 'sin rol') + '</div></div></div>'
+                    + '<span class="status-badge ' + (activo ? 'badge-active' : 'badge-error') + '">' + (activo ? 'ACTIVO' : 'INACTIVO') + '</span></div>'
+                    + '<div style="display:flex; justify-content:space-between; font-size:0.85rem; color:#cbd5e1; border-top:1px solid #334; padding-top:10px;">'
+                    + '<span>' + escB(empresas[u.company_id] || 'Sin empresa') + '</span>'
+                    + '<span style="color:#64748b;">' + desde(u.last_login) + '</span></div></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadUsersAdminData:', e);
+            grid.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudieron cargar los usuarios.</div>';
+        }
+    }
+
+    // Empresas REALES: companies + conteo real de usuarios por empresa.
+    // Antes eran 4 empresas inventadas con cantidades de usuarios ficticias.
     function renderTenantsView() {
-        const tenants = [
-            { name: "Naviera del Sur S.A.", plan: "PREMIUM", users: 15, status: "active", zone: "ARG-PY" },
-            { name: "Transporte Fluvial X", plan: "CORP", users: 42, status: "active", zone: "BRA-PAR" },
-            { name: "Logística Yhaguy", plan: "BASIC", users: 5, status: "warning", zone: "PY" },
-            { name: "FluviaFleet Demo", plan: "DEV", users: 3, status: "active", zone: "GLOBAL" }
-        ];
+        setTimeout(loadTenantsAdminData, 0);
+        const tenants = [];
 
         let cards = tenants.map(t => `
             <div style="background:#1e293b; border:1px solid #334; border-radius:12px; padding:15px; display:flex; flex-direction:column; gap:10px;">
@@ -344,21 +386,63 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                     <h3 style="margin:0;">Empresas Registradas (Tenants)</h3>
                     <button class="btn-admin-primary" onclick="AdminDashboard.openNewTenantModal()"><i class="fas fa-plus"></i> NUEVA EMPRESA</button>
                 </div>
-                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+                 <div id="tenants-admin-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
                     ${cards}
+                    <div style="color:#94a3b8; padding:20px;">Cargando empresas...</div>
                 </div>
             </div>
         `;
     };
 
+    async function loadTenantsAdminData() {
+        const grid = document.getElementById('tenants-admin-grid');
+        if (!grid || !window.sb) return;
+        try {
+            const res = await Promise.all([
+                window.sb.from('companies').select('id, name, plan, plan_tier, status, is_active, max_vessels'),
+                window.sb.from('profiles').select('company_id'),
+                window.sb.from('vessels').select('company_id')
+            ]);
+            const empresas = res[0].data || [];
+            if (!empresas.length) {
+                grid.innerHTML = '<div style="color:#94a3b8; padding:20px;">Sin empresas registradas.</div>';
+                return;
+            }
+            // Conteos reales, no numeros escritos a mano
+            const porEmpresaUsr = {}, porEmpresaBuq = {};
+            (res[1].data || []).forEach(function (p) { if (p.company_id) porEmpresaUsr[p.company_id] = (porEmpresaUsr[p.company_id] || 0) + 1; });
+            (res[2].data || []).forEach(function (v) { if (v.company_id) porEmpresaBuq[v.company_id] = (porEmpresaBuq[v.company_id] || 0) + 1; });
+
+            grid.innerHTML = empresas.map(function (t) {
+                const activa = t.is_active !== false && (t.status || 'active') === 'active';
+                const usuarios = porEmpresaUsr[t.id] || 0;
+                const buques = porEmpresaBuq[t.id] || 0;
+                return '<div style="background:#1e293b; border:1px solid #334; border-radius:12px; padding:15px; display:flex; flex-direction:column; gap:10px;">'
+                    + '<div style="display:flex; justify-content:space-between; align-items:center;">'
+                    + '<h3 style="margin:0; color:#fff; font-size:1.1rem;">' + escB(t.name) + '</h3>'
+                    + '<span class="badge-plan">' + escB(String(t.plan || t.plan_tier || '-').toUpperCase()) + '</span></div>'
+                    + '<div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; color:#94a3b8;">'
+                    + '<span><i class="fas fa-users"></i> ' + usuarios + ' usuario' + (usuarios === 1 ? '' : 's') + '</span>'
+                    + '<span class="status-badge ' + (activa ? 'badge-active' : 'badge-warning') + '">' + (activa ? 'ACTIVA' : 'INACTIVA') + '</span></div>'
+                    + '<div style="font-size:0.8rem; color:#64748b;"><i class="fas fa-ship"></i> ' + buques + ' embarcacion' + (buques === 1 ? '' : 'es') + '</div></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadTenantsAdminData:', e);
+            grid.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudieron cargar las empresas.</div>';
+        }
+    }
+
+    // Facturacion REAL: lee subscriptions + payments + companies.
+    // Antes eran 4 facturas escritas a mano con clientes que NO existen
+    // ("Naviera del Sur S.A.", "Logistica Yhaguy"). Las tablas ya existian
+    // pero estaban vacias: se sembraron con el catalogo de planes real del
+    // producto (ver sql/SEED_BILLING.sql).
+    //
+    // El render es sincrono (contentArea.innerHTML = render()), asi que se
+    // devuelve el cascaron y se rellena cuando llegan los datos.
     function renderBillingView() {
-        // MOCK DATA including ID for keying
-        const invoices = [
-            { id: 101, client: "Naviera del Sur S.A.", plan: "PREMIUM", amount: "$850.00", due: "15/05/2026", status: "paid" },
-            { id: 102, client: "Transporte Fluvial X", plan: "CORP", amount: "$1,200.00", due: "10/05/2026", status: "pending" },
-            { id: 103, client: "Logística Yhaguy", plan: "BASIC", amount: "$350.00", due: "01/05/2026", status: "overdue" },
-            { id: 104, client: "FluviaFleet Demo", plan: "DEV", amount: "$0.00", due: "-", status: "free" }
-        ];
+        setTimeout(loadBillingData, 0);
+        const invoices = [];
 
         let cards = invoices.map(inv => `
             <div style="background:#1e293b; border:1px solid #334; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:15px; box-shadow:0 4px 6px rgba(0,0,0,0.3);">
@@ -386,21 +470,21 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
         `).join('');
 
         return `
-            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; margin-bottom:30px;" class="kpi-grid">
+            <div id="billing-kpis" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; margin-bottom:30px;" class="kpi-grid">
                 <div class="kpi-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border:1px solid #334155;">
                     <div class="kpi-title">MRR (INGRESO MENSUAL)</div>
-                    <div class="kpi-value" style="color:#10b981;">$2,400</div>
-                    <div class="kpi-trend trend-up"><i class="fas fa-arrow-up"></i> +12% vs mes anterior</div>
+                    <div class="kpi-value" style="color:#10b981;">...</div>
+                    <div class="kpi-trend"><span style="color:#94a3b8;">Cargando</span></div>
                 </div>
                 <div class="kpi-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border:1px solid #334155;">
                     <div class="kpi-title">SUSCRIPCIONES ACTIVAS</div>
-                    <div class="kpi-value" style="color:#3b82f6;">4</div>
-                    <div class="kpi-trend"><span style="color:#94a3b8;">3 Pagas / 1 Free</span></div>
+                    <div class="kpi-value" style="color:#3b82f6;">...</div>
+                    <div class="kpi-trend"><span style="color:#94a3b8;"></span></div>
                 </div>
                 <div class="kpi-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border:1px solid #334155;">
-                    <div class="kpi-title">TASA DE MOROSIDAD</div>
-                    <div class="kpi-value" style="color:#ef4444;">25%</div>
-                    <div class="kpi-trend trend-down"><i class="fas fa-exclamation-circle"></i> 1 Cliente en Mora</div>
+                    <div class="kpi-title">COBRADO</div>
+                    <div class="kpi-value" style="color:#f59e0b;">...</div>
+                    <div class="kpi-trend"><span style="color:#94a3b8;"></span></div>
                 </div>
             </div>
 
@@ -414,21 +498,140 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                 </div>
                 
                 <!-- CARD GRID -->
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+                <div id="billing-cards" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
                     ${cards}
+                    <div style="color:#94a3b8; padding:20px;">Cargando facturacion...</div>
                 </div>
             </div>
         `;
     };
 
+    async function loadFleetAdminData() {
+        const grid = document.getElementById('fleet-admin-grid');
+        if (!grid || !window.sb) return;
+        try {
+            const r = await window.sb.from('vessels')
+                .select('id, name, type, status, current_lat, current_lng, last_position_update')
+                .order('name');
+            const buques = r.data || [];
+            if (!buques.length) {
+                grid.innerHTML = '<div style="color:var(--text-muted); padding:20px;">Sin embarcaciones registradas.</div>';
+                return;
+            }
+            // La base guarda los estados en espanol ('Activo', 'Mantenimiento').
+            const clase = function (st) {
+                const s = String(st || '').toLowerCase();
+                if (s.indexOf('activ') === 0) return 'active';
+                if (s.indexOf('mantenim') === 0 || s.indexOf('mainten') === 0) return 'inactive';
+                return 'pending';
+            };
+            const desde = function (iso) {
+                if (!iso) return 'Sin dato';
+                const min = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+                if (isNaN(min)) return 'Sin dato';
+                if (min < 60) return min + ' min';
+                if (min < 1440) return Math.floor(min / 60) + ' h';
+                return Math.floor(min / 1440) + ' d';
+            };
+            grid.innerHTML = buques.map(function (v) {
+                const pos = (v.current_lat != null && v.current_lng != null)
+                    ? Number(v.current_lat).toFixed(3) + ', ' + Number(v.current_lng).toFixed(3)
+                    : 'Sin posicion';
+                return '<div class="fleet-card" data-status="' + clase(v.status) + '">'
+                    + '<div class="fleet-card-header"><h3 class="fleet-card-title">' + escB(v.name) + '</h3>'
+                    + '<span class="fleet-badge">' + escB(String(v.type || 'BUQUE').toUpperCase()) + '</span></div>'
+                    + '<div class="fleet-card-body">'
+                    + '<div class="fleet-info-row"><span>Estado:</span>'
+                    + '<span class="status-badge ' + clase(v.status) + '">' + escB(String(v.status || '-').toUpperCase()) + '</span></div>'
+                    + '<div class="fleet-info-row"><span><i class="fas fa-map-marker-alt" style="color:var(--neon-gold)"></i> Posicion:</span>'
+                    + '<span class="fleet-info-val">' + pos + '</span></div>'
+                    + '<div class="fleet-info-row"><span><i class="fas fa-clock"></i> Actualizado:</span>'
+                    + '<span class="fleet-info-val">' + desde(v.last_position_update) + '</span></div>'
+                    + '</div></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadFleetAdminData:', e);
+            grid.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudo cargar la flota.</div>';
+        }
+    }
+
+    function billingKpi(titulo, valor, color, sub) {
+        return '<div class="kpi-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border:1px solid #334155;">'
+            + '<div class="kpi-title">' + titulo + '</div>'
+            + '<div class="kpi-value" style="color:' + color + ';">' + valor + '</div>'
+            + '<div class="kpi-trend"><span style="color:#94a3b8;">' + (sub || '') + '</span></div></div>';
+    }
+
+    function escB(v) {
+        return String(v == null ? '' : v)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    async function loadBillingData() {
+        const cont = document.getElementById('billing-cards');
+        const kpis = document.getElementById('billing-kpis');
+        if (!cont || !window.sb) return;
+        try {
+            const res = await Promise.all([
+                window.sb.from('subscriptions').select('*'),
+                window.sb.from('payments').select('*').order('created_at', { ascending: false }).limit(60),
+                window.sb.from('companies').select('id, name')
+            ]);
+            const subs = res[0].data || [];
+            const pagos = res[1].data || [];
+            const empresas = {};
+            (res[2].data || []).forEach(function (c) { empresas[c.id] = c.name; });
+
+            const activas = subs.filter(function (s) { return s.status === 'active'; });
+            const mrr = activas.reduce(function (a, s) { return a + Number(s.price_usd || 0); }, 0);
+            const cobrado = pagos.filter(function (p) { return p.status === 'completed'; })
+                                 .reduce(function (a, p) { return a + Number(p.amount || 0); }, 0);
+            const pendiente = pagos.filter(function (p) { return p.status === 'pending'; })
+                                   .reduce(function (a, p) { return a + Number(p.amount || 0); }, 0);
+
+            if (kpis) {
+                kpis.innerHTML =
+                    billingKpi('MRR (INGRESO MENSUAL)', '$' + mrr.toLocaleString('es-AR'), '#10b981', activas.length + ' suscripciones activas') +
+                    billingKpi('SUSCRIPCIONES ACTIVAS', String(activas.length), '#3b82f6', subs.length + ' en total') +
+                    billingKpi('COBRADO', '$' + cobrado.toLocaleString('es-AR'), '#f59e0b', '$' + pendiente.toLocaleString('es-AR') + ' pendiente');
+            }
+
+            if (!pagos.length) {
+                cont.innerHTML = '<div style="color:#94a3b8; padding:20px;">Sin facturacion registrada.</div>';
+                return;
+            }
+
+            const badge = { completed: 'badge-active', pending: 'badge-warning', failed: 'badge-error', refunded: 'badge-info' };
+            const texto = { completed: 'PAGADO', pending: 'PENDIENTE', failed: 'FALLIDO', refunded: 'REEMBOLSADO' };
+
+            cont.innerHTML = pagos.map(function (p) {
+                const sub = subs.filter(function (s) { return s.id === p.subscription_id; })[0];
+                const nombre = empresas[p.company_id] || 'Empresa sin nombre';
+                const plan = sub ? String(sub.plan_id).toUpperCase() : '-';
+                const fecha = p.paid_at || p.created_at;
+                const fechaTxt = fecha ? new Date(fecha).toLocaleDateString('es-AR') : '-';
+                return '<div style="background:#1e293b; border:1px solid #334; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:15px;">'
+                    + '<div style="display:flex; justify-content:space-between; align-items:flex-start;">'
+                    + '<div><h3 style="margin:0; color:#fff; font-size:1rem;">' + escB(nombre) + '</h3>'
+                    + '<span class="badge-plan" style="font-size:0.65rem; margin-top:5px; display:inline-block;">' + escB(plan) + '</span></div>'
+                    + '<div style="text-align:right;"><span class="status-badge ' + (badge[p.status] || 'badge-info') + '">' + (texto[p.status] || escB(p.status)) + '</span>'
+                    + '<div style="font-size:0.75rem; color:#94a3b8; margin-top:5px;">' + (p.status === 'completed' ? 'Pagado' : 'Emitido') + ': ' + fechaTxt + '</div></div></div>'
+                    + '<div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #334; padding-top:10px;">'
+                    + '<div style="font-size:1.2rem; font-weight:700; color:#fff;">$' + Number(p.amount || 0).toLocaleString('es-AR') + ' ' + escB(p.currency || 'USD') + '</div>'
+                    + '<div style="font-size:0.7rem; color:#64748b;">' + escB(p.invoice_number || '') + '</div></div></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadBillingData:', e);
+            cont.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudo cargar la facturacion.</div>';
+        }
+    }
+
+    // Auditoria REAL: lee la tabla logs (31 registros). Antes eran 5 eventos
+    // inventados, todos fechados el 21/01, con actores que no existen.
     function renderAuditView() {
-        const logs = [
-            { time: "21/01 14:30", actor: "Carlos M.", action: "DELETE", target: "Barcaza B-204", ip: "192.168.1.45" },
-            { time: "21/01 14:15", actor: "Juan Pérez", action: "LOGIN", target: "System", ip: "201.23.44.12" },
-            { time: "21/01 13:50", actor: "System", action: "AUTO-ALERT", target: "Nivel Rio < 3m", ip: "LOCALHOST" },
-            { time: "21/01 12:00", actor: "Ana Gomez", action: "UPDATE", target: "Convoy C-202", ip: "10.0.0.5" },
-            { time: "21/01 11:30", actor: "Carlos M.", action: "CREATE", target: "Usuario Nuevo", ip: "192.168.1.45" }
-        ];
+        setTimeout(loadAuditAdminData, 0);
+        const logs = [];
 
         let cards = logs.map(l => `
             <div style="background:#1e293b; border-bottom:1px solid #334; padding:15px; display:flex; flex-direction:column; gap:8px;">
@@ -455,14 +658,60 @@ Resumen: Operaciones normales en zona sur. Nivel de río estable (+2cm).
                 </div>
                 
                 <!-- LIST LAYOUT -->
-                <div style="display:flex; flex-direction:column;">
+                <div id="audit-admin-list" style="display:flex; flex-direction:column;">
                     ${cards}
+                    <div style="color:#94a3b8; padding:20px;">Cargando bitacora...</div>
                  </div>
-                 <div style="padding:15px; text-align:center;">
-                    <button class="btn-admin-primary" style="background:transparent; border:1px solid #334; width:100%;">CARGAR MÁS</button>
-                </div>
             </div>
         `;
+    }
+    // ^ Faltaba esta llave de cierre de renderAuditView (bug preexistente).
+    // Sin ella el archivo entero era un SyntaxError, asi que NINGUNA de las
+    // AD.render*View del final llegaba a registrarse y el panel de superadmin
+    // no cargaba ninguna vista.
+
+    async function loadAuditAdminData() {
+        const cont = document.getElementById('audit-admin-list');
+        if (!cont || !window.sb) return;
+        try {
+            const res = await Promise.all([
+                window.sb.from('logs').select('id, action_type, description, created_at, user_id, vessel_id')
+                    .order('created_at', { ascending: false }).limit(40),
+                window.sb.from('profiles').select('id, full_name, email'),
+                window.sb.from('vessels').select('id, name')
+            ]);
+            const registros = res[0].data || [];
+            const personas = {}, buques = {};
+            (res[1].data || []).forEach(function (p) { personas[p.id] = p.full_name || p.email; });
+            (res[2].data || []).forEach(function (v) { buques[v.id] = v.name; });
+
+            if (!registros.length) {
+                cont.innerHTML = '<div style="color:#94a3b8; padding:20px;">Sin registros de auditoria.</div>';
+                return;
+            }
+            const color = function (a) {
+                const s = String(a || '').toLowerCase();
+                if (s.indexOf('delete') >= 0 || s.indexOf('alert') >= 0) return '#ef4444';
+                if (s.indexOf('create') >= 0 || s.indexOf('insert') >= 0) return '#10b981';
+                return '#334155';
+            };
+            cont.innerHTML = registros.map(function (l) {
+                const cuando = l.created_at ? new Date(l.created_at).toLocaleString('es-AR') : '-';
+                const quien = personas[l.user_id] || 'Sistema';
+                const objetivo = buques[l.vessel_id] || l.description || '-';
+                return '<div style="background:#1e293b; border-bottom:1px solid #334; padding:15px; display:flex; flex-direction:column; gap:8px;">'
+                    + '<div style="display:flex; justify-content:space-between; align-items:center;">'
+                    + '<div style="display:flex; align-items:center; gap:10px;">'
+                    + '<span class="badge-plan" style="background:' + color(l.action_type) + '; font-size:0.7rem;">' + escB(String(l.action_type || 'EVENTO').toUpperCase()) + '</span>'
+                    + '<strong style="color:#e2e8f0;">' + escB(quien) + '</strong></div>'
+                    + '<span style="font-family:monospace; color:#94a3b8; font-size:0.8rem;">' + cuando + '</span></div>'
+                    + '<div style="font-size:0.9rem; color:#cbd5e1;">' + escB(objetivo) + '</div></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadAuditAdminData:', e);
+            cont.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudo cargar la bitacora.</div>';
+        }
+    }
 
     // Register on AdminDashboard
     AD.renderClientShipsView = renderClientShipsView;
