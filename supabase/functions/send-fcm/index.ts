@@ -8,25 +8,45 @@ const FIREBASE_PROJECT_ID = "riverhub-elite";
 
 serve(async (req) => {
   try {
-    const { type, title, body, user_id, data } = await req.json();
+    const { type, title, body, user_id, company_id, data } = await req.json();
 
     // fcm_token vive en profiles (id = auth.uid()), no en user_profiles
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const sbHeaders = { "apikey": supabaseKey, "Authorization": `Bearer ${supabaseKey}` };
 
     let tokens: string[] = [];
 
     if (user_id) {
       // Send to specific user
       const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user_id}&select=fcm_token`, {
-        headers: { "apikey": supabaseKey, "Authorization": `Bearer ${supabaseKey}` },
+        headers: sbHeaders,
       });
       const profiles = await res.json();
       tokens = profiles.filter((p: any) => p.fcm_token).map((p: any) => p.fcm_token);
+    } else if (company_id) {
+      // Solo la empresa dueña del recurso (+ superadmins, que supervisan todo).
+      // La pertenencia a empresa vive en user_profiles.company_id, pero el
+      // token vive en profiles.fcm_token — hay que cruzar por user_id/id.
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/user_profiles?or=(company_id.eq.${company_id},role.eq.superadmin)&select=user_id`,
+        { headers: sbHeaders },
+      );
+      const members = await res.json();
+      const ids = (Array.isArray(members) ? members : []).map((m: any) => m.user_id).filter(Boolean);
+      if (ids.length > 0) {
+        const tokRes = await fetch(
+          `${supabaseUrl}/rest/v1/profiles?id=in.(${ids.join(",")})&fcm_token=not.is.null&select=fcm_token`,
+          { headers: sbHeaders },
+        );
+        const profiles = await tokRes.json();
+        tokens = (Array.isArray(profiles) ? profiles : [])
+          .filter((p: any) => p.fcm_token).map((p: any) => p.fcm_token);
+      }
     } else {
-      // Broadcast to all users with tokens
+      // Sin destinatario ni empresa: aviso global real (broadcast)
       const res = await fetch(`${supabaseUrl}/rest/v1/profiles?fcm_token=not.is.null&select=fcm_token`, {
-        headers: { "apikey": supabaseKey, "Authorization": `Bearer ${supabaseKey}` },
+        headers: sbHeaders,
       });
       const profiles = await res.json();
       tokens = profiles.filter((p: any) => p.fcm_token).map((p: any) => p.fcm_token);
