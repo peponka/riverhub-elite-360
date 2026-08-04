@@ -241,11 +241,19 @@ app.get('/api/ais-positions', apiLimiter, (req, res) => {
         heading: v.heading
     }));
 
+    // 'connected' solo dice que el WebSocket esta abierto — puede estar abierto
+    // y no recibir NADA (clave rechazada, limite excedido). Se agrega el ultimo
+    // dato recibido y el ultimo error para poder distinguir "sano" de "abierto
+    // pero mudo" sin tener que entrar a los logs del servidor.
+    const ultimoMsg = req.app.locals.aisLastMessageAt || null;
     const result = {
         total: allVessels.length,
         page, limit,
         pages: Math.ceil(allVessels.length / limit),
         connected: aisConnected,
+        streaming: !!(ultimoMsg && (Date.now() - new Date(ultimoMsg).getTime()) < 10 * 60 * 1000),
+        lastMessageAt: ultimoMsg,
+        lastError: req.app.locals.aisLastError || null,
         vessels
     };
     cache.set(cacheKey, result, 15);
@@ -908,7 +916,21 @@ function startAISStream() {
     ws.on('message', (data) => {
         try {
             const msg = JSON.parse(data);
+
+            // AISStream avisa de clave invalida / limite excedido / filtro mal
+            // formado con un mensaje que NO es PositionReport. Antes caia en el
+            // if de abajo, no matcheaba, y se descartaba en silencio: el
+            // endpoint seguia diciendo "connected: true" con cero datos y sin
+            // rastro del motivo en ningun lado.
+            if (msg.error || msg.Error || (msg.MessageType && msg.MessageType !== 'PositionReport')) {
+                const detalle = msg.error || msg.Error || JSON.stringify(msg).slice(0, 200);
+                app.locals.aisLastError = { at: new Date().toISOString(), detalle: String(detalle).slice(0, 300) };
+                console.warn('⚠️ AIS mensaje no-posicion:', detalle);
+                return;
+            }
+
             if (msg.MessageType === "PositionReport") {
+                app.locals.aisLastMessageAt = new Date().toISOString();
                 const ship = msg.Message.PositionReport;
                 if (msg.MetaData && msg.MetaData.ShipName) {
                     ship.ShipName = msg.MetaData.ShipName.trim();
