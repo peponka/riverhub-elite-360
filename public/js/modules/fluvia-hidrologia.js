@@ -8,6 +8,9 @@ var hidroChart = null;
 window.loadUKC = null;
 
 async function loadHidrologia(){
+    // Independiente del resto: si el proxy de Open-Meteo falla, la referencia
+    // de calado (que usa el endpoint del INA) se muestra igual.
+    loadCaladoReferencia();
     try{
         var res = await fetch('/api/hydrology');
         if(!res.ok) throw new Error('Proxy HTTP ' + res.status);
@@ -543,4 +546,70 @@ async function loadINAForecastChart(){
         var c = document.getElementById('hidro-forecast-chart');
         if(c) c.innerHTML = '<div style="text-align:center;padding:20px;color:var(--error)">Error cargando pronóstico</div>';
     }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Referencia de calado a partir del nivel del rio en Rosario
+// ═══════════════════════════════════════════════════════════════════════════
+// El calado autorizado real por tramo lo publicaba el Boletin Fluvial de la
+// Subsecretaria de Puertos y Vias Navegables, que dejo de publicarse en marzo
+// 2025 (concesion de dragado en transicion, licitada a 25 anios con ofertas
+// abiertas en feb-2026). No hay hoy fuente oficial en vivo de calado por paso.
+//
+// Lo unico documentado y verificable es el umbral historico del hidrometro de
+// Rosario: con >= 2,47 m la concesionaria estaba obligada a garantizar 34 pies
+// desde Puerto San Martin al mar. Se muestra eso, rotulado como referencia
+// orientativa. NO se extrapola a las otras estaciones: no hay umbral publicado
+// para cada una e inventarlos seria un dato falso con apariencia de preciso.
+var CALADO_UMBRAL_ROSARIO_M = 2.47;
+var CALADO_PIES_GARANTIZADOS = 34;
+
+async function loadCaladoReferencia(){
+    var el = document.getElementById('calado-referencia');
+    if(!el) return;
+    try{
+        var res = await fetch('/api/hydrology/ina');
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        var data = await res.json();
+        var ros = (data.stations || []).filter(function(s){
+            return (s.name || '').toLowerCase() === 'rosario' && s.currentLevel != null;
+        })[0];
+        if(!ros){ el.innerHTML = ''; return; }
+
+        var nivel = Number(ros.currentLevel);
+        var alcanza = nivel >= CALADO_UMBRAL_ROSARIO_M;
+        var margen = nivel - CALADO_UMBRAL_ROSARIO_M;
+        var color = alcanza ? '#10B981' : '#F59E0B';
+        var icono = alcanza ? 'fa-circle-check' : 'fa-triangle-exclamation';
+
+        var h = '<div style="background:var(--bg-secondary);border:1px solid ' + color + '59;border-radius:16px;padding:20px">';
+        h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">';
+        h += '<div style="width:38px;height:38px;border-radius:10px;background:' + color + '1F;display:flex;align-items:center;justify-content:center">';
+        h += '<i class="fa-solid ' + icono + '" style="color:' + color + ';font-size:16px"></i></div>';
+        h += '<div><div style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:var(--text-secondary)">REFERENCIA DE CALADO — ROSARIO</div>';
+        h += '<div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-top:2px">'
+           + (alcanza ? 'Nivel sobre el umbral de ' : 'Nivel bajo el umbral de ') + CALADO_PIES_GARANTIZADOS + ' pies</div></div></div>';
+
+        h += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">';
+        h += caladoDato('Nivel actual', nivel.toFixed(2) + ' m', color);
+        h += caladoDato('Umbral', CALADO_UMBRAL_ROSARIO_M.toFixed(2) + ' m', 'var(--text-secondary)');
+        h += caladoDato('Margen', (margen >= 0 ? '+' : '') + margen.toFixed(2) + ' m', color);
+        h += '</div>';
+
+        h += '<div style="font-size:10px;color:var(--text-tertiary);line-height:1.5">'
+           + 'Referencia orientativa, no es el calado autorizado oficial. Umbral histórico del hidrómetro de Rosario '
+           + '(≥ ' + CALADO_UMBRAL_ROSARIO_M.toFixed(2) + ' m ⇒ ' + CALADO_PIES_GARANTIZADOS + ' pies garantizados de Puerto San Martín al mar). '
+           + 'El Boletín Fluvial oficial no se publica desde marzo 2025 por la transición de la concesión.</div>';
+        h += '</div>';
+        el.innerHTML = h;
+    }catch(e){
+        console.error('loadCaladoReferencia:', e);
+        el.innerHTML = '';
+    }
+}
+
+function caladoDato(label, valor, color){
+    return '<div style="background:var(--bg-primary);border-radius:10px;padding:10px 12px">'
+         + '<div style="font-size:9px;color:var(--text-tertiary)">' + label + '</div>'
+         + '<div style="font-size:15px;font-weight:700;color:' + color + ';margin-top:2px">' + valor + '</div></div>';
 }
