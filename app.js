@@ -823,6 +823,71 @@ const HIDROVIA_BOX = [[[-36.0, -63.0], [-18.0, -53.0]]];
 let aisConnected = false;
 let aisReconnectTimer = null;
 
+// --- PERSISTENCIA DE POSICIONES AIS ---------------------------------------
+// aisPositions vivia SOLO en memoria: cada redeploy de Render lo dejaba en
+// cero y tardaba horas en repoblarse (el mapa se veia casi vacio justo
+// despues de publicar, que es lo peor para una demo). Ahora se respalda en
+// la tabla ais_positions y se rehidrata al arrancar.
+//
+// No se escribe una fila por mensaje AIS (serian cientos por minuto): se
+// acumula en memoria y se vuelca en lote cada FLUSH_MS, solo lo que cambio.
+const AIS_FLUSH_MS = 60 * 1000;
+const AIS_MAX_AGE_HOURS = 24;   // no rehidratar posiciones mas viejas que esto
+const aisDirty = new Set();     // MMSIs con cambios pendientes de volcar
+
+// Al arrancar: recuperar el ultimo estado conocido. Se descartan las
+// posiciones viejas — mostrar un barco donde estaba hace tres dias como si
+// fuera su posicion actual seria peor que no mostrarlo.
+async function hydrateAisPositions() {
+    const sb = app.locals.supabaseAdmin;
+    if (!sb) { console.warn('⚠️ AIS: sin service key, no se puede rehidratar'); return; }
+    try {
+        const desde = new Date(Date.now() - AIS_MAX_AGE_HOURS * 3600 * 1000).toISOString();
+        const { data, error } = await sb
+            .from('ais_positions')
+            .select('mmsi, name, lat, lon, speed, course, heading, updated_at')
+            .gte('updated_at', desde);
+        if (error) throw error;
+        for (const r of (data || [])) {
+            app.locals.aisPositions[r.mmsi] = {
+                mmsi: r.mmsi, name: r.name || 'Unknown',
+                lat: r.lat, lon: r.lon,
+                speed: r.speed || 0, course: r.course || 0, heading: r.heading || 0,
+                timestamp: r.updated_at
+            };
+        }
+        console.log(`✅ AIS: ${(data || []).length} posiciones recuperadas de la base`);
+    } catch (e) {
+        console.warn('⚠️ AIS: no se pudo rehidratar:', e.message);
+    }
+}
+
+// Volcado periodico en lote de lo que cambio desde el ultimo flush.
+async function flushAisPositions() {
+    const sb = app.locals.supabaseAdmin;
+    if (!sb || aisDirty.size === 0) return;
+    const lote = [];
+    for (const mmsi of aisDirty) {
+        const p = app.locals.aisPositions[mmsi];
+        if (!p) continue;
+        lote.push({
+            mmsi: String(mmsi), name: p.name, lat: p.lat, lon: p.lon,
+            speed: p.speed, course: p.course, heading: p.heading,
+            updated_at: p.timestamp
+        });
+    }
+    aisDirty.clear();
+    if (lote.length === 0) return;
+    try {
+        const { error } = await sb.from('ais_positions').upsert(lote, { onConflict: 'mmsi' });
+        if (error) throw error;
+    } catch (e) {
+        console.warn('⚠️ AIS: fallo el volcado de posiciones:', e.message);
+    }
+}
+
+setInterval(flushAisPositions, AIS_FLUSH_MS);
+
 // --- AIS STREAM ---
 function startAISStream() {
     console.log("📡 Conectando a AISStream...");
@@ -862,6 +927,7 @@ function startAISStream() {
                         heading: ship.TrueHeading || 0,
                         timestamp: new Date().toISOString()
                     };
+                    aisDirty.add(mmsi);   // se vuelca en lote (ver flushAisPositions)
 
                     // TENANT-AWARE BROADCAST: emit to company rooms + global fallback
                     if (app.locals.supabase) {
@@ -1141,7 +1207,17 @@ server.listen(PORT, '0.0.0.0', () => {
 ║   AIS: Hidrovía Paraguay-Paraná         ║
 ╚══════════════════════════════════════════╝
     `);
-    startAISStream();
+    // Rehidratar primero: asi el mapa tiene datos desde el segundo cero en
+    // vez de esperar a que los barcos vuelvan a emitir uno por uno.
+    hydrateAisPositions().finally(startAISStream);
+});
+
+// Render manda SIGTERM antes de reiniciar en cada deploy: se vuelca lo que
+// quedo pendiente para no perder el ultimo tramo de posiciones.
+process.on('SIGTERM', async () => {
+    console.log('SIGTERM recibido — volcando posiciones AIS antes de salir');
+    try { await flushAisPositions(); } catch (_) {}
+    process.exit(0);
 });
 
 server.on('error', (e) => {
