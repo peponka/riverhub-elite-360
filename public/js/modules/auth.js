@@ -474,6 +474,18 @@ var AuthModule = (() => {
         login(simulatedUser);
     };
 
+    const togglePasswordVisibility = (inputId, btnEl) => {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const icon = btnEl.querySelector('i');
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        if (icon) {
+            icon.classList.toggle('fa-eye', !isHidden);
+            icon.classList.toggle('fa-eye-slash', isHidden);
+        }
+    };
+
     return {
         init,
         logout,
@@ -485,6 +497,7 @@ var AuthModule = (() => {
         showForgotPassword,
         sendPasswordReset,
         confirmPasswordChange,
+        togglePasswordVisibility,
         getCurrentUser: () => currentUser
     };
 

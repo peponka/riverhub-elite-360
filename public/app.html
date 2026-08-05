@@ -460,7 +460,10 @@
                     <input type="text" id="login-user" class="input-login-premium" placeholder="Email">
                 </div>
                 <div class="input-login-group">
-                    <input type="password" id="login-pass" class="input-login-premium" placeholder="Contraseña">
+                    <input type="password" id="login-pass" class="input-login-premium" style="padding-right:44px !important;" placeholder="Contraseña">
+                    <button type="button" class="password-toggle-btn" tabindex="-1"
+                        onclick="AuthModule.togglePasswordVisibility('login-pass', this)"><i
+                            class="fas fa-eye"></i></button>
                 </div>
                 <!-- Forgot Password Link inside Login Form -->
                 <div style="text-align: right; margin-bottom: 10px;">
@@ -497,7 +500,10 @@
                     <input type="email" id="reg-email" class="input-login-premium" placeholder="Email Corporativo">
                 </div>
                 <div class="input-login-group">
-                    <input type="password" id="reg-pass" class="input-login-premium" placeholder="Contraseña">
+                    <input type="password" id="reg-pass" class="input-login-premium" style="padding-right:44px !important;" placeholder="Contraseña">
+                    <button type="button" class="password-toggle-btn" tabindex="-1"
+                        onclick="AuthModule.togglePasswordVisibility('reg-pass', this)"><i
+                            class="fas fa-eye"></i></button>
                 </div>
                 <button class="btn-login ripple-effect" onclick="AuthModule.submitRegistration()">REGISTRARME</button>
             </div>
@@ -552,8 +558,14 @@
 
                     <div class="input-group">
                         <label>Nueva Contraseña</label>
-                        <input type="password" id="new-password-final" class="input-dark"
-                            placeholder="Mínimo 6 caracteres">
+                        <div style="position:relative;">
+                            <input type="password" id="new-password-final" class="input-dark"
+                                style="width:100%; box-sizing:border-box; padding-right:40px;"
+                                placeholder="Mínimo 6 caracteres">
+                            <button type="button" class="password-toggle-btn" tabindex="-1"
+                                onclick="AuthModule.togglePasswordVisibility('new-password-final', this)"><i
+                                    class="fas fa-eye"></i></button>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

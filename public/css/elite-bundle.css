@@ -16072,6 +16072,27 @@ a, a:hover, a:focus, a:active, a:visited,
     box-shadow: 0 0 0 4px rgba(0, 88, 188, 0.08);
 }
 
+.password-toggle-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #717786;
+    cursor: pointer;
+    font-size: 0.95rem;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.password-toggle-btn:hover {
+    color: #0058BC;
+}
+
 /* ===== CUPERTINO LIGHT VARIABLES ===== */
 :root {
     --flutter-bg: #F9F9FE;
