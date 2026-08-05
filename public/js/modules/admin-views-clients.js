@@ -1,4 +1,4 @@
-// admin-views-clients.js — Extracted from admin-dashboard.js
+// admin-views-clients.js ï¿½ Extracted from admin-dashboard.js
 // Client management views, tabs, and modals
 // Mixin: registers on AdminDashboard after load
 
@@ -311,7 +311,7 @@
     };
 
     // Modal Logic
-    function submitNewClient = async () => {
+    async function submitNewClient() {
         // Scope search to the modal container to ensure we get the visible input
         const container = document.getElementById('admin-modal-container');
         if (!container) return;

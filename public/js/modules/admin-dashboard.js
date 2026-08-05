@@ -256,12 +256,6 @@ const AdminDashboard = (() => {
     // VIEWS — Extracted to admin-views-clients.js and admin-views-ops.js
     // These functions are registered as mixins after admin-dashboard.js loads.
 
-                    <button class="btn-admin-primary" style="background:transparent; border:1px solid #334; width:100%;">CARGAR M�S</button>
-                </div>
-            </div>
-        `;
-    };
-
     const toggleSidebar = () => {
         const sidebar = document.querySelector('.admin-sidebar');
         if (sidebar) {
