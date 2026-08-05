@@ -23,10 +23,17 @@ const AisStreamService = (() => {
     const connect = () => {
         if (isConnected) return;
 
-        // Check if Socket.IO is available
+        // Socket.IO esta deshabilitado a proposito en esta app (ver
+        // comentario "SOCKET.IO (Disabled - using native WebSocket via
+        // AISStream)" en app.html), asi que `io` nunca esta definido aqui.
+        // Antes esto tiraba console.error y se quedaba sin datos: los
+        // suscriptores de Dashboard y Mapa (dashboard.js, mapa.js) nunca
+        // recibian una sola actualizacion de posicion. Fallback a polling
+        // REST del mismo endpoint que ya usa el mapa del panel admin.
         if (typeof io === 'undefined') {
-            console.error("AISStream: Socket.IO not loaded!");
-            setStatus("❌ Socket.IO no disponible", "#ef4444");
+            console.warn("AISStream: Socket.IO no disponible, usando polling REST");
+            setStatus("📡 Conectado vía REST (polling)", "#fbbf24");
+            connectRestFallback();
             return;
         }
 
@@ -86,6 +93,43 @@ const AisStreamService = (() => {
             console.error("AISStream: Socket creation failed:", e);
             setStatus("❌ Error al crear socket", "#ef4444");
         }
+    };
+
+    let _restInterval = null;
+
+    const connectRestFallback = () => {
+        if (_restInterval) return;
+
+        const poll = async () => {
+            try {
+                const resp = await fetch('/api/ais-positions');
+                const data = await resp.json();
+                const vessels = Array.isArray(data) ? data : (data.vessels || []);
+
+                isConnected = vessels.length > 0;
+                if (isConnected) setStatus(`✅ ${vessels.length} embarcaciones (REST)`, "#10b981");
+
+                vessels.forEach(v => {
+                    const vesselData = {
+                        mmsi: v.mmsi,
+                        name: v.name || 'Unknown',
+                        lat: v.lat,
+                        lon: v.lon,
+                        speed: v.speed || 0,
+                        course: v.course || 0,
+                        heading: v.heading || 0,
+                        navStatus: v.navStatus || 0,
+                        timestamp: new Date().toISOString()
+                    };
+                    _subscribers.forEach(cb => cb(vesselData));
+                });
+            } catch (e) {
+                console.warn("AISStream: REST polling error -", e.message);
+            }
+        };
+
+        poll();
+        _restInterval = setInterval(poll, 15000);
     };
 
     /**
