@@ -6,6 +6,12 @@
     const AD = window.AdminDashboard;
     if (!AD) { console.error('AdminDashboard not loaded'); return; }
 
+    function escC(v) {
+        return String(v == null ? '' : v)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     // --- CLIENT VIEWS (extracted from IIFE) ---
 
     function renderClientsView() {
@@ -74,24 +80,24 @@
         try {
             switch (activeTab) {
                 case 'users':
-                    if (typeof renderClientUsersTab === 'function') tabContent = renderClientUsersTab(name);
+                    if (typeof renderClientUsersTab === 'function') tabContent = renderClientUsersTab(id, name);
                     else console.error('renderClientUsersTab missing');
                     break;
                 case 'fleet':
-                    if (typeof renderClientFleetTab === 'function') tabContent = renderClientFleetTab(name);
+                    if (typeof renderClientFleetTab === 'function') tabContent = renderClientFleetTab(id, name);
                     else console.error('renderClientFleetTab missing');
                     break;
                 case 'billing':
-                    if (typeof renderClientBillingTab === 'function') tabContent = renderClientBillingTab(name);
+                    if (typeof renderClientBillingTab === 'function') tabContent = renderClientBillingTab(id, name);
                     else console.error('renderClientBillingTab missing');
                     break;
                 case 'audit':
-                    if (typeof renderClientAuditTab === 'function') tabContent = renderClientAuditTab(name);
+                    if (typeof renderClientAuditTab === 'function') tabContent = renderClientAuditTab(id, name);
                     else console.error('renderClientAuditTab missing');
                     break;
                 case 'general':
                 default:
-                    if (typeof renderClientGeneralTab === 'function') tabContent = renderClientGeneralTab(name);
+                    if (typeof renderClientGeneralTab === 'function') tabContent = renderClientGeneralTab(id, name);
                     else {
                         console.error('renderClientGeneralTab missing');
                         tabContent = '<div style="color:red; padding:20px;">Error: General Tab Renderer Missing</div>';
@@ -130,185 +136,229 @@
 
     // --- CLIENT TABS RENDERERS ---
 
-    function renderClientGeneralTab(name) {
+    // General REAL: lee companies (por id). Antes eran datos fijos
+    // (RUC 8009281-2, "Roberto Gómez", plan "ENTERPRISE") iguales para
+    // cualquier empresa que se abriera.
+    function renderClientGeneralTab(id, name) {
+        setTimeout(function () { loadClientGeneralTab(id); }, 0);
         return `
-            <div style="display:flex; flex-direction:column; gap:20px;">
-                <!-- Card 1: Info -->
-                <div class="kpi-card" style="background:#1e293b; border:1px solid #334; margin:0;">
-                    <h4 style="margin-top:0; color:#fff; border-bottom:1px solid #334; padding-bottom:10px;">Información Corporativa</h4>
-                    <div style="color:#cbd5e1; font-size:0.9rem; line-height:1.8;">
-                        <strong>Razón Social:</strong> ${name}<br>
-                        <strong>RUC / TAX ID:</strong> 8009281-2<br>
-                        <strong>Dirección:</strong> Av. Aviadores del Chaco 2050<br>
-                        <strong>País:</strong> Paraguay <img src="https://flagcdn.com/w20/py.png" style="width:16px;"><br>
-                        <strong>Contacto Admin:</strong> Roberto Gómez (roberto@${name.replace(/\s/g, '').toLowerCase()}.com)
-                    </div>
-                </div>
-
-                <!-- Card 2: Licencia -->
-                <div class="kpi-card" style="background:#1e293b; border:1px solid #334; margin:0;">
-                    <h4 style="margin-top:0; color:#fff; border-bottom:1px solid #334; padding-bottom:10px;">Licencia Activa</h4>
-                        <div style="color:#cbd5e1; font-size:0.9rem; line-height:1.8;">
-                        <strong>Plan Actual:</strong> <span class="badge-plan">ENTERPRISE</span><br>
-                        <strong>Inicio Contrato:</strong> 01/01/2024<br>
-                        <strong>Renovación:</strong> 01/01/2026<br>
-                        <strong>SLA:</strong> 99.9% Garantizado
-                    </div>
-                </div>
-
-                <!-- Card 3: Uso -->
-                <div class="kpi-card" style="background:#1e293b; border:1px solid #334; margin:0;">
-                    <h4 style="margin-top:0; color:#fff; border-bottom:1px solid #334; padding-bottom:10px;">Resumen de Uso</h4>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; text-align:center;">
-                        <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;">
-                            <div style="font-size:1.5rem; color:#00e5ff; font-weight:700;">12</div>
-                            <div style="font-size:0.8rem; color:#94a3b8;">Usuarios</div>
-                        </div>
-                            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;">
-                            <div style="font-size:1.5rem; color:#f59e0b; font-weight:700;">15</div>
-                            <div style="font-size:0.8rem; color:#94a3b8;">Barcos</div>
-                        </div>
-                            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;">
-                            <div style="font-size:1.5rem; color:#10b981; font-weight:700;">ACTIVE</div>
-                            <div style="font-size:0.8rem; color:#94a3b8;">Status</div>
-                        </div>
-                            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;">
-                            <div style="font-size:1.5rem; color:#ec4899; font-weight:700;">0</div>
-                            <div style="font-size:0.8rem; color:#94a3b8;">Deuda</div>
-                        </div>
-                    </div>
-                </div>
+            <div id="client-general-container" style="display:flex; flex-direction:column; gap:20px;">
+                <div style="text-align:center; padding:40px; color:#64748b;"><i class="fas fa-circle-notch fa-spin"></i> Cargando información de la empresa...</div>
             </div>
         `;
     };
 
-    function renderClientUsersTab(name) {
-        const users = [
-            { name: "Roberto Gómez (Admin)", role: "Super Admin", last: "Ahora", status: "active", email: "roberto@cargill.com" },
-            { name: "Juan C. (Ops)", role: "Dispatcher", last: "2h", status: "active", email: "juan.ops@cargill.com" },
-            { name: "Pedro A. (Capitán)", role: "Captain", last: "1d", status: "offline", email: "pedro.cap@cargill.com" },
-            { name: "Maria L. (Ventas)", role: "Viewer", last: "5h", status: "busy", email: "maria.sales@cargill.com" }
-        ];
+    async function loadClientGeneralTab(id) {
+        const cont = document.getElementById('client-general-container');
+        if (!cont || !window.sb) return;
+        try {
+            const res = await Promise.all([
+                window.sb.from('companies').select('*').eq('id', id).maybeSingle(),
+                window.sb.from('profiles').select('id', { count: 'exact', head: true }).eq('company_id', id),
+                window.sb.from('vessels').select('id', { count: 'exact', head: true }).eq('company_id', id)
+            ]);
+            const c = res[0].data;
+            if (!c) { cont.innerHTML = '<div style="color:#ef4444; padding:20px;">Empresa no encontrada.</div>'; return; }
+            const usuarios = res[1].count || 0;
+            const buques = res[2].count || 0;
+            const activa = c.is_active !== false && (c.status || 'active') === 'active';
+            const plan = String(c.plan || c.plan_tier || '-').toUpperCase();
+            const alta = c.created_at ? new Date(c.created_at).toLocaleDateString('es-AR') : '-';
+            const trial = c.trial_ends_at ? new Date(c.trial_ends_at).toLocaleDateString('es-AR') : 'N/A';
+            cont.innerHTML =
+                '<div class="kpi-card" style="background:#1e293b; border:1px solid #334; margin:0;">'
+                + '<h4 style="margin-top:0; color:#fff; border-bottom:1px solid #334; padding-bottom:10px;">Información Corporativa</h4>'
+                + '<div style="color:#cbd5e1; font-size:0.9rem; line-height:1.8;">'
+                + '<strong>Razón Social:</strong> ' + escC(c.name) + '<br>'
+                + '<strong>Email de Contacto:</strong> ' + escC(c.contact_email || 'No cargado') + '<br>'
+                + '<strong>Alta:</strong> ' + alta + '</div></div>'
+                + '<div class="kpi-card" style="background:#1e293b; border:1px solid #334; margin:0;">'
+                + '<h4 style="margin-top:0; color:#fff; border-bottom:1px solid #334; padding-bottom:10px;">Plan</h4>'
+                + '<div style="color:#cbd5e1; font-size:0.9rem; line-height:1.8;">'
+                + '<strong>Plan Actual:</strong> <span class="badge-plan">' + escC(plan) + '</span><br>'
+                + '<strong>Estado:</strong> ' + (activa ? 'ACTIVA' : 'INACTIVA') + '<br>'
+                + '<strong>Límite de Buques:</strong> ' + (c.max_vessels != null ? c.max_vessels : 'Sin límite') + '<br>'
+                + '<strong>Fin de Trial:</strong> ' + trial + '</div></div>'
+                + '<div class="kpi-card" style="background:#1e293b; border:1px solid #334; margin:0;">'
+                + '<h4 style="margin-top:0; color:#fff; border-bottom:1px solid #334; padding-bottom:10px;">Resumen de Uso</h4>'
+                + '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; text-align:center;">'
+                + '<div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;"><div style="font-size:1.5rem; color:#00e5ff; font-weight:700;">' + usuarios + '</div><div style="font-size:0.8rem; color:#94a3b8;">Usuarios</div></div>'
+                + '<div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;"><div style="font-size:1.5rem; color:#f59e0b; font-weight:700;">' + buques + '</div><div style="font-size:0.8rem; color:#94a3b8;">Barcos</div></div>'
+                + '</div></div>';
+        } catch (e) {
+            console.error('loadClientGeneralTab:', e);
+            cont.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudo cargar la información.</div>';
+        }
+    }
 
-        let cards = users.map(u => `
-            <div class="user-card" style="background:#1e293b; border:1px solid #334; padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                     <div style="font-weight:bold; color:#fff;">${u.name}</div>
-                     <div style="font-size:0.8rem; color:#94a3b8;">${u.role} &bull; ${u.email}</div>
-                     <div style="font-size:0.7rem; color:#64748b; margin-top:3px;">Último acceso: ${u.last}</div>
-                </div>
-                <div style="text-align:right; display:flex; flex-direction:column; gap:5px; align-items:flex-end;">
-                     <span class="status-badge ${u.status === 'active' ? 'badge-active' : (u.status === 'busy' ? 'badge-warning' : 'badge-error')}">${u.status}</span>
-                     <button class="btn-icon-action" onclick="AdminDashboard.openEditUserModal('${u.name}')" style="background:transparent; border:1px solid #475569; color:#94a3b8; padding:5px; border-radius:4px;"><i class="fas fa-edit"></i></button>
-                </div>
-            </div>
-        `).join('');
-
+    // Usuarios REAL: lee profiles filtrados por company_id. Antes eran 4
+    // personas inventadas ("Roberto Gómez", "Pedro A. Capitán") iguales para
+    // cualquier empresa.
+    function renderClientUsersTab(id, name) {
+        setTimeout(function () { loadClientUsersTab(id, name); }, 0);
         return `
-            <div style="display:flex; flex-direction:column; gap:15px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                     <h4 style="margin:0;">Usuarios (${users.length})</h4>
-                     <button class="btn-admin-primary" onclick="AdminDashboard.openNewUserModal('${name}')" style="font-size:0.8rem;"><i class="fas fa-user-plus"></i> NUEVO</button>
-                </div>
-                ${cards}
+            <div id="client-users-container" style="display:flex; flex-direction:column; gap:15px;">
+                <div style="text-align:center; padding:40px; color:#64748b;"><i class="fas fa-circle-notch fa-spin"></i> Cargando usuarios...</div>
             </div>
         `;
     };
 
-    function renderClientFleetTab(name) {
-        const fleets = [
-            { name: "M/V IGUAZU", type: "EMP + BARCAZAS", status: "Navegando", loc: "km 1200" },
-            { name: "M/V PARANA", type: "REMOLCADOR", status: "Puerto", loc: "Rosario" },
-            { name: "TB TRITON", type: "REMOLCADOR", status: "Mant. Preventivo", loc: "Asunción" }
-        ];
+    async function loadClientUsersTab(id, name) {
+        const cont = document.getElementById('client-users-container');
+        if (!cont || !window.sb) return;
+        try {
+            const r = await window.sb.from('profiles').select('id, full_name, email, role, is_active, last_login').eq('company_id', id).order('full_name');
+            const users = r.data || [];
+            const header = '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">'
+                + '<h4 style="margin:0;">Usuarios (' + users.length + ')</h4>'
+                + '<button class="btn-admin-primary" onclick="AdminDashboard.openNewUserModal(\'' + escC(name).replace(/'/g, "\\'") + '\')" style="font-size:0.8rem;"><i class="fas fa-user-plus"></i> NUEVO</button></div>';
+            if (!users.length) {
+                cont.innerHTML = header + '<div style="color:#94a3b8; padding:20px;">Sin usuarios registrados para esta empresa.</div>';
+                return;
+            }
+            const desde = function (iso) {
+                if (!iso) return 'Nunca';
+                const min = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+                if (isNaN(min)) return 'Nunca';
+                if (min < 60) return min + ' min';
+                if (min < 1440) return Math.floor(min / 60) + ' h';
+                return Math.floor(min / 1440) + ' d';
+            };
+            cont.innerHTML = header + users.map(function (u) {
+                const activo = u.is_active !== false;
+                return '<div class="user-card" style="background:#1e293b; border:1px solid #334; padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">'
+                    + '<div><div style="font-weight:bold; color:#fff;">' + escC(u.full_name || 'Sin nombre') + '</div>'
+                    + '<div style="font-size:0.8rem; color:#94a3b8;">' + escC(u.role || 'sin rol') + ' &bull; ' + escC(u.email) + '</div>'
+                    + '<div style="font-size:0.7rem; color:#64748b; margin-top:3px;">Último acceso: ' + desde(u.last_login) + '</div></div>'
+                    + '<span class="status-badge ' + (activo ? 'badge-active' : 'badge-error') + '">' + (activo ? 'active' : 'inactive') + '</span></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadClientUsersTab:', e);
+            cont.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudieron cargar los usuarios.</div>';
+        }
+    }
 
-        let cards = fleets.map(f => `
-            <div class="fleet-card" style="background:#1e293b; border:1px solid #334; padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="background:#00e5ff; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#000; font-size:0.8rem;"><i class="fas fa-ship"></i></div>
-                    <div>
-                         <div style="font-weight:bold; color:#fff;">${f.name}</div>
-                         <div style="font-size:0.8rem; color:#94a3b8;">${f.type}</div>
-                    </div>
-                </div>
-                <div style="text-align:right;">
-                    <span class="status-badge ${f.status === 'Navegando' ? 'badge-active' : 'badge-warning'}">${f.status}</span>
-                    <div style="font-size:0.75rem; color:#94a3b8; margin-top:5px;">${f.loc}</div>
-                </div>
-            </div>
-        `).join('');
-
+    // Flota REAL: lee vessels filtrados por company_id. Antes eran 3 buques
+    // inventados (M/V IGUAZU, TB TRITON) iguales para cualquier empresa.
+    function renderClientFleetTab(id, name) {
+        setTimeout(function () { loadClientFleetTab(id, name); }, 0);
         return `
-             <div style="display:flex; flex-direction:column; gap:15px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                     <h4 style="margin:0;">Flota Asignada (${fleets.length})</h4>
-                     <button class="btn-admin-primary" onclick="AdminDashboard.openLinkShipModal('${name}')" style="font-size:0.8rem;"><i class="fas fa-link"></i> VINCULAR</button>
-                </div>
-                ${cards}
+            <div id="client-fleet-container" style="display:flex; flex-direction:column; gap:15px;">
+                <div style="text-align:center; padding:40px; color:#64748b;"><i class="fas fa-circle-notch fa-spin"></i> Cargando flota...</div>
             </div>
         `;
     };
 
-    function renderClientBillingTab(name) {
-        const invoices = [
-            { period: "Ene 2026", concept: "Suscripción Enterprise + Addons", amount: "$2,500.00", status: "PAID" },
-            { period: "Dic 2025", concept: "Suscripción Enterprise", amount: "$2,500.00", status: "PAID" }
-        ];
+    async function loadClientFleetTab(id, name) {
+        const cont = document.getElementById('client-fleet-container');
+        if (!cont || !window.sb) return;
+        try {
+            const r = await window.sb.from('vessels').select('id, name, type, status, current_lat, current_lng').eq('company_id', id).order('name');
+            const fleets = r.data || [];
+            const header = '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">'
+                + '<h4 style="margin:0;">Flota Asignada (' + fleets.length + ')</h4>'
+                + '<button class="btn-admin-primary" onclick="AdminDashboard.openLinkShipModal(\'' + escC(name).replace(/'/g, "\\'") + '\')" style="font-size:0.8rem;"><i class="fas fa-link"></i> VINCULAR</button></div>';
+            if (!fleets.length) {
+                cont.innerHTML = header + '<div style="color:#94a3b8; padding:20px;">Sin embarcaciones vinculadas a esta empresa.</div>';
+                return;
+            }
+            cont.innerHTML = header + fleets.map(function (f) {
+                const pos = (f.current_lat != null && f.current_lng != null) ? Number(f.current_lat).toFixed(3) + ', ' + Number(f.current_lng).toFixed(3) : 'Sin posición';
+                const activo = String(f.status || '').toLowerCase().indexOf('activ') === 0;
+                return '<div class="fleet-card" style="background:#1e293b; border:1px solid #334; padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">'
+                    + '<div style="display:flex; align-items:center; gap:10px;">'
+                    + '<div style="background:#00e5ff; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#000; font-size:0.8rem;"><i class="fas fa-ship"></i></div>'
+                    + '<div><div style="font-weight:bold; color:#fff;">' + escC(f.name) + '</div><div style="font-size:0.8rem; color:#94a3b8;">' + escC(String(f.type || 'BUQUE').toUpperCase()) + '</div></div></div>'
+                    + '<div style="text-align:right;"><span class="status-badge ' + (activo ? 'badge-active' : 'badge-warning') + '">' + escC(String(f.status || '-')) + '</span>'
+                    + '<div style="font-size:0.75rem; color:#94a3b8; margin-top:5px;">' + pos + '</div></div></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadClientFleetTab:', e);
+            cont.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudo cargar la flota.</div>';
+        }
+    }
 
-        let cards = invoices.map(i => `
-            <div class="invoice-card" style="background:#1e293b; border:1px solid #334; padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <div>
-                     <div style="font-weight:bold; color:#fff;">${i.concept}</div>
-                     <div style="font-size:0.8rem; color:#94a3b8;">${i.period} &bull; ${i.amount}</div>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                     <span class="status-badge badge-active">${i.status}</span>
-                     <button class="btn-icon-action" onclick="RiverToast.success('Iniciando descarga segura de la Factura de ${i.period}.', 'Exportando PDF')" style="background:#334; border:1px solid #475569; color:#fff; padding:8px; border-radius:6px;" data-tooltip="Descargar PDF"><i class="fas fa-file-pdf"></i></button>
-                </div>
-            </div>
-        `).join('');
-
+    // Facturacion REAL: lee payments filtrados por company_id. Antes eran 2
+    // facturas fijas de "Suscripción Enterprise" de $2,500 iguales para
+    // cualquier empresa.
+    function renderClientBillingTab(id, name) {
+        setTimeout(function () { loadClientBillingTab(id); }, 0);
         return `
-             <div style="display:flex; flex-direction:column; gap:15px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                     <h4 style="margin:0;">Historial de Facturación</h4>
-                     <button class="btn-admin-primary" onclick="RiverToast.info('Verifique su carpeta de descargas en unos segundos.', 'Consolidando Estado de Cuenta')" style="background:#334; font-size:0.8rem;"><i class="fas fa-download"></i> ESTADO</button>
-                </div>
-                <div>
-                    ${cards}
-                </div>
+            <div id="client-billing-container" style="display:flex; flex-direction:column; gap:15px;">
+                <div style="text-align:center; padding:40px; color:#64748b;"><i class="fas fa-circle-notch fa-spin"></i> Cargando facturación...</div>
             </div>
         `;
     };
 
-    function renderClientAuditTab(name) {
-        const logs = [
-            { date: "24/01 10:30", user: "Roberto Gómez", action: "LOGIN", type: "info", desc: "Inicio de sesión desde IP 192.168.1.55" },
-            { date: "23/01 14:15", user: "Juan C.", action: "UPDATE", type: "warning", desc: "Modificó ETA de M/V IGUAZU" }
-        ];
+    async function loadClientBillingTab(id) {
+        const cont = document.getElementById('client-billing-container');
+        if (!cont || !window.sb) return;
+        try {
+            const r = await window.sb.from('payments').select('*').eq('company_id', id).order('created_at', { ascending: false });
+            const pagos = r.data || [];
+            const header = '<div style="display:flex; justify-content:space-between; align-items:center;"><h4 style="margin:0;">Historial de Facturación</h4></div>';
+            if (!pagos.length) {
+                cont.innerHTML = header + '<div style="color:#94a3b8; padding:20px;">Sin facturación registrada para esta empresa.</div>';
+                return;
+            }
+            const badge = { completed: 'badge-active', pending: 'badge-warning', failed: 'badge-error', refunded: 'badge-info' };
+            const texto = { completed: 'PAGADO', pending: 'PENDIENTE', failed: 'FALLIDO', refunded: 'REEMBOLSADO' };
+            cont.innerHTML = header + pagos.map(function (p) {
+                const fecha = p.paid_at || p.created_at;
+                const fechaTxt = fecha ? new Date(fecha).toLocaleDateString('es-AR') : '-';
+                return '<div class="invoice-card" style="background:#1e293b; border:1px solid #334; padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">'
+                    + '<div><div style="font-weight:bold; color:#fff;">$' + Number(p.amount || 0).toLocaleString('es-AR') + ' ' + escC(p.currency || 'USD') + '</div>'
+                    + '<div style="font-size:0.8rem; color:#94a3b8;">' + fechaTxt + (p.invoice_number ? (' &bull; ' + escC(p.invoice_number)) : '') + '</div></div>'
+                    + '<span class="status-badge ' + (badge[p.status] || 'badge-info') + '">' + (texto[p.status] || escC(p.status)) + '</span></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadClientBillingTab:', e);
+            cont.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudo cargar la facturación.</div>';
+        }
+    }
 
-        let items = logs.map(l => `
-            <div style="background:#1e293b; border-bottom:1px solid #334; padding:12px; display:flex; flex-direction:column; gap:5px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span class="badge-plan" style="background:${l.type === 'info' ? '#334' : '#f59e0b'}; color:#fff; font-size:0.65rem;">${l.action}</span>
-                    <span style="font-size:0.7rem; color:#64748b;">${l.date}</span>
-                </div>
-                <div style="color:#e2e8f0; font-size:0.9rem;">${l.desc}</div>
-                <div style="font-size:0.75rem; color:#94a3b8;">Usuario: ${l.user}</div>
-            </div>
-        `).join('');
-
+    // Auditoria REAL: lee logs filtrados por company_id, cruzado con
+    // profiles para el nombre del usuario. Antes eran 2 eventos fijos de
+    // "Roberto Gómez" fechados 24/01, iguales para cualquier empresa.
+    function renderClientAuditTab(id, name) {
+        setTimeout(function () { loadClientAuditTab(id, name); }, 0);
         return `
-             <div class="admin-table-container" style="padding:0; overflow:hidden;">
-                <div class="admin-table-header" style="padding:15px;">
-                     <h4 style="margin:0;">Auditoría (${name})</h4>
-                </div>
-                <div style="display:flex; flex-direction:column;">
-                    ${items}
-                </div>
+            <div id="client-audit-container" class="admin-table-container" style="padding:0; overflow:hidden;">
+                <div style="text-align:center; padding:40px; color:#64748b;"><i class="fas fa-circle-notch fa-spin"></i> Cargando auditoría...</div>
             </div>
         `;
     };
+
+    async function loadClientAuditTab(id, name) {
+        const cont = document.getElementById('client-audit-container');
+        if (!cont || !window.sb) return;
+        try {
+            const res = await Promise.all([
+                window.sb.from('logs').select('*').eq('company_id', id).order('created_at', { ascending: false }).limit(50),
+                window.sb.from('profiles').select('id, full_name')
+            ]);
+            const logs = res[0].data || [];
+            const nombres = {};
+            (res[1].data || []).forEach(function (p) { nombres[p.id] = p.full_name; });
+            const header = '<div class="admin-table-header" style="padding:15px;"><h4 style="margin:0;">Auditoría (' + escC(name) + ')</h4></div>';
+            if (!logs.length) {
+                cont.innerHTML = header + '<div style="color:#94a3b8; padding:20px;">Sin eventos de auditoría para esta empresa.</div>';
+                return;
+            }
+            cont.innerHTML = header + '<div style="display:flex; flex-direction:column;">' + logs.map(function (l) {
+                const fecha = l.created_at ? new Date(l.created_at).toLocaleString('es-AR') : '-';
+                return '<div style="background:#1e293b; border-bottom:1px solid #334; padding:12px; display:flex; flex-direction:column; gap:5px;">'
+                    + '<div style="display:flex; justify-content:space-between; align-items:center;">'
+                    + '<span class="badge-plan" style="background:#334; color:#fff; font-size:0.65rem;">' + escC(String(l.action_type || 'EVENTO').toUpperCase()) + '</span>'
+                    + '<span style="font-size:0.7rem; color:#64748b;">' + fecha + '</span></div>'
+                    + '<div style="color:#e2e8f0; font-size:0.9rem;">' + escC(l.description || '') + '</div>'
+                    + '<div style="font-size:0.75rem; color:#94a3b8;">Usuario: ' + escC(nombres[l.user_id] || 'Sistema') + '</div></div>';
+            }).join('') + '</div>';
+        } catch (e) {
+            console.error('loadClientAuditTab:', e);
+            cont.innerHTML = '<div style="color:#ef4444; padding:20px;">No se pudo cargar la auditoría.</div>';
+        }
+    }
 
     // Modal Logic
     async function submitNewClient() {
@@ -318,13 +368,11 @@
 
         const nameInput = container.querySelector('#new-client-name');
         const planInput = container.querySelector('#new-client-plan');
-        const typeInput = container.querySelector('#new-client-type');
 
         const name = nameInput ? nameInput.value.trim() : '';
         const plan = planInput ? planInput.value : 'BASIC';
-        const type = typeInput ? typeInput.value : 'AGRO';
 
-        void("Submit Debug:", { name, plan, type });
+        void("Submit Debug:", { name, plan });
 
         if (!name) {
             // Debug alert to help user understand what happened
@@ -339,19 +387,16 @@
         }
 
         try {
-            // Force PostgREST to refresh schema cache by adding a random param if possible, 
-            // but for JS Client, we just retry or rely on server side config.
-            // Let's try inserting without wait first? No, default is fine.
-
+            // "Empresas" son los tenants del SaaS -> tabla companies (no 'clients',
+            // que es la lista de contactos comerciales de CADA tenant).
             const { error } = await window.sb
-                .from('clients')
-                .insert([{  // Array format is safer sometimes
+                .from('companies')
+                .insert([{
                     name: name,
                     plan: plan,
-                    country_zone: 'PY',
-                    roles_config: 'Admin,Viewer',
-                    users_count: 1,
-                    status: 'active'
+                    plan_tier: plan,
+                    status: 'active',
+                    is_active: true
                 }]);
 
             if (error) {

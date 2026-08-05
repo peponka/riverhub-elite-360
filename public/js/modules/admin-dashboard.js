@@ -195,55 +195,67 @@ const AdminDashboard = (() => {
         }
 
         try {
-            // Simple query without explicit schema prefix to help cache
-            const { data: clients, error } = await window.sb
-                .from('clients')
-                .select('*')
-                .limit(100);
-
-            if (error) throw error;
+            // "Empresas" son los tenants del SaaS -> tabla companies.
+            // (La tabla 'clients' es otra cosa: los contactos comerciales
+            // de CADA tenant, no las empresas que administra el superadmin.
+            // Esta vista consultaba 'clients' por error.)
+            const res = await Promise.all([
+                window.sb.from('companies').select('*').order('name'),
+                window.sb.from('profiles').select('company_id'),
+                window.sb.from('vessels').select('company_id')
+            ]);
+            if (res[0].error) throw res[0].error;
+            const clients = res[0].data || [];
+            const porEmpresaUsr = {}, porEmpresaBuq = {};
+            (res[1].data || []).forEach(function (p) { if (p.company_id) porEmpresaUsr[p.company_id] = (porEmpresaUsr[p.company_id] || 0) + 1; });
+            (res[2].data || []).forEach(function (v) { if (v.company_id) porEmpresaBuq[v.company_id] = (porEmpresaBuq[v.company_id] || 0) + 1; });
 
             if (!clients || clients.length === 0) {
                 container.innerHTML = `
                     <div style="text-align:center; padding:40px; color:#64748b;">
                         <i class="fas fa-folder-open" style="font-size:2rem; margin-bottom:10px;"></i><br>
-                        No hay clientes registrados a�n.
+                        No hay empresas registradas aún.
                     </div>`;
                 return;
             }
 
-            void("Clients loaded:", clients);
-
-            let cards = clients.map(c => `
+            let cards = clients.map(c => {
+                const activa = c.is_active !== false && (c.status || 'active') === 'active';
+                const plan = String(c.plan || c.plan_tier || 'BASIC').toUpperCase();
+                const usuarios = porEmpresaUsr[c.id] || 0;
+                const buques = porEmpresaBuq[c.id] || 0;
+                const alta = c.created_at ? new Date(c.created_at).toLocaleDateString() : '-';
+                return `
                 <div class="client-card" style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border:1px solid #334; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:15px; box-shadow:0 4px 6px rgba(0,0,0,0.3);">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
                             <h3 style="margin:0; color:#fff; font-size:1.1rem;">${c.name}</h3>
-                            <span class="badge-plan" style="font-size:0.65rem; margin-top:5px; display:inline-block;">${c.plan || 'BASIC'}</span>
+                            <span class="badge-plan" style="font-size:0.65rem; margin-top:5px; display:inline-block;">${plan}</span>
                         </div>
                         <div style="text-align:right;">
-                            <span class="status-badge ${c.status === 'active' ? 'badge-active' : 'badge-warning'}">${(c.status || 'active').toUpperCase()}</span>
+                            <span class="status-badge ${activa ? 'badge-active' : 'badge-warning'}">${activa ? 'ACTIVA' : 'INACTIVA'}</span>
                         </div>
                     </div>
 
                     <div style="font-size:0.85rem; color:#94a3b8; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                        <div><i class="fas fa-globe-americas"></i> Zona: ${c.country_zone || 'N/A'}</div>
-                        <div><i class="fas fa-users"></i> ${c.users_count || 0} Usuarios</div>
-                        <div><i class="fas fa-calendar-alt"></i> ${new Date(c.created_at).toLocaleDateString()}</div>
-                        <div><i class="fas fa-id-badge"></i> Roles: ${(c.roles_config || 'Standard').split(',')[0]}</div>
+                        <div><i class="fas fa-users"></i> ${usuarios} Usuarios</div>
+                        <div><i class="fas fa-ship"></i> ${buques} Barcos</div>
+                        <div><i class="fas fa-calendar-alt"></i> ${alta}</div>
+                        <div><i class="fas fa-envelope"></i> ${c.contact_email || 'N/A'}</div>
                     </div>
 
                     <div style="border-top:1px solid #334; padding-top:15px; display:grid; grid-template-columns: repeat(5, 1fr); gap:6px;">
                         <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'general')" title="General" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#94a3b8; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-info-circle"></i></button>
                         <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'users')" title="Usuarios" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#00e5ff; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-users"></i></button>
                         <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'fleet')" title="Flota" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#f59e0b; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-ship"></i></button>
-                        <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'billing')" title="Facturaci�n" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#10b981; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-file-invoice-dollar"></i></button>
-                        <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'audit')" title="Auditor�a" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#ef4444; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-history"></i></button>
+                        <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'billing')" title="Facturación" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#10b981; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-file-invoice-dollar"></i></button>
+                        <button onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'audit')" title="Auditoría" class="btn-icon-action" style="background:transparent; border:1px solid #334; color:#ef4444; padding:8px; border-radius:6px; cursor:pointer;"><i class="fas fa-history"></i></button>
                     </div>
-                    
+
                     <button class="btn-admin-primary" onclick="window.AdminDashboard.viewClientDetails('${c.id}', '${c.name}', 'general')" style="width:100%; margin-top:5px; cursor:pointer;">GESTIONAR EMPRESA</button>
                 </div>
-            `).join('');
+            `;
+            }).join('');
 
             container.innerHTML = cards;
 

@@ -9,48 +9,11 @@
     // --- OPERATIONS VIEWS (extracted from IIFE) ---
 
 
+    // Barcos de Clientes (Global) REAL: lee vessels + companies. Antes eran
+    // 5 barcos escritos a mano con clientes inventados (Cargill, ADM
+    // Paraguay, Petropar) que no existen en la base.
     function renderClientShipsView() {
-        const ships = [
-            { id: 's1', name: "M/V IGUAZU", clientId: 'c1', client: "Cargill SACI", type: "EMP + BARCAZAS", status: "Navegando", loc: "km 1200" },
-            { id: 's2', name: "M/V PARANA", clientId: 'c1', client: "Cargill SACI", type: "REMOLCADOR", status: "Puerto", loc: "Rosario" },
-            { id: 's3', name: "TB TRITON", clientId: 'c4', client: "Naviera Chaco", type: "REMOLCADOR", status: "Mant. Preventivo", loc: "Asunción" },
-            { id: 's4', name: "B-2001", clientId: 'c2', client: "ADM Paraguay", type: "BARCAZA", status: "Cargada", loc: "Villeta" },
-            { id: 's5', name: "R/M ORION", clientId: 'c3', client: "Petropar", type: "REMOLCADOR", status: "Navegando", loc: "km 600" }
-        ];
-
-        let cards = ships.map(s => `
-            <div class="fleet-card" data-status="${s.status === 'Navegando' ? 'active' : (s.status === 'Puerto' ? 'port' : 'maintenance')}">
-                <div class="fleet-card-header">
-                     <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="background:var(--neon-cyan); width:8px; height:8px; border-radius:50%; box-shadow:0 0 10px var(--neon-cyan);"></div>
-                        <div>
-                            <h3 class="fleet-card-title">${s.name}</h3>
-                            <span style="font-size:0.75rem; color:var(--text-muted);">${s.type}</span>
-                        </div>
-                    </div>
-                    <span class="status-badge ${s.status === 'Navegando' ? 'active' : (s.status === 'Puerto' ? 'pending' : 'inactive')}">${s.status.toUpperCase()}</span>
-                </div>
-
-                <div class="fleet-card-body">
-                    <div class="fleet-info-row">
-                        <span>Ubicación:</span>
-                        <span class="fleet-info-val"><i class="fas fa-map-marker-alt" style="color:var(--neon-gold);"></i> ${s.loc}</span>
-                    </div>
-                    <div class="fleet-info-row">
-                        <span>Propietario:</span>
-                        <a href="#" onclick="AdminDashboard.viewClientDetails('${s.clientId}', '${s.client}')" style="color:var(--neon-cyan); text-decoration:none; font-weight:600;">
-                            ${s.client} <i class="fas fa-external-link-alt" style="font-size:0.7em;"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="fleet-card-actions">
-                    <button class="btn-admin-primary" onclick="AdminDashboard.openGlobalTrackingModal('${s.name}', '${s.loc}')" style="font-size:0.8rem;"><i class="fas fa-satellite-dish"></i> TRACKING</button>
-                    <button class="btn-table-action" onclick="RiverToast.info('Abriendo visor del contrato comercial activo de: ${s.client}')" style="width:auto; padding:0 15px;" data-tooltip="Visor de Contrato"><i class="fas fa-file-contract"></i></button>
-                </div>
-            </div>
-        `).join('');
-
+        setTimeout(loadClientShipsData, 0);
         return `
             <div class="admin-table-container" style="background:transparent; border:none; padding:0;">
                 <div class="admin-header" style="margin-bottom:20px;">
@@ -58,57 +21,106 @@
                         <h3 style="margin:0; font-size:1.5rem;">Barcos de Clientes (Global)</h3>
                         <p style="margin:5px 0 0 0; color:var(--text-muted);">Monitoreo de toda la flota de terceros.</p>
                     </div>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <input type="text" placeholder="Buscar barco o empresa..." style="background:var(--bg-panel); border:1px solid var(--border-color); color:white; padding:8px; border-radius:6px; min-width:200px;">
-                        <button class="btn-table-action" onclick="RiverToast.info('Funcionalidad de filtros avanzados inicializando...')" data-tooltip="Filtros Avanzados"><i class="fas fa-filter"></i></button>
-                    </div>
                 </div>
-                
-                <div class="fleet-grid">
-                    ${cards}
+                <div id="client-ships-grid" class="fleet-grid">
+                    <div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;"><i class="fas fa-circle-notch fa-spin"></i> Cargando...</div>
                 </div>
             </div>
         `;
     };
 
+    async function loadClientShipsData() {
+        const grid = document.getElementById('client-ships-grid');
+        if (!grid || !window.sb) return;
+        try {
+            const res = await Promise.all([
+                window.sb.from('vessels').select('id, name, type, status, company_id'),
+                window.sb.from('companies').select('id, name')
+            ]);
+            const buques = res[0].data || [];
+            const empresas = {};
+            (res[1].data || []).forEach(function (c) { empresas[c.id] = c.name; });
+            if (!buques.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1; color:#94a3b8; padding:20px;">Sin embarcaciones registradas.</div>';
+                return;
+            }
+            const clase = function (st) {
+                const s = String(st || '').toLowerCase();
+                if (s.indexOf('activ') === 0 || s === 'navegando') return 'active';
+                if (s.indexOf('mantenim') === 0) return 'maintenance';
+                return 'port';
+            };
+            grid.innerHTML = buques.map(function (v) {
+                const clienteId = v.company_id;
+                const clienteNombre = empresas[clienteId] || 'Sin asignar';
+                const owner = clienteId
+                    ? ('<a href="#" onclick="AdminDashboard.viewClientDetails(\'' + clienteId + '\', \'' + escB(clienteNombre).replace(/'/g, "\\'") + '\', \'fleet\')" style="color:var(--neon-cyan); text-decoration:none; font-weight:600;">' + escB(clienteNombre) + ' <i class="fas fa-external-link-alt" style="font-size:0.7em;"></i></a>')
+                    : ('<span class="fleet-info-val">' + escB(clienteNombre) + '</span>');
+                return '<div class="fleet-card" data-status="' + clase(v.status) + '">'
+                    + '<div class="fleet-card-header">'
+                    + '<div style="display:flex; align-items:center; gap:10px;">'
+                    + '<div style="background:var(--neon-cyan); width:8px; height:8px; border-radius:50%; box-shadow:0 0 10px var(--neon-cyan);"></div>'
+                    + '<div><h3 class="fleet-card-title">' + escB(v.name) + '</h3><span style="font-size:0.75rem; color:var(--text-muted);">' + escB(String(v.type || 'BUQUE').toUpperCase()) + '</span></div></div>'
+                    + '<span class="status-badge ' + clase(v.status) + '">' + escB(String(v.status || '-').toUpperCase()) + '</span></div>'
+                    + '<div class="fleet-card-body"><div class="fleet-info-row"><span>Propietario:</span>' + owner + '</div></div></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadClientShipsData:', e);
+            grid.innerHTML = '<div style="grid-column:1/-1; color:#ef4444; padding:20px;">No se pudo cargar la flota de clientes.</div>';
+        }
+    }
+
+    // Ordenes de Trabajo REAL: lee maintenance_tasks (13 registros). Antes
+    // eran 3 ordenes escritas a mano sobre buques que no existen (M/V IGUAZU,
+    // R/M TITAN).
     function renderOrdersView() {
-        const orders = [
-            { id: "OT-2024-001", vessel: "M/V IGUAZU", type: "MANTENIMIENTO", priority: "ALTA", status: "En Progreso", assigned: "Taller Central" },
-            { id: "OT-2024-002", vessel: "B-2001", type: "INSPECCIÓN", priority: "MEDIA", status: "Pendiente", assigned: "Juan Tec." },
-            { id: "OT-2024-003", vessel: "R/M TITAN", type: "ABASTECIMIENTO", priority: "BAJA", status: "Completado", assigned: "Logística" },
-        ];
-
-        let cards = orders.map(o => `
-            <div style="background:#1e293b; border:1px solid #334; border-radius:12px; padding:15px; display:flex; flex-direction:column; gap:10px; box-shadow:0 4px 6px rgba(0,0,0,0.3);">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                     <span style="font-family:monospace; color:#94a3b8; font-size:0.85rem;">${o.id}</span>
-                     <span class="status-badge ${o.priority === 'ALTA' ? 'badge-error' : (o.priority === 'MEDIA' ? 'badge-warning' : 'badge-info')}">${o.priority}</span>
-                </div>
-                <div>
-                     <h3 style="margin:0; font-size:1rem; color:#fff;">${o.vessel}</h3>
-                     <span style="font-size:0.75rem; color:#94a3b8;">${o.type}</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; color:#cbd5e1;">
-                    <span><i class="fas fa-user-cog"></i> ${o.assigned}</span>
-                    <span style="color:${o.status === 'Completado' ? '#10b981' : '#f59e0b'}">${o.status}</span>
-                </div>
-                <button class="btn-admin-primary" onclick="RiverToast.info('Descargando PDF de la OT: ${o.id}...\\nAbriendo vista detallada.')" style="width:100%; margin-top:5px; font-size:0.8rem;">VER DETALLES</button>
-            </div>
-        `).join('');
-
+        setTimeout(loadOrdersData, 0);
         return `
             <div class="admin-table-container" style="background:transparent; border:none;">
                 <div class="admin-table-header" style="background:#1e293b; border-radius:12px; border:1px solid #334; padding:20px; margin-bottom:20px;">
                     <h3 style="margin:0;"><i class="fas fa-tasks"></i> Órdenes de Trabajo</h3>
-                    <button class="btn-admin-primary" onclick="AdminDashboard.openNewOrderModal()"><i class="fas fa-plus"></i> NUEVA ORDEN</button>
                 </div>
-                
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
-                    ${cards}
+                <div id="orders-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+                    <div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;"><i class="fas fa-circle-notch fa-spin"></i> Cargando...</div>
                 </div>
             </div>
         `;
     };
+
+    async function loadOrdersData() {
+        const grid = document.getElementById('orders-grid');
+        if (!grid || !window.sb) return;
+        try {
+            const res = await Promise.all([
+                window.sb.from('maintenance_tasks').select('*').order('created_at', { ascending: false }).limit(100),
+                window.sb.from('vessels').select('id, name')
+            ]);
+            const tareas = res[0].data || [];
+            const buques = {};
+            (res[1].data || []).forEach(function (v) { buques[v.id] = v.name; });
+            if (!tareas.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1; color:#94a3b8; padding:20px;">Sin ordenes de trabajo registradas.</div>';
+                return;
+            }
+            const prioridadBadge = { alta: 'badge-error', high: 'badge-error', media: 'badge-warning', medium: 'badge-warning', baja: 'badge-info', low: 'badge-info' };
+            grid.innerHTML = tareas.map(function (o) {
+                const pr = String(o.priority || '-').toLowerCase();
+                const completada = String(o.status || '').toLowerCase().indexOf('complet') === 0;
+                return '<div style="background:#1e293b; border:1px solid #334; border-radius:12px; padding:15px; display:flex; flex-direction:column; gap:10px; box-shadow:0 4px 6px rgba(0,0,0,0.3);">'
+                    + '<div style="display:flex; justify-content:space-between; align-items:center;">'
+                    + '<span style="font-family:monospace; color:#94a3b8; font-size:0.85rem;">OT-' + String(o.id).slice(0, 8).toUpperCase() + '</span>'
+                    + '<span class="status-badge ' + (prioridadBadge[pr] || 'badge-info') + '">' + escB(String(o.priority || '-').toUpperCase()) + '</span></div>'
+                    + '<div><h3 style="margin:0; font-size:1rem; color:#fff;">' + escB(buques[o.vessel_id] || 'Buque sin asignar') + '</h3>'
+                    + '<span style="font-size:0.75rem; color:#94a3b8;">' + escB(String(o.task_type || o.component || 'Tarea').toUpperCase()) + '</span></div>'
+                    + '<div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; color:#cbd5e1;">'
+                    + '<span><i class="fas fa-user-cog"></i> ' + escB(o.assigned_to || 'Sin asignar') + '</span>'
+                    + '<span style="color:' + (completada ? '#10b981' : '#f59e0b') + ';">' + escB(o.status || '-') + '</span></div></div>';
+            }).join('');
+        } catch (e) {
+            console.error('loadOrdersData:', e);
+            grid.innerHTML = '<div style="grid-column:1/-1; color:#ef4444; padding:20px;">No se pudieron cargar las ordenes de trabajo.</div>';
+        }
+    }
 
     // --- VIEWS RENDERERS ---
 
