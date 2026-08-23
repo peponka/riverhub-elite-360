@@ -138,6 +138,7 @@ function showLoginView() {
     var card = document.querySelector('.login-card');
     if (!card || !loginCardTemplate) return;
     authMode = 'login';
+    card.classList.remove('register-card');
     card.innerHTML = loginCardTemplate;
     var errDiv = document.getElementById('login-error');
     if (errDiv) errDiv.style.display = 'none';
@@ -170,11 +171,66 @@ function showForgotPasswordView() {
 }
 
 function toggleRegister() {
-    authMode = authMode === 'login' ? 'register' : 'login';
-    document.querySelector('.login-title').innerHTML = authMode === 'login' ? 'Bienvenido<br><em>de vuelta.</em>' : 'Crear<br><em>cuenta nueva.</em>';
-    document.getElementById('login-btn').textContent = authMode === 'login' ? 'Iniciar Sesion' : 'Registrarse';
-    document.getElementById('toggle-register-btn').textContent = authMode === 'login' ? 'Crear nueva cuenta' : 'Ya tengo cuenta (Iniciar Sesion)';
-    document.getElementById('login-error').style.display = 'none';
+    var card = document.querySelector('.login-card');
+    if (!card) return;
+    if (authMode === 'register') {
+        showLoginView();
+        return;
+    }
+    authMode = 'register';
+    card.classList.add('register-card');
+    card.innerHTML = `
+        <div class="register-layout">
+            <div class="register-intro">
+                <div class="login-brand"><img src="img/viabarcazas-mark.svg" alt="" width="44" height="44"><span>ViaBarcazas</span></div>
+                <p class="register-eyebrow">ALTA DE FLOTA · 2 MINUTOS</p>
+                <h1 class="login-title">Tu operación,<br><em>lista para crecer.</em></h1>
+                <p class="register-copy">Contanos quiénes son y calculamos el plan adecuado para tu flota, sin llamadas ni formularios interminables.</p>
+                <div class="register-benefits">
+                    <span><i class="fa-solid fa-check"></i> Seguimiento de convoyes</span>
+                    <span><i class="fa-solid fa-check"></i> Datos protegidos por empresa</span>
+                    <span><i class="fa-solid fa-check"></i> 14 días de prueba</span>
+                </div>
+                <div class="register-estimate" id="registration-estimate">
+                    <span class="estimate-label">PLAN SUGERIDO</span>
+                    <strong>Amarre</strong>
+                    <span>Hasta 5 embarcaciones · 14 días de prueba</span>
+                </div>
+            </div>
+            <div class="register-form-panel">
+                <div class="register-form-heading"><strong>Crear cuenta</strong><span>Datos de tu operación</span></div>
+                <div id="login-error" style="display:none;color:var(--error);font-size:12px;margin:12px 0;font-weight:600;"></div>
+                <div class="register-grid">
+                    <div class="register-field"><label class="login-label">NOMBRE Y APELLIDO</label><input id="reg-name" class="login-input" placeholder="Ej. Martín González" autocomplete="name"></div>
+                    <div class="register-field"><label class="login-label">EMPRESA</label><input id="reg-company" class="login-input" placeholder="Nombre de la compañía" autocomplete="organization"></div>
+                    <div class="register-field"><label class="login-label">PAÍS DE OPERACIÓN</label><select id="reg-country" class="login-input"><option value="Paraguay">🇵🇾 Paraguay</option><option value="Argentina">🇦🇷 Argentina</option><option value="Uruguay">🇺🇾 Uruguay</option><option value="Brasil">🇧🇷 Brasil</option><option value="Bolivia">🇧🇴 Bolivia</option></select></div>
+                    <div class="register-field"><label class="login-label">TIPO DE OPERACIÓN</label><select id="reg-operation" class="login-input"><option value="Armador / Naviera">Armador / Naviera</option><option value="Cargador / Exportador">Cargador / Exportador</option><option value="Terminal / Puerto">Terminal / Puerto</option><option value="Servicios fluviales">Servicios fluviales</option></select></div>
+                </div>
+                <div class="fleet-count-heading"><span>COMPOSICIÓN DE FLOTA</span><small>Podés ajustarlo después</small></div>
+                <div class="fleet-count-grid">
+                    <label><span><i class="fa-solid fa-ship"></i> Remolcadores</span><input id="reg-tugs" type="number" min="0" value="1"></label>
+                    <label><span><i class="fa-solid fa-water"></i> Barcazas</span><input id="reg-barges" type="number" min="0" value="0"></label>
+                    <label><span><i class="fa-solid fa-droplet"></i> Tanques</span><input id="reg-tankers" type="number" min="0" value="0"></label>
+                </div>
+                <div class="register-grid register-credentials">
+                    <div class="register-field"><label class="login-label">EMAIL CORPORATIVO</label><input type="email" id="login-email" class="login-input" placeholder="usuario@empresa.com" autocomplete="email"></div>
+                    <div class="register-field"><label class="login-label">CONTRASEÑA</label><div class="password-wrap"><input type="password" id="login-password" class="login-input" placeholder="Mínimo 6 caracteres" autocomplete="new-password"><button type="button" onclick="togglePwVis('login-password',this)" aria-label="Mostrar contraseña"><i class="fa-solid fa-eye"></i></button></div></div>
+                </div>
+                <button class="login-btn" id="login-btn" onclick="doLogin()">Crear cuenta y calcular plan</button>
+                <p class="register-switch">¿Ya tenés cuenta? <button type="button" onclick="toggleRegister()" id="toggle-register-btn">Iniciar sesión</button></p>
+                <p class="login-footer">Hidrovía Paraguay-Paraná — ViaBarcazas</p>
+            </div>
+        </div>`;
+    document.querySelectorAll('#reg-tugs,#reg-barges,#reg-tankers').forEach(function(input){ input.addEventListener('input', updateRegistrationEstimate); });
+}
+
+function updateRegistrationEstimate() {
+    var total = ['reg-tugs', 'reg-barges', 'reg-tankers'].reduce(function(sum, id) {
+        return sum + Math.max(0, Number(document.getElementById(id)?.value || 0));
+    }, 0);
+    var plan = total <= 5 ? ['Amarre', 'Hasta 5 embarcaciones · 14 días de prueba'] : total <= 20 ? ['Convoy', 'Hasta 20 embarcaciones · 14 días de prueba'] : ['Armador', 'Flota completa · cotización personalizada'];
+    var estimate = document.getElementById('registration-estimate');
+    if (estimate) estimate.innerHTML = '<span class="estimate-label">PLAN SUGERIDO</span><strong>' + plan[0] + '</strong><span>' + plan[1] + '</span>';
 }
 
 async function doLogin(){
@@ -191,13 +247,24 @@ async function doLogin(){
             if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';btn.disabled=false;btn.textContent='Iniciar Sesion';return;}
             showApp(r.data.user);
         } else {
-            var r=await sb.auth.signUp({email:email,password:pass});
+            var name = document.getElementById('reg-name')?.value.trim() || '';
+            var company = document.getElementById('reg-company')?.value.trim() || '';
+            var country = document.getElementById('reg-country')?.value || '';
+            var operation = document.getElementById('reg-operation')?.value || '';
+            var fleet = {
+                tugs: Number(document.getElementById('reg-tugs')?.value || 0),
+                barges: Number(document.getElementById('reg-barges')?.value || 0),
+                tankers: Number(document.getElementById('reg-tankers')?.value || 0)
+            };
+            if(!name || !company || !country || !operation){errDiv.textContent='Completá tus datos y los de tu empresa para continuar.';errDiv.style.display='block';btn.disabled=false;btn.textContent='Crear cuenta y calcular plan';return;}
+            if(pass.length < 6){errDiv.textContent='La contraseña debe tener al menos 6 caracteres.';errDiv.style.display='block';btn.disabled=false;btn.textContent='Crear cuenta y calcular plan';return;}
+            var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name,company:company,country:country,operation:operation,fleet:fleet}}});
             if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';btn.disabled=false;btn.textContent='Registrarse';return;}
             errDiv.style.color = 'var(--success, #10b981)';
-            errDiv.textContent = 'Registro exitoso. Inicia sesi\u00f3n para continuar.';
+            errDiv.textContent = 'Cuenta creada. Revisá tu email si te pide confirmar la dirección.';
             errDiv.style.display='block';
             btn.disabled=false;btn.textContent='Registrarse';
-            setTimeout(() => { errDiv.style.display='none'; toggleRegister(); }, 3000);
+            setTimeout(() => { errDiv.style.display='none'; showLoginView(); }, 3500);
         }
     }catch(e){errDiv.style.color='var(--error)';errDiv.textContent='Error de conexion';errDiv.style.display='block';btn.disabled=false;btn.textContent=authMode==='login'?'Iniciar Sesion':'Registrarse';}
 }

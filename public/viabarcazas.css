@@ -601,6 +601,54 @@ html,body{font-family:'Manrope',-apple-system,sans-serif;background:var(--bg-pri
 .login-btn:hover{opacity:0.9}
 .login-btn:disabled{opacity:0.5;cursor:not-allowed}
 .login-footer{font-size:10px;color:var(--text-tertiary);text-align:center;margin-top:24px;letter-spacing:0.5px}
+.login-card.register-card{width:min(920px,94vw);padding:42px;background:linear-gradient(135deg,#0e2d24 0%,#102f27 55%,#0c241e 100%);box-shadow:0 24px 70px rgba(0,0,0,.28)}
+.register-layout{display:grid;grid-template-columns:minmax(240px,.82fr) minmax(440px,1.35fr);gap:48px;align-items:start}
+.register-intro{padding:4px 0 0 2px}
+.register-intro .login-brand{margin-bottom:48px}
+.register-intro .login-brand img{display:block}
+.register-intro .login-brand span{font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:700;color:var(--text-primary)}
+.register-eyebrow{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#55d49d;margin:0 0 15px}
+.register-copy{color:var(--text-secondary);font-size:13px;line-height:1.65;margin:16px 0 26px;max-width:270px}
+.register-benefits{display:grid;gap:12px;color:#c5d8d0;font-size:11px;font-weight:600}
+.register-benefits i{color:#25d366;margin-right:7px}
+.register-estimate{display:grid;gap:5px;margin-top:38px;padding:16px 18px;border-radius:14px;border:1px solid rgba(37,211,102,.25);background:rgba(9,25,20,.42)}
+.register-estimate .estimate-label{color:#73b99d;font-size:9px;font-weight:800;letter-spacing:1.3px}
+.register-estimate strong{color:#f3f7f5;font-family:'Bricolage Grotesque',sans-serif;font-size:22px}
+.register-estimate>span:last-child{color:#9ebbb0;font-size:11px;line-height:1.4}
+.register-form-panel{border-left:1px solid rgba(166,205,190,.14);padding-left:42px}
+.register-form-heading{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;color:var(--text-primary)}
+.register-form-heading strong{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:500}
+.register-form-heading span{color:var(--text-tertiary);font-size:11px}
+.register-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.register-field{min-width:0}
+.register-field .login-label{margin-top:14px}
+.register-field select{appearance:auto}
+.fleet-count-heading{display:flex;align-items:center;justify-content:space-between;margin-top:22px;padding-bottom:8px;border-bottom:1px solid rgba(166,205,190,.14);color:#a9c9bc;font-size:10px;font-weight:800;letter-spacing:1.2px}
+.fleet-count-heading small{font-size:10px;letter-spacing:0;color:var(--text-tertiary);font-weight:500}
+.fleet-count-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.fleet-count-grid label{display:grid;gap:7px;color:var(--text-secondary);font-size:10px;font-weight:700}
+.fleet-count-grid label span{white-space:nowrap}
+.fleet-count-grid i{color:#35c98a;margin-right:5px}
+.fleet-count-grid input{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--separator);background:rgba(6,22,17,.46);color:var(--text-primary);font:600 14px 'Manrope',sans-serif;outline:none}
+.fleet-count-grid input:focus{border-color:var(--accent)}
+.register-credentials{margin-top:3px}
+.password-wrap{position:relative}
+.password-wrap .login-input{padding-right:44px}
+.password-wrap button{position:absolute;right:9px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--text-secondary);cursor:pointer;padding:5px}
+.register-card .login-btn{margin-top:25px;background:#128c7e;box-shadow:0 10px 24px rgba(18,140,126,.22)}
+.register-switch{text-align:center;color:var(--text-secondary);font-size:12px;margin:18px 0 0}
+.register-switch button{background:none;border:0;color:#4cdda0;text-decoration:underline;cursor:pointer;font:600 12px 'Manrope',sans-serif;padding:0}
+.register-form-panel .login-footer{border-top:1px solid rgba(166,205,190,.14);padding-top:15px}
+@media(max-width:760px){
+  .login-card.register-card{padding:28px 24px}
+  .register-layout{grid-template-columns:1fr;gap:24px}
+  .register-intro .login-brand{margin-bottom:24px}
+  .register-copy{max-width:none;margin-bottom:16px}
+  .register-benefits{grid-template-columns:1fr 1fr;gap:8px;font-size:10px}
+  .register-estimate{margin-top:20px}
+  .register-form-panel{border-left:0;border-top:1px solid rgba(166,205,190,.14);padding:24px 0 0}
+}
+@media(max-width:480px){.register-grid,.fleet-count-grid{grid-template-columns:1fr}.register-benefits{grid-template-columns:1fr}.register-form-heading{display:block}.register-form-heading span{display:block;margin-top:4px}}
 /* PRICING */
 .plan-toggle{display:flex;gap:0;background:var(--cell-fill);border-radius:10px;padding:3px;width:fit-content}
 .plan-period{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all 0.2s}
