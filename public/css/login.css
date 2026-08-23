@@ -37,6 +37,32 @@
     margin-bottom: 24px;
 }
 
+.login-brand-lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-brand-mark {
+    width: 46px;
+    height: 46px;
+}
+
+.login-brand-name {
+    color: #128C7E;
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.login-brand-sub {
+    margin-top: 7px;
+    color: #7b8986;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+}
+
 .login-logo i {
     font-size: 2.8rem;
     color: #0058BC;
@@ -168,6 +194,20 @@
     margin-bottom: 16px;
     font-size: 0.85rem;
     display: none;
+}
+
+.splash-logo {
+    width: 64px;
+    height: 64px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.logo-mark {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    margin-right: 12px;
 }
 
 .registration-estimate {
