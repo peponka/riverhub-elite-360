@@ -193,9 +193,9 @@ function toggleRegister() {
                     <span><i class="fa-solid fa-check"></i> 14 días de prueba</span>
                 </div>
                 <div class="register-estimate" id="registration-estimate">
-                    <span class="estimate-label">PLAN SUGERIDO</span>
-                    <strong>Amarre</strong>
-                    <span>Hasta 5 embarcaciones · 14 días de prueba</span>
+                    <span class="estimate-label">TU FLOTA INICIAL</span>
+                    <strong>1 activo cargado</strong>
+                    <span>Después del registro vas a conocer todas las opciones disponibles.</span>
                 </div>
             </div>
             <div class="register-form-panel">
@@ -229,9 +229,9 @@ function updateRegistrationEstimate() {
     var total = ['reg-tugs', 'reg-barges', 'reg-tankers'].reduce(function(sum, id) {
         return sum + Math.max(0, Number(document.getElementById(id)?.value || 0));
     }, 0);
-    var plan = total <= 5 ? ['Amarre', 'Hasta 5 embarcaciones · 14 días de prueba'] : total <= 20 ? ['Convoy', 'Hasta 20 embarcaciones · 14 días de prueba'] : ['Armador', 'Flota completa · cotización personalizada'];
+    var label = total === 1 ? '1 activo cargado' : total + ' activos cargados';
     var estimate = document.getElementById('registration-estimate');
-    if (estimate) estimate.innerHTML = '<span class="estimate-label">PLAN SUGERIDO</span><strong>' + plan[0] + '</strong><span>' + plan[1] + '</span>';
+    if (estimate) estimate.innerHTML = '<span class="estimate-label">TU FLOTA INICIAL</span><strong>' + label + '</strong><span>Después del registro vas a conocer todas las opciones disponibles.</span>';
 }
 
 async function doLogin(){
