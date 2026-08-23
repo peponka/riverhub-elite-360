@@ -358,16 +358,12 @@ function showApp(user){
             checkAdminAccess();
         } else {
 
-            // Auto-create profile if missing
-            sb.from('companies').select('id').eq('name','ViaBarcazas Admin').single().then(function(c2){
-                var cid = c2.data ? c2.data.id : null;
-                sb.from('user_profiles').insert({user_id:user.id, company_id:cid, role:'viewer', full_name:'Nuevo Usuario'}).then(function(ins){
-
-                    currentCompanyId=cid;
-                    currentUserRole='viewer';
-                    checkAdminAccess();
-                });
-            });
+            // A new account must be provisioned by the tenant signup trigger.
+            // Never attach an unprovisioned user to the demo company.
+            currentCompanyId=null;
+            currentUserRole=null;
+            document.querySelector('.user-role').textContent='Cuenta pendiente de activacion';
+            console.warn('No se encontro un perfil de empresa para el usuario', user.id);
         }
         loadDashboard();
     });
