@@ -587,6 +587,7 @@ html,body{font-family:'Manrope',-apple-system,sans-serif;background:var(--bg-pri
 /* LOGIN */
 .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg-primary)}
 .login-card{background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:20px;padding:42px;width:min(920px,94vw);min-height:560px;max-width:94vw;display:flex;align-items:stretch}
+.login-card.forgot-card{display:block;width:400px;min-height:0;padding:48px;max-width:90vw}
 .login-layout{display:grid;grid-template-columns:minmax(240px,.82fr) minmax(400px,1.35fr);gap:48px;width:100%;align-items:center}
 .login-promo{padding:4px 0 4px 2px}
 .login-promo .login-brand{margin-bottom:48px}

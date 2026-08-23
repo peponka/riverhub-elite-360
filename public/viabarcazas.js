@@ -140,6 +140,7 @@ function showLoginView() {
     if (!card || !loginCardTemplate) return;
     authMode = 'login';
     card.classList.remove('register-card');
+    card.classList.remove('forgot-card');
     card.innerHTML = loginCardTemplate;
     var errDiv = document.getElementById('login-error');
     if (errDiv) errDiv.style.display = 'none';
@@ -154,6 +155,8 @@ function showForgotPasswordView() {
     var card = document.querySelector('.login-card');
     if (!card) return;
     authMode = 'forgotPassword';
+    card.classList.remove('register-card');
+    card.classList.add('forgot-card');
     card.innerHTML =
         '<div class="login-brand"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.4" fill="#25D366"/></svg><span style="font-family:Bricolage Grotesque,sans-serif;font-size:2.2rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>'+
         '<h1 class="login-title">Recuperar<br><em>contrase&ntilde;a.</em></h1>'+
