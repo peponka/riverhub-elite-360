@@ -75,6 +75,7 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
     } else {
         document.getElementById('login-screen').style.display='flex';
         document.getElementById('app-shell').style.display='none';
+        if(new URLSearchParams(window.location.search).get('mode') === 'register') toggleRegister();
     }
 })();
 
