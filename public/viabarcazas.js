@@ -216,6 +216,16 @@ function toggleRegister() {
                     <label><span><i class="fa-solid fa-water"></i> Barcazas</span><input id="reg-barges" type="number" min="0" value="0"></label>
                     <label><span><i class="fa-solid fa-droplet"></i> Tanques</span><input id="reg-tankers" type="number" min="0" value="0"></label>
                 </div>
+                <div class="vessel-onboarding-heading"><span>PRIMERA EMBARCACIÓN</span><small>Opcional · podés completarlo después</small></div>
+                <p class="vessel-onboarding-note">Cargá la matrícula para identificarla. El resto de la información ayuda a preparar tu panel, pero no te frena.</p>
+                <div class="register-grid vessel-onboarding-grid">
+                    <div class="register-field"><label class="login-label">MATRÍCULA <b>ÚNICO DATO REQUERIDO</b></label><input id="reg-vessel-registration" class="login-input" placeholder="Ej. PY-ABC123" autocomplete="off"></div>
+                    <div class="register-field"><label class="login-label">NOMBRE DE LA EMBARCACIÓN <span>OPCIONAL</span></label><input id="reg-vessel-name" class="login-input" placeholder="Ej. R/M Paraná I" autocomplete="off"></div>
+                    <div class="register-field"><label class="login-label">TIPO <span>OPCIONAL</span></label><select id="reg-vessel-type" class="login-input"><option value="">Elegir más adelante</option><option>Remolcador</option><option>Barcaza</option><option>Barcaza tanque</option><option>Empujador</option><option>Lancha</option><option>Pontón</option></select></div>
+                    <div class="register-field"><label class="login-label">BANDERA <span>OPCIONAL</span></label><select id="reg-vessel-flag" class="login-input"><option value="">Elegir más adelante</option><option value="Paraguay">🇵🇾 Paraguay</option><option value="Argentina">🇦🇷 Argentina</option><option value="Uruguay">🇺🇾 Uruguay</option><option value="Brasil">🇧🇷 Brasil</option><option value="Bolivia">🇧🇴 Bolivia</option></select></div>
+                    <div class="register-field"><label class="login-label">PUERTO DE REGISTRO <span>OPCIONAL</span></label><input id="reg-vessel-port" class="login-input" placeholder="Ej. Asunción" autocomplete="off"></div>
+                    <div class="register-field"><label class="login-label">IMO / MMSI <span>OPCIONAL</span></label><input id="reg-vessel-identifiers" class="login-input" placeholder="Podés agregarlo después" autocomplete="off"></div>
+                </div>
                 <div class="register-grid register-credentials">
                     <div class="register-field"><label class="login-label">EMAIL CORPORATIVO</label><input type="email" id="login-email" class="login-input" placeholder="usuario@empresa.com" autocomplete="email"></div>
                     <div class="register-field"><label class="login-label">CONTRASEÑA</label><div class="password-wrap"><input type="password" id="login-password" class="login-input" placeholder="Mínimo 6 caracteres" autocomplete="new-password"><button type="button" onclick="togglePwVis('login-password',this)" aria-label="Mostrar contraseña"><i class="fa-solid fa-eye"></i></button></div></div>
@@ -260,9 +270,19 @@ async function doLogin(){
                 barges: Number(document.getElementById('reg-barges')?.value || 0),
                 tankers: Number(document.getElementById('reg-tankers')?.value || 0)
             };
+            var firstVessel = {
+                registration: document.getElementById('reg-vessel-registration')?.value.trim() || '',
+                name: document.getElementById('reg-vessel-name')?.value.trim() || '',
+                type: document.getElementById('reg-vessel-type')?.value || '',
+                flag: document.getElementById('reg-vessel-flag')?.value || '',
+                port: document.getElementById('reg-vessel-port')?.value.trim() || '',
+                identifiers: document.getElementById('reg-vessel-identifiers')?.value.trim() || ''
+            };
+            var hasVesselDetails = Object.keys(firstVessel).some(function(key){ return firstVessel[key]; });
+            if(hasVesselDetails && !firstVessel.registration){errDiv.textContent='Si cargás una embarcación, completá solamente su matrícula para continuar.';errDiv.style.display='block';btn.disabled=false;btn.textContent='Crear cuenta y calcular plan';return;}
             if(!name || !company || !country || !operation){errDiv.textContent='Completá tus datos y los de tu empresa para continuar.';errDiv.style.display='block';btn.disabled=false;btn.textContent='Crear cuenta y calcular plan';return;}
             if(pass.length < 6){errDiv.textContent='La contraseña debe tener al menos 6 caracteres.';errDiv.style.display='block';btn.disabled=false;btn.textContent='Crear cuenta y calcular plan';return;}
-            var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name,company:company,country:country,operation:operation,fleet:fleet}}});
+            var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name,company:company,country:country,operation:operation,fleet:fleet,first_vessel:firstVessel.registration?firstVessel:null}}});
             if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';btn.disabled=false;btn.textContent='Registrarse';return;}
             errDiv.style.color = 'var(--success, #10b981)';
             errDiv.textContent = 'Cuenta creada. Revisá tu email si te pide confirmar la dirección.';
@@ -1291,7 +1311,7 @@ function updateHeatmap(){
 
 // MODAL
 var modalForms={
-    fleet:{title:'Agregar Activo',fields:[{id:'fleet-mmsi',label:'MMSI (9 dígitos — requerido para tracking AIS)',type:'text',placeholder:'Ej: 760123456'},{id:'fleet-name',label:'NOMBRE',type:'text',placeholder:'Ej: R/M ATLAS'},{id:'fleet-type',label:'TIPO',type:'select',options:['Barcaza','Remolcador','Empujador','Barcaza Tanque','Barcaza Contenedor','Ponton','Lancha']},{id:'fleet-status',label:'ESTADO',type:'select',options:['Activo','En Viaje','En Puerto','Mantenimiento']},{id:'fleet-location',label:'UBICACION',type:'text',placeholder:'Ej: Km 1420'}]},
+    fleet:{title:'Agregar Activo',fields:[{id:'fleet-registration',label:'MATRÍCULA (requerida)',type:'text',placeholder:'Ej: PY-ABC123'},{id:'fleet-name',label:'NOMBRE (opcional)',type:'text',placeholder:'Ej: R/M ATLAS'},{id:'fleet-type',label:'TIPO (opcional)',type:'select',options:['Barcaza','Remolcador','Empujador','Barcaza Tanque','Barcaza Contenedor','Ponton','Lancha']},{id:'fleet-flag',label:'BANDERA (opcional)',type:'select',options:['Paraguay','Argentina','Uruguay','Brasil','Bolivia']},{id:'fleet-mmsi',label:'MMSI (opcional)',type:'text',placeholder:'Se puede completar después'},{id:'fleet-status',label:'ESTADO',type:'select',options:['Activo','En Viaje','En Puerto','Mantenimiento']},{id:'fleet-location',label:'UBICACION (opcional)',type:'text',placeholder:'Ej: Km 1420'}]},
     viaje:{title:'Nueva Solicitud de Viaje',fields:[{id:'viaje-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'viaje-origin',label:'ORIGEN',type:'text',placeholder:'Puerto origen'},{id:'viaje-dest',label:'DESTINO',type:'text',placeholder:'Puerto destino'},{id:'viaje-cargo',label:'CARGA (TON)',type:'text',placeholder:'3500'},{id:'viaje-date',label:'FECHA SALIDA',type:'date'}]},
     bitacora:{title:'Nueva Entrada de Bitacora',fields:[{id:'bit-title',label:'TITULO',type:'text',placeholder:'Resumen'},{id:'bit-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'bit-type',label:'TIPO',type:'select',options:['Observacion','Incidente','Maniobra','Navegacion']},{id:'bit-desc',label:'DESCRIPCION',type:'textarea',placeholder:'Detalle...'}]},
     crew:{title:'Agregar Tripulante',fields:[{id:'crew-name',label:'NOMBRE',type:'text',placeholder:'Juan Perez'},{id:'crew-role',label:'ROL',type:'select',options:['Capitan','Timonel','Maquinista','Marinero','Cocinero']},{id:'crew-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'crew-doc',label:'DOCUMENTO',type:'text',placeholder:'Nro documento'}]},
@@ -1327,7 +1347,7 @@ document.getElementById('modal-submit').addEventListener('click',async function(
     var t=currentModal;if(!t)return;var c=modalForms[t];var d={};c.fields.forEach(function(f){d[f.id]=document.getElementById(f.id).value;});
     try{
         var cid=currentCompanyId;
-        if(t==='fleet'&&d['fleet-name']){var fr=await sb.from('vessels').insert({name:d['fleet-name'],type:d['fleet-type'],status:d['fleet-status'],mmsi:d['fleet-mmsi']||null,company_id:cid});if(fr.error){alert('Error al guardar embarcación: '+fr.error.message);return;}loadFleet();}
+        if(t==='fleet'){if(!d['fleet-registration']){alert('La matrícula es el único dato requerido para guardar la embarcación.');return;}var fr=await sb.from('vessels').insert({name:d['fleet-name']||d['fleet-registration'],registration_number:d['fleet-registration'],type:d['fleet-type']||null,flag:d['fleet-flag']||null,status:d['fleet-status'],mmsi:d['fleet-mmsi']||null,company_id:cid});if(fr.error){alert('Error al guardar embarcación: '+fr.error.message);return;}loadFleet();}
         else if(t==='viaje'&&d['viaje-vessel']){await sb.from('voyages').insert({vessel_name:d['viaje-vessel'],origin_port:d['viaje-origin'],destination_port:d['viaje-dest'],cargo_tons:parseInt(d['viaje-cargo'])||0,departure_date:d['viaje-date']||null,status:'pendiente',company_id:cid});loadViajes();}
         else if(t==='bitacora'&&d['bit-title']){var br=await sb.from('logs').insert({title:d['bit-title'],vessel_name:d['bit-vessel'],action_type:d['bit-type'].toLowerCase(),description:d['bit-desc'],company_id:cid});if(br.error){alert('Error al guardar entrada de bitácora: '+br.error.message);return;}loadBitacora();}
         else if(t==='crew'&&d['crew-name']){await sb.from('crew_members').insert({full_name:d['crew-name'],role:d['crew-role'],vessel_name:d['crew-vessel'],document_number:d['crew-doc'],status:'embarcado',company_id:cid});loadCrew();}
