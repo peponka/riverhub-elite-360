@@ -43,7 +43,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 window.onerror = function(msg, src, line, col, err) {
     // Suppress Supabase auth noise
     if (typeof msg === 'string' && (msg.includes('refresh_token') || msg.includes('AuthApiException'))) return true;
-    console.error('[FluviaFleet Error]', msg, '@ ' + src + ':' + line);
+    console.error('[ViaBarcazas Error]', msg, '@ ' + src + ':' + line);
     return true; // Prevent default error handling
 };
 window.addEventListener('unhandledrejection', function(e) {
@@ -53,7 +53,7 @@ window.addEventListener('unhandledrejection', function(e) {
         e.preventDefault();
         return;
     }
-    console.warn('[FluviaFleet Unhandled]', msg);
+    console.warn('[ViaBarcazas Unhandled]', msg);
     e.preventDefault();
 });
 
@@ -87,7 +87,7 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
             document.getElementById('app-shell').style.display='none';
             var screen = document.getElementById('login-screen');
             screen.style.display='flex';
-            screen.querySelector('.login-card').innerHTML = '<div class="login-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:64px;height:64px;border-radius:50%;object-fit:cover"><span style="font-family:Newsreader,serif;font-size:3.2rem;font-weight:400;color:var(--text-primary);letter-spacing:-0.01em">FluviaFleet</span></div>'+
+            screen.querySelector('.login-card').innerHTML = '<div class="login-brand"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.4" fill="#25D366"/></svg><span style="font-family:Bricolage Grotesque,sans-serif;font-size:2.2rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>'+
                 '<h1 class="login-title">Cambiar<br><em>Contraseña.</em></h1>'+
                 '<p class="login-sub">INGRESÁ TU NUEVA CONTRASEÑA</p>'+
                 '<div id="reset-pw-error" style="display:none;font-size:12px;margin:12px 0;font-weight:600;"></div>'+
@@ -96,7 +96,7 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
                 '<label class="login-label">CONFIRMAR CONTRASEÑA</label>'+
                 '<div style="position:relative"><input type="password" id="confirm-password-input" class="login-input" placeholder="Repetir contraseña" style="padding-right:44px"><button type="button" onclick="togglePwVis(\'confirm-password-input\',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-secondary);font-size:16px;padding:4px;" tabindex="-1"><i class="fa-solid fa-eye"></i></button></div>'+
                 '<button class="login-btn" onclick="doChangePassword()">Cambiar Contraseña</button>'+
-                '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Hidrovía Paraguay-Paraná — FluviaFleet</p></div>';
+                '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Hidrovía Paraguay-Paraná — ViaBarcazas</p></div>';
         }, 1000);
     }
 })();
@@ -153,7 +153,7 @@ function showForgotPasswordView() {
     if (!card) return;
     authMode = 'forgotPassword';
     card.innerHTML =
-        '<div class="login-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:64px;height:64px;border-radius:50%;object-fit:cover"><span style="font-family:Newsreader,serif;font-size:3.2rem;font-weight:400;color:var(--text-primary);letter-spacing:-0.01em">FluviaFleet</span></div>'+
+        '<div class="login-brand"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.4" fill="#25D366"/></svg><span style="font-family:Bricolage Grotesque,sans-serif;font-size:2.2rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>'+
         '<h1 class="login-title">Recuperar<br><em>contrase&ntilde;a.</em></h1>'+
         '<p class="login-sub" style="line-height:1.5;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;">Ingres&aacute; tu email y te enviaremos un enlace para restablecer tu contrase&ntilde;a.</p>'+
         '<div id="forgot-error" style="display:none;color:var(--error);font-size:12px;margin:12px 0;font-weight:600;"></div>'+
@@ -161,8 +161,8 @@ function showForgotPasswordView() {
         '<label class="login-label">EMAIL</label>'+
         '<input type="email" id="forgot-email" class="login-input" placeholder="usuario@empresa.com" autocomplete="email">'+
         '<button class="login-btn" id="forgot-submit-btn" onclick="sendPasswordResetLink()">Enviar enlace</button>'+
-        '<button type="button" onclick="showLoginView()" style="width:100%;margin-top:14px;background:none;border:1px solid var(--separator);border-radius:12px;padding:12px;color:var(--text-secondary);cursor:pointer;font-size:13px;font-weight:700;font-family:Inter,sans-serif;">Volver al inicio de sesi&oacute;n</button>'+
-        '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Hidrovia Paraguay-Parana - FluviaFleet</p></div>';
+        '<button type="button" onclick="showLoginView()" style="width:100%;margin-top:14px;background:none;border:1px solid var(--separator);border-radius:12px;padding:12px;color:var(--text-secondary);cursor:pointer;font-size:13px;font-weight:700;font-family:Manrope,sans-serif;">Volver al inicio de sesi&oacute;n</button>'+
+        '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Hidrovia Paraguay-Parana - ViaBarcazas</p></div>';
     setTimeout(function(){
         var input = document.getElementById('forgot-email');
         if (input) input.focus();
@@ -288,7 +288,7 @@ function showApp(user){
         } else {
 
             // Auto-create profile if missing
-            sb.from('companies').select('id').eq('name','FluviaFleet Admin').single().then(function(c2){
+            sb.from('companies').select('id').eq('name','ViaBarcazas Admin').single().then(function(c2){
                 var cid = c2.data ? c2.data.id : null;
                 sb.from('user_profiles').insert({user_id:user.id, company_id:cid, role:'viewer', full_name:'Nuevo Usuario'}).then(function(ins){
 
@@ -549,7 +549,7 @@ async function loadDashMiniCharts(vessels){
         var ctx1=document.getElementById('dash-fuel-trend');
         if(ctx1){
             if(dashFuelTrendChart)dashFuelTrendChart.destroy();
-            dashFuelTrendChart=new Chart(ctx1,{type:'line',data:{labels:fuelLabels,datasets:[{data:fuelValues,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.08)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#3B82F6',pointBorderColor:'#fff',pointBorderWidth:2,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' L'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:9},callback:function(v){return v>999?(v/1000).toFixed(0)+'k':v}}},x:{grid:{display:false},ticks:{font:{size:9},maxRotation:0}}}}});
+            dashFuelTrendChart=new Chart(ctx1,{type:'line',data:{labels:fuelLabels,datasets:[{data:fuelValues,borderColor:'#25D366',backgroundColor:'rgba(37,211,102,0.10)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#25D366',pointBorderColor:'#0F231C',pointBorderWidth:2,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' L'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2',font:{size:9},callback:function(v){return v>999?(v/1000).toFixed(0)+'k':v}}},x:{grid:{display:false},ticks:{color:'#A9B8B2',font:{size:9},maxRotation:0}}}}});
         }
     }catch(e){/* Fuel trend: */;}
     try{
@@ -558,7 +558,7 @@ async function loadDashMiniCharts(vessels){
         var ctx2=document.getElementById('dash-fleet-util');
         if(ctx2){
             if(dashFleetUtilChart)dashFleetUtilChart.destroy();
-            dashFleetUtilChart=new Chart(ctx2,{type:'doughnut',data:{labels:['Navegando','En Puerto','Mantenimiento'],datasets:[{data:[active,docked,maint],backgroundColor:['#2EA043','#3B82F6','#F59E0B'],borderWidth:0,borderRadius:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{font:{family:'Inter',size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}}});
+            dashFleetUtilChart=new Chart(ctx2,{type:'doughnut',data:{labels:['Navegando','En Puerto','Mantenimiento'],datasets:[{data:[active,docked,maint],backgroundColor:['#34D399','#128C7E','#FBBF24'],borderWidth:0,borderRadius:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#A9B8B2',font:{family:'Manrope',size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}}});
         }
     }catch(e){/* Fleet util: */;}
 }
@@ -674,7 +674,34 @@ async function loadFleet(){
         document.getElementById('fleet-total').textContent=data.length;
         var elServ=document.getElementById('fleet-service');if(elServ)elServ.textContent=inService;
         var elDock=document.getElementById('fleet-dock');if(elDock)elDock.textContent=inDock;
+        var fleetView=document.getElementById('view-fleet');
+        var emptyState=document.getElementById('fleet-empty-state');
+        var analyticsHeading=document.getElementById('fleet-analytics-heading');
+        var assetsHeading=document.querySelector('.fleet-assets-heading');
+        var assetsCount=document.getElementById('fleet-assets-count');
+        if(assetsCount)assetsCount.textContent=data.length+' activo'+(data.length===1?'':'s');
+        if(fleetView)fleetView.classList.toggle('is-empty',data.length===0);
+        if(emptyState)emptyState.hidden=data.length>0;
+        if(analyticsHeading)analyticsHeading.hidden=data.length===0;
+        if(assetsHeading)assetsHeading.hidden=data.length===0;
+        renderFleetCharts(data,inService,inDock);
     }catch(e){/* Fleet: */;}
+}
+var fleetStatusChart=null,fleetTypeChart=null;
+function renderFleetCharts(data,inService,inDock){
+    var other=Math.max(0,data.length-inService-inDock);
+    var ctx1=document.getElementById('fleet-status-chart');
+    if(ctx1){
+        if(fleetStatusChart)fleetStatusChart.destroy();
+        fleetStatusChart=new Chart(ctx1,{type:'doughnut',data:{labels:['En Servicio','En Dique','Otros'],datasets:[{data:[inService,inDock,other],backgroundColor:['#34D399','#FBBF24','#6B7280'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#A9B8B2',font:{family:'Manrope',size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}}});
+    }
+    var byType={};
+    data.forEach(function(v){var t=trad(v.type||v.vessel_type||'Otro');byType[t]=(byType[t]||0)+1;});
+    var ctx2=document.getElementById('fleet-type-chart');
+    if(ctx2){
+        if(fleetTypeChart)fleetTypeChart.destroy();
+        fleetTypeChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(byType),datasets:[{data:Object.values(byType),backgroundColor:'rgba(37,211,102,0.65)',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2',stepSize:1}},y:{grid:{display:false},ticks:{color:'#A9B8B2',font:{size:10}}}}}});
+    }
 }
 
 async function loadViajes(){
@@ -783,7 +810,7 @@ async function loadViajes(){
     }catch(e){console.error('loadViajes:',e);}
 }
 
-async function loadBitacora(){
+async function loadBitacora(filter){
     try{
         var r=await sb.from('logs').select('*').order('created_at',{ascending:false}).limit(30);
         var data=r.data||[];
@@ -799,6 +826,13 @@ async function loadBitacora(){
                 {id:'demo8',title:'carga',action_type:'carga',vessel_name:'BZ-1042',description:'Carga completada: 4.200 ton soja. Calado final: 3.2m',created_at:'2026-05-06T10:00:00Z'}
             ];
         }
+        var totalData=data.slice();
+        var today=new Date().toDateString();
+        var todayCount=totalData.filter(function(row){return row.created_at&&new Date(row.created_at).toDateString()===today}).length;
+        var categories={};totalData.forEach(function(row){categories[(row.title||row.action_type||'entrada').toLowerCase()]=true;});
+        var totalEl=document.getElementById('bit-total');var todayEl=document.getElementById('bit-today');var categoriesEl=document.getElementById('bit-categories');
+        if(totalEl)totalEl.textContent=totalData.length;if(todayEl)todayEl.textContent=todayCount;if(categoriesEl)categoriesEl.textContent=Object.keys(categories).length;
+        if(filter){var q=filter.toLowerCase();data=data.filter(function(row){return JSON.stringify(row).toLowerCase().indexOf(q)>=0;});}
         var l=document.getElementById('bitacora-list');var em=document.getElementById('bitacora-empty');
         if(!l)return;l.innerHTML='';
         var catIcons={'navegacion':'fa-route','combustible':'fa-gas-pump','clima':'fa-cloud-sun','tripulacion':'fa-users','mantenimiento':'fa-wrench','maniobra':'fa-anchor','incidente':'fa-triangle-exclamation','observacion':'fa-eye','carga':'fa-box','seguridad':'fa-shield-halved'};
@@ -806,7 +840,7 @@ async function loadBitacora(){
         var catLabels={'navegacion':'Navegacion','combustible':'Combustible','clima':'Clima','tripulacion':'Tripulacion','mantenimiento':'Mantenimiento','maniobra':'Maniobra','incidente':'Incidente','observacion':'Observacion','carga':'Carga','seguridad':'Seguridad'};
         if(data.length>0){
             if(em)em.style.display='none';
-            var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:16px">';
+            var h='<div class="logbook-card-grid">';
             data.forEach(function(row){
                 var cat=(row.title||row.action_type||'entrada').toLowerCase();
                 var icon=catIcons[cat]||'fa-pen-to-square';
@@ -814,9 +848,9 @@ async function loadBitacora(){
                 var label=catLabels[cat]||(cat.charAt(0).toUpperCase()+cat.slice(1));
                 var t=row.created_at?new Date(row.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'—';
                 var tTime=row.created_at?new Date(row.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}):'';
-                h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;border-left:4px solid '+color+';transition:box-shadow 0.2s,transform 0.2s" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.08)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
+                h+='<div class="logbook-card" style="--logbook-color:'+color+'" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.14)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
                 // Header: icon + category badge + time
-                h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">';
+                h+='<div class="logbook-card-header">';
                 h+='<div style="display:flex;align-items:center;gap:10px">';
                 h+='<div style="width:40px;height:40px;border-radius:12px;background:'+color+'15;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:16px;color:'+color+'"></i></div>';
                 h+='<div><span style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'12;padding:3px 10px;border-radius:6px;text-transform:uppercase">'+esc(label)+'</span>';
@@ -825,9 +859,9 @@ async function loadBitacora(){
                 h+='<div style="text-align:right;flex-shrink:0"><div style="font-size:10px;color:var(--text-tertiary)">'+t+'</div><div style="font-size:10px;color:var(--text-tertiary)">'+tTime+'</div></div>';
                 h+='</div>';
                 // Description
-                h+='<div style="font-size:13px;color:var(--text-primary);line-height:1.6;margin-bottom:12px">'+esc(row.description||row.details||'Sin detalles')+'</div>';
+                h+='<div class="logbook-description">'+esc(row.description||row.details||'Sin detalles')+'</div>';
                 // Footer
-                h+='<div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--separator)">';
+                h+='<div class="logbook-card-footer">';
                 h+='<div style="display:flex;gap:6px">';
                 h+='<span style="background:var(--bg-tertiary,#f0f0f0);padding:3px 8px;border-radius:6px;font-size:9px;color:var(--text-secondary);display:flex;align-items:center;gap:3px"><i class="fa-regular fa-clock" style="font-size:8px"></i> '+t+' '+tTime+'</span>';
                 h+='</div>';
@@ -841,6 +875,11 @@ async function loadBitacora(){
             l.innerHTML=h;
         }else{if(em)em.style.display='';}
     }catch(e){console.error('loadBitacora:',e);}
+}
+
+function filterBitacora(){
+    var input=document.getElementById('bit-search');
+    loadBitacora(input?input.value.trim():'');
 }
 
 async function loadCrew(){
@@ -885,14 +924,70 @@ async function loadCrew(){
             l.innerHTML=h;
             document.getElementById('crew-total').textContent=data.length;
             document.getElementById('crew-on').textContent=data.filter(function(c){var s=(c.status||'').toLowerCase();return s==='embarcado'||s==='onboard'}).length;
+            var elOff=document.getElementById('crew-off');if(elOff)elOff.textContent=data.filter(function(c){var s=(c.status||'').toLowerCase();return s==='franco'||s==='leave'}).length;
         }else{if(em)em.style.display='';}
     }catch(e){/* Crew: */;}
 }
+async function importCrewCSV(input){
+    var file=input.files&&input.files[0];if(!file)return;
+    try{
+        var text=await file.text();
+        var lines=text.split(/\r?\n/).filter(function(l){return l.trim()});
+        if(lines.length<2){alert('El archivo debe tener una fila de encabezado y al menos una fila de datos.');input.value='';return;}
+        var rows=lines.slice(1);
+        var cid=currentCompanyId;var inserted=0;var failed=0;
+        for(var i=0;i<rows.length;i++){
+            var cols=rows[i].split(',').map(function(c){return c.trim()});
+            if(!cols[0])continue;
+            try{
+                var res=await sb.from('crew_members').insert({full_name:cols[0],role:cols[1]||'Marinero',vessel_name:cols[2]||null,document_number:cols[3]||null,status:'embarcado',company_id:cid});
+                if(res.error)failed++;else inserted++;
+            }catch(e){failed++;}
+        }
+        alert('Importacion completa: '+inserted+' tripulantes agregados'+(failed>0?', '+failed+' fallidos':'')+'.');
+        loadCrew();
+    }catch(e){console.error('importCrewCSV:',e);alert('No se pudo leer el archivo.');}
+    input.value='';
+}
 
+var fuelTrendChart=null;
+function renderFuelTrend(data){
+    var ctx=document.getElementById('fuel-trend-chart');if(!ctx)return;
+    var byDay={};var order=[];
+    for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var k=d.toLocaleDateString('es',{day:'2-digit',month:'short'});byDay[k]=0;order.push(k);}
+    (data||[]).forEach(function(f){
+        if(!f.created_at)return;
+        var k=new Date(f.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'});
+        if(byDay.hasOwnProperty(k))byDay[k]+=(f.liters||f.quantity||0);
+    });
+    if(fuelTrendChart)fuelTrendChart.destroy();
+    fuelTrendChart=new Chart(ctx,{type:'line',data:{labels:order,datasets:[{data:order.map(function(k){return byDay[k]}),borderColor:'#25D366',backgroundColor:'rgba(37,211,102,0.10)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#25D366',pointBorderColor:'#0F231C',pointBorderWidth:2,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' L'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2',font:{size:9}}},x:{grid:{display:false},ticks:{color:'#A9B8B2',font:{size:9},maxRotation:0}}}}});
+}
+function renderFuelInsights(data){
+    var el=document.getElementById('fuel-insights');if(!el)return;
+    data=data||[];
+    if(data.length===0){el.innerHTML='<div style="font-size:12px;color:var(--text-tertiary)">Sin datos suficientes para generar insights.</div>';return;}
+    var byVessel={};data.forEach(function(f){var v=f.vessel_name||'Sin embarcacion';byVessel[v]=(byVessel[v]||0)+(f.liters||f.quantity||0);});
+    var topVessel='';var topLiters=0;
+    Object.keys(byVessel).forEach(function(v){if(byVessel[v]>topLiters){topLiters=byVessel[v];topVessel=v;}});
+    var last3=data.slice(0,3).reduce(function(s,f){return s+(f.liters||f.quantity||0)},0);
+    var prev3=data.slice(3,6).reduce(function(s,f){return s+(f.liters||f.quantity||0)},0);
+    var rows=[];
+    if(topVessel)rows.push({icon:'fa-ship',color:'var(--accent)',text:'<strong>'+esc(topVessel)+'</strong> concentra el mayor consumo: '+topLiters.toLocaleString()+' L registrados.'});
+    if(prev3>0&&last3>prev3*1.2)rows.push({icon:'fa-triangle-exclamation',color:'var(--warning)',text:'El consumo de las ultimas cargas subio '+Math.round((last3/prev3-1)*100)+'% respecto al periodo anterior.'});
+    else if(prev3>0&&last3<prev3*0.8)rows.push({icon:'fa-arrow-trend-down',color:'var(--success)',text:'El consumo de las ultimas cargas bajo '+Math.round((1-last3/prev3)*100)+'% respecto al periodo anterior.'});
+    var noVessel=data.filter(function(f){return!f.vessel_name}).length;
+    if(noVessel>0)rows.push({icon:'fa-circle-info',color:'var(--text-tertiary)',text:noVessel+' registro(s) sin embarcacion asignada.'});
+    if(rows.length===0)rows.push({icon:'fa-check',color:'var(--success)',text:'Consumo estable, sin anomalias detectadas.'});
+    el.innerHTML=rows.map(function(r){return '<div style="display:flex;gap:10px;align-items:flex-start"><div style="width:26px;height:26px;border-radius:8px;background:'+r.color+'1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+r.icon+'" style="font-size:11px;color:'+r.color+'"></i></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.5">'+r.text+'</div></div>';}).join('');
+}
 async function loadFuel(){
     try{
         var r=await sb.from('fuel_logs').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('fuel-list');var em=document.getElementById('fuel-empty');l.innerHTML='';
+        var fuelView=document.getElementById('view-combustible');
+        if(fuelView)fuelView.classList.toggle('is-empty',!(data&&data.length));
+        renderFuelTrend(data);renderFuelInsights(data);
         if(data&&data.length>0){
             em.style.display='none';
             l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px';
@@ -904,11 +999,11 @@ async function loadFuel(){
                 var typeColor=fType.indexOf('marine')>=0||fType.indexOf('mgo')>=0?'#0EA5E9':fType.indexOf('diesel')>=0||fType.indexOf('gasoil')>=0?'#F97316':'#8B5CF6';
                 var t=f.created_at?new Date(f.created_at).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}):'-';
                 var tShort=f.created_at?new Date(f.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}):'-';
-                var d=document.createElement('div');
+                var d=document.createElement('div');d.className='maint-card maint-priority-'+(pri||'baja');
                 d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default;position:relative;overflow:hidden';
                 d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
                 d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">'+'<div style="width:40px;height:40px;border-radius:10px;background:'+typeColor+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-gas-pump" style="font-size:16px;color:'+typeColor+'"></i></div>'+'<button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:'+(f.vessel_name?'var(--text-primary)':'var(--text-tertiary)')+';margin-bottom:2px"><i class="fa-solid fa-ship" style="font-size:11px;color:'+(f.vessel_name?typeColor:'var(--text-tertiary)')+'"></i>'+(f.vessel_name||'Sin embarcación')+'</div>'+'<div style="font-family:Newsreader,serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:8px">'+liters.toLocaleString()+' <span style="font-family:Inter,sans-serif;font-size:12px;color:var(--text-secondary);font-weight:500">litros</span></div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+typeColor+';background:'+typeColor+'10;padding:3px 8px;border-radius:5px">'+(f.fuel_type||'Gasoil').toUpperCase()+'</span>'+'<span style="font-size:10px;color:var(--text-tertiary)"><i class="fa-regular fa-calendar" style="margin-right:4px"></i>'+t+'</span>'+'</div>';
+                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">'+'<div style="width:40px;height:40px;border-radius:10px;background:'+typeColor+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-gas-pump" style="font-size:16px;color:'+typeColor+'"></i></div>'+'<button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:'+(f.vessel_name?'var(--text-primary)':'var(--text-tertiary)')+';margin-bottom:2px"><i class="fa-solid fa-ship" style="font-size:11px;color:'+(f.vessel_name?typeColor:'var(--text-tertiary)')+'"></i>'+(f.vessel_name||'Sin embarcación')+'</div>'+'<div style="font-family:Bricolage Grotesque,sans-serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:8px">'+liters.toLocaleString()+' <span style="font-family:Manrope,sans-serif;font-size:12px;color:var(--text-secondary);font-weight:500">litros</span></div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+typeColor+';background:'+typeColor+'10;padding:3px 8px;border-radius:5px">'+(f.fuel_type||'Gasoil').toUpperCase()+'</span>'+'<span style="font-size:10px;color:var(--text-tertiary)"><i class="fa-regular fa-calendar" style="margin-right:4px"></i>'+t+'</span>'+'</div>';
                 d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('fuel_logs',f.id,(f.vessel_name||'Registro'),loadFuel);});
                 l.appendChild(d);
             });
@@ -969,48 +1064,69 @@ async function loadMaint(){
     }catch(e){console.error('loadMaint:',e);}
 }
 
+var panolData=[];var panolPage=1;var panolFilter='';var panolPageSize=10;
+var panolCatIcons={'lubricantes':'fa-oil-can','filtros':'fa-filter','pintura':'fa-paint-roller','seguridad':'fa-shield-halved','motor':'fa-gear','casco':'fa-ship','hidraulica':'fa-droplet','electrico':'fa-bolt','cabulleria':'fa-link','soldadura':'fa-fire'};
+var panolCatColors={'lubricantes':'#8B5CF6','filtros':'#3B82F6','pintura':'#F97316','seguridad':'#EF4444','motor':'#6B7280','casco':'#0EA5E9','hidraulica':'#06B6D4','electrico':'#F59E0B','cabulleria':'#10B981','soldadura':'#DC2626'};
 async function loadPanol(){
     try{
-        var r=await sb.from('inventory_items').select('*').limit(500);var data=r.data;
-        var l=document.getElementById('panol-list');l.innerHTML='';
-        if(data&&data.length>0){
-            // Category icon map
-            var catIcons={'lubricantes':'fa-oil-can','filtros':'fa-filter','pintura':'fa-paint-roller','seguridad':'fa-shield-halved','motor':'fa-gear','casco':'fa-ship','hidraulica':'fa-droplet','electrico':'fa-bolt','cabulleria':'fa-link','soldadura':'fa-fire'};
-            var catColors={'lubricantes':'#8B5CF6','filtros':'#3B82F6','pintura':'#F97316','seguridad':'#EF4444','motor':'#6B7280','casco':'#0EA5E9','hidraulica':'#06B6D4','electrico':'#F59E0B','cabulleria':'#10B981','soldadura':'#DC2626'};
-            // Grid container
-            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px';
-            data.forEach(function(i){
-                var q=i.quantity||i.stock||0;var mn=i.min_stock||5;var low=q<=mn;var critical=q===0;
-                var cat=(i.category||'general').toLowerCase();
-                var icon=catIcons[cat]||'fa-box';
-                var color=catColors[cat]||'var(--accent)';
-                var pct=Math.min(100,Math.round((q/Math.max(mn*3,1))*100));
-                var barColor=critical?'var(--error)':low?'var(--warning)':'var(--success)';
-                var statusLabel=critical?'SIN STOCK':low?'STOCK BAJO':'EN STOCK';
-                var statusBg=critical?'rgba(220,38,38,0.08)':low?'rgba(245,158,11,0.08)':'rgba(46,160,67,0.08)';
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default;position:relative;overflow:hidden';
-                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">'+'<div style="width:42px;height:42px;border-radius:12px;background:'+color+'12;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:17px;color:'+color+'"></i></div>'+'<button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px;transition:all 0.15s"><i class="fa-regular fa-trash-can"></i></button>'+'</div>'+'<div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px;line-height:1.3">'+(i.name||'')+'</div>'+'<div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px;margin-bottom:14px">'+(i.category||'General').toUpperCase()+'</div>'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'+'<span style="font-size:11px;color:var(--text-secondary);font-weight:500">Stock</span>'+'<span style="font-size:13px;font-weight:700;color:var(--text-primary)">'+q+' <span style="font-size:10px;font-weight:500;color:var(--text-secondary)">uds</span></span>'+'</div>'+'<div style="width:100%;height:6px;background:var(--surface-low);border-radius:3px;overflow:hidden;margin-bottom:12px"><div style="width:'+pct+'%;height:100%;background:'+barColor+';border-radius:3px;transition:width 0.5s ease"></div></div>'+'<div style="display:flex;align-items:center;justify-content:space-between">'+'<span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+barColor+';background:'+statusBg+';padding:4px 10px;border-radius:6px">'+statusLabel+'</span>'+'<span style="font-size:10px;color:var(--text-tertiary)">min: '+mn+'</span>'+'</div>';
-                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});
-                l.appendChild(d);
-            });
-            document.getElementById('panol-total').textContent=data.length;
-            // Count categories and low stock
-            var cats={};var lowCount=0;
-            data.forEach(function(i){cats[i.category||'General']=1;if((i.quantity||i.stock||0)<=(i.min_stock||0))lowCount++;});
-            var elLow=document.getElementById('panol-low');if(elLow)elLow.textContent=lowCount;
-            var elCats=document.getElementById('panol-cats');if(elCats)elCats.textContent=Object.keys(cats).length;
-        }
+        var r=await sb.from('inventory_items').select('*').order('name').limit(500);
+        panolData=r.data||[];panolPage=1;
+        document.getElementById('panol-total').textContent=panolData.length;
+        var cats={};var lowCount=0;
+        panolData.forEach(function(i){cats[i.category||'General']=1;var q=i.stock_current||0;var mn=i.stock_min_alert||0;if(q<=mn)lowCount++;});
+        var elLow=document.getElementById('panol-low');if(elLow)elLow.textContent=lowCount;
+        var elCats=document.getElementById('panol-cats');if(elCats)elCats.textContent=Object.keys(cats).length;
+        renderPanolTable();
     }catch(e){/* Panol: */;}
+}
+function filterPanol(v){panolFilter=(v||'').toLowerCase();panolPage=1;renderPanolTable();}
+function panolGoPage(p){panolPage=p;renderPanolTable();}
+function renderPanolTable(){
+    var l=document.getElementById('panol-list');var pag=document.getElementById('panol-pagination');
+    l.innerHTML='';if(pag)pag.innerHTML='';
+    var filtered=panolData.filter(function(i){if(!panolFilter)return true;return((i.name||'')+' '+(i.sku||'')+' '+(i.category||'')+' '+(i.location||'')).toLowerCase().indexOf(panolFilter)>-1;});
+    if(filtered.length===0){l.innerHTML='<div style="padding:40px;text-align:center;color:var(--text-tertiary);font-size:13px">No se encontraron items en el pañol.</div>';return;}
+    var totalPages=Math.max(1,Math.ceil(filtered.length/panolPageSize));
+    if(panolPage>totalPages)panolPage=totalPages;
+    var start=(panolPage-1)*panolPageSize;
+    var pageItems=filtered.slice(start,start+panolPageSize);
+    var table=document.createElement('table');table.className='data-table panol-table';table.style.width='100%';
+    table.innerHTML='<thead><tr><th>SKU</th><th>Nombre</th><th>Categoria</th><th>Cantidad</th><th>Ubicacion</th><th>Estado</th><th style="text-align:right">Acciones</th></tr></thead>';
+    var tbody=document.createElement('tbody');
+    pageItems.forEach(function(i){
+        var q=i.stock_current||0;var mn=i.stock_min_alert||0;var low=q<=mn;var critical=q===0;
+        var cat=(i.category||'general').toLowerCase();
+        var icon=panolCatIcons[cat]||'fa-box';var color=panolCatColors[cat]||'var(--accent)';
+        var statusLabel=critical?'SIN STOCK':low?'STOCK BAJO':'EN STOCK';
+        var statusColor=critical?'var(--error)':low?'var(--warning)':'var(--success)';
+        var statusBg=critical?'rgba(248,113,113,0.1)':low?'rgba(251,191,36,0.1)':'rgba(52,211,153,0.1)';
+        var tr=document.createElement('tr');
+        tr.innerHTML='<td style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--text-tertiary)">'+(i.sku||'—')+'</td>'+
+            '<td><div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:8px;background:'+color+'1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:12px;color:'+color+'"></i></div><span style="font-weight:600;color:var(--text-primary)">'+esc(i.name||'')+'</span></div></td>'+
+            '<td style="color:var(--text-secondary)">'+esc(i.category||'General')+'</td>'+
+            '<td style="font-weight:700;color:var(--text-primary)">'+q+' <span style="font-weight:500;color:var(--text-tertiary);font-size:11px">'+(i.unit||'uds')+'</span></td>'+
+            '<td style="color:var(--text-secondary)">'+esc(i.location||'—')+'</td>'+
+            '<td><span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+statusColor+';background:'+statusBg+';padding:4px 10px;border-radius:6px">'+statusLabel+'</span></td>'+
+            '<td style="text-align:right"><button class="delete-btn" title="Eliminar" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button></td>';
+        tr.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});
+        tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    l.appendChild(table);
+    if(pag&&filtered.length>0){
+        var from=start+1;var to=Math.min(start+panolPageSize,filtered.length);
+        var html='<div>Mostrando '+from+'-'+to+' de '+filtered.length+' items</div><div style="display:flex;gap:6px">';
+        for(var p=1;p<=totalPages;p++){html+='<button onclick="panolGoPage('+p+')" style="min-width:26px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--separator);background:'+(p===panolPage?'var(--accent)':'var(--bg-secondary)')+';color:'+(p===panolPage?'#fff':'var(--text-secondary)')+';font-size:11px;cursor:pointer">'+p+'</button>';}
+        html+='</div>';
+        pag.innerHTML=html;
+    }
 }
 
 async function loadComms(){
     try{
         var r=await sb.from('comms').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var area=document.querySelector('#view-comunicaciones .comm-msg-area');
-        if(data&&data.length>0){area.innerHTML=data.map(function(m){return '<p style="margin:6px 0;font-size:13px;"><strong>'+esc(m.sender||'Sistema')+':</strong> '+esc(m.message||m.content||'')+' <span style="color:var(--text-secondary);font-size:10px;">'+(m.created_at?new Date(m.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}):'')+'</span></p>'}).join('');}
+        if(data&&data.length>0){area.innerHTML=data.map(function(m){return '<div class="comm-message"><div class="comm-message-meta"><strong>'+esc(m.sender||'Sistema')+'</strong><span>'+(m.created_at?new Date(m.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}):'')+'</span></div><p>'+esc(m.message||m.content||'')+'</p></div>'}).join('');}
     }catch(e){/* Comms: */;}
 }
 
@@ -1020,7 +1136,7 @@ var heatLayer = null;
 function initMap(){
     map=L.map('leaflet-map',{zoomControl:false}).setView([-27.5,-58.3],6);
     L.control.zoom({position:'topleft'}).addTo(map);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'OpenStreetMap',maxZoom:18}).addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:18,subdomains:'abcd'}).addTo(map);
     // Own fleet from Supabase
     loadFleetMarkers();
     // AIS third-party traffic
@@ -1114,7 +1230,7 @@ var modalForms={
     crew:{title:'Agregar Tripulante',fields:[{id:'crew-name',label:'NOMBRE',type:'text',placeholder:'Juan Perez'},{id:'crew-role',label:'ROL',type:'select',options:['Capitan','Timonel','Maquinista','Marinero','Cocinero']},{id:'crew-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'crew-doc',label:'DOCUMENTO',type:'text',placeholder:'Nro documento'}]},
     fuel:{title:'Registrar Combustible',fields:[{id:'fuel-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'fuel-liters',label:'LITROS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TIPO DE COMBUSTIBLE',type:'select',options:['Diesel Marine','Gasoil','IFO 380','MGO']},{id:'fuel-date',label:'FECHA',type:'date'}]},
     maint:{title:'Nueva Orden de Mantenimiento',fields:[{id:'maint-title',label:'DESCRIPCION',type:'text',placeholder:'Que reparar'},{id:'maint-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'maint-priority',label:'PRIORIDAD',type:'select',options:['Alta','Media','Baja']},{id:'maint-notes',label:'NOTAS',type:'textarea',placeholder:'Detalles...'}]},
-    panol:{title:'Agregar Item',fields:[{id:'panol-name',label:'REPUESTO',type:'text',placeholder:'Filtro de aceite'},{id:'panol-cat',label:'CATEGORIA',type:'select',options:['Motor','Electrico','Hidraulico','Casco','General']},{id:'panol-qty',label:'CANTIDAD',type:'text',placeholder:'10'},{id:'panol-min',label:'STOCK MINIMO',type:'text',placeholder:'2'}]},
+    panol:{title:'Agregar Item',fields:[{id:'panol-name',label:'REPUESTO',type:'text',placeholder:'Filtro de aceite'},{id:'panol-cat',label:'CATEGORIA',type:'select',options:['Motor','Electrico','Hidraulico','Casco','General']},{id:'panol-qty',label:'CANTIDAD',type:'text',placeholder:'10'},{id:'panol-min',label:'STOCK MINIMO',type:'text',placeholder:'2'},{id:'panol-loc',label:'UBICACION',type:'text',placeholder:'Paño A - Estante 3'}]},
     calado:{title:'Registrar Lectura de Calado',fields:[{id:'calado-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'calado-value',label:'CALADO (METROS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'CALADO MAXIMO (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVACIONES',type:'textarea',placeholder:'Condiciones, ubicacion...'}]},
     incidente:{title:'Reportar Incidente',fields:[{id:'inc-title',label:'TITULO',type:'text',placeholder:'Descripcion breve del incidente'},{id:'inc-vessel',label:'EMBARCACION',type:'vessel-select'},{id:'inc-severity',label:'SEVERIDAD',type:'select',options:['Critico','Alto','Medio','Bajo']},{id:'inc-type',label:'TIPO',type:'select',options:['Colision','Encalladura','Derrame','Averia mecanica','Incendio','Medico','Otro']},{id:'inc-desc',label:'DESCRIPCION DETALLADA',type:'textarea',placeholder:'Que ocurrio, donde, cuando, medidas tomadas...'}]},
     contrato:{title:'Nuevo Contrato de Flete',fields:[{id:'ctr-client',label:'CLIENTE',type:'text',placeholder:'Ej: Cargill S.A.'},{id:'ctr-route',label:'RUTA',type:'text',placeholder:'Ej: Rosario \u2192 Asunci\u00F3n'},{id:'ctr-product',label:'PRODUCTO',type:'text',placeholder:'Ej: Soja, Gas Oil'},{id:'ctr-type',label:'TIPO DE CONTRATO',type:'select',options:['COA Anual','Semestral','Trimestral','Spot']},{id:'ctr-volume',label:'VOLUMEN TOTAL (TON)',type:'text',placeholder:'84000'},{id:'ctr-rate',label:'TARIFA (USD/TON)',type:'text',placeholder:'28.5'},{id:'ctr-expdate',label:'FECHA EXPIRACION',type:'date'}]}
@@ -1146,21 +1262,23 @@ document.getElementById('modal-submit').addEventListener('click',async function(
         var cid=currentCompanyId;
         if(t==='fleet'&&d['fleet-name']){var fr=await sb.from('vessels').insert({name:d['fleet-name'],type:d['fleet-type'],status:d['fleet-status'],mmsi:d['fleet-mmsi']||null,company_id:cid});if(fr.error){alert('Error al guardar embarcación: '+fr.error.message);return;}loadFleet();}
         else if(t==='viaje'&&d['viaje-vessel']){await sb.from('voyages').insert({vessel_name:d['viaje-vessel'],origin_port:d['viaje-origin'],destination_port:d['viaje-dest'],cargo_tons:parseInt(d['viaje-cargo'])||0,departure_date:d['viaje-date']||null,status:'pendiente',company_id:cid});loadViajes();}
-        else if(t==='bitacora'&&d['bit-title']){await sb.from('logs').insert({title:d['bit-title'],vessel_name:d['bit-vessel'],action_type:d['bit-type'].toLowerCase(),description:d['bit-desc'],company_id:cid});loadBitacora();}
+        else if(t==='bitacora'&&d['bit-title']){var br=await sb.from('logs').insert({title:d['bit-title'],vessel_name:d['bit-vessel'],action_type:d['bit-type'].toLowerCase(),description:d['bit-desc'],company_id:cid});if(br.error){alert('Error al guardar entrada de bitácora: '+br.error.message);return;}loadBitacora();}
         else if(t==='crew'&&d['crew-name']){await sb.from('crew_members').insert({full_name:d['crew-name'],role:d['crew-role'],vessel_name:d['crew-vessel'],document_number:d['crew-doc'],status:'embarcado',company_id:cid});loadCrew();}
         else if(t==='fuel'&&d['fuel-vessel']){await sb.from('fuel_logs').insert({vessel_name:d['fuel-vessel'],liters:parseInt(d['fuel-liters'])||0,fuel_type:d['fuel-type'],company_id:cid});loadFuel();}
         else if(t==='maint'&&d['maint-title']){await sb.from('maintenance_tasks').insert({description:d['maint-title'],vessel_name:d['maint-vessel'],priority:d['maint-priority'],status:'pendiente',notes:d['maint-notes'],company_id:cid});loadMaint();}
-        else if(t==='panol'&&d['panol-name']){await sb.from('inventory_items').insert({name:d['panol-name'],category:d['panol-cat'],quantity:parseInt(d['panol-qty'])||0,min_stock:parseInt(d['panol-min'])||0,company_id:cid});loadPanol();}
-        else if(t==='calado'&&d['calado-vessel']){await sb.from('logs').insert({title:'Lectura de calado: '+d['calado-vessel'],vessel_name:d['calado-vessel'],action_type:'DRAFT_READING',description:d['calado-notes']||'Calado: '+d['calado-value']+'m / Max: '+d['calado-max']+'m',details:JSON.stringify({draft:parseFloat(d['calado-value'])||0,max_draft:parseFloat(d['calado-max'])||3.5}),company_id:cid});loadCalado();}
-        else if(t==='incidente'&&d['inc-title']){await sb.from('logs').insert({title:d['inc-title'],vessel_name:d['inc-vessel'],action_type:'INCIDENTE',description:d['inc-desc'],details:JSON.stringify({severity:d['inc-severity'],type:d['inc-type'],status:'Abierto'}),company_id:cid});loadIncidentes();}
+        else if(t==='panol'&&d['panol-name']){await sb.from('inventory_items').insert({name:d['panol-name'],category:d['panol-cat'],stock_current:parseInt(d['panol-qty'])||0,stock_min_alert:parseInt(d['panol-min'])||0,location:d['panol-loc']||null,company_id:cid});loadPanol();}
+        else if(t==='calado'&&d['calado-vessel']){var cr=await sb.from('logs').insert({title:'Lectura de calado: '+d['calado-vessel'],vessel_name:d['calado-vessel'],action_type:'DRAFT_READING',description:d['calado-notes']||'Calado: '+d['calado-value']+'m / Max: '+d['calado-max']+'m',details:JSON.stringify({draft:parseFloat(d['calado-value'])||0,max_draft:parseFloat(d['calado-max'])||3.5}),company_id:cid});if(cr.error){alert('Error al guardar lectura de calado: '+cr.error.message);return;}loadCalado();}
+        else if(t==='incidente'&&d['inc-title']){var ir=await sb.from('logs').insert({title:d['inc-title'],vessel_name:d['inc-vessel'],action_type:'INCIDENTE',description:d['inc-desc'],details:JSON.stringify({severity:d['inc-severity'],type:d['inc-type'],status:'Abierto'}),company_id:cid});if(ir.error){alert('Error al guardar incidente: '+ir.error.message);return;}loadIncidentes();}
         else if(t==='contrato'&&d['ctr-client']){await sb.from('freight_contracts').insert({client:d['ctr-client'],route:d['ctr-route'],product:d['ctr-product'],contract_type:d['ctr-type'],volume_total:parseInt(d['ctr-volume'])||0,volume_used:0,rate_per_ton:parseFloat(d['ctr-rate'])||0,expiration_date:d['ctr-expdate']||null,status:'active',company_id:cid});loadContratos();}
     }catch(e){console.error('Save:',e);}
     document.getElementById('modal-overlay').classList.remove('open');
 });
 
 // Comms send
+var commChannel='CH-16';
+document.querySelectorAll('#view-comunicaciones .comm-channel').forEach(function(channel){channel.addEventListener('click',function(){document.querySelectorAll('#view-comunicaciones .comm-channel').forEach(function(item){item.classList.remove('active');});channel.classList.add('active');commChannel=channel.querySelector('h4').textContent.trim();var label=document.querySelector('#view-comunicaciones .comm-compose-label small');if(label)label.textContent='Se enviará por '+commChannel;});});
 var commBtn=document.getElementById('comm-send-btn');
-if(commBtn){commBtn.addEventListener('click',async function(){var i=document.querySelector('#view-comunicaciones .comm-input');var m=i.value.trim();if(!m)return;try{await sb.from('comms').insert({message:m,sender:'Web',channel:'CH-16'});i.value='';loadComms();}catch(e){console.error('Comms:',e);}});}
+if(commBtn){commBtn.addEventListener('click',async function(){var i=document.querySelector('#view-comunicaciones .comm-input');var m=i.value.trim();if(!m)return;try{await sb.from('comms').insert({message:m,sender:'Web',channel:commChannel});i.value='';loadComms();}catch(e){console.error('Comms:',e);}});}
 
 // PRICING
 var currentPeriod='monthly';
@@ -1179,7 +1297,7 @@ function selectPlan(plan){
     var price=planPrices[plan][currentPeriod];
     var name=planNames[plan];
     document.getElementById('modal-title').textContent='Checkout - '+name;
-    document.getElementById('modal-body').innerHTML='<div style="background:var(--surface-low);border-radius:12px;padding:20px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">'+esc(name)+'</span><span style="font-family:Newsreader,serif;font-size:28px;font-weight:400">$'+price.toLocaleString('en-US')+'</span></div><p style="font-size:11px;color:var(--text-secondary);margin-top:4px">Facturacion '+(currentPeriod==='monthly'?'mensual':'anual')+' - 14 dias gratis</p></div><div style="text-align:center;padding:20px 0"><i class="fa-solid fa-lock" style="font-size:32px;color:var(--accent);margin-bottom:12px"></i><p style="font-size:14px;color:var(--text-primary);font-weight:600">Pago seguro via pasarela externa</p><p style="font-size:12px;color:var(--text-secondary);margin-top:8px">Al confirmar seras redirigido a la pasarela de pago segura para completar la transaccion.</p></div>';
+    document.getElementById('modal-body').innerHTML='<div style="background:var(--surface-low);border-radius:12px;padding:20px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">'+esc(name)+'</span><span style="font-family:Bricolage Grotesque,sans-serif;font-size:28px;font-weight:400">$'+price.toLocaleString('en-US')+'</span></div><p style="font-size:11px;color:var(--text-secondary);margin-top:4px">Facturacion '+(currentPeriod==='monthly'?'mensual':'anual')+' - 14 dias gratis</p></div><div style="text-align:center;padding:20px 0"><i class="fa-solid fa-lock" style="font-size:32px;color:var(--accent);margin-bottom:12px"></i><p style="font-size:14px;color:var(--text-primary);font-weight:600">Pago seguro via pasarela externa</p><p style="font-size:12px;color:var(--text-secondary);margin-top:8px">Al confirmar seras redirigido a la pasarela de pago segura para completar la transaccion.</p></div>';
     document.getElementById('modal-overlay').classList.add('open');
     document.getElementById('modal-submit').textContent='Contratar '+esc(name);
     document.getElementById('modal-submit').onclick=function(){processPayment(plan,price)};
@@ -1188,7 +1306,7 @@ async function processPayment(plan,price){
     document.getElementById('modal-submit').disabled=true;
     document.getElementById('modal-submit').textContent='Redirigiendo...';
     setTimeout(function(){
-        document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:40px 0"><i class="fa-solid fa-envelope" style="font-size:48px;color:var(--accent)"></i><h3 style="font-family:Newsreader,serif;font-size:24px;margin-top:16px">Solicitud Enviada</h3><p style="color:var(--text-secondary);margin-top:8px">Nuestro equipo se pondra en contacto para activar tu plan <strong>'+esc(planNames[plan])+'</strong>.</p><p style="color:var(--text-secondary);font-size:12px;margin-top:4px">Recibirás un email con instrucciones de pago.</p></div>';
+        document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:40px 0"><i class="fa-solid fa-envelope" style="font-size:48px;color:var(--accent)"></i><h3 style="font-family:Bricolage Grotesque,sans-serif;font-size:24px;margin-top:16px">Solicitud Enviada</h3><p style="color:var(--text-secondary);margin-top:8px">Nuestro equipo se pondra en contacto para activar tu plan <strong>'+esc(planNames[plan])+'</strong>.</p><p style="color:var(--text-secondary);font-size:12px;margin-top:4px">Recibirás un email con instrucciones de pago.</p></div>';
         document.getElementById('modal-submit').style.display='none';
         document.querySelector('.modal-actions .btn-secondary').textContent='Cerrar';
     },1500);
@@ -1229,7 +1347,7 @@ async function loadAdmin(){
 }
 function openNewCompanyModal(){
     document.getElementById('modal-title').textContent='Nueva Empresa';
-    document.getElementById('modal-body').innerHTML='<label>NOMBRE DE EMPRESA</label><input type="text" id="new-company-name" placeholder="Ej: Naviera Guarani"><label>PLAN</label><select id="new-company-plan" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px"><option value="barcaza">Por Barcaza ($149/mes)</option><option value="combo" selected>Combo Flota ($899/mes)</option><option value="enterprise">Enterprise ($1,499/mes)</option><option value="ilimitado">Ilimitado ($2,499/mes)</option></select><label>MAX EMBARCACIONES</label><input type="number" id="new-company-max" placeholder="10" value="10">';
+    document.getElementById('modal-body').innerHTML='<label>NOMBRE DE EMPRESA</label><input type="text" id="new-company-name" placeholder="Ej: Naviera Guarani"><label>PLAN</label><select id="new-company-plan" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Manrope,sans-serif;font-size:14px"><option value="barcaza">Por Barcaza ($149/mes)</option><option value="combo" selected>Combo Flota ($899/mes)</option><option value="enterprise">Enterprise ($1,499/mes)</option><option value="ilimitado">Ilimitado ($2,499/mes)</option></select><label>MAX EMBARCACIONES</label><input type="number" id="new-company-max" placeholder="10" value="10">';
     document.getElementById('modal-overlay').classList.add('open');
     document.getElementById('modal-submit').textContent='Crear Empresa';
     document.getElementById('modal-submit').style.display='';
@@ -1250,7 +1368,7 @@ function openNewUserModal(){
     sb.from('companies').select('id,name').then(function(r){
         var opts=r.data?r.data.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join(''):'';
         document.getElementById('modal-title').textContent='Agregar Usuario al Sistema';
-        document.getElementById('modal-body').innerHTML='<label>EMAIL</label><input type="email" id="new-user-email" placeholder="usuario@empresa.com"><label>PASSWORD</label><input type="password" id="new-user-pass" placeholder="Minimo 6 caracteres"><label>NOMBRE COMPLETO</label><input type="text" id="new-user-name" placeholder="Juan Perez"><label>EMPRESA</label><select id="new-user-company" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px">'+opts+'</select><label>ROL</label><select id="new-user-role" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px"><option value="admin">Admin</option><option value="operator">Operador</option><option value="viewer">Visor</option></select>';
+        document.getElementById('modal-body').innerHTML='<label>EMAIL</label><input type="email" id="new-user-email" placeholder="usuario@empresa.com"><label>PASSWORD</label><input type="password" id="new-user-pass" placeholder="Minimo 6 caracteres"><label>NOMBRE COMPLETO</label><input type="text" id="new-user-name" placeholder="Juan Perez"><label>EMPRESA</label><select id="new-user-company" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Manrope,sans-serif;font-size:14px">'+opts+'</select><label>ROL</label><select id="new-user-role" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Manrope,sans-serif;font-size:14px"><option value="admin">Admin</option><option value="operator">Operador</option><option value="viewer">Visor</option></select>';
         document.getElementById('modal-overlay').classList.add('open');
         document.getElementById('modal-submit').textContent='Crear Usuario';
         document.getElementById('modal-submit').style.display='';
@@ -1278,7 +1396,7 @@ async function sendCopiloto(){
     var input=document.getElementById('copiloto-input');
     var chat=document.getElementById('copiloto-chat');
     var msg=input.value.trim();if(!msg)return;
-    chat.innerHTML+='<div style="margin:12px 0;text-align:right"><span style="background:var(--text-primary);color:white;padding:8px 14px;border-radius:12px 12px 4px 12px;font-size:13px;display:inline-block;max-width:70%">'+esc(msg)+'</span></div>';
+    chat.innerHTML+='<div style="margin:12px 0;text-align:right"><span style="background:var(--accent);color:white;padding:8px 14px;border-radius:12px 12px 4px 12px;font-size:13px;display:inline-block;max-width:70%">'+esc(msg)+'</span></div>';
     input.value='';input.disabled=true;
     document.getElementById('copiloto-send').disabled=true;
     chat.innerHTML+='<div style="margin:12px 0" id="ai-typing"><span style="background:var(--surface-low);padding:8px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;color:var(--text-secondary)"><i class="fa-solid fa-spinner fa-spin"></i> Analizando datos...</span></div>';
@@ -1444,9 +1562,11 @@ var fleetChart=null,fuelChart=null,activityChart=null;
 async function loadReportes(){
     try{
         // Stats — parallel queries for performance
-        var results=await Promise.all([sb.from('vessels').select('status'),sb.from('voyages').select('id',{count:'exact',head:true}),sb.from('fuel_logs').select('liters'),sb.from('logs').select('id',{count:'exact',head:true})]);
+        var results=await Promise.all([sb.from('vessels').select('status'),sb.from('voyages').select('id',{count:'exact',head:true}),sb.from('fuel_logs').select('liters,created_at'),sb.from('logs').select('id',{count:'exact',head:true})]);
         var v=results[0];var vj=results[1];var fl=results[2];var lg=results[3];
         var totalFuel=fl.data?fl.data.reduce(function(s,x){return s+(x.liters||0)},0):0;
+        var fuelPanel=document.getElementById('report-fuel-panel');
+        if(fuelPanel)fuelPanel.classList.toggle('is-empty',!(fl.data&&fl.data.length));
         document.getElementById('report-stats').innerHTML=
             '<div class="admin-stat"><div class="stat-value">'+(v.data?v.data.length:0)+'</div><div class="stat-label">EMBARCACIONES</div></div>'+
             '<div class="admin-stat"><div class="stat-value">'+(vj.count||0)+'</div><div class="stat-label">VIAJES TOTALES</div></div>'+
@@ -1458,14 +1578,14 @@ async function loadReportes(){
             v.data.forEach(function(x){var s=(x.status||'').toLowerCase();if(s.indexOf('viaje')>=0||s==='active')enViaje++;else if(s.indexOf('manten')>=0)mant++;else enPuerto++;});
             if(fleetChart)fleetChart.destroy();
             var ctx1=document.getElementById('chart-fleet');
-            if(ctx1){fleetChart=new Chart(ctx1,{type:'doughnut',data:{labels:['En Viaje','En Puerto','Mantenimiento'],datasets:[{data:[enViaje,enPuerto,mant],backgroundColor:['#2EA043','#3B82F6','#F59E0B'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Inter',size:12}}}}}});}
+            if(ctx1){fleetChart=new Chart(ctx1,{type:'doughnut',data:{labels:['En Viaje','En Puerto','Mantenimiento'],datasets:[{data:[enViaje,enPuerto,mant],backgroundColor:['#34D399','#128C7E','#FBBF24'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#A9B8B2',font:{family:'Manrope',size:12}}}}}});}
         }
         // Fuel Chart
         if(fl.data&&fl.data.length>0){
-            var fuelByDay={};fl.data.forEach(function(f){var day='Carga '+(Object.keys(fuelByDay).length+1);fuelByDay[day]=(f.liters||0);});
+            var fuelByDay={};fl.data.forEach(function(f){var day=f.created_at?new Date(f.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'Sin fecha';fuelByDay[day]=(fuelByDay[day]||0)+(f.liters||0);});
             if(fuelChart)fuelChart.destroy();
             var ctx2=document.getElementById('chart-fuel');
-            if(ctx2){fuelChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(fuelByDay).slice(-7),datasets:[{label:'Litros',data:Object.values(fuelByDay).slice(-7),backgroundColor:'rgba(59,130,246,0.6)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}});}
+            if(ctx2){fuelChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(fuelByDay).slice(-7),datasets:[{label:'Litros',data:Object.values(fuelByDay).slice(-7),backgroundColor:'rgba(37,211,102,0.65)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2'}},x:{grid:{display:false},ticks:{color:'#A9B8B2'}}}}});}
         }
         // Activity Chart — use real log counts from DB
         if(activityChart)activityChart.destroy();
@@ -1479,10 +1599,16 @@ async function loadReportes(){
         } catch(e) {
             for(var i=29;i>=0;i--){var dt=new Date();dt.setDate(dt.getDate()-i);days.push((dt.getMonth()+1)+'/'+dt.getDate());counts.push(0);}
         }
-        if(ctx3){activityChart=new Chart(ctx3,{type:'line',data:{labels:days,datasets:[{label:'Entradas',data:counts,borderColor:'#1A1A2E',backgroundColor:'rgba(26,26,46,0.05)',fill:true,tension:0.4,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false},ticks:{maxTicksLimit:10}}}}});}
+        if(ctx3){activityChart=new Chart(ctx3,{type:'line',data:{labels:days,datasets:[{label:'Entradas',data:counts,borderColor:'#25D366',backgroundColor:'rgba(37,211,102,0.10)',fill:true,tension:0.4,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2'}},x:{grid:{display:false},ticks:{color:'#A9B8B2',maxTicksLimit:10}}}}});}
     }catch(e){/* Reports: */;}
 }
 
+function vesselIconSVG(type){
+    var t=(type||'').toLowerCase();
+    var hasHouse=t.indexOf('remolcador')>=0||t.indexOf('empujador')>=0||t.indexOf('lancha')>=0;
+    var house=hasHouse?'<rect x="18" y="1.5" width="7" height="5" rx="1" fill="currentColor"/><rect x="19.5" y="0" width="4" height="2" fill="currentColor"/>':'';
+    return '<svg viewBox="0 0 32 18" width="28" height="16" style="display:block;margin:0 auto 6px" aria-hidden="true"><path d="M2,15 L2,10 L6,10 L8,6.5 L27,6.5 L29,10 L30,10 L30,15 Z" fill="currentColor"/>'+house+'<line x1="0" y1="15.5" x2="32" y2="15.5" stroke="currentColor" stroke-width="1" opacity="0.4"/></svg>';
+}
 // CONVOY - Load fleet chips for drag-and-drop
 async function loadConvoy(){
     try{
@@ -1498,7 +1624,7 @@ async function loadConvoy(){
                 chip.className='fleet-chip';
                 chip.style.opacity=isBusy?'0.5':'1';
                 chip.style.cursor=isBusy?'not-allowed':'grab';
-                chip.innerHTML='<i class="fa-regular fa-clone"></i><div class="chip-name">'+(v.name||v.vessel_name||'--')+'</div><div class="chip-type">'+trad(v.type||v.vessel_type||'BARCAZA').toUpperCase()+'</div>';
+                chip.innerHTML=vesselIconSVG(v.type||v.vessel_type)+'<div class="chip-name">'+(v.name||v.vessel_name||'--')+'</div><div class="chip-type">'+trad(v.type||v.vessel_type||'BARCAZA').toUpperCase()+'</div>';
                 if(!isBusy){
                     chip.draggable=true;
                     chip.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',v.name||v.vessel_name||'');});
@@ -1528,7 +1654,7 @@ function renderTracking(filter){
     if(!activeList||!historyList)return;
     activeList.innerHTML='';historyList.innerHTML='';
     if(filter){data=data.filter(function(d){return JSON.stringify(d).toLowerCase().indexOf(filter.toLowerCase())>=0;});}
-    if(!data||data.length===0){empty.style.display='';return;}
+    if(!data||data.length===0){empty.style.display='';document.getElementById('track-active').textContent='0';document.getElementById('track-total-cargo').textContent='0';document.getElementById('track-completed').textContent='0';return;}
     empty.style.display='none';
     var inTransit=data.filter(function(v){var s=(trad(v.status||'')).toLowerCase();return s==='navegando'||s==='en_curso'||s==='en viaje'||s==='en_viaje';});
     var completed=data.filter(function(v){var s=(trad(v.status||'')).toLowerCase();return s==='completado'||s==='entregado'||s==='finalizado';});
@@ -1547,6 +1673,7 @@ function renderTracking(filter){
             var elapsed=Math.round((now-created.getTime())/3600000);
             var elapsedStr=elapsed>24?Math.round(elapsed/24)+'d '+elapsed%24+'h':elapsed+'h';
             var d=document.createElement('div');
+            d.className='tracking-active-card';
             d.style.cssText='background:var(--bg-secondary);border:1px solid var(--separator);border-left:4px solid #2EA043;border-radius:16px;padding:20px;transition:all 0.2s;cursor:default';
             d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'};
             d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
@@ -1570,6 +1697,7 @@ function renderTracking(filter){
             var stIcon=isCompleted?'fa-circle-check':isPending?'fa-clock':'fa-ship';
             var t=v.created_at?new Date(v.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'-';
             var d=document.createElement('div');
+            d.className='tracking-history-card';
             d.style.cssText='background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;transition:all 0.2s;cursor:default';
             d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'};
             d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
@@ -1589,7 +1717,7 @@ async function exportTracking(format){
     }
 }
 
-// DELETE CONFIRMATION (FluviaFleet modal, no native confirm)
+// DELETE CONFIRMATION (ViaBarcazas modal, no native confirm)
 function confirmDelete(table, id, itemName, reloadFn){
     document.getElementById('modal-title').textContent='Eliminar Registro';
     document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:20px 0"><i class="fa-regular fa-trash-can" style="font-size:36px;color:var(--error);margin-bottom:16px;display:block"></i><p style="font-size:15px;font-weight:500">Seguro que queres eliminar?</p><p style="font-size:13px;color:var(--text-secondary);margin-top:6px"><strong>'+itemName+'</strong></p><p style="font-size:11px;color:var(--text-tertiary);margin-top:12px">Esta accion no se puede deshacer.</p></div>';
@@ -1619,6 +1747,7 @@ async function loadCalado(){
         var r=await sb.from('logs').select('*').eq('action_type','DRAFT_READING').order('created_at',{ascending:false}).limit(50);
         var data=r.data;var l=document.getElementById('calado-list');var h=document.getElementById('calado-history');var em=document.getElementById('calado-empty');
         if(!l)return;l.innerHTML='';h.innerHTML='';
+        var caladoView=document.getElementById('view-calado');
         var vessels={};
         if(data&&data.length>0){
             em.style.display='none';
@@ -1633,7 +1762,7 @@ async function loadCalado(){
                 var color=pct>90?'var(--error)':pct>75?'var(--warning)':'var(--success)';
                 var status=pct>90?'CRITICO':pct>75?'ALERTA':'OPTIMO';
                 if(pct>75)alerts++;totalDraft+=v.draft;
-                l.innerHTML+='<div class="info-card" style="margin-bottom:10px"><i class="fa-solid fa-ruler-vertical" style="color:'+color+'"></i><div class="info-card-text"><h4>'+v.name+'</h4><p>Calado: <strong>'+v.draft.toFixed(2)+'m</strong> / Max: '+v.max.toFixed(2)+'m - '+status+'</p></div><div style="min-width:80px;text-align:right"><div style="font-family:Newsreader,serif;font-size:22px;font-weight:400">'+Math.round(pct)+'%</div><div style="height:4px;background:var(--surface-low);border-radius:2px;margin-top:4px"><div style="height:4px;background:'+color+';border-radius:2px;width:'+Math.min(pct,100)+'%"></div></div></div></div>';
+                l.innerHTML+='<div class="info-card" style="margin-bottom:10px"><i class="fa-solid fa-ruler-vertical" style="color:'+color+'"></i><div class="info-card-text"><h4>'+v.name+'</h4><p>Calado: <strong>'+v.draft.toFixed(2)+'m</strong> / Max: '+v.max.toFixed(2)+'m - '+status+'</p></div><div style="min-width:80px;text-align:right"><div style="font-family:Bricolage Grotesque,sans-serif;font-size:22px;font-weight:400">'+Math.round(pct)+'%</div><div style="height:4px;background:var(--surface-low);border-radius:2px;margin-top:4px"><div style="height:4px;background:'+color+';border-radius:2px;width:'+Math.min(pct,100)+'%"></div></div></div></div>';
             });
             document.getElementById('calado-total').textContent=vList.length;
             document.getElementById('calado-alerts').textContent=alerts;
@@ -1645,6 +1774,7 @@ async function loadCalado(){
             });
             h.querySelectorAll('.delete-btn').forEach(function(btn){btn.addEventListener('click',function(){confirmDelete('logs',this.dataset.id,'Lectura',loadCalado);});});
         }else{em.style.display='';}
+        if(caladoView)caladoView.classList.toggle('is-empty',!(data&&data.length));
     }catch(e){/* Calado: */;}
     // Load INA gauges into calado view
     if(typeof loadINA==='function') loadINA();
@@ -1659,7 +1789,7 @@ async function loadIncidentes(){
     }catch(e){/* Incidentes: */;}
 }
 function renderIncidents(filter){
-    var data=incidentesData;var l=document.getElementById('inc-list');var em=document.getElementById('inc-empty');
+    var data=incidentesData;var l=document.getElementById('inc-list');var em=document.getElementById('inc-empty');var incidentView=document.getElementById('view-incidentes');
     if(!l)return;l.innerHTML='';
     if(filter){data=data.filter(function(d){var s=JSON.stringify(d).toLowerCase();return s.indexOf(filter.toLowerCase())>=0;});}
     if(data&&data.length>0){
@@ -1667,7 +1797,7 @@ function renderIncidents(filter){
         var sevIcons={'Critico':'fa-circle-exclamation','Alto':'fa-triangle-exclamation','Medio':'fa-circle-info','Bajo':'fa-shield-halved'};
         var sevColors={'Critico':'#DC2626','Alto':'#F59E0B','Medio':'#3B82F6','Bajo':'#10B981'};
         var typeIcons={'Colision':'fa-ship','Encalladura':'fa-anchor','Derrame':'fa-droplet','Averia mecanica':'fa-gears','Incendio':'fa-fire','Medico':'fa-kit-medical','Otro':'fa-circle-dot'};
-        var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:16px">';
+        var h='<div class="incident-card-grid">';
         data.forEach(function(d){
             var det=typeof d.details==='string'?JSON.parse(d.details||'{}'):d.details||{};
             var sev=det.severity||'Medio';var st=det.status||'Abierto';
@@ -1678,7 +1808,7 @@ function renderIncidents(filter){
             var stColor=st==='Abierto'?'#DC2626':st==='En Proceso'?'#F59E0B':'#10B981';
             var t=d.created_at?new Date(d.created_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'—';
             var tTime=d.created_at?new Date(d.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}):'';
-            h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;border-left:4px solid '+sevColor+';transition:box-shadow 0.2s,transform 0.2s" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.08)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
+            h+='<div class="incident-card incident-priority-'+sev.toLowerCase()+'" style="border-left-color:'+sevColor+'" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.08)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'none\'">';
             h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">';
             h+='<div style="display:flex;align-items:center;gap:10px">';
             h+='<div style="width:40px;height:40px;border-radius:12px;background:'+sevColor+'15;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+sevIcon+'" style="font-size:16px;color:'+sevColor+'"></i></div>';
@@ -1700,8 +1830,9 @@ function renderIncidents(filter){
         document.getElementById('inc-open').textContent=open;
         document.getElementById('inc-critical').textContent=crit;
     }else{
-        if(em){em.style.display='';em.innerHTML='<div style="text-align:center;padding:60px 20px"><div style="width:64px;height:64px;border-radius:20px;background:#10B98115;display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><i class="fa-solid fa-shield-halved" style="font-size:28px;color:#10B981"></i></div><div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:6px">Sin incidentes reportados</div><div style="font-size:13px;color:var(--text-secondary)">La operacion se desarrolla con normalidad</div></div>';}
+        if(em)em.style.display='';
     }
+    if(incidentView)incidentView.classList.toggle('is-empty',!(data&&data.length));
 }
 function filterIncidents(){
     var q=document.getElementById('inc-search').value.trim();
@@ -1902,7 +2033,8 @@ async function loadContratos(){
         var activeCount=data.filter(function(c){return c.status==='active'}).length;
         var totalTon=data.reduce(function(s,c){return s+(c.volume_total||0)},0);
         var revenue=data.reduce(function(s,c){return s+((c.volume_used||0)*(parseFloat(c.rate_per_ton)||0))},0);
-        var expiringCount=data.filter(function(c){return c.status==='expires'||c.status==='renewing'}).length;
+        var now=Date.now();var sixtyDays=now+(60*864e5);
+        var expiringCount=data.filter(function(c){var d=c.expiration_date?new Date(c.expiration_date).getTime():0;return c.status==='expires'||c.status==='renewing'||(d>now&&d<=sixtyDays)}).length;
 
         var ae=document.getElementById('ctr-active');if(ae)ae.textContent=activeCount;
         var te=document.getElementById('ctr-tonnage');if(te)te.textContent=totalTon>=1000?(totalTon/1000).toFixed(0)+'k':totalTon;
@@ -1913,13 +2045,9 @@ async function loadContratos(){
         var container=document.getElementById('ctr-list');
         if(!container)return;
 
-        if(data.length===0){container.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-secondary);"><i class="fa-solid fa-file-contract" style="font-size:32px;opacity:0.3;margin-bottom:12px;display:block;"></i>Sin contratos registrados</div>';return;}
+        if(data.length===0){container.innerHTML='<div class="contract-empty-state"><div class="contract-empty-icon"><i class="fa-solid fa-file-contract"></i></div><div><span class="contract-section-kicker">CARTERA COMERCIAL</span><h2>Sin contratos registrados</h2><p>Registrá el primer acuerdo para seguir volumen, tarifa, vencimientos y revenue.</p></div><button class="btn-primary" onclick="openModal(\'contrato\')"><i class="fa-solid fa-plus"></i> Nuevo contrato</button></div>';return;}
 
-        var h='<div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px 0;">';
-        h+='<div style="font-family:Newsreader,serif;font-size:22px;font-weight:400;color:var(--text-primary);">Contratos Vigentes</div>';
-        h+='<div style="font-size:12px;color:var(--accent);font-weight:600;">'+data.length+' total</div></div>';
-
-        h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;">';
+        var h='<div class="contract-card-grid">';
         data.forEach(function(c){
             var vol=c.volume_total||1;
             var used=c.volume_used||0;
@@ -1929,26 +2057,27 @@ async function loadContratos(){
             var barColor=pct>90?'#EF4444':pct>70?'#F59E0B':'#10B981';
             var expDate=c.expiration_date?new Date(c.expiration_date).toLocaleDateString('es',{day:'numeric',month:'short',year:'numeric'}):'—';
 
-            h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,0.08)\'" onmouseout="this.style.boxShadow=\'none\'">';
+            var urgency=pct>=90?'critical':c.status==='expires'?'warning':c.status==='renewing'?'renewing':'normal';
+            h+='<div class="contract-card contract-card-'+urgency+'" style="--contract-status:'+sc+'" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.14)\'" onmouseout="this.style.boxShadow=\'none\'">';
 
             // Header: client + status badge
-            h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">';
-            h+='<div style="font-weight:700;font-size:15px;color:var(--text-primary);">'+esc(c.client)+'</div>';
+            h+='<div class="contract-card-header">';
+            h+='<div class="contract-client">'+esc(c.client)+'</div>';
             h+='<span style="background:'+sc+'18;color:'+sc+';padding:4px 10px;border-radius:8px;font-size:9px;font-weight:700;letter-spacing:0.5px;">'+sl+'</span>';
             h+='</div>';
-            h+='<div style="font-size:11px;color:var(--text-secondary);margin-bottom:14px;">'+esc(c.route)+' \u2014 '+esc(c.product)+'</div>';
+            h+='<div class="contract-route"><i class="fa-solid fa-route"></i>'+esc(c.route)+' <span>·</span> '+esc(c.product)+'</div>';
 
             // Progress bar
-            h+='<div style="position:relative;height:8px;background:var(--bg-tertiary);border-radius:4px;overflow:hidden;margin-bottom:8px;">';
+            h+='<div class="contract-progress">';
             h+='<div style="position:absolute;top:0;left:0;height:100%;width:'+Math.min(pct,100)+'%;background:'+barColor+';border-radius:4px;transition:width 0.6s ease;"></div></div>';
 
             // Volume + rate
-            h+='<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:10px;">';
+            h+='<div class="contract-volume-row">';
             h+='<span style="font-weight:600;color:var(--text-primary);">'+used.toLocaleString()+' / '+vol.toLocaleString()+' ton \u00B7 '+pct+'%</span>';
             h+='<span style="font-weight:700;color:var(--accent);">$'+parseFloat(c.rate_per_ton).toFixed(1)+'/ton</span></div>';
 
             // Meta chips
-            h+='<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+            h+='<div class="contract-meta">';
             h+='<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary);">'+esc(c.contract_type)+'</span>';
             h+='<span style="background:var(--bg-tertiary);padding:3px 8px;border-radius:6px;font-size:10px;color:var(--text-secondary);">Exp: '+expDate+'</span>';
             h+='</div>';
@@ -1986,36 +2115,36 @@ async function loadLiquidos(){
     var container=document.getElementById('liq-list');
     if(!container){console.error('liq-list not found');return;}
 
-    var h='<div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px 0;">';
-    h+='<div style="font-family:Newsreader,serif;font-size:22px;font-weight:400;color:var(--text-primary);">Barcazas Tanque</div>';
-    h+='<div style="font-size:12px;color:var(--accent);font-weight:600;">'+tanks.length+' monitoreadas</div></div>';
+    var h='<div class="liq-list-heading">';
+    h+='<div><span class="liq-section-kicker">FLOTA DE TANQUES</span><h2>Barcazas tanque</h2></div>';
+    h+='<div class="liq-list-count"><i class="fa-regular fa-circle-check"></i> '+tanks.length+' monitoreadas</div></div>';
 
-    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;">';
+    h+='<div class="liq-card-grid">';
     for(var i=0;i<tanks.length;i++){
         var t=tanks[i];
         var pct=t.cap>0?Math.round(t.current/t.cap*100):0;
         var sc=t.status==='En tránsito'?'#3B82F6':t.status==='Fondeada'?'#10B981':(t.status==='Descargando'||t.status==='En descarga')?'#F97316':'#6B7280';
         var barBg=t.color+'30';
 
-        h+='<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:16px;padding:20px;transition:box-shadow 0.2s;cursor:default;" onmouseover="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,0.08)\'" onmouseout="this.style.boxShadow=\'none\'">';
+        h+='<div class="liq-card" style="--liq-color:'+t.color+';" onmouseover="this.style.boxShadow=\'0 10px 28px rgba(0,0,0,0.16)\'" onmouseout="this.style.boxShadow=\'none\'">';
 
         // Header: name + product badge
-        h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">';
-        h+='<div style="font-weight:700;font-size:15px;color:var(--text-primary);letter-spacing:-0.01em;">'+t.name+'</div>';
-        h+='<span style="background:'+barBg+';color:'+t.color+';padding:4px 12px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:0.3px;border:1px solid '+t.color+'25;">'+t.product+'</span>';
+        h+='<div class="liq-card-head">';
+        h+='<div class="liq-card-name">'+t.name+'</div>';
+        h+='<span class="liq-product" style="background:'+barBg+';color:'+t.color+';border-color:'+t.color+'35;">'+t.product+'</span>';
         h+='</div>';
-        h+='<div style="font-size:11px;color:var(--text-secondary);margin-bottom:16px;">'+t.type+' \u2014 '+t.cap.toLocaleString()+' m\u00B3</div>';
+        h+='<div class="liq-card-type">'+t.type+' <span>·</span> '+t.cap.toLocaleString()+' m\u00B3 de capacidad</div>';
 
         // Horizontal gauge bar (like mobile app)
-        h+='<div style="position:relative;height:36px;background:var(--bg-tertiary);border-radius:10px;overflow:hidden;margin-bottom:10px;">';
-        h+='<div style="position:absolute;top:0;left:0;height:100%;width:'+pct+'%;background:linear-gradient(90deg,'+t.color+','+t.color+'BB);border-radius:10px;transition:width 0.6s ease;"></div>';
-        h+='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:'+(pct>40?'#fff':'var(--text-primary)')+';text-shadow:'+(pct>40?'0 1px 2px rgba(0,0,0,0.2)':'none')+';">'+pct+'%</div>';
+        h+='<div class="liq-gauge">';
+        h+='<div class="liq-gauge-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+t.color+','+t.color+'BB);"></div>';
+        h+='<div class="liq-gauge-label" style="color:'+(pct>40?'#fff':'var(--text-primary)')+';">'+pct+'%</div>';
         h+='</div>';
 
         // Actual / Cap row
-        h+='<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:12px;">';
-        h+='<span style="font-weight:600;color:var(--text-primary);">Actual: '+t.current.toLocaleString()+' m\u00B3</span>';
-        h+='<span style="color:var(--text-secondary);">Cap: '+t.cap.toLocaleString()+' m\u00B3</span></div>';
+        h+='<div class="liq-volume-row">';
+        h+='<span><strong>Actual</strong> '+t.current.toLocaleString()+' m\u00B3</span>';
+        h+='<span>Capacidad '+t.cap.toLocaleString()+' m\u00B3</span></div>';
 
         // Meta chips row
         h+='<div style="display:flex;gap:8px;flex-wrap:wrap;">';
@@ -2068,6 +2197,12 @@ function renderPreZarpe(){
     var el2=document.getElementById('pz-approved');if(el2)el2.textContent=approved;
     var el3=document.getElementById('pz-draft');if(el3)el3.textContent=drafts;
     var el4=document.getElementById('pz-rate');if(el4)el4.textContent=rate+'%';
+    var circumference=150.8;
+    var ringApproved=document.getElementById('pz-approved-ring');
+    if(ringApproved)ringApproved.style.strokeDashoffset=(circumference*(1-(total>0?approved/total:0))).toFixed(1);
+    var ringRate=document.getElementById('pz-rate-ring');
+    if(ringRate)ringRate.style.strokeDashoffset=(circumference*(1-rate/100)).toFixed(1);
+    renderPreZarpeInsights();
 
     var list=document.getElementById('pz-list');if(!list)return;
     if(_pzData.length===0){list.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary)"><i class="fa-solid fa-clipboard-check" style="font-size:48px;opacity:0.15;margin-bottom:12px"></i><p>Sin checklists registrados</p></div>';return;}
@@ -2090,6 +2225,24 @@ function renderPreZarpe(){
     }).join('')+'</div>';
 }
 
+function renderPreZarpeInsights(){
+    var el=document.getElementById('pz-insights');if(!el)return;
+    var data=_pzData||[];
+    if(data.length===0){el.innerHTML='<div style="font-size:12px;color:var(--text-tertiary)">Sin checklists para analizar.</div>';return;}
+    var rows=[];
+    var drafts=data.filter(function(c){return c.status!=='completed'});
+    var lowProgress=drafts.filter(function(c){var pct=(c.checked_items||0)/(c.total_items||28);return pct<0.6;});
+    if(lowProgress.length>0)rows.push({icon:'fa-triangle-exclamation',color:'var(--error)',text:lowProgress.length+' checklist(s) con menos del 60% completado.'});
+    var readyToApprove=drafts.filter(function(c){return(c.checked_items||0)>=(c.total_items||28);});
+    if(readyToApprove.length>0)rows.push({icon:'fa-circle-check',color:'var(--success)',text:readyToApprove.length+' checklist(s) al 100% listos para aprobar.'});
+    if(drafts.length>0){
+        var oldest=drafts.slice().sort(function(a,b){return new Date(a.signed_at||0)-new Date(b.signed_at||0);})[0];
+        if(oldest)rows.push({icon:'fa-clock',color:'var(--warning)',text:'Borrador mas antiguo: '+esc(oldest.vessel_name||'--')+' ('+(oldest.signed_at?new Date(oldest.signed_at).toLocaleDateString('es',{day:'2-digit',month:'short'}):'--')+').'});
+    }
+    if(rows.length===0)rows.push({icon:'fa-check',color:'var(--success)',text:'Todos los checklists estan al dia, sin alertas.'});
+    el.innerHTML=rows.map(function(r){return '<div style="display:flex;gap:9px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:7px;background:'+r.color+'1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+r.icon+'" style="font-size:10px;color:'+r.color+'"></i></div><div style="font-size:11px;color:var(--text-secondary);line-height:1.5">'+r.text+'</div></div>';}).join('');
+}
+
 function openPreZarpeForm(){
     var _pzChecked={};
     for(var s in _pzSections)_pzChecked[s]=[];
@@ -2098,7 +2251,7 @@ function openPreZarpeForm(){
     var m=document.createElement('div');m.id='pz-modal';
     m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
     m.innerHTML='<div style="background:var(--bg-secondary);border-radius:20px;width:90%;max-width:700px;max-height:90vh;overflow-y:auto;padding:32px">'+
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div style="font-family:Newsreader,serif;font-size:24px;color:var(--text-primary)">Nuevo Pre-Zarpe</div><button onclick="document.getElementById(\'pz-modal\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-secondary)"><i class="fa-solid fa-xmark"></i></button></div>'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div style="font-family:Bricolage Grotesque,sans-serif;font-size:24px;color:var(--text-primary)">Nuevo Pre-Zarpe</div><button onclick="document.getElementById(\'pz-modal\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-secondary)"><i class="fa-solid fa-xmark"></i></button></div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">'+
         '<div><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">EMBARCACION</label><input id="pz-vessel" class="login-input" placeholder="R/M Guarani" style="margin-top:4px"></div>'+
         '<div><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">DESTINO</label><input id="pz-dest" class="login-input" placeholder="Rosario" style="margin-top:4px"></div>'+

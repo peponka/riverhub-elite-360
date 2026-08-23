@@ -3,100 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FluviaFleet — Gestión Inteligente de Flotas Fluviales</title>
-    <meta name="description" content="La primera plataforma con IA diseñada para la Hidrovía Paraguay-Paraná. Tracking AIS, control de combustible, convoyes inteligentes y Copiloto IA.">
-    <meta name="keywords" content="fluviafleet, gestión fluvial, hidrovía, Paraguay-Paraná, tracking satelital, barcazas, remolcadores, flota fluvial, IA predictiva, convoy">
-    <meta name="author" content="FluviaFleet">
+    <title>ViaBarcazas — Gestión Inteligente de Flotas Fluviales</title>
+    <meta name="description" content="Panel de operaciones para flotas de barcazas en la Hidrovía Paraguay-Paraná: tracking AIS, combustible, convoyes y Copiloto IA en un solo lugar.">
+    <meta name="keywords" content="viabarcazas, gestión fluvial, hidrovía, Paraguay-Paraná, tracking satelital, barcazas, remolcadores, flota fluvial, IA predictiva, convoy">
+    <meta name="author" content="ViaBarcazas">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://fluviafleet.com/">
+    <link rel="canonical" href="https://viabarcazas.com/">
     <!-- Open Graph / Social Sharing -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fluviafleet.com/">
-    <meta property="og:title" content="FluviaFleet — Gestión Inteligente de Flotas Fluviales">
-    <meta property="og:description" content="La primera plataforma con IA diseñada para la Hidrovía Paraguay-Paraná. Tracking AIS, control de combustible, convoyes inteligentes y Copiloto IA.">
-    <meta property="og:image" content="https://fluviafleet.com/img/fluvia-convoy.jpg">
+    <meta property="og:url" content="https://viabarcazas.com/">
+    <meta property="og:title" content="ViaBarcazas — Gestión Inteligente de Flotas Fluviales">
+    <meta property="og:description" content="Panel de operaciones para flotas de barcazas en la Hidrovía Paraguay-Paraná: tracking AIS, combustible, convoyes y Copiloto IA en un solo lugar.">
+    <meta property="og:image" content="https://viabarcazas.com/img/viabarcazas-convoy.jpg">
     <meta property="og:locale" content="es_AR">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FluviaFleet — Gestión Inteligente de Flotas Fluviales">
+    <meta name="twitter:title" content="ViaBarcazas — Gestión Inteligente de Flotas Fluviales">
     <meta name="twitter:description" content="Tracking AIS con IA para la Hidrovía Paraguay-Paraná. Gestión integral de flotas fluviales.">
-    <meta name="twitter:image" content="https://fluviafleet.com/img/fluvia-convoy.jpg">
+    <meta name="twitter:image" content="https://viabarcazas.com/img/viabarcazas-convoy.jpg">
     <link rel="manifest" href="/manifest.json">
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,300;6..72,0,400;6..72,0,500;6..72,0,600;6..72,1,300;6..72,1,400;6..72,1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Unbounded:wght@700;900&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* ═══ FluviaFleet 3.0 — Fresh SaaS Redesign ═══ */
-        :root{--bg:#F8FAFF;--white:#FFFFFF;--surface:#EFF6FF;--surface2:#DBEAFE;--text:#0F172A;--text2:#64748B;--text3:#94A3B8;--sep:#E2E8F0;--accent:#2563EB;--accent-light:#3B82F6;--accent-bg:#EFF6FF;--success:#059669;--error:#DC2626;--warning:#F59E0B}
+        /* ═══ ViaBarcazas 3.0 — Fresh SaaS Redesign ═══ */
+        :root{--bg:#06110D;--white:#0F231C;--surface:#0C1F19;--surface2:#163931;--text:#F3F7F5;--text2:#A9B8B2;--text3:#6B7C74;--sep:#1E3B31;--accent:#128C7E;--accent-light:#25D366;--accent-bg:#14332A;--success:#34D399;--error:#F87171;--warning:#FBBF24;--bronze:#25D366}
         *{margin:0;padding:0;box-sizing:border-box}
         html{scroll-behavior:smooth}
-        body{font-family:'Inter',-apple-system,sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
+        body{font-family:'Manrope',-apple-system,sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased;padding-left:132px;padding-top:56px}
 
-        /* NAV */
-        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--sep);padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
-        .nav-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text)}
-        .nav-brand img.nav-logo{width:44px;height:44px;border-radius:50%;object-fit:cover}
-        .nav-brand img.nav-wordmark{height:38px;object-fit:contain}
-        .nav-links{display:flex;gap:32px}
-        .nav-links a{text-decoration:none;color:var(--text2);font-size:13px;font-weight:500;transition:color 0.2s;letter-spacing:0.3px}
-        .nav-links a:hover{color:var(--text)}
-        .nav-actions{display:flex;gap:12px;align-items:center}
-        .lang-toggle{display:flex;align-items:center;gap:8px;background:var(--surface);padding:4px 10px;border-radius:20px;border:1px solid var(--sep);margin-right:8px}
-        .lang-btn{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--text2);text-decoration:none;transition:all 0.2s}
-        .lang-btn:hover{color:var(--text)}
-        .lang-btn.active{color:var(--text)}
-        .lang-btn img{width:14px;height:14px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,0.1)}
-        .lang-sep{color:var(--sep);font-size:10px}
-        .btn-ghost{background:none;border:none;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;padding:8px 16px;font-family:'Inter',sans-serif;transition:color 0.2s}
+        /* NAV — vertical rail, fixed to the left edge, full height */
+        .nav{position:fixed;top:0;left:0;bottom:0;right:auto;width:132px;z-index:100;background:var(--accent);border-bottom:none;padding:22px 0 18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:0;transition:all 0.3s}
+        .nav-brand{display:none;flex-direction:row;align-items:center;gap:9px;text-decoration:none;color:#fff;margin-bottom:36px;padding:0 16px;width:100%}
+        .nav-brand svg.nav-logo{width:24px;height:24px;flex-shrink:0}
+        .nav-brand svg.nav-logo path{stroke:#fff}
+        .nav-brand span{display:block;font-size:11px;font-weight:700;color:#fff;letter-spacing:0;text-align:left;line-height:1.15;font-family:'Unbounded',sans-serif}
+
+        /* Brand header — white bar above the content, to the right of the rail. Big, normal-size wordmark. */
+        .brand-header{position:fixed;top:0;left:132px;right:0;height:56px;background:var(--white);border-bottom:1px solid var(--sep);z-index:99;display:flex;align-items:center;gap:14px;padding:0 40px;text-decoration:none;color:var(--text)}
+        .brand-header svg{width:42px;height:42px;flex-shrink:0}
+        .brand-header span{font-family:'Unbounded',sans-serif;font-size:1.55rem;font-weight:700;color:var(--accent);letter-spacing:-0.01em}
+        .nav-links{display:flex;flex-direction:column;gap:4px;align-items:center;flex:1}
+        .nav-links a{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:rgba(255,255,255,0.55);font-size:9px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;transition:color 0.2s;padding:10px 6px;border-radius:10px;width:76px;text-align:center}
+        .nav-links a i{font-size:16px}
+        .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+        .nav-actions{display:flex;flex-direction:column;gap:14px;align-items:center;margin-top:auto}
+        .lang-toggle{display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(255,255,255,0.08);padding:6px 8px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);margin-right:0}
+        .lang-btn{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.55);text-decoration:none;transition:all 0.2s}
+        .lang-btn:hover{color:#fff}
+        .lang-btn.active{color:#fff}
+        .lang-btn img{width:13px;height:13px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,0.2)}
+        .lang-sep{color:rgba(255,255,255,0.25);font-size:9px}
+        .btn-ghost{background:none;border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:10px;font-weight:600;cursor:pointer;padding:8px 6px;border-radius:8px;font-family:'Manrope',sans-serif;transition:color 0.2s;text-align:center;width:64px}
         .btn-ghost:hover{color:var(--accent)}
-        .btn-solid{background:var(--accent);color:white;border:none;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 14px rgba(37,99,235,0.25)}
-        .btn-solid:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,0.3)}
+        .btn-solid{background:#fff;color:var(--accent);border:none;padding:10px 8px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;text-decoration:none;text-align:center;width:64px;line-height:1.3}
+        .btn-solid:hover{background:var(--surface2)}
+        .btn-solid:hover{background:#0C6355;transform:translateY(-1px);box-shadow:0 6px 20px rgba(18,140,126,0.3)}
 
         /* UNIFIED BUTTONS */
-        .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 14px rgba(37,99,235,0.25)}
-        .btn-primary:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,0.3)}
-        .btn-secondary{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);color:var(--accent);border:1.5px solid var(--surface2);padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 14px rgba(18,140,126,0.25)}
+        .btn-primary:hover{background:#0C6355;transform:translateY(-1px);box-shadow:0 6px 20px rgba(18,140,126,0.3)}
+        .btn-secondary{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);color:var(--accent);border:1.5px solid var(--surface2);padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;text-decoration:none}
         .btn-secondary:hover{background:var(--surface2);border-color:var(--accent)}
 
-        /* HERO — asymmetric 2-col: text left (40%), big video right (60%) */
-        .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--white);padding:100px 48px 60px}
-        .hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,0.06) 0%,transparent 70%);border-radius:50%;pointer-events:none}
-        .hero::after{content:'';position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,0.04) 0%,transparent 70%);border-radius:50%;pointer-events:none}
-        .hero-inner{display:grid;grid-template-columns:0.8fr 1.2fr;gap:40px;align-items:center;max-width:1400px;width:100%}
+        /* HERO — stacked: centered text on top, full-width video banner below */
+        .hero{position:relative;display:flex;flex-direction:column;align-items:center;overflow:hidden;background:var(--bg);padding:10px 20px 36px}
+        .hero-bg-video{display:none}
+        .hero-scrim{display:none}
+        .hero-inner{position:relative;z-index:2;max-width:1440px;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px}
         .hero-bg{display:none}
         .hero-overlay{display:none}
-        .hero-content{position:relative;z-index:2;padding:0;max-width:none}
-        .hero-text{position:relative;z-index:2}
-        .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);border:1px solid var(--surface2);border-radius:100px;padding:8px 20px;margin-bottom:20px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--accent);font-family:'Inter',sans-serif}
-        .hero-badge i{font-size:11px}
+        .hero-content{position:relative;z-index:2;padding:0;max-width:none;width:100%}
+        .hero-text{position:relative;z-index:2;max-width:640px;text-align:center;display:flex;flex-direction:column;align-items:center;margin:0 auto}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);border:1px solid var(--sep);border-radius:100px;padding:5px 14px;margin-bottom:8px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--bronze);font-family:'Manrope',sans-serif}
+        .hero-badge i{font-size:11px;color:var(--bronze)}
         .hero-tag{display:none}
-        .hero h1{font-family:'Newsreader',serif;font-size:52px;font-weight:400;line-height:1.05;color:var(--text);margin-bottom:8px}
-        .hero h1 em{font-weight:300;font-style:italic;color:var(--accent)}
-        .hero-desc{font-size:15px;color:var(--text2);line-height:1.7;margin:20px 0 32px;max-width:460px}
-        .hero-cta{display:flex;gap:12px;align-items:center}
-        .hero-features{display:flex;gap:16px;margin-top:32px;flex-wrap:wrap}
-        .hero-feat{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);font-weight:500;background:var(--accent-bg);padding:5px 12px;border-radius:100px;border:1px solid var(--surface2)}
-        .hero-feat i{color:var(--accent);font-size:10px}
+        .hero h1{font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:400;line-height:1.1;color:var(--text);margin-bottom:4px}
+        .hero h1 em{font-weight:700;font-style:normal;color:var(--bronze)}
+        .hero-desc{font-size:13.5px;color:var(--text2);line-height:1.45;margin:8px 0 14px;max-width:480px}
+        .hero-cta{display:flex;gap:12px;align-items:center;justify-content:center}
+        .hero-features{display:flex;gap:14px;margin-top:12px;flex-wrap:wrap;justify-content:center}
+        .hero-feat{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);font-weight:500;background:var(--accent-bg);padding:5px 12px;border-radius:100px;border:1px solid var(--sep)}
 
-        /* Hero visual — big video right side */
-        .hero-visual{position:relative;z-index:1;width:100%}
-        .hero-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(37,99,235,0.10) 0%,transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none}
-        .hero-img-card{border-radius:20px;overflow:hidden;box-shadow:0 25px 70px rgba(37,99,235,0.16),0 0 0 1px rgba(37,99,235,0.08);transition:all 0.4s ease;position:relative;z-index:1}
-        .hero-img-card:hover{transform:translateY(-4px);box-shadow:0 35px 90px rgba(37,99,235,0.22),0 0 0 1px rgba(37,99,235,0.1)}
-        .hero-img-card img,.hero-img-card video{width:100%;display:block}
-        .hero-img-card img{width:100%;display:block}
+        /* Inset video card with a floating live-data chip, per reference mock */
+        .hero-frame{position:relative;width:100%;max-width:1440px;border-radius:18px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.45);border:1px solid var(--sep)}
+        .hero-frame video{width:100%;display:block;aspect-ratio:16/6.2;max-height:64vh;object-fit:cover}
+        .hero-data-chip{position:absolute;top:20px;left:20px;background:rgba(6,17,13,0.72);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.8;color:#fff}
+        .hero-data-chip .k{color:rgba(255,255,255,0.55);margin-right:6px}
+        .hero-data-chip .v{color:var(--bronze);font-weight:500}
+        .hero-feat i{color:var(--bronze);font-size:10px}
+        .hero-visual,.hero-glow,.hero-img-card{display:none}
 
         /* Legacy hero elements hidden */
         .hero-card{display:none}
         .hero-ship-bg{display:none}
         .hero-img{display:none}
         .float-card{display:none}
-        .btn-hero{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 14px rgba(37,99,235,0.25)}
-        .btn-hero:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,0.3)}
-        .btn-outline{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);color:var(--accent);border:1.5px solid var(--surface2);padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-decoration:none}
+        .btn-hero{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 14px rgba(18,140,126,0.25)}
+        .btn-hero:hover{background:#0C6355;transform:translateY(-1px);box-shadow:0 6px 20px rgba(18,140,126,0.3)}
+        .btn-outline{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);color:var(--accent);border:1.5px solid var(--surface2);padding:14px 32px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;text-decoration:none}
         .btn-outline:hover{background:var(--surface2);border-color:var(--accent)}
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
@@ -107,27 +115,31 @@
         .section{padding:100px 48px;max-width:1200px;margin:0 auto}
         .section-alt{background:var(--bg)}
         .section-tag{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:2px;margin-bottom:12px}
-        .section h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
-        .section h2 em{font-weight:300;font-style:italic;color:var(--accent)}
+        .section h2{font-family:'Bricolage Grotesque',sans-serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px}
+        .section h2 em{font-weight:700;font-style:normal;color:var(--accent)}
         .section-desc{font-size:15px;color:var(--text2);line-height:1.6;max-width:520px;margin-bottom:48px}
 
         .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
         .step-card{background:var(--white);border:0.5px solid var(--sep);border-radius:16px;padding:32px;transition:all 0.2s;border-top:2px solid transparent}
-        .step-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(37,99,235,0.08);border-top:2px solid var(--accent)}
-        .step-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400;color:var(--accent-light);line-height:1}
-        .step-card h3{font-family:'Newsreader',serif;font-size:22px;font-weight:500;margin:16px 0 8px}
+        .step-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(18,140,126,0.08);border-top:2px solid var(--accent)}
+        .step-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent-light);letter-spacing:1.5px;line-height:1}
+        .step-card h3{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:500;margin:16px 0 8px}
         .step-card p{font-size:13px;color:var(--text2);line-height:1.6}
         .step-icon{width:48px;height:48px;background:var(--accent-bg);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-top:20px}
         .step-icon i{font-size:20px;color:var(--accent)}
 
-        /* MODULES GRID (12 modules, 4 cols) */
-        .modules-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-        .mod-card{background:var(--white);border:0.5px solid var(--sep);border-radius:14px;padding:20px;display:flex;gap:14px;align-items:flex-start;transition:all 0.2s;cursor:default;border-left:3px solid transparent}
-        .mod-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(37,99,235,0.08);border-left:3px solid var(--accent)}
-        .mod-icon-wrap{width:40px;height:40px;background:var(--accent-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .mod-card i{font-size:18px;color:var(--accent);width:22px;flex-shrink:0;margin-top:2px}
-        .mod-card h4{font-size:14px;font-weight:600;margin-bottom:3px;color:var(--text)}
-        .mod-card p{font-size:11.5px;color:var(--text2);line-height:1.5}
+        /* MODULE PANEL — grouped nav-style list, not a card grid */
+        .modpanel{background:var(--white);border:1px solid var(--sep);border-radius:20px;display:grid;grid-template-columns:repeat(3,1fr);overflow:hidden}
+        .modpanel-col{padding:30px 28px}
+        .modpanel-col+.modpanel-col{border-left:1px solid var(--sep)}
+        .modpanel-col-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:16px;font-family:'JetBrains Mono',monospace}
+        .modpanel-col-header .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+        .modrow{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--sep)}
+        .modpanel-col .modrow:first-of-type{border-top:none;padding-top:0}
+        .modrow-icon{width:32px;height:32px;background:var(--accent-bg);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .modrow-icon i{font-size:14px;color:var(--accent)}
+        .modrow h4{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:2px}
+        .modrow p{font-size:11.5px;color:var(--text2);line-height:1.5}
 
         /* FEATURES (kept for compatibility) */
         .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -138,23 +150,23 @@
         .feat-card p{font-size:12px;color:var(--text2);line-height:1.5}
 
         /* STATS BANNER — blue gradient */
-        .stats-banner{background:linear-gradient(135deg,#1e40af 0%,#2563eb 50%,#3b82f6 100%);color:white;padding:80px 48px;text-align:center}
+        .stats-banner{background:linear-gradient(135deg,#075E54 0%,#128C7E 50%,#25D366 100%);color:white;padding:80px 48px;text-align:center}
         .stats-banner .section-tag{color:rgba(255,255,255,0.6)}
-        .stats-banner h2{color:white;font-family:'Newsreader',serif;font-size:42px;font-weight:400}
-        .stats-banner h2 em{font-weight:300;font-style:italic}
+        .stats-banner h2{color:white;font-family:'Bricolage Grotesque',sans-serif;font-size:42px;font-weight:400}
+        .stats-banner h2 em{font-weight:700;font-style:normal}
         .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;max-width:1000px;margin:48px auto 0}
-        .stat-item .stat-num{font-family:'Newsreader',serif;font-size:48px;font-weight:400}
+        .stat-item .stat-num{font-family:'Bricolage Grotesque',sans-serif;font-size:48px;font-weight:400}
         .stat-item .stat-lbl{font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:1px;margin-top:4px}
 
         /* PRICING — blue accents */
         .pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
         .price-card{background:var(--white);border:1px solid var(--sep);border-radius:20px;padding:36px;position:relative;transition:all 0.2s}
-        .price-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(37,99,235,0.08)}
+        .price-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(18,140,126,0.08)}
         .price-card.featured{border-color:var(--accent);border-width:2px}
         .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;font-size:9px;font-weight:800;letter-spacing:1px;padding:5px 16px;border-radius:20px}
-        .price-card h3{font-family:'Newsreader',serif;font-size:24px;font-weight:500;margin-bottom:4px}
+        .price-card h3{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:500;margin-bottom:4px}
         .price-card .price-desc{font-size:12px;color:var(--text2);margin-bottom:20px}
-        .price-amount{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text)}
+        .price-amount{font-family:'Bricolage Grotesque',sans-serif;font-size:42px;font-weight:400;color:var(--text)}
         .price-card.featured .price-amount{color:var(--accent)}
         .price-unit{font-size:13px;color:var(--text2)}
         .price-list{list-style:none;margin:24px 0;padding:0}
@@ -162,23 +174,23 @@
         .price-list li i{font-size:11px;color:var(--success);width:16px}
         .price-list li.disabled{color:var(--text3)}
         .price-list li.disabled i{color:var(--text3)}
-        .price-btn{width:100%;padding:13px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;border:1.5px solid var(--sep);background:var(--surface);color:var(--text);text-decoration:none;display:block;text-align:center}
+        .price-btn{width:100%;padding:13px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;border:1.5px solid var(--sep);background:var(--surface);color:var(--text);text-decoration:none;display:block;text-align:center}
         .price-btn:hover{background:var(--surface2);border-color:var(--accent)}
-        .price-btn.dark{background:var(--accent);color:white;border-color:var(--accent);box-shadow:0 4px 14px rgba(37,99,235,0.25)}
-        .price-btn.dark:hover{background:#1d4ed8;box-shadow:0 6px 20px rgba(37,99,235,0.3)}
+        .price-btn.dark{background:var(--accent);color:white;border-color:var(--accent);box-shadow:0 4px 14px rgba(18,140,126,0.25)}
+        .price-btn.dark:hover{background:#0C6355;box-shadow:0 6px 20px rgba(18,140,126,0.3)}
 
         /* CTA FINAL — blue gradient */
         .cta-section{text-align:center;padding:100px 48px;max-width:none;margin:0}
-        .cta-section h2{font-family:'Newsreader',serif;font-size:48px;font-weight:400;line-height:1.1;margin-bottom:16px}
-        .cta-section h2 em{font-weight:300;font-style:italic}
+        .cta-section h2{font-family:'Bricolage Grotesque',sans-serif;font-size:48px;font-weight:400;line-height:1.1;margin-bottom:16px}
+        .cta-section h2 em{font-weight:700;font-style:normal}
         .cta-section p{font-size:15px;line-height:1.6;margin-bottom:36px}
 
         /* FOOTER — light */
         .footer{background:var(--white);border-top:1px solid var(--sep);padding:60px 48px 32px}
-        .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto}
+        .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:36px;max-width:1200px;margin:0 auto}
         .footer-brand{display:flex;align-items:center;gap:8px;margin-bottom:12px}
         .footer-brand i{font-size:16px;color:var(--text)}
-        .footer-brand span{font-family:'Newsreader',serif;font-size:20px;font-weight:500;font-style:italic;color:var(--text)}
+        .footer-brand span{font-family:'Unbounded',sans-serif;font-size:17px;font-weight:700;font-style:normal;color:var(--text)}
         .footer-desc{font-size:12px;color:var(--text2);line-height:1.6;max-width:280px}
         .footer h4{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1.5px;margin-bottom:16px}
         .footer a{display:block;font-size:13px;color:var(--text);text-decoration:none;margin-bottom:10px;transition:color 0.2s}
@@ -194,25 +206,30 @@
 
         /* RESPONSIVE */
         @media(max-width:768px){
-            .nav{padding:0 16px}
+            /* Rail collapses to a slim top bar on mobile; brand moves back into it */
+            body{padding-left:0;padding-top:60px}
+            .nav{width:auto;height:60px;bottom:auto;flex-direction:row;padding:0 16px;justify-content:space-between;background:var(--accent)}
             .nav-links{display:none}
+            .nav-actions{flex-direction:row;margin-top:0}
             .nav-actions .btn-solid{display:none}
             .lang-toggle{display:none}
-            .nav-brand span{font-size:1.3rem !important}
-            .nav-brand img.nav-logo{width:34px;height:34px}
-            .nav-brand{gap:10px}
-            .btn-ghost{padding:8px 16px;font-size:13px;white-space:nowrap;background:var(--accent);color:white;border-radius:8px;text-decoration:none}
-            .hero{min-height:auto;padding:100px 24px 40px}
-            .hero-inner{grid-template-columns:1fr;gap:32px}
-            .hero h1{font-size:38px}
+            .brand-header{display:none}
+            .nav-brand{display:flex;margin-bottom:0;flex-direction:row;gap:10px}
+            .nav-brand span{display:inline;font-size:1.02rem !important;color:#fff;font-family:'Unbounded',sans-serif;font-weight:700}
+            .nav-brand svg.nav-logo{width:28px;height:28px}
+            .btn-ghost{padding:8px 16px;font-size:13px;white-space:nowrap;background:#fff;color:var(--accent);border-radius:8px;text-decoration:none;width:auto}
+            .hero{padding:40px 20px 48px}
+            .hero-inner{gap:28px}
+            .hero h1{font-size:34px}
+            .hero-frame video{aspect-ratio:4/3}
+            .hero-data-chip{padding:10px 12px;font-size:9px;top:12px;left:12px}
             .hero-desc{margin:16px 0 28px}
-            .hero-features{flex-wrap:wrap;gap:10px}
+            .hero-features{flex-wrap:wrap;gap:10px;justify-content:center}
             .hero-feat{font-size:11px;padding:5px 10px}
-            .hero-img-card{transform:none}
-            .hero-img-card:hover{transform:none}
             .section{padding:60px 24px}
             .steps-grid{grid-template-columns:repeat(2,1fr)}
-            .modules-grid{grid-template-columns:repeat(2,1fr)}
+            .modpanel{grid-template-columns:1fr}
+            .modpanel-col+.modpanel-col{border-left:none;border-top:1px solid var(--sep)}
             .feat-grid{grid-template-columns:1fr}
             .stats-banner{padding:60px 24px}
             .stats-row{grid-template-columns:1fr 1fr;gap:24px}
@@ -225,7 +242,6 @@
         }
         @media(max-width:480px){
             .steps-grid{grid-template-columns:1fr}
-            .modules-grid{grid-template-columns:1fr}
             .hero-cta{flex-direction:column}
             .hero-cta a{width:100%;text-align:center;justify-content:center}
         }
@@ -245,37 +261,53 @@
 <!-- NAV -->
 <nav class="nav">
     <a class="nav-brand" href="/">
-        <img class="nav-logo" src="img/fluvia-logo.jpg" alt="FluviaFleet">
-        <span style="font-family:'Newsreader',serif;font-size:2.1rem;font-weight:400;color:var(--text);letter-spacing:-0.01em">FluviaFleet</span>
+        <svg class="nav-logo" width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#128C7E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="2" y1="25" x2="46" y2="25" stroke="#128C7E" stroke-width="1.3" opacity="0.28"/><circle cx="24" cy="33" r="3" fill="#25D366"/></svg>
+        <span>ViaBarcazas</span>
     </a>
     <div class="nav-links">
-        <a href="#modulos">Plataforma</a>
-        <a href="#hidrovia" style="color:var(--accent);font-weight:700">Hidrovía</a>
-        <a href="#precios">Precios</a>
-        <a href="#nosotros">Nosotros</a>
-        <a href="#contacto">Contacto</a>
+        <a href="#modulos"><i class="fa-solid fa-layer-group"></i>Plataforma</a>
+        <a href="#como-funciona"><i class="fa-solid fa-diagram-project"></i>Cómo funciona</a>
+        <a href="#precios"><i class="fa-solid fa-tag"></i>Precios</a>
+        <a href="#hidrovia"><i class="fa-solid fa-water"></i>Hidrovía</a>
+        <a href="#nosotros"><i class="fa-solid fa-users"></i>Nosotros</a>
     </div>
     <div class="nav-actions">
         <div class="lang-toggle">
             <a href="index-en.html" class="lang-btn"><img src="https://flagcdn.com/w40/us.png" alt="EN"> EN</a>
-            <span class="lang-sep">|</span>
             <a href="index.html" class="lang-btn active"><img src="https://flagcdn.com/w40/es.png" alt="ES"> ES</a>
         </div>
-        <a href="fluvia.html" class="btn-ghost">Iniciar Sesión</a>
-        <a href="#contacto" class="btn-solid">Solicitar Demo</a>
+        <a href="viabarcazas.html" class="btn-ghost">Ingresar</a>
+        <a href="#contacto" class="btn-solid">Pedir demo</a>
     </div>
 </nav>
+
+<!-- BRAND HEADER — white bar, big normal-size wordmark, sits beside the rail -->
+<a class="brand-header" href="/">
+    <svg width="42" height="42" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="2" y1="25" x2="46" y2="25" stroke="#F3F7F5" stroke-width="1.3" opacity="0.28"/><circle cx="24" cy="33" r="3" fill="#25D366"/></svg>
+    <span>ViaBarcazas</span>
+</a>
 
 <!-- HERO -->
 <section class="hero">
     <div class="hero-inner">
+        <div class="hero-frame">
+            <video autoplay muted loop playsinline>
+                <source src="img/viabarcazas-hero.mp4" type="video/mp4">
+            </video>
+            <div class="hero-data-chip">
+                <div><span class="k">CONVOY</span><span class="v">VB-0417</span></div>
+                <div><span class="k">COMBUSTIBLE</span><span class="v">82%</span></div>
+                <div><span class="k">CARGA</span><span class="v">14.200 T</span></div>
+                <div><span class="k">ESTADO</span><span class="v">EN RUTA — ÓPTIMO</span></div>
+            </div>
+        </div>
         <div class="hero-text">
-            <div class="hero-badge"><i class="fa-solid fa-water"></i> LA PRIMERA PLATAFORMA CON IA PARA LA HIDROVÍA</div>
-            <h1>Sabé dónde están<br><em>sus embarcaciones.</em></h1>
-            <p class="hero-desc">Tracking AIS, convoyes inteligentes, combustible, mantenimiento e inteligencia artificial en una sola plataforma. Sin hardware. Sin instalaciones. Operativo en 5 minutos.</p>
+            <div class="hero-badge"><i class="fa-solid fa-water"></i> HIDROVÍA PARAGUAY-PARANÁ, EN TIEMPO REAL</div>
+            <h1>Cada barcaza, visible.<br><em>Cada decisión, a tiempo.</em></h1>
+            <p class="hero-desc">Una sola pantalla para el AIS, los convoyes, el combustible y el mantenimiento de tu flota. Sin instalar nada — conectás tus datos y arrancás hoy.</p>
             <div class="hero-cta">
                 <a href="#contacto" class="btn-primary">Solicitar Demo</a>
-                <a href="fluvia.html" class="btn-secondary">Ver Plataforma <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="viabarcazas.html" class="btn-secondary">Ver Plataforma <i class="fa-solid fa-arrow-right"></i></a>
             </div>
             <div class="hero-features">
                 <div class="hero-feat"><i class="fa-solid fa-check-circle"></i>Sin hardware necesario</div>
@@ -283,25 +315,671 @@
                 <div class="hero-feat"><i class="fa-solid fa-check-circle"></i>Operativo en 5 minutos</div>
             </div>
         </div>
-        <div class="hero-visual">
-            <div class="hero-glow"></div>
-            <div class="hero-img-card">
-                <video autoplay muted loop playsinline style="width:100%;display:block;border-radius:20px">
-                    <source src="img/fluviafleet-demo.mp4" type="video/mp4">
-                </video>
-            </div>
-        </div>
     </div>
 </section>
 
 
-<!-- WAVE DIVIDER -->
-<div class="wave-divider">
-    <svg viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,50 C180,20 360,70 540,40 C720,10 900,60 1080,35 C1260,10 1350,45 1440,30 L1440,80 L0,80 Z" fill="#F1F5F9" opacity="0.7"/>
-        <path d="M0,55 C200,35 400,65 600,45 C800,25 1000,55 1200,40 C1350,28 1400,50 1440,42 L1440,80 L0,80 Z" fill="#F8F9FA"/>
-    </svg>
+<!-- STATS -->
+<div class="stats-banner">
+    <div class="section-tag" style="color:rgba(255,255,255,0.6)">POR QUÉ VIABARCAZAS</div>
+    <h2>Hecho a la medida<br><em>del río.</em></h2>
+    <div class="stats-row">
+        <div class="stat-item reveal"><div class="stat-num">3.442</div><div class="stat-lbl">KM DE RÍO BAJO SEGUIMIENTO</div></div>
+        <div class="stat-item reveal"><div class="stat-num">12</div><div class="stat-lbl">MÓDULOS EN UN SOLO PANEL</div></div>
+        <div class="stat-item reveal"><div class="stat-num">5</div><div class="stat-lbl">PAÍSES EN LA MISMA RUTA</div></div>
+        <div class="stat-item reveal"><div class="stat-num"><5 min</div><div class="stat-lbl">PARA VER TU PRIMER DATO</div></div>
+    </div>
 </div>
+
+<!-- MÓDULOS — 12 modules in 4-column grid           -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="section reveal" id="modulos">
+    <div class="section-tag">TODO EL SISTEMA</div>
+    <h2>Cada frente de tu operación,<br><em>bajo un mismo techo.</em></h2>
+    <p class="section-desc">Del AIS a la última factura de gasoil, los 12 frentes de tu operación viven en la misma pantalla.</p>
+    <div class="modpanel reveal">
+        <div class="modpanel-col">
+            <div class="modpanel-col-header"><span class="dot" style="background:var(--bronze)"></span>AHORA</div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-ship"></i></div><div><h4>Flota</h4><p>Ficha viva de cada barcaza y remolcador, con su estado del día</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-map-location-dot"></i></div><div><h4>Mapa AIS</h4><p>Dónde está cada unidad ahora mismo, sin llamar a nadie</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-gas-pump"></i></div><div><h4>Combustible</h4><p>Consumo real por tramo, comparado contra lo esperado</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-bell"></i></div><div><h4>Alertas</h4><p>Avisos automáticos apenas algo se sale de lo normal</p></div></div>
+        </div>
+        <div class="modpanel-col">
+            <div class="modpanel-col-header"><span class="dot" style="background:var(--accent)"></span>PLANIFICACIÓN</div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-link"></i></div><div><h4>Armador de Convoy</h4><p>Calado validado contra el nivel del río antes de zarpar</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-route"></i></div><div><h4>Viajes</h4><p>Itinerarios y despacho planificados con datos del río de hoy</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-robot"></i></div><div><h4>Copiloto IA</h4><p>Preguntale a tu operación y respondé al toque</p></div></div>
+        </div>
+        <div class="modpanel-col">
+            <div class="modpanel-col-header"><span class="dot" style="background:var(--warning)"></span>GESTIÓN</div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-wrench"></i></div><div><h4>Mantenimiento</h4><p>Calendario preventivo que avisa antes de que algo falle</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-book"></i></div><div><h4>Bitácora Digital</h4><p>Cada novedad de a bordo, con foto y hora, lista para auditar</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-users"></i></div><div><h4>Tripulación</h4><p>Guardias, licencias y vencimientos de cada dotación</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-anchor"></i></div><div><h4>Puertos</h4><p>Turnos de carga y descarga coordinados sin planillas cruzadas</p></div></div>
+            <div class="modrow"><div class="modrow-icon"><i class="fa-solid fa-chart-bar"></i></div><div><h4>Reportes</h4><p>Los números que pide gerencia, listos para exportar</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- COMO FUNCIONA -->
+<div class="section-alt">
+<section class="section" id="como-funciona">
+    <div class="section-tag">PUESTA EN MARCHA</div>
+    <h2>No es un proyecto de meses.<br><em>Es un lunes distinto.</em></h2>
+    <p class="section-desc">Así se ve tu primer mes con ViaBarcazas, de la carga inicial de datos a los primeros números para mostrar.</p>
+    <div class="steps-grid">
+        <div class="step-card reveal">
+            <div class="step-num">DÍA 1</div>
+            <h3>Subís la flota, no instalás nada</h3>
+            <p>Cargás barcazas y remolcadores por planilla o uno por uno. El AIS que ya tenés se conecta solo, sin visitas técnicas ni cableado.</p>
+            <div class="step-icon"><i class="fa-solid fa-ship"></i></div>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num">DÍA 2</div>
+            <h3>El panel empieza a mirar el río por vos</h3>
+            <p>Nivel hídrico, calado y pronóstico quedan monitoreados solos. Cuando algo cambia en tu ruta, te llega el aviso antes que el problema.</p>
+            <div class="step-icon"><i class="fa-solid fa-water"></i></div>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num">SEMANA 1</div>
+            <h3>Armás tu primer convoy sin levantar el teléfono</h3>
+            <p>El sistema valida el calado contra el nivel actual y sugiere la formación. Lo que antes eran diez llamadas cruzadas, ahora es una pantalla.</p>
+            <div class="step-icon"><i class="fa-solid fa-link"></i></div>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num">MES 1</div>
+            <h3>Le mostrás números a quien te los pide</h3>
+            <p>Costo por viaje, consumo por tramo, eficiencia por embarcación — armado solo, exportable, sin pedirle nada a nadie a fin de mes.</p>
+            <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+    </div>
+</section>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- COPILOTO IA SHOWCASE                            -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .copiloto-section{position:relative;overflow:hidden;background:var(--white);padding:100px 48px}
+    .copiloto-inner{max-width:1200px;margin:0 auto}
+    .copiloto-header{text-align:center;margin-bottom:56px}
+    .copiloto-header .section-tag{color:var(--accent)}
+    .copiloto-header h2{font-family:'Bricolage Grotesque',sans-serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:12px}
+    .copiloto-header h2 em{font-weight:700;font-style:normal;color:var(--accent)}
+    .copiloto-header p{font-size:15px;color:var(--text2);max-width:520px;margin:0 auto}
+
+    .chat-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+    .chat-tab{background:var(--white);border:1px solid var(--sep);color:var(--text2);border-radius:100px;padding:10px 22px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;letter-spacing:0.3px}
+    .chat-tab:hover{background:var(--surface);color:var(--text)}
+    .chat-tab.active{background:var(--accent);border-color:var(--accent);color:white}
+
+    .chat-container{max-width:720px;margin:0 auto;background:var(--surface);border:1px solid var(--sep);border-radius:20px;padding:32px;min-height:280px}
+    .chat-panel{display:none}
+    .chat-panel.active{display:block}
+
+    .chat-bubble{max-width:85%;margin-bottom:16px;padding:14px 18px;border-radius:16px;font-size:13px;line-height:1.65;animation:fadeInBubble 0.3s ease}
+    .chat-bubble.user{background:#128C7E;border:1px solid #128C7E;color:white;margin-left:auto;border-bottom-right-radius:4px;text-align:right}
+    .chat-bubble.ai{background:var(--white);border:1px solid var(--sep);color:var(--text);margin-right:auto;border-bottom-left-radius:4px}
+    .chat-ai-label{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.5px}
+    .chat-ai-label i{font-size:14px;color:var(--accent)}
+    @keyframes fadeInBubble{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    .copiloto-cta{text-align:center;margin-top:40px}
+
+    @media(max-width:768px){
+        .copiloto-section{padding:60px 24px}
+        .copiloto-header h2{font-size:32px}
+        .chat-container{padding:20px}
+        .chat-bubble{max-width:95%}
+    }
+</style>
+
+<section class="copiloto-section reveal" id="copiloto">
+    <div class="copiloto-inner">
+        <div class="copiloto-header">
+            <div class="section-tag">INTELIGENCIA ARTIFICIAL</div>
+            <h2>Preguntale al río<br><em>lo que necesites saber.</em></h2>
+            <p>Preguntá en español. Respondemos con datos de tu operación real.</p>
+        </div>
+
+        <div class="chat-tabs">
+            <button class="chat-tab active" onclick="switchCopilotoTab(0)">Combustible</button>
+            <button class="chat-tab" onclick="switchCopilotoTab(1)">Mantenimiento</button>
+            <button class="chat-tab" onclick="switchCopilotoTab(2)">Tracking</button>
+            <button class="chat-tab" onclick="switchCopilotoTab(3)">Costos</button>
+        </div>
+
+        <div class="chat-container">
+            <!-- Tab 0: Combustible -->
+            <div class="chat-panel active" data-panel="0">
+                <div class="chat-bubble user">¿Cuál convoy tiene mayor consumo esta semana?</div>
+                <div class="chat-bubble ai">
+                    <div class="chat-ai-label"><i class="fa-solid fa-robot"></i>ViaBarcazas AI</div>
+                    El Convoy ASU-ROS-03 registra 12.4 kL/día, un 23% por encima del promedio. Causas probables: corriente adversa en sector Corrientes-Resistencia y velocidad de crucero por encima del óptimo.
+                </div>
+            </div>
+            <!-- Tab 1: Mantenimiento -->
+            <div class="chat-panel" data-panel="1">
+                <div class="chat-bubble user">¿Qué embarcaciones requieren mantenimiento urgente?</div>
+                <div class="chat-bubble ai">
+                    <div class="chat-ai-label"><i class="fa-solid fa-robot"></i>ViaBarcazas AI</div>
+                    3 embarcaciones con alertas activas:<br>· Remolcador Guaraní II — motor principal, vence en 3 días<br>· Barcaza PY-0047 — inspección de casco, vencida hace 5 días<br>· Barcaza PY-0089 — certificado de navegabilidad, vence esta semana
+                </div>
+            </div>
+            <!-- Tab 2: Tracking -->
+            <div class="chat-panel" data-panel="2">
+                <div class="chat-bubble user">Mostrá los barcos llegando a Rosario esta semana.</div>
+                <div class="chat-bubble ai">
+                    <div class="chat-ai-label"><i class="fa-solid fa-robot"></i>ViaBarcazas AI</div>
+                    4 embarcaciones con ETA Rosario confirmado:<br>· ASU-Convoy-03: Miércoles 14hs (sin alertas)<br>· Remolcador Delta I: Jueves 09hs (retraso estimado 4hs por nivel bajo)<br>· Barcaza AR-112: Viernes 16hs<br>· Convoy PY-Norte-07: Sábado 11hs
+                </div>
+            </div>
+            <!-- Tab 3: Costos -->
+            <div class="chat-panel" data-panel="3">
+                <div class="chat-bubble user">¿Cuáles son los mayores costos operativos del mes?</div>
+                <div class="chat-bubble ai">
+                    <div class="chat-ai-label"><i class="fa-solid fa-robot"></i>ViaBarcazas AI</div>
+                    Combustible representa el 67% del costo total este mes. El sector Asunción-Corrientes es el de mayor consumo relativo. Recomendación: revisar velocidad de crucero en ese tramo.
+                </div>
+            </div>
+        </div>
+
+        <div class="copiloto-cta">
+            <a href="#contacto" class="btn-hidrovia"><i class="fa-solid fa-robot"></i> Solicitar Demo</a>
+        </div>
+    </div>
+</section>
+<script>
+function switchCopilotoTab(idx) {
+    document.querySelectorAll('.chat-tab').forEach(function(t, i) {
+        t.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('.chat-panel').forEach(function(p) {
+        p.classList.toggle('active', parseInt(p.getAttribute('data-panel')) === idx);
+    });
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- ANALÍTICA DE FLOTA AVANZADA                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .analytics-section{padding:100px 48px;background:var(--white)}
+    .analytics-inner{max-width:1200px;margin:0 auto}
+    .analytics-section .section-tag,.analytics-section h2,.analytics-section .section-desc{text-align:center}
+    .analytics-section h2{margin:0 auto 12px}
+    .analytics-section .section-desc{margin:0 auto 48px;max-width:520px}
+
+    .analytics-grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;margin-bottom:20px}
+    .analytics-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .analytics-grid-3.kpis{margin-top:20px}
+    .analytics-card{background:var(--surface);border:1px solid var(--sep);border-radius:18px;padding:28px}
+    .analytics-card h4{font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:20px}
+
+    .line-chart{width:100%;height:auto;overflow:visible}
+    .line-chart .axis-label{font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--text3)}
+    .line-chart .chart-delta{font-family:'Manrope',sans-serif;font-size:11px;font-weight:700}
+
+    .pie-card{display:flex;flex-direction:column}
+    .pie-wrap{display:flex;align-items:center;gap:28px;margin-top:8px}
+    .pie{width:128px;height:128px;border-radius:50%;flex-shrink:0}
+    .pie-legend{list-style:none;display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--text2);font-family:'Manrope',sans-serif}
+    .pie-legend li{display:flex;align-items:center;gap:10px}
+    .pie-legend b{margin-left:auto;color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:500}
+    .pie-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+    .gauge-card{background:var(--surface);border:1px solid var(--sep);border-radius:18px;padding:28px 20px;text-align:center}
+    .gauge-outer{width:104px;height:104px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+    .gauge-inner{width:78px;height:78px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:19px;color:var(--text)}
+    .gauge-card p{font-size:13px;color:var(--text2);font-weight:500}
+
+    .mini-kpi{background:var(--surface);border:1px solid var(--sep);border-radius:18px;padding:24px 20px;text-align:center}
+    .mini-kpi-val{font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+    .mini-kpi-val.accent{color:var(--bronze)}
+    .mini-kpi-label{font-size:12px;color:var(--text2);margin-top:6px}
+
+    @media(max-width:768px){
+        .analytics-section{padding:60px 24px}
+        .analytics-grid-2{grid-template-columns:1fr}
+        .analytics-grid-3{grid-template-columns:1fr}
+    }
+</style>
+<section class="analytics-section reveal" id="analitica">
+    <div class="analytics-inner">
+        <div class="section-tag">ANALÍTICA</div>
+        <h2>Analítica de flota<br><em>avanzada.</em></h2>
+        <p class="section-desc">Los mismos datos que ves en el panel operativo, resumidos para el que firma los números.</p>
+
+        <div class="analytics-grid-2">
+            <div class="analytics-card">
+                <h4>Eficiencia de flota (L/km)</h4>
+                <svg class="line-chart" viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" style="stop-color:var(--bronze);stop-opacity:0.28"/>
+                            <stop offset="100%" style="stop-color:var(--bronze);stop-opacity:0"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M20,29 L92,55 L164,38 L236,77 L308,95 L380,112 L380,140 L20,140 Z" style="fill:url(#lineFill)"/>
+                    <polyline points="20,29 92,55 164,38 236,77 308,95 380,112" style="fill:none;stroke:var(--bronze);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"/>
+                    <g style="fill:var(--bronze)">
+                        <circle cx="20" cy="29" r="3.5"/><circle cx="92" cy="55" r="3.5"/><circle cx="164" cy="38" r="3.5"/>
+                        <circle cx="236" cy="77" r="3.5"/><circle cx="308" cy="95" r="3.5"/><circle cx="380" cy="112" r="3.5"/>
+                    </g>
+                    <text x="20" y="158" class="axis-label">ENE</text>
+                    <text x="84" y="158" class="axis-label">FEB</text>
+                    <text x="156" y="158" class="axis-label">MAR</text>
+                    <text x="228" y="158" class="axis-label">ABR</text>
+                    <text x="300" y="158" class="axis-label">MAY</text>
+                    <text x="364" y="158" class="axis-label">JUN</text>
+                    <text x="300" y="18" class="chart-delta" style="fill:var(--bronze)">-19% vs. ENE</text>
+                </svg>
+            </div>
+            <div class="analytics-card pie-card">
+                <h4>Composición de carga</h4>
+                <div class="pie-wrap">
+                    <div class="pie" style="background:conic-gradient(var(--accent) 0 45%, var(--bronze) 45% 72%, var(--warning) 72% 90%, var(--text3) 90% 100%)"></div>
+                    <ul class="pie-legend">
+                        <li><span class="pie-dot" style="background:var(--accent)"></span>Agregados <b>45%</b></li>
+                        <li><span class="pie-dot" style="background:var(--bronze)"></span>Granos <b>27%</b></li>
+                        <li><span class="pie-dot" style="background:var(--warning)"></span>Minerales <b>18%</b></li>
+                        <li><span class="pie-dot" style="background:var(--text3)"></span>Combustibles <b>10%</b></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-grid-3 gauges">
+            <div class="gauge-card">
+                <div class="gauge-outer" style="background:conic-gradient(var(--warning) 0 42%, var(--sep) 0)"><div class="gauge-inner">42%</div></div>
+                <p>Congestión de puerto</p>
+            </div>
+            <div class="gauge-card">
+                <div class="gauge-outer" style="background:conic-gradient(var(--accent) 0 78%, var(--sep) 0)"><div class="gauge-inner">78%</div></div>
+                <p>Disponibilidad de convoy</p>
+            </div>
+            <div class="gauge-card">
+                <div class="gauge-outer" style="background:conic-gradient(var(--bronze) 0 91%, var(--sep) 0)"><div class="gauge-inner">91%</div></div>
+                <p>Puntualidad de arribo</p>
+            </div>
+        </div>
+
+        <div class="analytics-grid-3 kpis">
+            <div class="mini-kpi"><div class="mini-kpi-val">128</div><div class="mini-kpi-label">Embarcaciones activas en la plataforma</div></div>
+            <div class="mini-kpi"><div class="mini-kpi-val accent">16%</div><div class="mini-kpi-label">Ahorro de combustible con IA</div></div>
+            <div class="mini-kpi"><div class="mini-kpi-val">6 días</div><div class="mini-kpi-label">Tránsito promedio Asunción-Rosario</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- ALGORITMOS DE IA PREDICTIVA                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .algo-section{padding:100px 48px}
+    .algo-inner{max-width:1200px;margin:0 auto;text-align:center}
+    .algo-inner .section-tag,.algo-inner h2,.algo-inner .section-desc{text-align:center}
+    .algo-inner h2{margin:0 auto 12px}
+    .algo-inner .section-desc{margin:0 auto 48px;max-width:520px}
+    .algo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:left}
+    .algo-card{background:var(--white);border:1px solid var(--sep);border-radius:18px;padding:28px}
+    .algo-card i{font-size:20px;color:var(--bronze);background:var(--accent-bg);width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+    .algo-card h4{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:8px}
+    .algo-card p{font-size:13px;color:var(--text2);line-height:1.6}
+    @media(max-width:768px){
+        .algo-section{padding:60px 24px}
+        .algo-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:480px){
+        .algo-grid{grid-template-columns:1fr}
+    }
+</style>
+<section class="algo-section reveal" id="algoritmos">
+    <div class="algo-inner">
+        <div class="section-tag">BAJO EL CAPOT</div>
+        <h2>Los algoritmos detrás<br><em>de cada módulo.</em></h2>
+        <p class="section-desc">Los modelos que corren en segundo plano cada vez que abrís el panel, aunque nunca los veas directamente.</p>
+        <div class="algo-grid">
+            <div class="algo-card"><i class="fa-solid fa-route"></i><h4>Ruta Dinámica Óptima</h4><p>Recalcula el itinerario según clima y nivel del río, en tiempo real.</p></div>
+            <div class="algo-card"><i class="fa-solid fa-gauge-high"></i><h4>Mantenimiento Predictivo</h4><p>Detecta fallas de convoy antes de que frenen la operación.</p></div>
+            <div class="algo-card"><i class="fa-solid fa-chart-line"></i><h4>Predicción de Demanda</h4><p>Anticipa la carga del próximo mes y arma la flota con tiempo.</p></div>
+            <div class="algo-card"><i class="fa-solid fa-scale-balanced"></i><h4>Balance de Convoy</h4><p>Calcula peso y estabilidad para una formación segura.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- ROI CALCULATOR                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .roi-section{padding:100px 48px;max-width:1100px;margin:0 auto}
+
+    .roi-sliders{display:grid;grid-template-columns:1fr 1fr;gap:24px 40px;margin-bottom:56px;padding:32px;background:var(--white);border:1px solid var(--sep);border-radius:20px}
+    .roi-slider-group{display:flex;flex-direction:column;gap:6px}
+    .roi-slider-label{display:flex;justify-content:space-between;align-items:center}
+    .roi-slider-label span{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px}
+    .roi-slider-value{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:var(--accent);min-width:60px;text-align:right}
+    .roi-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--sep);outline:none;transition:all 0.2s}
+    .roi-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 2px 8px rgba(37,211,102,0.3);transition:all 0.2s}
+    .roi-slider::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 4px 16px rgba(37,211,102,0.4)}
+    .roi-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:none;box-shadow:0 2px 8px rgba(37,211,102,0.3)}
+    .roi-slider::-moz-range-track{height:6px;border-radius:3px;background:var(--sep)}
+    .roi-slider-hint{font-size:11px;color:var(--text3);margin-top:2px}
+
+    /* Receipt-style breakdown, not a split comparison panel */
+    .roi-receipt{max-width:460px;margin:0 auto;background:var(--surface);border:1px solid var(--sep);border-radius:14px;padding:32px 36px 28px;box-shadow:0 20px 60px rgba(18,140,126,0.10)}
+    .roi-receipt-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;text-align:center;margin-bottom:22px}
+    .roi-receipt-line{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:9px 0;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text2)}
+    .roi-receipt-line span:first-child{flex:1}
+    .roi-receipt-val{font-weight:600;font-size:14px;color:var(--text)}
+    .roi-receipt-val.warn{color:var(--warning)}
+    .roi-receipt-divider{border-top:1px dashed var(--sep);margin:8px 0}
+    .roi-receipt-line.total{font-size:13px;color:var(--text);padding-top:16px}
+    .roi-receipt-line.total .roi-receipt-val{font-size:30px;font-family:'Bricolage Grotesque',sans-serif;color:var(--bronze);font-weight:700}
+    .roi-receipt-sub{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.5}
+    .roi-receipt-stamp{margin-top:22px;text-align:center;border:2px solid var(--bronze);color:var(--bronze);border-radius:8px;padding:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:1.5px;transform:rotate(-1.5deg)}
+
+    /* Extra stats strip (new) */
+    .roi-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--sep);border:1px solid var(--sep);border-top:none;border-radius:0 0 16px 16px;overflow:hidden}
+    .roi-extra-item{background:var(--white);padding:22px 20px;text-align:center}
+    .roi-extra-item .roi-extra-value{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:var(--accent)}
+    .roi-extra-item .roi-extra-label{font-size:10.5px;color:var(--text2);letter-spacing:0.5px;margin-top:4px;text-transform:uppercase}
+
+    .roi-cta-line{margin-top:28px;text-align:center}
+    .roi-cta-line a{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--text);text-decoration:none;transition:all 0.2s}
+    .roi-cta-line a:hover{color:var(--accent)}
+
+    @media(max-width:768px){
+        .roi-section{padding:60px 24px}
+        .roi-sliders{grid-template-columns:1fr;padding:24px}
+        .roi-receipt{padding:28px 22px 24px}
+        .roi-extra{grid-template-columns:1fr}
+    }
+</style>
+
+<div class="section-alt">
+<section class="roi-section reveal" id="roi">
+    <div class="section-tag">LA PLATA QUE SE ESCAPA</div>
+    <h2>Poné los números de tu flota<br><em>y mirá cuánto se pierde.</em></h2>
+    <p class="section-desc">Ingresá los datos de tu flota y veé el impacto proyectado en tiempo real. Sin registro.</p>
+
+    <div class="roi-sliders">
+        <div class="roi-slider-group">
+            <div class="roi-slider-label">
+                <span>Barcazas</span>
+                <div class="roi-slider-value" id="roi-barcazas-val">10</div>
+            </div>
+            <input type="range" class="roi-slider" id="roi-barcazas" min="1" max="150" value="10" oninput="calculateROI()">
+        </div>
+        <div class="roi-slider-group">
+            <div class="roi-slider-label">
+                <span>Remolcadores</span>
+                <div class="roi-slider-value" id="roi-remolcadores-val">3</div>
+            </div>
+            <input type="range" class="roi-slider" id="roi-remolcadores" min="1" max="30" value="3" oninput="calculateROI()">
+        </div>
+        <div class="roi-slider-group">
+            <div class="roi-slider-label">
+                <span>Combustible mensual (kL)</span>
+                <div class="roi-slider-value" id="roi-consumo-val">500</div>
+            </div>
+            <input type="range" class="roi-slider" id="roi-consumo" min="10" max="5000" value="500" step="10" oninput="calculateROI()">
+            <div class="roi-slider-hint">kL = kilolitros (1.000 litros)</div>
+        </div>
+        <div class="roi-slider-group">
+            <div class="roi-slider-label">
+                <span>Costo por litro (USD)</span>
+                <div class="roi-slider-value" id="roi-costo-val">1.2</div>
+            </div>
+            <input type="range" class="roi-slider" id="roi-costo" min="0.5" max="3.0" value="1.2" step="0.1" oninput="calculateROI()">
+        </div>
+    </div>
+
+    <div class="roi-receipt">
+        <div class="roi-receipt-title">RESUMEN — TU FLOTA HOY</div>
+        <div class="roi-receipt-line">
+            <span>Combustible mal gastado / año</span>
+            <span class="roi-receipt-val warn" id="roi-ahorro">$0</span>
+        </div>
+        <div class="roi-receipt-line">
+            <span>Plan ViaBarcazas / mes</span>
+            <span class="roi-receipt-val" id="roi-costo-mensual">$0</span>
+        </div>
+        <div class="roi-receipt-divider"></div>
+        <div class="roi-receipt-line total">
+            <span>Ahorro neto, año 1<div class="roi-receipt-sub">Ya descontado el costo de la plataforma</div></span>
+            <span class="roi-receipt-val" id="roi-neto">$0</span>
+        </div>
+        <div class="roi-receipt-stamp">ROI EN <span id="roi-payback">0 MESES</span></div>
+    </div>
+    <div class="roi-extra">
+        <div class="roi-extra-item">
+            <div class="roi-extra-value" id="roi-litros">0 kL</div>
+            <div class="roi-extra-label">Combustible ahorrado / año</div>
+        </div>
+        <div class="roi-extra-item">
+            <div class="roi-extra-value" id="roi-co2">0 t</div>
+            <div class="roi-extra-label">CO₂ no emitido / año</div>
+        </div>
+        <div class="roi-extra-item">
+            <div class="roi-extra-value">16%</div>
+            <div class="roi-extra-label">Reducción de consumo estimada</div>
+        </div>
+    </div>
+
+    <div class="roi-cta-line">
+        <a href="#contacto">Hablar con un especialista sobre tu flota <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+</section>
+</div>
+<script>
+function calculateROI() {
+    var barcazas = parseInt(document.getElementById('roi-barcazas').value);
+    var remolcadores = parseInt(document.getElementById('roi-remolcadores').value);
+    var consumo = parseInt(document.getElementById('roi-consumo').value);
+    var costo = parseFloat(document.getElementById('roi-costo').value);
+
+    // Update slider display values
+    document.getElementById('roi-barcazas-val').textContent = barcazas;
+    document.getElementById('roi-remolcadores-val').textContent = remolcadores;
+    document.getElementById('roi-consumo-val').textContent = consumo.toLocaleString('es-AR');
+    document.getElementById('roi-costo-val').textContent = costo.toFixed(1);
+
+    // Calculate savings (16% fuel reduction)
+    var REDUCCION = 0.16;
+    var litrosAhorrados = consumo * 1000 * REDUCCION * 12;
+    var ahorroAnual = litrosAhorrados * costo;
+    var co2Toneladas = litrosAhorrados * 2.68 / 1000; // ~2.68 kg CO2 por litro de gasoil
+
+    // Calculate monthly cost based on total vessels
+    var totalVessels = barcazas + remolcadores;
+    var costoMensual = 0;
+    var costoMensualText = '';
+    if (totalVessels <= 5) {
+        costoMensual = 179;
+        costoMensualText = '$179';
+    } else if (totalVessels <= 20) {
+        costoMensual = 549;
+        costoMensualText = '$549';
+    } else {
+        costoMensual = 0;
+        costoMensualText = 'a medida';
+    }
+
+    // Calculate ROI in months
+    var costoAnual = costoMensual * 12;
+    var roiMeses = 0;
+    var roiText = '';
+    if (costoMensual > 0 && ahorroAnual > 0) {
+        roiMeses = costoAnual / ahorroAnual * 12;
+        if (roiMeses < 1) {
+            roiText = '< 1 mes';
+        } else {
+            roiText = Math.ceil(roiMeses) + ' meses';
+        }
+    } else {
+        roiText = 'Contactar';
+    }
+
+    // Calculate net savings year 1
+    var ahorroNeto = ahorroAnual - costoAnual;
+
+    // Update display
+    document.getElementById('roi-ahorro').textContent = '$' + Math.round(ahorroAnual).toLocaleString('es-AR');
+    document.getElementById('roi-costo-mensual').textContent = costoMensualText;
+    document.getElementById('roi-payback').textContent = roiText;
+    document.getElementById('roi-litros').textContent = Math.round(litrosAhorrados / 1000).toLocaleString('es-AR') + ' kL';
+    document.getElementById('roi-co2').textContent = Math.round(co2Toneladas).toLocaleString('es-AR') + ' t';
+
+    var netoEl = document.getElementById('roi-neto');
+    if (costoMensual === 0) {
+        netoEl.textContent = 'A medida';
+    } else {
+        netoEl.textContent = (ahorroNeto < 0 ? '-' : '') + '$' + Math.abs(Math.round(ahorroNeto)).toLocaleString('es-AR');
+    }
+}
+// Init on load
+document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
+</script>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CASO DE ÉXITO                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+    .caso-exito-section{padding:100px 48px;max-width:1200px;margin:0 auto}
+    .caso-exito-section .section-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
+    .caso-exito-section h2{font-family:'Bricolage Grotesque',sans-serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:48px}
+    .caso-exito-section h2 em{font-weight:700;font-style:normal}
+
+    .caso-card{background:var(--white);border:1px solid var(--sep);border-radius:20px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+    .caso-label{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--accent);margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--sep)}
+    .caso-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+    .caso-step h4{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--text2);margin-bottom:10px}
+    .caso-step p{font-size:13px;color:var(--text);line-height:1.65}
+    .caso-note{font-size:11px;color:var(--text2);line-height:1.6;margin-top:24px;padding-top:20px;border-top:1px solid var(--sep);font-style:italic}
+    .caso-cta{margin-top:32px;text-align:center}
+    .caso-cta a{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--text);text-decoration:none;transition:all 0.2s}
+    .caso-cta a:hover{color:var(--accent)}
+    .caso-cta a i{font-size:12px}
+
+    @media(max-width:768px){
+        .caso-exito-section{padding:60px 24px}
+        .caso-exito-section h2{font-size:32px}
+        .caso-steps{grid-template-columns:1fr 1fr;gap:20px}
+        .caso-card{padding:28px}
+    }
+    @media(max-width:480px){
+        .caso-steps{grid-template-columns:1fr}
+    }
+</style>
+
+<section class="caso-exito-section reveal" id="caso-exito">
+    <div class="section-tag">CASO DE ÉXITO</div>
+    <h2>Así lo usa un operador<br><em>real de la hidrovía.</em></h2>
+
+    <div class="caso-card">
+        <div class="caso-label">PROGRAMA PILOTO — SECTOR ASUNCIÓN-ROSARIO</div>
+        <div class="caso-steps">
+            <div class="caso-step">
+                <h4>ANTES</h4>
+                <p>Armador chico, 9 barcazas y 2 remolcadores. La posición de la flota vivía en el celular de cada capitán y en llamadas por radio VHF.</p>
+            </div>
+            <div class="caso-step">
+                <h4>LO QUE DOLÍA</h4>
+                <p>Ningún dato de consumo por tramo, así que nadie sabía si el gasto de combustible era normal o no. Dos incidentes menores quedaron sin registro formal.</p>
+            </div>
+            <div class="caso-step">
+                <h4>PUESTA EN MARCHA</h4>
+                <p>4 días de carga de datos, sin parar la operación. El AIS que ya tenían se conectó directo, sin instalar nada nuevo a bordo.</p>
+            </div>
+            <div class="caso-step">
+                <h4>DESPUÉS</h4>
+                <p>Toda la flota visible desde una sola pantalla. 16% menos combustible en el tramo más consumido. La bitácora en papel desapareció del todo.</p>
+            </div>
+        </div>
+        <p class="caso-note">Cifras del programa piloto; varían según flota y ruta. Detalle completo disponible bajo acuerdo de confidencialidad.</p>
+    </div>
+
+    <div class="caso-cta">
+        <a href="#contacto">Conocer más → Solicitar Demo <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PLANES -->
+<section class="section" id="precios">
+    <div style="text-align:center;margin-bottom:16px">
+        <div class="section-tag">PRECIOS</div>
+        <h2>Tres tamaños de flota,<br><em>un solo panel.</em></h2>
+        <p style="color:var(--text2);font-size:16px;margin-top:16px;max-width:520px;margin-inline:auto;line-height:1.7">Empezá con lo que necesitás hoy. Escalá cuando tu operación crezca. Sin contratos largos, sin sorpresas.</p>
+    </div>
+
+    <!-- GARANTÍA STRIP -->
+    <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-bottom:48px;padding:20px;background:var(--surface);border-radius:16px;max-width:700px;margin-inline:auto">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-shield-halved" style="color:var(--success)"></i> 14 días de prueba gratis</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-bolt" style="color:var(--accent)"></i> Operativo en 5 minutos</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-credit-card" style="color:var(--warning)"></i> Sin tarjeta para empezar</div>
+    </div>
+
+    <div class="pricing-cards">
+        <!-- AMARRE -->
+        <div class="price-card reveal">
+            <h3>Amarre</h3>
+            <p class="price-desc">Hasta 5 embarcaciones</p>
+            <div style="margin:20px 0 8px">
+                <div style="font-size:15px;font-weight:700;color:var(--success);letter-spacing:0.5px">✦ PARA ARRANCAR</div>
+                <div style="font-size:13px;color:var(--text2);margin-top:4px">Salí del Excel y la radio esta semana</div>
+            </div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Mapa AIS en tiempo real</li>
+                <li><i class="fa-solid fa-check"></i>Bitácora digital</li>
+                <li><i class="fa-solid fa-check"></i>Control de combustible</li>
+                <li><i class="fa-solid fa-check"></i>Mantenimiento preventivo</li>
+                <li class="disabled"><i class="fa-solid fa-xmark"></i>Copiloto IA</li>
+                <li class="disabled"><i class="fa-solid fa-xmark"></i>Armador de convoyes</li>
+            </ul>
+            <a href="#contacto" class="price-btn">Empezar gratis →</a>
+        </div>
+
+        <!-- CONVOY -->
+        <div class="price-card featured reveal">
+            <div class="price-badge">MÁS ELEGIDO</div>
+            <h3>Convoy</h3>
+            <p class="price-desc">Hasta 20 embarcaciones</p>
+            <div style="margin:20px 0 8px">
+                <div style="font-size:15px;font-weight:700;color:white;letter-spacing:0.5px">✦ TODA LA OPERACIÓN</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px">Copiloto IA leyendo tus datos, no promedios</div>
+            </div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Todo lo de Amarre</li>
+                <li><i class="fa-solid fa-check"></i>Armador de convoyes</li>
+                <li><i class="fa-solid fa-check"></i>Gestión de tripulación</li>
+                <li><i class="fa-solid fa-check"></i>Pronóstico de hidrovía</li>
+                <li><i class="fa-solid fa-check"></i>Copiloto IA con datos reales</li>
+            </ul>
+            <a href="#contacto" class="price-btn dark">Solicitar Demo →</a>
+        </div>
+
+        <!-- ARMADOR -->
+        <div class="price-card reveal">
+            <h3>Armador</h3>
+            <p class="price-desc">Embarcaciones ilimitadas</p>
+            <div style="margin:20px 0 8px">
+                <div style="font-size:15px;font-weight:700;color:var(--accent);letter-spacing:0.5px">✦ FLOTA COMPLETA</div>
+                <div style="font-size:13px;color:var(--text2);margin-top:4px">Para armadores y operadores grandes</div>
+            </div>
+            <ul class="price-list">
+                <li><i class="fa-solid fa-check"></i>Embarcaciones ilimitadas</li>
+                <li><i class="fa-solid fa-check"></i>Copiloto IA avanzado</li>
+                <li><i class="fa-solid fa-check"></i>API e integraciones</li>
+                <li><i class="fa-solid fa-check"></i>Soporte 24/7 dedicado</li>
+                <li><i class="fa-solid fa-check"></i>SLA 99.9% garantizado</li>
+            </ul>
+            <a href="mailto:info@viabarcazas.com" class="price-btn">Hablar con nosotros →</a>
+        </div>
+    </div>
+</section>
 
 <!-- ═══════════════════════════════════════════════ -->
 <!-- HIDROVÍA PARANÁ-PARAGUAY — MARKETING SHOWCASE  -->
@@ -314,67 +992,68 @@
     .hidrovia-bg{display:none}
 
     /* Animated water shimmer */
-    .hidrovia-shimmer{position:absolute;bottom:0;left:0;right:0;height:200px;z-index:1;background:linear-gradient(180deg,transparent,rgba(37,99,235,0.04));overflow:hidden}
-    .hidrovia-shimmer::before{content:'';position:absolute;bottom:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse,rgba(37,99,235,0.06) 0%,transparent 60%);animation:shimmer-move 8s ease-in-out infinite}
+    .hidrovia-shimmer{position:absolute;bottom:0;left:0;right:0;height:200px;z-index:1;background:linear-gradient(180deg,transparent,rgba(18,140,126,0.04));overflow:hidden}
+    .hidrovia-shimmer::before{content:'';position:absolute;bottom:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse,rgba(18,140,126,0.06) 0%,transparent 60%);animation:shimmer-move 8s ease-in-out infinite}
     @keyframes shimmer-move{0%,100%{transform:translateX(-20%) translateY(0)}50%{transform:translateX(20%) translateY(-10%)}}
 
     /* Header */
     .hidrovia-header{text-align:center;padding:80px 48px 0;max-width:900px;margin:0 auto}
     .hidrovia-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);border:1px solid var(--surface2);border-radius:100px;padding:8px 20px;margin-bottom:24px;animation:pulse-badge 3s ease-in-out infinite}
     .hidrovia-badge i{color:var(--accent);font-size:10px}
-    .hidrovia-badge span{font-size:10px;font-weight:800;letter-spacing:2.5px;color:var(--accent);font-family:'Inter',sans-serif}
-    @keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.15)}50%{box-shadow:0 0 20px 4px rgba(37,99,235,0.1)}}
+    .hidrovia-badge span{font-size:10px;font-weight:800;letter-spacing:2.5px;color:var(--accent);font-family:'Manrope',sans-serif}
+    @keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(18,140,126,0.15)}50%{box-shadow:0 0 20px 4px rgba(18,140,126,0.1)}}
 
-    .hidrovia-header h2{font-family:'Newsreader',serif;font-size:56px;font-weight:400;color:var(--text);line-height:1.08;margin-bottom:20px}
-    .hidrovia-header h2 em{font-weight:300;font-style:italic;color:var(--accent)}
+    .hidrovia-header h2{font-family:'Bricolage Grotesque',sans-serif;font-size:56px;font-weight:400;color:var(--text);line-height:1.08;margin-bottom:20px}
+    .hidrovia-header h2 em{font-weight:700;font-style:normal;color:var(--accent)}
     .hidrovia-header p{font-size:17px;color:var(--text2);line-height:1.7;max-width:640px;margin:0 auto}
 
     /* Route Visual */
     .hidrovia-route{padding:60px 48px 0;max-width:1200px;margin:0 auto}
     .hidrovia-route-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
-    .hidrovia-map-wrap{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--sep);box-shadow:0 24px 80px rgba(37,99,235,0.1)}
-    .hidrovia-map-wrap img{width:100%;display:block;transition:transform 6s ease}
-    .hidrovia-map-wrap:hover img{transform:scale(1.05)}
-    .hidrovia-map-glow{position:absolute;top:50%;left:50%;width:60%;height:60%;background:radial-gradient(circle,rgba(37,99,235,0.1),transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:3}
+    .hidrovia-map-wrap{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--sep);box-shadow:0 24px 80px rgba(18,140,126,0.1);background:var(--bg)}
+    .hidrovia-map-wrap svg{width:100%;display:block;transition:transform 6s ease}
+    .hidrovia-map-wrap:hover svg{transform:scale(1.03)}
+    .river-map-label{font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;fill:var(--text)}
+    .river-map-country{font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--text3);letter-spacing:0.5px}
+    .hidrovia-map-glow{position:absolute;top:50%;left:50%;width:60%;height:60%;background:radial-gradient(circle,rgba(18,140,126,0.1),transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:3}
 
     /* Route Info */
-    .route-info h3{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:var(--text);margin-bottom:16px}
-    .route-info h3 em{font-weight:300;font-style:italic;color:var(--accent)}
+    .route-info h3{font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:400;color:var(--text);margin-bottom:16px}
+    .route-info h3 em{font-weight:700;font-style:normal;color:var(--accent)}
     .route-info>p{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:32px}
 
-    /* Port list */
-    .port-list{display:flex;flex-direction:column;gap:12px}
-    .port-item{display:flex;align-items:center;gap:16px;background:var(--white);border:1px solid var(--sep);border-radius:14px;padding:16px 20px;transition:all 0.3s ease;cursor:default}
-    .port-item:hover{background:var(--surface);border-color:var(--accent-light);transform:translateX(6px)}
-    .port-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;position:relative}
-    .port-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid;opacity:0.3}
-    .port-dot.argentina{background:#3B82F6}.port-dot.argentina::after{border-color:#3B82F6}
-    .port-dot.paraguay{background:#F87171}.port-dot.paraguay::after{border-color:#F87171}
-    .port-dot.brasil{background:#34D399}.port-dot.brasil::after{border-color:#34D399}
-    .port-dot.uruguay{background:#FBBF24}.port-dot.uruguay::after{border-color:#FBBF24}
-    .port-name{font-size:14px;font-weight:600;color:var(--text);flex:1}
-    .port-country{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:0.5px}
-    .port-km{font-size:12px;color:var(--accent);font-family:'Newsreader',serif;font-style:italic}
-    .port-connector{display:flex;align-items:center;gap:8px;padding:4px 0 4px 28px;font-size:10px;color:var(--text3);font-style:italic}
-    .port-connector::before{content:'';width:1px;height:16px;background:var(--sep);margin-right:8px}
+    /* Port manifest — table, not a stack of pill rows */
+    .port-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;display:inline-block}
+    .port-dot.argentina{background:#25D366}
+    .port-dot.paraguay{background:#F87171}
+    .port-dot.brasil{background:#34D399}
+    .port-dot.uruguay{background:#FBBF24}
+    .port-table-wrap{border:1px solid var(--sep);border-radius:16px;overflow:hidden;background:var(--white)}
+    .port-table{width:100%;border-collapse:collapse;font-size:12.5px}
+    .port-table thead th{text-align:left;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1px;color:var(--text3);text-transform:uppercase;padding:12px 14px;background:var(--surface);border-bottom:1px solid var(--sep)}
+    .port-table th.num,.port-table td.num{text-align:right}
+    .port-table td{padding:12px 14px;border-bottom:1px solid var(--sep);color:var(--text2);vertical-align:middle}
+    .port-table tbody tr:last-child td{border-bottom:none}
+    .port-table tbody tr:hover td{background:var(--surface)}
+    .port-table td.port-cell{color:var(--text);font-weight:600;display:flex;align-items:center;gap:8px;white-space:nowrap}
+    .port-table td.num{font-family:'JetBrains Mono',monospace;color:var(--accent-light);font-weight:500}
+    .port-table td.leg{font-size:11px;color:var(--text3)}
 
     /* Mega Stats */
     .hidrovia-stats{padding:80px 48px 80px;max-width:1200px;margin:0 auto}
-    .hidrovia-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-    .hv-stat{text-align:center;padding:36px 20px;background:var(--white);border:1px solid var(--sep);border-radius:20px;transition:all 0.3s ease}
-    .hv-stat:hover{background:var(--surface);border-color:var(--accent-light);transform:translateY(-4px);box-shadow:0 12px 36px rgba(37,99,235,0.08)}
-    .hv-stat-icon{width:52px;height:52px;border-radius:16px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
-    .hv-stat-icon i{font-size:22px;color:var(--accent)}
-    .hv-stat-num{font-family:'Newsreader',serif;font-size:44px;font-weight:400;color:var(--text);line-height:1}
-    .hv-stat-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text3);margin-top:8px}
+    .hv-strip{display:flex;border:1px solid var(--sep);border-radius:20px;overflow:hidden;background:var(--white)}
+    .hv-strip-item{flex:1;text-align:center;padding:34px 20px}
+    .hv-strip-item+.hv-strip-item{border-left:1px solid var(--sep)}
+    .hv-stat-num{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:600;color:var(--text);line-height:1;font-variant-numeric:tabular-nums}
+    .hv-stat-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text3);margin-top:10px;text-transform:uppercase}
 
     /* CTA in hidrovia */
     .hidrovia-cta{text-align:center;padding:0 48px 80px}
-    .hidrovia-cta-inner{max-width:700px;margin:0 auto;padding:48px;background:var(--white);border:1px solid var(--sep);border-radius:24px;box-shadow:0 8px 32px rgba(37,99,235,0.06)}
-    .hidrovia-cta-inner h3{font-family:'Newsreader',serif;font-size:28px;font-weight:400;color:var(--text);margin-bottom:12px}
+    .hidrovia-cta-inner{max-width:700px;margin:0 auto;padding:48px;background:var(--white);border:1px solid var(--sep);border-radius:24px;box-shadow:0 8px 32px rgba(18,140,126,0.06)}
+    .hidrovia-cta-inner h3{font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:400;color:var(--text);margin-bottom:12px}
     .hidrovia-cta-inner p{font-size:14px;color:var(--text2);margin-bottom:24px}
-    .btn-hidrovia{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:white;border:none;padding:15px 36px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s;text-decoration:none;box-shadow:0 8px 32px rgba(37,99,235,0.25)}
-    .btn-hidrovia:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(37,99,235,0.35)}
+    .btn-hidrovia{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:white;border:none;padding:15px 36px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.3s;text-decoration:none;box-shadow:0 8px 32px rgba(18,140,126,0.25)}
+    .btn-hidrovia:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(18,140,126,0.35)}
     .btn-hidrovia i{font-size:12px}
 
     /* Country flags row */
@@ -387,10 +1066,18 @@
         .hidrovia-header h2{font-size:36px}
         .hidrovia-route{padding:40px 24px 0}
         .hidrovia-route-grid{grid-template-columns:1fr;gap:32px}
+        .port-table-wrap{overflow-x:auto}
+        .port-table{font-size:11.5px}
+        .port-table td,.port-table th{padding:10px}
+        .port-table td.leg{display:none}
+        .port-table th:last-child{display:none}
         .hidrovia-stats{padding:60px 24px}
-        .hidrovia-stats-grid{grid-template-columns:1fr 1fr;gap:16px}
+        .hv-strip{flex-wrap:wrap}
+        .hv-strip-item{flex:1 1 50%;border-left:none !important}
+        .hv-strip-item:nth-child(odd){border-right:1px solid var(--sep)}
+        .hv-strip-item:nth-child(1),.hv-strip-item:nth-child(2){border-bottom:1px solid var(--sep)}
         .hidrovia-cta{padding:0 24px 60px}
-        .hv-stat-num{font-size:32px}
+        .hv-stat-num{font-size:28px}
     }
 </style>
 
@@ -408,9 +1095,9 @@
             <span>HIDROVÍA PARANÁ — PARAGUAY</span>
             <i class="fa-solid fa-water"></i>
         </div>
-        <h2>La Hidrovía Paraná-Paraguay:<br>la autopista fluvial de <em>Sudamérica.</em></h2>
-        <p>3.442 km de vía navegable estratégica que conecta cinco países y mueve más de 100 millones de toneladas al año. Soja, minerales, combustibles, contenedores — todo fluye por el sistema Paraná-Paraguay. FluviaFleet es la primera plataforma con IA diseñada exclusivamente para esta ruta.</p>
-        <p style="font-size:14px;color:var(--text2);margin-top:12px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7">Desde las minas de hierro de Corumbá hasta los puertos de aguas profundas de Rosario y Buenos Aires, la Paraná-Paraguay es el corredor logístico que sostiene la economía del Mercosur. Sin embargo, el 80% de las flotas aún operan con planillas de papel y radio VHF.</p>
+        <h2>3.442 kilómetros de río.<br>Un solo <em>panel para leerlo.</em></h2>
+        <p>Cinco países, más de 100 millones de toneladas al año, y una sola vía que las mueve a todas. Soja, minerales, combustibles, contenedores: todo pasa por acá, y ViaBarcazas está construido para esta hidrovía puntual, no adaptado de otra.</p>
+        <p style="font-size:14px;color:var(--text2);margin-top:12px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7">Del mineral de hierro que sale de Corumbá a los puertos de aguas profundas de Rosario y Buenos Aires, este corredor sostiene buena parte de la economía del Mercosur — y la mayoría de las flotas todavía lo gestionan a ojo, sin un dato centralizado.</p>
         <div class="country-flags" style="margin-top:24px">
             <div class="country-flag"><div class="flag-dot" style="background:#60A5FA"></div>Argentina</div>
             <div class="country-flag"><div class="flag-dot" style="background:#F87171"></div>Paraguay</div>
@@ -424,68 +1111,78 @@
     <div class="hidrovia-route">
         <div class="hidrovia-route-grid">
             <div class="hidrovia-map-wrap reveal">
-                <img src="img/hidrovia-map.png" alt="Mapa de la Hidrovía Paraná-Paraguay" loading="lazy">
+                <svg viewBox="0 0 480 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ruta esquemática de la Hidrovía Paraná-Paraguay, de Corumbá a Nueva Palmira">
+                    <defs>
+                        <radialGradient id="riverMapBg" cx="50%" cy="20%" r="90%">
+                            <stop offset="0%" style="stop-color:var(--surface2)"/>
+                            <stop offset="100%" style="stop-color:var(--bg)"/>
+                        </radialGradient>
+                    </defs>
+                    <rect width="480" height="900" fill="url(#riverMapBg)"/>
+                    <g opacity="0.5" style="stroke:var(--sep);stroke-width:1">
+                        <line x1="0" y1="150" x2="480" y2="150"/><line x1="0" y1="300" x2="480" y2="300"/>
+                        <line x1="0" y1="450" x2="480" y2="450"/><line x1="0" y1="600" x2="480" y2="600"/>
+                        <line x1="0" y1="750" x2="480" y2="750"/>
+                        <line x1="120" y1="0" x2="120" y2="900"/><line x1="240" y1="0" x2="240" y2="900"/><line x1="360" y1="0" x2="360" y2="900"/>
+                    </g>
+                    <path d="M260,60 C230,140 180,170 200,214 C220,250 250,300 240,381 C230,420 180,460 190,502 C200,550 230,600 220,676 C215,690 205,705 200,721 C210,735 225,755 230,772 C220,790 195,820 190,840"
+                          style="fill:none;stroke:var(--accent-light);stroke-width:9;stroke-linecap:round;opacity:0.18"/>
+                    <path d="M260,60 C230,140 180,170 200,214 C220,250 250,300 240,381 C230,420 180,460 190,502 C200,550 230,600 220,676 C215,690 205,705 200,721 C210,735 225,755 230,772 C220,790 195,820 190,840"
+                          style="fill:none;stroke:var(--accent-light);stroke-width:2.5;stroke-linecap:round"/>
+
+                    <circle cx="260" cy="60" r="6" fill="#34D399"/>
+                    <text x="274" y="57" class="river-map-label">Corumbá / Ladário</text>
+                    <text x="274" y="71" class="river-map-country">BRASIL · KM 2.770</text>
+
+                    <circle cx="200" cy="214" r="6" fill="#F87171"/>
+                    <text x="214" y="211" class="river-map-label">Concepción</text>
+                    <text x="214" y="225" class="river-map-country">PARAGUAY · KM 2.010</text>
+
+                    <circle cx="240" cy="381" r="6" fill="#F87171"/>
+                    <text x="254" y="378" class="river-map-label">Asunción</text>
+                    <text x="254" y="392" class="river-map-country">PARAGUAY · KM 1.630</text>
+
+                    <circle cx="190" cy="502" r="6" fill="#25D366"/>
+                    <text x="204" y="499" class="river-map-label">Barranqueras</text>
+                    <text x="204" y="513" class="river-map-country">ARGENTINA · KM 1.200</text>
+
+                    <circle cx="220" cy="676" r="5.5" fill="#25D366"/>
+                    <text x="234" y="673" class="river-map-label" font-size="12">Santa Fe</text>
+                    <text x="234" y="687" class="river-map-country">ARGENTINA · KM 580</text>
+
+                    <circle cx="200" cy="721" r="6.5" fill="#25D366"/>
+                    <text x="105" y="718" class="river-map-label" text-anchor="end">Rosario</text>
+                    <text x="105" y="732" class="river-map-country" text-anchor="end">HUB SOJERO · KM 420</text>
+
+                    <circle cx="230" cy="772" r="6" fill="#25D366"/>
+                    <text x="244" y="769" class="river-map-label">Buenos Aires</text>
+                    <text x="244" y="783" class="river-map-country">ARGENTINA · KM 240</text>
+
+                    <circle cx="190" cy="840" r="6.5" fill="#FBBF24"/>
+                    <text x="204" y="837" class="river-map-label">Nueva Palmira</text>
+                    <text x="204" y="851" class="river-map-country">URUGUAY · KM 0</text>
+                </svg>
                 <div class="hidrovia-map-glow"></div>
             </div>
             <div class="route-info reveal">
                 <h3>Puertos estratégicos<br><em>de la Paraná-Paraguay</em></h3>
                 <p>La hidrovía atraviesa el corazón productivo del Mercosur. Cada puerto es un nodo crítico en la cadena de exportación de granos, minerales y combustibles que mueve la economía regional.</p>
-                <div class="port-list">
-                    <div class="port-item">
-                        <div class="port-dot brasil"></div>
-                        <div class="port-name">Corumbá / Ladário</div>
-                        <div class="port-country">Brasil</div>
-                        <div class="port-km">Km 2.770</div>
-                    </div>
-                    <div class="port-connector">760 km · ~3-4 días</div>
-                    <div class="port-item">
-                        <div class="port-dot paraguay"></div>
-                        <div class="port-name">Concepción</div>
-                        <div class="port-country">Paraguay</div>
-                        <div class="port-km">Km 2.010</div>
-                    </div>
-                    <div class="port-connector">380 km · ~2 días</div>
-                    <div class="port-item">
-                        <div class="port-dot paraguay"></div>
-                        <div class="port-name">Asunción</div>
-                        <div class="port-country">Paraguay</div>
-                        <div class="port-km">Km 1.630</div>
-                    </div>
-                    <div class="port-connector">430 km · ~2-3 días</div>
-                    <div class="port-item">
-                        <div class="port-dot argentina"></div>
-                        <div class="port-name">Barranqueras</div>
-                        <div class="port-country">Argentina</div>
-                        <div class="port-km">Km 1.200</div>
-                    </div>
-                    <div class="port-connector">620 km · ~3 días</div>
-                    <div class="port-item">
-                        <div class="port-dot argentina"></div>
-                        <div class="port-name">Santa Fe</div>
-                        <div class="port-country">Argentina</div>
-                        <div class="port-km">Km 580</div>
-                    </div>
-                    <div class="port-connector">160 km · ~1 día</div>
-                    <div class="port-item">
-                        <div class="port-dot argentina"></div>
-                        <div class="port-name">Rosario (Hub Sojero)</div>
-                        <div class="port-country">Argentina</div>
-                        <div class="port-km">Km 420</div>
-                    </div>
-                    <div class="port-connector">180 km · ~1 día</div>
-                    <div class="port-item">
-                        <div class="port-dot argentina"></div>
-                        <div class="port-name">Buenos Aires</div>
-                        <div class="port-country">Argentina</div>
-                        <div class="port-km">Km 240</div>
-                    </div>
-                    <div class="port-connector">240 km · ~1-2 días</div>
-                    <div class="port-item">
-                        <div class="port-dot uruguay"></div>
-                        <div class="port-name">Nueva Palmira</div>
-                        <div class="port-country">Uruguay</div>
-                        <div class="port-km">Km 0</div>
-                    </div>
+                <div class="port-table-wrap">
+                    <table class="port-table">
+                        <thead>
+                            <tr><th>Puerto</th><th>País</th><th class="num">Km</th><th>Tramo siguiente</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="port-cell"><span class="port-dot brasil"></span>Corumbá / Ladário</td><td>Brasil</td><td class="num">2.770</td><td class="leg">760 km · ~3-4 días</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot paraguay"></span>Concepción</td><td>Paraguay</td><td class="num">2.010</td><td class="leg">380 km · ~2 días</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot paraguay"></span>Asunción</td><td>Paraguay</td><td class="num">1.630</td><td class="leg">430 km · ~2-3 días</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Barranqueras</td><td>Argentina</td><td class="num">1.200</td><td class="leg">620 km · ~3 días</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Santa Fe</td><td>Argentina</td><td class="num">580</td><td class="leg">160 km · ~1 día</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Rosario (Hub Sojero)</td><td>Argentina</td><td class="num">420</td><td class="leg">180 km · ~1 día</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Buenos Aires</td><td>Argentina</td><td class="num">240</td><td class="leg">240 km · ~1-2 días</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot uruguay"></span>Nueva Palmira</td><td>Uruguay</td><td class="num">0</td><td class="leg">—</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -493,26 +1190,22 @@
 
     <!-- Stats -->
     <div class="hidrovia-stats">
-        <div class="hidrovia-stats-grid">
-            <div class="hv-stat reveal">
-                <div class="hv-stat-icon"><i class="fa-solid fa-route"></i></div>
+        <div class="hv-strip reveal">
+            <div class="hv-strip-item">
                 <div class="hv-stat-num" data-target="3442">0</div>
-                <div class="hv-stat-label">KILÓMETROS NAVEGABLES</div>
+                <div class="hv-stat-label">Kilómetros navegables</div>
             </div>
-            <div class="hv-stat reveal">
-                <div class="hv-stat-icon"><i class="fa-solid fa-box-open"></i></div>
+            <div class="hv-strip-item">
                 <div class="hv-stat-num" data-target="100">0</div>
-                <div class="hv-stat-label">MILLONES TON/AÑO</div>
+                <div class="hv-stat-label">Millones ton/año</div>
             </div>
-            <div class="hv-stat reveal">
-                <div class="hv-stat-icon"><i class="fa-solid fa-earth-americas"></i></div>
+            <div class="hv-strip-item">
                 <div class="hv-stat-num" data-target="5">0</div>
-                <div class="hv-stat-label">PAÍSES CONECTADOS</div>
+                <div class="hv-stat-label">Países conectados</div>
             </div>
-            <div class="hv-stat reveal">
-                <div class="hv-stat-icon"><i class="fa-solid fa-anchor"></i></div>
+            <div class="hv-strip-item">
                 <div class="hv-stat-num" data-target="40">0</div>
-                <div class="hv-stat-label">PUERTOS ACTIVOS</div>
+                <div class="hv-stat-label">Puertos activos</div>
             </div>
         </div>
     </div>
@@ -520,12 +1213,12 @@
     <!-- Why Hidrovia subsection -->
     <style>
         .hidrovia-why{padding:0 48px 60px;max-width:1200px;margin:0 auto}
-        .hidrovia-why h3{font-family:'Newsreader',serif;font-size:32px;font-weight:400;color:var(--text);text-align:center;margin-bottom:12px}
-        .hidrovia-why h3 em{font-weight:300;font-style:italic;color:var(--accent)}
+        .hidrovia-why h3{font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:400;color:var(--text);text-align:center;margin-bottom:12px}
+        .hidrovia-why h3 em{font-weight:700;font-style:normal;color:var(--accent)}
         .hidrovia-why>p{text-align:center;font-size:14px;color:var(--text2);max-width:600px;margin:0 auto 36px;line-height:1.7}
         .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
         .why-card{background:var(--white);border:1px solid var(--sep);border-radius:18px;padding:28px;transition:all 0.3s}
-        .why-card:hover{background:var(--surface);border-color:var(--accent-light);transform:translateY(-4px);box-shadow:0 12px 36px rgba(37,99,235,0.08)}
+        .why-card:hover{background:var(--surface);border-color:var(--accent-light);transform:translateY(-4px);box-shadow:0 12px 36px rgba(18,140,126,0.08)}
         .why-card-icon{width:44px;height:44px;border-radius:12px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
         .why-card-icon i{font-size:18px;color:var(--accent)}
         .why-card h4{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
@@ -553,25 +1246,102 @@
         <div class="cargo-chip"><i class="fa-solid fa-car"></i>Vehículos</div>
     </div>
 
+    <!-- Hidrovía en datos -->
+    <style>
+        .hidrovia-live{padding:0 48px 60px;max-width:1200px;margin:0 auto}
+        .hidrovia-live .section-tag,.hidrovia-live h3,.hidrovia-live>p{text-align:center}
+        .hidrovia-live h3{font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:400;color:var(--text);margin:0 auto 12px}
+        .hidrovia-live h3 em{font-weight:700;font-style:normal;color:var(--accent)}
+        .hidrovia-live>p{font-size:14px;color:var(--text2);max-width:560px;margin:0 auto 36px;line-height:1.7}
+        .hidrovia-live .analytics-card,.hidrovia-live .gauge-card,.hidrovia-live .mini-kpi{background:var(--white)}
+        @media(max-width:768px){.hidrovia-live{padding:0 24px 40px}}
+    </style>
+    <div class="hidrovia-live reveal">
+        <div class="section-tag" style="color:var(--accent)">LECTURA EN VIVO</div>
+        <h3>La hidrovía,<br><em>medida en tiempo real.</em></h3>
+        <p>Los datos que ViaBarcazas cruza todos los días para decirte cuándo conviene zarpar y por dónde.</p>
+
+        <div class="analytics-grid-2">
+            <div class="analytics-card">
+                <h4>Nivel del río — Puerto Rosario (m)</h4>
+                <svg class="line-chart" viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="riverFill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" style="stop-color:var(--accent-light);stop-opacity:0.28"/>
+                            <stop offset="100%" style="stop-color:var(--accent-light);stop-opacity:0"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M20,118 L92,96 L164,42 L236,30 L308,64 L380,88 L380,140 L20,140 Z" style="fill:url(#riverFill)"/>
+                    <polyline points="20,118 92,96 164,42 236,30 308,64 380,88" style="fill:none;stroke:var(--accent-light);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"/>
+                    <g style="fill:var(--accent-light)">
+                        <circle cx="20" cy="118" r="3.5"/><circle cx="92" cy="96" r="3.5"/><circle cx="164" cy="42" r="3.5"/>
+                        <circle cx="236" cy="30" r="3.5"/><circle cx="308" cy="64" r="3.5"/><circle cx="380" cy="88" r="3.5"/>
+                    </g>
+                    <text x="20" y="158" class="axis-label">ENE</text>
+                    <text x="84" y="158" class="axis-label">FEB</text>
+                    <text x="156" y="158" class="axis-label">MAR</text>
+                    <text x="228" y="158" class="axis-label">ABR</text>
+                    <text x="300" y="158" class="axis-label">MAY</text>
+                    <text x="364" y="158" class="axis-label">JUN</text>
+                    <text x="228" y="18" class="chart-delta" style="fill:var(--accent-light)">CRECIDA · ABR</text>
+                </svg>
+            </div>
+            <div class="analytics-card pie-card">
+                <h4>Tráfico por país</h4>
+                <div class="pie-wrap">
+                    <div class="pie" style="background:conic-gradient(var(--accent) 0 42%, var(--bronze) 42% 68%, var(--warning) 68% 86%, var(--error) 86% 95%, var(--text3) 95% 100%)"></div>
+                    <ul class="pie-legend">
+                        <li><span class="pie-dot" style="background:var(--accent)"></span>Argentina <b>42%</b></li>
+                        <li><span class="pie-dot" style="background:var(--bronze)"></span>Paraguay <b>26%</b></li>
+                        <li><span class="pie-dot" style="background:var(--warning)"></span>Brasil <b>18%</b></li>
+                        <li><span class="pie-dot" style="background:var(--error)"></span>Uruguay <b>9%</b></li>
+                        <li><span class="pie-dot" style="background:var(--text3)"></span>Bolivia <b>5%</b></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-grid-3 gauges">
+            <div class="gauge-card">
+                <div class="gauge-outer" style="background:conic-gradient(var(--accent) 0 76%, var(--sep) 0)"><div class="gauge-inner">76%</div></div>
+                <p>Calado navegable disponible</p>
+            </div>
+            <div class="gauge-card">
+                <div class="gauge-outer" style="background:conic-gradient(var(--warning) 0 58%, var(--sep) 0)"><div class="gauge-inner">58%</div></div>
+                <p>Ocupación portuaria promedio</p>
+            </div>
+            <div class="gauge-card">
+                <div class="gauge-outer" style="background:conic-gradient(var(--bronze) 0 88%, var(--sep) 0)"><div class="gauge-inner">88%</div></div>
+                <p>Puertos sin restricción hoy</p>
+            </div>
+        </div>
+
+        <div class="analytics-grid-3 kpis">
+            <div class="mini-kpi"><div class="mini-kpi-val">214</div><div class="mini-kpi-label">Barcazas activas en la ruta hoy</div></div>
+            <div class="mini-kpi"><div class="mini-kpi-val accent">38</div><div class="mini-kpi-label">Convoyes en tránsito ahora</div></div>
+            <div class="mini-kpi"><div class="mini-kpi-val" style="color:var(--warning)">3</div><div class="mini-kpi-label">Alertas de bajante activas</div></div>
+        </div>
+    </div>
+
     <!-- Why the Hidrovia -->
     <div class="hidrovia-why reveal">
-        <h3>¿Por qué la Paraná-Paraguay<br><em>es tan estratégica?</em></h3>
-        <p>Es la columna vertebral logística del Mercosur. Sin ella, el costo del transporte de commodities se multiplicaría por 5x comparado con el flete terrestre.</p>
+        <h3>La cuenta que nadie te hace<br><em>antes de elegir camión.</em></h3>
+        <p>No es solo el flete del viaje. Es el gasoil, las emisiones y hacia dónde va el tráfico de acá a 2030 — la cuenta completa.</p>
         <div class="why-grid">
             <div class="why-card">
                 <div class="why-card-icon"><i class="fa-solid fa-dollar-sign"></i></div>
-                <h4>5x más barato que camión</h4>
-                <p>El transporte fluvial por la Paraná-Paraguay reduce hasta un 80% los costos logísticos respecto al transporte carretero. Una formación de 16 barcazas equivale a 960 camiones.</p>
+                <h4>Un camión, multiplicado por 60</h4>
+                <p>Una sola formación de convoy mueve lo mismo que 960 camiones, a una fracción del costo por tonelada. La diferencia aparece en cualquier planilla de costos apenas la hacés.</p>
             </div>
             <div class="why-card">
                 <div class="why-card-icon"><i class="fa-solid fa-leaf"></i></div>
-                <h4>Huella de carbono mínima</h4>
-                <p>El transporte fluvial emite 5 veces menos CO₂ por tonelada/km que el camión. Las empresas que operan en la hidrovía lideran la transición hacia logística sustentable.</p>
+                <h4>Menos gasoil quemado por tonelada</h4>
+                <p>Mover carga por agua gasta hasta 5 veces menos combustible por tonelada-kilómetro que moverla por ruta. No es una promesa verde: es física.</p>
             </div>
             <div class="why-card">
-                <div class="why-card-icon"><i class="fa-solid fa-chart-line"></i></div>
-                <h4>Crecimiento imparable</h4>
-                <p>El tráfico por la Paraná-Paraguay crece un 8% anual. Las inversiones en dragado, señalización y terminales privadas superan los USD 2.000M previstos hasta 2030.</p>
+                <div class="why-card-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                <h4>El tráfico no para de crecer</h4>
+                <p>8% más carga cada año, y más de USD 2.000M en dragado y terminales previstos hasta 2030. Quien no tenga los datos ordenados para entonces, va a quedar mirando desde afuera.</p>
             </div>
         </div>
     </div>
@@ -579,8 +1349,8 @@
     <!-- CTA -->
     <div class="hidrovia-cta reveal">
         <div class="hidrovia-cta-inner">
-            <h3>La Paraná-Paraguay necesitaba<br>una plataforma a su altura</h3>
-            <p>FluviaFleet digitaliza cada kilómetro de la hidrovía. Tracking satelital con IA, gestión de convoyes de hasta 40.000 toneladas, control de combustible que ahorra millones, y un Copiloto inteligente que conoce cada tramo del río — de Corumbá a Nueva Palmira.</p>
+            <h3>3.442 km de río.<br>Cero excusas para no verlos.</h3>
+            <p>De Corumbá a Nueva Palmira, ViaBarcazas convierte cada tramo en un dato: posición satelital, convoyes de hasta 40.000 toneladas armados con IA, combustible bajo control y un Copiloto que conoce la ruta tan bien como tu capitán más viejo.</p>
             <a href="#contacto" class="btn-hidrovia">
                 <i class="fa-solid fa-ship"></i>
                 Solicitar Demo Personalizada
@@ -590,514 +1360,14 @@
     </div>
 </section>
 
-<!-- COMO FUNCIONA -->
-<div class="section-alt">
-<section class="section" id="como-funciona">
-    <div class="section-tag">CÓMO FUNCIONA</div>
-    <h2>Cuatro pasos para<br><em>digitalizar tu flota.</em></h2>
-    <p class="section-desc">Sin instalaciones complejas. Sin hardware caro. Empezá a operar tu flota de forma inteligente en minutos.</p>
-    <div class="steps-grid">
-        <div class="step-card reveal">
-            <div class="step-num">01</div>
-            <h3>Cargás tu flota en minutos</h3>
-            <p>Importás tus barcazas y remolcadores. El sistema detecta datos AIS existentes. Sin hardware. Sin técnicos en campo.</p>
-            <div class="step-icon"><i class="fa-solid fa-ship"></i></div>
-        </div>
-        <div class="step-card reveal">
-            <div class="step-num">02</div>
-            <h3>El río te habla, vos escuchás</h3>
-            <p>Niveles hídricos en tiempo real, alertas de calado, condiciones meteorológicas. El Copiloto te avisa antes de que el problema ocurra.</p>
-            <div class="step-icon"><i class="fa-solid fa-water"></i></div>
-        </div>
-        <div class="step-card reveal">
-            <div class="step-num">03</div>
-            <h3>Convoyes con datos, no con llamadas</h3>
-            <p>Validación automática de calado según nivel del río. Formación óptima sugerida por IA. Sin las 12 llamadas de siempre.</p>
-            <div class="step-icon"><i class="fa-solid fa-link"></i></div>
-        </div>
-        <div class="step-card reveal">
-            <div class="step-num">04</div>
-            <h3>Tu operación, en números reales</h3>
-            <p>Reportes automáticos de combustible, costos por viaje, eficiencia por sector. Todo exportable. Todo auditable.</p>
-            <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
-        </div>
-    </div>
-</section>
-</div>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- MÓDULOS — 12 modules in 4-column grid           -->
-<!-- ═══════════════════════════════════════════════ -->
-<section class="section reveal" id="modulos">
-    <div class="section-tag">ECOSISTEMA COMPLETO</div>
-    <h2>Todo lo que tu flota<br><em>necesita en un lugar.</em></h2>
-    <p class="section-desc">12 módulos integrados que cubren cada aspecto de la operación fluvial.</p>
-    <div class="modules-grid">
-        <div class="mod-card reveal"><i class="fa-solid fa-ship"></i><div><h4>Fleet Management</h4><p>Control total de activos y estado operativo</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-map-location-dot"></i><div><h4>AIS Tracking</h4><p>Posicionamiento satelital en tiempo real</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-link"></i><div><h4>Convoy Builder</h4><p>Armado inteligente con validación de calado</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-wrench"></i><div><h4>Maintenance</h4><p>Mantenimiento preventivo y correctivo</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-gas-pump"></i><div><h4>Fuel Analytics</h4><p>Control de bunker y eficiencia por sector</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-book"></i><div><h4>Documents &amp; Bitácora</h4><p>Registro operativo con fotos y auditoría</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-users"></i><div><h4>Crew Management</h4><p>Dotaciones, certificaciones y guardias</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-anchor"></i><div><h4>Port Operations</h4><p>Gestión de operaciones portuarias</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-route"></i><div><h4>Voyage Planning</h4><p>Planificación de viajes y despacho</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-robot"></i><div><h4>FluviaFleet AI</h4><p>Copiloto inteligente para operaciones</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-chart-bar"></i><div><h4>Reports &amp; Analytics</h4><p>KPIs, tendencias y reportes exportables</p></div></div>
-        <div class="mod-card reveal"><i class="fa-solid fa-bell"></i><div><h4>Alerts &amp; Incidents</h4><p>Alertas automáticas y registro de incidentes</p></div></div>
-    </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- COPILOTO IA SHOWCASE                            -->
-<!-- ═══════════════════════════════════════════════ -->
-<style>
-    .copiloto-section{position:relative;overflow:hidden;background:var(--white);padding:100px 48px}
-    .copiloto-inner{max-width:1200px;margin:0 auto}
-    .copiloto-header{text-align:center;margin-bottom:56px}
-    .copiloto-header .section-tag{color:var(--accent)}
-    .copiloto-header h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:12px}
-    .copiloto-header h2 em{font-weight:300;font-style:italic;color:var(--accent)}
-    .copiloto-header p{font-size:15px;color:var(--text2);max-width:520px;margin:0 auto}
-
-    .chat-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
-    .chat-tab{background:var(--white);border:1px solid var(--sep);color:var(--text2);border-radius:100px;padding:10px 22px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;letter-spacing:0.3px}
-    .chat-tab:hover{background:var(--surface);color:var(--text)}
-    .chat-tab.active{background:var(--accent);border-color:var(--accent);color:white}
-
-    .chat-container{max-width:720px;margin:0 auto;background:var(--surface);border:1px solid var(--sep);border-radius:20px;padding:32px;min-height:280px}
-    .chat-panel{display:none}
-    .chat-panel.active{display:block}
-
-    .chat-bubble{max-width:85%;margin-bottom:16px;padding:14px 18px;border-radius:16px;font-size:13px;line-height:1.65;animation:fadeInBubble 0.3s ease}
-    .chat-bubble.user{background:#2563EB;border:1px solid #2563EB;color:white;margin-left:auto;border-bottom-right-radius:4px;text-align:right}
-    .chat-bubble.ai{background:var(--white);border:1px solid var(--sep);color:var(--text);margin-right:auto;border-bottom-left-radius:4px}
-    .chat-ai-label{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.5px}
-    .chat-ai-label i{font-size:14px;color:var(--accent)}
-    @keyframes fadeInBubble{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-    .copiloto-cta{text-align:center;margin-top:40px}
-
-    @media(max-width:768px){
-        .copiloto-section{padding:60px 24px}
-        .copiloto-header h2{font-size:32px}
-        .chat-container{padding:20px}
-        .chat-bubble{max-width:95%}
-    }
-</style>
-
-<section class="copiloto-section reveal" id="copiloto">
-    <div class="copiloto-inner">
-        <div class="copiloto-header">
-            <div class="section-tag">INTELIGENCIA ARTIFICIAL</div>
-            <h2>El primer copiloto inteligente<br><em>para operaciones fluviales.</em></h2>
-            <p>Preguntá en español. Respondemos con datos de tu operación real.</p>
-        </div>
-
-        <div class="chat-tabs">
-            <button class="chat-tab active" onclick="switchCopilotoTab(0)">Combustible</button>
-            <button class="chat-tab" onclick="switchCopilotoTab(1)">Mantenimiento</button>
-            <button class="chat-tab" onclick="switchCopilotoTab(2)">Tracking</button>
-            <button class="chat-tab" onclick="switchCopilotoTab(3)">Costos</button>
-        </div>
-
-        <div class="chat-container">
-            <!-- Tab 0: Combustible -->
-            <div class="chat-panel active" data-panel="0">
-                <div class="chat-bubble user">¿Cuál convoy tiene mayor consumo esta semana?</div>
-                <div class="chat-bubble ai">
-                    <div class="chat-ai-label"><i class="fa-solid fa-robot"></i>FluviaFleet AI</div>
-                    El Convoy ASU-ROS-03 registra 12.4 kL/día, un 23% por encima del promedio. Causas probables: corriente adversa en sector Corrientes-Resistencia y velocidad de crucero por encima del óptimo.
-                </div>
-            </div>
-            <!-- Tab 1: Mantenimiento -->
-            <div class="chat-panel" data-panel="1">
-                <div class="chat-bubble user">¿Qué embarcaciones requieren mantenimiento urgente?</div>
-                <div class="chat-bubble ai">
-                    <div class="chat-ai-label"><i class="fa-solid fa-robot"></i>FluviaFleet AI</div>
-                    3 embarcaciones con alertas activas:<br>· Remolcador Guaraní II — motor principal, vence en 3 días<br>· Barcaza PY-0047 — inspección de casco, vencida hace 5 días<br>· Barcaza PY-0089 — certificado de navegabilidad, vence esta semana
-                </div>
-            </div>
-            <!-- Tab 2: Tracking -->
-            <div class="chat-panel" data-panel="2">
-                <div class="chat-bubble user">Mostrá los barcos llegando a Rosario esta semana.</div>
-                <div class="chat-bubble ai">
-                    <div class="chat-ai-label"><i class="fa-solid fa-robot"></i>FluviaFleet AI</div>
-                    4 embarcaciones con ETA Rosario confirmado:<br>· ASU-Convoy-03: Miércoles 14hs (sin alertas)<br>· Remolcador Delta I: Jueves 09hs (retraso estimado 4hs por nivel bajo)<br>· Barcaza AR-112: Viernes 16hs<br>· Convoy PY-Norte-07: Sábado 11hs
-                </div>
-            </div>
-            <!-- Tab 3: Costos -->
-            <div class="chat-panel" data-panel="3">
-                <div class="chat-bubble user">¿Cuáles son los mayores costos operativos del mes?</div>
-                <div class="chat-bubble ai">
-                    <div class="chat-ai-label"><i class="fa-solid fa-robot"></i>FluviaFleet AI</div>
-                    Combustible representa el 67% del costo total este mes. El sector Asunción-Corrientes es el de mayor consumo relativo. Recomendación: revisar velocidad de crucero en ese tramo.
-                </div>
-            </div>
-        </div>
-
-        <div class="copiloto-cta">
-            <a href="#contacto" class="btn-hidrovia"><i class="fa-solid fa-robot"></i> Solicitar Demo</a>
-        </div>
-    </div>
-</section>
-<script>
-function switchCopilotoTab(idx) {
-    document.querySelectorAll('.chat-tab').forEach(function(t, i) {
-        t.classList.toggle('active', i === idx);
-    });
-    document.querySelectorAll('.chat-panel').forEach(function(p) {
-        p.classList.toggle('active', parseInt(p.getAttribute('data-panel')) === idx);
-    });
-}
-</script>
-
-<!-- STATS -->
-<div class="stats-banner">
-    <div class="section-tag" style="color:rgba(255,255,255,0.6)">LA PLATAFORMA</div>
-    <h2>Diseñado para<br><em>la Hidrovía.</em></h2>
-    <div class="stats-row">
-        <div class="stat-item reveal"><div class="stat-num">3.442</div><div class="stat-lbl">KM DE HIDROVÍA CUBIERTOS</div></div>
-        <div class="stat-item reveal"><div class="stat-num">12</div><div class="stat-lbl">MÓDULOS INTEGRADOS</div></div>
-        <div class="stat-item reveal"><div class="stat-num">5</div><div class="stat-lbl">PAÍSES CONECTADOS</div></div>
-        <div class="stat-item reveal"><div class="stat-num"><5 min</div><div class="stat-lbl">SETUP INICIAL</div></div>
-    </div>
-</div>
-
-<!-- PLANES -->
-<section class="section" id="precios">
-    <div style="text-align:center;margin-bottom:16px">
-        <div class="section-tag">PLANES ESCALABLES</div>
-        <h2>El tamaño de tu flota<br><em>determina tu plan.</em></h2>
-        <p style="color:var(--text2);font-size:16px;margin-top:16px;max-width:520px;margin-inline:auto;line-height:1.7">Empezá con lo que necesitás hoy. Escalá cuando tu operación crezca. Sin contratos largos, sin sorpresas.</p>
-    </div>
-
-    <!-- GARANTÍA STRIP -->
-    <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-bottom:48px;padding:20px;background:var(--surface);border-radius:16px;max-width:700px;margin-inline:auto">
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-shield-halved" style="color:var(--success)"></i> 14 días de prueba gratis</div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-bolt" style="color:var(--accent)"></i> Operativo en 5 minutos</div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2)"><i class="fa-solid fa-credit-card" style="color:var(--warning)"></i> Sin tarjeta para empezar</div>
-    </div>
-
-    <div class="pricing-cards">
-        <!-- STARTER -->
-        <div class="price-card reveal">
-            <h3>Starter</h3>
-            <p class="price-desc">Hasta 5 embarcaciones</p>
-            <div style="margin:20px 0 8px">
-                <div style="font-size:15px;font-weight:700;color:var(--success);letter-spacing:0.5px">✦ COMENZÁ HOY</div>
-                <div style="font-size:13px;color:var(--text2);margin-top:4px">Tu primera flota inteligente en minutos</div>
-            </div>
-            <ul class="price-list">
-                <li><i class="fa-solid fa-check"></i>Tracking AIS en tiempo real</li>
-                <li><i class="fa-solid fa-check"></i>Bitácora digital</li>
-                <li><i class="fa-solid fa-check"></i>Control de combustible</li>
-                <li><i class="fa-solid fa-check"></i>Mantenimiento preventivo</li>
-                <li class="disabled"><i class="fa-solid fa-xmark"></i>Copiloto IA</li>
-                <li class="disabled"><i class="fa-solid fa-xmark"></i>Convoyes inteligentes</li>
-            </ul>
-            <a href="#contacto" class="price-btn">Empezar gratis →</a>
-        </div>
-
-        <!-- PROFESIONAL -->
-        <div class="price-card featured reveal">
-            <div class="price-badge">MÁS ELEGIDO</div>
-            <h3>Profesional</h3>
-            <p class="price-desc">Hasta 20 embarcaciones</p>
-            <div style="margin:20px 0 8px">
-                <div style="font-size:15px;font-weight:700;color:white;letter-spacing:0.5px">✦ LA ELECCIÓN INTELIGENTE</div>
-                <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px">IA + datos reales de tu hidrovía</div>
-            </div>
-            <ul class="price-list">
-                <li><i class="fa-solid fa-check"></i>Todo de Starter</li>
-                <li><i class="fa-solid fa-check"></i>Armador de convoyes</li>
-                <li><i class="fa-solid fa-check"></i>Gestión de tripulación</li>
-                <li><i class="fa-solid fa-check"></i>Pronóstico de hidrovía</li>
-                <li><i class="fa-solid fa-check"></i>Copiloto IA con datos reales</li>
-            </ul>
-            <a href="#contacto" class="price-btn dark">Solicitar Demo →</a>
-        </div>
-
-        <!-- ENTERPRISE -->
-        <div class="price-card reveal">
-            <h3>Enterprise</h3>
-            <p class="price-desc">Embarcaciones ilimitadas</p>
-            <div style="margin:20px 0 8px">
-                <div style="font-size:15px;font-weight:700;color:var(--accent);letter-spacing:0.5px">✦ OPERACIÓN TOTAL</div>
-                <div style="font-size:13px;color:var(--text2);margin-top:4px">Para grandes armadores y operadores</div>
-            </div>
-            <ul class="price-list">
-                <li><i class="fa-solid fa-check"></i>Embarcaciones ilimitadas</li>
-                <li><i class="fa-solid fa-check"></i>Copiloto IA avanzado</li>
-                <li><i class="fa-solid fa-check"></i>API e integraciones</li>
-                <li><i class="fa-solid fa-check"></i>Soporte 24/7 dedicado</li>
-                <li><i class="fa-solid fa-check"></i>SLA 99.9% garantizado</li>
-            </ul>
-            <a href="mailto:info@fluviafleet.com" class="price-btn">Hablar con nosotros →</a>
-        </div>
-    </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- ROI CALCULATOR                                  -->
-<!-- ═══════════════════════════════════════════════ -->
-<style>
-    .roi-section{padding:100px 48px;max-width:1200px;margin:0 auto}
-    .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
-    .roi-inputs{display:flex;flex-direction:column;gap:28px}
-    .roi-slider-group{display:flex;flex-direction:column;gap:6px}
-    .roi-slider-label{display:flex;justify-content:space-between;align-items:center}
-    .roi-slider-label span{font-size:13px;font-weight:600;color:var(--text)}
-    .roi-slider-value{font-family:'Newsreader',serif;font-size:24px;font-weight:400;color:var(--accent);min-width:60px;text-align:right}
-    .roi-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--sep);outline:none;transition:all 0.2s}
-    .roi-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 2px 8px rgba(59,130,246,0.3);transition:all 0.2s}
-    .roi-slider::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 4px 16px rgba(59,130,246,0.4)}
-    .roi-slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:none;box-shadow:0 2px 8px rgba(59,130,246,0.3)}
-    .roi-slider::-moz-range-track{height:6px;border-radius:3px;background:var(--sep)}
-    .roi-slider-hint{font-size:11px;color:var(--text2);margin-top:2px}
-
-    .roi-outputs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .roi-card{background:var(--white);border:1px solid var(--sep);border-radius:16px;padding:24px;text-align:center;transition:all 0.2s}
-    .roi-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.06)}
-    .roi-card-value{font-family:'Newsreader',serif;font-size:36px;font-weight:400;line-height:1;margin-bottom:6px}
-    .roi-card-label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1px}
-    .roi-card.green .roi-card-value{color:#059669}
-    .roi-card.blue .roi-card-value{color:var(--accent)}
-    .roi-card.red .roi-card-value{color:var(--error)}
-    .roi-card.span-2{grid-column:span 2}
-
-    .roi-disclaimer{margin-top:32px;text-align:center}
-    .roi-disclaimer p{font-size:12px;color:var(--text2);line-height:1.6;max-width:560px;margin:0 auto 16px}
-    .roi-disclaimer a{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--text);text-decoration:none;transition:all 0.2s}
-    .roi-disclaimer a:hover{color:var(--accent)}
-    .roi-disclaimer .roi-anchor{display:block;font-size:13px;font-style:italic;color:var(--text2);margin-top:20px;padding-top:16px;border-top:1px solid var(--sep);max-width:560px;margin-left:auto;margin-right:auto}
-
-    @media(max-width:768px){
-        .roi-section{padding:60px 24px}
-        .roi-grid{grid-template-columns:1fr;gap:32px}
-        .roi-outputs{grid-template-columns:1fr 1fr}
-        .roi-card-value{font-size:28px}
-        .roi-card.span-2{grid-column:span 2}
-    }
-    @media(max-width:480px){
-        .roi-outputs{grid-template-columns:1fr}
-        .roi-card.span-2{grid-column:span 1}
-    }
-</style>
-
-<div class="section-alt">
-<section class="roi-section reveal" id="roi">
-    <div class="section-tag">RETORNO DE INVERSIÓN</div>
-    <h2>Calculá cuánto puede<br><em>ahorrarte FluviaFleet.</em></h2>
-    <p class="section-desc">Ingresá los datos de tu flota y veé el impacto proyectado en tiempo real. Sin registro.</p>
-
-    <div class="roi-grid">
-        <div class="roi-inputs">
-            <div class="roi-slider-group">
-                <div class="roi-slider-label">
-                    <span>Cantidad de barcazas</span>
-                    <div class="roi-slider-value" id="roi-barcazas-val">10</div>
-                </div>
-                <input type="range" class="roi-slider" id="roi-barcazas" min="1" max="150" value="10" oninput="calculateROI()">
-            </div>
-            <div class="roi-slider-group">
-                <div class="roi-slider-label">
-                    <span>Cantidad de remolcadores</span>
-                    <div class="roi-slider-value" id="roi-remolcadores-val">3</div>
-                </div>
-                <input type="range" class="roi-slider" id="roi-remolcadores" min="1" max="30" value="3" oninput="calculateROI()">
-            </div>
-            <div class="roi-slider-group">
-                <div class="roi-slider-label">
-                    <span>Consumo mensual de combustible (kL)</span>
-                    <div class="roi-slider-value" id="roi-consumo-val">500</div>
-                </div>
-                <input type="range" class="roi-slider" id="roi-consumo" min="10" max="5000" value="500" step="10" oninput="calculateROI()">
-                <div class="roi-slider-hint">kL = kilolitros (1.000 litros)</div>
-            </div>
-            <div class="roi-slider-group">
-                <div class="roi-slider-label">
-                    <span>Costo por litro (USD)</span>
-                    <div class="roi-slider-value" id="roi-costo-val">1.2</div>
-                </div>
-                <input type="range" class="roi-slider" id="roi-costo" min="0.5" max="3.0" value="1.2" step="0.1" oninput="calculateROI()">
-            </div>
-        </div>
-
-        <div class="roi-outputs">
-            <div class="roi-card green span-2">
-                <div class="roi-card-value" id="roi-ahorro">$0</div>
-                <div class="roi-card-label">AHORRO ANUAL ESTIMADO</div>
-            </div>
-            <div class="roi-card">
-                <div class="roi-card-value" id="roi-costo-mensual">$0</div>
-                <div class="roi-card-label">COSTO MENSUAL FLUVIAFLEET</div>
-            </div>
-            <div class="roi-card blue">
-                <div class="roi-card-value" id="roi-payback">0 meses</div>
-                <div class="roi-card-label">ROI ESTIMADO</div>
-            </div>
-            <div class="roi-card green span-2">
-                <div class="roi-card-value" id="roi-neto">$0</div>
-                <div class="roi-card-label">AHORRO NETO AÑO 1</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="roi-disclaimer">
-        <p>Estos números son proyecciones basadas en una reducción estimada del 18% en consumo de combustible. Para un análisis personalizado con tu operación real:</p>
-        <a href="#contacto">Hablar con un Especialista <i class="fa-solid fa-arrow-right"></i></a>
-        <div class="roi-anchor">Una barcaza detenida un día por falta de información cuesta más que un mes de FluviaFleet.</div>
-    </div>
-</section>
-</div>
-<script>
-function calculateROI() {
-    var barcazas = parseInt(document.getElementById('roi-barcazas').value);
-    var remolcadores = parseInt(document.getElementById('roi-remolcadores').value);
-    var consumo = parseInt(document.getElementById('roi-consumo').value);
-    var costo = parseFloat(document.getElementById('roi-costo').value);
-
-    // Update slider display values
-    document.getElementById('roi-barcazas-val').textContent = barcazas;
-    document.getElementById('roi-remolcadores-val').textContent = remolcadores;
-    document.getElementById('roi-consumo-val').textContent = consumo.toLocaleString('es-AR');
-    document.getElementById('roi-costo-val').textContent = costo.toFixed(1);
-
-    // Calculate savings (18% fuel reduction)
-    var ahorroAnual = consumo * 1000 * costo * 0.18 * 12;
-
-    // Calculate monthly cost based on total vessels
-    var totalVessels = barcazas + remolcadores;
-    var costoMensual = 0;
-    var costoMensualText = '';
-    if (totalVessels <= 5) {
-        costoMensual = 149;
-        costoMensualText = '$149';
-    } else if (totalVessels <= 20) {
-        costoMensual = 499;
-        costoMensualText = '$499';
-    } else {
-        costoMensual = 0;
-        costoMensualText = 'Contactar';
-    }
-
-    // Calculate ROI in months
-    var costoAnual = costoMensual * 12;
-    var roiMeses = 0;
-    var roiText = '';
-    if (costoMensual > 0 && ahorroAnual > 0) {
-        roiMeses = costoAnual / ahorroAnual * 12;
-        if (roiMeses < 1) {
-            roiText = '< 1 mes';
-        } else {
-            roiText = Math.ceil(roiMeses) + ' meses';
-        }
-    } else {
-        roiText = 'Contactar';
-    }
-
-    // Calculate net savings year 1
-    var ahorroNeto = ahorroAnual - costoAnual;
-
-    // Update display
-    document.getElementById('roi-ahorro').textContent = '$' + Math.round(ahorroAnual).toLocaleString('es-AR');
-    document.getElementById('roi-costo-mensual').textContent = costoMensualText;
-    document.getElementById('roi-payback').textContent = roiText;
-
-    var netoEl = document.getElementById('roi-neto');
-    var netoCard = netoEl.closest('.roi-card');
-    if (costoMensual === 0) {
-        netoEl.textContent = 'Contactar';
-        netoCard.classList.remove('red');
-        netoCard.classList.add('green');
-    } else {
-        netoEl.textContent = (ahorroNeto < 0 ? '-' : '') + '$' + Math.abs(Math.round(ahorroNeto)).toLocaleString('es-AR');
-        if (ahorroNeto >= 0) {
-            netoCard.classList.remove('red');
-            netoCard.classList.add('green');
-        } else {
-            netoCard.classList.remove('green');
-            netoCard.classList.add('red');
-        }
-    }
-}
-// Init on load
-document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
-</script>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- CASO DE ÉXITO                                   -->
-<!-- ═══════════════════════════════════════════════ -->
-<style>
-    .caso-exito-section{padding:100px 48px;max-width:1200px;margin:0 auto}
-    .caso-exito-section .section-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
-    .caso-exito-section h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:48px}
-    .caso-exito-section h2 em{font-weight:300;font-style:italic}
-
-    .caso-card{background:var(--white);border:1px solid var(--sep);border-radius:20px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
-    .caso-label{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--accent);margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--sep)}
-    .caso-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-    .caso-step h4{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--text2);margin-bottom:10px}
-    .caso-step p{font-size:13px;color:var(--text);line-height:1.65}
-    .caso-note{font-size:11px;color:var(--text2);line-height:1.6;margin-top:24px;padding-top:20px;border-top:1px solid var(--sep);font-style:italic}
-    .caso-cta{margin-top:32px;text-align:center}
-    .caso-cta a{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--text);text-decoration:none;transition:all 0.2s}
-    .caso-cta a:hover{color:var(--accent)}
-    .caso-cta a i{font-size:12px}
-
-    @media(max-width:768px){
-        .caso-exito-section{padding:60px 24px}
-        .caso-exito-section h2{font-size:32px}
-        .caso-steps{grid-template-columns:1fr 1fr;gap:20px}
-        .caso-card{padding:28px}
-    }
-    @media(max-width:480px){
-        .caso-steps{grid-template-columns:1fr}
-    }
-</style>
-
-<section class="caso-exito-section reveal" id="caso-exito">
-    <div class="section-tag">CASO DE ÉXITO</div>
-    <h2>Resultados reales con<br><em>operadores reales.</em></h2>
-
-    <div class="caso-card">
-        <div class="caso-label">PROGRAMA PILOTO — HIDROVÍA PARAGUAY-PARANÁ</div>
-        <div class="caso-steps">
-            <div class="caso-step">
-                <h4>SITUACIÓN</h4>
-                <p>Operador mediano con flota de 12 barcazas y 3 remolcadores. Gestión 100% manual con Excel, radio VHF y planillas en papel.</p>
-            </div>
-            <div class="caso-step">
-                <h4>PROBLEMA</h4>
-                <p>Sin visibilidad de posición en tiempo real. Costos de combustible crecientes sin datos para diagnosticar causa. 3 incidentes sin documentación suficiente.</p>
-            </div>
-            <div class="caso-step">
-                <h4>IMPLEMENTACIÓN</h4>
-                <p>Onboarding en 5 días. Integración con datos AIS existentes. Capacitación remota del equipo. Sin hardware adicional.</p>
-            </div>
-            <div class="caso-step">
-                <h4>RESULTADO</h4>
-                <p>Visibilidad total de flota. Reducción proyectada de 18% en combustible. Bitácora digital eliminó 3 llamadas diarias por embarcación.</p>
-            </div>
-        </div>
-        <p class="caso-note">Datos basados en programa piloto. Resultados pueden variar según operación. Caso completo disponible bajo acuerdo de confidencialidad.</p>
-    </div>
-
-    <div class="caso-cta">
-        <a href="#contacto">Conocer más → Solicitar Demo <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ -->
 <!-- PARTNERS / INTEGRADO CON                        -->
 <!-- ═══════════════════════════════════════════════ -->
 <style>
     .partners-section{background:var(--bg);padding:80px 48px;text-align:center}
     .partners-inner{max-width:1200px;margin:0 auto}
     .partners-inner .section-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
-    .partners-inner h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:48px}
-    .partners-inner h2 em{font-weight:300;font-style:italic}
+    .partners-inner h2{font-family:'Bricolage Grotesque',sans-serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:48px}
+    .partners-inner h2 em{font-weight:700;font-style:normal}
 
     .partners-row{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;margin-bottom:32px}
     .partner-badge{display:inline-flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--sep);border-radius:100px;padding:12px 24px;font-size:13px;font-weight:600;color:var(--text);transition:all 0.2s;cursor:default}
@@ -1137,7 +1407,7 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
     .faq-list{margin-top:48px}
     .faq-item{border-bottom:1px solid var(--sep);overflow:hidden}
     .faq-question{display:flex;justify-content:space-between;align-items:center;padding:22px 0;cursor:pointer;gap:16px;transition:color 0.2s}
-    .faq-question h4{font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:var(--text);margin:0;line-height:1.4}
+    .faq-question h4{font-family:'Manrope',sans-serif;font-size:15px;font-weight:600;color:var(--text);margin:0;line-height:1.4}
     .faq-icon{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--sep);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s ease;font-size:14px;color:var(--text2)}
     .faq-answer{max-height:0;overflow:hidden;transition:max-height 0.4s ease, padding 0.3s ease;padding:0 0}
     .faq-answer p{font-size:14px;color:var(--text2);line-height:1.7;padding:0 0 22px 0;margin:0}
@@ -1160,36 +1430,36 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
 
     <div class="faq-list">
         <div class="faq-item" onclick="toggleFAQ(0)">
-            <div class="faq-question"><h4>¿Necesito instalar hardware en mis embarcaciones?</h4><div class="faq-icon">+</div></div>
-            <div class="faq-answer"><p>No. FluviaFleet funciona 100% en la nube. Utilizamos datos AIS existentes de tus embarcaciones y GPS estándar. No se requiere ninguna instalación física ni técnicos en campo. Estás operativo en minutos.</p></div>
+            <div class="faq-question"><h4>¿Tengo que instalar algo a bordo?</h4><div class="faq-icon">+</div></div>
+            <div class="faq-answer"><p>No. Corre entero en la nube y toma los datos AIS y GPS que tu embarcación ya emite. No mandamos técnicos ni instalamos equipos: cargás tu flota y arrancás.</p></div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(1)">
-            <div class="faq-question"><h4>¿Funciona sin internet en el río?</h4><div class="faq-icon">+</div></div>
-            <div class="faq-answer"><p>FluviaFleet requiere conexión a internet para sincronizar datos en tiempo real. Sin embargo, los datos AIS se capturan continuamente y se sincronizan cuando la conexión se restablece. La app móvil funciona offline para registro de bitácora y novedades, sincronizando al volver a cobertura.</p></div>
+            <div class="faq-question"><h4>¿Y si se corta el internet en medio del río?</h4><div class="faq-icon">+</div></div>
+            <div class="faq-answer"><p>El mapa en vivo necesita conexión, pero el dato AIS se sigue capturando y se pone al día apenas vuelve la señal. La app de a bordo carga bitácora y novedades sin señal, y sincroniza sola cuando hay cobertura.</p></div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(2)">
-            <div class="faq-question"><h4>¿Mis datos son privados? ¿Quién puede verlos?</h4><div class="faq-icon">+</div></div>
-            <div class="faq-answer"><p>Tus datos son 100% privados y están cifrados en tránsito y en reposo. Cada empresa tiene su entorno aislado (multi-tenancy). Ningún otro usuario o competidor puede ver tu información. Cumplimos con estándares LGPD (Brasil) y GDPR.</p></div>
+            <div class="faq-question"><h4>¿Quién puede ver los datos de mi flota?</h4><div class="faq-icon">+</div></div>
+            <div class="faq-answer"><p>Solo tu empresa. Cada cuenta vive en su propio entorno aislado, cifrado en tránsito y en reposo, y cumplimos LGPD y GDPR. Nadie de afuera —ni otro cliente— entra a tus datos.</p></div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(3)">
-            <div class="faq-question"><h4>¿Pueden ver mi posición los competidores?</h4><div class="faq-icon">+</div></div>
-            <div class="faq-answer"><p>No. La posición de tus embarcaciones solo es visible para usuarios autorizados de tu empresa. Los datos AIS públicos (que ya son visibles en plataformas como MarineTraffic) no cambian, pero los datos internos de tu operación son 100% privados.</p></div>
+            <div class="faq-question"><h4>¿La competencia puede rastrear mis barcazas?</h4><div class="faq-icon">+</div></div>
+            <div class="faq-answer"><p>No con nuestros datos. El AIS público que ya existe en sitios como MarineTraffic sigue siendo público, eso no lo cambiamos; pero todo lo que ves adentro de ViaBarcazas —consumo, mantenimiento, tripulación— es privado de tu cuenta.</p></div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(4)">
-            <div class="faq-question"><h4>¿Cuánto tarda el onboarding?</h4><div class="faq-icon">+</div></div>
-            <div class="faq-answer"><p>El onboarding completo tarda entre 1 y 5 días dependiendo del tamaño de tu flota. Para flotas pequeñas (hasta 10 embarcaciones), podés estar operativo el mismo día. Incluye capacitación remota para tu equipo.</p></div>
+            <div class="faq-question"><h4>¿Cuánto tarda en estar andando?</h4><div class="faq-icon">+</div></div>
+            <div class="faq-answer"><p>Entre 1 y 5 días según cuántas embarcaciones cargues. Con flotas chicas (hasta 10) solés quedar operativo el mismo día, con capacitación remota incluida para tu equipo.</p></div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(5)">
-            <div class="faq-question"><h4>¿Qué pasa si cancelo?</h4><div class="faq-icon">+</div></div>
-            <div class="faq-answer"><p>Podés cancelar en cualquier momento sin penalidades. Tus datos se mantienen disponibles para exportar durante 30 días después de la cancelación. No hay contratos de permanencia mínima.</p></div>
+            <div class="faq-question"><h4>¿Hay que firmar contrato a largo plazo?</h4><div class="faq-icon">+</div></div>
+            <div class="faq-answer"><p>No. Cancelás cuando quieras, sin multa. Tus datos quedan disponibles para exportar 30 días después de dar de baja la cuenta.</p></div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(6)">
-            <div class="faq-question"><h4>¿En qué países opera FluviaFleet?</h4><div class="faq-icon">+</div></div>
-            <div class="faq-answer"><p>FluviaFleet está diseñado para la Hidrovía Paraguay-Paraná y cubre operaciones en Argentina, Paraguay, Brasil, Uruguay y Bolivia. La plataforma está disponible en español e inglés.</p></div>
+            <div class="faq-question"><h4>¿Dónde funciona ViaBarcazas?</h4><div class="faq-icon">+</div></div>
+            <div class="faq-answer"><p>Pensado para la Hidrovía Paraguay-Paraná: Paraguay, Argentina, Brasil, Uruguay y Bolivia. Disponible en español e inglés.</p></div>
         </div>
         <div class="faq-item" onclick="toggleFAQ(7)">
-            <div class="faq-question"><h4>¿Qué soporte ofrecen?</h4><div class="faq-icon">+</div></div>
-            <div class="faq-answer"><p>Plan Starter: soporte por email en horario laboral. Plan Profesional: soporte prioritario con respuesta en menos de 4 horas. Plan Enterprise: soporte dedicado 24/7 con account manager asignado y SLA garantizado.</p></div>
+            <div class="faq-question"><h4>¿Qué nivel de soporte tiene cada plan?</h4><div class="faq-icon">+</div></div>
+            <div class="faq-answer"><p>Amarre: email en horario laboral. Convoy: respuesta prioritaria en menos de 4 horas. Armador: soporte 24/7 con un account manager asignado y SLA garantizado.</p></div>
         </div>
     </div>
 </section>
@@ -1212,10 +1482,10 @@ function toggleFAQ(index) {
 <style>
     .nosotros-section{padding:100px 48px;max-width:800px;margin:0 auto;text-align:center}
     .nosotros-section .section-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
-    .nosotros-section h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:28px}
-    .nosotros-section h2 em{font-weight:300;font-style:italic}
+    .nosotros-section h2{font-family:'Bricolage Grotesque',sans-serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:28px}
+    .nosotros-section h2 em{font-weight:700;font-style:normal}
     .nosotros-story{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:28px;text-align:left}
-    .nosotros-mission{font-family:'Newsreader',serif;font-size:22px;font-weight:400;color:var(--text);font-style:italic;margin-bottom:28px;line-height:1.4}
+    .nosotros-mission{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:400;color:var(--text);font-style:italic;margin-bottom:28px;line-height:1.4}
     .nosotros-meta{display:flex;flex-direction:column;gap:8px;align-items:center}
     .nosotros-badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--sep);border-radius:100px;padding:10px 20px;font-size:12px;font-weight:600;color:var(--text)}
     .nosotros-badge i{font-size:14px;color:var(--accent)}
@@ -1232,23 +1502,23 @@ function toggleFAQ(index) {
 <section class="nosotros-section reveal" id="nosotros">
     <div class="section-tag">NOSOTROS</div>
     <h2>¿Quiénes somos?</h2>
-    <p class="nosotros-story">FluviaFleet nació de una frustración real: gestionar operaciones fluviales en la Hidrovía Paraguay-Paraná con herramientas del siglo pasado. Planillas de papel, radio VHF y llamadas interminables para saber dónde está una barcaza. Creamos la primera plataforma con IA diseñada exclusivamente para esta ruta — porque la conocemos, porque la navegamos, y porque sabemos que merece tecnología a su altura.</p>
-    <p class="nosotros-mission">Nuestra misión: digitalizar cada kilómetro de la Hidrovía Paraguay-Paraná.</p>
+    <p class="nosotros-story">A cualquier armador de la Paraguay-Paraná le pasa lo mismo: no hay forma de saber dónde está una barcaza sin levantar el radio VHF. ViaBarcazas es el panel que nos hubiera gustado tener nosotros — pensado para esta ruta específica, no adaptado de otro rubro ni de otro río.</p>
+    <p class="nosotros-mission">Nos proponemos que ningún armador de esta hidrovía vuelva a depender de un radio VHF para saber dónde está su propia flota.</p>
     <div class="nosotros-meta">
         <div class="nosotros-badge"><i class="fa-solid fa-location-dot"></i>Asunción, Paraguay · Operación regional en 5 países</div>
-        <div class="nosotros-email"><a href="mailto:info@fluviafleet.com">info@fluviafleet.com</a></div>
+        <div class="nosotros-email"><a href="mailto:info@viabarcazas.com">info@viabarcazas.com</a></div>
     </div>
 </section>
 
 <!-- CTA FINAL — Blue gradient (VHF closing copy) -->
-<div style="background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);color:white">
+<div style="background:linear-gradient(135deg,#075E54 0%,#128C7E 100%);color:white">
 <section class="cta-section" id="cierre">
-    <div class="section-tag" style="color:rgba(255,255,255,0.6)">¿POR QUÉ FLUVIAFLEET?</div>
-    <h2 style="color:white">Tu competencia sigue con<br><em style="color:rgba(255,255,255,0.9)">radio VHF y planillas.</em></h2>
-    <p style="color:rgba(255,255,255,0.8)">Mientras otros operadores gestionan su flota con llamadas, Excel y papel, vos podés saber dónde está cada barcaza, cuánto combustible gastó y qué necesita mantenimiento — en tiempo real. La Hidrovía no espera. Tu flota tampoco debería.</p>
+    <div class="section-tag" style="color:rgba(255,255,255,0.6)">LA DIFERENCIA</div>
+    <h2 style="color:white">Mientras leés esto, alguien<br><em style="color:rgba(255,255,255,0.9)">anota el consumo en un cuaderno.</em></h2>
+    <p style="color:rgba(255,255,255,0.8)">Con ViaBarcazas abierto, esa misma info ya está en tu pantalla, actualizada, sin que nadie tenga que copiarla a mano. El río sigue su curso mientras vos seguís mirando un cuaderno.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-        <a href="#contacto" class="btn-primary" style="background:white;color:#2563eb;box-shadow:0 4px 14px rgba(0,0,0,0.15)">Solicitar Demo</a>
-        <a href="mailto:info@fluviafleet.com" class="btn-secondary" style="background:rgba(255,255,255,0.1);color:white;border-color:rgba(255,255,255,0.3)">info@fluviafleet.com</a>
+        <a href="#contacto" class="btn-primary" style="background:white;color:#128C7E;box-shadow:0 4px 14px rgba(0,0,0,0.15)">Solicitar Demo</a>
+        <a href="mailto:info@viabarcazas.com" class="btn-secondary" style="background:rgba(255,255,255,0.1);color:white;border-color:rgba(255,255,255,0.3)">info@viabarcazas.com</a>
     </div>
 </section>
 </div>
@@ -1260,8 +1530,8 @@ function toggleFAQ(index) {
     .contacto-section{padding:100px 48px;max-width:1200px;margin:0 auto}
     .contacto-header{text-align:center;margin-bottom:56px}
     .contacto-header .section-tag{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;margin-bottom:12px}
-    .contacto-header h2{font-family:'Newsreader',serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:12px}
-    .contacto-header h2 em{font-weight:300;font-style:italic}
+    .contacto-header h2{font-family:'Bricolage Grotesque',sans-serif;font-size:42px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:12px}
+    .contacto-header h2 em{font-weight:700;font-style:normal}
     .contacto-header p{font-size:15px;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.6}
 
     .contacto-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:48px;align-items:start}
@@ -1272,15 +1542,15 @@ function toggleFAQ(index) {
     .form-group label{font-size:12px;font-weight:600;color:var(--text)}
     .form-group input,.form-group select,.form-group textarea{
         border:1px solid var(--sep);border-radius:10px;padding:12px 16px;font-size:13px;
-        font-family:'Inter',sans-serif;color:var(--text);background:var(--white);
+        font-family:'Manrope',sans-serif;color:var(--text);background:var(--white);
         transition:border-color 0.2s;outline:none;width:100%
     }
-    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,211,102,0.1)}
     .form-group textarea{resize:vertical;min-height:100px}
     .form-group select{cursor:pointer;appearance:auto}
 
-    .form-submit{background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;width:100%;box-shadow:0 4px 14px rgba(37,99,235,0.25)}
-    .form-submit:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,0.3)}
+    .form-submit{background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;width:100%;box-shadow:0 4px 14px rgba(18,140,126,0.25)}
+    .form-submit:hover{background:#0C6355;transform:translateY(-1px);box-shadow:0 6px 20px rgba(18,140,126,0.3)}
 
     .form-success{display:none;text-align:center;padding:24px;background:rgba(46,160,67,0.08);border:1px solid rgba(46,160,67,0.2);border-radius:14px;color:var(--success);font-size:14px;font-weight:600}
 
@@ -1303,8 +1573,8 @@ function toggleFAQ(index) {
 <section class="contacto-section reveal" id="contacto">
     <div class="contacto-header">
         <div class="section-tag">CONTACTO</div>
-        <h2>Hablemos sobre<br><em>tu flota.</em></h2>
-        <p>¿Querés ver FluviaFleet con tus datos? Completá el formulario o escribinos directo.</p>
+        <h2>Contanos cómo opera<br><em>tu flota hoy.</em></h2>
+        <p>Con eso alcanza para armarte una demo con tus propios números, no una genérica. Completá el formulario o escribinos directo.</p>
     </div>
 
     <div class="contacto-grid">
@@ -1363,17 +1633,17 @@ function toggleFAQ(index) {
 
         <div class="contact-cards">
             <!-- REEMPLAZAR NÚMERO DE WHATSAPP -->
-            <a href="https://wa.me/595994207248?text=Hola,%20quiero%20conocer%20FluviaFleet%20para%20gestionar%20mi%20flota%20en%20la%20hidrov%C3%ADa." class="contact-card" target="_blank" rel="noopener">
+            <a href="https://wa.me/595994207248?text=Hola,%20quiero%20conocer%20ViaBarcazas%20para%20gestionar%20mi%20flota%20en%20la%20hidrov%C3%ADa." class="contact-card" target="_blank" rel="noopener">
                 <div class="contact-card-icon" style="background:rgba(5,150,105,0.08);border-color:rgba(5,150,105,0.2)"><i class="fa-brands fa-whatsapp" style="color:#059669"></i></div>
                 <h4>Escribinos por WhatsApp</h4>
                 <p>Respuesta inmediata</p>
             </a>
-            <a href="mailto:info@fluviafleet.com" class="contact-card">
+            <a href="mailto:info@viabarcazas.com" class="contact-card">
                 <div class="contact-card-icon"><i class="fa-solid fa-envelope"></i></div>
-                <h4>info@fluviafleet.com</h4>
+                <h4>info@viabarcazas.com</h4>
                 <p>Respuesta en 24hs</p>
             </a>
-            <a href="mailto:info@fluviafleet.com?subject=Solicitud%20de%20Demo" class="contact-card">
+            <a href="mailto:info@viabarcazas.com?subject=Solicitud%20de%20Demo" class="contact-card">
                 <div class="contact-card-icon"><i class="fa-solid fa-calendar-check"></i></div>
                 <h4>Agendar Demo</h4>
                 <p>Elegí día y horario</p>
@@ -1408,7 +1678,7 @@ function toggleFAQ(index) {
             // Fallback to mailto
             var subject = encodeURIComponent('Solicitud de Demo - ' + data.empresa);
             var body = encodeURIComponent('Nombre: ' + data.nombre + '\nEmpresa: ' + data.empresa + '\nPaís: ' + data.pais + '\nFlota: ' + data.flota + '\nEmail: ' + data.email + '\nMensaje: ' + data.mensaje);
-            window.location.href = 'mailto:info@fluviafleet.com?subject=' + subject + '&body=' + body;
+            window.location.href = 'mailto:info@viabarcazas.com?subject=' + subject + '&body=' + body;
         });
     });
 })();
@@ -1418,8 +1688,8 @@ function toggleFAQ(index) {
 <footer class="footer">
     <div class="footer-grid">
         <div>
-            <div class="footer-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:36px;height:36px;border-radius:50%;object-fit:cover"><span style="font-family:'Newsreader',serif;font-size:1.7rem;font-weight:400;color:var(--text)">FluviaFleet</span></div>
-            <p class="footer-desc">Gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná. Tecnología al servicio del transporte fluvial.</p>
+            <div class="footer-brand"><svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="2" y1="25" x2="46" y2="25" stroke="#F3F7F5" stroke-width="1.3" opacity="0.28"/><circle cx="24" cy="33" r="3" fill="#25D366"/></svg><span style="font-family:'Unbounded',sans-serif;font-size:1.15rem;font-weight:700;color:var(--accent)">ViaBarcazas</span></div>
+            <p class="footer-desc">Panel de operaciones para flotas de barcazas en la Hidrovía Paraguay-Paraná.</p>
         </div>
         <div>
             <h4>PRODUCTO</h4>
@@ -1433,7 +1703,7 @@ function toggleFAQ(index) {
             <a href="#nosotros">Nosotros</a>
             <a href="#caso-exito">Caso de Éxito</a>
             <a href="#contacto">Contacto</a>
-            <a href="blog-fluvia.html">Blog</a>
+            <a href="blog.html">Blog</a>
         </div>
         <div>
             <h4>LEGAL</h4>
@@ -1441,8 +1711,19 @@ function toggleFAQ(index) {
             <a href="privacidad.html">Política de Privacidad</a>
             <a href="cookies.html">Política de Cookies</a>
         </div>
+        <div>
+            <h4>CONTACTO</h4>
+            <a href="tel:+595212527900" style="display:flex;align-items:center;gap:8px"><i class="fa-solid fa-phone" style="font-size:11px"></i> +595 21 252 7900</a>
+            <a href="mailto:info@viabarcazas.com" style="display:flex;align-items:center;gap:8px"><i class="fa-solid fa-envelope" style="font-size:11px"></i> info@viabarcazas.com</a>
+            <a href="#contacto" style="display:flex;align-items:center;gap:8px"><i class="fa-solid fa-location-dot" style="font-size:11px"></i> Asunción, Paraguay</a>
+            <div class="footer-socials" style="margin-top:14px">
+                <a href="https://linkedin.com" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://x.com" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://facebook.com" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i></a>
+            </div>
+        </div>
     </div>
-    <div class="footer-copy">&copy; 2026 FluviaFleet. Todos los derechos reservados.</div>
+    <div class="footer-copy">&copy; 2026 ViaBarcazas. Todos los derechos reservados.</div>
 </footer>
 
 <!-- Structured Data (JSON-LD) for SEO -->
@@ -1452,11 +1733,11 @@ function toggleFAQ(index) {
   "@graph": [
     {
       "@type": "Organization",
-      "name": "FluviaFleet",
-      "url": "https://fluviafleet.com",
-      "logo": "https://fluviafleet.com/img/fluvia-logo.jpg",
-      "description": "La primera plataforma con IA diseñada para la gestión de flotas fluviales en la Hidrovía Paraguay-Paraná.",
-      "email": "info@fluviafleet.com",
+      "name": "ViaBarcazas",
+      "url": "https://viabarcazas.com",
+      "logo": "https://viabarcazas.com/img/viabarcazas-logo.jpg",
+      "description": "Panel de operaciones con IA para flotas de barcazas en la Hidrovía Paraguay-Paraná.",
+      "email": "info@viabarcazas.com",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Asunción",
@@ -1472,20 +1753,20 @@ function toggleFAQ(index) {
     },
     {
       "@type": "SoftwareApplication",
-      "name": "FluviaFleet",
+      "name": "ViaBarcazas",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "description": "Plataforma SaaS de gestión inteligente de flotas fluviales con tracking AIS, control de combustible, armador de convoyes y Copiloto IA.",
-      "url": "https://fluviafleet.com",
+      "url": "https://viabarcazas.com",
       "offers": {
         "@type": "AggregateOffer",
-        "lowPrice": "149",
-        "highPrice": "499",
+        "lowPrice": "179",
+        "highPrice": "549",
         "priceCurrency": "USD",
         "offerCount": "3"
       },
       "featureList": [
-        "AIS Tracking en tiempo real",
+        "Mapa AIS en tiempo real",
         "Armador de convoyes inteligente",
         "Control de combustible",
         "Mantenimiento preventivo",
@@ -1497,10 +1778,10 @@ function toggleFAQ(index) {
     {
       "@type": "FAQPage",
       "mainEntity": [
-        {"@type": "Question", "name": "¿Necesito instalar hardware en mis embarcaciones?", "acceptedAnswer": {"@type": "Answer", "text": "No. FluviaFleet funciona 100% en la nube utilizando datos AIS existentes."}},
-        {"@type": "Question", "name": "¿Mis datos son privados?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Datos cifrados, entornos aislados por empresa, compatible con LGPD y GDPR."}},
-        {"@type": "Question", "name": "¿Cuánto tarda el onboarding?", "acceptedAnswer": {"@type": "Answer", "text": "Entre 1 y 5 días según el tamaño de la flota."}},
-        {"@type": "Question", "name": "¿En qué países opera FluviaFleet?", "acceptedAnswer": {"@type": "Answer", "text": "Argentina, Paraguay, Brasil, Uruguay y Bolivia."}}
+        {"@type": "Question", "name": "¿Tengo que instalar algo a bordo?", "acceptedAnswer": {"@type": "Answer", "text": "No. Corre en la nube y usa el AIS y GPS que tu embarcación ya emite."}},
+        {"@type": "Question", "name": "¿Quién puede ver los datos de mi flota?", "acceptedAnswer": {"@type": "Answer", "text": "Solo tu empresa. Datos cifrados, entorno aislado por cuenta, compatible con LGPD y GDPR."}},
+        {"@type": "Question", "name": "¿Cuánto tarda en estar andando?", "acceptedAnswer": {"@type": "Answer", "text": "Entre 1 y 5 días según el tamaño de la flota."}},
+        {"@type": "Question", "name": "¿Dónde funciona ViaBarcazas?", "acceptedAnswer": {"@type": "Answer", "text": "Paraguay, Argentina, Brasil, Uruguay y Bolivia."}}
       ]
     }
   ]

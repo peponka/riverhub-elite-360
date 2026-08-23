@@ -56,7 +56,7 @@ async function sendWhatsApp(phone, message) {
         to,
         type: 'template',
         template: {
-          name: 'fluviafleet_alerta',
+          name: 'viabarcazas_alerta',
           language: { code: 'es' },
           components: [{
             type: 'body',
@@ -120,14 +120,14 @@ router.post('/alert', async (req, res) => {
 
   const messages = {
     draft_alert:
-      `⚠️ *Alerta de Calado — FluviaFleet*\n\nEstación: ${payload?.station || '—'}\nNivel actual: ${payload?.level || '—'}m\nEmbarcación en riesgo: ${payload?.vessel || '—'}\n\nVerificá la situación antes de zarpar.`,
+      `⚠️ *Alerta de Calado — ViaBarcazas*\n\nEstación: ${payload?.station || '—'}\nNivel actual: ${payload?.level || '—'}m\nEmbarcación en riesgo: ${payload?.vessel || '—'}\n\nVerificá la situación antes de zarpar.`,
     compliance_expiry:
-      `🚨 *Documento por Vencer — FluviaFleet*\n\n📄 ${payload?.document_type || 'Certificado'}\n🚢 ${payload?.vessel || '—'}\n🏛️ ${payload?.authority || '—'}\n📅 Vence: ${payload?.expiry_date || '—'} (${payload?.days_left || '—'} días)\n\nRenovar antes de operar en aguas reguladas.`,
+      `🚨 *Documento por Vencer — ViaBarcazas*\n\n📄 ${payload?.document_type || 'Certificado'}\n🚢 ${payload?.vessel || '—'}\n🏛️ ${payload?.authority || '—'}\n📅 Vence: ${payload?.expiry_date || '—'} (${payload?.days_left || '—'} días)\n\nRenovar antes de operar en aguas reguladas.`,
     maintenance_overdue:
-      `🔧 *Mantenimiento Vencido — FluviaFleet*\n\n🚢 ${payload?.vessel || '—'}\n⚙️ ${payload?.task || '—'}\n📅 Venció: ${payload?.overdue_date || '—'}\n\nProgramar intervención urgente.`,
+      `🔧 *Mantenimiento Vencido — ViaBarcazas*\n\n🚢 ${payload?.vessel || '—'}\n⚙️ ${payload?.task || '—'}\n📅 Venció: ${payload?.overdue_date || '—'}\n\nProgramar intervención urgente.`,
     new_contract:
-      `📄 *Nuevo Contrato — FluviaFleet*\n\n🤝 ${payload?.client || '—'}\n🗺️ ${payload?.route || '—'}\n📦 ${payload?.product || '—'}\n💰 ${payload?.rate || '—'}\n\nRevisá los detalles en el panel.`,
-    custom: payload?.text || '📣 Notificación de FluviaFleet',
+      `📄 *Nuevo Contrato — ViaBarcazas*\n\n🤝 ${payload?.client || '—'}\n🗺️ ${payload?.route || '—'}\n📦 ${payload?.product || '—'}\n💰 ${payload?.rate || '—'}\n\nRevisá los detalles en el panel.`,
+    custom: payload?.text || '📣 Notificación de ViaBarcazas',
   };
 
   const body = messages[type] || messages.custom;

@@ -191,7 +191,7 @@ window.fetch = async function(...args) {
 window.onerror = function(msg, src, line, col, err) {
     // Suppress Supabase auth noise
     if (typeof msg === 'string' && (msg.includes('refresh_token') || msg.includes('AuthApiException'))) return true;
-    console.error('[FluviaFleet Error]', msg, '@ ' + src + ':' + line);
+    console.error('[ViaBarcazas Error]', msg, '@ ' + src + ':' + line);
     return true; // Prevent default error handling
 };
 window.addEventListener('unhandledrejection', function(e) {
@@ -201,7 +201,7 @@ window.addEventListener('unhandledrejection', function(e) {
         e.preventDefault();
         return;
     }
-    console.warn('[FluviaFleet Unhandled]', msg);
+    console.warn('[ViaBarcazas Unhandled]', msg);
     e.preventDefault();
 });
 
@@ -229,7 +229,7 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
             document.getElementById('app-shell').style.display='none';
             var screen = document.getElementById('login-screen');
             screen.style.display='flex';
-            screen.querySelector('.login-card').innerHTML = '<div class="login-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:64px;height:64px;border-radius:50%;object-fit:cover"><span style="font-family:Newsreader,serif;font-size:3.2rem;font-weight:400;color:var(--text-primary);letter-spacing:-0.01em">FluviaFleet</span></div>'+
+            screen.querySelector('.login-card').innerHTML = '<div class="login-brand"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.4" fill="#25D366"/></svg><span style="font-family:Bricolage Grotesque,sans-serif;font-size:2.2rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>'+
                 '<h1 class="login-title">Reset<br><em>Password.</em></h1>'+
                 '<p class="login-sub">ENTER YOUR NEW PASSWORD</p>'+
                 '<div id="reset-pw-error" style="display:none;font-size:12px;margin:12px 0;font-weight:600;"></div>'+
@@ -238,7 +238,7 @@ function esc(str) { const d = document.createElement('div'); d.textContent = str
                 '<label class="login-label">CONFIRM PASSWORD</label>'+
                 '<div style="position:relative"><input type="password" id="confirm-password-input" class="login-input" placeholder="Repeat password" style="padding-right:44px"><button type="button" onclick="togglePwVis(\'confirm-password-input\',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-secondary);font-size:16px;padding:4px;" tabindex="-1"><i class="fa-solid fa-eye"></i></button></div>'+
                 '<button class="login-btn" onclick="doChangePassword()">Change Password</button>'+
-                '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Paraguay-Parana Waterway ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â FluviaFleet</p></div>';
+                '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Paraguay-Parana Waterway - ViaBarcazas</p></div>';
         }, 1000);
     }
 })();
@@ -295,7 +295,7 @@ function showForgotPasswordView() {
     if (!card) return;
     authMode = 'forgotPassword';
     card.innerHTML =
-        '<div class="login-brand"><img src="img/fluvia-logo.jpg" alt="FluviaFleet" style="width:64px;height:64px;border-radius:50%;object-fit:cover"><span style="font-family:Newsreader,serif;font-size:3.2rem;font-weight:400;color:var(--text-primary);letter-spacing:-0.01em">FluviaFleet</span></div>'+
+        '<div class="login-brand"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.4" fill="#25D366"/></svg><span style="font-family:Bricolage Grotesque,sans-serif;font-size:2.2rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>'+
         '<h1 class="login-title">Recover<br><em>password.</em></h1>'+
         '<p class="login-sub" style="line-height:1.5;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;">Enter your email and we will send you a link to reset your password.</p>'+
         '<div id="forgot-error" style="display:none;color:var(--error);font-size:12px;margin:12px 0;font-weight:600;"></div>'+
@@ -303,8 +303,8 @@ function showForgotPasswordView() {
         '<label class="login-label">EMAIL</label>'+
         '<input type="email" id="forgot-email" class="login-input" placeholder="user@company.com" autocomplete="email">'+
         '<button class="login-btn" id="forgot-submit-btn" onclick="sendPasswordResetLink()">Send link</button>'+
-        '<button type="button" onclick="showLoginView()" style="width:100%;margin-top:14px;background:none;border:1px solid var(--separator);border-radius:12px;padding:12px;color:var(--text-secondary);cursor:pointer;font-size:13px;font-weight:700;font-family:Inter,sans-serif;">Back to sign in</button>'+
-        '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Paraguay-Parana Waterway - FluviaFleet</p></div>';
+        '<button type="button" onclick="showLoginView()" style="width:100%;margin-top:14px;background:none;border:1px solid var(--separator);border-radius:12px;padding:12px;color:var(--text-secondary);cursor:pointer;font-size:13px;font-weight:700;font-family:Manrope,sans-serif;">Back to sign in</button>'+
+        '<div style="margin-top:24px;border-top:0.5px solid var(--separator);padding-top:16px;"><p class="login-footer">Paraguay-Parana Waterway - ViaBarcazas</p></div>';
     setTimeout(function(){
         var input = document.getElementById('forgot-email');
         if (input) input.focus();
@@ -430,7 +430,7 @@ function showApp(user){
         } else {
 
             // Auto-create profile if missing
-            sb.from('companies').select('id').eq('name','FluviaFleet Admin').single().then(function(c2){
+            sb.from('companies').select('id').eq('name','ViaBarcazas Admin').single().then(function(c2){
                 var cid = c2.data ? c2.data.id : null;
                 sb.from('user_profiles').insert({user_id:user.id, company_id:cid, role:'viewer', full_name:'New User'}).then(function(ins){
 
@@ -705,7 +705,7 @@ async function loadDashMiniCharts(vessels){
         var ctx1=document.getElementById('dash-fuel-trend');
         if(ctx1){
             if(dashFuelTrendChart)dashFuelTrendChart.destroy();
-            dashFuelTrendChart=new Chart(ctx1,{type:'line',data:{labels:fuelLabels,datasets:[{data:fuelValues,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.08)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#3B82F6',pointBorderColor:'#fff',pointBorderWidth:2,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' L'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:9},callback:function(v){return v>999?(v/1000).toFixed(0)+'k':v}}},x:{grid:{display:false},ticks:{font:{size:9},maxRotation:0}}}}});
+            dashFuelTrendChart=new Chart(ctx1,{type:'line',data:{labels:fuelLabels,datasets:[{data:fuelValues,borderColor:'#25D366',backgroundColor:'rgba(37,211,102,0.10)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#25D366',pointBorderColor:'#0F231C',pointBorderWidth:2,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' L'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2',font:{size:9},callback:function(v){return v>999?(v/1000).toFixed(0)+'k':v}}},x:{grid:{display:false},ticks:{color:'#A9B8B2',font:{size:9},maxRotation:0}}}}});
         }
     }catch(e){/* Fuel trend: */;}
     try{
@@ -714,7 +714,7 @@ async function loadDashMiniCharts(vessels){
         var ctx2=document.getElementById('dash-fleet-util');
         if(ctx2){
             if(dashFleetUtilChart)dashFleetUtilChart.destroy();
-            dashFleetUtilChart=new Chart(ctx2,{type:'doughnut',data:{labels:['Navigating','In Port','Maintenance'],datasets:[{data:[active,docked,maint],backgroundColor:['#2EA043','#3B82F6','#F59E0B'],borderWidth:0,borderRadius:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{font:{family:'Inter',size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}}});
+            dashFleetUtilChart=new Chart(ctx2,{type:'doughnut',data:{labels:['Navigating','In Port','Maintenance'],datasets:[{data:[active,docked,maint],backgroundColor:['#34D399','#128C7E','#FBBF24'],borderWidth:0,borderRadius:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#A9B8B2',font:{family:'Manrope',size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}}});
         }
     }catch(e){/* Fleet util: */;}
 }
@@ -761,7 +761,24 @@ async function loadFleet(){
         document.getElementById('fleet-total').textContent=data.length;
         var elServ=document.getElementById('fleet-service');if(elServ)elServ.textContent=inService;
         var elDock=document.getElementById('fleet-dock');if(elDock)elDock.textContent=inDock;
+        renderFleetCharts(data,inService,inDock,typeLabels);
     }catch(e){console.error('loadFleet:',e);}
+}
+var fleetStatusChart=null,fleetTypeChart=null;
+function renderFleetCharts(data,inService,inDock,typeLabels){
+    var other=Math.max(0,data.length-inService-inDock);
+    var ctx1=document.getElementById('fleet-status-chart');
+    if(ctx1){
+        if(fleetStatusChart)fleetStatusChart.destroy();
+        fleetStatusChart=new Chart(ctx1,{type:'doughnut',data:{labels:['In Service','Dry Dock','Other'],datasets:[{data:[inService,inDock,other],backgroundColor:['#34D399','#FBBF24','#6B7280'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#A9B8B2',font:{family:'Manrope',size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}}});
+    }
+    var byType={};
+    data.forEach(function(v){var type=(v.type||v.vessel_type||'tugboat').toLowerCase();var t=typeLabels[type]||(v.type||v.vessel_type||'Vessel').toUpperCase();byType[t]=(byType[t]||0)+1;});
+    var ctx2=document.getElementById('fleet-type-chart');
+    if(ctx2){
+        if(fleetTypeChart)fleetTypeChart.destroy();
+        fleetTypeChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(byType),datasets:[{data:Object.values(byType),backgroundColor:'rgba(37,211,102,0.65)',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2',stepSize:1}},y:{grid:{display:false},ticks:{color:'#A9B8B2',font:{size:10}}}}}});
+    }
 }
 
 async function loadTrips(){
@@ -905,15 +922,69 @@ async function loadCrew(){
             l.innerHTML=h;
             document.getElementById('crew-total').textContent=data.length;
             document.getElementById('crew-on').textContent=data.filter(function(c){var s=(c.status||'').toLowerCase();return s==='embarcado'||s==='onboard'}).length;
+            var elOff=document.getElementById('crew-off');if(elOff)elOff.textContent=data.filter(function(c){var s=(c.status||'').toLowerCase();return s==='franco'||s==='leave'}).length;
         }else{if(em)em.style.display='';}
     }catch(e){/* Crew: */;}
 }
+async function importCrewCSV(input){
+    var file=input.files&&input.files[0];if(!file)return;
+    try{
+        var text=await file.text();
+        var lines=text.split(/\r?\n/).filter(function(l){return l.trim()});
+        if(lines.length<2){alert('The file must have a header row and at least one data row.');input.value='';return;}
+        var rows=lines.slice(1);
+        var cid=currentCompanyId;var inserted=0;var failed=0;
+        for(var i=0;i<rows.length;i++){
+            var cols=rows[i].split(',').map(function(c){return c.trim()});
+            if(!cols[0])continue;
+            try{
+                var res=await sb.from('crew_members').insert({full_name:cols[0],role:cols[1]||'Sailor',vessel_name:cols[2]||null,document_number:cols[3]||null,status:'embarcado',company_id:cid});
+                if(res.error)failed++;else inserted++;
+            }catch(e){failed++;}
+        }
+        alert('Import complete: '+inserted+' crew members added'+(failed>0?', '+failed+' failed':'')+'.');
+        loadCrew();
+    }catch(e){console.error('importCrewCSV:',e);alert('Could not read the file.');}
+    input.value='';
+}
 
+var fuelTrendChart=null;
+function renderFuelTrend(data){
+    var ctx=document.getElementById('fuel-trend-chart');if(!ctx)return;
+    var byDay={};var order=[];
+    for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var k=d.toLocaleDateString('en',{day:'2-digit',month:'short'});byDay[k]=0;order.push(k);}
+    (data||[]).forEach(function(f){
+        if(!f.created_at)return;
+        var k=new Date(f.created_at).toLocaleDateString('en',{day:'2-digit',month:'short'});
+        if(byDay.hasOwnProperty(k))byDay[k]+=(f.liters||f.quantity||0);
+    });
+    if(fuelTrendChart)fuelTrendChart.destroy();
+    fuelTrendChart=new Chart(ctx,{type:'line',data:{labels:order,datasets:[{data:order.map(function(k){return byDay[k]}),borderColor:'#25D366',backgroundColor:'rgba(37,211,102,0.10)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#25D366',pointBorderColor:'#0F231C',pointBorderWidth:2,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' L'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2',font:{size:9}}},x:{grid:{display:false},ticks:{color:'#A9B8B2',font:{size:9},maxRotation:0}}}}});
+}
+function renderFuelInsights(data){
+    var el=document.getElementById('fuel-insights');if(!el)return;
+    data=data||[];
+    if(data.length===0){el.innerHTML='<div style="font-size:12px;color:var(--text-tertiary)">Not enough data to generate insights.</div>';return;}
+    var byVessel={};data.forEach(function(f){var v=f.vessel_name||'No vessel';byVessel[v]=(byVessel[v]||0)+(f.liters||f.quantity||0);});
+    var topVessel='';var topLiters=0;
+    Object.keys(byVessel).forEach(function(v){if(byVessel[v]>topLiters){topLiters=byVessel[v];topVessel=v;}});
+    var last3=data.slice(0,3).reduce(function(s,f){return s+(f.liters||f.quantity||0)},0);
+    var prev3=data.slice(3,6).reduce(function(s,f){return s+(f.liters||f.quantity||0)},0);
+    var rows=[];
+    if(topVessel)rows.push({icon:'fa-ship',color:'var(--accent)',text:'<strong>'+esc(topVessel)+'</strong> accounts for the highest consumption: '+topLiters.toLocaleString()+' L logged.'});
+    if(prev3>0&&last3>prev3*1.2)rows.push({icon:'fa-triangle-exclamation',color:'var(--warning)',text:'Consumption on recent refuels rose '+Math.round((last3/prev3-1)*100)+'% versus the prior period.'});
+    else if(prev3>0&&last3<prev3*0.8)rows.push({icon:'fa-arrow-trend-down',color:'var(--success)',text:'Consumption on recent refuels dropped '+Math.round((1-last3/prev3)*100)+'% versus the prior period.'});
+    var noVessel=data.filter(function(f){return!f.vessel_name}).length;
+    if(noVessel>0)rows.push({icon:'fa-circle-info',color:'var(--text-tertiary)',text:noVessel+' record(s) with no vessel assigned.'});
+    if(rows.length===0)rows.push({icon:'fa-check',color:'var(--success)',text:'Consumption stable, no anomalies detected.'});
+    el.innerHTML=rows.map(function(r){return '<div style="display:flex;gap:10px;align-items:flex-start"><div style="width:26px;height:26px;border-radius:8px;background:'+r.color+'1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+r.icon+'" style="font-size:11px;color:'+r.color+'"></i></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.5">'+r.text+'</div></div>';}).join('');
+}
 async function loadFuel(){
     try{
         var r=await sb.from('fuel_logs').select('*').order('created_at',{ascending:false}).limit(20);
         var data=r.data;var l=document.getElementById('fuel-list');var em=document.getElementById('fuel-empty');l.innerHTML='';
-        if(data&&data.length>0){em.style.display='none';l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px';var _vnames=["TB PARAGUAY 01","R/M HERCULES","B/M TITAN","R/M CENTAURO","TB PARAGUAY 01"];data.forEach(function(f,_vi){if(!f.vessel_name)f.vessel_name=_vnames[_vi%_vnames.length];var d=document.createElement('div');var liters=f.liters||f.quantity||0;var fType=(f.fuel_type||'Gasoil').toLowerCase();var typeColor=fType.indexOf('marine')>=0||fType.indexOf('mgo')>=0?'#0EA5E9':fType.indexOf('diesel')>=0||fType.indexOf('gasoil')>=0?'#F97316':'#8B5CF6';var t=f.created_at?new Date(f.created_at).toLocaleDateString('en',{day:'2-digit',month:'short',year:'numeric'}):'-';d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default';d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:10px;background:'+typeColor+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-gas-pump" style="font-size:16px;color:'+typeColor+'"></i></div><button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button></div><div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:'+(f.vessel_name?'var(--text-primary)':'var(--text-tertiary)')+';margin-bottom:2px"><i class="fa-solid fa-ship" style="font-size:11px;color:'+(f.vessel_name?typeColor:'var(--text-tertiary)')+'"></i>'+(f.vessel_name||'No vessel')+'</div><div style="font-family:Newsreader,serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:8px">'+liters.toLocaleString()+' <span style="font-family:Inter,sans-serif;font-size:12px;color:var(--text-secondary);font-weight:500">liters</span></div><div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+typeColor+';background:'+typeColor+'10;padding:3px 8px;border-radius:5px">'+(f.fuel_type||'Gasoil').toUpperCase()+'</span><span style="font-size:10px;color:var(--text-tertiary)"><i class="fa-regular fa-calendar" style="margin-right:4px"></i>'+t+'</span></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('fuel_logs',f.id,(f.vessel_name||'Record'),loadFuel);});l.appendChild(d);});document.getElementById('fuel-count').textContent=data.length;}else{em.style.display='';}
+        renderFuelTrend(data);renderFuelInsights(data);
+        if(data&&data.length>0){em.style.display='none';l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px';var _vnames=["TB PARAGUAY 01","R/M HERCULES","B/M TITAN","R/M CENTAURO","TB PARAGUAY 01"];data.forEach(function(f,_vi){if(!f.vessel_name)f.vessel_name=_vnames[_vi%_vnames.length];var d=document.createElement('div');var liters=f.liters||f.quantity||0;var fType=(f.fuel_type||'Gasoil').toLowerCase();var typeColor=fType.indexOf('marine')>=0||fType.indexOf('mgo')>=0?'#0EA5E9':fType.indexOf('diesel')>=0||fType.indexOf('gasoil')>=0?'#F97316':'#8B5CF6';var t=f.created_at?new Date(f.created_at).toLocaleDateString('en',{day:'2-digit',month:'short',year:'numeric'}):'-';d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default';d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px"><div style="width:40px;height:40px;border-radius:10px;background:'+typeColor+'12;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-gas-pump" style="font-size:16px;color:'+typeColor+'"></i></div><button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button></div><div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:'+(f.vessel_name?'var(--text-primary)':'var(--text-tertiary)')+';margin-bottom:2px"><i class="fa-solid fa-ship" style="font-size:11px;color:'+(f.vessel_name?typeColor:'var(--text-tertiary)')+'"></i>'+(f.vessel_name||'No vessel')+'</div><div style="font-family:Bricolage Grotesque,sans-serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:8px">'+liters.toLocaleString()+' <span style="font-family:Manrope,sans-serif;font-size:12px;color:var(--text-secondary);font-weight:500">liters</span></div><div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+typeColor+';background:'+typeColor+'10;padding:3px 8px;border-radius:5px">'+(f.fuel_type||'Gasoil').toUpperCase()+'</span><span style="font-size:10px;color:var(--text-tertiary)"><i class="fa-regular fa-calendar" style="margin-right:4px"></i>'+t+'</span></div>';d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('fuel_logs',f.id,(f.vessel_name||'Record'),loadFuel);});l.appendChild(d);});document.getElementById('fuel-count').textContent=data.length;}else{em.style.display='';}
     }catch(e){/* Fuel: */;}
 }
 
@@ -955,40 +1026,64 @@ async function loadMaint(){
     }catch(e){console.error('loadMaint:',e);}
 }
 
+var panolData=[];var panolPage=1;var panolFilter='';var panolPageSize=10;
+var panolCatIcons={'lubricantes':'fa-oil-can','lubricants':'fa-oil-can','filtros':'fa-filter','filters':'fa-filter','pintura':'fa-paint-roller','paint':'fa-paint-roller','seguridad':'fa-shield-halved','safety':'fa-shield-halved','motor':'fa-gear','engine':'fa-gear','casco':'fa-ship','hull':'fa-ship','hidraulica':'fa-droplet','hydraulic':'fa-droplet','electrico':'fa-bolt','electrical':'fa-bolt','cabulleria':'fa-link','cordage':'fa-link','soldadura':'fa-fire','welding':'fa-fire'};
+var panolCatColors={'lubricantes':'#8B5CF6','lubricants':'#8B5CF6','filtros':'#3B82F6','filters':'#3B82F6','pintura':'#F97316','paint':'#F97316','seguridad':'#EF4444','safety':'#EF4444','motor':'#6B7280','engine':'#6B7280','casco':'#0EA5E9','hull':'#0EA5E9','hidraulica':'#06B6D4','hydraulic':'#06B6D4','electrico':'#F59E0B','electrical':'#F59E0B','cabulleria':'#10B981','cordage':'#10B981','soldadura':'#DC2626','welding':'#DC2626'};
+var panolCatLabels={'lubricantes':'LUBRICANTS','filtros':'FILTERS','pintura':'PAINT','seguridad':'SAFETY','motor':'ENGINE','casco':'HULL','hidraulica':'HYDRAULIC','electrico':'ELECTRICAL','cabulleria':'CORDAGE','soldadura':'WELDING'};
 async function loadPanol(){
     try{
-        var r=await sb.from('inventory_items').select('*').limit(500);var data=r.data;
-        var l=document.getElementById('panol-list');l.innerHTML='';
-        if(data&&data.length>0){
-            var catIcons={'lubricantes':'fa-oil-can','lubricants':'fa-oil-can','filtros':'fa-filter','filters':'fa-filter','pintura':'fa-paint-roller','paint':'fa-paint-roller','seguridad':'fa-shield-halved','safety':'fa-shield-halved','motor':'fa-gear','engine':'fa-gear','casco':'fa-ship','hull':'fa-ship','hidraulica':'fa-droplet','hydraulic':'fa-droplet','electrico':'fa-bolt','electrical':'fa-bolt','cabulleria':'fa-link','cordage':'fa-link','soldadura':'fa-fire','welding':'fa-fire'};
-            var catColors={'lubricantes':'#8B5CF6','lubricants':'#8B5CF6','filtros':'#3B82F6','filters':'#3B82F6','pintura':'#F97316','paint':'#F97316','seguridad':'#EF4444','safety':'#EF4444','motor':'#6B7280','engine':'#6B7280','casco':'#0EA5E9','hull':'#0EA5E9','hidraulica':'#06B6D4','hydraulic':'#06B6D4','electrico':'#F59E0B','electrical':'#F59E0B','cabulleria':'#10B981','cordage':'#10B981','soldadura':'#DC2626','welding':'#DC2626'};
-            var catLabels={'lubricantes':'LUBRICANTS','filtros':'FILTERS','pintura':'PAINT','seguridad':'SAFETY','motor':'ENGINE','casco':'HULL','hidraulica':'HYDRAULIC','electrico':'ELECTRICAL','cabulleria':'CORDAGE','soldadura':'WELDING'};
-            l.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px';
-            data.forEach(function(i){
-                var q=i.quantity||i.stock||0;var mn=i.min_stock||5;var low=q<=mn;var critical=q===0;
-                var cat=(i.category||'general').toLowerCase();
-                var icon=catIcons[cat]||'fa-box';
-                var color=catColors[cat]||'var(--accent)';
-                var catLabel=catLabels[cat]||(i.category||'General').toUpperCase();
-                var pct=Math.min(100,Math.round((q/Math.max(mn*3,1))*100));
-                var barColor=critical?'var(--error)':low?'var(--warning)':'var(--success)';
-                var statusLabel=critical?'OUT OF STOCK':low?'LOW STOCK':'IN STOCK';
-                var statusBg=critical?'rgba(220,38,38,0.08)':low?'rgba(245,158,11,0.08)':'rgba(46,160,67,0.08)';
-                var d=document.createElement('div');
-                d.style.cssText='background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px;transition:all 0.2s;cursor:default;position:relative;overflow:hidden';
-                d.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.06)'};
-                d.onmouseleave=function(){this.style.transform='none';this.style.boxShadow='none'};
-                d.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px"><div style="width:42px;height:42px;border-radius:12px;background:'+color+'12;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:17px;color:'+color+'"></i></div><button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px;transition:all 0.15s"><i class="fa-regular fa-trash-can"></i></button></div><div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px;line-height:1.3">'+(i.name||'')+'</div><div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.5px;color:'+color+';background:'+color+'10;padding:3px 8px;border-radius:5px;margin-bottom:14px">'+catLabel+'</div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:11px;color:var(--text-secondary);font-weight:500">Stock</span><span style="font-size:13px;font-weight:700;color:var(--text-primary)">'+q+' <span style="font-size:10px;font-weight:500;color:var(--text-secondary)">units</span></span></div><div style="width:100%;height:6px;background:var(--surface-low);border-radius:3px;overflow:hidden;margin-bottom:12px"><div style="width:'+pct+'%;height:100%;background:'+barColor+';border-radius:3px;transition:width 0.5s ease"></div></div><div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+barColor+';background:'+statusBg+';padding:4px 10px;border-radius:6px">'+statusLabel+'</span><span style="font-size:10px;color:var(--text-tertiary)">min: '+mn+'</span></div>';
-                d.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});
-                l.appendChild(d);
-            });
-            document.getElementById('panol-total').textContent=data.length;
-            var cats={};var lowCount=0;
-            data.forEach(function(i){cats[i.category||'General']=1;if((i.quantity||i.stock||0)<=(i.min_stock||0))lowCount++;});
-            var elLow=document.getElementById('panol-low');if(elLow)elLow.textContent=lowCount;
-            var elCats=document.getElementById('panol-cats');if(elCats)elCats.textContent=Object.keys(cats).length;
-        }
+        var r=await sb.from('inventory_items').select('*').order('name').limit(500);
+        panolData=r.data||[];panolPage=1;
+        document.getElementById('panol-total').textContent=panolData.length;
+        var cats={};var lowCount=0;
+        panolData.forEach(function(i){cats[i.category||'General']=1;var q=i.stock_current||0;var mn=i.stock_min_alert||0;if(q<=mn)lowCount++;});
+        var elLow=document.getElementById('panol-low');if(elLow)elLow.textContent=lowCount;
+        var elCats=document.getElementById('panol-cats');if(elCats)elCats.textContent=Object.keys(cats).length;
+        renderPanolTable();
     }catch(e){console.error('loadPanol:',e);}
+}
+function filterPanol(v){panolFilter=(v||'').toLowerCase();panolPage=1;renderPanolTable();}
+function panolGoPage(p){panolPage=p;renderPanolTable();}
+function renderPanolTable(){
+    var l=document.getElementById('panol-list');var pag=document.getElementById('panol-pagination');
+    l.innerHTML='';if(pag)pag.innerHTML='';
+    var filtered=panolData.filter(function(i){if(!panolFilter)return true;return((i.name||'')+' '+(i.sku||'')+' '+(i.category||'')+' '+(i.location||'')).toLowerCase().indexOf(panolFilter)>-1;});
+    if(filtered.length===0){l.innerHTML='<div style="padding:40px;text-align:center;color:var(--text-tertiary);font-size:13px">No items found in inventory.</div>';return;}
+    var totalPages=Math.max(1,Math.ceil(filtered.length/panolPageSize));
+    if(panolPage>totalPages)panolPage=totalPages;
+    var start=(panolPage-1)*panolPageSize;
+    var pageItems=filtered.slice(start,start+panolPageSize);
+    var table=document.createElement('table');table.className='data-table';table.style.width='100%';
+    table.innerHTML='<thead><tr><th>SKU</th><th>Name</th><th>Category</th><th>Quantity</th><th>Location</th><th>Status</th><th style="text-align:right">Actions</th></tr></thead>';
+    var tbody=document.createElement('tbody');
+    pageItems.forEach(function(i){
+        var q=i.stock_current||0;var mn=i.stock_min_alert||0;var low=q<=mn;var critical=q===0;
+        var cat=(i.category||'general').toLowerCase();
+        var icon=panolCatIcons[cat]||'fa-box';var color=panolCatColors[cat]||'var(--accent)';
+        var catLabel=panolCatLabels[cat]||(i.category||'General').toUpperCase();
+        var statusLabel=critical?'OUT OF STOCK':low?'LOW STOCK':'IN STOCK';
+        var statusColor=critical?'var(--error)':low?'var(--warning)':'var(--success)';
+        var statusBg=critical?'rgba(248,113,113,0.1)':low?'rgba(251,191,36,0.1)':'rgba(52,211,153,0.1)';
+        var tr=document.createElement('tr');
+        tr.innerHTML='<td style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--text-tertiary)">'+(i.sku||'—')+'</td>'+
+            '<td><div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:8px;background:'+color+'1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:12px;color:'+color+'"></i></div><span style="font-weight:600;color:var(--text-primary)">'+esc(i.name||'')+'</span></div></td>'+
+            '<td style="color:var(--text-secondary)">'+esc(catLabel)+'</td>'+
+            '<td style="font-weight:700;color:var(--text-primary)">'+q+' <span style="font-weight:500;color:var(--text-tertiary);font-size:11px">'+(i.unit||'units')+'</span></td>'+
+            '<td style="color:var(--text-secondary)">'+esc(i.location||'—')+'</td>'+
+            '<td><span style="font-size:10px;font-weight:700;letter-spacing:0.3px;color:'+statusColor+';background:'+statusBg+';padding:4px 10px;border-radius:6px">'+statusLabel+'</span></td>'+
+            '<td style="text-align:right"><button class="delete-btn" title="Delete" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;padding:4px;border-radius:6px;font-size:13px"><i class="fa-regular fa-trash-can"></i></button></td>';
+        tr.querySelector('.delete-btn').addEventListener('click',function(){confirmDelete('inventory_items',i.id,(i.name||'Item'),loadPanol);});
+        tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    l.appendChild(table);
+    if(pag&&filtered.length>0){
+        var from=start+1;var to=Math.min(start+panolPageSize,filtered.length);
+        var html='<div>Showing '+from+'-'+to+' of '+filtered.length+' items</div><div style="display:flex;gap:6px">';
+        for(var p=1;p<=totalPages;p++){html+='<button onclick="panolGoPage('+p+')" style="min-width:26px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--separator);background:'+(p===panolPage?'var(--accent)':'var(--bg-secondary)')+';color:'+(p===panolPage?'#fff':'var(--text-secondary)')+';font-size:11px;cursor:pointer">'+p+'</button>';}
+        html+='</div>';
+        pag.innerHTML=html;
+    }
 }
 
 async function loadComms(){
@@ -1005,7 +1100,7 @@ var heatLayer = null;
 function initMap(){
     map=L.map('leaflet-map',{zoomControl:false}).setView([-27.5,-58.3],6);
     L.control.zoom({position:'topleft'}).addTo(map);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'OpenStreetMap',maxZoom:18}).addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:18,subdomains:'abcd'}).addTo(map);
     // Own fleet from Supabase
     loadFleetMarkers();
     // AIS third-party traffic
@@ -1097,7 +1192,7 @@ var modalForms={
     crew:{title:'Add Crew Member',fields:[{id:'crew-name',label:'NAME',type:'text',placeholder:'John Doe'},{id:'crew-role',label:'ROLE',type:'select',options:['Captain','Helmsman','Engineer','Seaman','Cook']},{id:'crew-vessel',label:'VESSEL',type:'vessel-select'},{id:'crew-doc',label:'DOCUMENT ID',type:'text',placeholder:'Document number'}]},
     fuel:{title:'Record Fuel',fields:[{id:'fuel-vessel',label:'VESSEL',type:'text',placeholder:'Nombre'},{id:'fuel-liters',label:'LITERS',type:'text',placeholder:'5000'},{id:'fuel-type',label:'TYPE',type:'select',options:['Diesel','IFO 380','MGO']},{id:'fuel-date',label:'DATE',type:'date'}]},
     maint:{title:'New Maintenance Order',fields:[{id:'maint-title',label:'DESCRIPTION',type:'text',placeholder:'What to repair'},{id:'maint-vessel',label:'VESSEL',type:'text',placeholder:'Vessel'},{id:'maint-priority',label:'PRIORITY',type:'select',options:['High','Medium','Low']},{id:'maint-notes',label:'NOTES',type:'textarea',placeholder:'Details...'}]},
-    panol:{title:'Add Item',fields:[{id:'panol-name',label:'SPARE PART',type:'text',placeholder:'Oil filter'},{id:'panol-cat',label:'CATEGORY',type:'select',options:['Motor','Electric','Hydraulic','Hull','General']},{id:'panol-qty',label:'QUANTITY',type:'text',placeholder:'10'},{id:'panol-min',label:'MIN STOCK',type:'text',placeholder:'2'}]},
+    panol:{title:'Add Item',fields:[{id:'panol-name',label:'SPARE PART',type:'text',placeholder:'Oil filter'},{id:'panol-cat',label:'CATEGORY',type:'select',options:['Motor','Electric','Hydraulic','Hull','General']},{id:'panol-qty',label:'QUANTITY',type:'text',placeholder:'10'},{id:'panol-min',label:'MIN STOCK',type:'text',placeholder:'2'},{id:'panol-loc',label:'LOCATION',type:'text',placeholder:'Bay A - Shelf 3'}]},
     calado:{title:'Record Draft Reading',fields:[{id:'calado-vessel',label:'VESSEL',type:'vessel-select'},{id:'calado-value',label:'DRAFT (METERS)',type:'text',placeholder:'2.45'},{id:'calado-max',label:'MAX DRAFT (M)',type:'text',placeholder:'3.50'},{id:'calado-notes',label:'OBSERVATIONS',type:'textarea',placeholder:'Conditions, location...'}]},
     contrato:{title:'New Freight Contract',fields:[{id:'cont-client',label:'CLIENT',type:'text',placeholder:'Company name'},{id:'cont-route',label:'ROUTE',type:'text',placeholder:'Origin - Destination'},{id:'cont-product',label:'PRODUCT',type:'text',placeholder:'Soybean, Iron Ore, etc.'},{id:'cont-type',label:'TYPE',type:'select',options:['Spot','COA','Time Charter','Volume']},{id:'cont-volume',label:'VOLUME (tons)',type:'number',placeholder:'Total tonnage'},{id:'cont-rate',label:'RATE (USD/ton)',type:'number',placeholder:'Rate per ton'},{id:'cont-exp',label:'EXPIRATION',type:'date'}]},incidente:{title:'Report Incident',fields:[{id:'inc-title',label:'TITLE',type:'text',placeholder:'Brief incident description'},{id:'inc-vessel',label:'VESSEL',type:'vessel-select'},{id:'inc-severity',label:'SEVERITY',type:'select',options:['Critical','High','Medium','Low']},{id:'inc-type',label:'TYPE',type:'select',options:['Collision','Grounding','Spill','Mechanical failure','Fire','Medical','Other']},{id:'inc-desc',label:'DETAILED DESCRIPTION',type:'textarea',placeholder:'What happened, where, when, actions taken...'}]}
 };
@@ -1119,13 +1214,13 @@ document.getElementById('modal-submit').addEventListener('click',async function(
         var cid=currentCompanyId;
         if(t==='fleet'&&d['fleet-name']){await sb.from('vessels').insert({name:d['fleet-name'],type:d['fleet-type'],status:d['fleet-status'],location:d['fleet-location'],company_id:cid});loadFleet();}
         else if(t==='viaje'&&d['viaje-vessel']){await sb.from('voyages').insert({vessel_name:d['viaje-vessel'],origin_port:d['viaje-origin'],destination_port:d['viaje-dest'],cargo_tons:parseInt(d['viaje-cargo'])||0,departure_date:d['viaje-date']||null,status:'pending',company_id:cid});loadTrips();}
-        else if(t==='bitacora'&&d['bit-title']){await sb.from('logs').insert({title:d['bit-title'],vessel_name:d['bit-vessel'],action_type:d['bit-type'].toLowerCase(),description:d['bit-desc'],company_id:cid});loadBitacora();}
+        else if(t==='bitacora'&&d['bit-title']){var br=await sb.from('logs').insert({title:d['bit-title'],vessel_name:d['bit-vessel'],action_type:d['bit-type'].toLowerCase(),description:d['bit-desc'],company_id:cid});if(br.error){alert('Error saving logbook entry: '+br.error.message);return;}loadBitacora();}
         else if(t==='crew'&&d['crew-name']){await sb.from('crew_members').insert({full_name:d['crew-name'],role:d['crew-role'],vessel_name:d['crew-vessel'],document_number:d['crew-doc'],status:'embarcado',company_id:cid});loadCrew();}
         else if(t==='fuel'&&d['fuel-vessel']){await sb.from('fuel_logs').insert({vessel_name:d['fuel-vessel'],liters:parseInt(d['fuel-liters'])||0,fuel_type:d['fuel-type'],company_id:cid});loadFuel();}
         else if(t==='maint'&&d['maint-title']){await sb.from('maintenance_tasks').insert({description:d['maint-title'],vessel_name:d['maint-vessel'],priority:d['maint-priority'],status:'pending',notes:d['maint-notes'],company_id:cid});loadMaint();}
-        else if(t==='panol'&&d['panol-name']){await sb.from('inventory_items').insert({name:d['panol-name'],category:d['panol-cat'],quantity:parseInt(d['panol-qty'])||0,min_stock:parseInt(d['panol-min'])||0,company_id:cid});loadPanol();}
-        else if(t==='calado'&&d['calado-vessel']){await sb.from('logs').insert({title:'Draft reading: '+d['calado-vessel'],vessel_name:d['calado-vessel'],action_type:'DRAFT_READING',description:d['calado-notes']||'Draft: '+d['calado-value']+'m / Max: '+d['calado-max']+'m',details:JSON.stringify({draft:parseFloat(d['calado-value'])||0,max_draft:parseFloat(d['calado-max'])||3.5}),company_id:cid});loadCalado();}
-        else if(t==='incidente'&&d['inc-title']){await sb.from('logs').insert({title:d['inc-title'],vessel_name:d['inc-vessel'],action_type:'INCIDENT',description:d['inc-desc'],details:JSON.stringify({severity:d['inc-severity'],type:d['inc-type'],status:'Open'}),company_id:cid});loadIncidents();}
+        else if(t==='panol'&&d['panol-name']){await sb.from('inventory_items').insert({name:d['panol-name'],category:d['panol-cat'],stock_current:parseInt(d['panol-qty'])||0,stock_min_alert:parseInt(d['panol-min'])||0,location:d['panol-loc']||null,company_id:cid});loadPanol();}
+        else if(t==='calado'&&d['calado-vessel']){var cr=await sb.from('logs').insert({title:'Draft reading: '+d['calado-vessel'],vessel_name:d['calado-vessel'],action_type:'DRAFT_READING',description:d['calado-notes']||'Draft: '+d['calado-value']+'m / Max: '+d['calado-max']+'m',details:JSON.stringify({draft:parseFloat(d['calado-value'])||0,max_draft:parseFloat(d['calado-max'])||3.5}),company_id:cid});if(cr.error){alert('Error saving draft reading: '+cr.error.message);return;}loadCalado();}
+        else if(t==='incidente'&&d['inc-title']){var ir=await sb.from('logs').insert({title:d['inc-title'],vessel_name:d['inc-vessel'],action_type:'INCIDENT',description:d['inc-desc'],details:JSON.stringify({severity:d['inc-severity'],type:d['inc-type'],status:'Open'}),company_id:cid});if(ir.error){alert('Error saving incident: '+ir.error.message);return;}loadIncidents();}
         else if(t==='contrato'&&d['cont-client']){await sb.from('freight_contracts').insert({client:d['cont-client'],route:d['cont-route'],product:d['cont-product'],contract_type:d['cont-type'],volume_total:parseFloat(d['cont-volume'])||0,rate_per_ton:parseFloat(d['cont-rate'])||0,expiration_date:d['cont-exp'],status:'active',volume_used:0,company_id:cid});loadContratosEN();}
     }catch(e){console.error('Save:',e);}
     document.getElementById('modal-overlay').classList.remove('open');
@@ -1152,7 +1247,7 @@ function selectPlan(plan){
     var price=planPrices[plan][currentPeriod];
     var name=planNames[plan];
     document.getElementById('modal-title').textContent='Checkout - '+name;
-    document.getElementById('modal-body').innerHTML='<div style="background:var(--surface-low);border-radius:12px;padding:20px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">'+esc(name)+'</span><span style="font-family:Newsreader,serif;font-size:28px;font-weight:400">$'+price.toLocaleString('en-US')+'</span></div><p style="font-size:11px;color:var(--text-secondary);margin-top:4px">Billing '+(currentPeriod==='monthly'?'monthly':'yearly')+' - 14 days free</p></div><div style="text-align:center;padding:20px 0"><i class="fa-solid fa-lock" style="font-size:32px;color:var(--accent);margin-bottom:12px"></i><p style="font-size:14px;color:var(--text-primary);font-weight:600">Secure payment via external gateway</p><p style="font-size:12px;color:var(--text-secondary);margin-top:8px">Upon confirmation you will be redirected to the secure payment gateway to complete the transaction.</p></div>';
+    document.getElementById('modal-body').innerHTML='<div style="background:var(--surface-low);border-radius:12px;padding:20px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">'+esc(name)+'</span><span style="font-family:Bricolage Grotesque,sans-serif;font-size:28px;font-weight:400">$'+price.toLocaleString('en-US')+'</span></div><p style="font-size:11px;color:var(--text-secondary);margin-top:4px">Billing '+(currentPeriod==='monthly'?'monthly':'yearly')+' - 14 days free</p></div><div style="text-align:center;padding:20px 0"><i class="fa-solid fa-lock" style="font-size:32px;color:var(--accent);margin-bottom:12px"></i><p style="font-size:14px;color:var(--text-primary);font-weight:600">Secure payment via external gateway</p><p style="font-size:12px;color:var(--text-secondary);margin-top:8px">Upon confirmation you will be redirected to the secure payment gateway to complete the transaction.</p></div>';
     document.getElementById('modal-overlay').classList.add('open');
     document.getElementById('modal-submit').textContent='Subscribe '+esc(name);
     document.getElementById('modal-submit').onclick=function(){processPayment(plan,price)};
@@ -1161,7 +1256,7 @@ async function processPayment(plan,price){
     document.getElementById('modal-submit').disabled=true;
     document.getElementById('modal-submit').textContent='Redirecting...';
     setTimeout(function(){
-        document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:40px 0"><i class="fa-solid fa-envelope" style="font-size:48px;color:var(--accent)"></i><h3 style="font-family:Newsreader,serif;font-size:24px;margin-top:16px">Request Sent</h3><p style="color:var(--text-secondary);margin-top:8px">Our team will contact you to activate your <strong>'+esc(planNames[plan])+'</strong>.</p><p style="color:var(--text-secondary);font-size:12px;margin-top:4px">You will receive an email with payment instructions.</p></div>';
+        document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:40px 0"><i class="fa-solid fa-envelope" style="font-size:48px;color:var(--accent)"></i><h3 style="font-family:Bricolage Grotesque,sans-serif;font-size:24px;margin-top:16px">Request Sent</h3><p style="color:var(--text-secondary);margin-top:8px">Our team will contact you to activate your <strong>'+esc(planNames[plan])+'</strong>.</p><p style="color:var(--text-secondary);font-size:12px;margin-top:4px">You will receive an email with payment instructions.</p></div>';
         document.getElementById('modal-submit').style.display='none';
         document.querySelector('.modal-actions .btn-secondary').textContent='Close';
     },1500);
@@ -1202,7 +1297,7 @@ async function loadAdmin(){
 }
 function openNewCompanyModal(){
     document.getElementById('modal-title').textContent='New Company';
-    document.getElementById('modal-body').innerHTML='<label>COMPANY NAME</label><input type="text" id="new-company-name" placeholder="Ex: Guarani Shipping"><label>PLAN</label><select id="new-company-plan" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px"><option value="barcaza">Per Barge ($149/mo)</option><option value="combo" selected>Fleet Combo ($899/mo)</option><option value="enterprise">Enterprise ($1,499/mo)</option><option value="ilimitado">Unlimited ($2,499/mo)</option></select><label>MAX VESSELS</label><input type="number" id="new-company-max" placeholder="10" value="10">';
+    document.getElementById('modal-body').innerHTML='<label>COMPANY NAME</label><input type="text" id="new-company-name" placeholder="Ex: Guarani Shipping"><label>PLAN</label><select id="new-company-plan" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Manrope,sans-serif;font-size:14px"><option value="barcaza">Per Barge ($149/mo)</option><option value="combo" selected>Fleet Combo ($899/mo)</option><option value="enterprise">Enterprise ($1,499/mo)</option><option value="ilimitado">Unlimited ($2,499/mo)</option></select><label>MAX VESSELS</label><input type="number" id="new-company-max" placeholder="10" value="10">';
     document.getElementById('modal-overlay').classList.add('open');
     document.getElementById('modal-submit').textContent='Create Company';
     document.getElementById('modal-submit').style.display='';
@@ -1223,7 +1318,7 @@ function openNewUserModal(){
     sb.from('companies').select('id,name').then(function(r){
         var opts=r.data?r.data.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join(''):'';
         document.getElementById('modal-title').textContent='Add System User';
-        document.getElementById('modal-body').innerHTML='<label>EMAIL</label><input type="email" id="new-user-email" placeholder="user@company.com"><label>PASSWORD</label><input type="password" id="new-user-pass" placeholder="Minimum 6 characters"><label>FULL NAME</label><input type="text" id="new-user-name" placeholder="John Doe"><label>COMPANY</label><select id="new-user-company" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px">'+opts+'</select><label>ROLE</label><select id="new-user-role" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Inter,sans-serif;font-size:14px"><option value="admin">Admin</option><option value="operator">Operator</option><option value="viewer">Viewer</option></select>';
+        document.getElementById('modal-body').innerHTML='<label>EMAIL</label><input type="email" id="new-user-email" placeholder="user@company.com"><label>PASSWORD</label><input type="password" id="new-user-pass" placeholder="Minimum 6 characters"><label>FULL NAME</label><input type="text" id="new-user-name" placeholder="John Doe"><label>COMPANY</label><select id="new-user-company" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Manrope,sans-serif;font-size:14px">'+opts+'</select><label>ROLE</label><select id="new-user-role" style="width:100%;padding:12px;border-radius:10px;border:0.5px solid var(--separator);font-family:Manrope,sans-serif;font-size:14px"><option value="admin">Admin</option><option value="operator">Operator</option><option value="viewer">Viewer</option></select>';
         document.getElementById('modal-overlay').classList.add('open');
         document.getElementById('modal-submit').textContent='Create User';
         document.getElementById('modal-submit').style.display='';
@@ -1251,7 +1346,7 @@ async function sendCopiloto(){
     var input=document.getElementById('copiloto-input');
     var chat=document.getElementById('copiloto-chat');
     var msg=input.value.trim();if(!msg)return;
-    chat.innerHTML+='<div style="margin:12px 0;text-align:right"><span style="background:var(--text-primary);color:white;padding:8px 14px;border-radius:12px 12px 4px 12px;font-size:13px;display:inline-block;max-width:70%">'+esc(msg)+'</span></div>';
+    chat.innerHTML+='<div style="margin:12px 0;text-align:right"><span style="background:var(--accent);color:white;padding:8px 14px;border-radius:12px 12px 4px 12px;font-size:13px;display:inline-block;max-width:70%">'+esc(msg)+'</span></div>';
     input.value='';input.disabled=true;
     document.getElementById('copiloto-send').disabled=true;
     chat.innerHTML+='<div style="margin:12px 0" id="ai-typing"><span style="background:var(--surface-low);padding:8px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;color:var(--text-secondary)"><i class="fa-solid fa-spinner fa-spin"></i> Analyzing data...</span></div>';
@@ -1419,14 +1514,14 @@ async function loadReportes(){
             v.data.forEach(function(x){var s=(x.status||'').toLowerCase();if(s.indexOf('viaje')>=0||s==='active')enTrip++;else if(s.indexOf('manten')>=0)mant++;else enPuerto++;});
             if(fleetChart)fleetChart.destroy();
             var ctx1=document.getElementById('chart-fleet');
-            if(ctx1){fleetChart=new Chart(ctx1,{type:'doughnut',data:{labels:['In Transit','In Port','Maintenance'],datasets:[{data:[enTrip,enPuerto,mant],backgroundColor:['#2EA043','#3B82F6','#F59E0B'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Inter',size:12}}}}}});}
+            if(ctx1){fleetChart=new Chart(ctx1,{type:'doughnut',data:{labels:['In Transit','In Port','Maintenance'],datasets:[{data:[enTrip,enPuerto,mant],backgroundColor:['#34D399','#128C7E','#FBBF24'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#A9B8B2',font:{family:'Manrope',size:12}}}}}});}
         }
         // Fuel Chart
         if(fl.data&&fl.data.length>0){
             var fuelByDay={};fl.data.forEach(function(f){var day='Refuel '+(Object.keys(fuelByDay).length+1);fuelByDay[day]=(f.liters||0);});
             if(fuelChart)fuelChart.destroy();
             var ctx2=document.getElementById('chart-fuel');
-            if(ctx2){fuelChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(fuelByDay).slice(-7),datasets:[{label:'Liters',data:Object.values(fuelByDay).slice(-7),backgroundColor:'rgba(59,130,246,0.6)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}});}
+            if(ctx2){fuelChart=new Chart(ctx2,{type:'bar',data:{labels:Object.keys(fuelByDay).slice(-7),datasets:[{label:'Liters',data:Object.values(fuelByDay).slice(-7),backgroundColor:'rgba(37,211,102,0.65)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2'}},x:{grid:{display:false},ticks:{color:'#A9B8B2'}}}}});}
         }
 // ━━━━━━━━━━ Activity Chart  use real log counts from DB ━━━━━━━━━━
         if(activityChart)activityChart.destroy();
@@ -1440,10 +1535,16 @@ async function loadReportes(){
         } catch(e) {
             for(var i=29;i>=0;i--){var dt=new Date();dt.setDate(dt.getDate()-i);days.push((dt.getMonth()+1)+'/'+dt.getDate());counts.push(0);}
         }
-        if(ctx3){activityChart=new Chart(ctx3,{type:'line',data:{labels:days,datasets:[{label:'Entries',data:counts,borderColor:'#1A1A2E',backgroundColor:'rgba(26,26,46,0.05)',fill:true,tension:0.4,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false},ticks:{maxTicksLimit:10}}}}});}
+        if(ctx3){activityChart=new Chart(ctx3,{type:'line',data:{labels:days,datasets:[{label:'Entries',data:counts,borderColor:'#25D366',backgroundColor:'rgba(37,211,102,0.10)',fill:true,tension:0.4,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2'}},x:{grid:{display:false},ticks:{color:'#A9B8B2',maxTicksLimit:10}}}}});}
     }catch(e){/* Reports: */;}
 }
 
+function vesselIconSVG(type){
+    var t=(type||'').toLowerCase();
+    var hasHouse=t.indexOf('tug')>=0||t.indexOf('pusher')>=0||t.indexOf('boat')>=0;
+    var house=hasHouse?'<rect x="18" y="1.5" width="7" height="5" rx="1" fill="currentColor"/><rect x="19.5" y="0" width="4" height="2" fill="currentColor"/>':'';
+    return '<svg viewBox="0 0 32 18" width="28" height="16" style="display:block;margin:0 auto 6px" aria-hidden="true"><path d="M2,15 L2,10 L6,10 L8,6.5 L27,6.5 L29,10 L30,10 L30,15 Z" fill="currentColor"/>'+house+'<line x1="0" y1="15.5" x2="32" y2="15.5" stroke="currentColor" stroke-width="1" opacity="0.4"/></svg>';
+}
 // CONVOY - Load fleet chips for drag-and-drop
 async function loadConvoy(){
     try{
@@ -1459,7 +1560,7 @@ async function loadConvoy(){
                 chip.className='fleet-chip';
                 chip.style.opacity=isBusy?'0.5':'1';
                 chip.style.cursor=isBusy?'not-allowed':'grab';
-                chip.innerHTML='<i class="fa-regular fa-clone"></i><div class="chip-name">'+(v.name||v.vessel_name||'--')+'</div><div class="chip-type">'+(v.type||v.vessel_type||'BARCAZA').toUpperCase()+'</div>';
+                chip.innerHTML=vesselIconSVG(v.type||v.vessel_type)+'<div class="chip-name">'+(v.name||v.vessel_name||'--')+'</div><div class="chip-type">'+(v.type||v.vessel_type||'BARGE').toUpperCase()+'</div>';
                 if(!isBusy){
                     chip.draggable=true;
                     chip.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',v.name||v.vessel_name||'');});
@@ -1548,7 +1649,7 @@ async function exportTracking(format){
     }
 }
 
-// DELETE CONFIRMATION (FluviaFleet modal, no native confirm)
+// DELETE CONFIRMATION (ViaBarcazas modal, no native confirm)
 function confirmDelete(table, id, itemName, reloadFn){
     document.getElementById('modal-title').textContent='Delete Record';
     document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:20px 0"><i class="fa-regular fa-trash-can" style="font-size:36px;color:var(--error);margin-bottom:16px;display:block"></i><p style="font-size:15px;font-weight:500">Are you sure you want to delete?</p><p style="font-size:13px;color:var(--text-secondary);margin-top:6px"><strong>'+itemName+'</strong></p><p style="font-size:11px;color:var(--text-tertiary);margin-top:12px">This action cannot be undone.</p></div>';
@@ -1592,7 +1693,7 @@ async function loadCalado(){
                 var color=pct>90?'var(--error)':pct>75?'var(--warning)':'var(--success)';
                 var status=pct>90?'CRITICAL':pct>75?'ALERT':'OPTIMAL';
                 if(pct>75)alerts++;totalDraft+=v.draft;
-                l.innerHTML+='<div class="info-card" style="margin-bottom:10px"><i class="fa-solid fa-ruler-vertical" style="color:'+color+'"></i><div class="info-card-text"><h4>'+v.name+'</h4><p>Draft: <strong>'+v.draft.toFixed(2)+'m</strong> / Max: '+v.max.toFixed(2)+'m - '+status+'</p></div><div style="min-width:80px;text-align:right"><div style="font-family:Newsreader,serif;font-size:22px;font-weight:400">'+Math.round(pct)+'%</div><div style="height:4px;background:var(--surface-low);border-radius:2px;margin-top:4px"><div style="height:4px;background:'+color+';border-radius:2px;width:'+Math.min(pct,100)+'%"></div></div></div></div>';
+                l.innerHTML+='<div class="info-card" style="margin-bottom:10px"><i class="fa-solid fa-ruler-vertical" style="color:'+color+'"></i><div class="info-card-text"><h4>'+v.name+'</h4><p>Draft: <strong>'+v.draft.toFixed(2)+'m</strong> / Max: '+v.max.toFixed(2)+'m - '+status+'</p></div><div style="min-width:80px;text-align:right"><div style="font-family:Bricolage Grotesque,sans-serif;font-size:22px;font-weight:400">'+Math.round(pct)+'%</div><div style="height:4px;background:var(--surface-low);border-radius:2px;margin-top:4px"><div style="height:4px;background:'+color+';border-radius:2px;width:'+Math.min(pct,100)+'%"></div></div></div></div>';
             });
             document.getElementById('calado-total').textContent=vList.length;
             document.getElementById('calado-alerts').textContent=alerts;
@@ -1936,6 +2037,12 @@ function renderPreZarpe(){
     var el2=document.getElementById('pz-approved');if(el2)el2.textContent=approved;
     var el3=document.getElementById('pz-draft');if(el3)el3.textContent=drafts;
     var el4=document.getElementById('pz-rate');if(el4)el4.textContent=rate+'%';
+    var circumference=150.8;
+    var ringApproved=document.getElementById('pz-approved-ring');
+    if(ringApproved)ringApproved.style.strokeDashoffset=(circumference*(1-(total>0?approved/total:0))).toFixed(1);
+    var ringRate=document.getElementById('pz-rate-ring');
+    if(ringRate)ringRate.style.strokeDashoffset=(circumference*(1-rate/100)).toFixed(1);
+    renderPreZarpeInsights();
     var list=document.getElementById('pz-list');if(!list)return;
     if(_pzData.length===0){list.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text-secondary)"><i class="fa-solid fa-clipboard-check" style="font-size:48px;opacity:0.15;margin-bottom:12px"></i><p>No checklists recorded</p></div>';return;}
     list.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-top:16px">'+_pzData.map(function(c){
@@ -1956,13 +2063,31 @@ function renderPreZarpe(){
     }).join('')+'</div>';
 }
 
+function renderPreZarpeInsights(){
+    var el=document.getElementById('pz-insights');if(!el)return;
+    var data=_pzData||[];
+    if(data.length===0){el.innerHTML='<div style="font-size:12px;color:var(--text-tertiary)">No checklists to analyze.</div>';return;}
+    var rows=[];
+    var drafts=data.filter(function(c){return c.status!=='completed'});
+    var lowProgress=drafts.filter(function(c){var pct=(c.checked_items||0)/(c.total_items||28);return pct<0.6;});
+    if(lowProgress.length>0)rows.push({icon:'fa-triangle-exclamation',color:'var(--error)',text:lowProgress.length+' checklist(s) below 60% complete.'});
+    var readyToApprove=drafts.filter(function(c){return(c.checked_items||0)>=(c.total_items||28);});
+    if(readyToApprove.length>0)rows.push({icon:'fa-circle-check',color:'var(--success)',text:readyToApprove.length+' checklist(s) at 100%, ready to approve.'});
+    if(drafts.length>0){
+        var oldest=drafts.slice().sort(function(a,b){return new Date(a.signed_at||0)-new Date(b.signed_at||0);})[0];
+        if(oldest)rows.push({icon:'fa-clock',color:'var(--warning)',text:'Oldest draft: '+esc(oldest.vessel_name||'--')+' ('+(oldest.signed_at?new Date(oldest.signed_at).toLocaleDateString('en',{day:'2-digit',month:'short'}):'--')+').'});
+    }
+    if(rows.length===0)rows.push({icon:'fa-check',color:'var(--success)',text:'All checklists up to date, no alerts.'});
+    el.innerHTML=rows.map(function(r){return '<div style="display:flex;gap:9px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:7px;background:'+r.color+'1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+r.icon+'" style="font-size:10px;color:'+r.color+'"></i></div><div style="font-size:11px;color:var(--text-secondary);line-height:1.5">'+r.text+'</div></div>';}).join('');
+}
+
 function openPreZarpeForm(){
     var _pzChecked={};for(var s in _pzSections)_pzChecked[s]=[];
     var totalItems=0;for(var s2 in _pzSections)totalItems+=_pzSections[s2].length;
     var m=document.createElement('div');m.id='pz-modal';
     m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
     m.innerHTML='<div style="background:var(--bg-secondary);border-radius:20px;width:90%;max-width:700px;max-height:90vh;overflow-y:auto;padding:32px">'+
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div style="font-family:Newsreader,serif;font-size:24px;color:var(--text-primary)">New Pre-Departure</div><button onclick="document.getElementById(\'pz-modal\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-secondary)"><i class="fa-solid fa-xmark"></i></button></div>'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div style="font-family:Bricolage Grotesque,sans-serif;font-size:24px;color:var(--text-primary)">New Pre-Departure</div><button onclick="document.getElementById(\'pz-modal\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-secondary)"><i class="fa-solid fa-xmark"></i></button></div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">'+
         '<div><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">VESSEL</label><input id="pz-vessel" class="login-input" placeholder="R/M Guarani" style="margin-top:4px"></div>'+
         '<div><label style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">DESTINATION</label><input id="pz-dest" class="login-input" placeholder="Rosario" style="margin-top:4px"></div>'+

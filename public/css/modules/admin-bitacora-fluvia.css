@@ -206,7 +206,7 @@
 }
 
 .tag-btn:hover {
-  background: var(--text-main);
+  background: var(--primary);
   color: #FFFFFF;
   border-color: var(--text-main);
 }

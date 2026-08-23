@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════
-// FLUVIAFLEET — Export Engine (PDF & Excel)
+// VIABARCAZAS — Export Engine (PDF & Excel)
 // Extracted from fluvia.js for modularity
 // ═══════════════════════════════════════════
 
@@ -15,7 +15,7 @@ function exportToPDF(title, columns, rows, fileName){
     if(!rows||!rows.length){alert('No hay datos para exportar');return;}
     var doc=new jspdf.jsPDF({orientation:'landscape'});
     // Header
-    doc.setFontSize(18);doc.text('FluviaFleet',14,15);
+    doc.setFontSize(18);doc.text('ViaBarcazas',14,15);
     doc.setFontSize(12);doc.text(title,14,24);
     doc.setFontSize(8);doc.setTextColor(128);doc.text('Generado: '+new Date().toLocaleString('es'),14,30);
     doc.setTextColor(0);
@@ -76,9 +76,9 @@ async function exportMaint(format){
 async function exportPanol(format){
     var r=await sb.from('inventory_items').select('*').order('name');var data=r.data||[];
     if(format==='excel'){
-        exportToExcel(data.map(function(p){return{Repuesto:p.name||'',Categoria:p.category||'',Cantidad:p.quantity||0,StockMinimo:p.min_stock||0}}), 'Inventario','fluvia_panol');
+        exportToExcel(data.map(function(p){return{SKU:p.sku||'',Repuesto:p.name||'',Categoria:p.category||'',Cantidad:p.stock_current||0,Ubicacion:p.location||'',StockMinimo:p.stock_min_alert||0}}), 'Inventario','fluvia_panol');
     }else{
-        exportToPDF('Panol (Inventario)',['Repuesto','Categoria','Cantidad','Stock Min'],data.map(function(p){return[p.name||'',p.category||'',(p.quantity||0).toString(),(p.min_stock||0).toString()]}),'fluvia_panol');
+        exportToPDF('Panol (Inventario)',['SKU','Repuesto','Categoria','Cantidad','Ubicacion','Stock Min'],data.map(function(p){return[p.sku||'',p.name||'',p.category||'',(p.stock_current||0).toString(),p.location||'',(p.stock_min_alert||0).toString()]}),'fluvia_panol');
     }
 }
 async function exportCalado(format){

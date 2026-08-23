@@ -3,34 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Cliente — FluviaFleet</title>
+    <title>Portal de Cliente — ViaBarcazas</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="fluvia.css">
     <link rel="stylesheet" href="css/portal-cliente.css">
 </head>
-<body>
-<!-- TOP BAR -->
-<header class="pc-topbar">
-    <a href="fluvia.html" class="pc-logo"><i class="fas fa-arrow-left" style="font-size:0.8rem;color:var(--text-2);margin-right:4px"></i><img src="img/fluvia-logo.jpg" alt="FF"><span>FluviaFleet</span><span class="pc-badge">Portal Cliente</span></a>
-    <nav class="pc-tabs">
+<body class="portal-client-app">
+<div class="app-shell" style="display:flex">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.6" fill="#25D366"/></svg><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>
+        </div>
+        <div class="sb-company"><div class="sb-company-avatar">CS</div><div class="sb-company-info"><div class="sb-company-name">Cargill S.A.C.I.</div><div class="sb-company-sub">Cliente Activo</div></div><i class="fas fa-chevron-down"></i></div>
+        <div class="client-sidebar-nav" aria-label="Navegación del portal">
+            <div class="client-nav-label">MI CUENTA</div>
+            <a class="client-nav-item active" data-client-tab="embarques"><i class="fas fa-ship"></i><span>Mis embarques</span></a>
+            <a class="client-nav-item" data-client-tab="contratos"><i class="fas fa-file-contract"></i><span>Mis contratos</span></a>
+            <a class="client-nav-item" data-client-tab="documentos"><i class="fas fa-folder-open"></i><span>Documentos</span></a>
+            <a class="client-nav-item" data-client-tab="facturacion"><i class="fas fa-file-invoice-dollar"></i><span>Facturación</span></a>
+            <a class="client-nav-item" data-client-tab="soporte"><i class="fas fa-headset"></i><span>Soporte</span></a>
+            <div class="client-nav-divider"></div>
+            <a class="client-nav-back" href="fluvia.html"><i class="fas fa-arrow-left"></i><span>Volver al panel</span></a>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section-label">AHORA</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-grip"></i>Panel de Control</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-map"></i>Mapa de Flota</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-robot"></i>Copiloto IA</a>
+            <div class="nav-section-label">PLANIFICACIÓN</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-link"></i>Armador de Convoy</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-file-lines"></i>Gestion de Viajes</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-clipboard-check"></i>Pre-Zarpe</a>
+            <div class="nav-section-label">FLOTA</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-anchor"></i>Gestion de Flota</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-users"></i>Tripulacion &amp; Safety</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-gas-pump"></i>Combustible</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-droplet"></i>Líquidos (Tanques)</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-ruler-vertical"></i>Calados &amp; Hidrometria</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-wrench"></i>Mantenimiento</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-box-archive"></i>Panol (Inventario)</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-triangle-exclamation"></i>Incidentes</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-file-contract"></i>Contratos de Flete</a>
+            <div class="nav-section-label">COMUNICACIÓN</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-book"></i>Bitacora Digital</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-tower-broadcast"></i>Comunicaciones</a>
+            <a class="nav-item" href="admin-whatsapp-fluvia.html"><i class="fab fa-whatsapp" style="color:#25D366"></i>WhatsApp Alerts</a>
+            <div class="nav-section-label">INTELIGENCIA</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-water"></i>Pronostico Hidrovia</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-chart-pie"></i>Reportes &amp; Analytics</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-newspaper"></i>Briefing Diario</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-location-dot"></i>Tracking de Cargas</a>
+            <a class="nav-item" href="admin-facturacion-ia-fluvia.html"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Facturación IA</a>
+            <div class="nav-section-label">CUENTA</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-credit-card"></i>Planes &amp; Facturacion</a>
+            <a class="nav-item active" href="portal-cliente-fluvia.html"><i class="fa-solid fa-building" style="color:#059669"></i>Portal de Cliente</a>
+            <div style="padding:20px 24px;margin-top:auto;"><button class="btn-secondary" style="width:100%;" onclick="window.location.href='fluvia.html'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Volver al Panel</button></div>
+        </div>
+    </nav>
+    <div class="main-area">
+        <div class="topbar"><span class="topbar-title">Portal de Cliente</span><div class="topbar-actions">
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);margin-right:8px;">
+                <a href="portal-cliente-fluvia-en.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="portal-cliente-fluvia.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div></div></div>
+    <div class="content">
+    <nav class="pc-tabs" aria-label="Secciones del portal">
         <a class="pc-tab active" data-tab="embarques" onclick="pcTab(this)"><i class="fas fa-ship"></i> Embarques</a>
         <a class="pc-tab" data-tab="contratos" onclick="pcTab(this)"><i class="fas fa-file-contract"></i> Contratos</a>
         <a class="pc-tab" data-tab="documentos" onclick="pcTab(this)"><i class="fas fa-folder-open"></i> Documentos</a>
         <a class="pc-tab" data-tab="facturacion" onclick="pcTab(this)"><i class="fas fa-file-invoice-dollar"></i> Facturación</a>
         <a class="pc-tab" data-tab="soporte" onclick="pcTab(this)"><i class="fas fa-headset"></i> Soporte</a>
     </nav>
-    <div class="pc-user"><span>Cargill S.A.C.I.</span><div class="pc-avatar">CS</div></div>
-</header>
 
-<main class="pc-main">
     <!-- EMBARQUES -->
     <section class="pc-section active" id="tab-embarques">
-        <div class="pc-header"><h1>Mis Embarques</h1><p>Seguimiento en tiempo real de tus cargas</p></div>
+        <div class="pc-header"><h1>Mis Embarques</h1><p>Seguimiento en tiempo real de tus cargas — Cargill S.A.C.I.</p></div>
+
+        <div class="pc-statusbar"><div class="l">EMBARQUES · CARGILL S.A.C.I.</div><div class="r"><span>SEMANA 35 · 2026</span><span class="pc-link"><i class="fas fa-file-export"></i> Exportar</span></div></div>
+
         <div class="pc-kpis">
-            <div class="pc-kpi"><div class="pc-kpi-ico ico-em"><i class="fas fa-ship"></i></div><div class="pc-kpi-val">7</div><div class="pc-kpi-lbl">Embarques activos</div></div>
+            <div class="pc-kpi hl"><div class="pc-kpi-ico ico-em"><i class="fas fa-ship"></i></div><div class="pc-kpi-val">7</div><div class="pc-kpi-lbl">Embarques activos</div></div>
             <div class="pc-kpi"><div class="pc-kpi-ico ico-ok"><i class="fas fa-check-circle"></i></div><div class="pc-kpi-val">23</div><div class="pc-kpi-lbl">Entregados (mes)</div></div>
             <div class="pc-kpi"><div class="pc-kpi-ico ico-ton"><i class="fas fa-weight-hanging"></i></div><div class="pc-kpi-val">42.6K</div><div class="pc-kpi-lbl">Toneladas en tránsito</div></div>
             <div class="pc-kpi"><div class="pc-kpi-ico ico-eta"><i class="fas fa-clock"></i></div><div class="pc-kpi-val">4.2d</div><div class="pc-kpi-lbl">ETA promedio</div></div>
@@ -62,7 +119,7 @@
 
     <!-- CONTRATOS -->
     <section class="pc-section" id="tab-contratos">
-        <div class="pc-header"><h1>Mis Contratos</h1><p>Contratos de flete activos con FluviaFleet</p></div>
+        <div class="pc-header"><h1>Mis Contratos</h1><p>Contratos de flete activos con ViaBarcazas</p></div>
         <div class="pc-kpis">
             <div class="pc-kpi"><div class="pc-kpi-ico ico-ok"><i class="fas fa-check-circle"></i></div><div class="pc-kpi-val">4</div><div class="pc-kpi-lbl">Contratos activos</div></div>
             <div class="pc-kpi"><div class="pc-kpi-ico ico-ton"><i class="fas fa-weight-hanging"></i></div><div class="pc-kpi-val">340K</div><div class="pc-kpi-lbl">Ton contratadas</div></div>
@@ -123,7 +180,7 @@
         <div class="pc-header"><h1>Soporte</h1><p>Centro de ayuda y contacto directo</p></div>
         <div class="pc-grid-3">
             <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-headset"></i></div><h3>Chat en vivo</h3><p>Hablá con un agente ahora</p><button class="pc-sup-btn">Iniciar Chat</button></div>
-            <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-envelope"></i></div><h3>Email</h3><p>soporte@fluviafleet.com</p><button class="pc-sup-btn">Enviar Email</button></div>
+            <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-envelope"></i></div><h3>Email</h3><p>soporte@viabarcazas.com.py</p><button class="pc-sup-btn">Enviar Email</button></div>
             <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-phone"></i></div><h3>Teléfono</h3><p>+595 21 445 8800</p><button class="pc-sup-btn">Llamar</button></div>
         </div>
         <div class="pc-card">
@@ -133,7 +190,9 @@
             <div class="pc-act"><div class="pc-dot dot-gr"></div><div><strong>#T-0039</strong> — Actualización de datos de facturación<br><small>Resuelto · 28 Abr 2026</small></div></div>
         </div>
     </section>
-</main>
+    </div>
+    </div>
+</div>
 
 <script>
 function pcTab(el){
@@ -141,7 +200,9 @@ function pcTab(el){
     el.classList.add('active');
     document.querySelectorAll('.pc-section').forEach(s=>s.classList.remove('active'));
     document.getElementById('tab-'+el.dataset.tab).classList.add('active');
+    document.querySelectorAll('.client-nav-item').forEach(function(item){item.classList.toggle('active',item.dataset.clientTab===el.dataset.tab);});
 }
+document.querySelectorAll('.client-nav-item').forEach(function(item){item.addEventListener('click',function(){var tab=document.querySelector('.pc-tab[data-tab="'+item.dataset.clientTab+'"]');if(tab)pcTab(tab);});});
 </script>
 </body>
 </html>

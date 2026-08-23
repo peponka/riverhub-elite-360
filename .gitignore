@@ -1,5 +1,5 @@
 # ============================================
-# FLUVIAFLEET — .gitignore
+# ViaBarcazas — .gitignore
 # Updated: 2026-05-10
 # ============================================
 
@@ -22,8 +22,8 @@ key.properties
 *.jks
 *.keystore
 
-# Render config (contains secrets reference)
-render.yaml
+# Render deployment manifest contains only non-secret configuration.
+!render.yaml
 
 # Logs & debug output
 *.log
@@ -40,6 +40,7 @@ Thumbs.db
 
 # Temp files
 *.bak
+*.bak-*
 *.tmp
 temp_*
 

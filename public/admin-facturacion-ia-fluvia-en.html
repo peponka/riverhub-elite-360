@@ -3,71 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Intelligence — FluviaFleet</title>
+    <title>Invoice Intelligence — ViaBarcazas</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="fluvia.css">
     <style>
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
         :root {
-            --bg:#FFFFFF; --bg-alt:#FAFAFA; --surface:#F5F5F5;
-            --text:#1A1A1A; --text-2:#6B6B6B; --sep:#E5E5E5;
-            --blue:#0066FF; --blue-bg:#E8F0FE; --teal:#00C2A8;
-            --red:#EF4444; --amber:#F59E0B; --green:#22C55E;
-            --font-sans:'Inter',-apple-system,sans-serif;
-            --font-serif:'Newsreader',Georgia,serif;
-            --radius:14px; --shadow:0 2px 12px rgba(0,0,0,0.06);
+            --bg:#06110D; --bg-alt:#06110D; --surface:#0C1F19;
+            --text:#F3F7F5; --text-2:#A9B8B2; --sep:#1E3B31;
+            --blue:#25D366; --blue-bg:#14332A; --teal:#25D366;
+            --red:#F87171; --amber:#FBBF24; --green:#34D399;
+            --font-sans:'Manrope',-apple-system,sans-serif;
+            --font-serif:'Bricolage Grotesque',sans-serif;
+            --radius:14px; --shadow:0 2px 12px rgba(0,0,0,0.3);
         }
         html { scroll-behavior:smooth; }
-        body { font-family:var(--font-sans); color:var(--text); background:var(--bg-alt); line-height:1.6; }
-
-        /* LAYOUT */
-        .page { display:flex; min-height:100vh; }
-        .sidebar { width:260px; background:var(--bg); border-right:1px solid var(--sep); padding:24px 0; position:fixed; top:0; left:0; bottom:0; overflow-y:auto; z-index:10; }
-        .sidebar-logo { padding:0 24px 24px; display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
-        .sidebar-logo img { width:32px; height:32px; border-radius:8px; }
-        .sidebar-logo span { font-family:var(--font-serif); font-size:1.3rem; font-weight:500; }
-        .sidebar-section { padding:0 16px; margin-bottom:8px; }
-        .sidebar-section-label { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-2); padding:8px 8px 4px; }
-        .sidebar-link { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; color:var(--text-2); text-decoration:none; font-size:0.85rem; font-weight:500; transition:all 0.2s; }
-        .sidebar-link:hover { background:var(--surface); color:var(--text); }
-        .sidebar-link.active { background:var(--blue-bg); color:var(--blue); font-weight:600; }
-        .sidebar-link i { width:18px; text-align:center; font-size:0.9rem; }
-        .main { margin-left:260px; flex:1; padding:32px 40px; min-height:100vh; }
 
         /* HEADER */
         .page-header { margin-bottom:32px; }
-        .page-header h1 { font-family:var(--font-serif); font-size:1.8rem; font-weight:500; margin-bottom:4px; }
+        .page-header h1 { font-family:var(--font-serif); font-size:1.8rem; font-weight:600; margin-bottom:4px; }
         .page-header p { color:var(--text-2); font-size:0.9rem; }
-        .badge-new { display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,var(--blue),var(--teal)); color:white; font-size:0.65rem; font-weight:700; padding:3px 10px; border-radius:20px; margin-left:8px; text-transform:uppercase; letter-spacing:0.5px; }
+        .badge-new { display:inline-flex; align-items:center; gap:4px; background:var(--teal); color:#06110D; font-size:0.65rem; font-weight:800; padding:3px 10px; border-radius:20px; margin-left:8px; text-transform:uppercase; letter-spacing:0.5px; }
 
         /* CARDS */
-        .card { background:var(--bg); border:1px solid var(--sep); border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+        .card { background:var(--bg2,#0F231C); border:0.5px solid var(--sep); border-radius:var(--radius); padding:28px; margin-bottom:24px; }
         .card-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-2); margin-bottom:16px; }
 
         /* TEXTAREA */
-        .invoice-input { width:100%; min-height:200px; border:1px solid var(--sep); border-radius:12px; padding:16px; font-family:var(--font-sans); font-size:0.88rem; color:var(--text); resize:vertical; outline:none; transition:border 0.2s; line-height:1.7; }
-        .invoice-input:focus { border-color:var(--blue); }
-        .invoice-input::placeholder { color:#B0B0B0; }
+        .invoice-input { width:100%; min-height:200px; background:var(--bg); border:0.5px solid var(--sep); border-radius:12px; padding:16px; font-family:var(--font-sans); font-size:0.88rem; color:var(--text); resize:vertical; outline:none; transition:border 0.2s; line-height:1.7; }
+        .invoice-input:focus { border-color:var(--teal); }
+        .invoice-input::placeholder { color:#6B7C74; }
 
         /* BUTTONS */
         .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:10px; font-weight:600; font-size:0.88rem; border:none; cursor:pointer; transition:all 0.2s; text-decoration:none; }
-        .btn-primary { background:var(--text); color:white; }
-        .btn-primary:hover { background:#333; transform:translateY(-1px); }
+        .btn-primary { background:var(--teal); color:#06110D; }
+        .btn-primary:hover { background:#2ee076; transform:translateY(-1px); }
         .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-        .btn-outline { background:transparent; color:var(--text-2); border:1px solid var(--sep); }
-        .btn-outline:hover { border-color:var(--text); color:var(--text); }
+        .btn-outline { background:transparent; color:var(--text-2); border:0.5px solid var(--sep); }
+        .btn-outline:hover { border-color:var(--teal); color:var(--text); }
         .btn-row { display:flex; gap:12px; margin-top:16px; align-items:center; }
 
         /* RESULTS */
         .result-container { display:none; }
         .result-container.show { display:block; }
         .status-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 16px; border-radius:20px; font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
-        .status-badge.approved { background:#DCFCE7; color:#166534; }
-        .status-badge.review { background:#FEF3C7; color:#92400E; }
-        .status-badge.rejected { background:#FEE2E2; color:#991B1B; }
+        .status-badge.approved { background:rgba(52,211,153,0.15); color:var(--green); }
+        .status-badge.review { background:rgba(251,191,36,0.15); color:var(--amber); }
+        .status-badge.rejected { background:rgba(248,113,113,0.15); color:var(--red); }
 
         .result-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }
         .result-stat { text-align:center; padding:20px; background:var(--surface); border-radius:12px; }
@@ -76,39 +62,37 @@
 
         /* TABLE */
         .items-table { width:100%; border-collapse:collapse; margin-top:12px; }
-        .items-table th { text-align:left; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-2); padding:10px 12px; border-bottom:1px solid var(--sep); }
-        .items-table td { padding:12px; font-size:0.85rem; border-bottom:1px solid var(--surface); }
+        .items-table th { text-align:left; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-2); padding:10px 12px; border-bottom:0.5px solid var(--sep); }
+        .items-table td { padding:12px; font-size:0.85rem; border-bottom:0.5px solid var(--surface); color:var(--text); }
         .items-table tr:last-child td { border-bottom:none; }
         .items-table .number { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; }
 
         /* DISCREPANCIES */
         .disc-item { display:flex; align-items:flex-start; gap:12px; padding:14px; border-radius:10px; margin-bottom:8px; }
-        .disc-item.CRITICA { background:#FEE2E2; }
-        .disc-item.ADVERTENCIA { background:#FEF3C7; }
-        .disc-item.INFO { background:#E8F0FE; }
-        .disc-icon { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:0.75rem; }
-        .disc-item.CRITICA .disc-icon { background:var(--red); color:white; }
-        .disc-item.ADVERTENCIA .disc-icon { background:var(--amber); color:white; }
-        .disc-item.INFO .disc-icon { background:var(--blue); color:white; }
-        .disc-text strong { font-size:0.85rem; }
+        .disc-item.CRITICA { background:rgba(248,113,113,0.12); }
+        .disc-item.ADVERTENCIA { background:rgba(251,191,36,0.12); }
+        .disc-item.INFO { background:rgba(37,211,102,0.1); }
+        .disc-icon { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:0.75rem; color:#06110D; }
+        .disc-item.CRITICA .disc-icon { background:var(--red); }
+        .disc-item.ADVERTENCIA .disc-icon { background:var(--amber); }
+        .disc-item.INFO .disc-icon { background:var(--teal); }
+        .disc-text strong { font-size:0.85rem; color:var(--text); }
         .disc-text p { font-size:0.8rem; color:var(--text-2); margin-top:2px; }
 
         /* LOADING */
         .loading { display:none; align-items:center; gap:12px; padding:20px; color:var(--text-2); font-size:0.9rem; }
         .loading.show { display:flex; }
-        .spinner { width:24px; height:24px; border:3px solid var(--surface); border-top-color:var(--blue); border-radius:50%; animation:spin 0.8s linear infinite; }
+        .spinner { width:24px; height:24px; border:3px solid var(--surface); border-top-color:var(--teal); border-radius:50%; animation:spin 0.8s linear infinite; }
         @keyframes spin { to { transform:rotate(360deg); } }
 
         /* DEMO BANNER */
-        .demo-banner { background:linear-gradient(135deg,#0f172a,#1a2744); border-radius:var(--radius); padding:20px 24px; color:white; display:flex; align-items:center; gap:16px; margin-bottom:24px; }
+        .demo-banner { background:linear-gradient(135deg,#0B1F18,#0F2C22 55%,#0B1F18); border:0.5px solid var(--sep); border-radius:var(--radius); padding:20px 24px; color:white; display:flex; align-items:center; gap:16px; margin-bottom:24px; }
         .demo-banner i { font-size:1.4rem; color:var(--teal); }
         .demo-banner p { font-size:0.85rem; color:rgba(255,255,255,0.7); }
         .demo-banner strong { color:white; }
         .demo-link { color:var(--teal); cursor:pointer; text-decoration:underline; font-weight:600; }
 
         @media(max-width:900px) {
-            .sidebar { display:none; }
-            .main { margin-left:0; padding:20px; }
             .result-grid { grid-template-columns:1fr; }
         }
     </style>
@@ -118,6 +102,7 @@
   document.documentElement.style.visibility='hidden';
   function check(){
     var _sb=supabase.createClient(SURL,SKEY);
+    window._sb=_sb;
     _sb.auth.getSession().then(function(r){
       if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
       else{window.location.replace('fluvia.html');}
@@ -131,40 +116,61 @@
     s.onerror=function(){document.documentElement.style.visibility='visible';};
     document.head.appendChild(s);
   }
+  window.doLogout=async function(){if(window._sb)await window._sb.auth.signOut();window.location.href='fluvia.html';};
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 </head>
 <body>
-<div class="page">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <a href="fluvia.html" class="sidebar-logo">
-            <img src="img/fluvia-logo.jpg" alt="FF">
-            <span>FluviaFleet</span>
-        </a>
-        <div class="sidebar-section">
-            <div class="sidebar-section-label">MAIN</div>
-            <a href="fluvia.html" class="sidebar-link"><i class="fas fa-th-large"></i> Dashboard</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-map"></i> Fleet Map</a>
+<div class="app-shell" style="display:flex">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.6" fill="#25D366"/></svg><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>
+            <div class="sidebar-user"><div class="user-avatar">--</div><div class="user-info"><div class="user-name">My Account</div><div class="user-role">SESSION ACTIVE</div></div></div>
         </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-label">INTELLIGENCE</div>
-            <a href="#" class="sidebar-link active"><i class="fas fa-file-invoice-dollar"></i> Invoice Intelligence</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-robot"></i> AI Copilot</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-calculator"></i> Cotizador IA</a>
+        <div class="sidebar-nav">
+            <div class="nav-section-label">NOW</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-grip"></i>Dashboard</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-map"></i>Fleet Map</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-robot"></i>AI Copilot</a>
+            <div class="nav-section-label">PLANNING</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-link"></i>Convoy Builder</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-file-lines"></i>Trip Management</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-clipboard-check"></i>Pre-Departure</a>
+            <div class="nav-section-label">FLEET</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-anchor"></i>Fleet Management</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-users"></i>Crew &amp; Safety</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-gas-pump"></i>Fuel</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-droplet"></i>Liquids (Tanks)</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-ruler-vertical"></i>Drafts &amp; Hydrometry</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-wrench"></i>Maintenance</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-box-archive"></i>Inventory (Store)</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-triangle-exclamation"></i>Incidents</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-file-contract"></i>Freight Contracts</a>
+            <div class="nav-section-label">COMMUNICATION</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-book"></i>Digital Logbook</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-tower-broadcast"></i>Communications</a>
+            <div class="nav-section-label">INTELLIGENCE</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-water"></i>Waterway Forecast</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-chart-pie"></i>Reports &amp; Analytics</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-newspaper"></i>Daily Briefing</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-location-dot"></i>Cargo Tracking</a>
+            <a class="nav-item active" href="admin-facturacion-ia-fluvia-en.html"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Invoice IA</a>
+            <div class="nav-section-label">ACCOUNT</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-credit-card"></i>Plans &amp; Billing</a>
+            <a class="nav-item" href="portal-cliente-fluvia-en.html"><i class="fa-solid fa-building" style="color:#059669"></i>Client Portal</a>
+            <div style="padding:20px 24px;margin-top:auto;"><button class="btn-secondary" style="width:100%;" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</button></div>
         </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-label">OPERATIONAL</div>
-            <a href="#" class="sidebar-link"><i class="fas fa-anchor"></i> Convoyes</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-route"></i> Viajes</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-gas-pump"></i> Fuel</a>
-            <a href="#" class="sidebar-link"><i class="fas fa-wrench"></i> Maintenance</a>
-        </div>
-    </aside>
-
-    <!-- MAIN -->
-    <main class="main">
+    </nav>
+    <div class="main-area">
+        <div class="topbar"><span class="topbar-title">Invoice Intelligence</span><div class="topbar-actions">
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);margin-right:8px;">
+                <a href="admin-facturacion-ia-fluvia-en.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="admin-facturacion-ia-fluvia.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div>
+            <button onclick="doLogout()" title="Log Out" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-secondary);font-family:Inter,sans-serif;transition:all 0.2s;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</button></div></div>
+    <div class="content">
         <div class="page-header">
             <h1>Invoice Intelligence <span class="badge-new"><i class="fas fa-sparkles"></i> IA</span></h1>
             <p>Captura, valida y reconcilia facturas de flete automáticamente con Gemini AI.</p>
@@ -224,7 +230,8 @@
                 <div id="discList"></div>
             </div>
         </div>
-    </main>
+    </div>
+    </div>
 </div>
 
 <script>

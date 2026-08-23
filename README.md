@@ -1,4 +1,4 @@
-# FluviaFleet — Gestión Inteligente de Flotas Fluviales
+# ViaBarcazas — Gestión Inteligente de Flotas Fluviales
 
 > Plataforma SaaS para operadores de la Hidrovía Paraguay-Paraná. Web + Mobile + IA.
 
@@ -54,9 +54,9 @@ Codigo/
 ├── routes/n8n-automations.js ← Automatizaciones webhook
 ├── public/
 │   ├── landing.html          ← Landing page marketing
-│   ├── fluvia.html           ← SPA principal (app web)
-│   ├── fluvia.js             ← Lógica de la SPA (1048 líneas)
-│   ├── fluvia.css            ← Estilos Fluvia (20KB)
+│   ├── viabarcazas.html      ← SPA principal (app web)
+│   ├── viabarcazas.js        ← Lógica de la SPA
+│   ├── viabarcazas.css       ← Estilos principales
 │   └── js/modules/           ← Módulos JS extraídos
 ├── riverhub_mobile/riverhub_mobile_v2/
 │   └── lib/
@@ -64,7 +64,7 @@ Codigo/
 │       ├── screens/          ← 34 pantallas
 │       ├── services/         ← Supabase + GPS services
 │       ├── widgets/          ← AppDrawer + reusables
-│       └── theme/            ← Design tokens (Fluvia)
+│       └── theme/            ← Design tokens de ViaBarcazas
 └── sql/                      ← Migraciones SQL
 ```
 

@@ -1,7 +1,7 @@
 {
-  "name": "fluviafleet",
+  "name": "viabarcazas",
   "version": "2.0.0",
-  "description": "FluviaFleet - Gestión Inteligente de Flotas en la Hidrovía",
+  "description": "ViaBarcazas - Gestión Inteligente de Flotas en la Hidrovía",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

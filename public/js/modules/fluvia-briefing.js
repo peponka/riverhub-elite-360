@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════
-// FLUVIAFLEET — Briefing Diario Module
+// VIABARCAZAS — Briefing Diario Module
 // ═══════════════════════════════════════════
 
 var isEN = window.location.pathname.indexOf('-en') >= 0;
@@ -98,22 +98,23 @@ async function loadBriefing(){
         }catch(we){/* weather fallback */;}
 
         // ── ACTIVITY FEED ─────────────────────────────────────────────
+        var recentSince = new Date(Date.now() - 7*86400000).toISOString();
         var [lg, inc] = await Promise.all([
-            sb.from('logs').select('*').order('created_at',{ascending:false}).limit(6),
-            sb.from('logs').select('*').eq('action_type', isEN ? 'INCIDENT' : 'INCIDENTE').order('created_at',{ascending:false}).limit(5)
+            sb.from('logs').select('*').gte('created_at',recentSince).order('created_at',{ascending:false}).limit(6),
+            sb.from('logs').select('*').eq('action_type', isEN ? 'INCIDENT' : 'INCIDENTE').gte('created_at',recentSince).order('created_at',{ascending:false}).limit(5)
         ]);
 
         var act = document.getElementById('briefing-activity');
         act.innerHTML = '';
         if(lg.data && lg.data.length > 0){
-            var ah = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-top:4px">';
+            var ah = '<div class="briefing-activity-grid">';
             lg.data.forEach(function(l){
                 var cat   = (l.action_type || l.title || 'entrada').toLowerCase();
                 var icon  = catIcons[l.action_type] || catIcons[cat] || 'fa-bookmark';
                 var color = catColors[l.action_type] || catColors[cat] || '#94A3B8';
                 var label = bTxt.catLabels[l.action_type] || bTxt.catLabels[cat] || (l.action_type || 'Log');
                 var t     = l.created_at ? new Date(l.created_at).toLocaleString(isEN ? 'en' : 'es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
-                ah += '<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:12px;padding:14px;border-left:3px solid '+color+';transition:box-shadow 0.15s" onmouseover="this.style.boxShadow=\'0 4px 16px rgba(0,0,0,0.06)\'" onmouseout="this.style.boxShadow=\'none\'">';
+                ah += '<div class="briefing-activity-card" style="--briefing-color:'+color+'" onmouseover="this.style.boxShadow=\'0 8px 22px rgba(0,0,0,0.12)\'" onmouseout="this.style.boxShadow=\'none\'">';
                 ah += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
                 ah += '<div style="width:28px;height:28px;border-radius:8px;background:'+color+'15;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid '+icon+'" style="font-size:11px;color:'+color+'"></i></div>';
                 ah += '<span style="font-size:10px;font-weight:700;letter-spacing:0.4px;color:'+color+';background:'+color+'12;padding:2px 8px;border-radius:5px;text-transform:uppercase">'+label+'</span>';
@@ -133,13 +134,13 @@ async function loadBriefing(){
         var sevColors2 = {Critico:'#DC2626',Critical:'#DC2626',Alto:'#F59E0B',High:'#F59E0B',Medio:'#3B82F6',Medium:'#3B82F6',Bajo:'#10B981',Low:'#10B981'};
         var alertsDiv = document.getElementById('briefing-alerts');
         if(inc.data && inc.data.length > 0){
-            var alh = '<div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">';
+            var alh = '<div class="briefing-alert-list">';
             inc.data.forEach(function(i){
                 var det  = typeof i.details === 'string' ? JSON.parse(i.details||'{}') : i.details||{};
                 var sev  = det.severity || (isEN ? 'Medium' : 'Medio');
                 var sevC = sevColors2[sev] || '#94A3B8';
                 var isCrit = sev === 'Critico' || sev === 'Critical';
-                alh += '<div style="background:var(--bg-secondary);border:1px solid var(--separator);border-radius:12px;padding:14px;border-left:3px solid '+sevC+'">';
+                alh += '<div class="briefing-alert-card" style="--briefing-alert-color:'+sevC+'">';
                 alh += '<div style="display:flex;align-items:center;gap:10px">';
                 alh += '<div style="position:relative;width:28px;height:28px;flex-shrink:0">';
                 alh += '<div style="width:28px;height:28px;border-radius:8px;background:'+sevC+'15;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-triangle-exclamation" style="font-size:11px;color:'+sevC+'"></i></div>';

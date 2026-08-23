@@ -125,7 +125,7 @@
   border-right: none;
 }
 .mfc-btn.active {
-  background: var(--text-main);
+  background: var(--primary);
   color: #FFFFFF;
 }
 
@@ -218,7 +218,7 @@
   transition: all 0.2s;
 }
 .ais-btn.connect {
-  background: var(--text-main);
+  background: var(--primary);
   color: #FFFFFF;
   border-color: var(--text-main);
 }

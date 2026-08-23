@@ -3,34 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Cliente — FluviaFleet</title>
+    <title>Client Portal — ViaBarcazas</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="fluvia.css">
+    <link rel="stylesheet" href="css/portal-cliente.css">
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
         :root{
-            --bg:#FFFFFF;--bg-alt:#FAFAFA;--surface:#F5F5F5;
-            --text:#1A1A1A;--text-2:#6B6B6B;--sep:#E5E5E5;
-            --blue:#0066FF;--blue-bg:#E8F0FE;--teal:#00C2A8;
-            --green:#22C55E;--amber:#F59E0B;--red:#EF4444;
-            --font-sans:'Inter',-apple-system,sans-serif;
-            --font-serif:'Newsreader',Georgia,serif;
-            --radius:14px;--shadow:0 2px 12px rgba(0,0,0,0.06);
+            --bg:#06110D;--bg-alt:#06110D;--surface:#0C1F19;
+            --text:#F3F7F5;--text-2:#A9B8B2;--sep:#1E3B31;
+            --blue:#38BDF8;--blue-bg:#14332A;--teal:#25D366;
+            --green:#25D366;--amber:#FBBF24;--red:#F87171;
+            --font-sans:'Manrope',-apple-system,sans-serif;
+            --font-serif:'Bricolage Grotesque',sans-serif;
+            --radius:14px;--shadow:0 2px 12px rgba(0,0,0,0.3);
         }
         html{scroll-behavior:smooth}
-        body{font-family:var(--font-sans);color:var(--text);background:var(--bg-alt);line-height:1.6}
 
-        /* TOP BAR */
-        .topbar{background:var(--bg);border-bottom:1px solid var(--sep);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-        .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
-        .topbar-logo img{width:28px;height:28px;border-radius:6px}
-        .topbar-logo span{font-family:var(--font-serif);font-size:1.15rem;font-weight:500}
-        .topbar-badge{background:linear-gradient(135deg,var(--teal),var(--blue));color:white;font-size:0.6rem;font-weight:700;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.5px;margin-left:8px}
-        .topbar-user{display:flex;align-items:center;gap:12px;color:var(--text-2);font-size:0.85rem}
-        .topbar-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem}
+        .sb-company{margin:4px 20px 12px;background:var(--surface);border:0.5px solid var(--sep);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+        .sb-company-avatar{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#06110D;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.72rem;flex-shrink:0}
+        .sb-company-name{font-size:0.8rem;font-weight:700;color:var(--text)}
+        .sb-company-sub{font-size:0.63rem;color:var(--text-2)}
 
         /* LAYOUT */
         .main{max-width:1200px;margin:0 auto;padding:32px 40px}
@@ -43,10 +40,10 @@
         .stat-card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:20px 24px;transition:transform 0.2s}
         .stat-card:hover{transform:translateY(-2px)}
         .stat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;margin-bottom:12px}
-        .stat-icon.blue{background:var(--blue-bg);color:var(--blue)}
-        .stat-icon.green{background:#DCFCE7;color:var(--green)}
-        .stat-icon.amber{background:#FEF3C7;color:var(--amber)}
-        .stat-icon.teal{background:#CCFBF1;color:var(--teal)}
+        .stat-icon.blue{background:rgba(56,189,248,0.15);color:var(--blue)}
+        .stat-icon.green{background:rgba(37,211,102,0.15);color:var(--green)}
+        .stat-icon.amber{background:rgba(251,191,36,0.15);color:var(--amber)}
+        .stat-icon.teal{background:rgba(37,211,102,0.15);color:var(--teal)}
         .stat-value{font-size:1.5rem;font-weight:800;margin-bottom:2px}
         .stat-label{font-size:0.75rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px}
 
@@ -65,9 +62,9 @@
 
         /* STATUS BADGES */
         .status{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px}
-        .status.transit{background:#DBEAFE;color:#1E40AF}
-        .status.loading{background:#FEF3C7;color:#92400E}
-        .status.delivered{background:#DCFCE7;color:#166534}
+        .status.transit{background:rgba(56,189,248,0.15);color:var(--blue)}
+        .status.loading{background:rgba(251,191,36,0.15);color:var(--amber)}
+        .status.delivered{background:rgba(37,211,102,0.15);color:var(--green)}
         .status.waiting{background:var(--surface);color:var(--text-2)}
 
         .route-cell{display:flex;align-items:center;gap:8px}
@@ -123,20 +120,55 @@
     </style>
 </head>
 <body>
-    <!-- TOP BAR -->
-    <header class="topbar">
-        <a href="#" class="topbar-logo">
-            <img src="img/fluvia-logo.jpg" alt="FF">
-            <span>FluviaFleet</span>
-            <span class="topbar-badge">Portal Cliente</span>
-        </a>
-        <div class="topbar-user">
-            <span>Cargill S.A.C.I.</span>
-            <div class="topbar-avatar">CS</div>
+<div class="app-shell" style="display:flex">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.6" fill="#25D366"/></svg><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>
         </div>
-    </header>
-
-    <main class="main">
+        <div class="sb-company"><div class="sb-company-avatar">CS</div><div><div class="sb-company-name">Cargill S.A.C.I.</div><div class="sb-company-sub">Active Client</div></div></div>
+        <div class="sidebar-nav">
+            <div class="nav-section-label">NOW</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-grip"></i>Dashboard</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-map"></i>Fleet Map</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-robot"></i>AI Copilot</a>
+            <div class="nav-section-label">PLANNING</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-link"></i>Convoy Builder</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-file-lines"></i>Trip Management</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-clipboard-check"></i>Pre-Departure</a>
+            <div class="nav-section-label">FLEET</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-anchor"></i>Fleet Management</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-users"></i>Crew &amp; Safety</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-gas-pump"></i>Fuel</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-droplet"></i>Liquids (Tanks)</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-ruler-vertical"></i>Drafts &amp; Hydrometry</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-wrench"></i>Maintenance</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-box-archive"></i>Inventory (Store)</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-triangle-exclamation"></i>Incidents</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-file-contract"></i>Freight Contracts</a>
+            <div class="nav-section-label">COMMUNICATION</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-book"></i>Digital Logbook</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-tower-broadcast"></i>Communications</a>
+            <a class="nav-item" href="admin-whatsapp-fluvia-en.html"><i class="fab fa-whatsapp" style="color:#25D366"></i>WhatsApp Alerts</a>
+            <div class="nav-section-label">INTELLIGENCE</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-water"></i>Waterway Forecast</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-chart-pie"></i>Reports &amp; Analytics</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-newspaper"></i>Daily Briefing</a>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-location-dot"></i>Cargo Tracking</a>
+            <a class="nav-item" href="admin-facturacion-ia-fluvia-en.html"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Invoice IA</a>
+            <div class="nav-section-label">ACCOUNT</div>
+            <a class="nav-item" href="fluvia-en.html"><i class="fa-solid fa-credit-card"></i>Plans &amp; Billing</a>
+            <a class="nav-item active" href="portal-cliente-fluvia-en.html"><i class="fa-solid fa-building" style="color:#059669"></i>Client Portal</a>
+            <div style="padding:20px 24px;margin-top:auto;"><button class="btn-secondary" style="width:100%;" onclick="window.location.href='fluvia-en.html'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Back to Dashboard</button></div>
+        </div>
+    </nav>
+    <div class="main-area">
+        <div class="topbar"><span class="topbar-title">Client Portal</span><div class="topbar-actions">
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);margin-right:8px;">
+                <a href="portal-cliente-fluvia-en.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="portal-cliente-fluvia.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div></div></div>
+    <div class="content">
         <div class="page-header">
             <h1>My Shipments</h1>
             <p>Real-time tracking of your cargo on the Paraguay-Parana Waterway.</p>
@@ -308,6 +340,8 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+    </div>
+</div>
 </body>
 </html>

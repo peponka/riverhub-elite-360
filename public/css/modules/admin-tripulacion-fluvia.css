@@ -206,7 +206,7 @@
 }
 
 .btn-crew-act.primary {
-  background: var(--text-main);
+  background: var(--primary);
   color: #FFFFFF;
   border: none;
 }

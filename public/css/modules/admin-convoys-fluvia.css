@@ -243,7 +243,7 @@
 .deployed-tug {
   width: 96%;
   height: 96%;
-  background: var(--text-main);
+  background: var(--primary);
   border: none;
   color: #FFFFFF;
   border-radius: 50% 50% 10px 10px;
@@ -303,7 +303,7 @@
   font-family: var(--font-data);
 }
 .toast {
-  background: var(--text-main) !important;
+  background: var(--primary) !important;
   color: #FFFFFF !important;
   border-radius: var(--radius-md) !important;
   font-size: 0.85rem !important;

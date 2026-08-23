@@ -3,70 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Intelligence — FluviaFleet</title>
+    <title>Invoice Intelligence — ViaBarcazas</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="fluvia.css">
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#FFF;--bg2:#FAFAFA;--srf:#F5F5F5;--txt:#1A1A1A;--t2:#6B6B6B;--sep:#E5E5E5;--blue:#0066FF;--bbg:#E8F0FE;--teal:#00C2A8;--red:#EF4444;--amber:#F59E0B;--green:#22C55E;--purple:#7C3AED;--font:'Inter',sans-serif;--serif:'Newsreader',serif;--r:14px}
-        body{font-family:var(--font);color:var(--txt);background:var(--bg2);line-height:1.6}
-        .page{display:flex;min-height:100vh}
-        .sb{width:240px;background:var(--bg);border-right:1px solid var(--sep);padding:20px 0;position:fixed;top:0;left:0;bottom:0;z-index:10}
-        .sb-logo{padding:0 20px 20px;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--txt)}
-        .sb-logo img{width:28px;height:28px;border-radius:8px}.sb-logo span{font-family:var(--serif);font-size:1.2rem}
-        .sb-sec{padding:0 12px;margin-bottom:6px}.sb-lbl{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t2);padding:8px 8px 4px}
-        .sb-lk{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--t2);text-decoration:none;font-size:0.82rem;font-weight:500;transition:0.2s}
-        .sb-lk:hover{background:var(--srf);color:var(--txt)}.sb-lk.active{background:var(--bbg);color:var(--blue);font-weight:600}
-        .sb-lk i{width:16px;text-align:center;font-size:0.85rem}
-        .mn{margin-left:240px;flex:1;padding:28px 36px}
-        .hdr{margin-bottom:24px}.hdr h1{font-family:var(--serif);font-size:1.7rem;font-weight:500}.hdr p{color:var(--t2);font-size:0.88rem}
-        .badge{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font-size:0.6rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:8px;text-transform:uppercase}
-        .card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--r);padding:24px;margin-bottom:20px}
+        :root{--bg:#06110D;--bg2:#0F231C;--srf:#0C1F19;--txt:#F3F7F5;--t2:#A9B8B2;--t3:#6B7C74;--sep:#1E3B31;--accent:#128C7E;--teal:#25D366;--abg:#14332A;--red:#F87171;--amber:#FBBF24;--green:#34D399;--purple:#A78BFA;--font:'Manrope',sans-serif;--serif:'Bricolage Grotesque',sans-serif;--r:14px}
+        .hdr{margin-bottom:24px}.hdr h1{font-family:var(--serif);font-size:1.7rem;font-weight:600}.hdr p{color:var(--t2);font-size:0.88rem}
+        .badge{display:inline-flex;align-items:center;gap:4px;background:var(--teal);color:#06110D;font-size:0.6rem;font-weight:800;padding:3px 10px;border-radius:20px;margin-left:8px;text-transform:uppercase}
+        .card{background:var(--bg2);border:0.5px solid var(--sep);border-radius:var(--r);padding:24px;margin-bottom:20px}
         .card-t{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t2);margin-bottom:14px}
-        .banner{background:linear-gradient(135deg,#0f172a,#1a2744);border-radius:var(--r);padding:18px 20px;color:#fff;display:flex;align-items:center;gap:14px;margin-bottom:20px}
-        .banner i{font-size:1.3rem;color:var(--teal)}.banner p{font-size:0.82rem;color:rgba(255,255,255,0.7)}.banner strong{color:#fff}
+        /* HERO BANNER */
+        .hero-banner{position:relative;overflow:hidden;background:linear-gradient(135deg,#0B1F18,#0F2C22 55%,#0B1F18);border:0.5px solid var(--sep);border-radius:var(--r);padding:26px 28px;margin-bottom:20px}
+        .hero-banner::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(37,211,102,0.14) 1px,transparent 0);background-size:22px 22px;opacity:0.5;pointer-events:none}
+        .hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:relative}
+        .hero-top h2{font-family:var(--serif);font-size:1.4rem;font-weight:700;letter-spacing:0.01em;color:#fff}
+        .hero-top p{font-size:0.85rem;color:rgba(243,247,245,0.72);margin-top:6px;max-width:560px}
+        .hero-ai{width:56px;height:56px;border-radius:50%;background:radial-gradient(circle,rgba(37,211,102,0.28),rgba(37,211,102,0.05));border:1px solid rgba(37,211,102,0.4);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--teal);font-size:0.85rem;flex-shrink:0}
+        .steps{display:flex;align-items:flex-start;gap:0;margin-top:22px;position:relative}
+        .step{flex:1;display:flex;gap:12px;position:relative;padding-right:14px}
+        .step:not(:last-child)::after{content:'';position:absolute;top:20px;right:-6px;width:100%;height:1px;background:repeating-linear-gradient(to right,rgba(37,211,102,0.45) 0 6px,transparent 6px 11px)}
+        .step-ico{width:40px;height:40px;border-radius:10px;background:var(--abg);border:0.5px solid rgba(37,211,102,0.35);display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:1rem;flex-shrink:0;z-index:1}
+        .step-txt strong{display:block;font-size:0.82rem;font-weight:700;color:#fff;margin-bottom:2px}
+        .step-txt p{font-size:0.76rem;color:rgba(243,247,245,0.6);line-height:1.45}
         .demo-link{color:var(--teal);cursor:pointer;text-decoration:underline;font-weight:600}
         /* INPUT */
-        .inv-input{width:100%;min-height:160px;border:1px solid var(--sep);border-radius:10px;padding:14px;font-family:var(--font);font-size:0.85rem;resize:vertical;outline:none;line-height:1.6}
-        .inv-input:focus{border-color:var(--blue)}
+        .inv-input{width:100%;min-height:160px;background:var(--bg);border:0.5px solid var(--sep);border-radius:10px;padding:14px;font-family:var(--font);font-size:0.85rem;color:var(--txt);resize:vertical;outline:none;line-height:1.6}
+        .inv-input::placeholder{color:var(--t3)}
+        .inv-input:focus{border-color:var(--teal)}
         /* UPLOAD */
-        .drop-zone{border:2px dashed var(--sep);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:0.2s;margin-bottom:14px}
-        .drop-zone:hover,.drop-zone.drag{border-color:var(--purple);background:var(--bbg)}
-        .drop-zone i{font-size:2rem;color:var(--purple);margin-bottom:8px}
+        .drop-zone{border:1.5px dashed var(--sep);border-radius:12px;padding:40px 28px;text-align:center;cursor:pointer;transition:0.2s;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px}
+        .drop-zone:hover,.drop-zone.drag{border-color:var(--teal);background:var(--abg)}
+        .drop-zone i{font-size:2rem;color:var(--teal);margin-bottom:10px}
         .drop-zone p{font-size:0.85rem;color:var(--t2)}.drop-zone strong{color:var(--txt)}
         .file-preview{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--srf);border-radius:8px;margin-bottom:12px;font-size:0.82rem}
         .file-preview .remove{color:var(--red);cursor:pointer;margin-left:auto}
+        .split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
         /* BTNS */
-        .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-weight:600;font-size:0.85rem;border:none;cursor:pointer;transition:0.2s}
-        .btn-p{background:var(--txt);color:#fff}.btn-p:hover{background:#333}.btn-p:disabled{opacity:0.5;cursor:not-allowed}
-        .btn-o{background:transparent;color:var(--t2);border:1px solid var(--sep)}.btn-o:hover{border-color:var(--txt)}
+        .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-weight:600;font-size:0.85rem;border:none;cursor:pointer;transition:0.2s;font-family:var(--font)}
+        .btn-p{background:var(--teal);color:#06110D}.btn-p:hover{background:#2ee076}.btn-p:disabled{opacity:0.5;cursor:not-allowed}
+        .btn-o{background:transparent;color:var(--t2);border:0.5px solid var(--sep)}.btn-o:hover{border-color:var(--teal);color:var(--txt)}
         .btn-row{display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap}
         /* TABS */
         .inv-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-        .inv-tab{padding:6px 14px;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid var(--sep);background:var(--bg);transition:0.2s}
-        .inv-tab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
-        .inv-tab .close{margin-left:6px;color:rgba(255,255,255,0.6);font-size:0.7rem}
+        .inv-tab{padding:6px 14px;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;border:0.5px solid var(--sep);background:var(--bg2);color:var(--t2);transition:0.2s}
+        .inv-tab.active{background:var(--teal);color:#06110D;border-color:var(--teal)}
+        .inv-tab .close{margin-left:6px;color:rgba(0,0,0,0.5);font-size:0.7rem}
+        .inv-tab:not(.active) .close{color:var(--t3)}
         /* RESULTS */
         .result{display:none}.result.show{display:block}
         .st-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
-        .st-badge.ok{background:#DCFCE7;color:#166534}.st-badge.rev{background:#FEF3C7;color:#92400E}.st-badge.rej{background:#FEE2E2;color:#991B1B}
+        .st-badge.ok{background:rgba(52,211,153,0.15);color:var(--green)}.st-badge.rev{background:rgba(251,191,36,0.15);color:var(--amber)}.st-badge.rej{background:rgba(248,113,113,0.15);color:var(--red)}
         .r-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
         .r-stat{text-align:center;padding:16px;background:var(--srf);border-radius:10px}
-        .r-stat .val{font-size:1.4rem;font-weight:800}.r-stat .lbl{font-size:0.7rem;color:var(--t2);text-transform:uppercase;margin-top:3px}
+        .r-stat .val{font-size:1.4rem;font-weight:800;color:var(--txt)}.r-stat .lbl{font-size:0.7rem;color:var(--t2);text-transform:uppercase;margin-top:3px}
         .i-table{width:100%;border-collapse:collapse;margin-top:10px}
-        .i-table th{text-align:left;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t2);padding:8px 10px;border-bottom:1px solid var(--sep)}
-        .i-table td{padding:10px;font-size:0.82rem;border-bottom:1px solid var(--srf)}.i-table .num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+        .i-table th{text-align:left;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t2);padding:8px 10px;border-bottom:0.5px solid var(--sep)}
+        .i-table td{padding:10px;font-size:0.82rem;border-bottom:0.5px solid var(--srf);color:var(--txt)}.i-table .num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
         .disc{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:8px;margin-bottom:6px}
-        .disc.CRITICA{background:#FEE2E2}.disc.ADVERTENCIA{background:#FEF3C7}.disc.INFO{background:var(--bbg)}
-        .disc-ico{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.7rem;color:#fff}
-        .disc.CRITICA .disc-ico{background:var(--red)}.disc.ADVERTENCIA .disc-ico{background:var(--amber)}.disc.INFO .disc-ico{background:var(--blue)}
+        .disc.CRITICA{background:rgba(248,113,113,0.12)}.disc.ADVERTENCIA{background:rgba(251,191,36,0.12)}.disc.INFO{background:rgba(37,211,102,0.1)}
+        .disc-ico{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.7rem;color:#06110D}
+        .disc.CRITICA .disc-ico{background:var(--red)}.disc.ADVERTENCIA .disc-ico{background:var(--amber)}.disc.INFO .disc-ico{background:var(--teal)}
         .loading{display:none;align-items:center;gap:10px;padding:16px;color:var(--t2);font-size:0.85rem}.loading.show{display:flex}
-        .spinner{width:20px;height:20px;border:3px solid var(--srf);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite}
+        .spinner{width:20px;height:20px;border:3px solid var(--srf);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
-        @media(max-width:900px){.sb{display:none}.mn{margin-left:0;padding:16px}.r-grid{grid-template-columns:1fr}}
+        @media(max-width:900px){.r-grid{grid-template-columns:1fr}.split{grid-template-columns:1fr}.steps{flex-direction:column;gap:16px}.step:not(:last-child)::after{display:none}}
     </style>
 <script data-id="auth-guard-v1">
 (function(){
@@ -74,6 +79,7 @@
   document.documentElement.style.visibility='hidden';
   function check(){
     var _sb=supabase.createClient(SURL,SKEY);
+    window._sb=_sb;
     _sb.auth.getSession().then(function(r){
       if(r.data&&r.data.session){document.documentElement.style.visibility='visible';window._sbToken=r.data.session.access_token;}
       else{window.location.replace('fluvia.html');}
@@ -81,55 +87,104 @@
   }
   if(window.supabase){check();}
   else{var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=check;s.onerror=function(){document.documentElement.style.visibility='visible';};document.head.appendChild(s);}
+  window.doLogout=async function(){if(window._sb)await window._sb.auth.signOut();window.location.href='fluvia.html';};
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 </head>
 <body>
-<div class="page">
-    <aside class="sb">
-        <a href="fluvia.html" class="sb-logo"><img src="img/fluvia-logo.jpg" alt="FF"><span>FluviaFleet</span></a>
-        <div class="sb-sec"><div class="sb-lbl">PRINCIPAL</div>
-            <a href="fluvia.html" class="sb-lk"><i class="fas fa-th-large"></i> Panel de Control</a>
-            <a href="#" class="sb-lk"><i class="fas fa-map"></i> Mapa de Flota</a></div>
-        <div class="sb-sec"><div class="sb-lbl">INTELIGENCIA</div>
-            <a href="#" class="sb-lk active"><i class="fas fa-file-invoice-dollar"></i> Invoice Intelligence</a>
-            <a href="#" class="sb-lk"><i class="fas fa-robot"></i> Copiloto IA</a>
-            <a href="#" class="sb-lk"><i class="fas fa-calculator"></i> Cotizador IA</a></div>
-        <div class="sb-sec"><div class="sb-lbl">OPERATIVA</div>
-            <a href="#" class="sb-lk"><i class="fas fa-anchor"></i> Convoyes</a>
-            <a href="#" class="sb-lk"><i class="fas fa-route"></i> Viajes</a>
-            <a href="#" class="sb-lk"><i class="fas fa-gas-pump"></i> Combustible</a></div>
-    </aside>
-    <main class="mn">
+<div class="app-shell" style="display:flex">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.6" fill="#25D366"/></svg><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>
+            <div class="sidebar-user"><div class="user-avatar">--</div><div class="user-info"><div class="user-name">Mi Cuenta</div><div class="user-role">SESIÓN ACTIVA</div></div></div>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section-label">AHORA</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-grip"></i>Panel de Control</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-map"></i>Mapa de Flota</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-robot"></i>Copiloto IA</a>
+            <div class="nav-section-label">PLANIFICACIÓN</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-link"></i>Armador de Convoy</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-file-lines"></i>Gestion de Viajes</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-clipboard-check"></i>Pre-Zarpe</a>
+            <div class="nav-section-label">FLOTA</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-anchor"></i>Gestion de Flota</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-users"></i>Tripulacion &amp; Safety</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-gas-pump"></i>Combustible</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-droplet"></i>Líquidos (Tanques)</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-ruler-vertical"></i>Calados &amp; Hidrometria</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-wrench"></i>Mantenimiento</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-box-archive"></i>Panol (Inventario)</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-triangle-exclamation"></i>Incidentes</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-file-contract"></i>Contratos de Flete</a>
+            <div class="nav-section-label">COMUNICACIÓN</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-book"></i>Bitacora Digital</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-tower-broadcast"></i>Comunicaciones</a>
+            <a class="nav-item" href="admin-whatsapp-fluvia.html"><i class="fab fa-whatsapp" style="color:#25D366"></i>WhatsApp Alerts</a>
+            <div class="nav-section-label">INTELIGENCIA</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-water"></i>Pronostico Hidrovia</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-chart-pie"></i>Reportes &amp; Analytics</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-newspaper"></i>Briefing Diario</a>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-location-dot"></i>Tracking de Cargas</a>
+            <a class="nav-item active" href="admin-facturacion-ia-fluvia.html"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Facturación IA</a>
+            <div class="nav-section-label">CUENTA</div>
+            <a class="nav-item" href="fluvia.html"><i class="fa-solid fa-credit-card"></i>Planes &amp; Facturacion</a>
+            <a class="nav-item" href="portal-cliente-fluvia.html"><i class="fa-solid fa-building" style="color:#059669"></i>Portal de Cliente</a>
+            <div style="padding:20px 24px;margin-top:auto;"><button class="btn-secondary" style="width:100%;" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesion</button></div>
+        </div>
+    </nav>
+    <div class="main-area">
+        <div class="topbar"><span class="topbar-title">Invoice Intelligence</span><div class="topbar-actions">
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);margin-right:8px;">
+                <a href="admin-facturacion-ia-fluvia-en.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="admin-facturacion-ia-fluvia.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div>
+            <button onclick="doLogout()" title="Cerrar Sesión" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-secondary);font-family:Inter,sans-serif;transition:all 0.2s;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Salir</button></div></div>
+    <div class="content">
         <div class="hdr"><h1>Invoice Intelligence <span class="badge"><i class="fas fa-sparkles"></i> IA + OCR</span></h1>
             <p>Captura, valida y reconcilia facturas con Gemini AI. Soporta texto, imágenes y PDF.</p></div>
-        <div class="banner"><i class="fas fa-lightbulb"></i><div><strong>¿Cómo funciona?</strong>
-            <p>Pegá texto, arrastrá una imagen/PDF o subí un archivo. La IA extrae datos, valida montos y detecta discrepancias. <span class="demo-link" onclick="loadDemo()">Probar con factura demo →</span></p></div></div>
+
+        <div class="hero-banner">
+            <div class="hero-top">
+                <div><h2>ViaBarcazas — Invoice Intelligence</h2>
+                    <p>Pegá texto, arrastrá una imagen/PDF o subí un archivo. La IA extrae datos, valida montos y detecta discrepancias. <span class="demo-link" onclick="loadDemo()">Probar con factura demo →</span></p></div>
+                <div class="hero-ai">AI</div>
+            </div>
+            <div class="steps">
+                <div class="step"><div class="step-ico"><i class="fas fa-cloud-upload-alt"></i></div><div class="step-txt"><strong>Cargar Factura</strong><p>Arrastrá PDF/PNG/JPG, o pegá texto.</p></div></div>
+                <div class="step"><div class="step-ico"><i class="fas fa-microchip"></i></div><div class="step-txt"><strong>Procesamiento de IA</strong><p>Gemini AI extrae datos y valida montos.</p></div></div>
+                <div class="step"><div class="step-ico"><i class="fas fa-check-double"></i></div><div class="step-txt"><strong>Validación y Conciliación</strong><p>Confirma datos extraídos, detecta discrepancias.</p></div></div>
+            </div>
+        </div>
 
         <!-- TABS para batch -->
         <div class="inv-tabs" id="invTabs">
             <div class="inv-tab active" data-idx="0" onclick="switchTab(0)">Factura 1</div>
-            <div class="inv-tab" onclick="addInvoice()" style="background:var(--srf);border-style:dashed"><i class="fas fa-plus" style="font-size:0.7rem"></i> Agregar</div>
+            <div class="inv-tab" onclick="addInvoice()" style="background:var(--bg2);border-style:dashed"><i class="fas fa-plus" style="font-size:0.7rem"></i> Agregar</div>
         </div>
 
         <!-- INPUT AREA -->
         <div id="inputArea">
-            <!-- Drop zone -->
-            <div class="drop-zone" id="dropZone" ondrop="handleDrop(event)" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p><strong>Arrastrá una imagen o PDF</strong> de factura aquí<br>o hacé click para seleccionar archivo</p>
-            </div>
-            <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none" onchange="handleFileSelect(this)">
-            <div id="filePreview"></div>
-            <div class="card">
-                <div class="card-t">TEXTO DE FACTURA (opcional si subís imagen)</div>
-                <textarea id="invoiceText" class="inv-input" placeholder="Pegá aquí el texto de la factura..."></textarea>
-                <div class="btn-row">
-                    <button class="btn btn-p" id="analyzeBtn" onclick="analyzeInvoice()"><i class="fas fa-brain"></i> Analizar con IA</button>
-                    <button class="btn btn-o" onclick="clearCurrent()"><i class="fas fa-eraser"></i> Limpiar</button>
-                    <button class="btn btn-o" onclick="analyzeAll()" title="Analizar todas las facturas"><i class="fas fa-layer-group"></i> Analizar Todas</button>
+            <div class="split">
+                <div>
+                    <div class="drop-zone" id="dropZone" ondrop="handleDrop(event)" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p><strong>Arrastrá una imagen o PDF</strong> de factura aquí<br>o hacé click para seleccionar archivo</p>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none" onchange="handleFileSelect(this)">
+                    <div id="filePreview"></div>
                 </div>
+                <div class="card" style="margin-bottom:0">
+                    <div class="card-t">TEXTO DE FACTURA (opcional si subís imagen)</div>
+                    <textarea id="invoiceText" class="inv-input" placeholder="Pegá aquí el texto de la factura..."></textarea>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-p" id="analyzeBtn" onclick="analyzeInvoice()"><i class="fas fa-brain"></i> Analizar con IA</button>
+                <button class="btn btn-o" onclick="clearCurrent()"><i class="fas fa-eraser"></i> Limpiar</button>
+                <button class="btn btn-o" onclick="analyzeAll()" title="Analizar todas las facturas"><i class="fas fa-layer-group"></i> Analizar Todas</button>
             </div>
         </div>
 
@@ -146,7 +201,8 @@
                 <tbody id="itemsBody"></tbody></table></div>
             <div class="card" id="discCard" style="display:none"><div class="card-t">DISCREPANCIAS DETECTADAS</div><div id="discList"></div></div>
         </div>
-    </main>
+    </div>
+    </div>
 </div>
 
 <script>
@@ -185,7 +241,7 @@ function removeInvoice(idx, e) {
 function renderTabs() {
     const c = document.getElementById('invTabs');
     c.innerHTML = invoices.map((_, i) => `<div class="inv-tab${i===currentIdx?' active':''}" data-idx="${i}" onclick="switchTab(${i})">Factura ${i+1}${invoices.length>1?`<span class="close" onclick="removeInvoice(${i},event)">✕</span>`:''}</div>`).join('') +
-        `<div class="inv-tab" onclick="addInvoice()" style="background:var(--srf);border-style:dashed"><i class="fas fa-plus" style="font-size:0.7rem"></i> Agregar</div>`;
+        `<div class="inv-tab" onclick="addInvoice()" style="background:var(--bg2);border-style:dashed"><i class="fas fa-plus" style="font-size:0.7rem"></i> Agregar</div>`;
 }
 
 function saveCurrentState() { invoices[currentIdx].text = document.getElementById('invoiceText').value; }
@@ -193,7 +249,7 @@ function saveCurrentState() { invoices[currentIdx].text = document.getElementByI
 function loadTabState() {
     document.getElementById('invoiceText').value = invoices[currentIdx].text || '';
     document.getElementById('filePreview').innerHTML = invoices[currentIdx].imageName ?
-        `<div class="file-preview"><i class="fas fa-file-image" style="color:var(--purple)"></i>${invoices[currentIdx].imageName}<span class="remove" onclick="removeFile()">✕</span></div>` : '';
+        `<div class="file-preview"><i class="fas fa-file-image" style="color:var(--teal)"></i>${invoices[currentIdx].imageName}<span class="remove" onclick="removeFile()">✕</span></div>` : '';
     if (invoices[currentIdx].result) { renderResult(invoices[currentIdx].result); document.querySelector('.result').classList.add('show'); }
     else { document.querySelector('.result').classList.remove('show'); }
 }
@@ -213,7 +269,7 @@ function processFile(file) {
         const base64 = e.target.result.split(',')[1];
         invoices[currentIdx].image = { data: base64, mimeType: file.type || 'image/jpeg' };
         invoices[currentIdx].imageName = file.name;
-        document.getElementById('filePreview').innerHTML = `<div class="file-preview"><i class="fas fa-file-image" style="color:var(--purple)"></i>${file.name}<span class="remove" onclick="removeFile()">✕</span></div>`;
+        document.getElementById('filePreview').innerHTML = `<div class="file-preview"><i class="fas fa-file-image" style="color:var(--teal)"></i>${file.name}<span class="remove" onclick="removeFile()">✕</span></div>`;
     };
     reader.readAsDataURL(file);
 }

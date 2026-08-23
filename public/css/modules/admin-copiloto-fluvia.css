@@ -96,7 +96,7 @@
 }
 
 .msg.bot .msg-avatar {
-  background: var(--text-main);
+  background: var(--primary);
   color: #FFFFFF;
 }
 .msg.user .msg-avatar {
@@ -130,7 +130,7 @@
 }
 
 .msg.user .msg-text {
-  background: var(--text-main);
+  background: var(--primary);
   color: #FFFFFF;
   border-color: var(--text-main);
 }
@@ -200,7 +200,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--text-main);
+  background: var(--primary);
   color: #FFFFFF;
   border: none;
   cursor: pointer;

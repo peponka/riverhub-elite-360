@@ -53,7 +53,7 @@ let adminRoutes;
 try { adminRoutes = require('./routes/adminRoutes'); } catch (e) { console.error('❌ Admin routes failed to load:', e.message); }
 
 // ============================================
-// FLUVIAFLEET — Servidor Unificado
+// VIABARCAZAS — Servidor Unificado
 // Version: 2.0.0
 // ============================================
 
@@ -63,7 +63,7 @@ const cors = require('cors');
 
 const server = http.createServer(app);
 const ALLOWED_ORIGINS = [
-    process.env.FRONTEND_URL || 'https://fluviafleet.com',
+    process.env.FRONTEND_URL || 'https://viabarcazas.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:4001',
@@ -289,7 +289,7 @@ app.post('/api/ai/chat', aiLimiter, authenticateUser, async (req, res) => {
         return res.status(400).json({ error: 'Missing message' });
     }
 
-    const systemPrompt = `Eres el Copiloto IA de FluviaFleet, un experto en gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná.
+    const systemPrompt = `Eres el Copiloto IA de ViaBarcazas, un experto en gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná.
 Reglas estrictas:
 1. NO te presentes ni saludes repetidamente en cada mensaje. Respondé directamente a la pregunta.
 2. Respondé en español rioplatense profesional.
@@ -667,7 +667,7 @@ app.post('/api/ai/invoice', aiLimiter, authenticateUser, async (req, res) => {
         } catch (e) { /* silently continue without voyage data */ }
     }
 
-    const systemPrompt = `Eres el motor de Invoice Intelligence de FluviaFleet. Tu trabajo es analizar facturas de flete fluvial y extraer datos estructurados.
+    const systemPrompt = `Eres el motor de Invoice Intelligence de ViaBarcazas. Tu trabajo es analizar facturas de flete fluvial y extraer datos estructurados.
 
 INSTRUCCIONES:
 1. Extrae TODOS los datos de la factura en formato JSON estructurado
@@ -749,6 +749,38 @@ if (hydrologyRoutes) {
 }
 
 // --- STATIC FILES ---
+// Keep public URLs branded as ViaBarcazas while supporting legacy internal filenames.
+app.use((req, res, next) => {
+    if (!req.path.endsWith('.html')) return next();
+
+    const suffix = req.url.slice(req.path.length);
+    const legacyToClean = {
+        '/fluvia.html': '/viabarcazas.html',
+        '/fluvia-en.html': '/viabarcazas-en.html',
+        '/app.html': '/viabarcazas.html',
+        '/app-en.html': '/viabarcazas-en.html',
+        '/portal-cliente-fluvia.html': '/portal-clientes.html',
+        '/portal-cliente-fluvia-en.html': '/portal-clientes-en.html',
+        '/landing.html': '/',
+    };
+
+    const cleanPath = legacyToClean[req.path] ||
+        (req.path.match(/^\/admin-(.+)-fluvia(-en)?\.html$/i)
+            ? req.path.replace(/-fluvia(?=-en)?\.html$/i, '.html')
+            : null);
+    if (cleanPath) return res.redirect(301, cleanPath + suffix);
+
+    const cleanToLegacy = Object.fromEntries(Object.entries(legacyToClean).map(([legacy, clean]) => [clean, legacy]));
+    const legacyPath = cleanToLegacy[req.path] ||
+        (req.path.match(/^\/admin-(.+)(-en)?\.html$/i)
+            ? req.path.replace(/\.html$/i, '-fluvia$&').replace(/(-en)-fluvia\.html$/i, '-fluvia-en.html')
+            : null);
+    if (legacyPath) {
+        req.url = legacyPath + suffix;
+    }
+    next();
+});
+
 // HTML files: never cache so version bumps in script tags take effect immediately
 app.use((req, res, next) => {
     if (req.path.endsWith('.html')) {
@@ -1224,7 +1256,7 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`
 ╔══════════════════════════════════════════╗
-║   🚀 FLUVIAFLEET — v2.0.0              ║
+║   🚀 VIABARCAZAS — v2.0.0              ║
 ║   Puerto: ${PORT}                            ║
 ║   AIS: Hidrovía Paraguay-Paraná         ║
 ╚══════════════════════════════════════════╝
