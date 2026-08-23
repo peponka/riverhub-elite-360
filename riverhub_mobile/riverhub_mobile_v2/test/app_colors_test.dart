@@ -4,7 +4,7 @@ import 'package:riverhub_mobile_v2/theme/app_colors.dart';
 
 void main() {
   group('AppColors Design Tokens', () {
-    test('backgroundPrimary is correct Fluvia color', () {
+    test('backgroundPrimary is correct ViaBarcazas color', () {
       expect(AppColors.backgroundPrimary, const Color(0xFFF8F9FA));
     });
 

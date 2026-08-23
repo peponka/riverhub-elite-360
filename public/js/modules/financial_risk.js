@@ -1,7 +1,7 @@
 /**
  * Financial Risk Analysis Engine
  * 
- * Modulo de evaluación de riesgo financiero automatizado para FluviaFleet.
+ * Modulo de evaluación de riesgo financiero automatizado para ViaBarcazas.
  * Implementa lógica de validación, cálculo de ratios, detección de red flags y scoring.
  * 
  * Uso:

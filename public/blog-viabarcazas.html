@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — ViaBarcazas | Recursos para Operadores Fluviales</title>
+<meta name="description" content="Artículos, guías y análisis sobre gestión de flotas en la Hidrovía Paraguay-Paraná. Recursos para operadores fluviales.">
+<meta name="keywords" content="hidrovía paraguay paraná, transporte fluvial, barcazas, logística fluvial, gestión de flota, blog fluvial">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://viabarcazas.com/blog-viabarcazas.html">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:opsz,ital,wght@6..72,0,300;6..72,0,400;6..72,0,500;6..72,0,600;6..72,1,300;6..72,1,400;6..72,1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --bg:#FFFFFF;--bg-alt:#F8F9FA;--surface:#F1F5F9;--text:#1A1A2E;--text2:#94A3B8;--text3:#CBD5E1;
+    --sep:#E2E8F0;--accent:#3B82F6;--success:#2EA043;
+    --font-sans:'Inter',-apple-system,sans-serif;--font-serif:'Newsreader',Georgia,serif;
+    --radius:16px
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-sans);color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+.nav{position:sticky;top:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--sep);z-index:100;padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text)}
+.nav-brand img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.nav-brand span{font-family:var(--font-serif);font-size:2.1rem;font-weight:400;letter-spacing:-0.01em}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-back{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--text2);font-size:13px;font-weight:500;transition:color 0.2s}
+.nav-back:hover{color:var(--text)}
+.nav-back i{font-size:11px}
+.lang-toggle{display:flex;align-items:center;gap:8px;background:var(--surface);padding:4px 10px;border-radius:20px;border:1px solid var(--sep)}
+.lang-btn{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--text2);text-decoration:none;transition:all 0.2s}
+.lang-btn:hover{color:var(--text)}
+.lang-btn.active{color:var(--text)}
+.lang-btn img{width:14px;height:14px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,0.1)}
+.lang-sep{color:var(--sep);font-size:10px}
+
+/* HERO */
+.blog-hero{max-width:900px;margin:0 auto;padding:80px 48px 56px;text-align:center}
+.blog-hero-tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:3px;color:var(--accent);margin-bottom:16px;background:rgba(59,130,246,0.08);padding:6px 18px;border-radius:100px;border:1px solid rgba(59,130,246,0.15)}
+.blog-hero h1{font-family:var(--font-serif);font-size:52px;font-weight:400;line-height:1.1;margin-bottom:16px;color:var(--text)}
+.blog-hero h1 em{font-weight:300;font-style:italic}
+.blog-hero p{color:var(--text2);font-size:16px;line-height:1.7;max-width:600px;margin:0 auto}
+
+/* ARTICLES GRID */
+.articles-section{max-width:1100px;margin:0 auto;padding:0 48px 80px}
+.articles-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+
+/* ARTICLE CARD */
+.article-card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);overflow:hidden;transition:all 0.3s ease;cursor:pointer;display:flex;flex-direction:column}
+.article-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.08);border-color:rgba(59,130,246,0.2)}
+.article-card-body{padding:28px;display:flex;flex-direction:column;flex:1}
+.article-cat{display:inline-block;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:800;letter-spacing:1px;margin-bottom:14px;width:fit-content}
+.cat-industria{background:#FEF3C7;color:#92400E}
+.cat-guia{background:#EDE9FE;color:#5B21B6}
+.cat-tecnologia{background:rgba(59,130,246,0.1);color:#2563EB}
+.cat-operaciones{background:#DCFCE7;color:#15803D}
+.cat-implementacion{background:#CCFBF1;color:#0D6352}
+.article-card h2{font-family:var(--font-serif);font-size:20px;font-weight:500;line-height:1.3;margin-bottom:10px;color:var(--text);text-decoration:none;transition:color 0.2s}
+.article-card:hover h2{color:var(--accent)}
+.article-card p.excerpt{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:20px;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.article-card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--sep)}
+.article-meta{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--text2);font-weight:500}
+.article-meta span{display:flex;align-items:center;gap:4px}
+.article-meta i{font-size:10px;color:var(--text3)}
+.badge-soon{display:inline-block;padding:4px 10px;border-radius:8px;font-size:9px;font-weight:800;letter-spacing:1px;background:var(--surface);color:var(--text2);border:1px solid var(--sep)}
+
+/* NEWSLETTER */
+.newsletter-section{max-width:1100px;margin:0 auto;padding:0 48px 80px}
+.newsletter-box{background:var(--text);border-radius:20px;padding:56px;display:flex;align-items:center;justify-content:space-between;gap:48px}
+.newsletter-content h2{font-family:var(--font-serif);font-size:28px;font-weight:400;color:white;margin-bottom:8px;line-height:1.2}
+.newsletter-content p{color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6}
+.newsletter-form{display:flex;gap:10px;flex-shrink:0;min-width:380px}
+.newsletter-form input{flex:1;padding:14px 20px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-size:13px;font-family:var(--font-sans);outline:none;transition:border-color 0.2s}
+.newsletter-form input::placeholder{color:rgba(255,255,255,0.35)}
+.newsletter-form input:focus{border-color:rgba(255,255,255,0.4)}
+.newsletter-form button{padding:14px 28px;border-radius:12px;background:white;color:var(--text);font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:var(--font-sans);transition:all 0.2s;white-space:nowrap}
+.newsletter-form button:hover{opacity:0.9;transform:translateY(-1px)}
+
+/* FOOTER */
+.blog-footer{border-top:0.5px solid var(--sep);padding:48px 48px 32px}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-brand img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.footer-brand span{font-family:var(--font-serif);font-size:16px;font-weight:500;font-style:italic;color:var(--text)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:12px;color:var(--text2);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+.footer-copy{font-size:11px;color:var(--text3);text-align:center;margin-top:24px;padding-top:20px;border-top:0.5px solid var(--sep);max-width:1100px;margin-left:auto;margin-right:auto}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .articles-grid{grid-template-columns:1fr}
+    .newsletter-box{flex-direction:column;text-align:center;padding:40px 28px}
+    .newsletter-form{min-width:auto;width:100%;flex-direction:column}
+    .blog-hero h1{font-size:36px}
+}
+@media(max-width:600px){
+    .nav{padding:0 20px}
+    .blog-hero{padding:60px 20px 40px}
+    .articles-section{padding:0 20px 60px}
+    .newsletter-section{padding:0 20px 60px}
+    .blog-footer{padding:32px 20px 24px}
+    .footer-inner{flex-direction:column;text-align:center}
+    .footer-links{flex-wrap:wrap;justify-content:center}
+}
+
+/* REVEAL ANIMATION */
+.reveal{opacity:0;transform:translateY(20px);transition:all 0.5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+    <a href="index.html" class="nav-brand">
+        <img src="img/viabarcazas-logo.jpg" alt="ViaBarcazas">
+        <span>ViaBarcazas</span>
+    </a>
+    <div class="nav-right">
+        <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Volver al inicio</a>
+        <div class="lang-toggle">
+            <a href="blog-viabarcazas-en.html" class="lang-btn"><img src="https://flagcdn.com/w40/us.png" alt="EN"> EN</a>
+            <span class="lang-sep">|</span>
+            <a href="blog-viabarcazas.html" class="lang-btn active"><img src="https://flagcdn.com/w40/es.png" alt="ES"> ES</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="blog-hero">
+    <div class="blog-hero-tag">BLOG</div>
+    <h1>Recursos para<br><em>operadores fluviales.</em></h1>
+    <p>Artículos, guías y análisis sobre gestión de flotas en la Hidrovía Paraguay-Paraná.</p>
+</section>
+
+<!-- ARTICLES -->
+<section class="articles-section">
+    <div class="articles-grid">
+
+        <!-- Article 1 -->
+        <article class="article-card reveal">
+            <div class="article-card-body">
+                <span class="article-cat cat-industria">INDUSTRIA</span>
+                <h2>Por qué el 80% de las flotas de la hidrovía todavía usan Excel</h2>
+                <p class="excerpt">La resistencia al cambio en el sector fluvial no es capricho. Es un sistema que funcionó durante décadas. Pero los costos ocultos de la gestión manual se acumulan silenciosamente.</p>
+                <div class="article-card-footer">
+                    <div class="article-meta">
+                        <span><i class="fa-regular fa-calendar"></i> Junio 2026</span>
+                        <span><i class="fa-regular fa-clock"></i> 5 min</span>
+                    </div>
+                    <span class="badge-soon">PRÓXIMAMENTE</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 2 -->
+        <article class="article-card reveal">
+            <div class="article-card-body">
+                <span class="article-cat cat-guia">GUÍA TÉCNICA</span>
+                <h2>Cómo calcular la eficiencia de combustible en barcazas</h2>
+                <p class="excerpt">El combustible representa hasta el 60-70% del costo operativo de una barcaza. Aprendé a medir, comparar y optimizar el consumo por viaje y por sector.</p>
+                <div class="article-card-footer">
+                    <div class="article-meta">
+                        <span><i class="fa-regular fa-calendar"></i> Junio 2026</span>
+                        <span><i class="fa-regular fa-clock"></i> 8 min</span>
+                    </div>
+                    <span class="badge-soon">PRÓXIMAMENTE</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 3 -->
+        <article class="article-card reveal">
+            <div class="article-card-body">
+                <span class="article-cat cat-tecnologia">TECNOLOGÍA</span>
+                <h2>AIS: qué es y por qué tu flota lo necesita</h2>
+                <p class="excerpt">El Sistema de Identificación Automática es obligatorio en muchas jurisdicciones. Pero más allá de la regulación, es una herramienta de visibilidad operativa que puede transformar tu gestión.</p>
+                <div class="article-card-footer">
+                    <div class="article-meta">
+                        <span><i class="fa-regular fa-calendar"></i> Julio 2026</span>
+                        <span><i class="fa-regular fa-clock"></i> 6 min</span>
+                    </div>
+                    <span class="badge-soon">PRÓXIMAMENTE</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 4 -->
+        <article class="article-card reveal">
+            <div class="article-card-body">
+                <span class="article-cat cat-operaciones">OPERACIONES</span>
+                <h2>El armado de convoyes en la Paraná-Paraguay: errores comunes</h2>
+                <p class="excerpt">Armar un convoy de 16 barcazas no es solo cuestión de espacio. Calado, distribución de carga, corriente y condiciones del río determinan la formación óptima.</p>
+                <div class="article-card-footer">
+                    <div class="article-meta">
+                        <span><i class="fa-regular fa-calendar"></i> Julio 2026</span>
+                        <span><i class="fa-regular fa-clock"></i> 7 min</span>
+                    </div>
+                    <span class="badge-soon">PRÓXIMAMENTE</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 5 -->
+        <article class="article-card reveal">
+            <div class="article-card-body">
+                <span class="article-cat cat-implementacion">IMPLEMENTACIÓN</span>
+                <h2>De papel a digital: cómo implementar gestión de flota sin parar operaciones</h2>
+                <p class="excerpt">La mayor excusa para no digitalizar es "no podemos parar". La realidad es que la digitalización se puede hacer gradualmente, sin interrumpir un solo viaje.</p>
+                <div class="article-card-footer">
+                    <div class="article-meta">
+                        <span><i class="fa-regular fa-calendar"></i> Agosto 2026</span>
+                        <span><i class="fa-regular fa-clock"></i> 6 min</span>
+                    </div>
+                    <span class="badge-soon">PRÓXIMAMENTE</span>
+                </div>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+<!-- NEWSLETTER CTA -->
+<section class="newsletter-section reveal">
+    <div class="newsletter-box">
+        <div class="newsletter-content">
+            <h2>Suscribite al newsletter<br>de ViaBarcazas</h2>
+            <p>Recibí artículos, guías y novedades sobre gestión fluvial directamente en tu casilla. Sin spam, solo contenido útil.</p>
+        </div>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="tu@email.com" id="newsletter-email" required>
+            <button type="submit">Suscribirme</button>
+        </form>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="blog-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <img src="img/viabarcazas-logo.jpg" alt="ViaBarcazas">
+            <span>ViaBarcazas</span>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Inicio</a>
+            <a href="terminos.html">Términos</a>
+            <a href="privacidad.html">Privacidad</a>
+            <a href="cookies.html">Cookies</a>
+            <a href="mailto:info@viabarcazas.com">info@viabarcazas.com</a>
+        </div>
+    </div>
+    <div class="footer-copy">&copy; 2026 ViaBarcazas. Todos los derechos reservados. Hidrovía Paraguay-Paraná.</div>
+</footer>
+
+<script>
+// Reveal on scroll
+document.addEventListener('DOMContentLoaded', function() {
+    var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                obs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+});
+</script>
+</body>
+</html>

@@ -41,7 +41,7 @@ class AIService {
     }
 
     async chat(message, context) {
-        const systemPrompt = `Eres el Copiloto IA de FluviaFleet, un sistema de gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná.
+        const systemPrompt = `Eres el Copiloto IA de ViaBarcazas, un sistema de gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná.
 Tu rol:
 - Experto en logística fluvial, navegación de barcos empujadores y barcazas
 - Conoces sobre hidrología del Río Paraná y Paraguay
@@ -189,7 +189,7 @@ Responde en JSON:
             }
         }
 
-        const systemPrompt = `Eres el motor de Invoice Intelligence de FluviaFleet. Analiza facturas de flete.
+        const systemPrompt = `Eres el motor de Invoice Intelligence de ViaBarcazas. Analiza facturas de flete.
 Extrae JSON exacto:
 {
   "invoice": {"number": "x", "date": "x", "supplier": "x", "total": 0, "currency": "x", "items": [{"description": "x", "quantity": 0, "unit": "x", "unitPrice": 0, "subtotal": 0}]},

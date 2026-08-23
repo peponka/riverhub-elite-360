@@ -109,7 +109,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <link rel="stylesheet" href="css/elite-bundle.css?v=ELITE_PROX_GEN">
-    <link rel="stylesheet" href="css/fluvia-override.css?v=3">
+    <link rel="stylesheet" href="css/viabarcazas-override.css?v=3">
                                     <!-- REVERTED MOBILE OVERRIDES DUE TO BLACK SCREEN -->
 
     <!-- External Libs -->
@@ -174,10 +174,10 @@
         }
     </style>
 
-    <!-- FLUVIAFLEET PURGE: Remove ALL dark inline styles so CSS override takes full control -->
+    <!-- VIABARCAZAS PURGE: Remove ALL dark inline styles so CSS override takes full control -->
     <script>
     (function(){
-        function fluviafleetPurge(){
+        function viabarcazasPurge(){
             var all = document.querySelectorAll('*');
             var darkColors = ['#0f172a','#0f151f','#09090b','#18181b','#1e293b','#0b1120',
                               'rgb(15,','rgb(9,','rgb(24,','rgb(30,','rgb(11,'];
@@ -216,16 +216,16 @@
                 }
                 if(changed) count++;
             }
-            console.log('FLUVIAFLEET PURGE: '+count+' elements cleaned');
+            console.log('VIABARCAZAS PURGE: '+count+' elements cleaned');
         }
         // Run on load and periodically for dynamic content
-        if(document.readyState==='complete') fluviafleetPurge();
-        else window.addEventListener('load', function(){ setTimeout(fluviafleetPurge,300); setTimeout(fluviafleetPurge,1500); setTimeout(fluviafleetPurge,4000); });
+        if(document.readyState==='complete') viabarcazasPurge();
+        else window.addEventListener('load', function(){ setTimeout(viabarcazasPurge,300); setTimeout(viabarcazasPurge,1500); setTimeout(viabarcazasPurge,4000); });
         // Also run when views change
         document.addEventListener('click', function(e){
             if(e.target.closest && e.target.closest('.menu a, .mobile-nav-item')){
-                setTimeout(fluviafleetPurge, 500);
-                setTimeout(fluviafleetPurge, 1500);
+                setTimeout(viabarcazasPurge, 500);
+                setTimeout(viabarcazasPurge, 1500);
             }
         });
     })();
@@ -790,7 +790,7 @@
                         <!-- Header with Greeting -->
                         <div class="dash-header">
                             <div class="welcome-msg">
-                                <h2 id="dash-welcome-text">FluviaFleet Monitor</h2>
+                                <h2 id="dash-welcome-text">ViaBarcazas Monitor</h2>
                                 <span class="welcome-sub">CENTRO DE CONTROL UNIFICADO • NIVEL DE SERVICIO: ÓPTIMO</span>
                             </div>
                             <div class="system-status">

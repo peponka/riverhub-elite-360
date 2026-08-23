@@ -21,7 +21,7 @@
 --   • pre_zarpe_screen.dart:344   → company_id + full_name
 --   • contratos_screen.dart:377   → contratos (móvil)
 --   • main.dart:153               → alta del token FCM (push notifications)
---   • admin-contratos-fluvia.html / admin-compliance-fluvia.html (web)
+--   • admin-contratos-viabarcazas.html / admin-compliance-viabarcazas.html (web)
 --
 -- La solución correcta ya estaba escrita en la base: `is_superadmin()`, que es
 -- STABLE SECURITY DEFINER y por lo tanto NO dispara RLS al consultar la tabla.

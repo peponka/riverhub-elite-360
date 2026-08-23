@@ -1,0 +1,311 @@
+/* ============================================
+   CONVOYS MODULE - VIABARCAZAS "ViaBarcazas MERIDIAN" SYSTEM
+   ============================================ */
+
+/* MAIN LAYOUT FOR CONVOYS */
+.convoys-grid-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  height: calc(100vh - 200px);
+  min-height: 500px;
+}
+
+/* 1. ASSET LIST PANEL (LEFT) */
+.assets-panel-viabarcazas {
+  background: var(--surface-container-low);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.assets-panel-viabarcazas .section-header {
+  margin-bottom: 20px;
+}
+
+#asset-list-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 8px;
+}
+
+#asset-list-container::-webkit-scrollbar {
+  width: 4px;
+}
+#asset-list-container::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+/* Draggable Asset Cards */
+.draggable-asset {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.draggable-asset:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  border-color: var(--text-sec);
+}
+
+.draggable-asset:active {
+  cursor: grabbing;
+}
+
+.draggable-asset.selected {
+  border-color: var(--accent-orange);
+  background: rgba(212, 101, 42, 0.05); /* Orange tint */
+}
+
+/* Type Indication */
+.draggable-asset[data-type="REMOLCADOR"] { border-left: 3px solid var(--text-main); }
+.draggable-asset[data-type*="TANQUE"] { border-left: 3px solid #F59E0B; }
+.draggable-asset[data-type*="GRANEL"] { border-left: 3px solid var(--status-ok); }
+
+.asset-icon {
+  font-size: 1.1rem;
+  margin-right: 14px;
+  color: var(--text-sec);
+  width: 24px;
+  text-align: center;
+}
+
+.asset-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.asset-name {
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.type-tag {
+  color: var(--text-sec);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
+/* 2. MATRIX / BUILDER PANEL (RIGHT) */
+.builder-panel-viabarcazas {
+  background: var(--surface-container-low);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: relative;
+}
+
+.builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.convoy-name-input {
+  background: transparent;
+  border: none;
+  font-family: var(--font-brand);
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-main);
+  padding: 4px 8px;
+  width: 300px;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom 0.2s;
+}
+
+.convoy-name-input:focus {
+  outline: none;
+  border-bottom: 1px solid var(--text-sec);
+}
+
+.builder-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* THE GRID MATRIX */
+.matrix-wrapper-viabarcazas {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+#convoy-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 100px);
+  grid-template-rows: repeat(6, 100px);
+  gap: 8px;
+  padding: 20px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+  position: relative;
+}
+
+/* Marks (Proa / Popa) */
+#convoy-grid::before {
+  content: 'PROA';
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-family: var(--font-data);
+  color: var(--text-sec);
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+#convoy-grid::after {
+  content: 'POPA';
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-family: var(--font-data);
+  color: var(--text-sec);
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+/* Grid Cells */
+.grid-cell {
+  width: 100%;
+  height: 100%;
+  background: var(--surface-container-low);
+  border: 1px dashed #ced4da;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-cell:hover {
+  border-color: var(--text-sec);
+  background: #f1f5f9; /* slate-100 */
+}
+
+.grid-cell.drag-over {
+  border-color: var(--accent-orange);
+  background: rgba(212, 101, 42, 0.05);
+}
+
+/* DEPLOYED ASSETS IN GRID */
+.deployed-barge {
+  width: 96%;
+  height: 96%;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-bottom: 3px solid var(--barge-color, #94a3b8);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  animation: scaleIn 0.2s ease-out;
+}
+
+.deployed-barge.tanker { --barge-color: #F59E0B; }
+.deployed-barge.bulk { --barge-color: var(--status-ok); }
+.deployed-barge.container { --barge-color: #3b82f6; }
+
+.deployed-tug {
+  width: 96%;
+  height: 96%;
+  background: var(--primary);
+  border: none;
+  color: #FFFFFF;
+  border-radius: 50% 50% 10px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  font-size: 0.75rem;
+  padding: 5px;
+  text-align: center;
+}
+
+.barge-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-main);
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-first;
+  padding: 0 2px;
+}
+.deployed-tug .barge-label { color: #FFFFFF; }
+
+.btn-remove-barge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #FFFFFF;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 5;
+  transition: 0.15s;
+}
+.btn-remove-barge:hover {
+  background: var(--status-err);
+  color: #FFFFFF;
+  border-color: var(--status-err);
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Modals / Toasts Overrides */
+#toast-container {
+  font-family: var(--font-data);
+}
+.toast {
+  background: var(--primary) !important;
+  color: #FFFFFF !important;
+  border-radius: var(--radius-md) !important;
+  font-size: 0.85rem !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}

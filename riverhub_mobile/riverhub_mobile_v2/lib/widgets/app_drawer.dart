@@ -62,7 +62,7 @@ class AppDrawer extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            // ─── Fluvia Header ───────────────────────────────────────
+            // ─── ViaBarcazas Header ───────────────────────────────────────
             Container(
               padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
               decoration: const BoxDecoration(
@@ -76,7 +76,7 @@ class AppDrawer extends StatelessWidget {
                       Icon(CupertinoIcons.drop_fill, size: 18, color: AppColors.textPrimary),
                       const SizedBox(width: 8),
                       Text(
-                        'Fluvia',
+                        'ViaBarcazas',
                         style: GoogleFonts.newsreader(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+  <title>ViaBarcazas - Fleet Map (ViaBarcazas)</title>
+  <link rel="stylesheet" href="./css/modules/admin-viabarcazas.css">
+  <link rel="stylesheet" href="./css/modules/admin-mapa-viabarcazas.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- Leaflet CSS & JS via cdnjs (whitelisted in CSP) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <style>
+    #leaflet-map-flota { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; }
+    .leaflet-control-zoom a {
+      background: #FFFFFF !important; border: 1px solid var(--border-color) !important;
+      color: var(--text-main) !important; font-family: var(--font-data) !important;
+      width: 32px !important; height: 32px !important; line-height: 32px !important;
+    }
+    .leaflet-control-zoom { border: none !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; border-radius: 8px !important; overflow: hidden; }
+    .leaflet-control-attribution { display: none !important; }
+
+    /* Prototype #1 specific styles */
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+    .metric-box { display: flex; flex-direction: column; }
+    .metric-box span { font-family: var(--font-data); font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; font-weight: 700; }
+    .metric-box strong { font-family: var(--font-brand); font-size: 1.1rem; color: var(--text-main); font-weight: 500; }
+    .ship-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s; }
+    .ship-row:last-child { border-bottom: none; }
+    .ship-row:hover { background: #f8fafc; margin: 0 -10px; padding-left: 10px; padding-right: 10px; border-radius: 6px; }
+    .ship-row .icon { color: var(--text-sec); font-size: 0.8rem; }
+    .ship-row-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+    .ship-row-info b { font-family: var(--font-data); font-size: 0.8rem; color: var(--text-main); font-weight: 600; }
+    .ship-row-info span { font-family: var(--font-data); font-size: 0.65rem; color: var(--text-sec); }
+    .map-inner-header { position: absolute; top: 0; left: 0; right: 0; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 10; background: rgba(255,255,255,0.85); border-bottom: 1px solid var(--border-color); backdrop-filter: blur(5px); }
+    .map-inner-header span { font-family: var(--font-brand); font-size: 1rem; font-weight: 500; color: var(--text-main); }
+    .map-inner-coords { font-family: monospace; font-size: 0.7rem; color: var(--text-sec); display: flex; gap: 15px; }
+  </style>
+<script data-id="auth-guard-v1">
+(function(){
+  var SURL='https://nfybnnpdrvyxucgpqmmo.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  document.documentElement.style.visibility='hidden';
+  function check(){
+    var _sb=supabase.createClient(SURL,SKEY);
+    _sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      else{window.location.replace('viabarcazas.html');}
+    }).catch(function(){document.documentElement.style.visibility='visible';});
+  }
+  if(window.supabase){check();}
+  else{
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload=check;
+    s.onerror=function(){document.documentElement.style.visibility='visible';};
+    document.head.appendChild(s);
+  }
+})();
+</script>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo"><i class="fa-solid fa-water"></i> ViaBarcazas <span>v4.2</span></div>
+    <div class="nav-group">
+      <div class="nav-title">Main</div>
+      <a href="admin-viabarcazas.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard <span class="badge">1</span></a>
+      <a href="admin-mapa-flota-viabarcazas.html" class="nav-item active"><i class="fa-solid fa-map-location-dot"></i> Fleet Map <span class="badge">2</span></a>
+      <a href="admin-mapa-viabarcazas.html" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS (MapLibre) <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Operations</div>
+      <a href="admin-convoys-viabarcazas.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
+      <a href="admin-viajes-viabarcazas.html" class="nav-item"><i class="fa-solid fa-route"></i> Trip Management</a>
+      <a href="admin-bitacora-viabarcazas.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Digital Logbook</a>
+      <a href="admin-comunicaciones-viabarcazas.html" class="nav-item"><i class="fa-regular fa-comment-dots"></i> Communications</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Management</div>
+      <a href="admin-flota-viabarcazas.html" class="nav-item"><i class="fa-solid fa-ship"></i> Fleet (Assets)</a>
+      <a href="admin-tripulacion-viabarcazas.html" class="nav-item"><i class="fa-solid fa-user-shield"></i> Crew & Safety</a>
+      <a href="admin-combustible-viabarcazas.html" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Fuel</a>
+      <a href="admin-mantenimiento-viabarcazas.html" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a>
+    </div>
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info"><span class="user-name">Pepe Orué</span><span class="user-role">SUPERADMIN - ASU</span></div>
+    </div>
+  </div>
+
+  <div class="main-area" style="padding-bottom:0;">
+    <div class="topbar">
+      <div class="topbar-right" style="margin-left:auto;">
+        <div class="lang-switch-toggle" style="display:flex;align-items:center;gap:6px;margin-right:8px;"><a href="admin-mapa-flota-viabarcazas-en.html" style="color:var(--text-main);font-family:var(--font-data);font-size:0.7rem;font-weight:700;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">EN</a><span style="color:var(--border-color);">|</span><a href="admin-mapa-flota-viabarcazas.html" style="color:var(--text-sec);font-family:var(--font-data);font-size:0.7rem;font-weight:600;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">ES</a></div>
+        <div class="settings"><i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> SYSTEM ONLINE</div>
+        <div>ASU · 14:04</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content map-layout-pro">
+
+      <!-- LEFT: MAP -->
+      <div class="map-main-column">
+        <div class="map-header-pro">
+          <div>
+            <div style="font-family: var(--font-data); font-size: 0.7rem; font-weight: 700; color: var(--text-sec); letter-spacing: 2px; margin-bottom: 5px;">VIABARCAZAS OS / MAPA DE FLOTA</div>
+            <h1>Fleet <i>Map.</i></h1>
+            <div class="map-subtitle-pro" style="margin-top:10px;">AIS LIVE · PARAGUAY-PARANÁ · 318 VESSELS ON ROUTE</div>
+          </div>
+          <div class="map-actions-pro">
+            <button class="btn-pill-pro" style="color:var(--status-ok); font-weight:700;">● LIVE</button>
+            <button class="btn-pill-pro">Layers</button>
+            <button class="btn-pill-pro" style="background:var(--primary); color:#fff;">Replay 30d</button>
+          </div>
+        </div>
+
+        <div class="map-container-pro" style="border-radius: 16px;">
+          <!-- Inner header overlay -->
+          <div class="map-inner-header">
+            <span>Waterway · full stretch</span>
+            <div class="map-inner-coords">
+              <span>200M 1:240K</span>
+              <span id="coords-display">-25.28° -57.64°</span>
+            </div>
+          </div>
+
+          <!-- Floating Controls -->
+          <div class="map-float-controls" style="top:55px;">
+            <div class="mfc-group">
+              <button class="mfc-btn">SATELLITE</button>
+              <button class="mfc-btn active">CARTOGRAPHIC</button>
+              <button class="mfc-btn">DEPTH</button>
+              <button class="mfc-btn">CURRENT</button>
+            </div>
+          </div>
+
+          <!-- Leaflet -->
+          <div id="leaflet-map-flota"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: SIDEBAR -->
+      <div class="map-side-column" style="width:280px;">
+
+        <!-- Selected vessel -->
+        <div class="pro-box" style="border:none;box-shadow:none;padding:10px 0;border-bottom:1px solid var(--border-color);border-radius:0;">
+          <div class="pro-box-header" style="margin-bottom:10px;">
+            <span style="font-family:var(--font-data);font-size:0.8rem;font-weight:600;">Selected</span>
+            <span class="pro-box-subtitle" style="font-size:0.55rem;">IMO 9472314</span>
+          </div>
+          <div style="margin-bottom:15px;">
+            <h2 id="selected-name" style="font-family:var(--font-brand);font-size:1.6rem;font-weight:400;margin:0;">Itaipú 07</h2>
+            <div id="selected-route" style="font-family:monospace;font-size:0.7rem;color:var(--text-sec);">ASU → NPA</div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-box"><span>SPEED</span><strong>9.2 KN</strong></div>
+            <div class="metric-box"><span>HEADING</span><strong>72°</strong></div>
+            <div class="metric-box"><span>CONVOY</span><strong>4+1</strong></div>
+            <div class="metric-box"><span>FUEL</span><strong>68%</strong></div>
+          </div>
+        </div>
+
+        <!-- Ship list -->
+        <div class="pro-box" style="flex:1;border:none;box-shadow:none;padding:10px 0;">
+          <div class="pro-box-header" style="margin-bottom:10px;">
+            <span style="font-family:var(--font-data);font-size:0.8rem;font-weight:600;">Vessels <span style="color:var(--text-sec);font-weight:400;font-size:0.7rem;">6 on map</span></span>
+          </div>
+          <div id="ship-list"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let map;
+    const shipMarkers = {};
+
+    const ships = [
+      { id:'3', name:'Itaipú 07',      lat:-25.27, lon:-57.63, status:'nav', route:'ASU → NPA', speed:'9.2 KN' },
+      { id:'2', name:'R/M HERCULES',    lat:-32.95, lon:-60.65, status:'nav', route:'ROS → ASU', speed:'4.1 KN' },
+      { id:'1', name:'TB PARAGUAY 01',  lat:-27.33, lon:-58.83, status:'stop', route:'Fondeado · PIL', speed:'0 KN' },
+      { id:'4', name:'BG SOJA KING',    lat:-31.63, lon:-60.70, status:'nav', route:'SFE → BUE', speed:'6.8 KN' },
+      { id:'5', name:'BG FORMOSA',      lat:-26.18, lon:-58.17, status:'nav', route:'FOR → COR', speed:'3.9 KN' },
+      { id:'6', name:'TB SAN LORENZO',  lat:-33.30, lon:-60.50, status:'stop', route:'Fondeado · RSO', speed:'0 KN' },
+    ];
+
+    const routeCoords = [
+      [-25.27,-57.63],[-25.50,-57.70],[-26.18,-58.17],[-26.50,-58.40],
+      [-27.00,-58.70],[-27.33,-58.83],[-28.00,-59.10],[-29.00,-59.60],
+      [-30.00,-60.10],[-31.00,-60.40],[-31.63,-60.70],[-32.50,-60.67],
+      [-32.95,-60.65],[-33.30,-60.50],[-34.00,-59.50],[-34.60,-58.40]
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      map = L.map('leaflet-map-flota', { center: [-29.5, -59.0], zoom: 5, zoomControl: true });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd', maxZoom: 19
+      }).addTo(map);
+
+      // River route
+      L.polyline(routeCoords, { color: '#94a3b8', weight: 2, dashArray: '6, 8', opacity: 0.6 }).addTo(map);
+
+      // Plot ships
+      ships.forEach(s => {
+        const color = s.status === 'nav' ? '#2ea043' : '#f59e0b';
+        const icon = L.divIcon({
+          className: '',
+          html: `<div style="width:14px;height:14px;background:${color};border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>`,
+          iconSize: [14,14], iconAnchor: [7,7]
+        });
+        const m = L.marker([s.lat, s.lon], { icon }).addTo(map);
+        m.bindPopup(`<b>${s.name}</b><br><span style="color:#94a3b8;">${s.route} · ${s.speed}</span>`);
+        m.on('click', () => selectShip(s));
+        shipMarkers[s.id] = { marker: m, data: s };
+      });
+
+      // Build ship list
+      const listEl = document.getElementById('ship-list');
+      ships.forEach(s => {
+        const statusColor = s.status === 'nav' ? 'rgba(46,160,67,0.1)' : 'rgba(245,158,11,0.1)';
+        const statusText = s.status === 'nav' ? 'NAV' : 'STOP';
+        const statusFg = s.status === 'nav' ? 'var(--status-ok)' : 'var(--status-warn)';
+        const iconClass = s.status === 'nav' ? 'fa-ship' : 'fa-anchor';
+
+        const row = document.createElement('div');
+        row.className = 'ship-row';
+        row.innerHTML = `
+          <i class="fa-solid ${iconClass} icon"></i>
+          <div class="ship-row-info"><b>${s.name}</b><span>${s.route} · ${s.speed}</span></div>
+          <div style="background:${statusColor};color:${statusFg};padding:2px 6px;border-radius:4px;font-size:0.6rem;font-weight:700;">${statusText}</div>
+        `;
+        row.onclick = () => { selectShip(s); };
+        listEl.appendChild(row);
+      });
+
+      // Coords on hover
+      map.on('mousemove', (e) => {
+        document.getElementById('coords-display').textContent = e.latlng.lat.toFixed(2) + '° ' + e.latlng.lng.toFixed(2) + '°';
+      });
+
+      // Animate ships
+      setInterval(() => {
+        ships.forEach(s => {
+          if (s.status !== 'nav') return;
+          s.lat += (Math.random() - 0.5) * 0.01;
+          s.lon += (Math.random() - 0.5) * 0.01;
+          if (shipMarkers[s.id]) shipMarkers[s.id].marker.setLatLng([s.lat, s.lon]);
+        });
+      }, 4000);
+    });
+
+    function selectShip(s) {
+      document.getElementById('selected-name').textContent = s.name;
+      document.getElementById('selected-route').textContent = s.route;
+      map.flyTo([s.lat, s.lon], 10, { duration: 1.5 });
+    }
+  </script>
+</body>
+</html>

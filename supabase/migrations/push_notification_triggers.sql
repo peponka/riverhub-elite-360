@@ -1,5 +1,5 @@
 -- ============================================================
--- Fluvia: SQL Triggers for Automatic Push Notifications
+-- ViaBarcazas: SQL Triggers for Automatic Push Notifications
 -- Execute in Supabase SQL Editor
 -- ============================================================
 
@@ -35,7 +35,7 @@ BEGIN
   IF NEW.action_type = 'alert' THEN
     PERFORM notify_push(
       'alert',
-      '⚠️ Alerta en Fluvia',
+      '⚠️ Alerta en ViaBarcazas',
       COALESCE(NEW.description, 'Nueva alerta registrada'),
       NULL -- Broadcast to all users
     );

@@ -1,5 +1,5 @@
 -- ============================================================
--- RIVERHUB/FLUVIA — PARCHE DE SEGURIDAD RLS
+-- RIVERHUB/VIABARCAZAS — PARCHE DE SEGURIDAD RLS
 -- ============================================================
 -- Generado: 29 Abril 2026
 -- Problema: Supabase reportó tablas públicamente accesibles

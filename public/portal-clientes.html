@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Cliente — ViaBarcazas</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="viabarcazas.css">
+    <link rel="stylesheet" href="css/portal-cliente.css">
+</head>
+<body class="portal-client-app">
+<div class="app-shell" style="display:flex">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.6" fill="#25D366"/></svg><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>
+        </div>
+        <div class="sb-company"><div class="sb-company-avatar">CS</div><div class="sb-company-info"><div class="sb-company-name">Cargill S.A.C.I.</div><div class="sb-company-sub">Cliente Activo</div></div><i class="fas fa-chevron-down"></i></div>
+        <div class="client-sidebar-nav" aria-label="Navegación del portal">
+            <div class="client-nav-label">MI CUENTA</div>
+            <a class="client-nav-item active" data-client-tab="embarques"><i class="fas fa-ship"></i><span>Mis embarques</span></a>
+            <a class="client-nav-item" data-client-tab="contratos"><i class="fas fa-file-contract"></i><span>Mis contratos</span></a>
+            <a class="client-nav-item" data-client-tab="documentos"><i class="fas fa-folder-open"></i><span>Documentos</span></a>
+            <a class="client-nav-item" data-client-tab="facturacion"><i class="fas fa-file-invoice-dollar"></i><span>Facturación</span></a>
+            <a class="client-nav-item" data-client-tab="soporte"><i class="fas fa-headset"></i><span>Soporte</span></a>
+            <div class="client-nav-divider"></div>
+            <a class="client-nav-back" href="viabarcazas.html"><i class="fas fa-arrow-left"></i><span>Volver al panel</span></a>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section-label">AHORA</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-grip"></i>Panel de Control</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-map"></i>Mapa de Flota</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-robot"></i>Copiloto IA</a>
+            <div class="nav-section-label">PLANIFICACIÓN</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-link"></i>Armador de Convoy</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-file-lines"></i>Gestion de Viajes</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-clipboard-check"></i>Pre-Zarpe</a>
+            <div class="nav-section-label">FLOTA</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-anchor"></i>Gestion de Flota</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-users"></i>Tripulacion &amp; Safety</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-gas-pump"></i>Combustible</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-droplet"></i>Líquidos (Tanques)</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-ruler-vertical"></i>Calados &amp; Hidrometria</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-wrench"></i>Mantenimiento</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-box-archive"></i>Panol (Inventario)</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-triangle-exclamation"></i>Incidentes</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-file-contract"></i>Contratos de Flete</a>
+            <div class="nav-section-label">COMUNICACIÓN</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-book"></i>Bitacora Digital</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-tower-broadcast"></i>Comunicaciones</a>
+            <a class="nav-item" href="admin-whatsapp-viabarcazas.html"><i class="fab fa-whatsapp" style="color:#25D366"></i>WhatsApp Alerts</a>
+            <div class="nav-section-label">INTELIGENCIA</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-water"></i>Pronostico Hidrovia</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-chart-pie"></i>Reportes &amp; Analytics</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-newspaper"></i>Briefing Diario</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-location-dot"></i>Tracking de Cargas</a>
+            <a class="nav-item" href="admin-facturacion-ia-viabarcazas.html"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Facturación IA</a>
+            <div class="nav-section-label">CUENTA</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-credit-card"></i>Planes &amp; Facturacion</a>
+            <a class="nav-item active" href="portal-clientes.html"><i class="fa-solid fa-building" style="color:#059669"></i>Portal de Cliente</a>
+            <div style="padding:20px 24px;margin-top:auto;"><button class="btn-secondary" style="width:100%;" onclick="window.location.href='viabarcazas.html'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Volver al Panel</button></div>
+        </div>
+    </nav>
+    <div class="main-area">
+        <div class="topbar"><span class="topbar-title">Portal de Cliente</span><div class="topbar-actions">
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);margin-right:8px;">
+                <a href="portal-clientes-en.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="portal-clientes.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div></div></div>
+    <div class="content">
+    <nav class="pc-tabs" aria-label="Secciones del portal">
+        <a class="pc-tab active" data-tab="embarques" onclick="pcTab(this)"><i class="fas fa-ship"></i> Embarques</a>
+        <a class="pc-tab" data-tab="contratos" onclick="pcTab(this)"><i class="fas fa-file-contract"></i> Contratos</a>
+        <a class="pc-tab" data-tab="documentos" onclick="pcTab(this)"><i class="fas fa-folder-open"></i> Documentos</a>
+        <a class="pc-tab" data-tab="facturacion" onclick="pcTab(this)"><i class="fas fa-file-invoice-dollar"></i> Facturación</a>
+        <a class="pc-tab" data-tab="soporte" onclick="pcTab(this)"><i class="fas fa-headset"></i> Soporte</a>
+    </nav>
+
+    <!-- EMBARQUES -->
+    <section class="pc-section active" id="tab-embarques">
+        <div class="pc-header"><h1>Mis Embarques</h1><p>Seguimiento en tiempo real de tus cargas — Cargill S.A.C.I.</p></div>
+
+        <div class="pc-statusbar"><div class="l">EMBARQUES · CARGILL S.A.C.I.</div><div class="r"><span>SEMANA 35 · 2026</span><span class="pc-link"><i class="fas fa-file-export"></i> Exportar</span></div></div>
+
+        <div class="pc-kpis">
+            <div class="pc-kpi hl"><div class="pc-kpi-ico ico-em"><i class="fas fa-ship"></i></div><div class="pc-kpi-val">7</div><div class="pc-kpi-lbl">Embarques activos</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ok"><i class="fas fa-check-circle"></i></div><div class="pc-kpi-val">23</div><div class="pc-kpi-lbl">Entregados (mes)</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ton"><i class="fas fa-weight-hanging"></i></div><div class="pc-kpi-val">42.6K</div><div class="pc-kpi-lbl">Toneladas en tránsito</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-eta"><i class="fas fa-clock"></i></div><div class="pc-kpi-val">4.2d</div><div class="pc-kpi-lbl">ETA promedio</div></div>
+        </div>
+        <div class="pc-grid">
+            <div class="pc-card">
+                <div class="pc-card-h"><span>EMBARQUES EN CURSO</span><span class="pc-link"><i class="fas fa-download"></i> Exportar</span></div>
+                <table class="pc-table"><thead><tr><th>Ruta</th><th>Embarcación</th><th>Carga</th><th>Progreso</th><th>Estado</th><th>ETA</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="rt-o">ASU</span><span class="rt-a">→</span><span class="rt-d">ROE</span></td><td><strong>R/M Hércules</strong><br><small>Convoy 6 bz</small></td><td><strong>8,400</strong> ton</td><td><div class="pbar"><div class="pfill" style="width:72%"></div></div><small>72%</small></td><td><span class="st st-transit"><i class="fas fa-ship"></i> En tránsito</span></td><td><strong>10 May</strong><br><small>4 días</small></td></tr>
+                    <tr><td><span class="rt-o">VCO</span><span class="rt-a">→</span><span class="rt-d">SLO</span></td><td><strong>R/M Paraná I</strong><br><small>Convoy 4 bz</small></td><td><strong>5,200</strong> ton</td><td><div class="pbar"><div class="pfill" style="width:45%"></div></div><small>45%</small></td><td><span class="st st-transit"><i class="fas fa-ship"></i> En tránsito</span></td><td><strong>13 May</strong><br><small>7 días</small></td></tr>
+                    <tr><td><span class="rt-o">ROE</span><span class="rt-a">→</span><span class="rt-d">BHI</span></td><td><strong>R/M Guaraní</strong><br><small>Convoy 8 bz</small></td><td><strong>12,800</strong> ton</td><td><div class="pbar"><div class="pfill pf-am" style="width:15%"></div></div><small>15%</small></td><td><span class="st st-load"><i class="fas fa-anchor"></i> Cargando</span></td><td><strong>18 May</strong><br><small>12 días</small></td></tr>
+                    <tr><td><span class="rt-o">CDB</span><span class="rt-a">→</span><span class="rt-d">ROE</span></td><td><strong>R/M Itapúa</strong><br><small>Convoy 5 bz</small></td><td><strong>7,500</strong> ton</td><td><div class="pbar"><div class="pfill pf-gr" style="width:98%"></div></div><small>98%</small></td><td><span class="st st-ok"><i class="fas fa-check"></i> Llegando</span></td><td><strong>Hoy</strong><br><small>~3 horas</small></td></tr>
+                    <tr><td><span class="rt-o">ASU</span><span class="rt-a">→</span><span class="rt-d">SNI</span></td><td><strong>R/M Chaco</strong><br><small>Convoy 3 bz</small></td><td><strong>4,200</strong> ton</td><td><div class="pbar"><div class="pfill" style="width:0%"></div></div><small>0%</small></td><td><span class="st st-wait"><i class="fas fa-hourglass"></i> Programado</span></td><td><strong>20 May</strong><br><small>14 días</small></td></tr>
+                </tbody></table>
+            </div>
+            <div>
+                <div class="pc-card">
+                    <div class="pc-card-h"><span>ACTIVIDAD RECIENTE</span></div>
+                    <div class="pc-act"><div class="pc-dot dot-gr"></div><div><strong>R/M Itapúa</strong> llegó a zona de fondeo en Rosario<br><small>Hace 23 min</small></div></div>
+                    <div class="pc-act"><div class="pc-dot dot-em"></div><div><strong>R/M Hércules</strong> pasó km 1,180 — Santa Fe<br><small>Hace 2 horas</small></div></div>
+                    <div class="pc-act"><div class="pc-dot dot-am"></div><div><strong>R/M Guaraní</strong> — carga iniciada en Terminal ROE<br><small>Hace 5 horas</small></div></div>
+                    <div class="pc-act"><div class="pc-dot dot-em"></div><div><strong>R/M Paraná I</strong> pasó Confluencia (km 1,620)<br><small>Hace 8 horas</small></div></div>
+                    <div class="pc-act"><div class="pc-dot dot-gr"></div><div>Factura <strong>#0001-004518</strong> disponible para descarga<br><small>Ayer, 14:15</small></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTRATOS -->
+    <section class="pc-section" id="tab-contratos">
+        <div class="pc-header"><h1>Mis Contratos</h1><p>Contratos de flete activos con ViaBarcazas</p></div>
+        <div class="pc-kpis">
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ok"><i class="fas fa-check-circle"></i></div><div class="pc-kpi-val">4</div><div class="pc-kpi-lbl">Contratos activos</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ton"><i class="fas fa-weight-hanging"></i></div><div class="pc-kpi-val">340K</div><div class="pc-kpi-lbl">Ton contratadas</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-em"><i class="fas fa-percentage"></i></div><div class="pc-kpi-val">72%</div><div class="pc-kpi-lbl">Ejecución acumulada</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-eta"><i class="fas fa-calendar"></i></div><div class="pc-kpi-val">Jul 2026</div><div class="pc-kpi-lbl">Próximo vencimiento</div></div>
+        </div>
+        <div class="pc-card">
+            <div class="pc-card-h"><span>CONTRATOS VIGENTES</span></div>
+            <table class="pc-table"><thead><tr><th>Contrato</th><th>Ruta</th><th>Volumen</th><th>Ejecutado</th><th>Tarifa</th><th>Vence</th><th>Estado</th></tr></thead>
+            <tbody>
+                <tr><td><strong>CF-2026-001</strong></td><td><span class="rt-o">ASU</span><span class="rt-a">→</span><span class="rt-d">ROE</span></td><td>120,000 ton</td><td><div class="pbar"><div class="pfill" style="width:72%"></div></div><small>86,400 ton</small></td><td>$12.50/ton</td><td>15 Jul 2026</td><td><span class="st st-ok">Activo</span></td></tr>
+                <tr><td><strong>CF-2026-002</strong></td><td><span class="rt-o">CDB</span><span class="rt-a">→</span><span class="rt-d">SLO</span></td><td>80,000 ton</td><td><div class="pbar"><div class="pfill pf-am" style="width:55%"></div></div><small>44,000 ton</small></td><td>$11.80/ton</td><td>30 Jun 2026</td><td><span class="st st-load">Por vencer</span></td></tr>
+                <tr><td><strong>CF-2026-003</strong></td><td><span class="rt-o">VCO</span><span class="rt-a">→</span><span class="rt-d">BHI</span></td><td>60,000 ton</td><td><div class="pbar"><div class="pfill" style="width:88%"></div></div><small>52,800 ton</small></td><td>$14.20/ton</td><td>20 Ago 2026</td><td><span class="st st-ok">Activo</span></td></tr>
+                <tr><td><strong>CF-2026-004</strong></td><td><span class="rt-o">ASU</span><span class="rt-a">→</span><span class="rt-d">SNI</span></td><td>40,000 ton</td><td><div class="pbar"><div class="pfill pf-gr" style="width:30%"></div></div><small>12,000 ton</small></td><td>$13.00/ton</td><td>31 Dic 2026</td><td><span class="st st-ok">Activo</span></td></tr>
+            </tbody></table>
+        </div>
+    </section>
+
+    <!-- DOCUMENTOS -->
+    <section class="pc-section" id="tab-documentos">
+        <div class="pc-header"><h1>Documentos</h1><p>Conocimientos de embarque, certificados y reportes</p></div>
+        <div class="pc-card">
+            <div class="pc-card-h"><span>DOCUMENTOS DISPONIBLES</span><span class="pc-link"><i class="fas fa-filter"></i> Filtrar</span></div>
+            <table class="pc-table"><thead><tr><th>Documento</th><th>Tipo</th><th>Embarque</th><th>Fecha</th><th>Acción</th></tr></thead>
+            <tbody>
+                <tr><td><i class="fas fa-file-pdf" style="color:#EF4444;margin-right:8px"></i><strong>BL-2026-04521.pdf</strong></td><td><span class="doc-tag tag-bl">BL</span></td><td>C-47 (ASU→ROE)</td><td>6 May 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+                <tr><td><i class="fas fa-file-invoice" style="color:#7C3AED;margin-right:8px"></i><strong>FACTURA-004518.pdf</strong></td><td><span class="doc-tag tag-inv">Factura</span></td><td>C-41 (VCO→SLO)</td><td>5 May 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+                <tr><td><i class="fas fa-certificate" style="color:#059669;margin-right:8px"></i><strong>CERT-CALIDAD-S204.pdf</strong></td><td><span class="doc-tag tag-cert">Certificado</span></td><td>Lote Soja 204</td><td>4 May 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+                <tr><td><i class="fas fa-file-pdf" style="color:#EF4444;margin-right:8px"></i><strong>BL-2026-04499.pdf</strong></td><td><span class="doc-tag tag-bl">BL</span></td><td>C-38 (CDB→ROE)</td><td>1 May 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+                <tr><td><i class="fas fa-chart-bar" style="color:#0066FF;margin-right:8px"></i><strong>REPORTE-MENSUAL-ABR.pdf</strong></td><td><span class="doc-tag tag-rep">Reporte</span></td><td>Resumen Abril 2026</td><td>30 Abr 2026</td><td><span class="pc-link"><i class="fas fa-download"></i> Descargar</span></td></tr>
+            </tbody></table>
+        </div>
+    </section>
+
+    <!-- FACTURACION -->
+    <section class="pc-section" id="tab-facturacion">
+        <div class="pc-header"><h1>Facturación</h1><p>Estado de cuenta y facturas emitidas</p></div>
+        <div class="pc-kpis">
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-em"><i class="fas fa-file-invoice-dollar"></i></div><div class="pc-kpi-val">$184,200</div><div class="pc-kpi-lbl">Facturado este mes</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-ok"><i class="fas fa-check-double"></i></div><div class="pc-kpi-val">12</div><div class="pc-kpi-lbl">Facturas pagadas</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-am"><i class="fas fa-clock"></i></div><div class="pc-kpi-val">2</div><div class="pc-kpi-lbl">Pendientes de pago</div></div>
+            <div class="pc-kpi"><div class="pc-kpi-ico ico-eta"><i class="fas fa-calendar-alt"></i></div><div class="pc-kpi-val">$24,990</div><div class="pc-kpi-lbl">Próximo vencimiento</div></div>
+        </div>
+        <div class="pc-card">
+            <div class="pc-card-h"><span>HISTORIAL DE FACTURAS</span></div>
+            <table class="pc-table"><thead><tr><th>Factura</th><th>Concepto</th><th>Monto</th><th>Fecha</th><th>Estado</th></tr></thead>
+            <tbody>
+                <tr><td><strong>#0001-004520</strong></td><td>Flete C-47 ASU→ROE (8,400 ton)</td><td><strong>$105,000</strong></td><td>6 May 2026</td><td><span class="st st-load">Pendiente</span></td></tr>
+                <tr><td><strong>#0001-004518</strong></td><td>Flete C-41 VCO→SLO (5,200 ton)</td><td><strong>$61,360</strong></td><td>1 May 2026</td><td><span class="st st-ok">Pagada</span></td></tr>
+                <tr><td><strong>#0001-004510</strong></td><td>Flete C-38 CDB→ROE (7,500 ton)</td><td><strong>$88,500</strong></td><td>25 Abr 2026</td><td><span class="st st-ok">Pagada</span></td></tr>
+                <tr><td><strong>#0001-004502</strong></td><td>Plan Enterprise — Mayo 2026</td><td><strong>$24,990</strong></td><td>1 May 2026</td><td><span class="st st-ok">Pagada</span></td></tr>
+            </tbody></table>
+        </div>
+    </section>
+
+    <!-- SOPORTE -->
+    <section class="pc-section" id="tab-soporte">
+        <div class="pc-header"><h1>Soporte</h1><p>Centro de ayuda y contacto directo</p></div>
+        <div class="pc-grid-3">
+            <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-headset"></i></div><h3>Chat en vivo</h3><p>Hablá con un agente ahora</p><button class="pc-sup-btn">Iniciar Chat</button></div>
+            <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-envelope"></i></div><h3>Email</h3><p>soporte@viabarcazas.com.py</p><button class="pc-sup-btn">Enviar Email</button></div>
+            <div class="pc-card pc-support-card"><div class="pc-sup-ico"><i class="fas fa-phone"></i></div><h3>Teléfono</h3><p>+595 21 445 8800</p><button class="pc-sup-btn">Llamar</button></div>
+        </div>
+        <div class="pc-card">
+            <div class="pc-card-h"><span>TICKETS RECIENTES</span></div>
+            <div class="pc-act"><div class="pc-dot dot-gr"></div><div><strong>#T-0045</strong> — Consulta sobre ETA del convoy C-47<br><small>Resuelto · 8 May 2026</small></div></div>
+            <div class="pc-act"><div class="pc-dot dot-am"></div><div><strong>#T-0042</strong> — Solicitud de certificado de calidad lote 198<br><small>En proceso · 5 May 2026</small></div></div>
+            <div class="pc-act"><div class="pc-dot dot-gr"></div><div><strong>#T-0039</strong> — Actualización de datos de facturación<br><small>Resuelto · 28 Abr 2026</small></div></div>
+        </div>
+    </section>
+    </div>
+    </div>
+</div>
+
+<script>
+function pcTab(el){
+    document.querySelectorAll('.pc-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.pc-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('tab-'+el.dataset.tab).classList.add('active');
+    document.querySelectorAll('.client-nav-item').forEach(function(item){item.classList.toggle('active',item.dataset.clientTab===el.dataset.tab);});
+}
+document.querySelectorAll('.client-nav-item').forEach(function(item){item.addEventListener('click',function(){var tab=document.querySelector('.pc-tab[data-tab="'+item.dataset.clientTab+'"]');if(tab)pcTab(tab);});});
+</script>
+</body>
+</html>

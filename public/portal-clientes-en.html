@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Portal — ViaBarcazas</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="viabarcazas.css">
+    <link rel="stylesheet" href="css/portal-cliente.css">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#06110D;--bg-alt:#06110D;--surface:#0C1F19;
+            --text:#F3F7F5;--text-2:#A9B8B2;--sep:#1E3B31;
+            --blue:#38BDF8;--blue-bg:#14332A;--teal:#25D366;
+            --green:#25D366;--amber:#FBBF24;--red:#F87171;
+            --font-sans:'Manrope',-apple-system,sans-serif;
+            --font-serif:'Bricolage Grotesque',sans-serif;
+            --radius:14px;--shadow:0 2px 12px rgba(0,0,0,0.3);
+        }
+        html{scroll-behavior:smooth}
+
+        .sb-company{margin:4px 20px 12px;background:var(--surface);border:0.5px solid var(--sep);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+        .sb-company-avatar{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#06110D;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.72rem;flex-shrink:0}
+        .sb-company-name{font-size:0.8rem;font-weight:700;color:var(--text)}
+        .sb-company-sub{font-size:0.63rem;color:var(--text-2)}
+
+        /* LAYOUT */
+        .main{max-width:1200px;margin:0 auto;padding:32px 40px}
+        .page-header{margin-bottom:32px}
+        .page-header h1{font-family:var(--font-serif);font-size:1.8rem;font-weight:500;margin-bottom:4px}
+        .page-header p{color:var(--text-2);font-size:0.9rem}
+
+        /* STATS ROW */
+        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+        .stat-card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:20px 24px;transition:transform 0.2s}
+        .stat-card:hover{transform:translateY(-2px)}
+        .stat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;margin-bottom:12px}
+        .stat-icon.blue{background:rgba(56,189,248,0.15);color:var(--blue)}
+        .stat-icon.green{background:rgba(37,211,102,0.15);color:var(--green)}
+        .stat-icon.amber{background:rgba(251,191,36,0.15);color:var(--amber)}
+        .stat-icon.teal{background:rgba(37,211,102,0.15);color:var(--teal)}
+        .stat-value{font-size:1.5rem;font-weight:800;margin-bottom:2px}
+        .stat-label{font-size:0.75rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px}
+
+        /* CARDS */
+        .card{background:var(--bg);border:1px solid var(--sep);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+        .card-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2)}
+        .card-action{font-size:0.8rem;color:var(--blue);text-decoration:none;font-weight:600;cursor:pointer}
+
+        /* SHIPMENTS TABLE */
+        .shipments-table{width:100%;border-collapse:collapse}
+        .shipments-table th{text-align:left;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-2);padding:10px 12px;border-bottom:1px solid var(--sep)}
+        .shipments-table td{padding:14px 12px;font-size:0.85rem;border-bottom:1px solid var(--surface);vertical-align:middle}
+        .shipments-table tr:last-child td{border-bottom:none}
+        .shipments-table tr:hover{background:var(--surface)}
+
+        /* STATUS BADGES */
+        .status{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px}
+        .status.transit{background:rgba(56,189,248,0.15);color:var(--blue)}
+        .status.loading{background:rgba(251,191,36,0.15);color:var(--amber)}
+        .status.delivered{background:rgba(37,211,102,0.15);color:var(--green)}
+        .status.waiting{background:var(--surface);color:var(--text-2)}
+
+        .route-cell{display:flex;align-items:center;gap:8px}
+        .route-arrow{color:var(--text-2);font-size:0.7rem}
+        .route-port{font-weight:600;font-size:0.82rem}
+        .route-port.origin{color:var(--blue)}
+        .route-port.dest{color:var(--teal)}
+
+        .vessel-name{font-weight:600}
+        .vessel-type{font-size:0.75rem;color:var(--text-2)}
+        .cargo-tons{font-weight:700;font-variant-numeric:tabular-nums}
+        .eta-date{font-weight:600}
+        .eta-days{font-size:0.75rem;color:var(--text-2)}
+
+        /* PROGRESS BAR */
+        .progress-wrap{width:100%;max-width:120px}
+        .progress-bar{height:6px;background:var(--surface);border-radius:3px;overflow:hidden}
+        .progress-fill{height:100%;border-radius:3px;transition:width 0.5s}
+        .progress-fill.blue{background:var(--blue)}
+        .progress-fill.green{background:var(--green)}
+        .progress-fill.amber{background:var(--amber)}
+        .progress-pct{font-size:0.7rem;color:var(--text-2);margin-top:2px}
+
+        /* ACTIVITY FEED */
+        .activity-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--surface)}
+        .activity-item:last-child{border-bottom:none}
+        .activity-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+        .activity-dot.blue{background:var(--blue)}
+        .activity-dot.green{background:var(--green)}
+        .activity-dot.amber{background:var(--amber)}
+        .activity-text{font-size:0.85rem}
+        .activity-text strong{font-weight:600}
+        .activity-time{font-size:0.75rem;color:var(--text-2);margin-top:2px}
+
+        /* GRID */
+        .grid-2{display:grid;grid-template-columns:2fr 1fr;gap:24px}
+
+        /* EMPTY */
+        .empty-state{text-align:center;padding:60px 20px;color:var(--text-2)}
+        .empty-state i{font-size:2.5rem;margin-bottom:16px;color:var(--sep)}
+        .empty-state h3{font-family:var(--font-serif);color:var(--text);margin-bottom:8px}
+
+        @media(max-width:900px){
+            .stats-row{grid-template-columns:repeat(2,1fr)}
+            .grid-2{grid-template-columns:1fr}
+            .main{padding:20px}
+            .topbar{padding:12px 20px}
+        }
+        @media(max-width:600px){
+            .stats-row{grid-template-columns:1fr}
+            .shipments-table{font-size:0.8rem}
+        }
+    </style>
+</head>
+<body>
+<div class="app-shell" style="display:flex">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.6" fill="#25D366"/></svg><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>
+        </div>
+        <div class="sb-company"><div class="sb-company-avatar">CS</div><div><div class="sb-company-name">Cargill S.A.C.I.</div><div class="sb-company-sub">Active Client</div></div></div>
+        <div class="sidebar-nav">
+            <div class="nav-section-label">NOW</div>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-grip"></i>Dashboard</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-map"></i>Fleet Map</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-robot"></i>AI Copilot</a>
+            <div class="nav-section-label">PLANNING</div>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-link"></i>Convoy Builder</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-file-lines"></i>Trip Management</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-clipboard-check"></i>Pre-Departure</a>
+            <div class="nav-section-label">FLEET</div>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-anchor"></i>Fleet Management</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-users"></i>Crew &amp; Safety</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-gas-pump"></i>Fuel</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-droplet"></i>Liquids (Tanks)</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-ruler-vertical"></i>Drafts &amp; Hydrometry</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-wrench"></i>Maintenance</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-box-archive"></i>Inventory (Store)</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-triangle-exclamation"></i>Incidents</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-file-contract"></i>Freight Contracts</a>
+            <div class="nav-section-label">COMMUNICATION</div>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-book"></i>Digital Logbook</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-tower-broadcast"></i>Communications</a>
+            <a class="nav-item" href="admin-whatsapp-viabarcazas-en.html"><i class="fab fa-whatsapp" style="color:#25D366"></i>WhatsApp Alerts</a>
+            <div class="nav-section-label">INTELLIGENCE</div>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-water"></i>Waterway Forecast</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-chart-pie"></i>Reports &amp; Analytics</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-newspaper"></i>Daily Briefing</a>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-location-dot"></i>Cargo Tracking</a>
+            <a class="nav-item" href="admin-facturacion-ia-viabarcazas-en.html"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Invoice IA</a>
+            <div class="nav-section-label">ACCOUNT</div>
+            <a class="nav-item" href="viabarcazas-en.html"><i class="fa-solid fa-credit-card"></i>Plans &amp; Billing</a>
+            <a class="nav-item active" href="portal-clientes-en.html"><i class="fa-solid fa-building" style="color:#059669"></i>Client Portal</a>
+            <div style="padding:20px 24px;margin-top:auto;"><button class="btn-secondary" style="width:100%;" onclick="window.location.href='viabarcazas-en.html'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Back to Dashboard</button></div>
+        </div>
+    </nav>
+    <div class="main-area">
+        <div class="topbar"><span class="topbar-title">Client Portal</span><div class="topbar-actions">
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);margin-right:8px;">
+                <a href="portal-clientes-en.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="portal-clientes.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div></div></div>
+    <div class="content">
+        <div class="page-header">
+            <h1>My Shipments</h1>
+            <p>Real-time tracking of your cargo on the Paraguay-Parana Waterway.</p>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-ship"></i></div>
+                <div class="stat-value">7</div>
+                <div class="stat-label">Active shipments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-value">23</div>
+                <div class="stat-label">Delivered (month)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon amber"><i class="fas fa-weight-hanging"></i></div>
+                <div class="stat-value">42.6K</div>
+                <div class="stat-label">Tons in transit</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon teal"><i class="fas fa-clock"></i></div>
+                <div class="stat-value">4.2d</div>
+                <div class="stat-label">Average ETA</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- SHIPMENTS TABLE -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">SHIPMENTS IN PROGRESS</span>
+                    <span class="card-action"><i class="fas fa-download"></i> Export</span>
+                </div>
+                <table class="shipments-table">
+                    <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Vessel</th>
+                            <th>Cargo</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>ETA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="route-cell"><span class="route-port origin">ASU</span><span class="route-arrow">→</span><span class="route-port dest">ROE</span></div></td>
+                            <td><div class="vessel-name">R/M Hércules</div><div class="vessel-type">6-barge convoy</div></td>
+                            <td><span class="cargo-tons">8,400</span> ton</td>
+                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill blue" style="width:72%"></div></div><div class="progress-pct">72%</div></div></td>
+                            <td><span class="status transit"><i class="fas fa-ship"></i> In transit</span></td>
+                            <td><div class="eta-date">10 May</div><div class="eta-days">in 4 days</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="route-cell"><span class="route-port origin">VCO</span><span class="route-arrow">→</span><span class="route-port dest">SLO</span></div></td>
+                            <td><div class="vessel-name">R/M Paraná I</div><div class="vessel-type">4-barge convoy</div></td>
+                            <td><span class="cargo-tons">5,200</span> ton</td>
+                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill blue" style="width:45%"></div></div><div class="progress-pct">45%</div></div></td>
+                            <td><span class="status transit"><i class="fas fa-ship"></i> In transit</span></td>
+                            <td><div class="eta-date">13 May</div><div class="eta-days">in 7 days</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="route-cell"><span class="route-port origin">ROE</span><span class="route-arrow">→</span><span class="route-port dest">BHI</span></div></td>
+                            <td><div class="vessel-name">R/M Guaraní</div><div class="vessel-type">8-barge convoy</div></td>
+                            <td><span class="cargo-tons">12,800</span> ton</td>
+                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill amber" style="width:15%"></div></div><div class="progress-pct">15%</div></div></td>
+                            <td><span class="status loading"><i class="fas fa-crane"></i> Loading</span></td>
+                            <td><div class="eta-date">18 May</div><div class="eta-days">in 12 days</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="route-cell"><span class="route-port origin">CDB</span><span class="route-arrow">→</span><span class="route-port dest">ROE</span></div></td>
+                            <td><div class="vessel-name">R/M Itapúa</div><div class="vessel-type">5-barge convoy</div></td>
+                            <td><span class="cargo-tons">7,500</span> ton</td>
+                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill green" style="width:98%"></div></div><div class="progress-pct">98%</div></div></td>
+                            <td><span class="status delivered"><i class="fas fa-check"></i> Arriving</span></td>
+                            <td><div class="eta-date">Today</div><div class="eta-days">~3 hours</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="route-cell"><span class="route-port origin">ASU</span><span class="route-arrow">→</span><span class="route-port dest">SNI</span></div></td>
+                            <td><div class="vessel-name">R/M Chaco</div><div class="vessel-type">3-barge convoy</div></td>
+                            <td><span class="cargo-tons">4,200</span> ton</td>
+                            <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill blue" style="width:0%"></div></div><div class="progress-pct">0%</div></div></td>
+                            <td><span class="status waiting"><i class="fas fa-hourglass"></i> Scheduled</span></td>
+                            <td><div class="eta-date">20 May</div><div class="eta-days">in 14 days</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ACTIVITY FEED -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">RECENT ACTIVITY</span>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot green"></div>
+                        <div>
+                            <div class="activity-text"><strong>R/M Itapúa</strong> arrived at anchorage area in Rosario</div>
+                            <div class="activity-time">23 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot blue"></div>
+                        <div>
+                            <div class="activity-text"><strong>R/M Hércules</strong> passed km 1,180 — Santa Fe</div>
+                            <div class="activity-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot amber"></div>
+                        <div>
+                            <div class="activity-text"><strong>R/M Guaraní</strong> — loading started at Terminal ROE</div>
+                            <div class="activity-time">5 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot blue"></div>
+                        <div>
+                            <div class="activity-text"><strong>R/M Paraná I</strong> passed Confluencia (km 1,620)</div>
+                            <div class="activity-time">8 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot green"></div>
+                        <div>
+                            <div class="activity-text"><strong>Convoy C-41</strong> — discharge completed in San Lorenzo</div>
+                            <div class="activity-time">Yesterday, 18:30</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot green"></div>
+                        <div>
+                            <div class="activity-text">Invoice <strong>#0001-004518</strong> available for download</div>
+                            <div class="activity-time">Yesterday, 14:15</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">RECENT DOCUMENTS</span>
+                        <span class="card-action">View all</span>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot blue"></div>
+                        <div>
+                            <div class="activity-text"><i class="fas fa-file-pdf" style="color:var(--red);margin-right:6px"></i> BL-2026-04521.pdf</div>
+                            <div class="activity-time">Bill of Lading — C-47</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot blue"></div>
+                        <div>
+                            <div class="activity-text"><i class="fas fa-file-pdf" style="color:var(--red);margin-right:6px"></i> FACTURA-004518.pdf</div>
+                            <div class="activity-time">Freight invoice — C-41</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot blue"></div>
+                        <div>
+                            <div class="activity-text"><i class="fas fa-file-pdf" style="color:var(--red);margin-right:6px"></i> CERT-CALIDAD-S204.pdf</div>
+                            <div class="activity-time">Quality certificate — Soybean batch 204</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+</html>

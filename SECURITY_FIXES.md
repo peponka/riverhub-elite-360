@@ -1,4 +1,4 @@
-# SECURITY_FIXES.md — FluviaFleet Security Remediation
+# SECURITY_FIXES.md — ViaBarcazas Security Remediation
 
 **Date:** 2026-06-04  
 **Risk Score Before:** 100/100 (CRITICAL)  
@@ -9,7 +9,7 @@
 
 ## Resumen Ejecutivo
 
-Se identificaron 44 vulnerabilidades (Risk Score 100/100 CRÍTICO) en el proyecto FluviaFleet.
+Se identificaron 44 vulnerabilidades (Risk Score 100/100 CRÍTICO) en el proyecto ViaBarcazas.
 Todas fueron remediadas exitosamente el 4 de junio de 2026, llevando el risk score a 0/100.
 
 **Archivos modificados:** 22  
@@ -37,7 +37,7 @@ Todas fueron remediadas exitosamente el 4 de junio de 2026, llevando el risk sco
 
 | # | Vulnerabilidad | Archivo | Fix | Estado |
 |---|---------------|---------|-----|--------|
-| 1.1 | Credenciales superadmin hardcodeadas en HTML (`SA_EMAIL`, `SA_PASS`) | `public/superadmin-fluvia.html` | Eliminadas. Login ahora via `POST /api/auth/superadmin-login` con Supabase Auth + verificación de rol superadmin | ✅ |
+| 1.1 | Credenciales superadmin hardcodeadas en HTML (`SA_EMAIL`, `SA_PASS`) | `public/superadmin-viabarcazas.html` | Eliminadas. Login ahora via `POST /api/auth/superadmin-login` con Supabase Auth + verificación de rol superadmin | ✅ |
 | 1.2 | API keys n8n expuestas en JS cliente (`RH_Secure_n8n_X9fL!2026`) | 5 archivos en `public/js/modules/` | Keys eliminadas. Llamadas redirigidas a `/api/n8n/proxy` (server-side) | ✅ |
 | 1.3 | Rutas IA sin autenticación (`/predict-maintenance`, `/optimize-convoy`, `/fuel-anomalies`) | `routes/aiRoutes.js` | Añadido middleware `authenticateUser` a las 3 rutas | ✅ |
 | 1.4 | Firebase service account como archivo JSON en el repo | `app.js`, `routes/n8n-automations.js` | Cambiado a `JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)` | ✅ |
@@ -72,8 +72,8 @@ Todas fueron remediadas exitosamente el 4 de junio de 2026, llevando el risk sco
 | # | Cambio | Archivo | Estado |
 |---|--------|---------|--------|
 | 4.1 | `.gitignore` ampliado (*.pem, *.key, *.p12, *-backup.js) | `.gitignore` | ✅ |
-| 4.2 | Backup con credenciales eliminado | `public/fluvia-en-backup.js` | ✅ Borrado |
-| 4.3 | API key `FluviaFleet_n8n_2026` en comentario | `routes/n8n-automations.js` | ✅ Reemplazada con placeholder |
+| 4.2 | Backup con credenciales eliminado | `public/viabarcazas-en-backup.js` | ✅ Borrado |
+| 4.3 | API key `ViaBarcazas_n8n_2026` en comentario | `routes/n8n-automations.js` | ✅ Reemplazada con placeholder |
 | 4.4 | CI pipeline con security checks | `.github/workflows/ci.yml` | ✅ Creado |
 | 4.5 | Dependabot para actualizaciones automáticas | `.github/dependabot.yml` | ✅ Creado |
 | 4.6 | npm audit fix (27 paquetes actualizados) | `package-lock.json` | ✅ |

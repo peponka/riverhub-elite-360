@@ -135,7 +135,7 @@ DECLARE
 BEGIN
   IF NEW.action_type = 'alert' THEN
     SELECT name INTO v_vessel FROM vessels WHERE id = NEW.vessel_id;
-    v_titulo := 'Alerta' || COALESCE(': ' || v_vessel, ' en Fluvia');
+    v_titulo := 'Alerta' || COALESCE(': ' || v_vessel, ' en ViaBarcazas');
     PERFORM notify_push('alert', v_titulo,
       COALESCE(NEW.description, 'Nueva alerta registrada'), NULL, NEW.company_id::text);
   END IF;

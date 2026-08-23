@@ -1,5 +1,5 @@
 // ============================================
-// FluviaFleet — n8n Automation API
+// ViaBarcazas — n8n Automation API
 // Endpoints para automatización con n8n
 // Version: 1.0.0
 // ============================================
@@ -502,7 +502,7 @@ router.get('/crew-certifications', async (req, res) => {
 // ============================================
 // 9. POST /api/n8n/send-alert
 // Recibe alertas desde n8n y las guarda en DB
-// Uso n8n: Cualquier trigger → POST → FluviaFleet
+// Uso n8n: Cualquier trigger → POST → ViaBarcazas
 // ============================================
 router.post('/send-alert', async (req, res) => {
     try {
@@ -613,8 +613,8 @@ router.post('/webhook', async (req, res) => {
             console.log(`🚀 Front-End Event detected: ${req.body.event}. Forwarding to n8n local webhook...`);
             // Se envía al webhook de test/producción de n8n. 
             const n8nUrl = process.env.N8N_WEBHOOK_URL
-                ? `${process.env.N8N_WEBHOOK_URL}/webhook-test/FluviaFleet-events`
-                : 'http://localhost:5678/webhook-test/FluviaFleet-events';
+                ? `${process.env.N8N_WEBHOOK_URL}/webhook-test/ViaBarcazas-events`
+                : 'http://localhost:5678/webhook-test/ViaBarcazas-events';
             await fetch(n8nUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -629,7 +629,7 @@ router.post('/webhook', async (req, res) => {
         }
     }
 
-    // 2. Si viene un comando DESDE n8n hacia FluviaFleet
+    // 2. Si viene un comando DESDE n8n hacia ViaBarcazas
     const { action, payload } = req.body;
 
     console.log(`📨 n8n Webhook received: ${action || 'unknown'}`, JSON.stringify(payload || {}).substring(0, 200));
@@ -740,7 +740,7 @@ router.get('/ai-analysis', async (req, res) => {
         }
 
         // Armamos el prompt contextual
-        const systemPrompt = `Actúa como el Analista de Logística Marítima de FluviaFleet.
+        const systemPrompt = `Actúa como el Analista de Logística Marítima de ViaBarcazas.
 Tengo el siguiente reporte rápido de mi flota de remolcadores y barcazas en la hidrovía:
         
 --- ESTADO FLUVIAL ---
@@ -911,7 +911,7 @@ router.post('/create-maintenance', async (req, res) => {
 // ============================================
 router.get('/endpoints', (req, res) => {
     res.json({
-        service: 'FluviaFleet — n8n Automation API',
+        service: 'ViaBarcazas — n8n Automation API',
         version: '1.0.0',
         authentication: 'Header x-api-key: <tu_clave>',
         endpoints: [

@@ -754,30 +754,12 @@ app.use((req, res, next) => {
     if (!req.path.endsWith('.html')) return next();
 
     const suffix = req.url.slice(req.path.length);
-    const legacyToClean = {
-        '/fluvia.html': '/viabarcazas.html',
-        '/fluvia-en.html': '/viabarcazas-en.html',
+    const redirects = {
         '/app.html': '/viabarcazas.html',
         '/app-en.html': '/viabarcazas-en.html',
-        '/portal-cliente-fluvia.html': '/portal-clientes.html',
-        '/portal-cliente-fluvia-en.html': '/portal-clientes-en.html',
         '/landing.html': '/',
     };
-
-    const cleanPath = legacyToClean[req.path] ||
-        (req.path.match(/^\/admin-(.+)-fluvia(-en)?\.html$/i)
-            ? req.path.replace(/-fluvia(?=-en)?\.html$/i, '.html')
-            : null);
-    if (cleanPath) return res.redirect(301, cleanPath + suffix);
-
-    const cleanToLegacy = Object.fromEntries(Object.entries(legacyToClean).map(([legacy, clean]) => [clean, legacy]));
-    const legacyPath = cleanToLegacy[req.path] ||
-        (req.path.match(/^\/admin-(.+)(-en)?\.html$/i)
-            ? req.path.replace(/\.html$/i, '-fluvia$&').replace(/(-en)-fluvia\.html$/i, '-fluvia-en.html')
-            : null);
-    if (legacyPath) {
-        req.url = legacyPath + suffix;
-    }
+    if (redirects[req.path]) return res.redirect(301, redirects[req.path] + suffix);
     next();
 });
 
@@ -1114,7 +1096,7 @@ app.post('/api/notifications/send', authenticateUser, async (req, res) => {
             token: profile.fcm_token,
             notification: { title, body: body || '' },
             data: data || {},
-            android: { priority: 'high', notification: { channelId: 'fluvia_channel' } }
+            android: { priority: 'high', notification: { channelId: 'viabarcazas_channel' } }
         };
         const result = await firebaseAdmin.messaging().send(message);
         res.json({ success: true, messageId: result });
@@ -1145,7 +1127,7 @@ app.post('/api/notifications/broadcast', authenticateUser, async (req, res) => {
         const message = {
             notification: { title, body: body || '' },
             data: data || {},
-            android: { priority: 'high', notification: { channelId: 'fluvia_channel' } }
+            android: { priority: 'high', notification: { channelId: 'viabarcazas_channel' } }
         };
         const result = await firebaseAdmin.messaging().sendEachForMulticast({ ...message, tokens });
         res.json({ success: true, sent: result.successCount, failed: result.failureCount });

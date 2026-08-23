@@ -1,4 +1,4 @@
-name: CI — FluviaFleet
+name: CI — ViaBarcazas
 on:
   push:
     branches: [main]
@@ -26,7 +26,7 @@ jobs:
       - name: Check for secrets in code
         run: |
           echo "Checking for hardcoded secrets..."
-          ! grep -rn "fluvia2026super" public/ --include="*.html" --include="*.js" || (echo "FAIL: Hardcoded password found!" && exit 1)
+          ! grep -rn "viabarcazas2026super" public/ --include="*.html" --include="*.js" || (echo "FAIL: Hardcoded password found!" && exit 1)
           ! grep -rn "x-api-key.*riverhub_n8n" public/ --include="*.js" || (echo "FAIL: Hardcoded API key found!" && exit 1)
           echo "✅ No hardcoded secrets found"
 

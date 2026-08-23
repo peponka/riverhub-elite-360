@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -28,7 +28,7 @@
                 doc.rect(0, 0, 210, 40, 'F');
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(22);
-                doc.text('FluviaFleet ELITE', 15, 25);
+                doc.text('ViaBarcazas ELITE', 15, 25);
                 doc.setFontSize(10);
                 doc.setTextColor(0, 229, 255);
                 doc.text('COTIZACION OFICIAL', 150, 25);
@@ -75,7 +75,7 @@
                 doc.setFontSize(18);
                 doc.text(price, 140, y + 55);
 
-                doc.save('FluviaFleet_Quote.pdf');
+                doc.save('ViaBarcazas_Quote.pdf');
             } catch (e) {
                 console.error("Error generating PDF:", e);
             }
@@ -109,7 +109,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <link rel="stylesheet" href="css/elite-bundle.css?v=ELITE_PROX_GEN">
-    <link rel="stylesheet" href="css/fluvia-override.css?v=3">
+    <link rel="stylesheet" href="css/viabarcazas-override.css?v=3">
                                     <!-- REVERTED MOBILE OVERRIDES DUE TO BLACK SCREEN -->
 
     <!-- External Libs -->
@@ -174,10 +174,10 @@
         }
     </style>
 
-    <!-- FLUVIAFLEET PURGE: Remove ALL dark inline styles so CSS override takes full control -->
+    <!-- VIABARCAZAS PURGE: Remove ALL dark inline styles so CSS override takes full control -->
     <script>
     (function(){
-        function fluviafleetPurge(){
+        function viabarcazasPurge(){
             var all = document.querySelectorAll('*');
             var darkColors = ['#0f172a','#0f151f','#09090b','#18181b','#1e293b','#0b1120',
                               'rgb(15,','rgb(9,','rgb(24,','rgb(30,','rgb(11,'];
@@ -216,16 +216,16 @@
                 }
                 if(changed) count++;
             }
-            console.log('FLUVIAFLEET PURGE: '+count+' elements cleaned');
+            console.log('VIABARCAZAS PURGE: '+count+' elements cleaned');
         }
         // Run on load and periodically for dynamic content
-        if(document.readyState==='complete') fluviafleetPurge();
-        else window.addEventListener('load', function(){ setTimeout(fluviafleetPurge,300); setTimeout(fluviafleetPurge,1500); setTimeout(fluviafleetPurge,4000); });
+        if(document.readyState==='complete') viabarcazasPurge();
+        else window.addEventListener('load', function(){ setTimeout(viabarcazasPurge,300); setTimeout(viabarcazasPurge,1500); setTimeout(viabarcazasPurge,4000); });
         // Also run when views change
         document.addEventListener('click', function(e){
             if(e.target.closest && e.target.closest('.menu a, .mobile-nav-item')){
-                setTimeout(fluviafleetPurge, 500);
-                setTimeout(fluviafleetPurge, 1500);
+                setTimeout(viabarcazasPurge, 500);
+                setTimeout(viabarcazasPurge, 1500);
             }
         });
     })();
@@ -507,7 +507,7 @@
             </div>
 
             <div class="login-footer">
-                <p>FluviaFleet ELITE OS • V 2.5.0 SECURE</p>
+                <p>ViaBarcazas ELITE OS • V 2.5.0 SECURE</p>
             </div>
         </div>
 
@@ -785,7 +785,7 @@
                         <!-- Header with Greeting -->
                         <div class="dash-header">
                             <div class="welcome-msg">
-                                <h2 id="dash-welcome-text">FluviaFleet Monitor</h2>
+                                <h2 id="dash-welcome-text">ViaBarcazas Monitor</h2>
                                 <span class="welcome-sub">UNIFIED CONTROL CENTER • SERVICE LEVEL: OPTIMAL</span>
                             </div>
                             <div class="system-status">
@@ -1154,7 +1154,7 @@
                     <div class="reports-header">
                         <div>
                             <h2>CENTRO DE REPORTES</h2>
-                            <p style="color:#1e3a5f; font-size:0.9rem;">BUSINESS INTELLIGENCE • FluviaFleet AI</p>
+                            <p style="color:#1e3a5f; font-size:0.9rem;">BUSINESS INTELLIGENCE • ViaBarcazas AI</p>
                         </div>
                         <div class="report-controls">
                             <select class="report-period-select">
@@ -2239,7 +2239,7 @@
                                     style="color: #1A1A1A; font-family: 'Rajdhani', sans-serif; margin: 0 0 10px 0; font-size: 1.5rem;">
                                     CREDENCIALES DE ACCESO</h3>
                                 <p style="color: #889; font-size: 0.9rem; margin: 0;">Utiliza estas credenciales
-                                    para integrar FluviaFleet con tus sistemas ERP (SAP, Oracle, etc).</p>
+                                    para integrar ViaBarcazas con tus sistemas ERP (SAP, Oracle, etc).</p>
                             </div>
 
                             <!-- API KEY BOX -->
@@ -2269,7 +2269,7 @@
                                         style="color: #667; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px;">
                                         ENDPOINT BASE</div>
                                     <div style="color: #10b981; font-family: 'JetBrains Mono';">
-                                        https://api.FluviaFleet.io/v1</div>
+                                        https://api.ViaBarcazas.io/v1</div>
                                 </div>
                                 <div class="stat-box"
                                     style="flex: 1; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 6px; border: 0.5px solid #E5E5E5;">

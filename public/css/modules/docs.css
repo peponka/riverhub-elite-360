@@ -1,5 +1,5 @@
 /* ============================================
-   DOCS — FLUVIA DESIGN SYSTEM
+   DOCS — VIABARCAZAS DESIGN SYSTEM
    ============================================ */
 
 .docs-container { display: flex; flex-direction: column; gap: 20px; height: auto; min-height: 85vh; padding: 32px; background: var(--bg-primary, #FFFFFF); }

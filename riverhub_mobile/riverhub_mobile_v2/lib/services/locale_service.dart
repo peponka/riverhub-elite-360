@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-/// Lightweight EN/ES locale service for FluviaFleet mobile.
+/// Lightweight EN/ES locale service for ViaBarcazas mobile.
 class LocaleService {
   LocaleService._();
   static final ValueNotifier<String> _locale = ValueNotifier<String>('es');
@@ -634,7 +634,7 @@ class LocaleService {
       'register_your_account_has_bee': 'Tu cuenta ha sido creada. Verificá tu correo electrónico.',
       'register_error': 'Error',
       'register_sign_up': 'Registrarse',
-      'register_fluviafleet': 'FluviaFleet',
+      'register_viabarcazas': 'ViaBarcazas',
       'register_create_account': 'CREAR CUENTA',
       'register_fill_all_fields': 'Completá todos los campos.',
       'register_passwords_no_match': 'Las contraseñas no coinciden.',
@@ -1368,7 +1368,7 @@ class LocaleService {
       'register_your_account_has_bee': 'Your account has been created. Please verify your email.',
       'register_error': 'Error',
       'register_sign_up': 'Sign Up',
-      'register_fluviafleet': 'FluviaFleet',
+      'register_viabarcazas': 'ViaBarcazas',
       'register_create_account': 'CREATE ACCOUNT',
       'register_fill_all_fields': 'Please fill in all fields.',
       'register_passwords_no_match': 'Passwords do not match.',

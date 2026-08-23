@@ -1,6 +1,6 @@
 -- ═══════════════════════════════════════════════════════════
 -- PATCH: Restrict get_all_fcm_tokens to service_role only
--- FluviaFleet Security Fix 2.1
+-- ViaBarcazas Security Fix 2.1
 -- ═══════════════════════════════════════════════════════════
 -- PROBLEM: SECURITY DEFINER function exposes ALL user FCM tokens
 -- to any role (including anon), bypassing RLS entirely.

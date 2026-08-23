@@ -28,7 +28,7 @@ class _DraftScreenState extends State<DraftScreen> {
   Future<void> _fetchINA() async {
     setState(() => _isLoading = true);
     try {
-      final url = Uri.parse('https://fluviafleet.com/api/hydrology/ina');
+      final url = Uri.parse('https://viabarcazas.com/api/hydrology/ina');
       final res = await http.get(url).timeout(const Duration(seconds: 30));
       if (res.statusCode == 200 && mounted) {
         final data = json.decode(res.body);

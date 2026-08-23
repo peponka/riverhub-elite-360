@@ -54,7 +54,7 @@ class AdminScreen extends StatelessWidget {
                 border: Border.all(color: AppColors.separator, width: 0.5),
               ),
               child: Column(children: [
-                _InfoRow(label: LocaleService.t('dyn_key_9'), value: 'v3.2.1 (Fluvia)'),
+                _InfoRow(label: LocaleService.t('dyn_key_9'), value: 'v3.2.1 (ViaBarcazas)'),
                 _InfoRow(label: LocaleService.t('dyn_key_3'), value: 'Supabase (PostgreSQL 15)'),
                 _InfoRow(label: LocaleService.t('dyn_key_11'), value: 'Supabase Edge'),
                 _InfoRow(label: LocaleService.t('dyn_key_7'), value: '18/04/2026'),

@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluvia — Gestión Inteligente de Flotas en la Hidrovía</title>
+    <title>ViaBarcazas — Gestión Inteligente de Flotas en la Hidrovía</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <meta name="description"
-        content="Fluvia — Plataforma líder de gestión de flotas fluviales para la Hidrovía Paraguay-Paraná. Monitoreo AIS en tiempo real, convoyes inteligentes y control total de tu operación.">
+        content="ViaBarcazas — Plataforma líder de gestión de flotas fluviales para la Hidrovía Paraguay-Paraná. Monitoreo AIS en tiempo real, convoyes inteligentes y control total de tu operación.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,8 +52,8 @@
             </div>
 
             <div class="nav-actions">
-                <a href="fluvia.html" class="btn-ghost">Iniciar Sesión</a>
-                <a href="fluvia.html" class="btn-primary-sm">Prueba Gratis</a>
+                <a href="viabarcazas.html" class="btn-ghost">Iniciar Sesión</a>
+                <a href="viabarcazas.html" class="btn-primary-sm">Prueba Gratis</a>
             </div>
 
             <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
@@ -88,7 +88,7 @@
             </p>
 
             <div class="hero-ctas">
-                <a href="fluvia.html" class="btn-primary">
+                <a href="viabarcazas.html" class="btn-primary">
                     <i class="fas fa-rocket"></i>
                     Empezar — 15 días gratis
                 </a>
@@ -396,7 +396,7 @@
                         <li><i class="fas fa-check"></i> Bitácora digital</li>
                         <li><i class="fas fa-check"></i> Soporte email</li>
                     </ul>
-                    <a href="fluvia.html" class="btn-price">Comenzar</a>
+                    <a href="viabarcazas.html" class="btn-price">Comenzar</a>
                 </div>
 
                 <!-- SQUAD -->
@@ -419,7 +419,7 @@
                         <li><i class="fas fa-check"></i> Cotizador IA</li>
                         <li><i class="fas fa-check"></i> Soporte prioritario</li>
                     </ul>
-                    <a href="fluvia.html" class="btn-price primary">Probar Gratis</a>
+                    <a href="viabarcazas.html" class="btn-price primary">Probar Gratis</a>
                 </div>
 
                 <!-- EXPANSION -->
@@ -441,7 +441,7 @@
                         <li><i class="fas fa-check"></i> API & integraciones</li>
                         <li><i class="fas fa-check"></i> Soporte 24/7</li>
                     </ul>
-                    <a href="fluvia.html" class="btn-price">Escalar</a>
+                    <a href="viabarcazas.html" class="btn-price">Escalar</a>
                 </div>
 
                 <!-- ADMIRAL -->
@@ -463,7 +463,7 @@
                         <li><i class="fas fa-check"></i> Onboarding dedicado</li>
                         <li><i class="fas fa-check"></i> SLA garantizado</li>
                     </ul>
-                    <a href="fluvia.html" class="btn-price">Contactar</a>
+                    <a href="viabarcazas.html" class="btn-price">Contactar</a>
                 </div>
             </div>
         </div>
@@ -476,7 +476,7 @@
                 <div class="cta-content">
                     <h2>Tu flota merece tecnología de primer nivel</h2>
                     <p>Dejá de operar a ciegas. Empezá hoy con 15 días gratis, sin tarjeta de crédito.</p>
-                    <a href="fluvia.html" class="btn-primary btn-lg">
+                    <a href="viabarcazas.html" class="btn-primary btn-lg">
                         <i class="fas fa-rocket"></i>
                         Empezar ahora — Es gratis
                     </a>

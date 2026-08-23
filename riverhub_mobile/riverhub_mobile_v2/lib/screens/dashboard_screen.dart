@@ -192,7 +192,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Icon(CupertinoIcons.drop_fill, size: 14, color: AppColors.textPrimary),
             const SizedBox(width: 6),
-            Text('Fluvia', style: GoogleFonts.newsreader(fontSize: 18, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: AppColors.textPrimary)),
+            Text('ViaBarcazas', style: GoogleFonts.newsreader(fontSize: 18, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: AppColors.textPrimary)),
             // Language pill in nav bar
             const SizedBox(width: 6),
             GestureDetector(

@@ -118,7 +118,7 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
   Future<void> _fetchINA() async {
     try {
       setState(() => _inaLoading = true);
-      final url = Uri.parse('https://fluviafleet.com/api/hydrology/ina');
+      final url = Uri.parse('https://viabarcazas.com/api/hydrology/ina');
       final res = await http.get(url).timeout(const Duration(seconds: 15));
       if (res.statusCode == 200 && mounted) {
         final data = json.decode(res.body);
@@ -633,7 +633,7 @@ class _HidrologiaScreenState extends State<HidrologiaScreen>
   Future<void> _fetchINAForecast() async {
     setState(() => _forecastLoading = true);
     try {
-      final url = Uri.parse('https://fluviafleet.com/api/hydrology/ina/forecast');
+      final url = Uri.parse('https://viabarcazas.com/api/hydrology/ina/forecast');
       final res = await http.get(url).timeout(const Duration(seconds: 20));
       if (res.statusCode == 200 && mounted) {
         final data = json.decode(res.body);

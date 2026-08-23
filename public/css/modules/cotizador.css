@@ -1,5 +1,5 @@
 /* ============================================
-   COTIZADOR — FLUVIA DESIGN SYSTEM
+   COTIZADOR — VIABARCAZAS DESIGN SYSTEM
    ============================================ */
 
 .cotizador-container { display: flex; flex-direction: column; gap: 20px; height: auto; min-height: 85vh; background: var(--bg-primary, #FFFFFF); }

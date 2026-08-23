@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-/// RiverHub Meridian — Paleta "Fluvia" (Editorial Light Mode)
+/// RiverHub Meridian — Paleta "ViaBarcazas" (Editorial Light Mode)
 ///
 /// Diseño editorial No-Line: separación por capas tonales,
 /// tipografía dual Newsreader (títulos) + Inter (datos).
@@ -33,7 +33,7 @@ abstract class AppColors {
   static const Color textOnAccent = Color(0xFFFFFFFF);
 
   // ─── Separadores y bordes ──────────────────────────────────────────────────
-  /// Borde principal Fluvia (muy sutil)
+  /// Borde principal ViaBarcazas (muy sutil)
   static const Color separator = Color(0xFFE2E8F0);
 
   /// Borde más claro
@@ -43,7 +43,7 @@ abstract class AppColors {
   static const Color cellFill = Color(0xFFF1F5F9);
 
   // ─── Acento principal ──────────────────────────────────────────────────────
-  /// Azul editorial Fluvia
+  /// Azul editorial ViaBarcazas
   static const Color accent = Color(0xFF3B82F6);
 
   /// Azul teal (links, secundario)
@@ -53,7 +53,7 @@ abstract class AppColors {
   static const Color blue = Color(0xFF3B82F6);
 
   // ─── Semánticos ────────────────────────────────────────────────────────────
-  /// Verde éxito (status-ok Fluvia)
+  /// Verde éxito (status-ok ViaBarcazas)
   static const Color success = Color(0xFF2EA043);
 
   /// Rojo error / peligro
@@ -68,7 +68,7 @@ abstract class AppColors {
   /// Púrpura
   static const Color purple = Color(0xFF8B5CF6);
 
-  // ─── Grises del sistema (escala Fluvia) ────────────────────────────────────
+  // ─── Grises del sistema (escala ViaBarcazas) ────────────────────────────────────
   static const Color systemGray1 = Color(0xFF94A3B8);
   static const Color systemGray2 = Color(0xFFCBD5E1);
   static const Color systemGray3 = Color(0xFFE2E8F0);

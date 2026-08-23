@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+  <title>ViaBarcazas - Panel de Control</title>
+  <link rel="stylesheet" href="./css/modules/admin-viabarcazas.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script data-id="auth-guard-v1">
+(function(){
+  var SURL='https://nfybnnpdrvyxucgpqmmo.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  document.documentElement.style.visibility='hidden';
+  function check(){
+    var _sb=supabase.createClient(SURL,SKEY);
+    _sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      else{window.location.replace('viabarcazas.html');}
+    }).catch(function(){document.documentElement.style.visibility='visible';});
+  }
+  if(window.supabase){check();}
+  else{
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload=check;
+    s.onerror=function(){document.documentElement.style.visibility='visible';};
+    document.head.appendChild(s);
+  }
+})();
+</script>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#0C333A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="4" fill="#A87A3C"/></svg>
+      ViaBarcazas <span>v1.0</span>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-title">Ahora</div>
+      <a href="#" class="nav-item active"><i class="fa-solid fa-table-cells-large"></i> Panel de Control <span class="badge">1</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Mapa de Flota <span class="badge">2</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS <span class="badge">3</span></a>
+      <a href="#" class="nav-item alert"><i class="fa-regular fa-comment-dots"></i> Comunicaciones <span class="badge">3</span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Planificación</div>
+      <a href="#" class="nav-item"><i class="fa-solid fa-layer-group"></i> Armador de Convoy</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-route"></i> Gestión de Viajes</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> Copiloto IA <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Flota</div>
+      <a href="#" class="nav-item"><i class="fa-solid fa-ship"></i> Flota (Activos)</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i> Tripulación & Safety</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Combustible</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimiento</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Bitácora Digital</a>
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info">
+        <span class="user-name">Pepe Orué <i class="fa-solid fa-pen" style="font-size:10px; color:#aaa; margin-left:4px;"></i></span>
+        <span class="user-role">SUPERADMIN - ASU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area">
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar embarcación, puerto, viaje...">
+        <span class="shortcut">⌘K</span>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-switch-toggle" style="display:flex;align-items:center;gap:6px;margin-right:8px;"><a href="admin-viabarcazas-en.html" style="color:var(--text-sec);font-family:var(--font-data);font-size:0.7rem;font-weight:600;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">EN</a><span style="color:var(--border-color);">|</span><a href="admin-viabarcazas.html" style="color:var(--text-main);font-family:var(--font-data);font-size:0.7rem;font-weight:700;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">ES</a></div>
+        <div class="settings">
+          <i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> SISTEMA OPERATIVO
+        </div>
+        <div>ASU · 14:04</div>
+        <i class="fa-solid fa-share-nodes"></i>
+        <i class="fa-regular fa-bell"></i>
+        <i class="fa-solid fa-gear"></i>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <div class="header-section">
+        <div class="greeting">
+          <p>VIABARCAZAS / PANEL DE CONTROL</p>
+          <h1>Buenas tardes, <i>Capitán.</i></h1>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec);">CENTRO UNIFICADO · NIVEL DE SERVICIO ÓPTIMO · FLOTA SINCRONIZADA HACE 12 S</p>
+        </div>
+        <div class="header-actions">
+          <span class="week-info">SEMANA 16 - 2026</span>
+          <button class="btn-outline">Exportar</button>
+          <button class="btn-primary">+ Nuevo viaje</button>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-title">FLOTA ACTIVA</div>
+          <div class="kpi-value" id="kpi-fleet">—<span></span></div>
+          <div class="kpi-footer positive">
+            <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,8 L6,4 L12,8 L24,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            ↑ 86% disp. +2 vs. ayer
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">ALARMAS CRÍTICAS <i class="fa-solid fa-circle-exclamation" style="color:var(--status-err);"></i></div>
+          <div class="kpi-value alert" id="kpi-alarms">—</div>
+          <div class="kpi-footer negative">
+            <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,4 L6,8 L12,4 L24,10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            Atención requerida
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">CONSUMO REGISTRADO <span>ACUMULADO</span></div>
+          <div class="kpi-value" id="kpi-fuel">—<span>kL</span></div>
+          <div class="kpi-footer positive" style="color:var(--status-ok);">
+            <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,0 L6,4 L12,2 L24,8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            ↓ 4.2% vs. promedio · estable
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">CALADO MÍNIMO <span>PILAR</span></div>
+          <div class="kpi-value" id="kpi-draft">—<span>pies</span></div>
+          <div class="kpi-footer" style="color:var(--status-warn);">
+            Navegable · margen 0.4'
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">EFICIENCIA OTP <span>ON TIME</span></div>
+          <div class="kpi-value ok" id="kpi-otp">—<span>%</span></div>
+          <div class="kpi-footer positive">
+            <svg width="24" height="12" viewBox="0 0 24 12"><path d="M0,10 L6,4 L12,6 L24,0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            ↑ Mejor mes del Q
+          </div>
+        </div>
+      </div>
+
+      <div class="main-grid">
+        <!-- Left Col -->
+        <div>
+          <div class="section-header">
+            <div>
+              <span class="section-title">Mapa de flota</span>
+              <span class="section-subtitle">Paraguay-Paraná · AIS en vivo</span>
+            </div>
+            <div class="map-badge">LIVE <span style="color:#1A1A2E; margin-left:6px; font-weight:500;">6 EMBARCACIONES</span></div>
+          </div>
+
+          <div class="map-container">
+            <div class="map-toolbar">
+              <button class="map-btn">SATÉLITE</button>
+              <button class="map-btn active">CARTOGRÁFICO</button>
+              <button class="map-btn">PROFUNDIDAD</button>
+              <button class="map-btn">CORRIENTE</button>
+              <div class="map-coords">
+                25.28° S<br>
+                -57.64° W<br>
+                ZOOM 1:240K
+              </div>
+            </div>
+            <div class="map-view">
+              <div class="river-shape"></div>
+              <!-- Dots randomly -->
+              <div style="position:absolute; left:20%; top:50%; display:flex; flex-direction:column; align-items:center;">
+                <i class="fa-solid fa-location-arrow" style="color:var(--text-main); font-size:12px; transform:rotate(45deg);"></i>
+                <span style="font-size:10px; font-weight:600; margin-top:4px;">ASU</span>
+              </div>
+              <div style="position:absolute; left:40%; top:45%; display:flex; flex-direction:column; align-items:center;">
+                <i class="fa-solid fa-location-arrow" style="color:var(--status-ok); font-size:12px; transform:rotate(60deg);"></i>
+                <span style="font-size:10px; font-weight:600; margin-top:4px;">PIL</span>
+              </div>
+              <div style="position:absolute; left:70%; top:60%; display:flex; flex-direction:column; align-items:center;">
+                <i class="fa-solid fa-circle" style="color:var(--status-warn); font-size:8px;"></i>
+                <span style="font-size:10px; font-weight:600; margin-top:4px;">COR</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Grid: Pronostico y Timeline -->
+          <div class="bottom-grid">
+            <div style="grid-column: span 2;">
+              <div class="section-header" style="margin-top:24px;">
+                <span class="section-title">Pronóstico niveles del río</span>
+                <span class="section-subtitle">ML · 7 Días</span>
+                <span style="margin-left:auto; font-size:10px; color:var(--text-sec); font-weight:600; letter-spacing:1px;">ACTUALIZADO 12:40 · CONFIANZA 91%</span>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>PUERTO</th><th>HOY</th><th>MIÉ</th><th>JUE</th><th>VIE</th><th>SÁB</th><th>DOM</th><th>LUN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Asunción<small>ASU</small></td>
+                    <td><span class="cell-val safe">3.20m</span></td>
+                    <td><span class="cell-val safe">3.15m</span></td>
+                    <td><span class="cell-val safe">3.10m</span></td>
+                    <td><span class="cell-val safe">3.05m</span></td>
+                    <td><span class="cell-val safe">3.00m</span></td>
+                    <td><span class="cell-val warn">2.98m</span></td>
+                    <td><span class="cell-val safe">3.05m</span></td>
+                  </tr>
+                  <tr>
+                    <td>Pilar<small>PIL</small></td>
+                    <td><span class="cell-val safe">3.10m</span></td>
+                    <td><span class="cell-val safe">3.05m</span></td>
+                    <td><span class="cell-val warn">2.95m</span></td>
+                    <td><span class="cell-val warn">2.90m</span></td>
+                    <td><span class="cell-val warn">2.85m</span></td>
+                    <td><span class="cell-val warn">2.80m</span></td>
+                    <td><span class="cell-val warn">2.95m</span></td>
+                  </tr>
+                  <tr>
+                    <td>Corrientes<small>COR</small></td>
+                    <td><span class="cell-val safe">3.40m</span></td>
+                    <td><span class="cell-val safe">3.38m</span></td>
+                    <td><span class="cell-val safe">3.35m</span></td>
+                    <td><span class="cell-val safe">3.30m</span></td>
+                    <td><span class="cell-val safe">3.28m</span></td>
+                    <td><span class="cell-val safe">3.30m</span></td>
+                    <td><span class="cell-val safe">3.35m</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Col -->
+        <div>
+          <div class="section-header">
+            <div>
+              <span class="section-title">Embarcaciones</span>
+              <span class="section-subtitle">6 bajo monitoreo</span>
+            </div>
+            <div style="font-size:10px; color:var(--text-sec); font-weight:600; text-transform:uppercase;">Ordenar · ETA</div>
+          </div>
+
+          <div class="fleet-list">
+            <div class="fleet-item">
+              <div class="fleet-info-main">
+                <i class="fa-solid fa-ferry fleet-icon"></i>
+                <div class="fleet-details">
+                  <h4>Itaipú 07</h4>
+                  <div class="fleet-meta">ASU → NPA · 4+1 · 9.2 KN</div>
+                </div>
+              </div>
+              <div class="status-badge navegando">NAVEGANDO</div>
+            </div>
+
+            <div class="fleet-item">
+              <div class="fleet-info-main">
+                <i class="fa-solid fa-ferry fleet-icon"></i>
+                <div class="fleet-details">
+                  <h4>Paraná Voyager</h4>
+                  <div class="fleet-meta">COR → ROS · 6+1 · 8.1 KN</div>
+                </div>
+              </div>
+              <div class="status-badge navegando">NAVEGANDO</div>
+            </div>
+
+            <div class="fleet-item">
+              <div class="fleet-info-main">
+                <i class="fa-solid fa-ferry fleet-icon"></i>
+                <div class="fleet-details">
+                  <h4>Don Eugenio</h4>
+                  <div class="fleet-meta">EN ASUNCIÓN · LIBRE · 0 KN</div>
+                </div>
+              </div>
+              <div class="status-badge puerto">EN PUERTO</div>
+            </div>
+
+            <div class="fleet-item">
+              <div class="fleet-info-main">
+                <i class="fa-solid fa-ferry fleet-icon"></i>
+                <div class="fleet-details">
+                  <h4>Aquidabán</h4>
+                  <div class="fleet-meta">PIL → ROS · 4+1 · 7.8 KN</div>
+                </div>
+              </div>
+              <div class="status-badge atencion">ATENCIÓN</div>
+            </div>
+          </div>
+
+          <div class="selected-vessel">
+            <div class="vessel-header">SELECCIONADA · IMO 9472314</div>
+            <div class="vessel-name">Itaipú 07</div>
+            
+            <div class="vessel-stats">
+              <div class="stat-col">
+                <span class="stat-label">CONVOY</span>
+                <span class="stat-val">4+1</span>
+              </div>
+              <div class="stat-col">
+                <span class="stat-label">COMBUSTIBLE</span>
+                <span class="stat-val">68%</span>
+              </div>
+              <div class="stat-col">
+                <span class="stat-label">ETA</span>
+                <span class="stat-val">+14h 22m</span>
+              </div>
+              <div class="stat-col" style="text-align:right;">
+                <span class="stat-label" style="text-align:right;">DESTINO</span>
+                <span class="stat-val">ASU &rarr; NPA</span>
+              </div>
+            </div>
+
+            <div class="vessel-actions">
+              <button class="btn-dark">Abrir bitácora</button>
+              <button class="btn-outline">Contactar</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- ── KPIs REALES ────────────────────────────────────────────────────────────
+     Estos 5 KPIs estaban escritos a mano en el HTML (FLOTA=12, ALARMAS=02,
+     CONSUMO=42.5, CALADO=10.2, OTP=92) y nunca cambiaban. Ahora salen de la
+     base. Cada uno se resuelve por separado: si una consulta falla, ese KPI
+     queda en "—" en vez de romper el resto o mostrar un número inventado.
+     Las políticas RLS siguen aplicando, así que un admin de empresa ve los
+     números de SU flota y un superadmin ve los de todas. -->
+<script>
+(function(){
+  var SB_URL='https://nfybnnpdrvyxucgpqmmo.supabase.co',
+      SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+
+  function setKpi(id, valor, sufijo, pie){
+    var el=document.getElementById(id); if(!el) return;
+    el.innerHTML = valor + (sufijo?'<span>'+sufijo+'</span>':'');
+    if(pie!=null){
+      var f=el.parentElement && el.parentElement.querySelector('.kpi-footer');
+      if(f) f.textContent=pie;
+    }
+  }
+
+  function cargar(sb){
+    // FLOTA ACTIVA — ojo: conviven 'Activo' y 'active' en vessels.status
+    sb.from('vessels').select('status').then(function(r){
+      if(r.error||!r.data) return;
+      var total=r.data.length;
+      var act=r.data.filter(function(v){
+        return String(v.status||'').toLowerCase()==='activo'||String(v.status||'').toLowerCase()==='active';
+      }).length;
+      var disp = total? Math.round(act/total*100) : 0;
+      setKpi('kpi-fleet', act, '/'+total, disp+'% de disponibilidad');
+    });
+
+    // ALARMAS CRÍTICAS — severidad ALTA sin resolver
+    sb.from('alerts').select('severity,resolved_at').then(function(r){
+      if(r.error||!r.data) return;
+      var n=r.data.filter(function(a){return a.severity==='ALTA'&&!a.resolved_at;}).length;
+      setKpi('kpi-alarms', (n<10?'0':'')+n, null, n?'Atención requerida':'Sin alarmas críticas');
+    });
+
+    // CONSUMO — suma de fuel_logs (litros → kL).
+    // Es el ACUMULADO registrado, no "las últimas 24h": hoy todas las cargas
+    // son del mismo día y no hay ninguna en las últimas 24h, así que rotularlo
+    // por día daría 0 o sería directamente falso. El pie aclara el período.
+    sb.from('fuel_logs').select('quantity,logged_at').then(function(r){
+      if(r.error||!r.data||!r.data.length) return;
+      var litros=r.data.reduce(function(s,f){return s+(Number(f.quantity)||0);},0);
+      var fechas=r.data.map(function(f){return f.logged_at;}).filter(Boolean).sort();
+      var ult=fechas.length?new Date(fechas[fechas.length-1]).toLocaleDateString('es-PY'):null;
+      setKpi('kpi-fuel', (litros/1000).toFixed(1), 'kL',
+             r.data.length+' cargas'+(ult?' · última '+ult:''));
+    });
+
+    // CALADO MÍNIMO — la lectura más restrictiva registrada
+    sb.from('readings').select('draft_value,location_name').then(function(r){
+      if(r.error||!r.data||!r.data.length) return;
+      var min=r.data.reduce(function(m,x){return (Number(x.draft_value)<Number(m.draft_value))?x:m;});
+      setKpi('kpi-draft', Number(min.draft_value).toFixed(1), 'pies', 'Punto crítico: '+(min.location_name||'—'));
+    });
+
+    // OTP — viajes cerrados que llegaron dentro de la ETA
+    sb.from('voyages').select('eta,actual_arrival').then(function(r){
+      if(r.error||!r.data) return;
+      var cerr=r.data.filter(function(v){return v.actual_arrival&&v.eta;});
+      if(!cerr.length){ setKpi('kpi-otp','—','','Sin viajes cerrados aún'); return; }
+      var ok=cerr.filter(function(v){return new Date(v.actual_arrival)<=new Date(v.eta);}).length;
+      setKpi('kpi-otp', Math.round(ok/cerr.length*100), '%', ok+' de '+cerr.length+' viajes en fecha');
+    });
+  }
+
+  function init(){ try{ cargar(supabase.createClient(SB_URL,SB_KEY)); }catch(e){} }
+  if(window.supabase) init();
+  else{
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload=init; document.head.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

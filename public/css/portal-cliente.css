@@ -2,7 +2,7 @@
 :root{--bg:#06110D;--bg2:#0F231C;--srf:#0C1F19;--txt:#F3F7F5;--t2:#A9B8B2;--t3:#6B7C74;--sep:#1E3B31;--teal:#25D366;--blue:#38BDF8;--amber:#FBBF24;--red:#F87171;--purple:#A78BFA;--font:'Manrope',-apple-system,sans-serif;--serif:'Bricolage Grotesque',sans-serif;--radius:14px}
 html{scroll-behavior:smooth}body{font-family:var(--font);color:var(--txt);background:var(--bg);line-height:1.6}
 
-/* COMPANY SWITCHER (sits inside the shared .sidebar from fluvia.css) */
+/* COMPANY SWITCHER (sits inside the shared .sidebar from viabarcazas.css) */
 .sb-company{margin:4px 20px 12px;background:var(--srf);border:0.5px solid var(--sep);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:0.2s}
 .sb-company:hover{border-color:var(--teal)}
 .sb-company-avatar{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#06110D;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.72rem;flex-shrink:0}

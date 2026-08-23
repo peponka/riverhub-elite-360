@@ -67,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
           children: [
-            // ─── Fluvia Title ────────────────────────
+            // ─── ViaBarcazas Title ────────────────────────
             Text(
               t('profile_my'),
               style: GoogleFonts.newsreader(
@@ -201,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             Center(
               child: Text(
-                'FLUVIA v4.2 · RIVERHUB ELITE 360',
+                'VIABARCAZAS v4.2 · RIVERHUB ELITE 360',
                 style: GoogleFonts.inter(
                   fontSize: 9, color: AppColors.textTertiary, fontWeight: FontWeight.w600, letterSpacing: 1,
                 ),

@@ -1,5 +1,5 @@
 -- ============================================================
--- RIVERHUB / FLUVIAFLEET — NUCLEAR RLS PATCH
+-- RIVERHUB / VIABARCAZAS — NUCLEAR RLS PATCH
 -- ============================================================
 -- Fecha: 13 Mayo 2026
 -- Problema: Supabase email "Table publicly accessible" 

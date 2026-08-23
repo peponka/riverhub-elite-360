@@ -252,7 +252,7 @@ var AuthModule = (() => {
         if (role === 'superadmin') {
             // Ve todo absoluto
         } else if (role === 'admin') {
-            // Admin de Empresa: Ve todo menos el backoffice global de FluviaFleet
+            // Admin de Empresa: Ve todo menos el backoffice global de ViaBarcazas
             hideNav(['nav-backoffice']);
         } else if (role === 'operator') {
             // Personal Operativo (Capitanes, Armadores): NO ven facturación ni consolas admin
@@ -466,10 +466,10 @@ var AuthModule = (() => {
         void("🔓 MODO SIMULADOR ACTIVADO (localhost only)");
         const simulatedUser = {
             id: 'sim-user-001',
-            email: 'simulador@fluviafleet.local',
+            email: 'simulador@viabarcazas.local',
             full_name: 'Capitán Simulador',
             role: 'operator',
-            company: 'FluviaFleet Demo'
+            company: 'ViaBarcazas Demo'
         };
         login(simulatedUser);
     };

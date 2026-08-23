@@ -1,4 +1,4 @@
--- FluviaFleet: Leads table for contact form submissions
+-- ViaBarcazas: Leads table for contact form submissions
 CREATE TABLE IF NOT EXISTS public.leads (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   nombre TEXT NOT NULL,

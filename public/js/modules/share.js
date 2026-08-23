@@ -37,7 +37,7 @@ const ShareModule = (() => {
                     </div>
 
                     <div id="magic-link-section" class="share-link-container" style="display:none;">
-                        <input type="text" value="https://fluviafleet.com/s/xe92-a1" class="share-link-input" readonly id="share-input">
+                        <input type="text" value="https://viabarcazas.com/s/xe92-a1" class="share-link-input" readonly id="share-input">
                         <button class="btn-copy" onclick="ShareModule.copyLink()">COPIAR</button>
                     </div>
 
@@ -81,7 +81,7 @@ const ShareModule = (() => {
 
         // Generate random hash
         const hash = Math.random().toString(36).substring(7);
-        input.value = `https://fluviafleet.com/v/${hash}`;
+        input.value = `https://viabarcazas.com/v/${hash}`;
 
         linkSection.style.display = 'flex';
         // Hide AI if open

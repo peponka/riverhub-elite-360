@@ -5,7 +5,7 @@ import 'package:riverhub_mobile_v2/widgets/offline_banner.dart';
 
 void main() {
   group('SplashScreen', () {
-    testWidgets('renders logo image and FluviaFleet text', (tester) async {
+    testWidgets('renders logo image and ViaBarcazas text', (tester) async {
       await tester.pumpWidget(
         CupertinoApp(
           home: SplashScreen(
@@ -17,8 +17,8 @@ void main() {
       );
       await tester.pump();
 
-      // Should show FluviaFleet text
-      expect(find.text('FluviaFleet'), findsOneWidget);
+      // Should show ViaBarcazas text
+      expect(find.text('ViaBarcazas'), findsOneWidget);
 
       // Should show HIDROVÍA INTELIGENTE tagline
       expect(find.text('HIDROVÍA INTELIGENTE'), findsOneWidget);
@@ -39,7 +39,7 @@ void main() {
       );
 
       // Before animation completes
-      expect(find.text('FluviaFleet'), findsOneWidget);
+      expect(find.text('ViaBarcazas'), findsOneWidget);
       expect(find.text('Arrived'), findsNothing);
 
       // Pump through the full 2.4s animation + navigation

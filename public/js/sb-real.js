@@ -1,11 +1,11 @@
 /* ============================================================================
  * sb-real.js — implementación REAL de window.sb
  * ============================================================================
- * Los módulos de las páginas admin (flota-fluvia.js, tripulacion-fluvia.js,
+ * Los módulos de las páginas admin (flota-viabarcazas.js, tripulacion-viabarcazas.js,
  * etc.) piden los datos con `window.sb.fetchMine(tabla, columnas)` — el contrato
  * está bien escrito. El problema era que `window.sb` NUNCA se definía de verdad:
  *
- *   • En admin-flota-fluvia.html directamente no existía → el módulo caía a
+ *   • En admin-flota-viabarcazas.html directamente no existía → el módulo caía a
  *     `getDemoAssets()` y mostraba 5 embarcaciones inventadas.
  *   • En otras páginas se definía un `window.sb` MOCK con arrays hardcodeados
  *     (en admin-bitacora el propio código lo llama "nuestro array de mentira").

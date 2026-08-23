@@ -1,6 +1,6 @@
 // ============================================
 // ADMIN CLIENTE — Panel de Administración por Empresa
-// FluviaFleet — Tenant-Aware
+// ViaBarcazas — Tenant-Aware
 // ============================================
 
 const AdminCliente = (() => {

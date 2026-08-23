@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Alerts — ViaBarcazas</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="viabarcazas.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#06110D;--bg-alt:#06110D;--surface:#0C1F19;--text:#F3F7F5;--text-2:#A9B8B2;--sep:#1E3B31;--green:#25D366;--green-bg:rgba(37,211,102,0.15);--blue:#38BDF8;--blue-bg:rgba(56,189,248,0.15);--amber:#FBBF24;--red:#F87171;--font-sans:'Manrope',-apple-system,sans-serif;--font-serif:'Bricolage Grotesque',sans-serif;--radius:14px}
+.page-header{margin-bottom:28px}
+.page-header h1{font-family:var(--font-serif);font-size:1.8rem;font-weight:600;margin-bottom:4px}
+.page-header p{color:var(--text-2);font-size:.9rem}
+.badge-wa{display:inline-flex;align-items:center;gap:4px;background:#25D366;color:#06110D;font-size:.6rem;font-weight:800;padding:3px 10px;border-radius:20px;margin-left:8px;text-transform:uppercase;letter-spacing:.5px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--bg2,#0F231C);border:0.5px solid var(--sep);border-radius:var(--radius);padding:18px 22px}
+.stat-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-bottom:10px}
+.stat-icon.green{background:var(--green-bg);color:var(--green)}
+.stat-icon.red{background:rgba(248,113,113,0.15);color:var(--red)}
+.stat-icon.blue{background:var(--blue-bg);color:var(--blue)}
+.stat-icon.amber{background:rgba(251,191,36,0.15);color:var(--amber)}
+.stat-value{font-size:1.4rem;font-weight:800;color:var(--text)}
+.stat-label{font-size:.72rem;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.card{background:var(--bg2,#0F231C);border:0.5px solid var(--sep);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.card-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-weight:600;font-size:.82rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;font-family:var(--font-sans)}
+.btn-primary{background:var(--green);color:#06110D}
+.btn-primary:hover{background:#2ee076}
+.btn-wa{background:#25D366;color:#06110D}
+.btn-wa:hover{background:#2ee076}
+.btn-sm{padding:6px 14px;font-size:.75rem;border-radius:8px}
+.btn-outline{background:transparent;border:0.5px solid var(--sep);color:var(--text)}
+.btn-outline:hover{border-color:var(--green)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.contact-card{display:flex;align-items:center;gap:14px;padding:14px;border:0.5px solid var(--sep);border-radius:12px;margin-bottom:10px;background:var(--bg)}
+.contact-avatar{width:40px;height:40px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;color:#06110D;font-weight:700;font-size:.95rem;flex-shrink:0}
+.contact-info{flex:1}
+.contact-name{font-weight:600;font-size:.88rem;color:var(--text)}
+.contact-phone{font-size:.78rem;color:var(--text-2)}
+.contact-role{font-size:.72rem;color:var(--text-2);margin-top:1px}
+.alert-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.chip{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.65rem;font-weight:600;background:var(--blue-bg);color:var(--blue)}
+.chip.draft{background:rgba(251,191,36,0.15);color:var(--amber)}
+.chip.compliance{background:rgba(167,139,250,0.15);color:#A78BFA}
+.chip.maintenance{background:rgba(248,113,113,0.15);color:var(--red)}
+.chip.contract{background:var(--green-bg);color:var(--green)}
+.log-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:0.5px solid var(--sep)}
+.log-row:last-child{border-bottom:none}
+.log-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
+.log-icon.sent{background:var(--green-bg);color:var(--green)}
+.log-icon.failed{background:rgba(248,113,113,0.15);color:var(--red)}
+.log-msg{flex:1;font-size:.78rem;color:var(--text);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.log-meta{font-size:.68rem;color:var(--text-2);white-space:nowrap;margin-top:2px}
+.send-box{background:var(--bg);border-radius:12px;padding:18px;border:0.5px solid var(--sep)}
+.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.form-group label{font-size:.75rem;font-weight:600;color:var(--text-2)}
+.form-group input,.form-group select,.form-group textarea{padding:9px 12px;border:0.5px solid var(--sep);border-radius:9px;font-size:.85rem;font-family:var(--font-sans);color:var(--text);background:var(--surface);outline:none;transition:border .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#25D366}
+.form-group textarea{resize:vertical;min-height:80px}
+.alert-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.alert-type-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border:0.5px solid var(--sep);border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s;color:var(--text)}
+.alert-type-item input{accent-color:#25D366}
+.alert-type-item:hover{border-color:#25D366;background:var(--green-bg)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#0F231C;border:0.5px solid var(--sep);border-radius:16px;padding:28px;width:100%;max-width:480px}
+.modal h2{font-family:var(--font-serif);font-size:1.3rem;font-weight:600;margin-bottom:20px;color:var(--text)}
+.sandbox-notice{background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:12px 16px;font-size:.8rem;color:var(--amber);margin-bottom:20px;display:flex;align-items:flex-start;gap:8px}
+</style>
+<script data-id="auth-guard-v1">
+(function(){
+  var SURL='https://nfybnnpdrvyxucgpqmmo.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  document.documentElement.style.visibility='hidden';
+  function check(){
+    var _sb=supabase.createClient(SURL,SKEY);
+    window._sb=_sb;
+    _sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      else{window.location.replace('viabarcazas.html');}
+    }).catch(function(){document.documentElement.style.visibility='visible';});
+  }
+  if(window.supabase){check();}else{var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=check;s.onerror=function(){document.documentElement.style.visibility='visible';};document.head.appendChild(s);}
+  window.doLogout=async function(){if(window._sb)await window._sb.auth.signOut();window.location.href='viabarcazas.html';};
+})();
+</script>
+<script src="sw-register.js" defer></script>
+</head>
+<body>
+<div class="app-shell" style="display:flex">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#F3F7F5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="33" r="3.6" fill="#25D366"/></svg><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em">ViaBarcazas</span></div>
+            <div class="sidebar-user"><div class="user-avatar">--</div><div class="user-info"><div class="user-name">Mi Cuenta</div><div class="user-role">SESIÓN ACTIVA</div></div></div>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section-label">AHORA</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-grip"></i>Panel de Control</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-map"></i>Mapa de Flota</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-robot"></i>Copiloto IA</a>
+            <div class="nav-section-label">PLANIFICACIÓN</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-link"></i>Armador de Convoy</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-file-lines"></i>Gestion de Viajes</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-clipboard-check"></i>Pre-Zarpe</a>
+            <div class="nav-section-label">FLOTA</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-anchor"></i>Gestion de Flota</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-users"></i>Tripulacion &amp; Safety</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-gas-pump"></i>Combustible</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-droplet"></i>Líquidos (Tanques)</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-ruler-vertical"></i>Calados &amp; Hidrometria</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-wrench"></i>Mantenimiento</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-box-archive"></i>Panol (Inventario)</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-triangle-exclamation"></i>Incidentes</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-file-contract"></i>Contratos de Flete</a>
+            <div class="nav-section-label">COMUNICACIÓN</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-book"></i>Bitacora Digital</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-tower-broadcast"></i>Comunicaciones</a>
+            <a class="nav-item active" href="admin-whatsapp-viabarcazas.html"><i class="fab fa-whatsapp" style="color:#25D366"></i>WhatsApp Alerts</a>
+            <div class="nav-section-label">INTELIGENCIA</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-water"></i>Pronostico Hidrovia</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-chart-pie"></i>Reportes &amp; Analytics</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-newspaper"></i>Briefing Diario</a>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-location-dot"></i>Tracking de Cargas</a>
+            <a class="nav-item" href="admin-facturacion-ia-viabarcazas.html"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Facturación IA</a>
+            <div class="nav-section-label">CUENTA</div>
+            <a class="nav-item" href="viabarcazas.html"><i class="fa-solid fa-credit-card"></i>Planes &amp; Facturacion</a>
+            <a class="nav-item" href="portal-clientes.html"><i class="fa-solid fa-building" style="color:#059669"></i>Portal de Cliente</a>
+            <div style="padding:20px 24px;margin-top:auto;"><button class="btn-secondary" style="width:100%;" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesion</button></div>
+        </div>
+    </nav>
+    <div class="main-area">
+        <div class="topbar"><span class="topbar-title">WhatsApp Alerts</span><div class="topbar-actions">
+            <div class="lang-toggle" style="display:flex;align-items:center;gap:8px;background:var(--bg-secondary);padding:4px 10px;border-radius:20px;border:1px solid var(--separator);margin-right:8px;">
+                <a href="admin-whatsapp-viabarcazas-en.html" style="font-size:11px;font-weight:700;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/us.png" style="width:14px;border-radius:50%;" alt="EN"> EN</a>
+                <span style="color:var(--separator);font-size:10px;">|</span>
+                <a href="admin-whatsapp-viabarcazas.html" style="font-size:11px;font-weight:700;color:var(--text-primary);text-decoration:none;display:flex;align-items:center;gap:6px;"><img src="https://flagcdn.com/w40/es.png" style="width:14px;border-radius:50%;" alt="ES"> ES</a>
+            </div>
+            <button onclick="doLogout()" title="Cerrar Sesión" style="background:none;border:1px solid var(--separator);border-radius:8px;padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-secondary);font-family:Inter,sans-serif;transition:all 0.2s;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Salir</button></div></div>
+    <div class="content">
+<div class="page-header">
+  <h1>WhatsApp Alerts <span class="badge-wa"><i class="fab fa-whatsapp"></i> Meta API</span></h1>
+  <p>Notificaciones automáticas a capitanes y gerentes — calado, compliance, mantenimiento y contratos.</p>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-icon green"><i class="fas fa-paper-plane"></i></div><div class="stat-value" id="stat-sent">—</div><div class="stat-label">Enviados hoy</div></div>
+  <div class="stat-card"><div class="stat-icon red"><i class="fas fa-times-circle"></i></div><div class="stat-value" id="stat-failed">—</div><div class="stat-label">Fallidos hoy</div></div>
+  <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-users"></i></div><div class="stat-value" id="stat-contacts">—</div><div class="stat-label">Contactos activos</div></div>
+  <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-bell"></i></div><div class="stat-value" id="stat-total">—</div><div class="stat-label">Total enviados</div></div>
+</div>
+
+<div class="grid-2">
+  <!-- CONTACTS -->
+  <div class="card" style="margin-bottom:0">
+    <div class="card-header">
+      <span class="card-title">CONTACTOS CONFIGURADOS</span>
+      <button class="btn btn-wa btn-sm" onclick="document.getElementById('newContactModal').classList.add('show')">
+        <i class="fas fa-plus"></i> Agregar
+      </button>
+    </div>
+    <div id="contacts-container">
+      <div style="color:var(--text-2);font-size:.83rem;padding:12px 0">Cargando contactos...</div>
+    </div>
+  </div>
+
+  <!-- SEND MANUAL -->
+  <div class="card" style="margin-bottom:0">
+    <div class="card-header"><span class="card-title">ENVIAR MENSAJE</span></div>
+    <div class="send-box">
+      <div class="sandbox-notice">
+        <i class="fab fa-whatsapp" style="margin-top:1px;color:#25D366"></i>
+        <span><strong>Meta WhatsApp API:</strong> Los mensajes se envían desde el número de negocio de ViaBarcazas. Los destinatarios no necesitan hacer ninguna activación.</span>
+      </div>
+      <div class="form-group">
+        <label>Destinatario</label>
+        <select id="send-to">
+          <option value="">Seleccionar contacto...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tipo de alerta</label>
+        <select id="send-type">
+          <option value="custom">Mensaje personalizado</option>
+          <option value="draft_alert">⚠️ Alerta de calado</option>
+          <option value="compliance_expiry">🚨 Documento por vencer</option>
+          <option value="maintenance_overdue">🔧 Mantenimiento vencido</option>
+          <option value="new_contract">📄 Nuevo contrato</option>
+        </select>
+      </div>
+      <div class="form-group" id="custom-msg-group">
+        <label>Mensaje</label>
+        <textarea id="send-message" placeholder="Escribí el mensaje..."></textarea>
+      </div>
+      <button class="btn btn-wa" id="btn-send" style="width:100%;justify-content:center">
+        <i class="fab fa-whatsapp"></i> Enviar WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- LOG -->
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">HISTORIAL DE MENSAJES</span>
+    <button class="btn btn-outline btn-sm" onclick="loadLog()"><i class="fas fa-sync"></i> Actualizar</button>
+  </div>
+  <div id="log-container">
+    <div style="color:var(--text-2);font-size:.83rem;padding:12px 0">Cargando historial...</div>
+  </div>
+</div>
+    </div>
+    </div>
+</div>
+
+<!-- NEW CONTACT MODAL -->
+<div class="modal-overlay" id="newContactModal">
+<div class="modal">
+<h2>Agregar Contacto WhatsApp</h2>
+<div class="form-group"><label>Nombre</label><input type="text" id="c-name" placeholder="Ej: Juan Pérez"></div>
+<div class="form-group"><label>Teléfono (con código de país)</label><input type="text" id="c-phone" placeholder="Ej: +595981234567"></div>
+<div class="form-group"><label>Rol / Cargo</label><input type="text" id="c-role" placeholder="Ej: Capitán, Gerente de Operaciones"></div>
+<div class="form-group">
+  <label>Recibir alertas de</label>
+  <div class="alert-type-grid">
+    <label class="alert-type-item"><input type="checkbox" value="draft_alert"> ⚠️ Calado del río</label>
+    <label class="alert-type-item"><input type="checkbox" value="compliance_expiry"> 🚨 Docs por vencer</label>
+    <label class="alert-type-item"><input type="checkbox" value="maintenance_overdue"> 🔧 Mantenimiento</label>
+    <label class="alert-type-item"><input type="checkbox" value="new_contract"> 📄 Nuevos contratos</label>
+  </div>
+</div>
+<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">
+  <button class="btn btn-outline" onclick="document.getElementById('newContactModal').classList.remove('show')">Cancelar</button>
+  <button class="btn btn-wa" id="btn-save-contact"><i class="fab fa-whatsapp"></i> Guardar</button>
+</div>
+</div>
+</div>
+
+<script>
+(function () {
+  var SURL = 'https://nfybnnpdrvyxucgpqmmo.supabase.co';
+  var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  var sb, companyId;
+
+  var ALERT_LABELS = {
+    draft_alert: { label: '⚠️ Calado', cls: 'draft' },
+    compliance_expiry: { label: '🚨 Compliance', cls: 'compliance' },
+    maintenance_overdue: { label: '🔧 Mant.', cls: 'maintenance' },
+    new_contract: { label: '📄 Contrato', cls: 'contract' },
+  };
+
+  async function waitSb() {
+    var n = 0;
+    while (!window.supabase && n++ < 30) await new Promise(r => setTimeout(r, 200));
+    if (!window.supabase) return false;
+    sb = window.supabase.createClient(SURL, SKEY);
+    return true;
+  }
+
+  async function getCompanyId() {
+    var { data: s } = await sb.auth.getSession();
+    var token = s?.session?.access_token;
+    if (!token) return null;
+    try {
+      var res = await fetch('/api/whatsapp/my-company', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      var d = await res.json();
+      return d.company_id || null;
+    } catch { return null; }
+  }
+
+  async function loadContacts() {
+    var res = await fetch('/api/whatsapp/contacts?company_id=' + encodeURIComponent(companyId));
+    var contacts = await res.json();
+    contactsMap = {};
+    contacts.forEach(function (c) { contactsMap[c.id] = c; });
+    renderContacts(contacts);
+    updateContactSelect(contacts);
+    document.getElementById('stat-contacts').textContent = contacts.filter(function (c) { return c.active; }).length;
+    return contacts;
+  }
+
+  // contactsMap: id → contact object, used when sending to look up api_key
+  var contactsMap = {};
+
+  function renderContacts(contacts) {
+    var cont = document.getElementById('contacts-container');
+    if (!contacts.length) {
+      cont.innerHTML = '<div style="color:var(--text-2);font-size:.83rem;padding:12px 0">No hay contactos configurados. Agregá el primero.</div>';
+      return;
+    }
+    cont.innerHTML = contacts.map(function (c) {
+      var initials = (c.name || '?').split(' ').map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase();
+      var chips = (c.alert_types || []).map(function (t) {
+        var a = ALERT_LABELS[t] || { label: t, cls: '' };
+        return '<span class="chip ' + a.cls + '">' + a.label + '</span>';
+      }).join('');
+      return '<div class="contact-card">' +
+        '<div class="contact-avatar">' + initials + '</div>' +
+        '<div class="contact-info">' +
+          '<div class="contact-name">' + c.name + '</div>' +
+          '<div class="contact-phone">' + c.phone + '</div>' +
+          (c.role ? '<div class="contact-role">' + c.role + '</div>' : '') +
+          (chips ? '<div class="alert-chips">' + chips + '</div>' : '') +
+        '</div>' +
+        '<button class="btn btn-outline btn-sm" onclick="deleteContact(\'' + c.id + '\')" style="flex-shrink:0"><i class="fas fa-trash" style="font-size:.7rem"></i></button>' +
+        '</div>';
+    }).join('');
+  }
+
+  function updateContactSelect(contacts) {
+    var sel = document.getElementById('send-to');
+    sel.innerHTML = '<option value="">Seleccionar contacto...</option>' +
+      contacts.filter(function (c) { return c.active; }).map(function (c) {
+        return '<option value="' + c.id + '">' + c.name + ' (' + c.phone + ')</option>';
+      }).join('');
+  }
+
+  window.loadLog = async function () {
+    var res = await fetch('/api/whatsapp/log?company_id=' + encodeURIComponent(companyId));
+    var log = await res.json();
+    renderLog(log);
+
+    var today = new Date().toDateString();
+    var todaySent = log.filter(function (l) { return l.status === 'sent' && new Date(l.created_at).toDateString() === today; }).length;
+    var todayFailed = log.filter(function (l) { return l.status === 'failed' && new Date(l.created_at).toDateString() === today; }).length;
+    document.getElementById('stat-sent').textContent = todaySent;
+    document.getElementById('stat-failed').textContent = todayFailed;
+    document.getElementById('stat-total').textContent = log.length;
+  };
+
+  function renderLog(log) {
+    var cont = document.getElementById('log-container');
+    if (!log.length) {
+      cont.innerHTML = '<div style="color:var(--text-2);font-size:.83rem;padding:12px 0">Sin mensajes enviados todavía.</div>';
+      return;
+    }
+    cont.innerHTML = log.slice(0, 20).map(function (l) {
+      var dt = new Date(l.created_at).toLocaleString('es', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      return '<div class="log-row">' +
+        '<div class="log-icon ' + l.status + '"><i class="fas fa-' + (l.status === 'sent' ? 'check' : 'times') + '"></i></div>' +
+        '<div style="flex:1">' +
+          '<div style="font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:3px">' + l.to_number + (l.alert_type ? ' · <span style="color:var(--text-2)">' + (ALERT_LABELS[l.alert_type]?.label || l.alert_type) + '</span>' : '') + '</div>' +
+          '<div class="log-msg">' + l.message.slice(0, 120) + (l.message.length > 120 ? '...' : '') + '</div>' +
+          (l.error_message ? '<div style="color:var(--red);font-size:.72rem;margin-top:2px">' + l.error_message + '</div>' : '') +
+        '</div>' +
+        '<div class="log-meta">' + dt + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function showToast(msg, ok) {
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:' + (ok !== false ? '#25D366' : '#EF4444') + ';color:#fff;padding:12px 20px;border-radius:10px;font-size:.83rem;font-weight:600;z-index:9999;box-shadow:0 4px 14px rgba(0,0,0,.18)';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 3000);
+  }
+
+  async function saveContact() {
+    var name = document.getElementById('c-name').value.trim();
+    var phone = document.getElementById('c-phone').value.trim();
+    var role = document.getElementById('c-role').value.trim();
+    var alertTypes = Array.from(document.querySelectorAll('#newContactModal input[type=checkbox]:checked')).map(function (cb) { return cb.value; });
+
+    if (!name || !phone) { showToast('Nombre y teléfono son requeridos', false); return; }
+    if (!phone.startsWith('+')) { showToast('El teléfono debe incluir código de país (+595...)', false); return; }
+
+    var btn = document.getElementById('btn-save-contact');
+    btn.disabled = true;
+    try {
+      var res = await fetch('/api/whatsapp/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company_id: companyId, name, phone, role, alert_types: alertTypes }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      document.getElementById('newContactModal').classList.remove('show');
+      ['c-name','c-phone','c-role'].forEach(function(id){ document.getElementById(id).value=''; });
+      document.querySelectorAll('#newContactModal input[type=checkbox]').forEach(function(cb){ cb.checked=false; });
+      showToast('Contacto agregado');
+      await loadContacts();
+    } catch (e) {
+      showToast('Error: ' + e.message, false);
+    } finally { btn.disabled = false; }
+  }
+
+  window.deleteContact = async function (id) {
+    if (!confirm('¿Eliminar contacto?')) return;
+    await fetch('/api/whatsapp/contacts/' + id, { method: 'DELETE' });
+    await loadContacts();
+  };
+
+  async function sendMessage() {
+    var contactId = document.getElementById('send-to').value;
+    var type = document.getElementById('send-type').value;
+    var message = document.getElementById('send-message').value.trim();
+
+    if (!contactId) { showToast('Seleccioná un contacto', false); return; }
+    if (type === 'custom' && !message) { showToast('Escribí un mensaje', false); return; }
+
+    var contact = contactsMap[contactId];
+    if (!contact) { showToast('Contacto no encontrado', false); return; }
+
+    var btn = document.getElementById('btn-send');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+    try {
+      var payload, endpoint;
+      if (type === 'custom') {
+        endpoint = '/api/whatsapp/send';
+        payload = { to: contact.phone, message, company_id: companyId };
+      } else {
+        endpoint = '/api/whatsapp/alert';
+        payload = { type, company_id: companyId, payload: {} };
+      }
+
+      var res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if (data.ok || data.response) {
+        showToast('¡Mensaje enviado!');
+        await loadLog();
+      } else {
+        showToast('Error: ' + (data.error || data.reason || 'intentá de nuevo'), false);
+      }
+    } catch (e) {
+      showToast('Error: ' + e.message, false);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar WhatsApp';
+    }
+  }
+
+  document.getElementById('send-type').addEventListener('change', function () {
+    document.getElementById('custom-msg-group').style.display = this.value === 'custom' ? 'flex' : 'none';
+  });
+
+  async function init() {
+    var ok = await waitSb();
+    if (!ok) return;
+    companyId = await getCompanyId();
+    await Promise.all([loadContacts(), loadLog()]);
+    document.getElementById('btn-save-contact').addEventListener('click', saveContact);
+    document.getElementById('btn-send').addEventListener('click', sendMessage);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

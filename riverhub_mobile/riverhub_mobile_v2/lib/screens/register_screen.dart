@@ -32,7 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: 'fluviafleet://login-callback',
+        redirectTo: 'viabarcazas://login-callback',
       );
     } catch (e) {
       if (mounted) _showErrorDialog('Error signing in with Google.');
@@ -164,7 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo
-                Text(LocaleService.t('register_fluviafleet'), style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
+                Text(LocaleService.t('register_viabarcazas'), style: GoogleFonts.newsreader(fontSize: 28, fontWeight: FontWeight.w400, color: AppColors.textPrimary)),
                 const SizedBox(height: 4),
                 Text(LocaleService.t('register_create_account'), style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5)),
                 const SizedBox(height: 40),

@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: 'fluviafleet://login-callback',
+        redirectTo: 'viabarcazas://login-callback',
       );
     } catch (e) {
       if (mounted) _showErrorDialog(LocaleService.t('login_error_connection'));
@@ -197,11 +197,11 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 40),
 
-                // ─── Fluvia Logo ─────────────────────────
+                // ─── ViaBarcazas Logo ─────────────────────────
                 Icon(CupertinoIcons.drop_fill, size: 32, color: AppColors.textPrimary),
                 const SizedBox(height: 16),
                 Text(
-                  'FluviaFleet',
+                  'ViaBarcazas',
                   style: GoogleFonts.newsreader(
                     fontSize: 42,
                     fontWeight: FontWeight.w400,

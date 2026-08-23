@@ -1,6 +1,6 @@
 // ============================================
 // BILLING MODULE — Suscripción Premium + Checkout
-// FluviaFleet — Pasarela Simulada
+// ViaBarcazas — Pasarela Simulada
 // ============================================
 
 const BillingModule = (() => {
@@ -250,10 +250,10 @@ const BillingModule = (() => {
                                     <h4><i class="fas fa-university" style="color:#3b82f6;"></i> Datos para Transferencia</h4>
                                     <div class="bill-transfer-row"><span>Banco</span><strong>Banco Nacional de Fomento</strong></div>
                                     <div class="bill-transfer-row"><span>Cuenta</span><strong>123-456789-001</strong></div>
-                                    <div class="bill-transfer-row"><span>Titular</span><strong>FluviaFleet Technologies S.A.</strong></div>
+                                    <div class="bill-transfer-row"><span>Titular</span><strong>ViaBarcazas Technologies S.A.</strong></div>
                                     <div class="bill-transfer-row"><span>Monto</span><strong style="color:#10b981;">$${price} USD</strong></div>
                                     <div class="bill-transfer-row"><span>Ref.</span><strong>RH-${Date.now().toString(36).toUpperCase()}</strong></div>
-                                    <p style="color:#f59e0b; font-size:0.8rem; margin-top:12px;"><i class="fas fa-info-circle"></i> Enviá el comprobante a pagos@fluviafleet.com</p>
+                                    <p style="color:#f59e0b; font-size:0.8rem; margin-top:12px;"><i class="fas fa-info-circle"></i> Enviá el comprobante a pagos@viabarcazas.com</p>
                                 </div>
                             </div>
                         </div>

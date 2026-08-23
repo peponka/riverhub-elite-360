@@ -1,4 +1,4 @@
-// tests/e2e/smoke.spec.js — FluviaFleet E2E Smoke Tests
+// tests/e2e/smoke.spec.js — ViaBarcazas E2E Smoke Tests
 const { test, expect } = require('@playwright/test');
 
 // ═══════════════════════════════════════════
@@ -9,11 +9,11 @@ test.describe('Server Health', () => {
         const res = await request.get('/');
         expect(res.status()).toBe(200);
         const body = await res.text();
-        expect(body).toContain('FluviaFleet');
+        expect(body).toContain('ViaBarcazas');
     });
 
-    test('GET /fluvia.html returns 200', async ({ request }) => {
-        const res = await request.get('/fluvia.html');
+    test('GET /viabarcazas.html returns 200', async ({ request }) => {
+        const res = await request.get('/viabarcazas.html');
         expect(res.status()).toBe(200);
     });
 
@@ -26,17 +26,17 @@ test.describe('Server Health', () => {
 });
 
 // ═══════════════════════════════════════════
-// 2. FLUVIA SPA — LOGIN & NAVIGATION
+// 2. VIABARCAZAS SPA — LOGIN & NAVIGATION
 // ═══════════════════════════════════════════
-test.describe('Fluvia SPA', () => {
+test.describe('ViaBarcazas SPA', () => {
     test('Login page renders with all elements', async ({ page }) => {
-        await page.goto('/fluvia.html');
+        await page.goto('/viabarcazas.html');
         // Should have login form
-        await expect(page.locator('text=FluviaFleet').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('text=ViaBarcazas').first()).toBeVisible({ timeout: 10000 });
     });
 
     test('Bypass login loads dashboard (localhost)', async ({ page }) => {
-        await page.goto('/fluvia.html');
+        await page.goto('/viabarcazas.html');
         // Click bypass button if present
         const bypassBtn = page.locator('#bypass-login, [onclick*="bypassLogin"]');
         if (await bypassBtn.count() > 0) {
@@ -47,7 +47,7 @@ test.describe('Fluvia SPA', () => {
     });
 
     test('Navigation tabs exist and are clickable', async ({ page }) => {
-        await page.goto('/fluvia.html');
+        await page.goto('/viabarcazas.html');
         // Bypass login
         const bypassBtn = page.locator('#bypass-login, [onclick*="bypassLogin"]');
         if (await bypassBtn.count() > 0) {
@@ -63,7 +63,7 @@ test.describe('Fluvia SPA', () => {
     test('No console errors on load', async ({ page }) => {
         const errors = [];
         page.on('pageerror', err => errors.push(err.message));
-        await page.goto('/fluvia.html');
+        await page.goto('/viabarcazas.html');
         await page.waitForTimeout(2000);
         // Filter out expected Supabase auth noise
         const realErrors = errors.filter(e =>
@@ -84,7 +84,7 @@ test.describe('Main App', () => {
         const res = await request.get('/app.html');
         expect(res.status()).toBe(200);
         const body = await res.text();
-        expect(body).toContain('FluviaFleet');
+        expect(body).toContain('ViaBarcazas');
         expect(body.length).toBeGreaterThan(10000); // 5000-line file
     });
 
@@ -132,11 +132,11 @@ test.describe('Security', () => {
 // 5. MODULE INTEGRITY — Extracted modules load
 // ═══════════════════════════════════════════
 test.describe('Module Integrity', () => {
-    test('Extracted fluvia modules are accessible', async ({ request }) => {
+    test('Extracted viabarcazas modules are accessible', async ({ request }) => {
         const modules = [
-            '/js/modules/fluvia-exports.js',
-            '/js/modules/fluvia-hidrologia.js',
-            '/js/modules/fluvia-briefing.js',
+            '/js/modules/viabarcazas-exports.js',
+            '/js/modules/viabarcazas-hidrologia.js',
+            '/js/modules/viabarcazas-briefing.js',
         ];
         for (const mod of modules) {
             const res = await request.get(mod);

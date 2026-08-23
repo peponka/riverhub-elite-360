@@ -1,5 +1,5 @@
 // ============================================
-// FLUVIAFLEET - Toast Notification System
+// VIABARCAZAS - Toast Notification System
 // Replaces ALL native alert() calls
 // ============================================
 (function () {
@@ -126,5 +126,5 @@
         ensureContainer();
     }
 
-    void('🔔 FluviaFleet Toast System Active');
+    void('🔔 ViaBarcazas Toast System Active');
 })();

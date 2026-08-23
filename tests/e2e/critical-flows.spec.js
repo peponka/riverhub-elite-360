@@ -1,5 +1,5 @@
 // ============================================
-// FluviaFleet — Critical Flows E2E Tests
+// ViaBarcazas — Critical Flows E2E Tests
 // Tests para flujos críticos del producto
 // Ejecutar: npx playwright test
 // ============================================
@@ -40,7 +40,7 @@ test.describe('API Health', () => {
 test.describe('Landing Page', () => {
     test('Carga la landing en español', async ({ page }) => {
         await page.goto(`${BASE_URL}/`);
-        await expect(page).toHaveTitle(/FluviaFleet/i);
+        await expect(page).toHaveTitle(/ViaBarcazas/i);
     });
 
     test('Pricing page carga correctamente', async ({ page }) => {
@@ -65,7 +65,7 @@ test.describe('Landing Page', () => {
 
     test('Onboarding page carga', async ({ page }) => {
         await page.goto(`${BASE_URL}/onboarding.html`);
-        await expect(page).toHaveTitle(/FluviaFleet/i);
+        await expect(page).toHaveTitle(/ViaBarcazas/i);
     });
 });
 
@@ -138,10 +138,10 @@ test.describe('Seguridad', () => {
         expect(headers['x-frame-options']).toBeDefined();
     });
 
-    test('superadmin-fluvia.html NO contiene contraseñas hardcodeadas', async ({ page }) => {
-        await page.goto(`${BASE_URL}/superadmin-fluvia.html`);
+    test('superadmin-viabarcazas.html NO contiene contraseñas hardcodeadas', async ({ page }) => {
+        await page.goto(`${BASE_URL}/superadmin-viabarcazas.html`);
         const content = await page.content();
-        expect(content).not.toContain('fluvia2026super');
+        expect(content).not.toContain('viabarcazas2026super');
         expect(content).not.toContain('SA_PASS=');
     });
 

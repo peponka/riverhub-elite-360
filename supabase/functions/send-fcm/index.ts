@@ -1,4 +1,4 @@
-// Fluvia — Push Notification Edge Function
+// ViaBarcazas — Push Notification Edge Function
 // Sends FCM push notifications when alerts/events occur
 // Deploy: supabase functions deploy send-fcm --project-ref nfybnnpdrvyxucgpqmmo
 
@@ -100,14 +100,14 @@ serve(async (req) => {
               message: {
                 token,
                 notification: {
-                  title: title || "Fluvia",
+                  title: title || "ViaBarcazas",
                   body: body || "Nueva notificación",
                 },
                 data: data || {},
                 android: {
                   priority: "high",
                   notification: {
-                    channel_id: "fluvia_channel",
+                    channel_id: "viabarcazas_channel",
                     icon: "@mipmap/ic_launcher",
                   },
                 },

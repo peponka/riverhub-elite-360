@@ -1,5 +1,5 @@
 -- ======================================================
--- FluviaFleet: Freight Contracts Table
+-- ViaBarcazas: Freight Contracts Table
 -- Execute in Supabase SQL Editor
 -- ======================================================
 

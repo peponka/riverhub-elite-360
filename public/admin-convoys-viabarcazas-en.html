@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+  <title>ViaBarcazas - Convoy Builder (ViaBarcazas)</title>
+  <!-- Base ViaBarcazas Styles (Typography, Colors, Layout) -->
+  <link rel="stylesheet" href="./css/modules/admin-viabarcazas.css">
+  <!-- Convoys Specific Styles -->
+  <link rel="stylesheet" href="./css/modules/admin-convoys-viabarcazas.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script data-id="auth-guard-v1">
+(function(){
+  var SURL='https://nfybnnpdrvyxucgpqmmo.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  document.documentElement.style.visibility='hidden';
+  function check(){
+    var _sb=supabase.createClient(SURL,SKEY);
+    _sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      else{window.location.replace('viabarcazas.html');}
+    }).catch(function(){document.documentElement.style.visibility='visible';});
+  }
+  if(window.supabase){check();}
+  else{
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload=check;
+    s.onerror=function(){document.documentElement.style.visibility='visible';};
+    document.head.appendChild(s);
+  }
+})();
+</script>
+</head>
+<body>
+  <!-- SIDEBAR (Identical to Dashboard but "Convoy Builder" is active) -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-water"></i> ViaBarcazas <span>v4.2</span>
+    </div>
+    
+    <div class="nav-group">
+      <div class="nav-title">Main</div>
+      <a href="admin-viabarcazas.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard <span class="badge">1</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map <span class="badge">2</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-satellite-dish"></i> AIS Map <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Operations</div>
+      <a href="#" class="nav-item active"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-route"></i> Trip Management</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Digital Logbook</a>
+      <a href="#" class="nav-item alert"><i class="fa-regular fa-comment-dots"></i> Communications <span class="badge">3</span></a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Management</div>
+      <a href="#" class="nav-item"><i class="fa-solid fa-ship"></i> Fleet (Assets)</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i> Crew & Safety</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Fuel</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a>
+    </div>
+
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info">
+        <span class="user-name">Pepe Orué <i class="fa-solid fa-pen" style="font-size:10px; color:#aaa; margin-left:4px;"></i></span>
+        <span class="user-role">SUPERADMIN - ASU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area" id="view-convoys">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar embarcación, puerto, viaje...">
+        <span class="shortcut">⌘K</span>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-switch-toggle" style="display:flex;align-items:center;gap:6px;margin-right:8px;"><a href="admin-convoys-viabarcazas-en.html" style="color:var(--text-main);font-family:var(--font-data);font-size:0.7rem;font-weight:700;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">EN</a><span style="color:var(--border-color);">|</span><a href="admin-convoys-viabarcazas.html" style="color:var(--text-sec);font-family:var(--font-data);font-size:0.7rem;font-weight:600;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">ES</a></div>
+        <div class="settings">
+          <i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> MODO EDICIÓN
+        </div>
+        <div>ARMADOR · V2.0</div>
+        <i class="fa-solid fa-share-nodes"></i>
+        <i class="fa-regular fa-bell"></i>
+        <i class="fa-solid fa-gear"></i>
+      </div>
+    </div>
+
+    <!-- CONVOYS APP CONTENT -->
+    <div class="dashboard-content">
+      
+      <div class="header-section" style="margin-bottom: 24px;">
+        <div class="greeting">
+          <p>MÓDULO OPERATIVO</p>
+          <h1>Convoy Builder</h1>
+          <p style="margin-top: 12px; font-size: 10px; color: var(--text-sec); letter-spacing: 1px;">DRAG & DROP · DISEÑO ESTRUCTURAL · SINCRONIZADO</p>
+        </div>
+      </div>
+
+      <!-- THE CONVOYS BUILDER GRID SYSTEM -->
+      <div class="convoys-grid-layout">
+        
+        <!-- LEFT: Assets Panel -->
+        <div class="assets-panel-viabarcazas">
+          <div class="section-header">
+            <div>
+              <span class="section-title">Flota Disponible</span>
+              <span class="section-subtitle">Arrastrar hacia la matriz</span>
+            </div>
+            <button id="btn-add-asset-convoy" class="btn-icon-only" style="background:transparent; border:none; color:var(--text-main); font-size:1.2rem; cursor:pointer;" title="Create Virtual Asset"><i class="fa-solid fa-plus-circle"></i></button>
+          </div>
+          
+          <div id="asset-list-container">
+            <!-- conboys.js will render .draggable-asset items here -->
+            <div class="loading-state" style="font-size:12px; color:var(--text-sec); margin-top:20px; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Cargando Flota...</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Matrix Grid -->
+        <div class="builder-panel-viabarcazas">
+          <div class="builder-header">
+            <input type="text" class="convoy-name-input" value="New Convoy" placeholder="Convoy name...">
+            <div class="builder-actions">
+              <button class="btn-outline" onclick="ConvoysModule.openLoadModal()"><i class="fa-solid fa-folder-open"></i> Cargar</button>
+              <button class="btn-primary btn-save-convoy"><i class="fa-solid fa-check"></i> Validar Zarpe</button>
+            </div>
+          </div>
+
+          <div class="matrix-wrapper-viabarcazas">
+            <!-- SVG Background Lines could be added here if needed, but the cell grid is solid enough -->
+            <div id="convoy-grid">
+               <!-- convoys.js generates 6x5 cells here -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOAD MODAL (Hidden by default) -->
+  <div id="modal-load-convoy" style="display:none;">
+    <div style="background:var(--surface-container-low); padding:30px; border-radius:var(--radius-lg); width:500px; max-width:90%; border:1px solid var(--border-color);">
+      <h3 style="margin-top:0; font-family:var(--font-heading); color:var(--text-main);">Mis Convoyes Guardados</h3>
+      <div id="saved-convoys-list" style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+        <!-- Logic injects here -->
+      </div>
+      <div style="margin-top:20px; text-align:right;">
+        <button class="btn-dark" onclick="document.getElementById('modal-load-convoy').style.display='none'">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+  <!-- LOAD SCRIPTS -->
+  <!-- We need the supabase client global mock or real if you use it -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- In app.js environment, the real supersonic config is used.
+       For this isolated preview to work perfectly with convoys.js, I'll provide a mock for window.sb if it's missing -->
+  <script>
+    if (!window.sb) {
+      window.sb = {
+        fetchMine: async () => ({ data: [
+            { id: 'b1', name: 'B-101 (Grano)', type: 'BARCAZA_GRANEL' },
+            { id: 'b2', name: 'B-102 (Grano)', type: 'BARCAZA_GRANEL' },
+            { id: 't1', name: 'T-505 (Tanque)', type: 'BARCAZA_TANQUE' },
+            { id: 't2', name: 'T-506 (Tanque)', type: 'BARCAZA_TANQUE' },
+            { id: 't3', name: 'C-712 (Cont)', type: 'BARCAZA_CONTAINER' },
+            { id: 'tug1', name: 'ITAIPU 07', type: 'REMOLCADOR' }
+        ]}),
+        insertMine: async () => ({ data: {}, error: null }),
+        from: () => ({ select: () => ({ order: async () => ({ data: [] }) }), delete: () => ({ eq: async () => ({}) }) })
+      };
+    }
+  </script>
+  <script src="./js/modules/convoys.js"></script>
+</body>
+</html>

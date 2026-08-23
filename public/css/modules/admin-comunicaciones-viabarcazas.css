@@ -1,0 +1,243 @@
+/* ============================================
+   COMMS MODULE - VIABARCAZAS "ViaBarcazas MERIDIAN" SYSTEM
+   ============================================ */
+
+.comms-container-viabarcazas {
+  display: flex;
+  height: calc(100vh - 200px);
+  min-height: 550px;
+  gap: 24px;
+  padding: 0;
+}
+
+/* 1. CHANNELS SIDEBAR (LEFT) */
+.channels-panel {
+  width: 280px;
+  background: var(--surface-container-low);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  overflow: hidden;
+}
+
+.channels-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  background: #FFFFFF;
+}
+
+.channels-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.channel-card {
+  padding: 12px 15px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.channel-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--text-sec);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+}
+
+.channel-card.active {
+  background: rgba(26, 26, 46, 0.04);
+  border-color: var(--text-main);
+}
+
+.ch-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.ch-number {
+  font-family: var(--font-brand);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--text-main);
+  font-size: 1.1rem;
+}
+
+.ch-desc {
+  font-size: 0.65rem;
+  color: var(--text-sec);
+  font-family: var(--font-data);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.ch-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-sec); /* default */
+}
+.channel-card:nth-child(1) .ch-status { background: var(--status-ok); box-shadow: 0 0 5px var(--status-ok); }
+.channel-card:nth-child(2) .ch-status { background: var(--accent-orange); }
+
+
+/* 2. MAIN CHAT AREA (RIGHT) */
+.chat-panel {
+  flex: 1;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface-container-low);
+}
+
+#active-ch-title {
+  font-family: var(--font-brand);
+  font-style: italic;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--text-main);
+  margin: 0;
+}
+
+#comm-chat-area {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: rgba(248, 250, 252, 0.5); /* ultra light slatish */
+  scroll-behavior: smooth;
+}
+
+/* Messsges styling for ViaBarcazas */
+.msg-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 75%;
+  align-self: flex-start;
+}
+
+.msg-wrapper.self {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-family: var(--font-data);
+  color: var(--text-sec);
+  margin-bottom: 6px;
+}
+
+.msg-wrapper.self .msg-meta {
+  flex-direction: row-reverse;
+}
+
+.sender-tag {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.vhf-tag {
+  background: var(--border-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.6rem;
+}
+
+.msg-bubble {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border-bottom-left-radius: 0; /* Chat tail */
+}
+
+.msg-wrapper.self .msg-bubble {
+  background: rgba(26, 26, 46, 0.05); /* very light text-main tint */
+  border-color: rgba(26, 26, 46, 0.2);
+  border-bottom-left-radius: var(--radius-md);
+  border-bottom-right-radius: 0;
+}
+
+/* Input Area */
+.chat-input-area {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border-color);
+  background: #FFFFFF;
+  display: flex;
+  gap: 12px;
+}
+
+#comm-input {
+  flex: 1;
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 0 20px;
+  font-family: var(--font-data);
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  outline: none;
+}
+
+#comm-input:focus {
+  border-color: var(--text-sec);
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.1);
+  background: #FFFFFF;
+}
+
+#btn-ptt {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #FFFFFF;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(26, 26, 46, 0.2);
+  flex-shrink: 0;
+}
+
+#btn-ptt:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(26, 26, 46, 0.3);
+}
+
+#btn-ptt i {
+  font-size: 1.1rem;
+}

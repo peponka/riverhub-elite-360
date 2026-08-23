@@ -1,11 +1,11 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-const FROM_EMAIL = 'FluviaFleet <bienvenida@fluviafleet.com>'
-// La raiz (fluviafleet.com) es la landing de marketing: no carga auth.js ni
+const FROM_EMAIL = 'ViaBarcazas <bienvenida@viabarcazas.com>'
+// La raiz (viabarcazas.com) es la landing de marketing: no carga auth.js ni
 // escucha el evento PASSWORD_RECOVERY. La pantalla que de verdad procesa el
 // link y muestra "poner contraseña nueva" vive en /app.html.
-const APP_URL = 'https://fluviafleet.com/app.html'
+const APP_URL = 'https://viabarcazas.com/app.html'
 // Clave publica (anon), pensada para ir embebida en clientes. La necesita
 // el link de abajo porque pega directo contra /auth/v1/verify, que exige
 // apikey igual que el resto de la API de Supabase.
@@ -42,14 +42,14 @@ serve(async (req) => {
     const isSignup = actionType === 'signup' || actionType === 'email_change'
     const isRecovery = actionType === 'recovery' || actionType === 'magiclink'
 
-    let subject = '¡Bienvenido a FluviaFleet! ⚓'
+    let subject = '¡Bienvenido a ViaBarcazas! ⚓'
     let ctaText = 'Confirmar mi cuenta →'
     let headingLine = `Hola, <em style="font-style:italic;">${name}</em>`
-    let subheading = 'Tu cuenta en FluviaFleet está lista. Confirmá tu email para comenzar a gestionar tu flota fluvial.'
+    let subheading = 'Tu cuenta en ViaBarcazas está lista. Confirmá tu email para comenzar a gestionar tu flota fluvial.'
     let bannerLabel = 'BIENVENIDO A BORDO'
 
     if (isRecovery) {
-      subject = 'Restablecer contraseña — FluviaFleet'
+      subject = 'Restablecer contraseña — ViaBarcazas'
       ctaText = 'Restablecer contraseña →'
       headingLine = 'Restablecer<br><em style="font-style:italic;">contraseña</em>'
       subheading = 'Recibiste este email porque solicitaste restablecer tu contraseña. Si no fuiste vos, podés ignorarlo.'
@@ -78,7 +78,7 @@ serve(async (req) => {
               <table cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" valign="middle" style="width:44px; height:44px; background:#1A1A2E; border-radius:12px; text-align:center; font-size:22px; line-height:44px;">⚓</td>
-                  <td style="padding-left:12px; font-family:Georgia,serif; font-size:26px; font-weight:400; color:#1A1A2E; letter-spacing:-0.01em;">FluviaFleet</td>
+                  <td style="padding-left:12px; font-family:Georgia,serif; font-size:26px; font-weight:400; color:#1A1A2E; letter-spacing:-0.01em;">ViaBarcazas</td>
                 </tr>
               </table>
             </td>
@@ -163,7 +163,7 @@ serve(async (req) => {
           <tr>
             <td style="padding: 28px 0; text-align:center;">
               <p style="margin:0; font-size:11px; color:#CBD5E1; line-height:1.8;">
-                FluviaFleet · Gestión de flotas fluviales<br>
+                ViaBarcazas · Gestión de flotas fluviales<br>
                 Si no creaste esta cuenta, podés ignorar este mensaje.
               </p>
             </td>

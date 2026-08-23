@@ -260,7 +260,7 @@ const ReportesModule = (() => {
         doc.setTextColor(0, 229, 255); // Cyan
         doc.setFontSize(22);
         doc.setFont("helvetica", "bold");
-        doc.text("FLUVIAFLEET", 15, 20);
+        doc.text("VIABARCAZAS", 15, 20);
 
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
@@ -337,7 +337,7 @@ const ReportesModule = (() => {
             doc.text("Fig 2.2: Disponibilidad Flota", 110, yPos + 75);
         }
 
-        doc.save(`FluviaFleet_Reporte_BI_${date.replace(/\//g, '-')}.pdf`);
+        doc.save(`ViaBarcazas_Reporte_BI_${date.replace(/\//g, '-')}.pdf`);
     };
 
     return {

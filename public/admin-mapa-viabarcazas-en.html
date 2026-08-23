@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+  <title>ViaBarcazas - Mapa AIS (ViaBarcazas)</title>
+  <link rel="stylesheet" href="./css/modules/admin-viabarcazas.css">
+  <link rel="stylesheet" href="./css/modules/admin-mapa-viabarcazas.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- Leaflet CSS & JS via cdnjs (whitelisted in CSP) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <style>
+    /* Force the Leaflet container to fill its parent */
+    #leaflet-map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; }
+    /* Override Leaflet's ugly default zoom buttons to match ViaBarcazas */
+    .leaflet-control-zoom a {
+      background: #FFFFFF !important; border: 1px solid var(--border-color) !important;
+      color: var(--text-main) !important; font-family: var(--font-data) !important;
+      width: 32px !important; height: 32px !important; line-height: 32px !important;
+    }
+    .leaflet-control-zoom { border: none !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; border-radius: 8px !important; overflow: hidden; }
+    /* Kill Leaflet attribution bar */
+    .leaflet-control-attribution { display: none !important; }
+    /* Status bar at bottom of map */
+    .map-statusbar { position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; background: rgba(255,255,255,0.9); border-top: 1px solid var(--border-color); padding: 8px 20px; display: flex; align-items: center; gap: 15px; font-family: var(--font-data); font-size: 0.7rem; color: var(--text-sec); }
+    .map-statusbar .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; }
+  </style>
+<script data-id="auth-guard-v1">
+(function(){
+  var SURL='https://nfybnnpdrvyxucgpqmmo.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc';
+  document.documentElement.style.visibility='hidden';
+  function check(){
+    var _sb=supabase.createClient(SURL,SKEY);
+    _sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session){document.documentElement.style.visibility='visible';}
+      else{window.location.replace('viabarcazas.html');}
+    }).catch(function(){document.documentElement.style.visibility='visible';});
+  }
+  if(window.supabase){check();}
+  else{
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload=check;
+    s.onerror=function(){document.documentElement.style.visibility='visible';};
+    document.head.appendChild(s);
+  }
+})();
+</script>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo"><i class="fa-solid fa-water"></i> ViaBarcazas <span>v4.2</span></div>
+    <div class="nav-group">
+      <div class="nav-title">Main</div>
+      <a href="admin-viabarcazas.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard <span class="badge">1</span></a>
+      <a href="admin-mapa-flota-viabarcazas.html" class="nav-item"><i class="fa-solid fa-map-location-dot"></i> Fleet Map <span class="badge">2</span></a>
+      <a href="admin-mapa-viabarcazas.html" class="nav-item active"><i class="fa-solid fa-satellite-dish"></i> Mapa AIS (MapLibre) <span class="badge">3</span></a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Copilot <span class="badge"><i class="fa-brands fa-kickstarter"></i></span></a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Operations</div>
+      <a href="admin-convoys-viabarcazas.html" class="nav-item"><i class="fa-solid fa-layer-group"></i> Convoy Builder</a>
+      <a href="admin-viajes-viabarcazas.html" class="nav-item"><i class="fa-solid fa-route"></i> Trip Management</a>
+      <a href="admin-bitacora-viabarcazas.html" class="nav-item"><i class="fa-solid fa-book-journal-whills"></i> Digital Logbook</a>
+      <a href="admin-comunicaciones-viabarcazas.html" class="nav-item"><i class="fa-regular fa-comment-dots"></i> Communications</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Management</div>
+      <a href="admin-flota-viabarcazas.html" class="nav-item"><i class="fa-solid fa-ship"></i> Fleet (Assets)</a>
+      <a href="admin-tripulacion-viabarcazas.html" class="nav-item"><i class="fa-solid fa-user-shield"></i> Crew & Safety</a>
+      <a href="admin-combustible-viabarcazas.html" class="nav-item"><i class="fa-solid fa-gas-pump"></i> Fuel</a>
+      <a href="admin-mantenimiento-viabarcazas.html" class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a>
+    </div>
+    <div class="user-profile">
+      <div class="avatar">PE</div>
+      <div class="user-info"><span class="user-name">Pepe Orué</span><span class="user-role">SUPERADMIN - ASU</span></div>
+    </div>
+  </div>
+
+  <div class="main-area" style="padding-bottom:0;">
+    <div class="topbar">
+      <div class="topbar-right" style="margin-left:auto;">
+        <div class="lang-switch-toggle" style="display:flex;align-items:center;gap:6px;margin-right:8px;"><a href="admin-mapa-viabarcazas-en.html" style="color:var(--text-main);font-family:var(--font-data);font-size:0.7rem;font-weight:700;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">EN</a><span style="color:var(--border-color);">|</span><a href="admin-mapa-viabarcazas.html" style="color:var(--text-sec);font-family:var(--font-data);font-size:0.7rem;font-weight:600;text-decoration:none;letter-spacing:0.5px;padding:2px 4px;">ES</a></div>
+        <div class="settings"><i class="fa-solid fa-circle" style="color:var(--status-ok); font-size:8px;"></i> SYSTEM ONLINE</div>
+        <div>ASU · 14:04</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content map-layout-pro">
+
+      <!-- LEFT: MAP AREA -->
+      <div class="map-main-column">
+        <div class="map-header-pro">
+          <div>
+            <h1>AIS Map <i>live.</i></h1>
+            <div class="map-subtitle-pro">MAPLIBRE GL · OPENSTREETMAP · OPENSEAMAP · AISSTREAM INTEGRATION READY</div>
+          </div>
+          <div class="map-actions-pro">
+            <button class="btn-pill-pro" onclick="alert('MODO DEMO activado')">MODO DEMO</button>
+            <button class="btn-pill-pro" onclick="toggleRoute()">Hide waterway</button>
+          </div>
+        </div>
+
+        <div class="map-container-pro">
+          <!-- Floating Map Controls -->
+          <div class="map-float-controls">
+            <div class="mfc-group">
+              <button class="mfc-btn active">CARTO + SEAMARK</button>
+              <button class="mfc-btn" onclick="setTileLayer('osm')">SOLO BASE</button>
+            </div>
+            <div class="mfc-group">
+              <button class="mfc-btn active">ALL</button>
+              <button class="mfc-btn">OWN</button>
+              <button class="mfc-btn">THIRD PARTY</button>
+            </div>
+          </div>
+
+          <!-- Leaflet Map Container -->
+          <div id="leaflet-map"></div>
+
+          <!-- Status Bar -->
+          <div class="map-statusbar">
+            <div class="live-dot"></div>
+            <span>12 VESSELS · LEAFLET + CARTO</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: SIDEBAR -->
+      <div class="map-side-column">
+
+        <!-- WSS Box -->
+        <div class="pro-box">
+          <div class="pro-box-header">
+            <h3 class="pro-box-title">AIS Source</h3>
+            <span class="pro-box-subtitle">AISSTREAM.IO</span>
+          </div>
+          <p class="ais-desc">Paste your AISStream API key to receive real river traffic in real time (WebSocket).</p>
+          <input type="text" class="ais-input" id="ais-apikey" placeholder="aisstream api key">
+          <div class="ais-actions">
+            <button class="ais-btn">Disconnect</button>
+            <button class="ais-btn connect" id="btn-connect" onclick="toggleConnection()">Connect</button>
+          </div>
+          <div class="ais-url">wss://stream.aisstream.io/v0/stream<br>BBOX: -35,-60 / -22,-55</div>
+        </div>
+
+        <!-- Legend -->
+        <div class="pro-box">
+          <div class="pro-box-header">
+            <h3 class="pro-box-title">Legend</h3>
+          </div>
+          <ul class="legend-list">
+            <li class="legend-item"><div class="l-dot propia"></div> Own fleet</li>
+            <li class="legend-item"><div class="l-dot trafico"></div> Third-party AIS traffic</li>
+            <li class="legend-item"><div class="l-dot atencion"></div> Attention required</li>
+            <li class="legend-item"><div class="l-dot alerta"></div> Critical alert</li>
+            <li class="legend-item"><div class="l-line"></div> Waterway route</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ============ LEAFLET MAP LOGIC ============
+    let map, routeLayer;
+    const markers = {};
+    let isDemo = true;
+
+    // Ships mock data
+    const ships = [
+      { id:'1', name:'TB PARAGUAY 01', lat:-27.33, lon:-58.83, color:'#2ea043' },
+      { id:'2', name:'R/M HERCULES',   lat:-32.95, lon:-60.65, color:'#2ea043' },
+      { id:'3', name:'Itaipú 07',      lat:-25.27, lon:-57.63, color:'#2ea043' },
+      { id:'4', name:'BG SANTA FE',    lat:-31.63, lon:-60.70, color:'#94a3b8' },
+      { id:'5', name:'BG FORMOSA',     lat:-26.18, lon:-58.17, color:'#94a3b8' },
+      { id:'6', name:'TB CORRIENTES',  lat:-27.47, lon:-58.83, color:'#f59e0b' },
+      { id:'7', name:'MV ROSARIO',     lat:-32.94, lon:-60.63, color:'#dc2626' },
+    ];
+
+    // River route coordinates (Paraná-Paraguay waterway)
+    const routeCoords = [
+      [-25.27,-57.63],[-25.50,-57.70],[-26.18,-58.17],[-26.50,-58.40],
+      [-27.00,-58.70],[-27.33,-58.83],[-27.47,-58.83],[-28.00,-59.10],
+      [-29.00,-59.60],[-30.00,-60.10],[-31.00,-60.40],[-31.63,-60.70],
+      [-32.50,-60.67],[-32.95,-60.65],[-33.30,-60.50],[-34.00,-59.50],
+      [-34.60,-58.40]
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Leaflet map
+      map = L.map('leaflet-map', {
+        center: [-30.0, -59.0],
+        zoom: 5,
+        zoomControl: true
+      });
+
+      // Carto Positron (Light) — same look as the Claude prototype
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      // Draw the river route
+      routeLayer = L.polyline(routeCoords, {
+        color: '#3b82f6',
+        weight: 2.5,
+        dashArray: '8, 8',
+        opacity: 0.7
+      }).addTo(map);
+
+      // Place ships
+      ships.forEach(s => {
+        const icon = L.divIcon({
+          className: '',
+          html: `<div style="width:14px;height:14px;background:${s.color};border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>`,
+          iconSize: [14,14],
+          iconAnchor: [7,7]
+        });
+        const m = L.marker([s.lat, s.lon], { icon }).addTo(map);
+        m.bindPopup(`<b style="font-size:14px;">${s.name}</b><br><span style="color:#94a3b8;">MMSI: ${s.id}00000</span><br><span style="color:#2ea043;">● AIS ACTIVO</span>`);
+        markers[s.id] = { marker: m, data: s };
+      });
+
+      // Animate ship positions every 3 sec
+      setInterval(() => {
+        if (!isDemo) return;
+        ships.forEach(s => {
+          s.lat += (Math.random() - 0.5) * 0.015;
+          s.lon += (Math.random() - 0.5) * 0.015;
+          if (markers[s.id]) markers[s.id].marker.setLatLng([s.lat, s.lon]);
+        });
+      }, 3000);
+    });
+
+    function toggleRoute() {
+      if (map.hasLayer(routeLayer)) { map.removeLayer(routeLayer); }
+      else { routeLayer.addTo(map); }
+    }
+
+    function setTileLayer(type) {
+      // Simple toggle for demo
+      alert('Changing base layer (Simulated)');
+    }
+
+    function toggleConnection() {
+      const btn = document.getElementById('btn-connect');
+      if (btn.innerText === 'Connect') {
+        const key = document.getElementById('ais-apikey').value;
+        if (!key) { alert('Enter an API Key'); return; }
+        btn.innerText = 'Disconnect';
+        btn.style.background = '#dc2626';
+        btn.style.borderColor = '#dc2626';
+        isDemo = false;
+        Object.values(markers).forEach(m => map.removeLayer(m.marker));
+        alert('Connecting to AISStream WSS...');
+        setTimeout(() => {
+          alert('WSS Error: Invalid API Key');
+          btn.innerText = 'Connect';
+          btn.style.background = '';
+          btn.style.borderColor = '';
+          isDemo = true;
+          Object.values(markers).forEach(m => m.marker.addTo(map));
+        }, 3000);
+      }
+    }
+  </script>
+</body>
+</html>

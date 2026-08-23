@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' show Colors, FadeTransition;
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 
-/// FluviaFleet Splash — Logo sobre fondo blanco, fade in → fade out → destino.
+/// ViaBarcazas Splash — Logo sobre fondo blanco, fade in → fade out → destino.
 class SplashScreen extends StatefulWidget {
   final Widget destination;
   final VoidCallback? onComplete;
@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen>
               const SizedBox(height: 20),
               // Name
               Text(
-                'FluviaFleet',
+                'ViaBarcazas',
                 style: GoogleFonts.newsreader(
                   color: AppColors.textPrimary,
                   fontSize: 32,

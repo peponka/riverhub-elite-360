@@ -147,7 +147,7 @@ const CotizadorModule = (() => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         message: `Genera un análisis ultra breve (1 oración impactante) de una cotización de flete fluvial: de ${origin} a ${dest}, río crítico a ${river}m, bunker a $${bunker}/L, tarifa final USD ${finalPrice}/TN.`,
-                        context: 'Cotizador Comercial FluviaFleet'
+                        context: 'Cotizador Comercial ViaBarcazas'
                     })
                 });
                 if (res.ok) {

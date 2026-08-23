@@ -1,5 +1,5 @@
 -- ============================================================
--- FLUVIAFLEET — PARCHE FASE 1 SEGURIDAD
+-- VIABARCAZAS — PARCHE FASE 1 SEGURIDAD
 -- ============================================================
 -- Fecha: 2 Mayo 2026
 -- Fix #4: comms tenant isolation

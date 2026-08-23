@@ -1,5 +1,5 @@
 -- ===========================================================
--- FLUVIAFLEET — COMMS TABLE RLS FIX
+-- VIABARCAZAS — COMMS TABLE RLS FIX
 -- Audit Issue #7: comms table had open policies (USING true)
 -- allowing any authenticated user to read/write all companies
 -- 

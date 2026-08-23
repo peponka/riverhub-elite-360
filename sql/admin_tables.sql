@@ -1,5 +1,5 @@
 -- ============================================================
--- FluviaFleet — Tablas de Admin (ejecutar en Supabase SQL editor)
+-- ViaBarcazas — Tablas de Admin (ejecutar en Supabase SQL editor)
 -- ============================================================
 
 -- Tabla de audit log para acciones de administradores

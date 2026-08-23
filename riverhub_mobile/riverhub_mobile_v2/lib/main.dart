@@ -67,12 +67,12 @@ Future<void> main() async {
       if (notification != null) {
         _localNotifs.show(
           notification.hashCode,
-          notification.title ?? 'Fluvia',
+          notification.title ?? 'ViaBarcazas',
           notification.body ?? '',
           const NotificationDetails(
             android: AndroidNotificationDetails(
-              'fluvia_channel', 'Fluvia Notificaciones',
-              channelDescription: 'Notificaciones de Fluvia',
+              'viabarcazas_channel', 'ViaBarcazas Notificaciones',
+              channelDescription: 'Notificaciones de ViaBarcazas',
               importance: Importance.high,
               priority: Priority.high,
               icon: '@mipmap/ic_launcher',
@@ -201,7 +201,7 @@ class _RiverHubMobileAppState extends State<RiverHubMobileApp> {
       valueListenable: LocaleService.notifier,
       builder: (context, locale, _) {
         return CupertinoApp(
-          title: 'Fluvia',
+          title: 'ViaBarcazas',
           debugShowCheckedModeBanner: false,
           locale: material.Locale(locale == 'en' ? 'en' : 'es'),
           theme: CupertinoThemeData(

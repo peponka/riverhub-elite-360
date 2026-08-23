@@ -1,8 +1,8 @@
-// FluviaFleet Service Worker v2
+// ViaBarcazas Service Worker v2
 const CACHE = 'ff-v2';
 
 const STATIC_ASSETS = [
-  '/fluvia.css',
+  '/viabarcazas.css',
   '/css/elite-bundle.css',
   '/css/global.css',
   '/css/maritime-elite.css',
@@ -54,7 +54,7 @@ self.addEventListener('fetch', e => {
         })
         .catch(() =>
           caches.match(e.request)
-            .then(r => r || caches.match('/fluvia.html'))
+            .then(r => r || caches.match('/viabarcazas.html'))
         )
     );
     return;

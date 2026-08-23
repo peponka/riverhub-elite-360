@@ -18,7 +18,7 @@ try {
             if (typeof io !== 'undefined') {
                 const socket = io();
 
-                socket.on('connect', () => void("✅ Conectado al Sistema FluviaFleet (WebSocket)"));
+                socket.on('connect', () => void("✅ Conectado al Sistema ViaBarcazas (WebSocket)"));
                 socket.on('position_update', (ship) => {
                     updateShipMarker(ship);
                 });
@@ -413,7 +413,7 @@ try {
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(22);
             doc.setFont("helvetica", "bold");
-            doc.text("FluviaFleet", 20, 25);
+            doc.text("ViaBarcazas", 20, 25);
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
             doc.text("MANIFIESTO DE CARGA VIRTUAL", 140, 25);
@@ -444,7 +444,7 @@ try {
             const finalY = doc.lastAutoTable.finalY + 30;
             doc.setFontSize(10);
             doc.setTextColor(150);
-            doc.text("Este documento es generado automáticamente por FluviaFleet.", 20, finalY);
+            doc.text("Este documento es generado automáticamente por ViaBarcazas.", 20, finalY);
             doc.text("Validez sujeta a confirmación satelital.", 20, finalY + 5);
 
             if (window.RiverToast) RiverToast.success(`Generando PDF firmado digitalmente para ${vesselName}...`, 'Manifiesto Seguro');
