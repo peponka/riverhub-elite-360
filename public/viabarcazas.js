@@ -280,9 +280,8 @@ async function doLogin(){
             };
             var hasVesselDetails = Object.keys(firstVessel).some(function(key){ return firstVessel[key]; });
             if(hasVesselDetails && !firstVessel.registration){errDiv.textContent='Si cargás una embarcación, completá solamente su matrícula para continuar.';errDiv.style.display='block';btn.disabled=false;btn.textContent='Crear cuenta y calcular plan';return;}
-            if(!name || !company || !country || !operation){errDiv.textContent='Completá tus datos y los de tu empresa para continuar.';errDiv.style.display='block';btn.disabled=false;btn.textContent='Crear cuenta y calcular plan';return;}
             if(pass.length < 6){errDiv.textContent='La contraseña debe tener al menos 6 caracteres.';errDiv.style.display='block';btn.disabled=false;btn.textContent='Crear cuenta y calcular plan';return;}
-            var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name,company:company,country:country,operation:operation,fleet:fleet,first_vessel:firstVessel.registration?firstVessel:null}}});
+            var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name || email.split('@')[0],company:company || 'Nueva empresa',country:country || null,operation:operation || null,fleet:fleet,first_vessel:firstVessel.registration?firstVessel:null}}});
             if(r.error){errDiv.textContent=r.error.message;errDiv.style.display='block';btn.disabled=false;btn.textContent='Registrarse';return;}
             errDiv.style.color = 'var(--success, #10b981)';
             errDiv.textContent = 'Cuenta creada. Revisá tu email si te pide confirmar la dirección.';
