@@ -110,6 +110,7 @@
 
     <link rel="stylesheet" href="css/elite-bundle.css?v=ELITE_PROX_GEN">
     <link rel="stylesheet" href="css/viabarcazas-override.css?v=3">
+    <link rel="stylesheet" href="css/login.css?v=viabarcazas-onboarding-1">
                                     <!-- REVERTED MOBILE OVERRIDES DUE TO BLACK SCREEN -->
 
     <!-- External Libs -->
@@ -493,7 +494,7 @@
 
             <!-- REGISTER FORM (Hidden by default) -->
             <div id="form-register" class="auth-form-container" style="display:none;">
-                <div style="margin:0 0 14px;color:var(--md-sys-color-on-surface-variant);font-size:.82rem;line-height:1.4;text-align:center;">Contanos sobre tu operación y prepararemos tu espacio de trabajo.</div>
+                <div style="margin:0 0 14px;color:var(--md-sys-color-on-surface-variant);font-size:.82rem;line-height:1.4;text-align:center;">Contanos lo esencial y calculamos el plan adecuado para tu flota.</div>
                 <div class="input-login-group">
                     <input type="text" id="reg-name" class="input-login-premium" placeholder="Nombre Completo">
                 </div>
@@ -501,30 +502,25 @@
                     <input type="text" id="reg-company" class="input-login-premium" placeholder="Empresa / Buque">
                 </div>
                 <div class="input-login-group">
-                    <input type="text" id="reg-role" class="input-login-premium" placeholder="Cargo / Rol">
-                </div>
-                <div class="input-login-group">
                     <input type="tel" id="reg-phone" class="input-login-premium" placeholder="Teléfono / WhatsApp">
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                    <div class="input-login-group">
-                        <select id="reg-operation" class="input-login-premium" aria-label="Tipo de operación">
-                            <option value="">Tipo de operación</option>
-                            <option value="armador">Armador / Naviera</option>
-                            <option value="cargador">Cargador / Exportador</option>
-                            <option value="terminal">Terminal / Puerto</option>
-                            <option value="servicios">Servicios fluviales</option>
-                        </select>
-                    </div>
-                    <div class="input-login-group">
-                        <input type="text" id="reg-country" class="input-login-premium" placeholder="País / base operativa">
-                    </div>
+                <div class="input-login-group">
+                    <select id="reg-operation" class="input-login-premium" aria-label="Tipo de operación">
+                        <option value="">Tipo de operación</option>
+                        <option value="armador">Armador / Naviera</option>
+                        <option value="cargador">Cargador / Exportador</option>
+                        <option value="terminal">Terminal / Puerto</option>
+                        <option value="servicios">Servicios fluviales</option>
+                    </select>
                 </div>
                 <div style="font-size:.68rem;letter-spacing:.08em;color:var(--md-sys-color-on-surface-variant);margin:4px 0 8px;text-transform:uppercase;">Tamaño aproximado de tu flota</div>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-                    <input type="number" id="reg-tugs" class="input-login-premium" min="0" placeholder="Remolcadores">
-                    <input type="number" id="reg-barges" class="input-login-premium" min="0" placeholder="Barcazas">
-                    <input type="number" id="reg-tankers" class="input-login-premium" min="0" placeholder="Tanques">
+                    <input type="number" id="reg-tugs" class="input-login-premium fleet-count" min="0" value="0" placeholder="Remolcadores" oninput="AuthModule.updatePlanEstimate()">
+                    <input type="number" id="reg-barges" class="input-login-premium fleet-count" min="0" value="0" placeholder="Barcazas" oninput="AuthModule.updatePlanEstimate()">
+                    <input type="number" id="reg-tankers" class="input-login-premium fleet-count" min="0" value="0" placeholder="Tanques" oninput="AuthModule.updatePlanEstimate()">
+                </div>
+                <div id="registration-estimate" class="registration-estimate" aria-live="polite">
+                    <strong>Plan sugerido: Amarre</strong><span>Hasta 5 embarcaciones · 14 días de prueba</span>
                 </div>
                 <div class="input-login-group">
                     <input type="email" id="reg-email" class="input-login-premium" placeholder="Email Corporativo">

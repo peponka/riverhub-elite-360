@@ -329,7 +329,7 @@ var AuthModule = (() => {
         const pass = document.getElementById('reg-pass').value;
         // New Professional Fields
         const company = document.getElementById('reg-company').value;
-        const roleTitle = document.getElementById('reg-role').value;
+        const roleTitle = document.getElementById('reg-role')?.value || '';
         const phone = document.getElementById('reg-phone').value;
         const operation = document.getElementById('reg-operation')?.value || '';
         const country = document.getElementById('reg-country')?.value.trim() || '';
@@ -400,6 +400,20 @@ var AuthModule = (() => {
             btn.innerText = originalText;
             btn.disabled = false;
         }
+    };
+
+    const updatePlanEstimate = () => {
+        const estimate = document.getElementById('registration-estimate');
+        if (!estimate) return;
+        const total = ['reg-tugs', 'reg-barges', 'reg-tankers']
+            .map(id => Number(document.getElementById(id)?.value || 0))
+            .reduce((sum, value) => sum + Math.max(0, value), 0);
+        const plan = total <= 5
+            ? ['Amarre', 'Hasta 5 embarcaciones · 14 días de prueba']
+            : total <= 20
+                ? ['Convoy', 'Hasta 20 embarcaciones · 14 días de prueba']
+                : ['Armador', 'Flota completa · cotización personalizada'];
+        estimate.innerHTML = `<strong>Plan sugerido: ${plan[0]}</strong><span>${plan[1]}</span>`;
     };
 
     const showForgotPassword = (event) => {
@@ -509,6 +523,7 @@ var AuthModule = (() => {
         attemptLogin,
         bypassLogin,
         submitRegistration,
+        updatePlanEstimate,
         showForgotPassword,
         sendPasswordReset,
         confirmPasswordChange,
