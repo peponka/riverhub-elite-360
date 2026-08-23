@@ -307,19 +307,22 @@ var AuthModule = (() => {
         const tabs = document.querySelectorAll('.tab');
         const loginForm = document.getElementById('form-login');
         const regForm = document.getElementById('form-register');
+        const card = document.querySelector('.login-card');
 
         // Reset Tabs
         tabs.forEach(t => t.classList.remove('active'));
 
         // Toggle Views
         if (mode === 'login') {
+            if (card) card.classList.remove('register-mode');
             if (tabs[0]) tabs[0].classList.add('active');
             if (loginForm) loginForm.style.display = 'block';
             if (regForm) regForm.style.display = 'none';
         } else {
+            if (card) card.classList.add('register-mode');
             if (tabs[1]) tabs[1].classList.add('active');
             if (loginForm) loginForm.style.display = 'none';
-            if (regForm) regForm.style.display = 'block';
+            if (regForm) regForm.style.display = 'grid';
         }
     };
 

@@ -37,6 +37,69 @@
     margin-bottom: 24px;
 }
 
+.login-card.register-mode {
+    width: min(860px, calc(100vw - 48px));
+    padding: 38px 44px;
+}
+
+.login-card.register-mode .login-logo {
+    margin-bottom: 18px;
+}
+
+.register-intro {
+    grid-area: intro;
+    padding: 18px 24px 18px 0;
+    text-align: left;
+    border-right: 1px solid #e5ebe9;
+}
+
+.register-intro-kicker {
+    color: #128c7e;
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+}
+
+.register-intro h3 {
+    margin: 10px 0 8px;
+    color: #173d38;
+    font-size: 1.55rem;
+    letter-spacing: -.03em;
+}
+
+.register-intro p {
+    margin: 0 0 24px;
+    color: #56736d;
+    font-size: .86rem;
+    line-height: 1.5;
+}
+
+.register-benefit {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 13px;
+    color: #56736d;
+    font-size: .76rem;
+}
+
+.register-benefit i { color: #128c7e; width: 16px; }
+
+.register-fields {
+    grid-area: fields;
+    min-width: 0;
+}
+
+#form-register {
+    display: grid;
+    grid-template-columns: minmax(210px, .8fr) minmax(360px, 1.2fr);
+    grid-template-areas: "intro fields";
+    gap: 28px;
+    text-align: left;
+}
+
+#form-register .registration-estimate { margin-top: 10px; }
+
 .login-brand-lockup {
     display: inline-flex;
     align-items: center;
@@ -229,6 +292,10 @@
 .registration-estimate span { color: #56736d; text-align: right; }
 
 @media (max-width: 520px) {
+    .login-card.register-mode { width: calc(100vw - 28px); padding: 28px 20px; }
+    #form-register { display: block !important; }
+    .register-intro { padding: 0 0 16px; border-right: 0; border-bottom: 1px solid #e5ebe9; margin-bottom: 18px; }
+    .register-intro h3 { font-size: 1.3rem; }
     .registration-estimate { align-items: flex-start; flex-direction: column; gap: 3px; }
     .registration-estimate span { text-align: left; }
 }

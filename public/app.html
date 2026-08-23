@@ -502,7 +502,14 @@
 
             <!-- REGISTER FORM (Hidden by default) -->
             <div id="form-register" class="auth-form-container" style="display:none;">
-                <div style="margin:0 0 14px;color:var(--md-sys-color-on-surface-variant);font-size:.82rem;line-height:1.4;text-align:center;">Contanos lo esencial y calculamos el plan adecuado para tu flota.</div>
+                <div class="register-intro">
+                    <div class="register-intro-kicker">PRIMER PASO</div>
+                    <h3>Armemos tu operación.</h3>
+                    <p>Contanos lo esencial y calculamos el plan adecuado para tu flota.</p>
+                    <div class="register-benefit"><i class="fas fa-chart-line"></i><span>Precio estimado según tus unidades</span></div>
+                    <div class="register-benefit"><i class="fas fa-shield-halved"></i><span>Acceso seguro para tu equipo</span></div>
+                </div>
+                <div class="register-fields">
                 <div class="input-login-group">
                     <input type="text" id="reg-name" class="input-login-premium" placeholder="Nombre Completo">
                 </div>
@@ -540,6 +547,7 @@
                             class="fas fa-eye"></i></button>
                 </div>
                 <button class="btn-login ripple-effect" onclick="AuthModule.submitRegistration()">REGISTRARME</button>
+                </div>
             </div>
 
             <div class="login-footer">
