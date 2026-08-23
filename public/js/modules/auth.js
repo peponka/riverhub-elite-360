@@ -331,9 +331,16 @@ var AuthModule = (() => {
         const company = document.getElementById('reg-company').value;
         const roleTitle = document.getElementById('reg-role').value;
         const phone = document.getElementById('reg-phone').value;
+        const operation = document.getElementById('reg-operation')?.value || '';
+        const country = document.getElementById('reg-country')?.value.trim() || '';
+        const fleet = {
+            tugs: Number(document.getElementById('reg-tugs')?.value || 0),
+            barges: Number(document.getElementById('reg-barges')?.value || 0),
+            tankers: Number(document.getElementById('reg-tankers')?.value || 0)
+        };
 
-        if (!name || !email || !pass || !company || !phone) {
-            RiverToast.warning("Por favor completa todos los campos profesionales (Empresa, Teléfono, etc).", "Registro Incompleto");
+        if (!name || !email || !pass || !company || !phone || !operation) {
+            RiverToast.warning("Completá nombre, empresa, teléfono, operación, email y contraseña.", "Registro Incompleto");
             return;
         }
 
@@ -348,7 +355,15 @@ var AuthModule = (() => {
                 email: email,
                 password: pass,
                 options: {
-                    data: { full_name: name } // Meta data
+                    data: {
+                        full_name: name,
+                        company,
+                        job_title: roleTitle,
+                        phone,
+                        operation,
+                        country,
+                        fleet
+                    }
                 }
             });
 

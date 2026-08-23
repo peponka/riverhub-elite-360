@@ -117,9 +117,18 @@
     <!-- APP CONFIGURATION (MUST BE LOADED FIRST) -->
     <script src="js/services/toast.js"></script> <!-- TOAST SYSTEM (intercepts alert) -->
     <script src="js/config.js"></script>
-    <script src="js/modules/auth.js"></script>
+                    <script src="js/modules/auth.js"></script>
     <script src="js/services/supabase.js"></script>
     <script src="js/global.js"></script>
+    <script>
+        // Permite que los botones de la landing abran directamente la pestaña correcta.
+        document.addEventListener('DOMContentLoaded', function () {
+            var mode = new URLSearchParams(window.location.search).get('mode');
+            if (mode === 'register' && window.AuthModule) {
+                setTimeout(function () { window.AuthModule.switchTab('register'); }, 0);
+            }
+        });
+    </script>
     <script src="js/modules/convoys.js"></script> <!-- CONVOYS MODULE -->
 
     <!-- FLUTTER SIDEBAR COLORS — INLINE TO AVOID CACHE ISSUES -->
@@ -484,6 +493,7 @@
 
             <!-- REGISTER FORM (Hidden by default) -->
             <div id="form-register" class="auth-form-container" style="display:none;">
+                <div style="margin:0 0 14px;color:var(--md-sys-color-on-surface-variant);font-size:.82rem;line-height:1.4;text-align:center;">Contanos sobre tu operación y prepararemos tu espacio de trabajo.</div>
                 <div class="input-login-group">
                     <input type="text" id="reg-name" class="input-login-premium" placeholder="Nombre Completo">
                 </div>
@@ -495,6 +505,26 @@
                 </div>
                 <div class="input-login-group">
                     <input type="tel" id="reg-phone" class="input-login-premium" placeholder="Teléfono / WhatsApp">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div class="input-login-group">
+                        <select id="reg-operation" class="input-login-premium" aria-label="Tipo de operación">
+                            <option value="">Tipo de operación</option>
+                            <option value="armador">Armador / Naviera</option>
+                            <option value="cargador">Cargador / Exportador</option>
+                            <option value="terminal">Terminal / Puerto</option>
+                            <option value="servicios">Servicios fluviales</option>
+                        </select>
+                    </div>
+                    <div class="input-login-group">
+                        <input type="text" id="reg-country" class="input-login-premium" placeholder="País / base operativa">
+                    </div>
+                </div>
+                <div style="font-size:.68rem;letter-spacing:.08em;color:var(--md-sys-color-on-surface-variant);margin:4px 0 8px;text-transform:uppercase;">Tamaño aproximado de tu flota</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                    <input type="number" id="reg-tugs" class="input-login-premium" min="0" placeholder="Remolcadores">
+                    <input type="number" id="reg-barges" class="input-login-premium" min="0" placeholder="Barcazas">
+                    <input type="number" id="reg-tankers" class="input-login-premium" min="0" placeholder="Tanques">
                 </div>
                 <div class="input-login-group">
                     <input type="email" id="reg-email" class="input-login-premium" placeholder="Email Corporativo">
@@ -4602,7 +4632,7 @@
                 <script src="js/services/supabase.js"></script>
                 <script src="js/services/aisstream.js"></script>
                 <!-- Modules -->
-                    <script src="js/modules/auth.js"></script>
+    <script src="js/modules/auth.js"></script>
                     <script src="js/modules/dashboard.js?v=3"></script>
                     <script src="js/modules/mapa.js?v=OL_V1"></script>
                     <script src="js/modules/viajes.js"></script>
