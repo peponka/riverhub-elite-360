@@ -1499,7 +1499,9 @@ async function sendCopiloto(){
         var fl=await sb.from('fuel_logs').select('*').limit(50);if(fl.data)ctx+='Combustible: '+JSON.stringify(fl.data)+'\n';
         var mt=await sb.from('maintenance_tasks').select('*').limit(50);if(mt.data)ctx+='Mantenimiento: '+JSON.stringify(mt.data)+'\n';
         var token=(await sb.auth.getSession())?.data?.session?.access_token;
-        var res=await fetch('/api/ai/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({message:msg,context:ctx,history:chatHistory})});
+        // The apex domain redirects API requests to www; call the canonical API directly.
+        var aiEndpoint=location.hostname==='viabarcazas.com'?'https://www.viabarcazas.com/api/ai/chat':'/api/ai/chat';
+        var res=await fetch(aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({message:msg,context:ctx,history:chatHistory})});
         var data=await res.json();
         var typing=document.getElementById('ai-typing');if(typing)typing.remove();
         var answer=data.response||data.analysis||data.message||'No pude procesar la consulta.';
