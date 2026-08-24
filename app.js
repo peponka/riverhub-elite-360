@@ -351,7 +351,7 @@ Contexto de Flota actual:
 ${context || 'No hay embarcaciones registradas o activas.'}`;
 
     try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
 
         let contents = [];
         if (history && Array.isArray(history)) {
@@ -386,8 +386,10 @@ ${context || 'No hay embarcaciones registradas o activas.'}`;
         if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
             res.json({ response: data.candidates[0].content.parts[0].text });
         } else {
-            console.error('Gemini response error:', JSON.stringify(data).substring(0, 200));
-            res.json({ response: 'No pude procesar tu consulta. Intentá reformular la pregunta.' });
+            console.error('Gemini response error:', response.status, JSON.stringify(data).substring(0, 500));
+            res.status(response.ok ? 502 : response.status).json({
+                response: 'El Copiloto no pudo responder en este momento. Intentá nuevamente en unos segundos.'
+            });
         }
     } catch (e) {
         console.error('Gemini API error:', e.message);
