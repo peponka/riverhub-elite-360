@@ -81,16 +81,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       final result = await Supabase.instance.client.auth.signUp(email: email, password: password, data: metadata);
       if (result.user != null) {
-        // Same extended profile details captured by the web registration.
-        await Supabase.instance.client.from('profiles').upsert({
-          'id': result.user!.id,
-          'email': email,
-          'full_name': name,
-          'role': 'pending',
-          'company': company,
-          'phone': phone,
-          'created_at': DateTime.now().toUtc().toIso8601String(),
-        });
+        // The signup trigger creates the canonical user_profiles record.
+        // Keeping this client out of role and company writes prevents escalation.
       }
       if (mounted) {
         showCupertinoDialog(

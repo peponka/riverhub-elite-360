@@ -1126,12 +1126,33 @@ app.post('/api/notifications/send', authenticateUser, async (req, res) => {
         const { userId, title, body, data } = req.body;
         if (!userId || !title) return res.status(400).json({ error: 'userId y title requeridos' });
 
-        // fcm_token vive en profiles (por id = auth.uid()), no en user_profiles
-        const { data: profile } = await req.app.locals.supabase.from('profiles').select('fcm_token').eq('id', userId).single();
-        if (!profile?.fcm_token) return res.status(404).json({ error: 'Usuario sin token FCM' });
+        const db = req.app.locals.supabaseAdmin || req.app.locals.supabase;
+        const { data: sender } = await db
+            .from('user_profiles')
+            .select('company_id, role')
+            .eq('user_id', req.user.id)
+            .single();
+        const { data: recipient } = await db
+            .from('user_profiles')
+            .select('company_id, fcm_token')
+            .eq('user_id', userId)
+            .single();
+        if (!sender || !recipient) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+        const isPrivileged = ['admin', 'superadmin'].includes(sender.role);
+        const canSendToRecipient = sender.role === 'superadmin'
+            || (sender.role === 'admin' && sender.company_id === recipient.company_id)
+            || req.user.id === userId;
+        if (!isPrivileged && req.user.id !== userId) {
+            return res.status(403).json({ error: 'Sin permisos para enviar notificaciones a otros usuarios' });
+        }
+        if (!canSendToRecipient) {
+            return res.status(403).json({ error: 'No podés enviar notificaciones a otra empresa' });
+        }
+        if (!recipient.fcm_token) return res.status(404).json({ error: 'Usuario sin token FCM' });
 
         const message = {
-            token: profile.fcm_token,
+            token: recipient.fcm_token,
             notification: { title, body: body || '' },
             data: data || {},
             android: { priority: 'high', notification: { channelId: 'viabarcazas_channel' } }
@@ -1148,8 +1169,12 @@ app.post('/api/notifications/send', authenticateUser, async (req, res) => {
 app.post('/api/notifications/broadcast', authenticateUser, async (req, res) => {
     try {
         // Verify admin/superadmin role
-        const sb = req.app.locals.supabase;
-        const { data: profile } = await sb.from('user_profiles').select('role').eq('user_id', req.user.id).single();
+        const sb = req.app.locals.supabaseAdmin || req.app.locals.supabase;
+        const { data: profile } = await sb
+            .from('user_profiles')
+            .select('role, company_id')
+            .eq('user_id', req.user.id)
+            .single();
         if (!profile || !['admin', 'superadmin'].includes(profile.role)) {
             return res.status(403).json({ error: 'Insufficient permissions' });
         }
@@ -1158,7 +1183,11 @@ app.post('/api/notifications/broadcast', authenticateUser, async (req, res) => {
         const { title, body, data } = req.body;
         if (!title) return res.status(400).json({ error: 'title requerido' });
 
-        const { data: profiles } = await req.app.locals.supabase.from('profiles').select('fcm_token').not('fcm_token', 'is', null);
+        let recipientsQuery = sb.from('user_profiles').select('fcm_token').not('fcm_token', 'is', null);
+        if (profile.role !== 'superadmin') {
+            recipientsQuery = recipientsQuery.eq('company_id', profile.company_id);
+        }
+        const { data: profiles } = await recipientsQuery;
         const tokens = (profiles || []).map(p => p.fcm_token).filter(t => t && t.length > 10);
         if (tokens.length === 0) return res.json({ success: true, sent: 0, message: 'No hay tokens FCM registrados' });
 

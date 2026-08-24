@@ -279,9 +279,9 @@ class SupabaseService {
       final uid = currentUserId;
       if (uid.isEmpty) return null;
       final res = await client
-          .from('profiles')
+          .from('user_profiles')
           .select('*')
-          .eq('id', uid)
+          .eq('user_id', uid)
           .maybeSingle();
       return res;
     } catch (e) {

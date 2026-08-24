@@ -97,9 +97,9 @@ var AuthModule = (() => {
 
             // 2. Fetch Profile
             const { data: profile, error: profileError } = await window.sb
-                .from('profiles')
+                .from('user_profiles')
                 .select('*')
-                .eq('id', data.user.id)
+                .eq('user_id', data.user.id)
                 .single();
 
             // Handle missing profile gracefully
@@ -113,7 +113,7 @@ var AuthModule = (() => {
                     full_name: 'Usuario (Perfil Pendiente)'
                 });
             } else {
-                await login(profile);
+                await login(normalizeProfile(profile, data.user));
             }
 
         } catch (err) {
@@ -138,6 +138,13 @@ var AuthModule = (() => {
             loginBtn.innerText = originalText;
         }
     };
+
+    const normalizeProfile = (profile, user) => ({
+        ...profile,
+        id: profile.id || profile.user_id || user.id,
+        user_id: profile.user_id || user.id,
+        email: profile.email || user.email
+    });
 
     const login = async (userProfile) => {
         currentUser = userProfile;
@@ -168,12 +175,12 @@ var AuthModule = (() => {
             void("DEBUG: Session Found", data.session);
             try {
                 const { data: profile } = await window.sb
-                    .from('profiles')
+                    .from('user_profiles')
                     .select('*')
-                    .eq('id', data.session.user.id)
+                    .eq('user_id', data.session.user.id)
                     .single();
 
-                if (profile) login(profile);
+                if (profile) login(normalizeProfile(profile, data.session.user));
                 else {
                     // SECURITY: Auth valid but no profile row — assign minimal role
                     login({ ...data.session.user, role: 'user', full_name: 'Usuario' });
@@ -372,27 +379,8 @@ var AuthModule = (() => {
 
             if (error) throw error;
             if (data.user) {
-                // 2. Insert Extended Profile
-                // Note: Triggers might create a basic profile, so we UPSERT
-                const { error: profileError } = await window.sb
-                    .from('profiles')
-                    .upsert({
-                        id: data.user.id,
-                        email: email,
-                        full_name: name,
-                        role: 'pending', // Security: Default to pending or user
-                        // Extended Fields (Ensure these columns exist in Supabase 'profiles' table)
-                        company: company,
-                        job_title: roleTitle,
-                        phone: phone,
-                        created_at: new Date().toISOString()
-                    });
-
-                if (profileError) {
-                    console.warn("Profile save warning:", profileError);
-                    // Continue anyway, auth is done
-                }
-
+                // The database trigger creates the canonical user_profiles row
+                // from this signup metadata. Clients never assign roles directly.
                 RiverToast.success(`Tu cuenta está en proceso de revisión.\\nPuedes ingresar, pero algunas funciones pueden estar limitadas hasta la aprobación.`, `¡Bienvenido, ${name}!`);
                 switchTab('login');
             }
