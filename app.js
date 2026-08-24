@@ -77,13 +77,15 @@ if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY
 
 const server = http.createServer(app);
 const ALLOWED_ORIGINS = [
-    process.env.FRONTEND_URL || 'https://viabarcazas.com',
+    process.env.FRONTEND_URL,
+    'https://viabarcazas.com',
+    'https://www.viabarcazas.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:4001',
     'http://127.0.0.1:4001',
     'https://riverhub-elite-360.onrender.com'
-];
+].filter(Boolean);
 
 // SECURITY: Restrict CORS to known origins only (no open wildcard)
 app.use(cors({
