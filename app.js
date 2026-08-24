@@ -118,7 +118,7 @@ app.use(helmet({
             styleSrcElem: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             imgSrc: ["'self'", "data:", "blob:", "https://*.basemaps.cartocdn.com", "https://*.tile.openstreetmap.org", "https://cartodb-basemaps-a.global.ssl.fastly.net", "https://cartodb-basemaps-b.global.ssl.fastly.net", "https://cartodb-basemaps-c.global.ssl.fastly.net", "https://cartodb-basemaps-d.global.ssl.fastly.net", "https://a.basemaps.cartocdn.com", "https://b.basemaps.cartocdn.com", "https://c.basemaps.cartocdn.com", "https://d.basemaps.cartocdn.com", "https://tile.openstreetmap.org", "https://flagcdn.com"],
-            connectSrc: ["'self'", "wss:", "ws:", "https://*.supabase.co", "https://api.open-meteo.com", "https://flood-api.open-meteo.com", "https://alerta.ina.gob.ar", "https://open.er-api.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
+            connectSrc: ["'self'", "wss:", "ws:", "https://viabarcazas.com", "https://www.viabarcazas.com", "https://*.supabase.co", "https://api.open-meteo.com", "https://flood-api.open-meteo.com", "https://alerta.ina.gob.ar", "https://open.er-api.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
             frameAncestors: ["'self'"]
         }
     },
