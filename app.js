@@ -903,6 +903,10 @@ if (!process.env.AIS_API_KEY) {
 const HIDROVIA_BOX = [[[-36.0, -63.0], [-18.0, -53.0]]];
 let aisConnected = false;
 let aisReconnectTimer = null;
+let aisReconnectAttempts = 0;
+let activeAisSocket = null;
+const AIS_RECONNECT_MIN_MS = 15 * 1000;
+const AIS_RECONNECT_MAX_MS = 5 * 60 * 1000;
 
 // --- PERSISTENCIA DE POSICIONES AIS ---------------------------------------
 // aisPositions vivia SOLO en memoria: cada redeploy de Render lo dejaba en
@@ -970,10 +974,45 @@ async function flushAisPositions() {
 setInterval(flushAisPositions, AIS_FLUSH_MS);
 
 // --- AIS STREAM ---
-function startAISStream() {
-    console.log("📡 Conectando a AISStream...");
+function scheduleAisReconnect(reason) {
+    if (aisReconnectTimer || !API_KEY) return;
 
-    const ws = new WebSocket('wss://stream.aisstream.io/v0/stream');
+    const baseDelay = Math.min(
+        AIS_RECONNECT_MIN_MS * (2 ** aisReconnectAttempts),
+        AIS_RECONNECT_MAX_MS
+    );
+    const delay = Math.round(baseDelay * (0.9 + Math.random() * 0.2));
+    aisReconnectAttempts += 1;
+    app.locals.aisReconnectAt = new Date(Date.now() + delay).toISOString();
+
+    console.warn(`⚠️ AIS desconectado (${reason}). Reintento ${aisReconnectAttempts} en ${Math.ceil(delay / 1000)}s...`);
+    aisReconnectTimer = setTimeout(() => {
+        aisReconnectTimer = null;
+        startAISStream();
+    }, delay);
+}
+
+function startAISStream() {
+    if (!API_KEY) {
+        console.warn('⚠️ AIS no iniciado: falta AIS_API_KEY.');
+        return;
+    }
+    if (activeAisSocket) {
+        const state = activeAisSocket.readyState;
+        if (state === WebSocket.OPEN || state === WebSocket.CONNECTING) return;
+        activeAisSocket = null;
+    }
+
+    console.log("📡 Conectando a AISStream...");
+    let ws;
+    try {
+        ws = new WebSocket('wss://stream.aisstream.io/v0/stream');
+        activeAisSocket = ws;
+    } catch (e) {
+        console.warn('⚠️ No se pudo iniciar AIS:', e.message);
+        scheduleAisReconnect('error de conexión');
+        return;
+    }
 
     ws.on('open', () => {
         aisConnected = true;
@@ -999,10 +1038,16 @@ function startAISStream() {
                 const detalle = msg.error || msg.Error || JSON.stringify(msg).slice(0, 200);
                 app.locals.aisLastError = { at: new Date().toISOString(), detalle: String(detalle).slice(0, 300) };
                 console.warn('⚠️ AIS mensaje no-posicion:', detalle);
+                // A provider-side error can leave the socket open but unusable.
+                // Close it so the bounded backoff decides when to try again.
+                if (ws.readyState === WebSocket.OPEN) ws.close(4008, 'AIS provider error');
                 return;
             }
 
             if (msg.MessageType === "PositionReport") {
+                // A valid position proves the stream recovered, so future outages
+                // may begin again with the shortest retry delay.
+                aisReconnectAttempts = 0;
                 app.locals.aisLastMessageAt = new Date().toISOString();
                 const ship = msg.Message.PositionReport;
                 if (msg.MetaData && msg.MetaData.ShipName) {
@@ -1067,11 +1112,10 @@ function startAISStream() {
     });
 
     ws.on('close', (code) => {
+        if (activeAisSocket === ws) activeAisSocket = null;
         aisConnected = false;
         app.locals.aisConnected = false;
-        console.log(`❌ AIS desconectado (${code}). Reintentando en 15s...`);
-        if (aisReconnectTimer) clearTimeout(aisReconnectTimer);
-        aisReconnectTimer = setTimeout(startAISStream, 15000);
+        scheduleAisReconnect(code);
     });
 }
 
