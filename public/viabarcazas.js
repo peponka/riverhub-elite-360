@@ -1505,7 +1505,11 @@ async function sendCopiloto(){
         var data=await res.json();
         var typing=document.getElementById('ai-typing');if(typing)typing.remove();
         var answer=data.response||data.analysis||data.message||'No pude procesar la consulta.';
-        chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;max-width:80%;line-height:1.5"><i class="fa-solid fa-robot" style="color:var(--accent);margin-right:6px"></i>'+esc(answer).replace(/\n/g,'<br>')+'</span></div>';
+        // Escape the response first, then render the small Markdown subset the Copilot uses.
+        var formattedAnswer=esc(answer)
+            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+            .replace(/\n/g,'<br>');
+        chat.innerHTML+='<div style="margin:12px 0"><span style="background:var(--surface-low);padding:12px 14px;border-radius:12px 12px 12px 4px;font-size:13px;display:inline-block;max-width:80%;line-height:1.5"><i class="fa-solid fa-robot" style="color:var(--accent);margin-right:6px"></i>'+formattedAnswer+'</span></div>';
         chatHistory.push({ role: 'user', text: msg });
         chatHistory.push({ role: 'model', text: answer });
         if(chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
