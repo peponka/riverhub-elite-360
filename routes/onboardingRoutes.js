@@ -24,6 +24,16 @@ module.exports = function(authenticateUser, supabase, supabaseAdmin) {
         return data.company_id;
     }
 
+    async function getUserProfile(userId) {
+        const { data, error } = await sb
+            .from('user_profiles')
+            .select('company_id, role')
+            .eq('user_id', userId)
+            .single();
+        if (error || !data) return null;
+        return data;
+    }
+
     // ─── POST /api/onboarding/company ───────────────────────────
     // Crea la empresa y la asocia al usuario autenticado
     router.post('/company', authenticateUser, async (req, res) => {
@@ -32,6 +42,12 @@ module.exports = function(authenticateUser, supabase, supabaseAdmin) {
             if (!name) return res.status(400).json({ error: 'El nombre de la empresa es requerido' });
 
             const userId = req.user.id;
+
+            // An authenticated user can only create their initial company once.
+            const currentProfile = await getUserProfile(userId);
+            if (currentProfile?.company_id) {
+                return res.status(409).json({ error: 'Ya tenés una empresa asociada' });
+            }
 
             // Crear empresa
             const { data: company, error: compErr } = await sb
@@ -72,8 +88,12 @@ module.exports = function(authenticateUser, supabase, supabaseAdmin) {
     router.post('/vessels', authenticateUser, async (req, res) => {
         try {
             const userId = req.user.id;
-            const companyId = await getCompanyId(userId);
+            const profile = await getUserProfile(userId);
+            const companyId = profile?.company_id;
             if (!companyId) return res.status(403).json({ error: 'No tenés una empresa asociada' });
+            if (!['admin', 'superadmin'].includes(profile.role)) {
+                return res.status(403).json({ error: 'Solo un administrador puede cargar embarcaciones' });
+            }
 
             const { vessels } = req.body;
             if (!vessels || !Array.isArray(vessels) || vessels.length === 0) {
@@ -115,8 +135,12 @@ module.exports = function(authenticateUser, supabase, supabaseAdmin) {
     router.post('/invite', authenticateUser, async (req, res) => {
         try {
             const userId = req.user.id;
-            const companyId = await getCompanyId(userId);
+            const profile = await getUserProfile(userId);
+            const companyId = profile?.company_id;
             if (!companyId) return res.status(403).json({ error: 'No tenés una empresa asociada' });
+            if (!['admin', 'superadmin'].includes(profile.role)) {
+                return res.status(403).json({ error: 'Solo un administrador puede invitar personas' });
+            }
 
             const { email, role = 'operator' } = req.body;
             if (!email) return res.status(400).json({ error: 'El email es requerido' });

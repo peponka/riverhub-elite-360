@@ -19,7 +19,7 @@ description: "Estado completo del ecosistema RiverHub Elite 360: diseño ViaBarc
 
 ### APIs
 - **AIS WebSocket**: `wss://stream.aisstream.io/v0/stream` (key: `REDACTED_AIS_KEY_1`)
-- **n8n API Key**: `RH_Secure_n8n_X9fL!2026`
+- **n8n API Key**: Configurada exclusivamente como variable `N8N_API_KEY` en el entorno.
 - **Gemini API Key**: En `.env` como `GEMINI_API_KEY`
 
 ### Render Environment Variables
@@ -28,7 +28,7 @@ PORT=3000 (Render asigna dinámicamente)
 SUPABASE_URL=https://nfybnnpdrvyxucgpqmmo.supabase.co
 SUPABASE_ANON_KEY=REDACTED_SUPABASE_ANON_KEY
 AIS_API_KEY=REDACTED_AIS_KEY_1
-N8N_API_KEY=RH_Secure_n8n_X9fL!2026
+N8N_API_KEY=<configurar-en-el-entorno>
 GEMINI_API_KEY=(configurar)
 ```
 

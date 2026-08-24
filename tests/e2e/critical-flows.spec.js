@@ -6,7 +6,7 @@
 
 const { test, expect } = require('@playwright/test');
 
-const BASE_URL = process.env.TEST_URL || 'http://localhost:3000';
+const BASE_URL = process.env.TEST_URL || 'http://localhost:4001';
 
 // ── HEALTH CHECK ─────────────────────────────
 test.describe('API Health', () => {

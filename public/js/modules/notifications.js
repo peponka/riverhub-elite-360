@@ -11,7 +11,7 @@ const NotificationCenter = {
         this.renderBadge();
         this.setupListeners();
 
-        // Try loading real alerts from Supabase first
+        // Load alerts through the server so direct database access stays closed.
         if (this.notifications.length === 0) {
             await this.loadFromSupabase();
         }
@@ -50,13 +50,15 @@ const NotificationCenter = {
     loadFromSupabase: async function () {
         if (!window.sb) return;
         try {
-            const { data, error } = await window.sb
-                .from('system_alerts') // Cambiado de 'alerts' a 'system_alerts' (n8n schema)
-                .select('*')
-                .order('created_at', { ascending: false })
-                .limit(20);
+            const { data: { session } } = await window.sb.auth.getSession();
+            if (!session?.access_token) return;
 
-            if (error) throw error;
+            const response = await fetch('/api/system-alerts', {
+                headers: { Authorization: `Bearer ${session.access_token}` }
+            });
+            if (!response.ok) throw new Error('No se pudieron cargar las alertas');
+
+            const { alerts: data } = await response.json();
             if (data && data.length > 0) {
                 data.forEach(alert => {
                     this.addNotification({

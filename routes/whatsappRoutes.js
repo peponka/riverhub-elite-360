@@ -25,6 +25,35 @@ async function getCompanyId(userId) {
   return data?.company_id || null;
 }
 
+async function getAuthorizedCompany(req, res, adminOnly = false) {
+  const db = getAdmin();
+  if (!db || !req.user?.id) {
+    res.status(401).json({ error: 'Sesión inválida' });
+    return null;
+  }
+
+  const { data: profile } = await db
+    .from('user_profiles')
+    .select('company_id, role')
+    .eq('user_id', req.user.id)
+    .single();
+  if (!profile?.company_id) {
+    res.status(403).json({ error: 'No tenés una empresa asociada' });
+    return null;
+  }
+  if (adminOnly && !['admin', 'superadmin'].includes(profile.role)) {
+    res.status(403).json({ error: 'Solo un administrador puede realizar esta acción' });
+    return null;
+  }
+
+  const requestedCompanyId = req.body?.company_id || req.query?.company_id;
+  if (requestedCompanyId && requestedCompanyId !== profile.company_id && profile.role !== 'superadmin') {
+    res.status(403).json({ error: 'No podés acceder a otra empresa' });
+    return null;
+  }
+  return profile.role === 'superadmin' && requestedCompanyId ? requestedCompanyId : profile.company_id;
+}
+
 // GET /api/whatsapp/my-company — el frontend llama esto para obtener su company_id
 router.get('/my-company', async (req, res) => {
   const company_id = await getCompanyId(req.user?.id);
@@ -76,16 +105,18 @@ async function sendWhatsApp(phone, message) {
 
 // ── POST /api/whatsapp/send ─────────────────────────────────────────────────
 router.post('/send', async (req, res) => {
-  const { to, message, company_id } = req.body;
+  const companyId = await getAuthorizedCompany(req, res, true);
+  if (!companyId) return;
+  const { to, message } = req.body;
   if (!to || !message) return res.status(400).json({ error: 'to y message son requeridos' });
 
   try {
     const result = await sendWhatsApp(to, message);
 
     const db = getAdmin();
-    if (db && company_id) {
+    if (db) {
       await db.from('whatsapp_log').insert({
-        company_id,
+        company_id: companyId,
         to_number: to,
         message,
         status: result.ok ? 'sent' : 'failed',
@@ -101,11 +132,11 @@ router.post('/send', async (req, res) => {
 
 // ── POST /api/whatsapp/alert ────────────────────────────────────────────────
 router.post('/alert', async (req, res) => {
+  const isCronJob = req.headers['x-cron-secret'] && req.headers['x-cron-secret'] === process.env.CRON_SECRET;
+  const company_id = isCronJob ? req.body.company_id : await getAuthorizedCompany(req, res, true);
+  if (!company_id) return;
   const { type, payload } = req.body;
   if (!type) return res.status(400).json({ error: 'type requerido' });
-  // company_id siempre viene del usuario autenticado, nunca del body (previene IDOR)
-  const company_id = await getCompanyId(req.user?.id);
-  if (!company_id) return res.status(403).json({ error: 'No se pudo resolver company_id del usuario' });
 
   const db = getAdmin();
   if (!db) return res.status(503).json({ error: 'DB no disponible' });
@@ -176,7 +207,10 @@ router.post('/daily-check', async (req, res) => {
       if (daysLeft > 30) continue;
       await fetch(`${base}/api/whatsapp/alert`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-cron-secret': process.env.CRON_SECRET || '',
+        },
         body: JSON.stringify({
           type: 'compliance_expiry',
           company_id: company.id,
@@ -198,8 +232,8 @@ router.post('/daily-check', async (req, res) => {
 
 // ── GET /api/whatsapp/log ───────────────────────────────────────────────────
 router.get('/log', async (req, res) => {
-  const { company_id } = req.query;
-  if (!company_id) return res.status(400).json({ error: 'company_id requerido' });
+  const company_id = await getAuthorizedCompany(req, res);
+  if (!company_id) return;
   const db = getAdmin();
   const { data, error } = await db
     .from('whatsapp_log').select('*')
@@ -211,8 +245,8 @@ router.get('/log', async (req, res) => {
 
 // ── GET /api/whatsapp/contacts ──────────────────────────────────────────────
 router.get('/contacts', async (req, res) => {
-  const { company_id } = req.query;
-  if (!company_id) return res.status(400).json({ error: 'company_id requerido' });
+  const company_id = await getAuthorizedCompany(req, res);
+  if (!company_id) return;
   const db = getAdmin();
   const { data, error } = await db
     .from('whatsapp_contacts').select('*')
@@ -223,8 +257,10 @@ router.get('/contacts', async (req, res) => {
 
 // ── POST /api/whatsapp/contacts ─────────────────────────────────────────────
 router.post('/contacts', async (req, res) => {
-  const { company_id, name, phone, role, alert_types } = req.body;
-  if (!company_id || !phone) return res.status(400).json({ error: 'company_id y phone requeridos' });
+  const company_id = await getAuthorizedCompany(req, res, true);
+  if (!company_id) return;
+  const { name, phone, role, alert_types } = req.body;
+  if (!phone) return res.status(400).json({ error: 'phone requerido' });
   const db = getAdmin();
   const { data, error } = await db
     .from('whatsapp_contacts')
@@ -236,8 +272,10 @@ router.post('/contacts', async (req, res) => {
 
 // ── DELETE /api/whatsapp/contacts/:id ──────────────────────────────────────
 router.delete('/contacts/:id', async (req, res) => {
+  const company_id = await getAuthorizedCompany(req, res, true);
+  if (!company_id) return;
   const db = getAdmin();
-  const { error } = await db.from('whatsapp_contacts').delete().eq('id', req.params.id);
+  const { error } = await db.from('whatsapp_contacts').delete().eq('id', req.params.id).eq('company_id', company_id);
   if (error) return res.status(500).json({ error: error.message });
   res.json({ ok: true });
 });

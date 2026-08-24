@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
@@ -24,7 +25,8 @@ final GlobalKey<material.ScaffoldState> rootScaffoldKey =
     GlobalKey<material.ScaffoldState>();
 
 // Local notifications for foreground messages
-final FlutterLocalNotificationsPlugin _localNotifs = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin _localNotifs =
+    FlutterLocalNotificationsPlugin();
 
 // Background message handler (must be top-level)
 @pragma('vm:entry-point')
@@ -35,55 +37,6 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Firebase init
-  try {
-    await Firebase.initializeApp();
-    debugPrint('Firebase initialized');
-  } catch (e) {
-    debugPrint('Firebase init error: $e');
-  }
-
-  // FCM setup
-  try {
-    FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
-    final messaging = FirebaseMessaging.instance;
-    
-    // Request permission
-    await messaging.requestPermission(alert: true, badge: true, sound: true);
-    
-    // Get token
-    final token = await messaging.getToken();
-    debugPrint('FCM Token: $token');
-    
-    // Setup local notifications for foreground
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initSettings = InitializationSettings(android: androidInit);
-    await _localNotifs.initialize(initSettings);
-    
-    // Foreground message handler
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      final notification = message.notification;
-      if (notification != null) {
-        _localNotifs.show(
-          notification.hashCode,
-          notification.title ?? 'ViaBarcazas',
-          notification.body ?? '',
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'viabarcazas_channel', 'ViaBarcazas Notificaciones',
-              channelDescription: 'Notificaciones de ViaBarcazas',
-              importance: Importance.high,
-              priority: Priority.high,
-              icon: '@mipmap/ic_launcher',
-            ),
-          ),
-        );
-      }
-    });
-  } catch (e) {
-    debugPrint('FCM setup error: $e');
-  }
 
   // Supabase credentials via --dart-define (never hardcode in production)
   const supabaseUrl = String.fromEnvironment(
@@ -92,7 +45,8 @@ Future<void> main() async {
   );
   const supabaseKey = String.fromEnvironment(
     'SUPABASE_ANON_KEY',
-    defaultValue: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc',
+    defaultValue:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5meWJubnBkcnZ5eHVjZ3BxbW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc1MzYyMTQsImV4cCI6MjA4MzExMjIxNH0.hMCCfcdSeXBF0Ed8g3tzhNH0M3foeiAYXG12p34JGRc',
   );
   try {
     await Supabase.initialize(
@@ -108,20 +62,18 @@ Future<void> main() async {
 
   // Save FCM token after auth state changes (not in main where user is null)
   Supabase.instance.client.auth.onAuthStateChange.listen((data) {
-    if (data.event == AuthChangeEvent.signedIn || data.event == AuthChangeEvent.tokenRefreshed) {
+    if (data.event == AuthChangeEvent.signedIn ||
+        data.event == AuthChangeEvent.tokenRefreshed) {
       _saveFcmToken();
     }
-  });
-
-  // Also listen for FCM token refreshes
-  FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-    _saveFcmToken();
   });
 
   // Global Error Handlers para Refresh Token Bug (Supabase)
   FlutterError.onError = (details) {
     final errorStr = details.exceptionAsString().toLowerCase();
-    if (errorStr.contains('refresh_token') || errorStr.contains('already_used') || errorStr.contains('invalid refresh token')) {
+    if (errorStr.contains('refresh_token') ||
+        errorStr.contains('already_used') ||
+        errorStr.contains('invalid refresh token')) {
       SupabaseService.forceSignOutCorruptSession();
       return;
     }
@@ -131,13 +83,18 @@ Future<void> main() async {
   PlatformDispatcher.instance.onError = (error, stack) {
     final errorStr = error.toString().toLowerCase();
     // Only silence refresh token corruption — let real errors propagate
-    if (errorStr.contains('refresh_token') || errorStr.contains('already_used') || errorStr.contains('invalid refresh token')) {
+    if (errorStr.contains('refresh_token') ||
+        errorStr.contains('already_used') ||
+        errorStr.contains('invalid refresh token')) {
       SupabaseService.forceSignOutCorruptSession();
       return true;
     }
     // Silence network errors that are not actionable
-    if (errorStr.contains('socketexception') || errorStr.contains('timeoutexception') || errorStr.contains('connection refused')) {
-      if (kDebugMode) debugPrint('\u26a0\ufe0f Network error suppressed: $error');
+    if (errorStr.contains('socketexception') ||
+        errorStr.contains('timeoutexception') ||
+        errorStr.contains('connection refused')) {
+      if (kDebugMode)
+        debugPrint('\u26a0\ufe0f Network error suppressed: $error');
       return true;
     }
     // In release: swallow to prevent crash. In debug: propagate to see errors.
@@ -148,6 +105,54 @@ Future<void> main() async {
   ConnectivityService.startMonitoring();
 
   runApp(const RiverHubMobileApp());
+
+  // Push notifications must never delay the first rendered screen.
+  unawaited(_initializeFirebase());
+}
+
+Future<void> _initializeFirebase() async {
+  try {
+    await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
+  } catch (e) {
+    // Debug APKs can intentionally omit the private google-services.json file.
+    debugPrint('Firebase unavailable: $e');
+    return;
+  }
+
+  try {
+    final messaging = FirebaseMessaging.instance;
+    await messaging.requestPermission(alert: true, badge: true, sound: true);
+    debugPrint('FCM Token: ${await messaging.getToken()}');
+
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    await _localNotifs.initialize(
+      const InitializationSettings(android: androidInit),
+    );
+
+    messaging.onTokenRefresh.listen((_) => _saveFcmToken());
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final notification = message.notification;
+      if (notification == null) return;
+      _localNotifs.show(
+        notification.hashCode,
+        notification.title ?? 'ViaBarcazas',
+        notification.body ?? '',
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'viabarcazas_channel',
+            'ViaBarcazas Notificaciones',
+            channelDescription: 'Notificaciones de ViaBarcazas',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: '@mipmap/ic_launcher',
+          ),
+        ),
+      );
+    });
+  } catch (e) {
+    debugPrint('FCM setup error: $e');
+  }
 }
 
 Future<void> _saveFcmToken() async {
@@ -156,7 +161,10 @@ Future<void> _saveFcmToken() async {
     if (user == null) return;
     final token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
-      await Supabase.instance.client.from('user_profiles').update({'fcm_token': token}).eq('user_id', user.id);
+      await Supabase.instance.client
+          .from('user_profiles')
+          .update({'fcm_token': token})
+          .eq('user_id', user.id);
       debugPrint('FCM token saved to Supabase');
     }
   } catch (e) {
@@ -245,6 +253,7 @@ class _RiverHubMobileAppState extends State<RiverHubMobileApp> {
     if (!_splashDone) {
       return SplashScreen(
         destination: destination,
+        isAuthenticated: _loggedIn == true,
         onComplete: () {
           if (mounted) setState(() => _splashDone = true);
         },

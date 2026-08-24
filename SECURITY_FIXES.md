@@ -38,7 +38,7 @@ Todas fueron remediadas exitosamente el 4 de junio de 2026, llevando el risk sco
 | # | Vulnerabilidad | Archivo | Fix | Estado |
 |---|---------------|---------|-----|--------|
 | 1.1 | Credenciales superadmin hardcodeadas en HTML (`SA_EMAIL`, `SA_PASS`) | `public/superadmin-viabarcazas.html` | Eliminadas. Login ahora via `POST /api/auth/superadmin-login` con Supabase Auth + verificación de rol superadmin | ✅ |
-| 1.2 | API keys n8n expuestas en JS cliente (`RH_Secure_n8n_X9fL!2026`) | 5 archivos en `public/js/modules/` | Keys eliminadas. Llamadas redirigidas a `/api/n8n/proxy` (server-side) | ✅ |
+| 1.2 | API keys n8n expuestas en JS cliente | 5 archivos en `public/js/modules/` | Keys eliminadas. Llamadas redirigidas a `/api/n8n/proxy` (server-side) | ✅ |
 | 1.3 | Rutas IA sin autenticación (`/predict-maintenance`, `/optimize-convoy`, `/fuel-anomalies`) | `routes/aiRoutes.js` | Añadido middleware `authenticateUser` a las 3 rutas | ✅ |
 | 1.4 | Firebase service account como archivo JSON en el repo | `app.js`, `routes/n8n-automations.js` | Cambiado a `JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)` | ✅ |
 

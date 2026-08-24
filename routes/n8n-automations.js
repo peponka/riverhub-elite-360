@@ -39,8 +39,13 @@ if (!admin.apps.length) {
 const N8N_API_KEY = process.env.N8N_API_KEY;
 if (!N8N_API_KEY) throw new Error('N8N_API_KEY environment variable is required');
 
+// n8n requests are authenticated server-to-server. Use the service client so
+// automation keeps working after public table policies are removed.
+const getDb = (req) => req.app.locals.supabaseAdmin || req.app.locals.supabase;
+
 const authenticateN8N = (req, res, next) => {
-    const apiKey = req.headers['x-api-key'] || req.query.apikey;
+    // Query strings are routinely retained in logs and proxies; keep secrets in headers only.
+    const apiKey = req.headers['x-api-key'];
     if (apiKey !== N8N_API_KEY) {
         return res.status(401).json({ error: 'Unauthorized', message: 'API key inválida. Enviar header x-api-key' });
     }
@@ -56,7 +61,7 @@ router.use(authenticateN8N);
 // ============================================
 router.get('/fleet-status', async (req, res) => {
     try {
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         if (!sb) return res.json({ vessels: [], source: 'no_db', message: 'Supabase no configurado en servidor' });
 
         const { data: vessels, error } = await sb
@@ -95,7 +100,7 @@ router.get('/fleet-status', async (req, res) => {
 router.get('/fuel-alerts', async (req, res) => {
     try {
         const threshold = parseInt(req.query.threshold) || 25; // Default: < 25%
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
 
         if (!sb) {
             // Demo data if no DB
@@ -144,7 +149,7 @@ router.get('/fuel-alerts', async (req, res) => {
 router.get('/maintenance-due', async (req, res) => {
     try {
         const daysAhead = parseInt(req.query.days) || 7;
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
 
         if (!sb) {
             return res.json({
@@ -201,7 +206,7 @@ router.get('/maintenance-due', async (req, res) => {
 // ============================================
 router.get('/daily-summary', async (req, res) => {
     try {
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         const aisPositions = req.app.locals.aisPositions || {};
         const aisCount = Object.keys(aisPositions).length;
 
@@ -269,7 +274,7 @@ router.post('/log-positions', async (req, res) => {
             return res.json({ logged: 0, message: 'No hay posiciones AIS activas para loguear' });
         }
 
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         if (!sb) {
             return res.json({
                 logged: 0,
@@ -419,7 +424,7 @@ router.get('/hydrology', async (req, res) => {
 router.get('/crew-certifications', async (req, res) => {
     try {
         const daysAhead = parseInt(req.query.days) || 30;
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
 
         if (!sb) {
             return res.json({ expiring: [], message: 'Supabase no configurado' });
@@ -506,7 +511,7 @@ router.get('/crew-certifications', async (req, res) => {
 // ============================================
 router.post('/send-alert', async (req, res) => {
     try {
-        const { type, title, message, severity, vessel_name, data: alertData } = req.body;
+        const { type, title, message, severity, vessel_name, company_id, data: alertData } = req.body;
 
         if (!title || !message) {
             return res.status(400).json({ error: 'Campos requeridos: title, message' });
@@ -518,13 +523,14 @@ router.post('/send-alert', async (req, res) => {
             message,
             severity: severity || 'info', // info, warning, critical
             vessel_name: vessel_name || null,
+            company_id: company_id || null,
             source: 'n8n',
             metadata: alertData || {},
             created_at: new Date().toISOString(),
             read: false
         };
 
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         if (sb) {
             const { error } = await sb.from('system_alerts').insert([alert]);
             if (error) console.warn('Alert DB save error:', error.message);
@@ -579,7 +585,7 @@ router.post('/send-alert', async (req, res) => {
 // ============================================
 router.get('/voyage-status', async (req, res) => {
     try {
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         if (!sb) {
             return res.json({ trips: [], message: 'Supabase no configurado' });
         }
@@ -727,7 +733,7 @@ router.get('/anomalies', (req, res) => {
 // ============================================
 router.get('/ai-analysis', async (req, res) => {
     try {
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         const aisData = req.app.locals.aisPositions || {};
         
         // Obtenemos los buques
@@ -773,7 +779,7 @@ Instrucción: Escribe un resumen ejecutivo de un párrafo, en tono profesional p
 // ============================================
 router.get('/delayed-voyages', async (req, res) => {
     try {
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         if (!sb) {
             return res.json({ delayed: [], message: 'Supabase no configurado' });
         }
@@ -827,7 +833,7 @@ router.get('/delayed-voyages', async (req, res) => {
 // ============================================
 router.get('/unresolved-incidents', async (req, res) => {
     try {
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         if (!sb) return res.json({ incidents: [], message: 'Supabase no configurado' });
 
         const { data, error } = await sb
@@ -871,7 +877,7 @@ router.post('/create-maintenance', async (req, res) => {
             return res.status(400).json({ error: 'Faltan campos requeridos (vessel_name, task_name)' });
         }
 
-        const sb = req.app.locals.supabase;
+        const sb = getDb(req);
         if (!sb) return res.status(500).json({ error: 'Supabase desconectado' });
 
         // 'maintenance_logs' no existe: la tabla real es 'maintenance_tasks',

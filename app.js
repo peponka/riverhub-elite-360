@@ -61,6 +61,20 @@ const app = express();
 app.set('trust proxy', 1);
 const cors = require('cors');
 
+// Initialize database clients before mounting route modules that capture them.
+if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+    app.locals.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+    console.log('✅ Supabase server-side client initialized');
+} else {
+    console.warn('⚠️ SUPABASE_URL/KEY not set — protected DB endpoints will be unavailable');
+}
+if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    app.locals.supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+    console.log('✅ Supabase Admin (service role) client initialized');
+} else {
+    console.warn('⚠️ SUPABASE_SERVICE_KEY not set — privileged server operations are unavailable');
+}
+
 const server = http.createServer(app);
 const ALLOWED_ORIGINS = [
     process.env.FRONTEND_URL || 'https://viabarcazas.com',
@@ -154,6 +168,43 @@ const authenticateUser = async (req, res, next) => {
         return res.status(401).json({ error: 'Auth failed' });
     }
 };
+
+// System alerts are read through the backend. The client never receives
+// direct access to the automation tables in Supabase.
+app.get('/api/system-alerts', authenticateUser, async (req, res) => {
+    try {
+        const sb = req.app.locals.supabaseAdmin || req.app.locals.supabase;
+        if (!sb) return res.status(503).json({ error: 'Base de datos no disponible' });
+
+        const { data: profile, error: profileError } = await sb
+            .from('user_profiles')
+            .select('company_id, role')
+            .eq('user_id', req.user.id)
+            .maybeSingle();
+        if (profileError) throw profileError;
+        if (!profile) return res.status(403).json({ error: 'Perfil de empresa no encontrado' });
+
+        let query = sb
+            .from('system_alerts')
+            .select('id, type, title, message, severity, vessel_name, source, metadata, created_at')
+            .order('created_at', { ascending: false })
+            .limit(20);
+
+        if (profile.role !== 'superadmin') {
+            // Global alerts are safe to share; company alerts remain isolated.
+            query = profile.company_id
+                ? query.or(`company_id.is.null,company_id.eq.${profile.company_id}`)
+                : query.is('company_id', null);
+        }
+
+        const { data: alerts, error } = await query;
+        if (error) throw error;
+        res.json({ alerts: alerts || [] });
+    } catch (e) {
+        console.error('[System Alerts]', e.message);
+        res.status(500).json({ error: 'No se pudieron cargar las alertas' });
+    }
+});
 
 app.get('/api/health', (req, res) => {
     res.json({
@@ -779,9 +830,11 @@ if (whatsappRoutes) {
     // daily-check is called by cron jobs — protected with CRON_SECRET header
     // all other endpoints require a valid user JWT
     const whatsappAuth = (req, res, next) => {
-        if (req.path === '/daily-check') {
+        const isCronJob = req.path === '/daily-check' || req.path === '/alert';
+        if (isCronJob) {
             const secret = req.headers['x-cron-secret'];
             if (secret && secret === process.env.CRON_SECRET) return next();
+            if (req.path === '/alert') return authenticateUser(req, res, next);
             return res.status(401).json({ error: 'Unauthorized' });
         }
         return authenticateUser(req, res, next);
@@ -813,21 +866,6 @@ if (onboardingRoutes) {
     app.use('/api/onboarding', obRouter);
     app.use('/api/vessels', obRouter); // bulk-import-vessels también en /api/vessels
     console.log('✅ Onboarding API mounted at /api/onboarding');
-}
-
-// --- SUPABASE SERVER-SIDE CLIENT ---
-if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
-    app.locals.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-    console.log('✅ Supabase server-side client initialized');
-} else {
-    console.warn('⚠️ SUPABASE_URL/KEY not set — n8n DB endpoints will return demo data');
-}
-// --- SUPABASE ADMIN CLIENT (service role — for public endpoints like /api/contact) ---
-if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
-    app.locals.supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-    console.log('✅ Supabase Admin (service role) client initialized');
-} else {
-    console.warn('⚠️ SUPABASE_SERVICE_KEY not set — contact form leads will only log to console');
 }
 
 // --- SHARED STATE FOR n8n ---

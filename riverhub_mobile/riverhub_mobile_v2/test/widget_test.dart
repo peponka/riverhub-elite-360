@@ -5,10 +5,11 @@ import 'package:riverhub_mobile_v2/widgets/offline_banner.dart';
 
 void main() {
   group('SplashScreen', () {
-    testWidgets('renders logo image and ViaBarcazas text', (tester) async {
+    testWidgets('renders the ViaBarcazas welcome landing', (tester) async {
       await tester.pumpWidget(
         CupertinoApp(
           home: SplashScreen(
+            isAuthenticated: false,
             destination: const CupertinoPageScaffold(
               child: Center(child: Text('Destination')),
             ),
@@ -17,20 +18,18 @@ void main() {
       );
       await tester.pump();
 
-      // Should show ViaBarcazas text
       expect(find.text('ViaBarcazas'), findsOneWidget);
-
-      // Should show HIDROVÍA INTELIGENTE tagline
-      expect(find.text('HIDROVÍA INTELIGENTE'), findsOneWidget);
-
-      // Should have an activity indicator
-      expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+      expect(find.text('Solicitar Demo'), findsOneWidget);
+      expect(find.text('Ver Plataforma'), findsOneWidget);
     });
 
-    testWidgets('navigates to destination after animation', (tester) async {
+    testWidgets('continues to the panel for an authenticated user', (tester) async {
+      var didContinue = false;
       await tester.pumpWidget(
         CupertinoApp(
           home: SplashScreen(
+            isAuthenticated: true,
+            onComplete: () => didContinue = true,
             destination: const CupertinoPageScaffold(
               child: Center(child: Text('Arrived')),
             ),
@@ -38,15 +37,10 @@ void main() {
         ),
       );
 
-      // Before animation completes
-      expect(find.text('ViaBarcazas'), findsOneWidget);
-      expect(find.text('Arrived'), findsNothing);
+      await tester.tap(find.text('Entrar al panel'));
+      await tester.pump();
 
-      // Pump through the full 2.4s animation + navigation
-      await tester.pumpAndSettle(const Duration(seconds: 3));
-
-      // Should have navigated to destination
-      expect(find.text('Arrived'), findsOneWidget);
+      expect(didContinue, isTrue);
     });
   });
 

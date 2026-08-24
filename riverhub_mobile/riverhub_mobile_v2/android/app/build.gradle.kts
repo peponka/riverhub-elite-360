@@ -1,13 +1,19 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services") apply false
 }
 
-import java.util.Properties
-import java.io.FileInputStream
+// Firebase needs google-services.json, which is intentionally not committed.
+// Keep debug builds usable without the private Firebase configuration file.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
 
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
