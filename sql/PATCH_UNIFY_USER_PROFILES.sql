@@ -15,6 +15,9 @@ ALTER TABLE public.user_profiles ADD COLUMN IF NOT EXISTS permissions JSONB NOT 
 ALTER TABLE public.user_profiles ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
 -- Legacy columns are kept only while old dashboard screens are migrated.
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS phone TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS job_title TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_url TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS fcm_token TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS last_login TIMESTAMPTZ;
@@ -24,18 +27,17 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS permissions JSONB NOT NULL 
 -- canonical company or role already stored in user_profiles.
 UPDATE public.user_profiles up
 SET
-  email = COALESCE(up.email, p.email, au.email),
-  full_name = COALESCE(up.full_name, p.full_name),
-  phone = COALESCE(up.phone, p.phone),
-  job_title = COALESCE(up.job_title, p.job_title),
-  avatar_url = COALESCE(up.avatar_url, p.avatar_url),
-  fcm_token = COALESCE(up.fcm_token, p.fcm_token),
-  is_active = COALESCE(up.is_active, p.is_active, true),
-  last_login = COALESCE(up.last_login, p.last_login),
-  permissions = COALESCE(up.permissions, p.permissions, '{}'::jsonb),
+  email = COALESCE(up.email, (SELECT p.email FROM public.profiles p WHERE p.id = up.user_id), au.email),
+  full_name = COALESCE(up.full_name, (SELECT p.full_name FROM public.profiles p WHERE p.id = up.user_id)),
+  phone = COALESCE(up.phone, (SELECT p.phone FROM public.profiles p WHERE p.id = up.user_id)),
+  job_title = COALESCE(up.job_title, (SELECT p.job_title FROM public.profiles p WHERE p.id = up.user_id)),
+  avatar_url = COALESCE(up.avatar_url, (SELECT p.avatar_url FROM public.profiles p WHERE p.id = up.user_id)),
+  fcm_token = COALESCE(up.fcm_token, (SELECT p.fcm_token FROM public.profiles p WHERE p.id = up.user_id)),
+  is_active = COALESCE(up.is_active, (SELECT p.is_active FROM public.profiles p WHERE p.id = up.user_id), true),
+  last_login = COALESCE(up.last_login, (SELECT p.last_login FROM public.profiles p WHERE p.id = up.user_id)),
+  permissions = COALESCE(up.permissions, (SELECT p.permissions FROM public.profiles p WHERE p.id = up.user_id), '{}'::jsonb),
   updated_at = NOW()
 FROM auth.users au
-LEFT JOIN public.profiles p ON p.id = up.user_id
 WHERE au.id = up.user_id;
 
 CREATE INDEX IF NOT EXISTS idx_user_profiles_fcm_token
