@@ -22,7 +22,7 @@ Resolvimos con éxito rotundo el reporte de la `AUDITORIA_RIVERHUB_2026.md`:
 - [ ] **Limpieza de Artifacts:** Corregir iconos desfasados o modales en módulos clave (Facturación, Backoffice).
 
 ## FASE 2: Validar la Infraestructura Cloud y n8n ☁️
-- [ ] **Testeo de n8n Webhooks:** Disparar un pago mock desde el módulo Billing (ahora seguro) y confirmar que la automatización llega, es validada por la nueva Key segura (`RH_Secure_n8n_...`), y se procesa.
+- [ ] **Testeo de n8n Webhooks:** Disparar un pago mock desde el módulo Billing (ahora seguro) y confirmar que la automatización llega, es validada por la clave segura configurada en el entorno, y se procesa.
 - [ ] **AISStream y Firebase en Render:** Revisar en vivo los logs de Render para garantizar 100% que el radar está tragando datos y no arroja `Error 429`. Rotar keys de Gemini y AIS si amerita.
 
 ## FASE 3: El Gran Despliegue Móvil (Flutter APK) 📱

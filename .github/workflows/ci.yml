@@ -28,7 +28,7 @@ jobs:
           echo "Checking for hardcoded secrets..."
           ! grep -rn "viabarcazas2026super" public/ --include="*.html" --include="*.js" || (echo "FAIL: Hardcoded password found!" && exit 1)
           ! grep -rn "x-api-key.*riverhub_n8n" public/ --include="*.js" || (echo "FAIL: Hardcoded API key found!" && exit 1)
-          ! grep -RIn --exclude-dir=node_modules --exclude-dir=.git --exclude=package-lock.json "RH_Secure_n8n_" . || (echo "FAIL: Historical n8n key found!" && exit 1)
+          ! grep -RIn --exclude-dir=node_modules --exclude-dir=.git --exclude=package-lock.json --exclude=ci.yml "RH_Secure_n8n_" . || (echo "FAIL: Historical n8n key found!" && exit 1)
           echo "✅ No hardcoded secrets found"
 
       - name: Verify app starts
