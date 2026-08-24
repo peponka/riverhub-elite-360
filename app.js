@@ -342,6 +342,13 @@ app.post('/api/ai/chat', aiLimiter, authenticateUser, async (req, res) => {
         return res.status(400).json({ error: 'Missing message' });
     }
 
+    // Keep production diagnostics useful without recording user messages or secrets.
+    console.info('[Gemini Chat] request received', {
+        messageLength: String(message).length,
+        contextLength: String(context || '').length,
+        historyCount: Array.isArray(history) ? history.length : 0
+    });
+
     const systemPrompt = `Eres el Copiloto IA de ViaBarcazas, un experto en gestión inteligente de flotas fluviales para la Hidrovía Paraguay-Paraná.
 Reglas estrictas:
 1. NO te presentes ni saludes repetidamente en cada mensaje. Respondé directamente a la pregunta.
@@ -353,7 +360,7 @@ Contexto de Flota actual:
 ${context || 'No hay embarcaciones registradas o activas.'}`;
 
     try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
+        const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
         let contents = [];
         if (history && Array.isArray(history)) {
@@ -370,7 +377,10 @@ ${context || 'No hay embarcaciones registradas o activas.'}`;
 
         const response = await fetch(geminiUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'x-goog-api-key': GEMINI_KEY
+            },
             body: JSON.stringify({
                 systemInstruction: {
                     parts: [{ text: systemPrompt }]
@@ -383,12 +393,19 @@ ${context || 'No hay embarcaciones registradas o activas.'}`;
             })
         });
 
-        const data = await response.json();
+        const rawResponse = await response.text();
+        let data;
+        try {
+            data = JSON.parse(rawResponse);
+        } catch (_) {
+            data = { rawResponse };
+        }
 
         if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+            console.info('[Gemini Chat] response generated');
             res.json({ response: data.candidates[0].content.parts[0].text });
         } else {
-            console.error('Gemini response error:', response.status, JSON.stringify(data).substring(0, 500));
+            console.error('[Gemini Chat] response error:', response.status, JSON.stringify(data).substring(0, 500));
             res.status(response.ok ? 502 : response.status).json({
                 response: 'El Copiloto no pudo responder en este momento. Intentá nuevamente en unos segundos.'
             });
