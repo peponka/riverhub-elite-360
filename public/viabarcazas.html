@@ -729,66 +729,52 @@
             <!-- PLANES & FACTURACION -->
             <div class="view" id="view-planes">
                 <div class="viabarcazas-title">Planes &amp;<br><em>Facturacion.</em></div>
-                <div class="viabarcazas-subtitle">ELIGE TU PLAN - HIDROVIA INTELIGENTE</div>
-                <div class="plan-toggle" style="margin-top:20px">
-                    <span class="plan-period active" id="plan-monthly" onclick="togglePeriod('monthly')">Mensual</span>
-                    <span class="plan-period" id="plan-yearly" onclick="togglePeriod('yearly')">Anual <small>-20%</small></span>
-                </div>
-                <div class="pricing-grid" id="pricing-grid">
+                <div class="viabarcazas-subtitle">PRECIO SEGÚN EL TAMAÑO REAL DE TU FLOTA</div>
+                <div class="pricing-grid" id="pricing-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:20px">
                     <div class="pricing-card">
                         <div class="plan-icon"><i class="fa-solid fa-ship"></i></div>
-                        <h3 class="plan-name">Starter</h3>
-                        <p class="plan-desc">Hasta 5 embarcaciones — Control esencial de tu flota</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="149" data-yearly="119">$149</span><span class="plan-unit">/mes</span></div>
+                        <h3 class="plan-name">Unidad Individual</h3>
+                        <p class="plan-desc">Hasta 1 embarcación facturable</p>
+                        <div class="plan-price"><span class="plan-amount">USD 125</span><span class="plan-unit">/mes</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Hasta 5 embarcaciones</li>
-                            <li><i class="fa-solid fa-check"></i>Tracking AIS en tiempo real</li>
-                            <li><i class="fa-solid fa-check"></i>Bitácora digital</li>
-                            <li><i class="fa-solid fa-check"></i>Control de combustible</li>
-                            <li><i class="fa-solid fa-check"></i>Mantenimiento preventivo</li>
-                            <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>Copiloto IA</li>
-                            <li class="feat-disabled"><i class="fa-solid fa-xmark"></i>Armador de convoyes</li>
+                            <li><i class="fa-solid fa-check"></i>USD 125 por embarcación</li>
+                            <li><i class="fa-solid fa-check"></i>Barcaza o remolcador</li>
                         </ul>
-                        <button class="plan-btn" onclick="selectPlan('starter')">Solicitar Demo</button>
+                        <button class="plan-btn" onclick="location.href='/pricing.html#contacto'">Solicitar Demo</button>
                     </div>
                     <div class="pricing-card popular">
                         <div class="plan-badge">MÁS POPULAR</div>
                         <div class="plan-icon"><i class="fa-solid fa-anchor"></i></div>
-                        <h3 class="plan-name">Profesional</h3>
-                        <p class="plan-desc">Hasta 20 embarcaciones — Gestión integral de flota</p>
-                        <div class="plan-price"><span class="plan-amount" data-monthly="499" data-yearly="399">$499</span><span class="plan-unit">/mes</span></div>
+                        <h3 class="plan-name">Combo Flota 25</h3>
+                        <p class="plan-desc">Hasta 25 embarcaciones facturables</p>
+                        <div class="plan-price"><span class="plan-amount">USD 2.500</span><span class="plan-unit">/mes</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Hasta 20 embarcaciones</li>
-                            <li><i class="fa-solid fa-check"></i>Todo de Starter</li>
-                            <li><i class="fa-solid fa-check"></i>Armador de convoyes</li>
-                            <li><i class="fa-solid fa-check"></i>Gestión de tripulación</li>
-                            <li><i class="fa-solid fa-check"></i>Pronóstico de hidrovía</li>
-                            <li><i class="fa-solid fa-check"></i>Copiloto IA</li>
+                            <li><i class="fa-solid fa-check"></i>USD 100 por embarcación</li>
+                            <li><i class="fa-solid fa-check"></i>Barcazas y remolcadores por igual</li>
+                            <li><i class="fa-solid fa-check"></i>Compromiso anual disponible</li>
                         </ul>
-                        <button class="plan-btn popular-btn" onclick="selectPlan('profesional')">Solicitar Demo</button>
+                        <button class="plan-btn popular-btn" onclick="location.href='/pricing.html#contacto'">Solicitar Demo</button>
                     </div>
                     <div class="pricing-card">
                         <div class="plan-icon"><i class="fa-solid fa-building"></i></div>
-                        <h3 class="plan-name">Enterprise</h3>
-                        <p class="plan-desc">Embarcaciones ilimitadas — Solución corporativa a medida</p>
-                        <div class="plan-price"><span class="plan-amount">Contactar</span><span class="plan-unit"></span></div>
+                        <h3 class="plan-name">Combos Flota</h3>
+                        <p class="plan-desc">10, 50, 100 y 150 embarcaciones</p>
+                        <div class="plan-price"><span class="plan-amount">Desde USD 1.100</span><span class="plan-unit">/mes</span></div>
                         <ul class="plan-features">
-                            <li><i class="fa-solid fa-check"></i>Embarcaciones ilimitadas</li>
-                            <li><i class="fa-solid fa-check"></i>Todo de Profesional</li>
-                            <li><i class="fa-solid fa-check"></i>API e integraciones</li>
-                            <li><i class="fa-solid fa-check"></i>SLA 99.9% garantizado</li>
-                            <li><i class="fa-solid fa-check"></i>Soporte dedicado 24/7</li>
-                            <li><i class="fa-solid fa-check"></i>Onboarding personalizado</li>
+                            <li><i class="fa-solid fa-check"></i>10: USD 1.100</li>
+                            <li><i class="fa-solid fa-check"></i>50: USD 4.750</li>
+                            <li><i class="fa-solid fa-check"></i>100: USD 9.000</li>
+                            <li><i class="fa-solid fa-check"></i>150: USD 12.750</li>
+                            <li><i class="fa-solid fa-check"></i>Más de 150: propuesta</li>
                         </ul>
-                        <button class="plan-btn" onclick="selectPlan('enterprise')">Contactar Ventas</button>
+                        <button class="plan-btn" onclick="location.href='/pricing.html#contacto'">Hablar con ventas</button>
                     </div>
                 </div>
                 <div class="plan-faq">
                     <div class="section-title">Preguntas Frecuentes</div>
-                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Puedo cambiar de plan?</h4><p>Si, podes upgradear o downgradear en cualquier momento. El cambio se aplica al proximo ciclo de facturacion.</p></div></div>
-                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Que metodos de pago aceptan?</h4><p>Tarjeta de credito/debito, transferencia bancaria, y facturacion corporativa mensual.</p></div></div>
-                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Hay periodo de prueba?</h4><p>Si, todos los planes incluyen 14 dias gratis sin compromiso. Sin tarjeta requerida.</p></div></div>
-                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Que incluye el soporte?</h4><p>Todos los planes incluyen soporte por email. Enterprise e Ilimitado tienen soporte 24/7 con tiempo de respuesta garantizado.</p></div></div>
+                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Cómo se cuenta la flota?</h4><p>Cada barcaza y cada remolcador registrado consume una unidad del plan.</p></div></div>
+                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Cómo se contrata?</h4><p>Mediante propuesta comercial, con facturación mensual y compromiso anual de 12 meses o prepago anual con hasta 10% de descuento.</p></div></div>
+                    <div class="info-card"><i class="fa-solid fa-circle-question"></i><div class="info-card-text"><h4>Hay piloto?</h4><p>Sí: 60 días, hasta 15 embarcaciones, USD 3.000. El 50% se acredita a implementación al firmar un contrato anual.</p></div></div>
                 </div>
             </div>
             <!-- ADMIN PANEL -->
