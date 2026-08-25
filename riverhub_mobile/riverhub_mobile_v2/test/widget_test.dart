@@ -19,8 +19,9 @@ void main() {
       await tester.pump();
 
       expect(find.text('ViaBarcazas'), findsOneWidget);
-      expect(find.text('Solicitar Demo'), findsOneWidget);
-      expect(find.text('Ver Plataforma'), findsOneWidget);
+      expect(find.text('Crear cuenta'), findsOneWidget);
+      // 'Ingresar' appears twice: the header shortcut and the main CTA button.
+      expect(find.text('Ingresar'), findsNWidgets(2));
     });
 
     testWidgets('continues to the panel for an authenticated user', (tester) async {
