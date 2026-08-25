@@ -26,12 +26,13 @@ BEGIN
       ) AS zones(name, lat, lon, radius_meters)
     LOOP
       INSERT INTO geofences (
-        company_id, name, geom_type, coordinates,
+        company_id, name, type, geom_type, coordinates,
         alert_on_enter, alert_on_exit, is_active, color
       )
       SELECT
         company.company_id,
         zone.name,
+        'operational_port',
         'circle',
         jsonb_build_object(
           'center', jsonb_build_object('lat', zone.lat, 'lng', zone.lon),
