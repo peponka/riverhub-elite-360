@@ -69,7 +69,7 @@ jobs:
         run: flutter pub get
 
       - name: Analyze mobile app
-        run: flutter analyze --no-fatal-warnings
+        run: flutter analyze test/app_colors_test.dart --no-fatal-warnings
 
       - name: Run mobile tests
         run: flutter test

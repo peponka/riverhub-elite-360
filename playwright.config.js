@@ -12,7 +12,7 @@ module.exports = defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'node app.js',
+    command: 'PORT=4001 node app.js',
     port: 4001,
     timeout: 30000,
     reuseExistingServer: true,
