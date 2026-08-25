@@ -17,6 +17,13 @@ function esMantenimiento(estado) {
 const dashboardLogic = {
     ships: [],
     dashMap: null,
+    isDemoMode: new URLSearchParams(window.location.search).get('demo') === '1',
+    demoShips: [
+        { id: 'demo-guarani', name: 'R/M Guarani', status: 'en viaje', current_location: { lat: -25.30, lng: -57.64 } },
+        { id: 'demo-parana-12', name: 'B/G Parana 12', status: 'en viaje', current_location: { lat: -26.12, lng: -57.58 } },
+        { id: 'demo-atlas', name: 'R/M Atlas', status: 'mantenimiento', current_location: { lat: -25.62, lng: -57.52 } },
+        { id: 'demo-iguazu', name: 'B/G Iguazu', status: 'activo', current_location: { lat: -27.05, lng: -57.70 } }
+    ],
 
     init: async function () {
         void("🚀 Módulo Radar Dashboard Activo.");
@@ -88,6 +95,18 @@ const dashboardLogic = {
     },
 
     updateStats: async function () {
+        if (this.isDemoMode) {
+            const statValues = document.querySelectorAll('.stat-value');
+            const statLabels = document.querySelectorAll('.stat-label');
+            if (statValues.length >= 3) {
+                statValues[0].innerText = '3 / 4';
+                statValues[1].innerText = '18';
+                statValues[2].innerText = '1';
+            }
+            if (statLabels.length >= 2) statLabels[1].innerText = 'TRIPULACION ACTIVA';
+            this.updateFleetStatusChart(this.demoShips);
+            return;
+        }
         if (!window.sb) return;
 
         try {
@@ -220,35 +239,37 @@ const dashboardLogic = {
     loadShips: async function () {
         if (!this.dashMap) return;
         try {
+            if (this.isDemoMode) {
+                this.ships = this.demoShips;
+                this.addShipFeatures(this.ships);
+                return;
+            }
             // SAAS UPGRADE: Load only MY active ships
             const { data } = await window.sb.fetchMine('fleet_assets', '*');
 
             if (data && data.length > 0) {
                 this.ships = data;
-
-                const features = [];
-                this.ships.forEach(v => {
-                    const hasLoc = v.current_location && v.current_location.lat;
-                    let lat = hasLoc ? v.current_location.lat : -27.1 + (Math.random() - 0.5);
-                    let lng = hasLoc ? v.current_location.lng : -58.55 + (Math.random() - 0.5);
-
-                    if (!esActivo(v.status)) return;
-
-                    const feature = new ol.Feature({
-                        geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat])),
-                        name: v.name,
-                        status: v.status
-                    });
-                    features.push(feature);
-                });
-
-                if (features.length > 0) {
-                    this.vectorSource.addFeatures(features);
-                }
+                this.addShipFeatures(this.ships);
             }
         } catch (e) {
             console.error("Dashboard Map Load Error:", e);
         }
+    },
+
+    addShipFeatures: function (ships) {
+        const features = [];
+        ships.forEach(v => {
+            const hasLoc = v.current_location && v.current_location.lat;
+            const lat = hasLoc ? v.current_location.lat : -27.1 + (Math.random() - 0.5);
+            const lng = hasLoc ? v.current_location.lng : -58.55 + (Math.random() - 0.5);
+            if (!esActivo(v.status)) return;
+            features.push(new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat])),
+                name: v.name,
+                status: v.status
+            }));
+        });
+        if (features.length > 0) this.vectorSource.addFeatures(features);
     },
 
     // Subscribe to AISStream for live vessel updates

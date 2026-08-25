@@ -13,7 +13,7 @@
         android:label="ViaBarcazas"
         android:name="${applicationName}"
         android:icon="@drawable/viabarcazas_launcher"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"

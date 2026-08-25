@@ -32,12 +32,12 @@ class SupabaseService {
   }
 
   /// Default query limit for list endpoints
-  static const int _defaultLimit = 200;
+  static const int defaultLimit = 200;
 
   // ============ VESSELS ============
   static Future<List<Map<String, dynamic>>> getVessels() async {
     try {
-      final res = await client.from('vessels').select('*').limit(_defaultLimit);
+      final res = await client.from('vessels').select('*').limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getVessels error: $e');
@@ -48,7 +48,10 @@ class SupabaseService {
   // ============ CREW ============
   static Future<List<Map<String, dynamic>>> getCrewMembers() async {
     try {
-      final res = await client.from('crew_members').select('*').limit(_defaultLimit);
+      final res = await client
+          .from('crew_members')
+          .select('*')
+          .limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getCrewMembers error: $e');
@@ -83,7 +86,7 @@ class SupabaseService {
           .from('maintenance_tasks')
           .select('*, vessel:vessels(name)')
           .order('created_at', ascending: false)
-          .limit(_defaultLimit);
+          .limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getMaintenanceTasks error: $e');
@@ -121,7 +124,7 @@ class SupabaseService {
           .from('incidents')
           .select('*')
           .order('created_at', ascending: false)
-          .limit(_defaultLimit);
+          .limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getIncidents error: $e');
@@ -142,9 +145,7 @@ class SupabaseService {
   // ============ COMMUNICATIONS ============
   static Future<List<Map<String, dynamic>>> getComms({String? channel}) async {
     try {
-      var query = client
-          .from('comms')
-          .select('*');
+      var query = client.from('comms').select('*');
       if (channel != null) {
         query = query.eq('channel', channel);
       }
@@ -187,7 +188,10 @@ class SupabaseService {
   // ============ MONITORING ============
   static Future<List<Map<String, dynamic>>> getGeofences() async {
     try {
-      final res = await client.from('geofences').select('*').limit(_defaultLimit);
+      final res = await client
+          .from('geofences')
+          .select('*')
+          .limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getGeofences error: $e');
@@ -212,7 +216,10 @@ class SupabaseService {
   // ============ INVENTORY (PANOL) ============
   static Future<List<Map<String, dynamic>>> getInventoryItems() async {
     try {
-      final res = await client.from('inventory_items').select('*').limit(_defaultLimit);
+      final res = await client
+          .from('inventory_items')
+          .select('*')
+          .limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getInventoryItems error: $e');
@@ -233,7 +240,7 @@ class SupabaseService {
   // ============ COMMERCIAL ============
   static Future<List<Map<String, dynamic>>> getClients() async {
     try {
-      final res = await client.from('clients').select('*').limit(_defaultLimit);
+      final res = await client.from('clients').select('*').limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getClients error: $e');
@@ -247,7 +254,7 @@ class SupabaseService {
           .from('service_orders')
           .select('*')
           .order('created_at', ascending: false)
-          .limit(_defaultLimit);
+          .limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getServiceOrders error: $e');
@@ -265,7 +272,7 @@ class SupabaseService {
       if (orderId != null) {
         query = query.eq('order_id', orderId);
       }
-      final res = await query.limit(_defaultLimit);
+      final res = await query.limit(defaultLimit);
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
       debugPrint('[SupabaseService] getCargoManifests error: $e');
@@ -311,7 +318,9 @@ class SupabaseService {
   }
 
   // ============ VOYAGES ============
-  static Future<List<Map<String, dynamic>>> getVoyages({int limit = 100}) async {
+  static Future<List<Map<String, dynamic>>> getVoyages({
+    int limit = 100,
+  }) async {
     try {
       final res = await client
           .from('voyages')
@@ -326,7 +335,9 @@ class SupabaseService {
   }
 
   // ============ FUEL LOGS ============
-  static Future<List<Map<String, dynamic>>> getFuelLogs({int limit = 100}) async {
+  static Future<List<Map<String, dynamic>>> getFuelLogs({
+    int limit = 100,
+  }) async {
     try {
       final res = await client
           .from('fuel_logs')

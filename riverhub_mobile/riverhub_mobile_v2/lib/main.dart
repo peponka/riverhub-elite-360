@@ -97,9 +97,9 @@ Future<void> main() async {
         debugPrint('\u26a0\ufe0f Network error suppressed: $error');
       return true;
     }
-    // In release: swallow to prevent crash. In debug: propagate to see errors.
+    // Keep unexpected failures visible to Flutter's default error reporting.
     debugPrint('\u274c Unhandled error: $error');
-    return kDebugMode ? false : true;
+    return false;
   };
 
   ConnectivityService.startMonitoring();

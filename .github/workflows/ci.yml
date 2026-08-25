@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 jobs:
-  security-and-build:
+  web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,5 +36,40 @@ jobs:
           NODE_ENV: production
           PORT: 3000
         run: |
-          timeout 10 node app.js || true
-          echo "✅ App start check complete"
+          node app.js > app.log 2>&1 &
+          APP_PID=$!
+          trap 'kill $APP_PID' EXIT
+          for attempt in {1..10}; do
+            curl --fail --silent http://127.0.0.1:3000/api/health && exit 0
+            sleep 1
+          done
+          cat app.log
+          exit 1
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run web end-to-end tests
+        run: npx playwright test
+
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: riverhub_mobile/riverhub_mobile_v2
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze mobile app
+        run: flutter analyze
+
+      - name: Run mobile tests
+        run: flutter test
