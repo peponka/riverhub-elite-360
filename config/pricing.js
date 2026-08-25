@@ -1,6 +1,6 @@
 // Fuente unica de verdad para precios y cupos facturables de ViaBarcazas.
 const PLANES = Object.freeze([
-    { id: 'individual', name: 'Unidad Individual', capacity: 1, monthlyPrice: 125, effectiveUnitPrice: 125 },
+    { id: 'individual', name: 'Unidad Individual', capacity: 1, monthlyPrice: 115, effectiveUnitPrice: 115 },
     { id: 'fleet-10', name: 'Combo Flota 10', capacity: 10, monthlyPrice: 1100, effectiveUnitPrice: 110, },
     { id: 'fleet-25', name: 'Combo Flota 25', capacity: 25, monthlyPrice: 2500, effectiveUnitPrice: 100, popular: true },
     { id: 'fleet-50', name: 'Combo Flota 50', capacity: 50, monthlyPrice: 4750, effectiveUnitPrice: 95 },

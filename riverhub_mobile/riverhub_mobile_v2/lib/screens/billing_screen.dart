@@ -20,7 +20,7 @@ class _BillingScreenState extends State<BillingScreen> {
   final List<Map<String, dynamic>> _plans = [
     {
       'id': 'individual', 'name': 'Unidad Individual', 'desc': 'Hasta 1 embarcacion facturable',
-      'monthly': 125, 'yearly': 112.5, 'unit': '/mes', 'unitYearly': '/mes',
+      'monthly': 115, 'yearly': 103.5, 'unit': '/mes', 'unitYearly': '/mes',
       'icon': '🚢',
       'popular': false,
       'features': [
