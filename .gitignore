@@ -27,6 +27,7 @@ key.properties
 
 # Logs & debug output
 *.log
+*.log.*
 *.txt
 !README.md
 

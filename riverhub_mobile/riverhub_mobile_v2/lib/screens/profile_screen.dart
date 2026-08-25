@@ -52,15 +52,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
-        border: Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        border: Border(
+          bottom: BorderSide(color: AppColors.separator, width: 0.5),
+        ),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary),
+          child: Icon(
+            CupertinoIcons.bars,
+            size: 24,
+            color: AppColors.textPrimary,
+          ),
           onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
         ),
         middle: Text(
           t('profile_title'),
-          style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
         ),
       ),
       child: SafeArea(
@@ -71,13 +80,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Text(
               t('profile_my'),
               style: GoogleFonts.newsreader(
-                fontSize: 36, fontWeight: FontWeight.w400, color: AppColors.textPrimary, height: 1.1,
+                fontSize: 36,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textPrimary,
+                height: 1.1,
               ),
             ),
             Text(
               t('profile_subtitle'),
               style: GoogleFonts.newsreader(
-                fontSize: 36, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic, color: AppColors.textPrimary, height: 1.1,
+                fontSize: 36,
+                fontWeight: FontWeight.w300,
+                fontStyle: FontStyle.italic,
+                color: AppColors.textPrimary,
+                height: 1.1,
               ),
             ),
             const SizedBox(height: 32),
@@ -93,7 +109,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Row(
                 children: [
                   Container(
-                    width: 56, height: 56,
+                    width: 56,
+                    height: 56,
                     decoration: BoxDecoration(
                       color: AppColors.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(14),
@@ -102,7 +119,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                         _initials(_userEmail),
                         style: GoogleFonts.inter(
-                          fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.textPrimary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ),
@@ -115,19 +134,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Text(
                           _userEmail.split('@').first,
                           style: GoogleFonts.inter(
-                            fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           _userEmail,
-                          style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'SUPERADMIN',
                           style: GoogleFonts.inter(
-                            fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.success, letterSpacing: 1,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.success,
+                            letterSpacing: 1,
                           ),
                         ),
                       ],
@@ -143,7 +170,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Text(
               t('profile_settings'),
               style: GoogleFonts.inter(
-                fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textSecondary,
+                letterSpacing: 1.5,
               ),
             ),
             const SizedBox(height: 12),
@@ -153,7 +183,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: CupertinoIcons.bell,
                 title: t('profile_notifications'),
                 trailing: CupertinoSwitch(
-                  value: true, onChanged: (v) {},
+                  value: true,
+                  onChanged: (v) {},
                   activeTrackColor: AppColors.textPrimary,
                 ),
               ),
@@ -170,7 +201,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Text(
               t('profile_account'),
               style: GoogleFonts.inter(
-                fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 1.5,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textSecondary,
+                letterSpacing: 1.5,
               ),
             ),
             const SizedBox(height: 12),
@@ -180,15 +214,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: EdgeInsets.zero,
                 onPressed: () => _signOut(context),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 18,
+                  ),
                   child: Row(
                     children: [
-                      Icon(CupertinoIcons.square_arrow_right, color: AppColors.error, size: 20),
+                      Icon(
+                        CupertinoIcons.square_arrow_right,
+                        color: AppColors.error,
+                        size: 20,
+                      ),
                       const SizedBox(width: 14),
                       Text(
                         t('profile_sign_out'),
                         style: GoogleFonts.inter(
-                          fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.error,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.error,
                         ),
                       ),
                     ],
@@ -203,7 +246,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'VIABARCAZAS v4.2 · RIVERHUB ELITE 360',
                 style: GoogleFonts.inter(
-                  fontSize: 9, color: AppColors.textTertiary, fontWeight: FontWeight.w600, letterSpacing: 1,
+                  fontSize: 9,
+                  color: AppColors.textTertiary,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
                 ),
               ),
             ),
@@ -215,24 +261,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // ─── Language Toggle Row ─────────────────────────────────────────────────
   Widget _languageToggleRow() {
-    final isEn = LocaleService.current == 'en';
+    final currentLocale = LocaleService.current;
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 18),
           child: Row(
             children: [
-              Icon(CupertinoIcons.globe, color: AppColors.textSecondary, size: 20),
+              Icon(
+                CupertinoIcons.globe,
+                color: AppColors.textSecondary,
+                size: 20,
+              ),
               const SizedBox(width: 14),
               Expanded(
                 child: Text(
                   LocaleService.t('profile_language'),
                   style: GoogleFonts.inter(
-                    fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimary,
                   ),
                 ),
               ),
-              // ── EN/ES Segmented Control ──
+              // ── ES/EN/PT language control ──
               Container(
                 decoration: BoxDecoration(
                   color: AppColors.surfaceContainerLow,
@@ -241,12 +293,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _langButton('ES', !isEn, () {
+                    _langButton('ES', currentLocale == 'es', () {
                       LocaleService.setLocale('es');
                       setState(() {});
                     }),
-                    _langButton('EN', isEn, () {
+                    _langButton('EN', currentLocale == 'en', () {
                       LocaleService.setLocale('en');
+                      setState(() {});
+                    }),
+                    _langButton('PT', currentLocale == 'pt', () {
+                      LocaleService.setLocale('pt');
                       setState(() {});
                     }),
                   ],
@@ -312,15 +368,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Text(
                   title,
                   style: GoogleFonts.inter(
-                    fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimary,
                   ),
                 ),
               ),
               if (subtitle != null)
-                Text(subtitle, style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary)),
+                Text(
+                  subtitle,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
               if (trailing != null) trailing,
               if (trailing == null)
-                Icon(CupertinoIcons.chevron_right, size: 14, color: AppColors.separator),
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  size: 14,
+                  color: AppColors.separator,
+                ),
             ],
           ),
         ),

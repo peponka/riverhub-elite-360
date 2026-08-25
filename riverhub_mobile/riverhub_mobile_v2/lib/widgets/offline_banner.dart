@@ -25,8 +25,9 @@ class ConnectivityService {
 
   static Future<void> _check() async {
     try {
-      final result = await InternetAddress.lookup('google.com')
-          .timeout(const Duration(seconds: 5));
+      final result = await InternetAddress.lookup(
+        'google.com',
+      ).timeout(const Duration(seconds: 5));
       isOnline.value = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } on SocketException catch (_) {
       isOnline.value = false;
@@ -64,11 +65,17 @@ class OfflineBanner extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(CupertinoIcons.wifi_slash, size: 14, color: Colors.white),
+                      const Icon(
+                        CupertinoIcons.wifi_slash,
+                        size: 14,
+                        color: Colors.white,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         LocaleService.current == 'en'
                             ? 'No internet connection'
+                            : LocaleService.current == 'pt'
+                            ? 'Sem conexão com a internet'
                             : 'Sin conexión a internet',
                         style: GoogleFonts.inter(
                           color: Colors.white,

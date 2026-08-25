@@ -1,0 +1,28 @@
+name: Supabase backup
+
+on:
+  schedule:
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Create encrypted database dump
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          test -n "$SUPABASE_DB_URL"
+          pg_dump --no-owner --no-privileges "$SUPABASE_DB_URL" | gzip > "viabarcazas-$(date -u +%F).sql.gz"
+      - name: Retain the backup for 30 days
+        uses: actions/upload-artifact@v4
+        with:
+          name: viabarcazas-supabase-${{ github.run_id }}
+          path: viabarcazas-*.sql.gz
+          retention-days: 30

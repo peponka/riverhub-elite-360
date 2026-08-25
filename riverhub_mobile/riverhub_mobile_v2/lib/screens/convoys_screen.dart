@@ -7,6 +7,7 @@ import '../theme/app_colors.dart';
 import '../main.dart';
 import '../services/ai_service.dart';
 import '../services/locale_service.dart';
+import '../services/offline_sync_service.dart';
 
 class ConvoysScreen extends StatefulWidget {
   const ConvoysScreen({super.key});
@@ -31,7 +32,9 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: LocaleService.t('convoy_name'));
+    _nameController = TextEditingController(
+      text: LocaleService.t('convoy_name'),
+    );
     _fetchAssets();
   }
 
@@ -52,13 +55,24 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
 
       setState(() {
         _availableAssets = List<Map<String, dynamic>>.from(response).map((v) {
-          String dbType = v['type']?.toString().toLowerCase() ?? v['vessel_type']?.toString().toLowerCase() ?? '';
+          String dbType =
+              v['type']?.toString().toLowerCase() ??
+              v['vessel_type']?.toString().toLowerCase() ??
+              '';
           String name = v['name']?.toString().toLowerCase() ?? '';
           String type = 'BARCAZA';
-          if (dbType.contains('tug') || dbType.contains('remolcador') || dbType.contains('push') || name.contains('r/m') || name.contains('b/m') || name.contains('tb ')) {
+          if (dbType.contains('tug') ||
+              dbType.contains('remolcador') ||
+              dbType.contains('push') ||
+              name.contains('r/m') ||
+              name.contains('b/m') ||
+              name.contains('tb ')) {
             type = 'REMOLCADOR';
           }
-          if (dbType.contains('oil') || dbType.contains('tank') || dbType.contains('cisterna') || name.contains('t-')) {
+          if (dbType.contains('oil') ||
+              dbType.contains('tank') ||
+              dbType.contains('cisterna') ||
+              name.contains('t-')) {
             type = LocaleService.t('dyn_key_85');
           }
           v['mapped_type'] = type;
@@ -146,6 +160,46 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
       return;
     }
 
+    final tugboats = assigned
+        .where((asset) => asset!['mapped_type'] == 'REMOLCADOR')
+        .toList();
+    final barges = assigned
+        .where((asset) => asset!['mapped_type'] != 'REMOLCADOR')
+        .toList();
+    if (tugboats.length != 1 || barges.isEmpty) {
+      await _showValidationError(
+        'El convoy requiere exactamente un remolcador y al menos una barcaza.',
+      );
+      return;
+    }
+    final tug = tugboats.single!;
+    final rawCapacity =
+        double.tryParse(
+          '${tug['max_barges'] ?? tug['towing_capacity'] ?? 16}',
+        ) ??
+        16;
+    if (barges.length > rawCapacity) {
+      await _showValidationError(
+        'El remolcador admite hasta ${rawCapacity.toInt()} barcazas; se asignaron ${barges.length}.',
+      );
+      return;
+    }
+    final maxDraft = barges
+        .map(
+          (asset) =>
+              double.tryParse(
+                '${asset!['draft'] ?? asset['current_draft'] ?? 0}',
+              ) ??
+              0,
+        )
+        .fold<double>(0, (value, draft) => draft > value ? draft : value);
+    if (maxDraft > 0 && maxDraft > 3.5) {
+      await _showValidationError(
+        'Calado máximo ${maxDraft.toStringAsFixed(2)} m supera el límite operativo base de 3,50 m. Verificá la hidrología antes de zarpar.',
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
       final convoyCode =
@@ -161,7 +215,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
         }
       }
 
-      await Supabase.instance.client.from('convoys').insert({
+      await OfflineSyncService.insertOrQueue('convoys', {
         'name': _nameController.text,
         'convoy_code': convoyCode,
         'configuration': config,
@@ -205,6 +259,20 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
     }
   }
 
+  Future<void> _showValidationError(String message) => showCupertinoDialog(
+    context: context,
+    builder: (ctx) => CupertinoAlertDialog(
+      title: const Text('Validación operativa'),
+      content: Text(message),
+      actions: [
+        CupertinoDialogAction(
+          onPressed: () => Navigator.pop(ctx),
+          child: const Text('Entendido'),
+        ),
+      ],
+    ),
+  );
+
   Color _typeColor(String type) {
     switch (type) {
       case 'REMOLCADOR':
@@ -241,9 +309,21 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
     {'id': 11, 'name': 'B-108 ARENA', 'mapped_type': 'BARCAZA'},
     {'id': 12, 'name': 'B-109 CLINKER', 'mapped_type': 'BARCAZA'},
     {'id': 13, 'name': 'B-110 MINERAL', 'mapped_type': 'BARCAZA'},
-    {'id': 14, 'name': 'T-501 GASOIL', 'mapped_type': LocaleService.t('dyn_key_85')},
-    {'id': 15, 'name': 'T-502 NAFTA', 'mapped_type': LocaleService.t('dyn_key_85')},
-    {'id': 16, 'name': 'T-503 QUIMICO', 'mapped_type': LocaleService.t('dyn_key_85')},
+    {
+      'id': 14,
+      'name': 'T-501 GASOIL',
+      'mapped_type': LocaleService.t('dyn_key_85'),
+    },
+    {
+      'id': 15,
+      'name': 'T-502 NAFTA',
+      'mapped_type': LocaleService.t('dyn_key_85'),
+    },
+    {
+      'id': 16,
+      'name': 'T-503 QUIMICO',
+      'mapped_type': LocaleService.t('dyn_key_85'),
+    },
   ];
 
   String _slotLabel(int i) {
@@ -262,20 +342,59 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
       backgroundColor: AppColors.backgroundPrimary,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: AppColors.backgroundSecondary.withValues(alpha: 0.95),
-        border: const Border(bottom: BorderSide(color: AppColors.separator, width: 0.5)),
+        border: const Border(
+          bottom: BorderSide(color: AppColors.separator, width: 0.5),
+        ),
         leading: Navigator.of(context).canPop()
-            ? CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.back, size: 22, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context))
-            : CupertinoButton(padding: EdgeInsets.zero, child: const Icon(CupertinoIcons.bars, size: 24, color: AppColors.textPrimary), onPressed: () => rootScaffoldKey.currentState?.openDrawer()),
-        middle: Text(LocaleService.t('convoy_title'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+            ? CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: const Icon(
+                  CupertinoIcons.back,
+                  size: 22,
+                  color: AppColors.textPrimary,
+                ),
+                onPressed: () => Navigator.pop(context),
+              )
+            : CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: const Icon(
+                  CupertinoIcons.bars,
+                  size: 24,
+                  color: AppColors.textPrimary,
+                ),
+                onPressed: () => rootScaffoldKey.currentState?.openDrawer(),
+              ),
+        middle: Text(
+          LocaleService.t('convoy_title'),
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (assignedCount > 0)
-              CupertinoButton(padding: EdgeInsets.zero, onPressed: _clearFormation, child: const Icon(CupertinoIcons.trash, color: AppColors.error, size: 18)),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: _clearFormation,
+                child: const Icon(
+                  CupertinoIcons.trash,
+                  color: AppColors.error,
+                  size: 18,
+                ),
+              ),
             CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: _isLoading ? null : _saveConvoy,
-              child: Text(LocaleService.t('convoy_save'), style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
+              child: Text(
+                LocaleService.t('convoy_save'),
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: AppColors.textPrimary,
+                ),
+              ),
             ),
           ],
         ),
@@ -292,7 +411,9 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                   controller: _nameController,
                   placeholder: LocaleService.t('convoy_name'),
                   style: const TextStyle(color: AppColors.textPrimary),
-                  placeholderStyle: const TextStyle(color: AppColors.textSecondary),
+                  placeholderStyle: const TextStyle(
+                    color: AppColors.textSecondary,
+                  ),
                   padding: const EdgeInsets.all(14),
                   prefix: const Padding(
                     padding: EdgeInsets.only(left: 12),
@@ -574,9 +695,14 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
   String? _convoyAIError;
 
   Future<void> _runConvoyAI() async {
-    setState(() { _loadingConvoyAI = true; _convoyAIError = null; });
+    setState(() {
+      _loadingConvoyAI = true;
+      _convoyAIError = null;
+    });
     try {
-      final result = await AIService.optimizeConvoy(destination: _destController.text);
+      final result = await AIService.optimizeConvoy(
+        destination: _destController.text,
+      );
       if (mounted) {
         setState(() {
           _convoyAISuggestion = result.isNotEmpty ? result : null;
@@ -599,24 +725,46 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [const Color(0xFF8B5CF6).withValues(alpha: 0.1), const Color(0xFF3B82F6).withValues(alpha: 0.1)],
+          colors: [
+            const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+            const Color(0xFF3B82F6).withValues(alpha: 0.1),
+          ],
         ),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.3)),
+        border: Border.all(
+          color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(CupertinoIcons.wand_stars, color: Color(0xFF8B5CF6), size: 20),
+              const Icon(
+                CupertinoIcons.wand_stars,
+                color: Color(0xFF8B5CF6),
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(LocaleService.t('convoy_ai_optimizer'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 13, color: AppColors.textPrimary)),
-                    Text(LocaleService.t('convoy_ai_desc'), style: GoogleFonts.inter(fontSize: 10, color: AppColors.textSecondary)),
+                    Text(
+                      LocaleService.t('convoy_ai_optimizer'),
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    Text(
+                      LocaleService.t('convoy_ai_desc'),
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -630,8 +778,14 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                   controller: _destController,
                   placeholder: LocaleService.t('convoy_dest_hint'),
                   padding: const EdgeInsets.all(10),
-                  style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary),
-                  placeholderStyle: GoogleFonts.inter(fontSize: 12, color: AppColors.textTertiary),
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: AppColors.textPrimary,
+                  ),
+                  placeholderStyle: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: AppColors.textTertiary,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.backgroundSecondary,
                     borderRadius: BorderRadius.circular(10),
@@ -641,18 +795,35 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
               ),
               const SizedBox(width: 8),
               CupertinoButton(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
                 color: const Color(0xFF8B5CF6),
                 borderRadius: BorderRadius.circular(10),
                 onPressed: _loadingConvoyAI ? null : _runConvoyAI,
                 child: _loadingConvoyAI
-                    ? const CupertinoActivityIndicator(color: CupertinoColors.white, radius: 8)
+                    ? const CupertinoActivityIndicator(
+                        color: CupertinoColors.white,
+                        radius: 8,
+                      )
                     : Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(CupertinoIcons.sparkles, size: 14, color: CupertinoColors.white),
+                          const Icon(
+                            CupertinoIcons.sparkles,
+                            size: 14,
+                            color: CupertinoColors.white,
+                          ),
                           const SizedBox(width: 4),
-                          Text(LocaleService.t('convoy_suggest'), style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: CupertinoColors.white)),
+                          Text(
+                            LocaleService.t('convoy_suggest'),
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: CupertinoColors.white,
+                            ),
+                          ),
                         ],
                       ),
               ),
@@ -666,7 +837,15 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                   children: [
                     const CupertinoActivityIndicator(radius: 12),
                     const SizedBox(height: 8),
-                    Text(LocaleService.t('convoy_optimizing'), textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary, fontStyle: FontStyle.italic)),
+                    Text(
+                      LocaleService.t('convoy_optimizing'),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -679,66 +858,131 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
                 decoration: BoxDecoration(
                   color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.3),
+                  ),
                 ),
-                child: Text(_convoyAIError!, style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFFEF4444))),
+                child: Text(
+                  _convoyAIError!,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: const Color(0xFFEF4444),
+                  ),
+                ),
               ),
             ),
           if (_convoyAISuggestion != null && !_loadingConvoyAI) ...[
             const SizedBox(height: 12),
-            Builder(builder: (context) {
-              final s = _convoyAISuggestion!;
-              final f = s['formation'] as Map<String, dynamic>? ?? {};
-              return Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.backgroundSecondary,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.separator),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Config + Risk
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('⚓ ${s['config'] ?? 'N/A'}',
-                            style: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 18, color: const Color(0xFF8B5CF6))),
-                        _buildRiskGauge(s['risk_score'] as num? ?? 0),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    if (f['proa'] != null) Text('🔴 Proa: ${f['proa']}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
-                    if (f['barcazas_f1'] != null) Text('📦 Fila 1: ${(f['barcazas_f1'] as List).join(', ')}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
-                    if (f['barcazas_f2'] != null) Text('📦 Fila 2: ${(f['barcazas_f2'] as List).join(', ')}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
-                    if (f['popa'] != null) Text('🔵 Popa: ${f['popa']}', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
-                    if (s['fuel_estimate_liters'] != null) ...[
-                      const SizedBox(height: 8),
-                      Text('⛽ Consumo: ${s['fuel_estimate_liters']} lts', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                    ],
-                    if (s['warnings'] != null)
-                      ...(s['warnings'] as List).map((w) =>
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text('⚠️ $w', style: GoogleFonts.inter(fontSize: 11, color: const Color(0xFFF59E0B))),
-                          )),
-                    if (s['recommendation'] != null) ...[
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text('🤖 ${s['recommendation']}',
-                            style: GoogleFonts.inter(fontSize: 12, color: AppColors.textPrimary)),
+            Builder(
+              builder: (context) {
+                final s = _convoyAISuggestion!;
+                final f = s['formation'] as Map<String, dynamic>? ?? {};
+                return Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundSecondary,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.separator),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Config + Risk
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '⚓ ${s['config'] ?? 'N/A'}',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 18,
+                              color: const Color(0xFF8B5CF6),
+                            ),
+                          ),
+                          _buildRiskGauge(s['risk_score'] as num? ?? 0),
+                        ],
                       ),
+                      const SizedBox(height: 10),
+                      if (f['proa'] != null)
+                        Text(
+                          '🔴 Proa: ${f['proa']}',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      if (f['barcazas_f1'] != null)
+                        Text(
+                          '📦 Fila 1: ${(f['barcazas_f1'] as List).join(', ')}',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      if (f['barcazas_f2'] != null)
+                        Text(
+                          '📦 Fila 2: ${(f['barcazas_f2'] as List).join(', ')}',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      if (f['popa'] != null)
+                        Text(
+                          '🔵 Popa: ${f['popa']}',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      if (s['fuel_estimate_liters'] != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          '⛽ Consumo: ${s['fuel_estimate_liters']} lts',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                      if (s['warnings'] != null)
+                        ...(s['warnings'] as List).map(
+                          (w) => Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              '⚠️ $w',
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                color: const Color(0xFFF59E0B),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (s['recommendation'] != null) ...[
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color(
+                              0xFF8B5CF6,
+                            ).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            '🤖 ${s['recommendation']}',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              );
-            }),
+                  ),
+                );
+              },
+            ),
           ],
         ],
       ),
@@ -746,19 +990,40 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
   }
 
   Widget _buildRiskGauge(num score) {
-    final color = score <= 30 ? const Color(0xFF10B981) : score <= 60 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444);
+    final color = score <= 30
+        ? const Color(0xFF10B981)
+        : score <= 60
+        ? const Color(0xFFF59E0B)
+        : const Color(0xFFEF4444);
     return Column(
       children: [
         Container(
-          width: 44, height: 44,
+          width: 44,
+          height: 44,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(color: color, width: 3.5),
           ),
-          child: Center(child: Text('$score', style: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 14, color: color))),
+          child: Center(
+            child: Text(
+              '$score',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w800,
+                fontSize: 14,
+                color: color,
+              ),
+            ),
+          ),
         ),
         const SizedBox(height: 2),
-        Text(LocaleService.t('convoy_risk'), style: GoogleFonts.inter(fontSize: 8, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+        Text(
+          LocaleService.t('convoy_risk'),
+          style: GoogleFonts.inter(
+            fontSize: 8,
+            color: AppColors.textSecondary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -769,9 +1034,7 @@ class _ConvoysScreenState extends State<ConvoysScreen> {
       width: 95,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: selected
-            ? color.withValues(alpha: 0.2)
-            : AppColors.separator,
+        color: selected ? color.withValues(alpha: 0.2) : AppColors.separator,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: selected ? color : color.withValues(alpha: 0.3),

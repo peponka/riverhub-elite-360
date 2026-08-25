@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'offline_sync_service.dart';
 
 /// GPS Tracker Service for RiverHub Fleet
 /// Sends device location to Supabase every 15 seconds
@@ -49,7 +50,10 @@ class GpsTrackerService {
     await _sendPosition();
 
     // Then every 15 seconds
-    _timer = Timer.periodic(const Duration(seconds: 15), (_) => _sendPosition());
+    _timer = Timer.periodic(
+      const Duration(seconds: 15),
+      (_) => _sendPosition(),
+    );
 
     debugPrint('🛰️ GPS Tracker started for vessel: $vesselId');
     return true;
@@ -78,18 +82,24 @@ class GpsTrackerService {
       _lastPosition = position;
 
       // Update vessel position in Supabase
-      await Supabase.instance.client.from('vessels').update({
-        'current_lat': position.latitude,
-        'current_lng': position.longitude,
-        'heading': position.heading,
-        'speed': position.speed * 1.94384, // m/s to knots
-        'last_signal': DateTime.now().toIso8601String(),
-        'status': 'en_viaje',
-      }).eq('id', _vesselId!);
+      await OfflineSyncService.updateOrQueue(
+        'vessels',
+        {
+          'current_lat': position.latitude,
+          'current_lng': position.longitude,
+          'heading': position.heading,
+          'speed': position.speed * 1.94384, // m/s to knots
+          'last_signal': DateTime.now().toIso8601String(),
+          'status': 'en_viaje',
+        },
+        matchColumn: 'id',
+        matchValue: _vesselId!,
+      );
 
       debugPrint(
-          '📍 GPS: ${position.latitude.toStringAsFixed(4)}, '
-          '${position.longitude.toStringAsFixed(4)} → Supabase ✅');
+        '📍 GPS: ${position.latitude.toStringAsFixed(4)}, '
+        '${position.longitude.toStringAsFixed(4)} → Supabase ✅',
+      );
     } catch (e) {
       debugPrint('❌ GPS send error: $e');
     }

@@ -13,6 +13,7 @@ import 'screens/profile_screen.dart';
 import 'widgets/app_drawer.dart';
 import 'screens/splash_screen.dart';
 import 'widgets/offline_banner.dart';
+import 'services/offline_sync_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'services/locale_service.dart';
 import 'services/supabase_service.dart';
@@ -103,6 +104,7 @@ Future<void> main() async {
   };
 
   ConnectivityService.startMonitoring();
+  await OfflineSyncService.initialize();
 
   runApp(const RiverHubMobileApp());
 

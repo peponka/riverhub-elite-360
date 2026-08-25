@@ -9,6 +9,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const stripeStr = process.env.STRIPE_SECRET_KEY || 'sk_test_mock';
 const stripe = require('stripe')(stripeStr);
+const GeofenceService = require('./services/geofenceService');
 let createClient;
 try { createClient = require('@supabase/supabase-js').createClient; } catch (e) { console.warn('⚠️ @supabase/supabase-js not found — n8n DB features disabled'); }
 
@@ -74,6 +75,7 @@ if (createClient && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY
 } else {
     console.warn('⚠️ SUPABASE_SERVICE_KEY not set — privileged server operations are unavailable');
 }
+app.locals.geofenceMonitor = new GeofenceService(app.locals.supabaseAdmin || app.locals.supabase);
 
 const server = http.createServer(app);
 const ALLOWED_ORIGINS = [
@@ -1068,6 +1070,9 @@ function startAISStream() {
                         timestamp: new Date().toISOString()
                     };
                     aisDirty.add(mmsi);   // se vuelca en lote (ver flushAisPositions)
+                    // The monitor persists one alert per real geofence transition.
+                    void app.locals.geofenceMonitor.processPosition(app.locals.aisPositions[mmsi])
+                        .catch(error => console.warn('[Geofence monitor]', error.message));
 
                     // TENANT-AWARE BROADCAST: emit to company rooms + global fallback
                     if (app.locals.supabase) {

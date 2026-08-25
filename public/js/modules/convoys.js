@@ -341,6 +341,25 @@
             cell.appendChild(badge);
         };
 
+        const validateConvoy = () => {
+            const assigned = state.currentConvoy?.slots || [];
+            const assets = assigned.map(slot => slot.asset_data).filter(Boolean);
+            const tugs = assets.filter(asset => asset.type === 'REMOLCADOR');
+            const barges = assets.filter(asset => asset.type !== 'REMOLCADOR');
+            if (tugs.length !== 1 || barges.length === 0) {
+                return 'El convoy necesita exactamente un remolcador y al menos una barcaza.';
+            }
+            const maxBarges = Number(tugs[0].raw?.max_barges || tugs[0].raw?.towing_capacity || 16);
+            if (barges.length > maxBarges) {
+                return `El remolcador admite hasta ${maxBarges} barcazas; se asignaron ${barges.length}.`;
+            }
+            const maxDraft = Math.max(0, ...barges.map(asset => Number(asset.raw?.draft || asset.raw?.current_draft || 0)));
+            if (maxDraft > 3.5) {
+                return `Calado máximo ${maxDraft.toFixed(2)} m supera el límite operativo base de 3,50 m. Verificá la hidrología.`;
+            }
+            return null;
+        };
+
         // 4. PERSISTENCE (REAL SUPABASE)
         const saveConvoyToDB = async () => {
             const slotCount = state.currentConvoy && state.currentConvoy.slots ? state.currentConvoy.slots.length : 0;
@@ -349,7 +368,7 @@
                 const nameInput = document.querySelector('.convoy-name-input');
                 const convoyName = nameInput ? nameInput.value : "Convoy Sin Nombre";
 
-                if (!state.currentConvoy || !state.currentConvoy.slots || state.currentConvoy.slots.length === 0) {
+            if (!state.currentConvoy || !state.currentConvoy.slots || state.currentConvoy.slots.length === 0) {
                     RiverToast.warning("El convoy está vacío. Agregue activos antes de guardar.", "Datos Insuficientes");
                     return;
                 }
@@ -441,6 +460,12 @@
 
             if (list.length === 0) {
                 container.innerHTML = '<div style="text-align:center; color:#94a3b8;">No tienes convoys guardados.</div>';
+                return;
+            }
+
+            const validationError = validateConvoy();
+            if (validationError) {
+                RiverToast.warning(validationError, 'Validación operativa');
                 return;
             }
 
