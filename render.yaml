@@ -20,10 +20,6 @@ services:
         sync: false
       - key: AIS_API_KEY
         sync: false
-      - key: STRIPE_SECRET_KEY
-        sync: false
-      - key: STRIPE_WEBHOOK_SECRET
-        sync: false
       - key: FIREBASE_SERVICE_ACCOUNT
         sync: false
       - key: N8N_API_KEY

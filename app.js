@@ -7,8 +7,6 @@ const path = require('path');
 const fs = require('fs');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const stripeStr = process.env.STRIPE_SECRET_KEY || 'sk_test_mock';
-const stripe = require('stripe')(stripeStr);
 const GeofenceService = require('./services/geofenceService');
 let createClient;
 try { createClient = require('@supabase/supabase-js').createClient; } catch (e) { console.warn('⚠️ @supabase/supabase-js not found — n8n DB features disabled'); }
@@ -52,6 +50,8 @@ let onboardingRoutes;
 try { onboardingRoutes = require('./routes/onboardingRoutes'); } catch (e) { console.error('❌ Onboarding routes failed:', e.message); }
 let adminRoutes;
 try { adminRoutes = require('./routes/adminRoutes'); } catch (e) { console.error('❌ Admin routes failed to load:', e.message); }
+let pricingRoutes;
+try { pricingRoutes = require('./routes/pricingRoutes'); } catch (e) { console.error('❌ Pricing routes failed to load:', e.message); }
 
 // ============================================
 // VIABARCAZAS — Servidor Unificado
@@ -662,54 +662,11 @@ Si todo parece normal, devolvé un array con al menos 1 item tipo "normal" con s
     }
 });
 
-// --- STRIPE PAYMENT GATEWAY (authenticated) ---
-app.post('/api/create-checkout', authenticateUser, async (req, res) => {
-    try {
-        const { planId, companyId, email } = req.body;
-        
-        // Precios base (Demo Sandbox)
-        const plans = {
-            solist:    { price: 15000, name: 'SOLIST (1 Barco)' }, // Centavos USD
-            squad:     { price: 45000, name: 'SQUAD (3 Barcos)' },
-            expansion: { price: 120000, name: 'PACK EXPANSIÓN (10 Barcos)' },
-            admiral:   { price: 180000, name: 'ADMIRAL (Ilimitado)' }
-        };
-
-        if (!plans[planId]) return res.status(400).json({ error: 'Plan no válido' });
-
-        // SECURITY: Block mock payments in production
-        if (stripeStr === 'sk_test_mock') {
-            if (process.env.NODE_ENV === 'production') {
-                return res.status(503).json({ error: 'Pasarela de pago no configurada. Contactar soporte.' });
-            }
-            console.warn('⚠️ Mock Stripe Checkout triggered (dev only)');
-            return res.json({ url: req.headers.origin + '/app.html?payment=success_mock' });
-        }
-
-        const session = await stripe.checkout.sessions.create({
-            customer_email: email,
-            payment_method_types: ['card'],
-            line_items: [{
-                price_data: {
-                    currency: 'usd',
-                    product_data: { name: plans[planId].name },
-                    unit_amount: plans[planId].price,
-                    recurring: { interval: 'month' }
-                },
-                quantity: 1
-            }],
-            mode: 'subscription',
-            success_url: req.headers.origin + '/app.html?payment=success',
-            cancel_url: req.headers.origin + '/app.html?payment=cancel',
-            metadata: { companyId, planId }
-        });
-
-        res.json({ url: session.url });
-    } catch (e) {
-        console.error("Stripe Checkout Error:", e.message);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
+// Compatibilidad segura: ViaBarcazas comercializa contratos con ventas, no Stripe.
+app.post('/api/create-checkout', (_req, res) => res.status(410).json({
+    error: 'El checkout online fue retirado. Solicitá una propuesta comercial.',
+    proposalUrl: '/pricing.html#contacto'
+}));
 
 // --- INVOICE INTELLIGENCE (Gemini AI, authenticated + rate limited) ---
 app.post('/api/ai/invoice', aiLimiter, authenticateUser, async (req, res) => {
@@ -890,6 +847,7 @@ if (onboardingRoutes) {
     app.use('/api/vessels', obRouter); // bulk-import-vessels también en /api/vessels
     console.log('✅ Onboarding API mounted at /api/onboarding');
 }
+if (pricingRoutes) app.use('/api/pricing', pricingRoutes());
 
 // --- SHARED STATE FOR n8n ---
 app.locals.aisPositions = {};  // Live AIS positions indexed by MMSI

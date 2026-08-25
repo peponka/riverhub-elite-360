@@ -47,20 +47,20 @@ test.describe('Landing Page', () => {
         await page.goto(`${BASE_URL}/pricing.html`);
         await expect(page.locator('h1')).toBeVisible();
         // Verificar que los 3 planes están presentes
-        await expect(page.locator('text=Starter')).toBeVisible();
-        await expect(page.locator('text=Profesional')).toBeVisible();
-        await expect(page.locator('text=Enterprise')).toBeVisible();
+        await expect(page.locator('text=Unidad Individual')).toBeVisible();
+        await expect(page.locator('text=Combo Flota 25')).toBeVisible();
+        await expect(page.locator('text=Combo Flota 150')).toBeVisible();
     });
 
     test('Toggle de facturación cambia precios', async ({ page }) => {
         await page.goto(`${BASE_URL}/pricing.html`);
         // Precio mensual inicial
-        const starterMonthly = await page.locator('#price-starter').textContent();
-        expect(starterMonthly).toBe('149');
-        // Activar anual
-        await page.click('#billing-toggle');
-        const starterAnnual = await page.locator('#price-starter').textContent();
-        expect(starterAnnual).toBe('119');
+        await page.locator('#barges').fill('22');
+        await page.locator('#tugboats').fill('3');
+        await expect(page.locator('#quote')).toContainText('Combo Flota 25');
+        await expect(page.locator('#quote')).toContainText('2.500');
+        await page.locator('#barges').fill('151');
+        await expect(page.locator('#quote')).toContainText('solicitar propuesta');
     });
 
     test('Onboarding page carga', async ({ page }) => {

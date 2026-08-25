@@ -112,6 +112,24 @@ module.exports = function(authenticateUser, supabase, supabaseAdmin) {
 
             if (rows.length === 0) return res.status(400).json({ error: 'Cada embarcación requiere un nombre' });
 
+            // El cupo se cuenta por embarcacion, sin diferenciar barcazas de remolcadores.
+            const { data: subscription } = await sb.from('subscriptions')
+                .select('included_units, max_vessels')
+                .eq('company_id', companyId)
+                .in('contract_status', ['trial', 'active', 'pending_sales'])
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+            if (subscription) {
+                const { count, error: countError } = await sb.from('vessels')
+                    .select('id', { count: 'exact', head: true }).eq('company_id', companyId);
+                if (countError) throw countError;
+                const capacity = subscription.included_units || subscription.max_vessels;
+                if (capacity && (count || 0) + rows.length > capacity) {
+                    return res.status(409).json({ error: `El plan permite hasta ${capacity} embarcaciones entre barcazas y remolcadores.` });
+                }
+            }
+
             const { data, error } = await sb.from('vessels').insert(rows).select();
             if (error) {
                 console.error('[Onboarding/vessels]', error.message);

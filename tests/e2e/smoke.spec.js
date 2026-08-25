@@ -102,18 +102,15 @@ test.describe('Main App', () => {
 });
 
 // ═══════════════════════════════════════════
-// 4. SECURITY — Stripe & Rate Limiting
+// 4. SECURITY — Commercial flow & Rate Limiting
 // ═══════════════════════════════════════════
 test.describe('Security', () => {
-    test('Stripe mock is blocked in production mode', async ({ request }) => {
-        // This test validates the route exists and responds
-        const res = await request.post('/api/create-checkout-session', {
-            data: { plan: 'professional' },
-            headers: { 'Content-Type': 'application/json' }
-        });
-        // In dev mode: should work (200). In prod: should be 503.
-        // Either way, should not crash
-        expect([200, 503, 400, 404]).toContain(res.status());
+    test('old checkout is retired and price catalog is public', async ({ request }) => {
+        const checkout = await request.post('/api/create-checkout', { data: {} });
+        expect(checkout.status()).toBe(410);
+        const catalog = await request.get('/api/pricing');
+        expect(catalog.status()).toBe(200);
+        expect((await catalog.json()).plans).toHaveLength(6);
     });
 
     test('Security headers are present', async ({ request }) => {

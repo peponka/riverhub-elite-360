@@ -76,7 +76,6 @@ Codigo/
 | `SUPABASE_ANON_KEY` | Clave anónima de Supabase |
 | `GEMINI_API_KEY` | Google Gemini API key |
 | `AIS_API_KEY` | AISStream.io API key |
-| `STRIPE_SECRET_KEY` | Stripe secret key (pagos) |
 | `PORT` | Puerto del servidor (default: 3000) |
 
 ## 📡 API Endpoints
@@ -87,7 +86,8 @@ Codigo/
 | GET | `/api/ais-positions` | ❌ | Posiciones AIS en vivo |
 | POST | `/api/ai/chat` | ✅ | Copiloto IA (Gemini) |
 | POST | `/api/ai/invoice` | ✅ | Invoice Intelligence |
-| POST | `/api/create-checkout` | ✅ | Crear sesión de pago Stripe |
+| GET | `/api/pricing` | ✅ | Catálogo comercial por flota |
+| POST | `/api/pricing/quote` | ✅ | Calcula propuesta por barcazas + remolcadores |
 | * | `/api/n8n/*` | API Key | Automatizaciones n8n |
 
 ## 🛡️ Seguridad
@@ -107,5 +107,5 @@ Codigo/
 - **IA**: Google Gemini 2.0 Flash
 - **AIS**: AISStream.io (WebSocket satelital)
 - **Push**: Firebase Cloud Messaging (FCM)
-- **Payments**: Stripe Checkout
+- **Contratación**: propuesta comercial directa; no se procesa pago online
 - **Deploy**: Render (backend) + Git push auto-deploy

@@ -14,18 +14,13 @@ class BillingScreen extends StatefulWidget {
 
 class _BillingScreenState extends State<BillingScreen> {
   bool _isAnnual = false;
-  String _currentPlan = 'combo'; // default selected
+  String _currentPlan = 'fleet-25'; // default selected
   bool _processing = false;
 
   final List<Map<String, dynamic>> _plans = [
     {
-      'id': 'barcaza',
-      'name': LocaleService.t('dyn_key_31'),
-      'desc': LocaleService.t('dyn_key_53'),
-      'monthly': 149,
-      'yearly': 119,
-      'unit': '/barcaza/mes',
-      'unitYearly': '/barcaza/mes',
+      'id': 'individual', 'name': 'Unidad Individual', 'desc': 'Hasta 1 embarcacion facturable',
+      'monthly': 125, 'yearly': 112.5, 'unit': '/mes', 'unitYearly': '/mes',
       'icon': '🚢',
       'popular': false,
       'features': [
@@ -38,13 +33,8 @@ class _BillingScreenState extends State<BillingScreen> {
       ],
     },
     {
-      'id': 'combo',
-      'name': LocaleService.t('dyn_key_39'),
-      'desc': LocaleService.t('dyn_key_33'),
-      'monthly': 899,
-      'yearly': 719,
-      'unit': '/mes (hasta 10)',
-      'unitYearly': '/mes (hasta 10)',
+      'id': 'fleet-10', 'name': 'Combo Flota 10', 'desc': 'Hasta 10 embarcaciones facturables',
+      'monthly': 1100, 'yearly': 990, 'unit': '/mes', 'unitYearly': '/mes',
       'icon': '⚓',
       'popular': true,
       'features': [
@@ -57,13 +47,8 @@ class _BillingScreenState extends State<BillingScreen> {
       ],
     },
     {
-      'id': 'enterprise',
-      'name': 'Enterprise',
-      'desc': 'Solución corporativa para flotas grandes',
-      'monthly': 1499,
-      'yearly': 1199,
-      'unit': '/mes (hasta 50)',
-      'unitYearly': '/mes (hasta 50)',
+      'id': 'fleet-25', 'name': 'Combo Flota 25', 'desc': 'Hasta 25 embarcaciones facturables',
+      'monthly': 2500, 'yearly': 2250, 'unit': '/mes', 'unitYearly': '/mes',
       'icon': '🏢',
       'popular': false,
       'features': [
@@ -76,13 +61,8 @@ class _BillingScreenState extends State<BillingScreen> {
       ],
     },
     {
-      'id': 'ilimitado',
-      'name': LocaleService.t('dyn_key_37'),
-      'desc': LocaleService.t('dyn_key_52'),
-      'monthly': 2499,
-      'yearly': 1999,
-      'unit': '/mes',
-      'unitYearly': '/mes',
+      'id': 'fleet-50', 'name': 'Combo Flota 50', 'desc': 'Hasta 50 embarcaciones facturables',
+      'monthly': 4750, 'yearly': 4275, 'unit': '/mes', 'unitYearly': '/mes',
       'icon': '∞',
       'popular': false,
       'features': [
@@ -98,10 +78,10 @@ class _BillingScreenState extends State<BillingScreen> {
 
   // Simulated payment history
   final List<Map<String, String>> _payments = [
-    {'month': 'Abril 2026', 'amount': '\$899', 'status': LocaleService.t('dyn_key_41')},
-    {'month': 'Marzo 2026', 'amount': '\$899', 'status': LocaleService.t('dyn_key_35')},
-    {'month': 'Febrero 2026', 'amount': '\$899', 'status': LocaleService.t('dyn_key_35')},
-    {'month': 'Enero 2026', 'amount': '\$899', 'status': LocaleService.t('dyn_key_35')},
+    {'month': 'Abril 2026', 'amount': '\$2.500', 'status': LocaleService.t('dyn_key_41')},
+    {'month': 'Marzo 2026', 'amount': '\$2.500', 'status': LocaleService.t('dyn_key_35')},
+    {'month': 'Febrero 2026', 'amount': '\$2.500', 'status': LocaleService.t('dyn_key_35')},
+    {'month': 'Enero 2026', 'amount': '\$2.500', 'status': LocaleService.t('dyn_key_35')},
   ];
 
   void _selectPlan(String planId) {
@@ -270,7 +250,7 @@ class _BillingScreenState extends State<BillingScreen> {
                     ),
                     child: Row(children: [
                       _toggleButton(LocaleService.t('dyn_key_55'), !_isAnnual, () => setState(() => _isAnnual = false)),
-                      _toggleButton('Anual -20%', _isAnnual, () => setState(() => _isAnnual = true)),
+                      _toggleButton('Prepago anual -10%', _isAnnual, () => setState(() => _isAnnual = true)),
                     ]),
                   ),
                   const SizedBox(height: 20),
@@ -286,11 +266,11 @@ class _BillingScreenState extends State<BillingScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(12)),
-                      child: Center(child: Text(LocaleService.t('billing_suscribirse_al_plan'), style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.backgroundPrimary, letterSpacing: 0.5))),
+                      child: Center(child: Text('SOLICITAR PROPUESTA', style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.backgroundPrimary, letterSpacing: 0.5))),
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Center(child: Text(LocaleService.t('billing_14_dias_de_prueba_gr_1'), style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary))),
+                  Center(child: Text('Cada barcaza y remolcador cuenta como una unidad.', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textTertiary))),
                   const SizedBox(height: 32),
 
                   // ── Payment History ────────────────────────────
