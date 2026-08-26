@@ -53,9 +53,9 @@ Si cargás el seed, vas a ver 6 barcazas tanque y 5 operaciones reales en:
 
 ### Respaldo de Supabase
 
-El workflow diario de GitHub Actions genera un archivo restaurable de PostgreSQL y lo conserva 30 días. Antes de ejecutarlo, crear el secreto de repositorio `SUPABASE_DB_URL` en `Settings > Secrets and variables > Actions` con la cadena de conexión directa de la base de datos (debe comenzar con `postgresql://` o `postgres://`).
+El workflow diario de GitHub Actions genera un archivo restaurable de PostgreSQL y lo conserva 30 días. Antes de ejecutarlo, crear el secreto de repositorio `SUPABASE_DB_URL` en `Settings > Secrets and variables > Actions` con la cadena del **Session pooler** de la base de datos (puerto `5432`; debe comenzar con `postgresql://` o `postgres://`).
 
-La cadena se obtiene en Supabase: `Project Settings > Database > Connection string > URI`. No usar la URL pública del proyecto ni la clave anónima; esas no permiten realizar un respaldo.
+La cadena se obtiene desde `Connect` en Supabase. GitHub Actions no puede conectarse a la URL directa IPv6 de Supabase, salvo que el proyecto tenga el complemento IPv4. No usar la URL pública del proyecto ni la clave anónima; esas no permiten realizar un respaldo.
 
 ### App Mobile (Flutter)
 
