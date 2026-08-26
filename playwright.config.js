@@ -13,7 +13,7 @@ module.exports = defineConfig({
   },
   webServer: {
     command: process.platform === 'win32'
-      ? 'powershell -NoProfile -Command "$env:PORT=4001; node app.js"'
+      ? 'set PORT=4001&& node app.js'
       : 'PORT=4001 node app.js',
     port: 4001,
     timeout: 30000,
