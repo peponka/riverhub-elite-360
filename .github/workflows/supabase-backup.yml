@@ -42,7 +42,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           backup_file="viabarcazas-$(date -u +%F).dump"
-          pg_dump --no-owner --no-privileges --format=custom --file="$backup_file" "$SUPABASE_DB_URL"
+          /usr/lib/postgresql/17/bin/pg_dump --no-owner --no-privileges --format=custom --file="$backup_file" "$SUPABASE_DB_URL"
           test -s "$backup_file"
       - name: Retain the backup for 30 days
         uses: actions/upload-artifact@v4
