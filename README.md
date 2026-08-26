@@ -115,6 +115,19 @@ Codigo/
 | GET | `/api/health` | ❌ | Health check (AIS + AI status) |
 | GET | `/api/ais-positions` | ❌ | Posiciones AIS en vivo |
 | POST | `/api/internal/ais-ingest` | Relay token | Ingesta privada de posiciones AIS desde el relay |
+
+### Relay AIS local (opcional)
+
+Cuando AISStream limite la IP compartida de un hosting gratuito, se puede usar
+una computadora local como relay seguro. Con `AIS_DIRECT_STREAM=false` y
+`AIS_RELAY_TOKEN` configurados en Render, ejecutar en Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/start-ais-relay.ps1
+```
+
+El relay pide la clave AISStream y el token por consola, sin guardarlos en
+archivos. Debe mantenerse abierto mientras se necesiten posiciones en vivo.
 | POST | `/api/ai/chat` | ✅ | Copiloto IA (Gemini) |
 | POST | `/api/ai/invoice` | ✅ | Invoice Intelligence |
 | GET | `/api/pricing` | ✅ | Catálogo comercial por flota |
