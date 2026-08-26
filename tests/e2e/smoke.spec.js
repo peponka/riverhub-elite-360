@@ -29,51 +29,32 @@ test.describe('Server Health', () => {
 // 2. VIABARCAZAS SPA — LOGIN & NAVIGATION
 // ═══════════════════════════════════════════
 test.describe('ViaBarcazas SPA', () => {
-    test('Login page renders with all elements', async ({ page }) => {
+    test('Login page renders protected access controls', async ({ page }) => {
         await page.goto('/viabarcazas.html');
-        // Should have login form
-        await expect(page.locator('text=ViaBarcazas').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('#login-screen')).toBeVisible({ timeout: 10000 });
+        await expect(page.getByPlaceholder('usuario@empresa.com')).toBeVisible();
+        await expect(page.getByRole('button', { name: /Iniciar Sesi[oó]n/ })).toBeVisible();
     });
 
-    test('Bypass login loads dashboard (localhost)', async ({ page }) => {
+    test('Unauthenticated users remain on the login screen', async ({ page }) => {
         await page.goto('/viabarcazas.html');
-        // Click bypass button if present
-        const bypassBtn = page.locator('#bypass-login, [onclick*="bypassLogin"]');
-        if (await bypassBtn.count() > 0) {
-            await bypassBtn.first().click();
-            // Dashboard should load
-            await expect(page.locator('#view-dashboard, .section-content')).toBeVisible({ timeout: 10000 });
-        }
+        await expect(page.locator('#login-screen')).toBeVisible();
+        await expect(page.getByPlaceholder('usuario@empresa.com')).toBeVisible();
     });
 
-    test('Navigation tabs exist and are clickable', async ({ page }) => {
+    test('Navigation shell includes operational sections', async ({ page }) => {
         await page.goto('/viabarcazas.html');
-        // Bypass login
-        const bypassBtn = page.locator('#bypass-login, [onclick*="bypassLogin"]');
-        if (await bypassBtn.count() > 0) {
-            await bypassBtn.first().click();
-            await page.waitForTimeout(1000);
-        }
-        // Check that nav items exist
         const navItems = page.locator('.menu-item, .nav-item');
-        const count = await navItems.count();
-        expect(count).toBeGreaterThan(0);
+        await expect(navItems).not.toHaveCount(0);
+        await expect(page.locator('[data-view="liquidos"]')).toHaveCount(1);
     });
 
-    test('Liquids view is present in the main SPA', async ({ page }) => {
+    test('Liquids view is included in the protected application shell', async ({ page }) => {
         await page.goto('/viabarcazas.html');
-        const bypassBtn = page.locator('#bypass-login, [onclick*="bypassLogin"]');
-        if (await bypassBtn.count() > 0) {
-            await bypassBtn.first().click();
-            await page.waitForTimeout(1000);
-        }
-
-        const liquidsNav = page.locator('[data-view="liquidos"]').first();
-        await expect(liquidsNav).toBeVisible();
-        await liquidsNav.click();
-        await expect(page.locator('#view-liquidos')).toBeVisible();
-        await expect(page.locator('#liq-count')).toBeVisible();
-        await expect(page.locator('#liq-list')).toBeVisible();
+        await expect(page.locator('[data-view="liquidos"]')).toHaveCount(1);
+        await expect(page.locator('#view-liquidos')).toHaveCount(1);
+        await expect(page.locator('#liq-count')).toHaveCount(1);
+        await expect(page.locator('#liq-list')).toHaveCount(1);
     });
 
     test('No console errors on load', async ({ page }) => {
