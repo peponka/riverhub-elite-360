@@ -43,7 +43,8 @@ async function flush() {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
-                authorization: `Bearer ${relayToken}`
+                authorization: `Bearer ${relayToken}`,
+                'x-ais-relay-token': relayToken
             },
             body: JSON.stringify({ positions })
         });

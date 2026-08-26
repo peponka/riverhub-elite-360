@@ -940,7 +940,9 @@ setInterval(flushAisPositions, AIS_FLUSH_MS);
 function validRelayToken(req) {
     if (!AIS_RELAY_TOKEN) return false;
     const authorization = req.get('authorization') || '';
-    const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+    // Some hosting proxies treat Authorization specially, so accept the relay's
+    // dedicated header as well while keeping the same shared secret.
+    const token = req.get('x-ais-relay-token') || (authorization.startsWith('Bearer ') ? authorization.slice(7) : '');
     if (token.length !== AIS_RELAY_TOKEN.length) return false;
     return require('crypto').timingSafeEqual(Buffer.from(token), Buffer.from(AIS_RELAY_TOKEN));
 }
