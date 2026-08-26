@@ -1225,7 +1225,7 @@ var heatLayer = null;
 function initMap(){
     map=L.map('leaflet-map',{zoomControl:false}).setView([-27.5,-58.3],6);
     L.control.zoom({position:'topleft'}).addTo(map);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:18,subdomains:'abcd'}).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors',maxZoom:19,subdomains:'abc'}).addTo(map);
     // Own fleet from Supabase
     loadFleetMarkers();
     // AIS third-party traffic
