@@ -1142,9 +1142,7 @@ async function loadAISTraffic(){
                     aisMarkers[key]=m;
                 }
             });
-            // Update legend
-            var legend=document.querySelector('.map-legend');
-            if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=json.total+' active';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=json.total+' active AIS';legend.appendChild(d);}}
+            updateAisLegend(json.total,json.lastMessageAt);
             updateHeatmap();
             return;
         }
@@ -1169,9 +1167,20 @@ function renderAISMarkers(data){
             aisMarkers[key]=m;
         }
     });
-    var legend=document.querySelector('.map-legend');
-    if(legend){var existing=legend.querySelector('.ais-count');if(existing)existing.textContent=data.length+' active';else{var d=document.createElement('div');d.className='map-legend-item ais-count';d.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';d.textContent=data.length+' active AIS';legend.appendChild(d);}}
+    updateAisLegend(data.length);
     updateHeatmap();
+}
+function updateAisLegend(total,lastMessageAt){
+    var legend=document.querySelector('.map-legend');
+    if(!legend)return;
+    var count=legend.querySelector('.ais-count');
+    if(!count){count=document.createElement('div');count.className='map-legend-item ais-count';count.style.cssText='margin-top:6px;font-size:10px;color:var(--text-secondary);font-weight:600';legend.appendChild(count);}
+    count.textContent=total+' active AIS';
+    var status=legend.querySelector('.ais-status');
+    if(!status){status=document.createElement('div');status.className='ais-status';status.style.cssText='margin-top:5px;font-size:9px;color:#10b981;font-weight:700';legend.appendChild(status);}
+    var updated=lastMessageAt?new Date(lastMessageAt):null;
+    var time=updated&&!isNaN(updated.getTime())?updated.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}):'now';
+    status.textContent='AIS live · updated '+time;
 }
 function updateHeatmap(){
     var points=[];
