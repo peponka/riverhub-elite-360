@@ -45,7 +45,7 @@ jobs:
           /usr/lib/postgresql/17/bin/pg_dump --no-owner --no-privileges --format=custom --file="$backup_file" "$SUPABASE_DB_URL"
           test -s "$backup_file"
       - name: Retain the backup for 30 days
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: viabarcazas-supabase-${{ github.run_id }}
           path: viabarcazas-*.dump
