@@ -12,7 +12,9 @@ module.exports = defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'PORT=4001 node app.js',
+    command: process.platform === 'win32'
+      ? 'powershell -NoProfile -Command "$env:PORT=4001; node app.js"'
+      : 'PORT=4001 node app.js',
     port: 4001,
     timeout: 30000,
     reuseExistingServer: true,

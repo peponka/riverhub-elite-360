@@ -14,15 +14,34 @@ jobs:
     steps:
       - name: Install PostgreSQL client
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
-      - name: Create encrypted database dump
+      - name: Validate backup configuration
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          test -n "$SUPABASE_DB_URL"
-          pg_dump --no-owner --no-privileges "$SUPABASE_DB_URL" | gzip > "viabarcazas-$(date -u +%F).sql.gz"
+          set -Eeuo pipefail
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "SUPABASE_DB_URL is missing. Add the direct PostgreSQL connection string in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          case "$SUPABASE_DB_URL" in
+            postgres://*|postgresql://*) ;;
+            *)
+              echo "SUPABASE_DB_URL must be a PostgreSQL connection string beginning with postgres:// or postgresql://."
+              exit 1
+              ;;
+          esac
+      - name: Create database dump
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -Eeuo pipefail
+          backup_file="viabarcazas-$(date -u +%F).dump"
+          pg_dump --no-owner --no-privileges --format=custom --file="$backup_file" "$SUPABASE_DB_URL"
+          test -s "$backup_file"
       - name: Retain the backup for 30 days
         uses: actions/upload-artifact@v4
         with:
           name: viabarcazas-supabase-${{ github.run_id }}
-          path: viabarcazas-*.sql.gz
+          path: viabarcazas-*.dump
           retention-days: 30
+          if-no-files-found: error

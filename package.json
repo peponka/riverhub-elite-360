@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node app.js",
     "dev": "node app.js",
-    "test:pricing": "node --test tests/pricing.test.js"
+    "test:pricing": "node --test tests/pricing.test.js",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.js",
+    "test:e2e:critical": "playwright test tests/e2e/critical-flows.spec.js"
   },
   "dependencies": {
     "@google/genai": "^1.0.0",

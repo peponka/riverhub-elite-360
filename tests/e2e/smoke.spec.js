@@ -60,6 +60,22 @@ test.describe('ViaBarcazas SPA', () => {
         expect(count).toBeGreaterThan(0);
     });
 
+    test('Liquids view is present in the main SPA', async ({ page }) => {
+        await page.goto('/viabarcazas.html');
+        const bypassBtn = page.locator('#bypass-login, [onclick*="bypassLogin"]');
+        if (await bypassBtn.count() > 0) {
+            await bypassBtn.first().click();
+            await page.waitForTimeout(1000);
+        }
+
+        const liquidsNav = page.locator('[data-view="liquidos"]').first();
+        await expect(liquidsNav).toBeVisible();
+        await liquidsNav.click();
+        await expect(page.locator('#view-liquidos')).toBeVisible();
+        await expect(page.locator('#liq-count')).toBeVisible();
+        await expect(page.locator('#liq-list')).toBeVisible();
+    });
+
     test('No console errors on load', async ({ page }) => {
         const errors = [];
         page.on('pageerror', err => errors.push(err.message));
@@ -134,10 +150,24 @@ test.describe('Module Integrity', () => {
             '/js/modules/viabarcazas-exports.js',
             '/js/modules/viabarcazas-hidrologia.js',
             '/js/modules/viabarcazas-briefing.js',
+            '/js/modules/liquidos-viabarcazas.js',
         ];
         for (const mod of modules) {
             const res = await request.get(mod);
             expect(res.status(), `Module ${mod} should return 200`).toBe(200);
+        }
+    });
+
+    test('Liquids admin pages are accessible in both languages', async ({ request }) => {
+        const pages = [
+            '/admin-liquidos-viabarcazas.html',
+            '/admin-liquidos-viabarcazas-en.html',
+        ];
+        for (const path of pages) {
+            const res = await request.get(path);
+            expect(res.status(), `${path} should return 200`).toBe(200);
+            const body = await res.text();
+            expect(body).toContain('liquidos-viabarcazas.js');
         }
     });
 

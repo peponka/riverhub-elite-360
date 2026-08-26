@@ -23,11 +23,39 @@ cp .env.example .env
 # 3. Ejecutar SQL en Supabase Dashboard
 # sql/SUPABASE_FINAL.sql → crea todas las tablas
 # sql/PATCH_FCM_RLS.sql  → configura Row Level Security
+# sql/PATCH_LIQUIDOS_TANQUES.sql → crea tablas y políticas para barcazas tanque
+# sql/SEED_LIQUIDOS.sql          → carga datos demo editables para la vista Líquidos
 
 # 4. Iniciar servidor
 npm start
 # → http://localhost:3000
 ```
+
+### Demo de Barcazas Tanque
+
+La vista `Líquidos` de la web y su página admin ya no usan tarjetas hardcodeadas. Ambas leen `liquid_tanks` y `liquid_operations`, el mismo modelo que consume la app móvil.
+
+Para dejarla operativa en un entorno nuevo:
+
+```bash
+# 1. Crear el modelo
+# sql/PATCH_LIQUIDOS_TANQUES.sql
+
+# 2. Cargar datos demo opcionales
+# sql/SEED_LIQUIDOS.sql
+```
+
+Si cargás el seed, vas a ver 6 barcazas tanque y 5 operaciones reales en:
+
+- `public/admin-liquidos-viabarcazas.html`
+- `public/admin-liquidos-viabarcazas-en.html`
+- `public/viabarcazas.html` / `public/viabarcazas-en.html`
+
+### Respaldo de Supabase
+
+El workflow diario de GitHub Actions genera un archivo restaurable de PostgreSQL y lo conserva 30 días. Antes de ejecutarlo, crear el secreto de repositorio `SUPABASE_DB_URL` en `Settings > Secrets and variables > Actions` con la cadena de conexión directa de la base de datos (debe comenzar con `postgresql://` o `postgres://`).
+
+La cadena se obtiene en Supabase: `Project Settings > Database > Connection string > URI`. No usar la URL pública del proyecto ni la clave anónima; esas no permiten realizar un respaldo.
 
 ### App Mobile (Flutter)
 
@@ -109,3 +137,11 @@ Codigo/
 - **Push**: Firebase Cloud Messaging (FCM)
 - **Contratación**: propuesta comercial directa; no se procesa pago online
 - **Deploy**: Render (backend) + Git push auto-deploy
+
+## ✅ Pruebas
+
+```bash
+npm run test:pricing
+npm run test:e2e:smoke
+npm run test:e2e:critical
+```
