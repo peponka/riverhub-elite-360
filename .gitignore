@@ -44,6 +44,8 @@ Thumbs.db
 *.bak-*
 *.tmp
 temp_*
+test-results/
+playwright-report/
 
 # Build folders
 **/build/

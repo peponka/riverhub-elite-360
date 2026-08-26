@@ -46,11 +46,14 @@ jobs:
           cat app.log
           exit 1
 
+      - name: Run pricing tests
+        run: npm run test:pricing
+
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Run web smoke test
-        run: npx playwright test --grep "GET / returns 200 and serves the main app"
+      - name: Run web smoke tests
+        run: npm run test:e2e:smoke
 
   mobile:
     runs-on: ubuntu-latest
