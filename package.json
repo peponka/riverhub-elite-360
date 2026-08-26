@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "node app.js",
+    "ais:relay": "node scripts/ais-relay.js",
     "test:pricing": "node --test tests/pricing.test.js",
     "test:e2e": "playwright test",
     "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.js",

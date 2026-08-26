@@ -104,6 +104,8 @@ Codigo/
 | `SUPABASE_ANON_KEY` | Clave anónima de Supabase |
 | `GEMINI_API_KEY` | Google Gemini API key |
 | `AIS_API_KEY` | AISStream.io API key |
+| `AIS_DIRECT_STREAM` | Set to `false` only when using the optional external AIS relay |
+| `AIS_RELAY_TOKEN` | Long random token that authenticates the optional AIS relay |
 | `PORT` | Puerto del servidor (default: 3000) |
 
 ## 📡 API Endpoints
@@ -112,6 +114,7 @@ Codigo/
 |---|---|---|---|
 | GET | `/api/health` | ❌ | Health check (AIS + AI status) |
 | GET | `/api/ais-positions` | ❌ | Posiciones AIS en vivo |
+| POST | `/api/internal/ais-ingest` | Relay token | Ingesta privada de posiciones AIS desde el relay |
 | POST | `/api/ai/chat` | ✅ | Copiloto IA (Gemini) |
 | POST | `/api/ai/invoice` | ✅ | Invoice Intelligence |
 | GET | `/api/pricing` | ✅ | Catálogo comercial por flota |

@@ -861,6 +861,8 @@ if (!process.env.AIS_API_KEY) {
 }
 
 const HIDROVIA_BOX = [[[-36.0, -63.0], [-18.0, -53.0]]];
+const AIS_DIRECT_STREAM = process.env.AIS_DIRECT_STREAM !== 'false';
+const AIS_RELAY_TOKEN = process.env.AIS_RELAY_TOKEN || '';
 let aisConnected = false;
 let aisReconnectTimer = null;
 let aisReconnectAttempts = 0;
@@ -933,6 +935,55 @@ async function flushAisPositions() {
 
 setInterval(flushAisPositions, AIS_FLUSH_MS);
 
+// A relay can run outside Render when the shared outbound IP is throttled by
+// an AIS provider. The relay only sends normalized positions over HTTPS.
+function validRelayToken(req) {
+    if (!AIS_RELAY_TOKEN) return false;
+    const authorization = req.get('authorization') || '';
+    const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+    if (token.length !== AIS_RELAY_TOKEN.length) return false;
+    return require('crypto').timingSafeEqual(Buffer.from(token), Buffer.from(AIS_RELAY_TOKEN));
+}
+
+function ingestRelayPosition(position) {
+    const mmsi = String(position.mmsi || '').trim();
+    const lat = Number(position.lat);
+    const lon = Number(position.lon);
+    if (!/^\d{9}$/.test(mmsi) || !Number.isFinite(lat) || !Number.isFinite(lon) ||
+        lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        return false;
+    }
+
+    app.locals.aisPositions[mmsi] = {
+        mmsi,
+        name: String(position.name || 'Unknown').slice(0, 120),
+        lat, lon,
+        speed: Number(position.speed) || 0,
+        course: Number(position.course) || 0,
+        heading: Number(position.heading) || 0,
+        timestamp: new Date().toISOString()
+    };
+    aisDirty.add(mmsi);
+    app.locals.aisLastMessageAt = new Date().toISOString();
+    app.locals.aisConnected = true;
+    aisConnected = true;
+    io.emit('position_update', app.locals.aisPositions[mmsi]);
+    return true;
+}
+
+app.post('/api/internal/ais-ingest', (req, res) => {
+    if (!validRelayToken(req)) return res.status(401).json({ error: 'Unauthorized' });
+
+    const positions = Array.isArray(req.body?.positions) ? req.body.positions : [req.body];
+    if (positions.length === 0 || positions.length > 250) {
+        return res.status(400).json({ error: 'Expected between 1 and 250 positions' });
+    }
+
+    const accepted = positions.filter(ingestRelayPosition).length;
+    if (accepted === 0) return res.status(400).json({ error: 'No valid AIS positions supplied' });
+    res.status(202).json({ accepted });
+});
+
 // --- AIS STREAM ---
 function scheduleAisReconnect(reason) {
     if (aisReconnectTimer || !API_KEY) return;
@@ -953,6 +1004,10 @@ function scheduleAisReconnect(reason) {
 }
 
 function startAISStream() {
+    if (!AIS_DIRECT_STREAM) {
+        console.log('AIS directo desactivado: esperando posiciones del relay externo');
+        return;
+    }
     if (!API_KEY) {
         console.warn('⚠️ AIS no iniciado: falta AIS_API_KEY.');
         return;
@@ -979,7 +1034,7 @@ function startAISStream() {
         app.locals.aisConnected = true;
         console.log("✅ Satélite AIS conectado");
         ws.send(JSON.stringify({
-            Apikey: API_KEY,
+            APIKey: API_KEY,
             BoundingBoxes: HIDROVIA_BOX,
             FilterMessageTypes: ["PositionReport"]
         }));
