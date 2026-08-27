@@ -7,193 +7,90 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--ink:#07352b;--deep:#062d25;--paper:#f5f2e9;--line:#a8c9bd;--mint:#dbf1e5;--accent:#e85c3c;--muted:#55766d}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}.nav{min-height:70px;padding:14px 6%;display:flex;gap:20px;justify-content:space-between;align-items:center;background:#fff}.brand{font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}.cta,.button{border:0;cursor:pointer;background:var(--accent);color:#fff;padding:12px 20px;border-radius:9px;font:700 14px 'Plus Jakarta Sans',sans-serif;text-decoration:none;display:inline-block}.hero{text-align:center;padding:62px 20px 35px}.hero h1{font:700 clamp(42px,6vw,72px)/.95 Newsreader,serif;margin:0}.hero p{max-width:650px;margin:17px auto;line-height:1.65}.calculator,.contact{max-width:900px;margin:0 auto 65px;padding:32px;background:var(--deep);border-radius:18px;color:#fff}.calculator h2,.contact h2{font:700 34px Newsreader,serif;margin:0 0 6px}.calculator>p,.contact>p{margin:0 0 26px;color:#c9e2d9}.inputrow{max-width:440px}.label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#d4f4e2}.stepper{display:grid;grid-template-columns:52px 1fr 52px;height:58px}.stepper button{background:#104a3c;border:1px solid var(--line);color:#fff;font-size:27px;cursor:pointer}.stepper button:first-child{border-radius:10px 0 0 10px}.stepper button:last-child{border-radius:0 10px 10px 0}.stepper input{width:100%;border:1px solid var(--line);border-left:0;border-right:0;background:#0a3d32;color:#fff;text-align:center;font-size:23px;font-weight:700}.total{margin:24px 0;padding:16px;border-radius:11px;background:#0c493b;text-align:center;font-size:17px}.total strong{font-size:26px;margin-left:8px}.live-price{margin:-10px 0 24px;padding:18px 20px;border-radius:11px;background:var(--mint);color:var(--ink);display:flex;justify-content:space-between;gap:18px;align-items:center}.live-price span{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--muted)}.live-price strong{font:700 24px Newsreader,serif}.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{padding:17px;background:white;border-radius:10px;color:var(--ink)}.box span{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}.box b{display:block;margin-top:7px;font-size:20px}.wide{grid-column:span 2;background:var(--mint)}.annual{display:flex;gap:9px;align-items:center;margin-top:20px;font-size:13px}.proposal-action{margin-top:22px;text-align:center}.plans{max-width:1050px;margin:auto;padding:0 20px 60px}.plans h2{text-align:center;font:700 43px Newsreader,serif}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid #d4ded7;border-radius:13px;padding:22px;display:flex;flex-direction:column}.card.popular{border:3px solid #168064}.card h3{margin:0;font-size:16px}.price{font:700 33px Newsreader,serif;margin:14px 0 4px}.card p{font-size:13px;line-height:1.5;flex:1}.card .button{width:100%;text-align:center;background:var(--deep);margin-top:12px}.note{max-width:900px;margin:0 auto 45px;text-align:center;font-size:13px}.contact{background:#fff;color:var(--ink);border:1px solid #d4ded7}.contact>p{color:var(--muted)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field.wide{grid-column:span 2}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{border:1px solid #b8cdc4;border-radius:8px;padding:12px;font:400 15px 'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff}.field textarea{min-height:105px;resize:vertical}.form-note{font-size:12px;color:var(--muted);margin:14px 0}.status{display:none;margin-top:15px;padding:13px;border-radius:8px;background:var(--mint);font-weight:600}.status.error{background:#ffe0d8;color:#7e260f}.checkout-dialog{border:0;border-radius:16px;padding:0;max-width:510px;width:calc(100% - 28px);box-shadow:0 18px 60px #0006}.checkout-dialog::backdrop{background:#022a22bb}.checkout-card{padding:28px;color:var(--ink)}.checkout-card h2{font:700 33px Newsreader,serif;margin:0 0 8px}.checkout-card p{line-height:1.5}.checkout-total{margin:20px 0;padding:18px;border-radius:10px;background:var(--mint)}.checkout-total span{display:block;color:var(--muted);font-weight:700;font-size:12px;text-transform:uppercase}.checkout-total strong{display:block;margin-top:6px;font:700 27px Newsreader,serif}.checkout-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}.footer-note{padding:28px;text-align:center;font-size:12px;color:var(--muted)}@media(max-width:650px){.live-price{align-items:flex-start;flex-direction:column}.result,.grid,.formgrid{grid-template-columns:1fr}.wide,.field.wide{grid-column:span 1}.calculator,.contact{margin:0 14px 45px;padding:22px}.hero{padding-top:45px}.nav{padding:14px 20px}.nav .cta{padding:10px 14px}}
+    :root{--ink:#07352b;--deep:#062d25;--paper:#f5f2e9;--line:#a8c9bd;--mint:#dbf1e5;--accent:#e85c3c;--muted:#55766d}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}.nav{min-height:70px;padding:14px 6%;display:flex;gap:20px;justify-content:space-between;align-items:center;background:#fff}.brand{font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}.actions{display:flex;gap:14px;align-items:center}.languages{display:flex;gap:5px}.lang{border:1px solid #c5d7cf;background:#fff;border-radius:7px;padding:5px 7px;line-height:1;text-decoration:none;font-size:14px}.lang.active{background:var(--ink);border-color:var(--ink);color:#fff}.cta,.button{border:0;cursor:pointer;background:var(--accent);color:#fff;padding:12px 20px;border-radius:9px;font:700 14px 'Plus Jakarta Sans',sans-serif;text-decoration:none;display:inline-block}.hero{text-align:center;padding:62px 20px 35px}.hero h1{font:700 clamp(42px,6vw,72px)/.95 Newsreader,serif;margin:0}.hero p{max-width:690px;margin:17px auto;line-height:1.65}.calculator,.contact{max-width:900px;margin:0 auto 65px;padding:32px;background:var(--deep);border-radius:18px;color:#fff}.calculator h2,.contact h2{font:700 34px Newsreader,serif;margin:0 0 6px}.calculator>p,.contact>p{margin:0 0 26px;color:#c9e2d9}.label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#d4f4e2}.stepper{display:grid;grid-template-columns:58px 1fr 58px;height:62px;max-width:500px}.stepper button{background:#104a3c;border:1px solid var(--line);color:#fff;font-size:28px;cursor:pointer}.stepper button:first-child{border-radius:10px 0 0 10px}.stepper button:last-child{border-radius:0 10px 10px 0}.stepper input{width:100%;border:1px solid var(--line);border-left:0;border-right:0;background:#0a3d32;color:#fff;text-align:center;font-size:25px;font-weight:700}.total{margin:24px 0;padding:16px;border-radius:11px;background:#0c493b;text-align:center;font-size:17px}.total strong{font-size:27px;margin:0 7px}.live{padding:20px;border-radius:11px;background:var(--mint);color:var(--ink)}.eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}.live strong{display:block;font:700 25px Newsreader,serif;margin-top:7px}.live p{margin:7px 0 0;font-size:14px}.billing{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.billing label{border:1px solid var(--line);border-radius:9px;padding:11px 13px;cursor:pointer;font-size:13px}.billing input{accent-color:var(--accent)}.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{padding:17px;background:#fff;border-radius:10px;color:var(--ink)}.box span{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}.box b{display:block;margin-top:7px;font-size:20px}.wide{grid-column:span 2;background:var(--mint)}.proposal-action{margin-top:22px;text-align:center}.plans{max-width:1050px;margin:auto;padding:0 20px 60px}.plans h2{text-align:center;font:700 43px Newsreader,serif}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid #d4ded7;border-radius:13px;padding:22px}.card.active{border:3px solid #168064}.card h3{margin:0;font-size:16px}.price{font:700 33px Newsreader,serif;margin:14px 0 4px}.card p{font-size:13px;line-height:1.5}.note{max-width:900px;margin:0 auto 45px;text-align:center;font-size:13px}.contact{background:#fff;color:var(--ink);border:1px solid #d4ded7}.contact>p{color:var(--muted)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field.wide{grid-column:span 2}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{border:1px solid #b8cdc4;border-radius:8px;padding:12px;font:400 15px 'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff}.field textarea{min-height:105px;resize:vertical}.form-note{font-size:12px;color:var(--muted);margin:14px 0}.status{display:none;margin-top:15px;padding:13px;border-radius:8px;background:var(--mint);font-weight:600}.checkout-dialog{border:0;border-radius:16px;padding:0;max-width:510px;width:calc(100% - 28px);box-shadow:0 18px 60px #0006}.checkout-dialog::backdrop{background:#022a22bb}.checkout-card{padding:28px;color:var(--ink)}.checkout-card h2{font:700 33px Newsreader,serif;margin:0 0 8px}.checkout-card p{line-height:1.5}.checkout-total{margin:20px 0;padding:18px;border-radius:10px;background:var(--mint)}.checkout-total span{display:block;color:var(--muted);font-weight:700;font-size:12px;text-transform:uppercase}.checkout-total strong{display:block;margin-top:6px;font:700 27px Newsreader,serif}.checkout-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}.footer-note{padding:28px;text-align:center;font-size:12px;color:var(--muted)}@media(max-width:650px){.nav{padding:14px 18px}.cta{display:none}.hero{padding-top:45px}.calculator,.contact{margin:0 14px 45px;padding:22px}.result,.grid,.formgrid{grid-template-columns:1fr}.wide,.field.wide{grid-column:span 1}.checkout-actions{flex-direction:column}.checkout-actions .button{width:100%}}
   </style>
 </head>
 <body>
-  <nav class="nav"><a class="brand" href="/">ViaBarcazas</a><a class="cta" href="#contacto">Hablar con ventas</a></nav>
-  <header class="hero"><h1>Calcula tu plan.</h1><p>Cada conjunto de una barcaza con su remolcador cuenta como una única unidad facturable. El total se actualiza en vivo.</p></header>
+  <nav class="nav">
+    <a class="brand" href="/">ViaBarcazas</a>
+    <div class="actions">
+      <div class="languages" aria-label="Language">
+        <a class="lang" data-lang="es" href="/pricing.html" title="Español">ES</a>
+        <a class="lang" data-lang="en" href="/pricing.html?lang=en" title="English">EN</a>
+        <a class="lang" data-lang="pt" href="/pricing.html?lang=pt" title="Português">PT</a>
+      </div>
+      <a id="salesLink" class="cta" href="#contacto">Hablar con ventas</a>
+    </div>
+  </nav>
+  <header class="hero"><h1 id="heroTitle">Calcula tu plan.</h1><p id="heroText"></p></header>
   <main>
     <section class="calculator">
-      <h2>Calcula tu flota.</h2><p>Cargá la cantidad de conjuntos barcaza + remolcador. Cada conjunto se factura como una sola unidad, sin pagar cupos vacíos.</p>
-      <div class="inputrow"><div><label class="label" for="convoys">Cantidad de conjuntos barcaza + remolcador</label><div class="stepper"><button type="button" data-step="convoys:-1">-</button><input id="convoys" type="number" min="0" value="1"><button type="button" data-step="convoys:1">+</button></div></div></div>
-<div class="total">Tu flota tiene <strong id="total">1</strong><span id="unitLabel"> unidad facturable</span></div>
-<div id="livePrice" class="live-price" aria-live="polite"><span>Precio mensual en vivo</span><strong>1 conjunto x USD 100 = USD 100 / mes</strong></div>
-<div id="result" class="result" aria-live="polite"></div>
-      <label class="annual"><input id="annual" type="checkbox"> Pago anual anticipado: 10% de descuento maximo.</label>
-      <div class="proposal-action"><button id="proposalButton" class="button" type="button">Continuar a pago</button></div>
+      <h2 id="calculatorTitle"></h2><p id="calculatorText"></p>
+      <label id="unitsLabel" class="label" for="units"></label>
+      <div class="stepper"><button type="button" data-step="-1">-</button><input id="units" type="number" min="0" value="1"><button type="button" data-step="1">+</button></div>
+      <div class="total"><span id="fleetIntro"></span><strong id="unitCount">1</strong><span id="unitName"></span></div>
+      <div class="live" aria-live="polite"><span id="activeRule" class="eyebrow"></span><strong id="calculation"></strong><p id="calculationNote"></p></div>
+      <div class="billing"><label><input type="radio" name="billing" value="monthly" checked><span id="monthlyOption"></span></label><label><input type="radio" name="billing" value="annual"><span id="annualOption"></span></label></div>
+      <div id="result" class="result" aria-live="polite"></div>
+      <div class="proposal-action"><button id="checkoutButton" class="button" type="button"></button></div>
     </section>
-    <section class="plans"><h2>Precios por unidad y tramo</h2><div id="plans" class="grid"></div></section>
-    <p class="note">Mas de 150 conjuntos barcaza + remolcador: propuesta personalizada. Piloto comercial: 60 dias, hasta 15 conjuntos, USD 3.000.</p>
+    <section class="plans"><h2 id="plansTitle"></h2><div id="plans" class="grid"></div></section>
+    <p id="note" class="note"></p>
     <section id="contacto" class="contact">
-      <h2>Solicita una propuesta</h2><p>Recibimos el pedido con el calculo de flota para preparar una propuesta comercial precisa.</p>
+      <h2 id="contactTitle"></h2><p id="contactText"></p>
       <form id="proposalForm" novalidate>
         <div class="formgrid">
-          <div class="field"><label for="name">Nombre *</label><input id="name" required autocomplete="name" placeholder="Tu nombre completo"></div>
-          <div class="field"><label for="company">Empresa *</label><input id="company" required autocomplete="organization" placeholder="Nombre de la empresa"></div>
-          <div class="field"><label for="email">Email *</label><input id="email" required type="email" autocomplete="email" placeholder="tu@empresa.com"></div>
-          <div class="field"><label for="country">Pais *</label><select id="country" required><option value="">Seleccionar pais</option><option>Argentina</option><option>Paraguay</option><option>Brasil</option><option>Uruguay</option><option>Bolivia</option><option>Otro</option></select></div>
-          <div class="field wide"><label for="message">Comentario (opcional)</label><textarea id="message" placeholder="Contanos sobre la operacion que queres digitalizar."></textarea></div>
+          <div class="field"><label id="nameLabel" for="name"></label><input id="name" required autocomplete="name"></div>
+          <div class="field"><label id="companyLabel" for="company"></label><input id="company" required autocomplete="organization"></div>
+          <div class="field"><label id="emailLabel" for="email"></label><input id="email" required type="email" autocomplete="email"></div>
+          <div class="field"><label id="countryLabel" for="country"></label><select id="country" required></select></div>
+          <div class="field wide"><label id="messageLabel" for="message"></label><textarea id="message"></textarea></div>
         </div>
         <p id="quoteSummary" class="form-note"></p>
-        <button class="button" type="submit">Enviar solicitud comercial</button>
-        <div id="formStatus" class="status" role="status"></div>
+        <button id="formButton" class="button" type="submit"></button><div id="formStatus" class="status" role="status"></div>
       </form>
     </section>
   </main>
-  <dialog id="checkoutDialog" class="checkout-dialog" aria-labelledby="checkoutTitle">
-    <div class="checkout-card">
-      <h2 id="checkoutTitle">Confirma tu plan</h2>
-      <p>Estas viendo una demostracion de compra. No se realizara ningun cobro.</p>
-      <div id="checkoutTotal" class="checkout-total"></div>
-      <p id="checkoutDetail"></p>
-      <div class="checkout-actions"><button id="checkoutCancel" class="button secondary" type="button">Volver al calculo</button><button id="checkoutConfirm" class="button" type="button">Confirmar contratacion simulada</button></div>
-      <div id="checkoutStatus" class="status" role="status"></div>
-    </div>
+  <dialog id="checkoutDialog" class="checkout-dialog">
+    <div class="checkout-card"><h2 id="checkoutTitle"></h2><p id="checkoutText"></p><div id="checkoutTotal" class="checkout-total"></div><p id="checkoutDetail"></p><div class="checkout-actions"><button id="checkoutCancel" class="button secondary" type="button"></button><button id="checkoutConfirm" class="button" type="button"></button></div><div id="checkoutStatus" class="status" role="status"></div></div>
   </dialog>
-  <footer class="footer-note">ViaBarcazas | Gestion de flotas para la Hidrovia Paraguay-Parana</footer>
+  <footer id="footer" class="footer-note"></footer>
   <script>
-    (function () {
-      // The embedded catalog keeps the calculator working in an offline demo.
-      // Render replaces it with the server catalog whenever it is available.
-      var fallbackCatalog = [
-        { id: 'starter', name: 'Precio inicial', minUnits: 1, capacity: 9, effectiveUnitPrice: 100 },
-        { id: 'fleet-10', name: 'Flota 10+', minUnits: 10, capacity: 24, effectiveUnitPrice: 95 },
-        { id: 'fleet-25', name: 'Flota 25+', minUnits: 25, capacity: 49, effectiveUnitPrice: 90, popular: true },
-        { id: 'fleet-50', name: 'Flota 50+', minUnits: 50, capacity: 99, effectiveUnitPrice: 85 },
-        { id: 'fleet-100', name: 'Flota 100+', minUnits: 100, capacity: 149, effectiveUnitPrice: 80 },
-        { id: 'fleet-150', name: 'Flota 150', minUnits: 150, capacity: 150, effectiveUnitPrice: 75 }
-      ];
-      var catalog = fallbackCatalog.slice();
-      var selectedPlan = null;
-      var money = function (amount) { return 'USD ' + Number(amount || 0).toLocaleString('en-US'); };
-      var value = function (id) { return Math.max(0, Number(document.getElementById(id).value) || 0); };
-      var getFleet = function () { return { convoys: value('convoys') }; };
-      var getUnits = function () { return getFleet().convoys; };
-      var setLabel = function (units) { return units === 1 ? 'conjunto' : 'conjuntos'; };
-      function updateSummary(plan, monthlyPrice) {
-        var fleet = getFleet();
-        var annual = document.getElementById('annual').checked;
-        var units = getUnits();
-        var text = 'Flota consultada: ' + fleet.convoys + ' ' + setLabel(units) + ' barcaza + remolcador. ';
-        if (plan) text += 'Tramo activo: ' + plan.name + '. ' + units + ' ' + setLabel(units) + ' x ' + money(plan.effectiveUnitPrice) + ' = ' + money(monthlyPrice) + ' por mes' + (annual ? ' o ' + money(monthlyPrice * 12 * 0.9) + ' por ano con pago anual.' : '.');
-        else if (getUnits() === 0) text += 'Agrega al menos un conjunto para ver el calculo.';
-        else text += 'Propuesta personalizada para una flota de mas de 150 conjuntos.';
-        document.getElementById('quoteSummary').textContent = text;
-      }
-      function calculate() {
-        var units = getUnits();
-        var plan = catalog.find(function (item) { return units >= item.minUnits && units <= item.capacity; }) || null;
-        var annual = document.getElementById('annual').checked;
-        var result = document.getElementById('result');
-        var proposalButton = document.getElementById('proposalButton');
-        var livePrice = document.getElementById('livePrice');
-        document.getElementById('total').textContent = units;
-        document.getElementById('unitLabel').textContent = ' conjunto' + (units === 1 ? '' : 's') + ' facturable' + (units === 1 ? '' : 's');
-        selectedPlan = plan;
-        if (units === 0) {
-          proposalButton.textContent = 'Agrega un conjunto para calcular';
-          livePrice.innerHTML = '<span>Precio mensual en vivo</span><strong>Agrega un conjunto para ver el total</strong>';
-          result.innerHTML = '<div class="box wide"><span>Empeza tu calculo</span><b>Ingresa un conjunto barcaza + remolcador para ver el precio en vivo.</b></div>';
-          updateSummary(null, 0);
-          return;
-        }
-        if (!plan) {
-          proposalButton.textContent = 'Solicitar propuesta personalizada';
-          livePrice.innerHTML = '<span>Precio mensual en vivo</span><strong>Propuesta personalizada</strong>';
-          result.innerHTML = '<div class="box wide"><span>Plan recomendado</span><b>Flota personalizada: solicitar propuesta</b></div>';
-          updateSummary(null, 0);
-          return;
-        }
-        proposalButton.textContent = 'Continuar a pago';
-        var baseRate = catalog[0] ? catalog[0].effectiveUnitPrice : plan.effectiveUnitPrice;
-        var monthlyPrice = units * plan.effectiveUnitPrice;
-        var baseMonthly = units * baseRate;
-        var saving = Math.max(0, baseMonthly - monthlyPrice);
-        var annualRegular = monthlyPrice * 12;
-        var annualPrepay = annualRegular * 0.9;
-        var annualSaving = annualRegular - annualPrepay;
-        var nextPlan = catalog.find(function (item) { return item.minUnits > units; });
-        livePrice.innerHTML = '<span>Precio mensual en vivo</span><strong>' + units + ' ' + setLabel(units) + ' x ' + money(plan.effectiveUnitPrice) + ' = ' + money(monthlyPrice) + ' / mes</strong>';
-        result.innerHTML = '<div class="box wide"><span>Regla activa</span><b>' + plan.name + ': de ' + plan.minUnits + ' a ' + plan.capacity + ' conjuntos, ' + money(plan.effectiveUnitPrice) + ' por conjunto / mes</b></div>' +
-          '<div class="box wide"><span>Calculo de tu flota</span><b>' + units + ' ' + setLabel(units) + ' x ' + money(plan.effectiveUnitPrice) + ' = ' + money(monthlyPrice) + ' / mes</b></div>' +
-          '<div class="box"><span>Precio mensual real</span><b>' + money(monthlyPrice) + '</b></div>' +
-          '<div class="box"><span>Costo por conjunto</span><b>' + money(plan.effectiveUnitPrice) + ' / mes</b></div>' +
-          '<div class="box"><span>Precio base sin descuento</span><b>' + money(baseMonthly) + ' / mes</b></div>' +
-          '<div class="box"><span>Ahorro por tramo</span><b>' + money(saving) + ' / mes</b></div>' +
-          '<div class="box"><span>Compromiso anual mensual</span><b>' + money(annualRegular) + ' / ano</b></div>' +
-          '<div class="box"><span>Prepago anual (-10%)</span><b>' + money(annualPrepay) + ' / ano</b></div>' +
-          '<div class="box wide"><span>' + (nextPlan ? 'Siguiente descuento' : 'Mejor tarifa disponible') + '</span><b>' + (nextPlan ? 'Con ' + (nextPlan.minUnits - units) + ' conjunto' + (nextPlan.minUnits - units === 1 ? '' : 's') + ' mas: ' + money(nextPlan.effectiveUnitPrice) + ' por conjunto / mes.' : 'Ya alcanzaste la mejor tarifa estandar.') + ' Prepago anual: ' + money(annualSaving) + ' de ahorro adicional' + (annual ? ' | seleccionado' : ' | disponible al seleccionar pago anual') + '</b></div>';
-        updateSummary(plan, monthlyPrice);
-      }
-      function choosePlan(planId) {
-        var plan = catalog.find(function (item) { return item.id === planId; });
-        if (plan) {
-          document.getElementById('convoys').value = plan.minUnits;
-          selectedPlan = plan;
-        }
-        calculate();
-        document.querySelector('.calculator').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      function openCheckout() {
-        var units = getUnits();
-        if (!selectedPlan || units === 0) { calculate(); return; }
-        var monthlyPrice = units * selectedPlan.effectiveUnitPrice;
-        var annual = document.getElementById('annual').checked;
-        var total = annual ? monthlyPrice * 12 * 0.9 : monthlyPrice;
-        var cadence = annual ? 'por ano con prepago anual' : 'por mes';
-        document.getElementById('checkoutTotal').innerHTML = '<span>Total seleccionado</span><strong>' + money(total) + ' ' + cadence + '</strong>';
-        document.getElementById('checkoutDetail').textContent = units + ' ' + setLabel(units) + ' barcaza + remolcador | ' + selectedPlan.name + ' | ' + money(selectedPlan.effectiveUnitPrice) + ' por conjunto / mes.';
-        document.getElementById('checkoutStatus').style.display = 'none';
-        document.getElementById('checkoutDialog').showModal();
-      }
-      function renderPlans() {
-        document.getElementById('plans').innerHTML = catalog.map(function (plan) {
-          return '<article class="card ' + (plan.popular ? 'popular' : '') + '"><h3>' + plan.name + (plan.popular ? ' | Mas elegido' : '') + '</h3><div class="price">' + money(plan.effectiveUnitPrice) + '</div><p>Por conjunto barcaza + remolcador / mes.<br>De ' + plan.minUnits + ' a ' + plan.capacity + ' conjuntos. Solo se factura tu cantidad real.</p><button class="button" type="button" data-plan="' + plan.id + '">Elegir este tramo</button></article>';
-        }).join('');
-        document.querySelectorAll('[data-plan]').forEach(function (button) {
-          button.addEventListener('click', function () { choosePlan(button.dataset.plan); });
-        });
-      }
-      document.querySelectorAll('[data-step]').forEach(function (button) {
-        button.addEventListener('click', function () { var parts = button.dataset.step.split(':'); var input = document.getElementById(parts[0]); input.value = Math.max(0, value(parts[0]) + Number(parts[1])); calculate(); });
-      });
-      document.querySelectorAll('#convoys,#annual').forEach(function (input) { input.addEventListener('input', calculate); input.addEventListener('change', calculate); });
-      document.getElementById('proposalButton').addEventListener('click', openCheckout);
-      document.getElementById('checkoutCancel').addEventListener('click', function () { document.getElementById('checkoutDialog').close(); });
-      document.getElementById('checkoutConfirm').addEventListener('click', function () {
-        var status = document.getElementById('checkoutStatus');
-        var code = 'VB-' + String(Date.now()).slice(-6);
-        status.className = 'status';
-        status.style.display = 'block';
-        status.textContent = 'Contratacion simulada confirmada. Referencia ' + code + '. No se realizo ningun cobro.';
-        document.getElementById('checkoutConfirm').disabled = true;
-      });
-      document.getElementById('checkoutDialog').addEventListener('close', function () { document.getElementById('checkoutConfirm').disabled = false; });
-      document.getElementById('proposalForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-        var form = event.currentTarget;
-        var status = document.getElementById('formStatus');
-        if (!form.checkValidity()) { form.reportValidity(); return; }
-        var fleet = getFleet();
-        var details = 'Solicitud comercial desde la calculadora. ' + document.getElementById('quoteSummary').textContent + ' Comentario: ' + document.getElementById('message').value;
-        var payload = { nombre: document.getElementById('name').value.trim(), empresa: document.getElementById('company').value.trim(), pais: document.getElementById('country').value, flota: fleet.convoys + ' conjunto' + (fleet.convoys === 1 ? '' : 's') + ' barcaza + remolcador', email: document.getElementById('email').value.trim(), mensaje: details };
-        status.className = 'status'; status.style.display = 'block'; status.textContent = 'Enviando solicitud...';
-        fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
-          .then(function (response) { if (!response.ok) throw new Error('request_failed'); return response.json(); })
-          .then(function () { status.className = 'status'; status.textContent = 'Solicitud recibida. El equipo comercial te contactara dentro de 24 horas habiles.'; form.reset(); calculate(); })
-          .catch(function () { status.className = 'status error'; status.textContent = 'No pudimos registrar la solicitud. Escribinos a info@viabarcazas.com e incluye el resumen mostrado arriba.'; });
-      });
-      renderPlans();
-      calculate();
-      fetch('/api/pricing').then(function (response) { if (!response.ok) throw new Error('catalog_failed'); return response.json(); }).then(function (data) {
-        if (Array.isArray(data.plans) && data.plans.length) {
-          catalog = data.plans;
-          renderPlans();
-          calculate();
-        }
-      }).catch(function () { /* Offline presentations continue with the embedded catalog. */ });
-    }());
+  (function(){
+    var tiers=[{name:'Inicial',min:1,max:9,rate:100},{name:'Flota 10+',min:10,max:24,rate:95},{name:'Flota 25+',min:25,max:49,rate:90},{name:'Flota 50+',min:50,max:99,rate:85},{name:'Flota 100+',min:100,max:149,rate:80},{name:'Flota 150',min:150,max:150,rate:75}];
+    var lang=new URLSearchParams(location.search).get('lang')||'es'; if(['es','en','pt'].indexOf(lang)<0)lang='es';
+    var text={
+      es:{title:'Calculadora de flota | ViaBarcazas',sales:'Hablar con ventas',hero:'Calcula tu plan.',heroText:'Cada conjunto de una barcaza con su remolcador cuenta como una única unidad facturable. El total se actualiza en vivo.',calc:'Calcula tu flota.',calcText:'Cargá cuántos conjuntos barcaza + remolcador vas a gestionar. Cada conjunto se factura como una sola unidad, sin cupos vacíos.',units:'Cantidad de conjuntos barcaza + remolcador',fleet:'Tu flota tiene',unit:'unidad facturable',unitsWord:'unidades facturables',rule:'Regla activa',monthly:'Pago mensual',annual:'Prepago anual (10% de descuento)',pay:'Elegir y continuar a pago simulado',plans:'Precios por unidad y tramo',note:'Más de 150 conjuntos: propuesta personalizada. Piloto comercial: 60 días, hasta 15 conjuntos, USD 3.000.',contact:'Solicitá una propuesta',contactText:'Recibimos tu cálculo para preparar una propuesta comercial precisa.',name:'Nombre *',company:'Empresa *',email:'Email *',country:'País *',message:'Comentario (opcional)',send:'Enviar solicitud comercial',quote:'Resumen de tu selección:',checkout:'Confirmá tu plan',checkoutText:'Esta es una demostración de pago. No se realizará ningún cobro.',back:'Volver al cálculo',confirm:'Confirmar contratación simulada',simulated:'Contratación simulada registrada. Un asesor comercial te contactará.',formOk:'Solicitud simulada registrada. Te contactaremos con una propuesta.',footer:'ViaBarcazas | Gestión de flotas para la Hidrovía Paraguay-Paraná',initial:'Precio inicial',custom:'Propuesta personalizada',perUnit:'por unidad / mes',monthlyPrice:'Precio mensual real',unitCost:'Costo por unidad',base:'Precio base sin descuento',saving:'Ahorro por tramo',annualTotal:'Compromiso anual mensual',annualPrepay:'Prepago anual (-10%)',annualSaving:'Ahorro por prepago anual',choose:'Seleccionado por tu cantidad',add:'Agregá al menos un conjunto para ver el cálculo.',calcLine:'conjuntos x',perMonth:'/ mes',countryBlank:'Seleccionar país',messagePlaceholder:'Contanos sobre la operación que querés digitalizar.',namePlaceholder:'Tu nombre completo',companyPlaceholder:'Nombre de la empresa',emailPlaceholder:'tu@empresa.com',tier:'de'},
+      en:{title:'Fleet calculator | ViaBarcazas',sales:'Talk to sales',hero:'Calculate your plan.',heroText:'Each barge and tugboat set counts as one billable unit. The total updates live.',calc:'Calculate your fleet.',calcText:'Enter how many barge + tugboat sets you will manage. Each set is billed as one unit, with no empty seats.',units:'Number of barge + tugboat sets',fleet:'Your fleet has',unit:'billable unit',unitsWord:'billable units',rule:'Active rule',monthly:'Monthly payment',annual:'Annual prepayment (10% off)',pay:'Choose and continue to simulated payment',plans:'Prices by unit and tier',note:'More than 150 sets: custom proposal. Commercial pilot: 60 days, up to 15 sets, USD 3,000.',contact:'Request a proposal',contactText:'We receive your calculation to prepare an accurate commercial proposal.',name:'Name *',company:'Company *',email:'Email *',country:'Country *',message:'Comment (optional)',send:'Send commercial request',quote:'Your selection summary:',checkout:'Confirm your plan',checkoutText:'This is a payment demonstration. No charge will be made.',back:'Back to calculator',confirm:'Confirm simulated contract',simulated:'Simulated contract registered. A commercial advisor will contact you.',formOk:'Simulated request registered. We will contact you with a proposal.',footer:'ViaBarcazas | Fleet management for the Paraguay-Paraná Waterway',initial:'Starting price',custom:'Custom proposal',perUnit:'per unit / month',monthlyPrice:'Actual monthly price',unitCost:'Cost per unit',base:'Base price without discount',saving:'Tier savings',annualTotal:'Annual monthly commitment',annualPrepay:'Annual prepayment (-10%)',annualSaving:'Annual prepayment savings',choose:'Selected for your quantity',add:'Add at least one set to see the calculation.',calcLine:'sets x',perMonth:'/ month',countryBlank:'Select country',messagePlaceholder:'Tell us about the operation you want to digitize.',namePlaceholder:'Your full name',companyPlaceholder:'Company name',emailPlaceholder:'you@company.com',tier:'from'},
+      pt:{title:'Calculadora de frota | ViaBarcazas',sales:'Falar com vendas',hero:'Calcule seu plano.',heroText:'Cada conjunto de barcaça e rebocador conta como uma única unidade faturável. O total é atualizado ao vivo.',calc:'Calcule sua frota.',calcText:'Informe quantos conjuntos barcaça + rebocador você vai gerenciar. Cada conjunto é faturado como uma unidade, sem vagas vazias.',units:'Quantidade de conjuntos barcaça + rebocador',fleet:'Sua frota tem',unit:'unidade faturável',unitsWord:'unidades faturáveis',rule:'Regra ativa',monthly:'Pagamento mensal',annual:'Pré-pagamento anual (10% de desconto)',pay:'Escolher e continuar para pagamento simulado',plans:'Preços por unidade e faixa',note:'Mais de 150 conjuntos: proposta personalizada. Piloto comercial: 60 dias, até 15 conjuntos, USD 3.000.',contact:'Solicite uma proposta',contactText:'Recebemos seu cálculo para preparar uma proposta comercial precisa.',name:'Nome *',company:'Empresa *',email:'E-mail *',country:'País *',message:'Comentário (opcional)',send:'Enviar solicitação comercial',quote:'Resumo da sua seleção:',checkout:'Confirme seu plano',checkoutText:'Esta é uma demonstração de pagamento. Nenhuma cobrança será realizada.',back:'Voltar ao cálculo',confirm:'Confirmar contratação simulada',simulated:'Contratação simulada registrada. Um consultor comercial entrará em contato.',formOk:'Solicitação simulada registrada. Entraremos em contato com uma proposta.',footer:'ViaBarcazas | Gestão de frotas para a Hidrovia Paraguai-Paraná',initial:'Preço inicial',custom:'Proposta personalizada',perUnit:'por unidade / mês',monthlyPrice:'Preço mensal real',unitCost:'Custo por unidade',base:'Preço base sem desconto',saving:'Economia por faixa',annualTotal:'Compromisso anual mensal',annualPrepay:'Pré-pagamento anual (-10%)',annualSaving:'Economia no pré-pagamento anual',choose:'Selecionado pela sua quantidade',add:'Adicione pelo menos um conjunto para ver o cálculo.',calcLine:'conjuntos x',perMonth:'/ mês',countryBlank:'Selecione o país',messagePlaceholder:'Conte-nos sobre a operação que deseja digitalizar.',namePlaceholder:'Seu nome completo',companyPlaceholder:'Nome da empresa',emailPlaceholder:'voce@empresa.com',tier:'de'}
+    }[lang];
+    var $=function(id){return document.getElementById(id)}, money=function(n){return 'USD '+Number(n||0).toLocaleString('en-US')}, value=function(){return Math.max(0,Number($('units').value)||0)}, selected=function(n){return tiers.filter(function(t){return n>=t.min&&n<=t.max})[0]||null}, annual=function(){return document.querySelector('input[name="billing"]:checked').value==='annual'}, set=function(id,v){$(id).textContent=v};
+    function staticText(){
+      document.documentElement.lang=lang; document.title=text.title; document.querySelectorAll('.lang').forEach(function(a){a.classList.toggle('active',a.dataset.lang===lang)});
+      set('salesLink',text.sales);set('heroTitle',text.hero);set('heroText',text.heroText);set('calculatorTitle',text.calc);set('calculatorText',text.calcText);set('unitsLabel',text.units);set('fleetIntro',text.fleet);set('activeRule',text.rule);set('monthlyOption',text.monthly);set('annualOption',text.annual);set('checkoutButton',text.pay);set('plansTitle',text.plans);set('note',text.note);set('contactTitle',text.contact);set('contactText',text.contactText);set('nameLabel',text.name);set('companyLabel',text.company);set('emailLabel',text.email);set('countryLabel',text.country);set('messageLabel',text.message);set('formButton',text.send);set('checkoutTitle',text.checkout);set('checkoutText',text.checkoutText);set('checkoutCancel',text.back);set('checkoutConfirm',text.confirm);set('footer',text.footer);
+      $('name').placeholder=text.namePlaceholder;$('company').placeholder=text.companyPlaceholder;$('email').placeholder=text.emailPlaceholder;$('message').placeholder=text.messagePlaceholder;
+      $('country').innerHTML='<option value="">'+text.countryBlank+'</option><option>Argentina</option><option>Paraguay</option><option>Brasil</option><option>Uruguay</option><option>Bolivia</option><option>Other</option>';
+    }
+    function renderPlans(active){
+      $('plans').innerHTML=tiers.map(function(t){var title=t.min===1?text.initial:'Fleet '+t.min+'+';if(lang==='pt'&&t.min!==1)title='Frota '+t.min+'+';if(lang==='es'&&t.min!==1)title='Flota '+t.min+'+';var range=t.min===t.max?String(t.min):t.min+'-'+t.max;return '<article class="card '+(active&&active.min===t.min?'active':'')+'"><h3>'+title+(active&&active.min===t.min?' · '+text.choose:'')+'</h3><div class="price">'+money(t.rate)+'</div><p>'+text.perUnit+'<br>'+text.tier+' '+range+' '+text.unitsWord+'.</p></article>'}).join('');
+    }
+    function calculate(){
+      var n=value(), plan=selected(n), isAnnual=annual();set('unitCount',n);set('unitName',' '+(n===1?text.unit:text.unitsWord));
+      if(!n){set('calculation',text.add);$('calculationNote').textContent='';$('result').innerHTML='';$('quoteSummary').textContent=text.quote+' '+text.add;renderPlans(null);return}
+      if(!plan){set('calculation',text.custom);$('calculationNote').textContent=text.note;$('result').innerHTML='';$('quoteSummary').textContent=text.quote+' '+n+' '+text.unitsWord+'. '+text.custom+'.';renderPlans(null);return}
+      var monthly=n*plan.rate,base=n*100,annualPrice=monthly*12*.9,charged=isAnnual?annualPrice:monthly;
+      set('calculation',n+' '+text.calcLine+' '+money(plan.rate)+' = '+money(monthly)+' '+text.perMonth);
+      $('calculationNote').textContent=(isAnnual?text.annualPrepay+': '+money(annualPrice)+' / '+(lang==='en'?'year':lang==='pt'?'ano':'año'):text.monthly);
+      $('result').innerHTML='<div class="box"><span>'+text.monthlyPrice+'</span><b>'+money(monthly)+' '+text.perMonth+'</b></div><div class="box"><span>'+text.unitCost+'</span><b>'+money(plan.rate)+' '+text.perMonth+'</b></div><div class="box"><span>'+text.base+'</span><b>'+money(base)+' '+text.perMonth+'</b></div><div class="box"><span>'+text.saving+'</span><b>'+money(base-monthly)+' '+text.perMonth+'</b></div><div class="box"><span>'+text.annualTotal+'</span><b>'+money(monthly*12)+' / '+(lang==='en'?'year':lang==='pt'?'ano':'año')+'</b></div><div class="box"><span>'+text.annualPrepay+'</span><b>'+money(annualPrice)+' / '+(lang==='en'?'year':lang==='pt'?'ano':'año')+'</b></div><div class="box wide"><span>'+text.annualSaving+'</span><b>'+money(monthly*12-annualPrice)+'</b></div>';
+      $('quoteSummary').textContent=text.quote+' '+n+' '+text.unitsWord+' · '+money(charged)+(isAnnual?' / '+(lang==='en'?'year':lang==='pt'?'ano':'año'):' '+text.perMonth)+'.';renderPlans(plan);
+    }
+    document.querySelectorAll('[data-step]').forEach(function(b){b.addEventListener('click',function(){$('units').value=Math.max(0,value()+Number(b.dataset.step));calculate()})});
+    $('units').addEventListener('input',calculate);document.querySelectorAll('input[name="billing"]').forEach(function(i){i.addEventListener('change',calculate)});
+    $('checkoutButton').addEventListener('click',function(){var n=value(),plan=selected(n);if(!plan){location.hash='contacto';return}var total=annual()?n*plan.rate*12*.9:n*plan.rate;$('checkoutTotal').innerHTML='<span>'+text.quote+'</span><strong>'+money(total)+(annual()?' / '+(lang==='en'?'year':lang==='pt'?'ano':'año'):' '+text.perMonth)+'</strong>';$('checkoutDetail').textContent=n+' '+(n===1?text.unit:text.unitsWord)+' · '+money(plan.rate)+' '+text.perUnit;$('checkoutStatus').style.display='none';$('checkoutDialog').showModal()});
+    $('checkoutCancel').addEventListener('click',function(){$('checkoutDialog').close()});$('checkoutConfirm').addEventListener('click',function(){$('checkoutStatus').textContent=text.simulated;$('checkoutStatus').style.display='block'});
+    $('proposalForm').addEventListener('submit',function(e){e.preventDefault();if(!$('proposalForm').checkValidity()){$('proposalForm').reportValidity();return}$('formStatus').textContent=text.formOk;$('formStatus').style.display='block'});
+    staticText();calculate();
+  })();
   </script>
 </body>
 </html>
