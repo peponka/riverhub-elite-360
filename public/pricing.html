@@ -46,7 +46,17 @@
   <footer class="footer-note">ViaBarcazas | Gestion de flotas para la Hidrovia Paraguay-Parana</footer>
   <script>
     (function () {
-      var catalog = [];
+      // The embedded catalog keeps the calculator working in an offline demo.
+      // Render replaces it with the server catalog whenever it is available.
+      var fallbackCatalog = [
+        { id: 'individual', name: 'Unidad Individual', capacity: 1, monthlyPrice: 115, effectiveUnitPrice: 115 },
+        { id: 'fleet-10', name: 'Combo Flota 10', capacity: 10, monthlyPrice: 1100, effectiveUnitPrice: 110 },
+        { id: 'fleet-25', name: 'Combo Flota 25', capacity: 25, monthlyPrice: 2500, effectiveUnitPrice: 100, popular: true },
+        { id: 'fleet-50', name: 'Combo Flota 50', capacity: 50, monthlyPrice: 4750, effectiveUnitPrice: 95 },
+        { id: 'fleet-100', name: 'Combo Flota 100', capacity: 100, monthlyPrice: 9000, effectiveUnitPrice: 90 },
+        { id: 'fleet-150', name: 'Combo Flota 150', capacity: 150, monthlyPrice: 12750, effectiveUnitPrice: 85 }
+      ];
+      var catalog = fallbackCatalog.slice();
       var selectedPlan = null;
       var money = function (amount) { return 'USD ' + Number(amount || 0).toLocaleString('en-US'); };
       var value = function (id) { return Math.max(0, Number(document.getElementById(id).value) || 0); };
@@ -76,8 +86,19 @@
         }
         proposalButton.textContent = 'Solicitar propuesta para mi flota';
         var individual = catalog[0] ? catalog[0].monthlyPrice : plan.monthlyPrice;
-        var saving = Math.max(0, units * individual - plan.monthlyPrice);
-        result.innerHTML = '<div class="box"><span>Plan recomendado</span><b>' + plan.name + '</b></div><div class="box"><span>Precio mensual</span><b>' + money(plan.monthlyPrice) + '</b></div><div class="box"><span>Precio por unidad</span><b>' + money(plan.effectiveUnitPrice) + '</b></div><div class="box"><span>Ahorro vs. individuales</span><b>' + money(saving) + ' / mes</b></div>' + (annual ? '<div class="box wide"><span>Pago anual anticipado</span><b>' + money(plan.monthlyPrice * 12 * 0.9) + ' por ano</b></div>' : '');
+        var individualMonthly = units * individual;
+        var saving = Math.max(0, individualMonthly - plan.monthlyPrice);
+        var annualRegular = plan.monthlyPrice * 12;
+        var annualPrepay = annualRegular * 0.9;
+        var annualSaving = annualRegular - annualPrepay;
+        result.innerHTML = '<div class="box wide"><span>Plan recomendado</span><b>' + plan.name + ' | hasta ' + plan.capacity + ' unidades</b></div>' +
+          '<div class="box"><span>Precio mensual del plan</span><b>' + money(plan.monthlyPrice) + '</b></div>' +
+          '<div class="box"><span>Costo efectivo por unidad</span><b>' + money(plan.effectiveUnitPrice) + ' / mes</b></div>' +
+          '<div class="box"><span>Equivalente individual</span><b>' + money(individualMonthly) + ' / mes</b></div>' +
+          '<div class="box"><span>Ahorro por el combo</span><b>' + money(saving) + ' / mes</b></div>' +
+          '<div class="box"><span>Compromiso anual mensual</span><b>' + money(annualRegular) + ' / ano</b></div>' +
+          '<div class="box"><span>Prepago anual (-10%)</span><b>' + money(annualPrepay) + ' / ano</b></div>' +
+          '<div class="box wide"><span>Beneficio por prepago anual</span><b>' + money(annualSaving) + ' de ahorro adicional' + (annual ? ' | seleccionaste esta modalidad' : ' | disponible al seleccionar pago anual') + '</b></div>';
         updateSummary(plan);
       }
       function choosePlan(planId) {
@@ -90,6 +111,14 @@
         calculate();
         document.getElementById('contacto').scrollIntoView({ behavior: 'smooth', block: 'start' });
         window.setTimeout(function () { document.getElementById('name').focus(); }, 500);
+      }
+      function renderPlans() {
+        document.getElementById('plans').innerHTML = catalog.map(function (plan) {
+          return '<article class="card ' + (plan.popular ? 'popular' : '') + '"><h3>' + plan.name + (plan.popular ? ' | Mas elegido' : '') + '</h3><div class="price">' + money(plan.monthlyPrice) + '</div><p>Hasta ' + plan.capacity + ' embarcaciones.<br>' + money(plan.effectiveUnitPrice) + ' por unidad.</p><button class="button" type="button" data-plan="' + plan.id + '">Elegir este plan</button></article>';
+        }).join('');
+        document.querySelectorAll('[data-plan]').forEach(function (button) {
+          button.addEventListener('click', function () { choosePlan(button.dataset.plan); });
+        });
       }
       document.querySelectorAll('[data-step]').forEach(function (button) {
         button.addEventListener('click', function () { var parts = button.dataset.step.split(':'); var input = document.getElementById(parts[0]); input.value = Math.max(0, value(parts[0]) + Number(parts[1])); calculate(); });
@@ -110,13 +139,15 @@
           .then(function () { status.className = 'status'; status.textContent = 'Solicitud recibida. El equipo comercial te contactara dentro de 24 horas habiles.'; form.reset(); calculate(); })
           .catch(function () { status.className = 'status error'; status.textContent = 'No pudimos registrar la solicitud. Escribinos a info@viabarcazas.com e incluye el resumen mostrado arriba.'; });
       });
-      fetch('/api/pricing').then(function (response) { if (!response.ok) throw new Error('catalog_failed'); return response.json(); }).then(function (data) {
-        catalog = data.plans || [];
-        document.getElementById('plans').innerHTML = catalog.map(function (plan) { return '<article class="card ' + (plan.popular ? 'popular' : '') + '"><h3>' + plan.name + (plan.popular ? ' | Mas elegido' : '') + '</h3><div class="price">' + money(plan.monthlyPrice) + '</div><p>Hasta ' + plan.capacity + ' embarcaciones.<br>' + money(plan.effectiveUnitPrice) + ' por unidad.</p><button class="button" type="button" data-plan="' + plan.id + '">Elegir este plan</button></article>'; }).join('');
-        document.querySelectorAll('[data-plan]').forEach(function (button) { button.addEventListener('click', function () { choosePlan(button.dataset.plan); }); });
-        calculate();
-      }).catch(function () { document.getElementById('result').innerHTML = '<div class="box wide"><b>No se pudo cargar el catalogo comercial.</b></div>'; });
+      renderPlans();
       calculate();
+      fetch('/api/pricing').then(function (response) { if (!response.ok) throw new Error('catalog_failed'); return response.json(); }).then(function (data) {
+        if (Array.isArray(data.plans) && data.plans.length) {
+          catalog = data.plans;
+          renderPlans();
+          calculate();
+        }
+      }).catch(function () { /* Offline presentations continue with the embedded catalog. */ });
     }());
   </script>
 </body>
