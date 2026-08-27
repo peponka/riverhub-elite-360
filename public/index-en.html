@@ -1994,5 +1994,240 @@ document.addEventListener('DOMContentLoaded',function(){
     if(statsBanner)statsObs2.observe(statsBanner);
 });
 </script>
+<script>
+/* English landing shares the production layout with Spanish; this copy layer keeps both pages in sync. */
+(function () {
+    "use strict";
+
+    var copy = {
+        "PLATAFORMA": "PLATFORM",
+        "CÓMO FUNCIONA": "HOW IT WORKS",
+        "PRECIOS": "PRICING",
+        "HIDROVÍA": "WATERWAY",
+        "NOSOTROS": "ABOUT US",
+        "Ingresar": "Sign in",
+        "Pedir demo": "Request demo",
+        "Crear cuenta": "Create account",
+        "Iniciar sesión": "Sign in",
+        "HIDROVÍA PARAGUAY-PARANÁ, EN TIEMPO REAL": "PARAGUAY-PARANÁ WATERWAY, IN REAL TIME",
+        "Cada barcaza, visible.": "Every barge, visible.",
+        "Cada decisión, a tiempo.": "Every decision, on time.",
+        "AIS, convoyes, combustible y mantenimiento de tu flota en una sola pantalla. Conectás tus datos y arrancás hoy.": "AIS, convoys, fuel and fleet maintenance on one screen. Connect your data and get started today.",
+        "Flota conectada": "Connected fleet",
+        "Posición y estado de cada unidad.": "Position and status of every vessel.",
+        "IA predictiva": "Predictive AI",
+        "Alertas antes de que algo se atrase.": "Alerts before delays become problems.",
+        "Lista en minutos": "Ready in minutes",
+        "Sin instalar hardware adicional.": "No additional hardware to install.",
+        "POR QUÉ VIABARCAZAS": "WHY VIABARCAZAS",
+        "Hecho a la medida": "Built for",
+        "del río.": "the waterway.",
+        "Cada frente de tu operación,": "Every part of your operation,",
+        "bajo un mismo techo.": "in one place.",
+        "Del AIS a la última factura de gasoil, los 12 frentes de tu operación viven en la misma pantalla.": "From AIS to the latest fuel invoice, all 12 areas of your operation live on the same screen.",
+        "KM DE RÍO BAJO SEGUIMIENTO": "KM OF WATERWAY MONITORED",
+        "MÓDULOS EN UN SOLO PANEL": "MODULES IN ONE PLATFORM",
+        "PAÍSES EN LA MISMA RUTA": "COUNTRIES ON ONE ROUTE",
+        "PARA VER TU PRIMER DATO": "TO SEE YOUR FIRST DATA",
+        "TODO EL SISTEMA": "THE ENTIRE PLATFORM",
+        "AHORA": "NOW",
+        "Flota": "Fleet",
+        "Ficha viva de cada barcaza y remolcador, con su estado del día": "A live profile for every barge and tug, with its current operating status.",
+        "Mapa AIS": "AIS map",
+        "Dónde está cada unidad ahora mismo, sin llamar a nadie": "Know where every vessel is right now, without calling anyone.",
+        "Combustible": "Fuel",
+        "Consumo real por tramo, comparado contra lo esperado": "Actual consumption by leg, compared with the plan.",
+        "Alertas": "Alerts",
+        "Avisos automáticos apenas algo se sale de lo normal": "Automatic alerts as soon as something is out of range.",
+        "PLANIFICACIÓN": "PLANNING",
+        "Armador de Convoy": "Convoy Builder",
+        "Calado validado contra el nivel del río antes de zarpar": "Draft validated against river levels before departure.",
+        "Viajes": "Voyages",
+        "Itinerarios y despacho planificados con datos del río de hoy": "Itineraries and dispatch planned with today’s waterway data.",
+        "Copiloto IA": "AI Copilot",
+        "Preguntale a tu operación y respondé al toque": "Ask about your operations and get an answer instantly.",
+        "GESTIÓN": "MANAGEMENT",
+        "Mantenimiento": "Maintenance",
+        "Calendario preventivo que avisa antes de que algo falle": "A preventive schedule that warns you before something fails.",
+        "Bitácora Digital": "Digital Logbook",
+        "Cada novedad de a bordo, con foto y hora, lista para auditar": "Every onboard update, with photo and timestamp, ready to audit.",
+        "Tripulación": "Crew",
+        "Guardias, licencias y vencimientos de cada dotación": "Watch schedules, licenses and expiry dates for every crew.",
+        "Puertos": "Ports",
+        "Turnos de carga y descarga coordinados sin planillas cruzadas": "Loading and unloading slots coordinated without conflicting spreadsheets.",
+        "Reportes": "Reports",
+        "Los números que pide gerencia, listos para exportar": "The numbers management asks for, ready to export.",
+        "No es un proyecto de meses.": "This is not a months-long project.",
+        "Es un lunes distinto.": "It is a different Monday.",
+        "Así se ve tu primer mes con ViaBarcazas, desde el primer dato hasta los primeros números que podés presentar.": "This is what your first month with ViaBarcazas looks like, from first data upload to the first numbers you can present.",
+        "DÍA 1": "DAY 1",
+        "DÍA 3": "DAY 3",
+        "SEMANA 1": "WEEK 1",
+        "SEMANA 2": "WEEK 2",
+        "MES 1": "MONTH 1",
+        "Cargás tu flota": "Upload your fleet",
+        "Subís las embarcaciones y listo.": "Add your vessels and you are ready to go.",
+        "Ves el río": "See the waterway",
+        "AIS, niveles, calados y alertas en una pantalla.": "AIS, river levels, drafts and alerts on one screen.",
+        "Planificás mejor": "Plan better",
+        "Armás convoyes con datos reales, no con intuición.": "Build convoys with real data, not assumptions.",
+        "Operás con contexto": "Operate with context",
+        "Combustible, mantenimiento y tripulación conectados.": "Fuel, maintenance and crew connected.",
+        "Mostrás resultados": "Show results",
+        "Reportes claros para dirección, socios y clientes.": "Clear reports for leadership, partners and customers.",
+        "INTELIGENCIA ARTIFICIAL": "ARTIFICIAL INTELLIGENCE",
+        "Preguntale al río": "Ask the waterway",
+        "lo que necesites saber.": "anything you need to know.",
+        "Preguntá en español. Respondemos con datos de tu operación real.": "Ask in plain language. We answer with data from your real operation.",
+        "¿Cuál convoy tiene mayor consumo esta semana?": "Which convoy has the highest fuel consumption this week?",
+        "¿Qué embarcaciones requieren mantenimiento urgente?": "Which vessels need urgent maintenance?",
+        "Mostrá los barcos llegando a Rosario esta semana.": "Show the vessels arriving in Rosario this week.",
+        "¿Cuáles son los mayores costos operativos del mes?": "What are the largest operating costs this month?",
+        "Solicitar Demo": "Request a demo",
+        "ANALÍTICA": "ANALYTICS",
+        "Analítica de flota": "Fleet analytics",
+        "avanzada.": "advanced.",
+        "Los mismos datos que ves en el panel operativo, resumidos para el que firma los números.": "The same data you see in the operations panel, summarized for the people who sign off on the numbers.",
+        "Eficiencia de flota (L/km)": "Fleet efficiency (L/km)",
+        "Composición de carga": "Cargo mix",
+        "Agregados": "Aggregates",
+        "Granos": "Grains",
+        "Minerales": "Minerals",
+        "Combustibles": "Fuels",
+        "Congestión de puerto": "Port congestion",
+        "Disponibilidad de convoy": "Convoy availability",
+        "Puntualidad de arribo": "Arrival punctuality",
+        "Embarcaciones activas en la plataforma": "Active vessels on the platform",
+        "Ahorro de combustible con IA": "Fuel savings with AI",
+        "Tránsito promedio Asunción-Rosario": "Average Asunción-Rosario transit",
+        "BAJO EL CAPOT": "UNDER THE HOOD",
+        "Los algoritmos detrás": "The algorithms behind",
+        "de cada módulo.": "each module.",
+        "Los modelos que corren en segundo plano cada vez que abrís la plataforma, aunque nunca los veas directamente.": "The models that run in the background every time you open the platform, even if you never see them directly.",
+        "Ruta Dinámica Óptima": "Dynamic Route Optimization",
+        "Recalcula el itinerario según clima y nivel del río, en tiempo real.": "Recalculates the itinerary based on weather and river levels, in real time.",
+        "Predicción de Consumo": "Fuel Consumption Prediction",
+        "Aprende el consumo real de cada combinación barcaza-remolcador.": "Learns the real consumption of every barge-tug combination.",
+        "Mantenimiento Predictivo": "Predictive Maintenance",
+        "Detecta patrones antes de que una falla se convierta en parada.": "Detects patterns before a failure becomes downtime.",
+        "ETA Inteligente": "Smart ETA",
+        "Estima llegadas con el río, el clima y la operación real.": "Estimates arrivals using waterway, weather and real operating data.",
+        "LA PLATA QUE SE ESCAPA": "THE MONEY THAT LEAKS AWAY",
+        "Poné los números de tu flota": "Enter your fleet numbers",
+        "y mirá cuánto se pierde.": "and see what is being lost.",
+        "Ingresá los datos de tu flota y mirá el impacto proyectado en tiempo real. Sin registrarte.": "Enter your fleet information and view the projected impact in real time. No sign-up required.",
+        "Barcazas": "Barges",
+        "Remolcadores": "Tugboats",
+        "Combustible mensual (kL)": "Monthly fuel (kL)",
+        "Costo por litro (USD)": "Cost per litre (USD)",
+        "RESUMEN — TU FLOTA HOY": "SUMMARY - YOUR FLEET TODAY",
+        "Combustible mal gastado / año": "Fuel wasted / year",
+        "Plan ViaBarcazas / mes": "ViaBarcazas plan / month",
+        "Ahorro neto, año 1": "Net savings, year 1",
+        "Ya descontado el costo de la plataforma": "After deducting the platform cost",
+        "MESES": "MONTHS",
+        "Combustible ahorrado / año": "Fuel saved / year",
+        "CO₂ no emitido / año": "CO₂ avoided / year",
+        "Reducción de consumo estimada": "Estimated consumption reduction",
+        "Hablar con un especialista sobre tu flota": "Talk to a fleet specialist",
+        "Tres tamaños de flota,": "Three fleet sizes,",
+        "un solo panel.": "one platform.",
+        "Empezá con lo que necesitás hoy. Escalá cuando tu operación crezca. Sin contratos largos, sin sorpresas.": "Start with what you need today. Scale when your operation grows. No long-term contracts, no surprises.",
+        "Calcula el precio exacto de tu flota": "Calculate your exact fleet price",
+        "14 días de prueba gratis": "14-day free trial",
+        "Operativo en 5 minutos": "Operational in 5 minutes",
+        "Sin tarjeta para empezar": "No card required to start",
+        "Hasta 5 embarcaciones": "Up to 5 vessels",
+        "PARA ARRANCAR": "TO GET STARTED",
+        "Salí del Excel y la radio esta semana": "Move beyond spreadsheets and radio calls this week",
+        "Mapa AIS en tiempo real": "Real-time AIS map",
+        "Control de combustible": "Fuel control",
+        "Mantenimiento preventivo": "Preventive maintenance",
+        "Armador de convoyes": "Convoy builder",
+        "Empezar gratis →": "Start free →",
+        "MÁS ELEGIDO": "MOST POPULAR",
+        "Hasta 20 embarcaciones": "Up to 20 vessels",
+        "TODA LA OPERACIÓN": "THE FULL OPERATION",
+        "Copiloto IA leyendo tus datos, no promedios": "AI Copilot reading your data, not averages",
+        "Todo lo de Amarre": "Everything in Mooring",
+        "Gestión de tripulación": "Crew management",
+        "Pronóstico de hidrovía": "Waterway forecast",
+        "Copiloto IA con datos reales": "AI Copilot with real data",
+        "Embarcaciones ilimitadas": "Unlimited vessels",
+        "FLOTA COMPLETA": "FULL FLEET",
+        "Para armadores y operadores grandes": "For large fleet owners and operators",
+        "API e integraciones": "API and integrations",
+        "Soporte 24/7 dedicado": "Dedicated 24/7 support",
+        "CARGAS QUE TRANSITAN LA PARANÁ-PARAGUAY": "CARGO MOVING ON THE PARANÁ-PARAGUAY WATERWAY",
+        "LECTURA EN VIVO": "LIVE INSIGHT",
+        "PREGUNTAS FRECUENTES": "FREQUENTLY ASKED QUESTIONS",
+        "¿Qué necesito instalar?": "What do I need to install?",
+        "Nada. ViaBarcazas funciona desde el navegador.": "Nothing. ViaBarcazas works directly in your browser.",
+        "¿Cuánto tarda la implementación?": "How long does implementation take?",
+        "Podés estar operativo en minutos.": "You can be operational within minutes.",
+        "¿Puedo probar antes de contratar?": "Can I try it before subscribing?",
+        "Sí. Tenés 14 días de prueba gratis.": "Yes. You get a 14-day free trial.",
+        "¿Funciona con mi flota actual?": "Does it work with my existing fleet?",
+        "Sí. Cargás tus embarcaciones y empezás a operar.": "Yes. Add your vessels and start operating.",
+        "Construimos ViaBarcazas": "We built ViaBarcazas",
+        "para que el río sea más predecible.": "to make the waterway more predictable.",
+        "Somos un equipo que conoce la operación, la tecnología y la Hidrovía.": "We are a team that understands operations, technology and the Waterway.",
+        "¿Hablamos?": "Shall we talk?",
+        "Contanos sobre tu operación y te mostramos la plataforma.": "Tell us about your operation and we will show you the platform.",
+        "Nombre": "Name",
+        "Empresa": "Company",
+        "Correo": "Email",
+        "Teléfono": "Phone",
+        "Mensaje": "Message",
+        "Enviar mensaje": "Send message",
+        "Todos los derechos reservados.": "All rights reserved.",
+        "Política de privacidad": "Privacy policy",
+        "Términos y condiciones": "Terms and conditions"
+    };
+
+    var attributes = {
+        "Acceso a la plataforma": "Platform access",
+        "Acceso a ViaBarcazas": "ViaBarcazas access",
+        "Hidrovía Paraná-Paraguay vista aérea": "Aerial view of the Paraná-Paraguay Waterway",
+        "Ruta esquemática de la Hidrovía Paraná-Paraguay, de Corumbá a Nueva Palmira": "Schematic route of the Paraná-Paraguay Waterway, from Corumbá to Nueva Palmira",
+        "Volver arriba": "Back to top"
+    };
+
+    function translateTextNode(node) {
+        var parent = node.parentElement;
+        if (!parent || parent.closest("script, style, noscript, svg")) return;
+        var raw = node.nodeValue;
+        var key = raw.replace(/\s+/g, " ").trim();
+        var translation = copy[key];
+        if (!translation) return;
+        var leading = (raw.match(/^\s*/) || [""])[0];
+        var trailing = (raw.match(/\s*$/) || [""])[0];
+        node.nodeValue = leading + translation + trailing;
+    }
+
+    function translatePage() {
+        document.documentElement.lang = "en";
+        document.querySelectorAll("a[href='pricing.html']").forEach(function (link) {
+            link.setAttribute("href", "pricing-en.html");
+        });
+        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        var nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(translateTextNode);
+        document.querySelectorAll("[aria-label], [placeholder], [title], img[alt]").forEach(function (element) {
+            ["aria-label", "placeholder", "title", "alt"].forEach(function (name) {
+                var value = element.getAttribute(name);
+                if (value && attributes[value]) element.setAttribute(name, attributes[value]);
+            });
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", translatePage);
+    } else {
+        translatePage();
+    }
+}());
+</script>
 </body>
 </html>
