@@ -12,20 +12,20 @@
 </head>
 <body>
   <nav class="nav"><a class="brand" href="/">ViaBarcazas</a><a class="cta" href="#contacto">Hablar con ventas</a></nav>
-  <header class="hero"><h1>Calcula tu plan.</h1><p>Una barcaza y un remolcador tienen el mismo valor: cada uno ocupa una unidad dentro del plan.</p></header>
+  <header class="hero"><h1>Calcula tu plan.</h1><p>Una barcaza y un remolcador tienen el mismo valor: cada uno suma una unidad. El total se actualiza en vivo según tu flota real.</p></header>
   <main>
     <section class="calculator">
-      <h2>Cuanto cuesta mi flota?</h2><p><strong>1.</strong> Carga tus barcazas. <strong>2.</strong> Suma tus remolcadores. Abajo ves el plan y el precio final.</p>
+      <h2>Cuanto cuesta mi flota?</h2><p><strong>1.</strong> Carga tus barcazas. <strong>2.</strong> Suma tus remolcadores. Vas a ver el cálculo exacto por unidad, sin pagar cupos vacíos.</p>
       <div class="inputrow">
-        <div><label class="label" for="barges">1. Cantidad de barcazas</label><div class="stepper"><button type="button" data-step="barges:-1">-</button><input id="barges" type="number" min="0" value="20"><button type="button" data-step="barges:1">+</button></div></div>
-        <div><label class="label" for="tugs">2. Cantidad de remolcadores</label><div class="stepper"><button type="button" data-step="tugs:-1">-</button><input id="tugs" type="number" min="0" value="5"><button type="button" data-step="tugs:1">+</button></div></div>
+        <div><label class="label" for="barges">1. Cantidad de barcazas</label><div class="stepper"><button type="button" data-step="barges:-1">-</button><input id="barges" type="number" min="0" value="1"><button type="button" data-step="barges:1">+</button></div></div>
+        <div><label class="label" for="tugs">2. Cantidad de remolcadores</label><div class="stepper"><button type="button" data-step="tugs:-1">-</button><input id="tugs" type="number" min="0" value="0"><button type="button" data-step="tugs:1">+</button></div></div>
       </div>
-      <div class="total">Tu flota tiene <strong id="total">25</strong> unidades facturables</div>
-      <div id="result" class="result"></div>
+      <div class="total">Tu flota tiene <strong id="total">1</strong> unidad facturable</div>
+      <div id="result" class="result" aria-live="polite"></div>
       <label class="annual"><input id="annual" type="checkbox"> Pago anual anticipado: 10% de descuento maximo.</label>
       <div class="proposal-action"><button id="proposalButton" class="button" type="button">Solicitar propuesta para mi flota</button></div>
     </section>
-    <section class="plans"><h2>Combos mensuales</h2><div id="plans" class="grid"></div></section>
+    <section class="plans"><h2>Precios por unidad y tramo</h2><div id="plans" class="grid"></div></section>
     <p class="note">Mas de 150 embarcaciones: propuesta personalizada. Piloto comercial: 60 dias, hasta 15 embarcaciones, USD 3.000.</p>
     <section id="contacto" class="contact">
       <h2>Solicita una propuesta</h2><p>Recibimos el pedido con el calculo de flota para preparar una propuesta comercial precisa.</p>
@@ -49,12 +49,12 @@
       // The embedded catalog keeps the calculator working in an offline demo.
       // Render replaces it with the server catalog whenever it is available.
       var fallbackCatalog = [
-        { id: 'individual', name: 'Unidad Individual', capacity: 1, monthlyPrice: 115, effectiveUnitPrice: 115 },
-        { id: 'fleet-10', name: 'Combo Flota 10', capacity: 10, monthlyPrice: 1100, effectiveUnitPrice: 110 },
-        { id: 'fleet-25', name: 'Combo Flota 25', capacity: 25, monthlyPrice: 2500, effectiveUnitPrice: 100, popular: true },
-        { id: 'fleet-50', name: 'Combo Flota 50', capacity: 50, monthlyPrice: 4750, effectiveUnitPrice: 95 },
-        { id: 'fleet-100', name: 'Combo Flota 100', capacity: 100, monthlyPrice: 9000, effectiveUnitPrice: 90 },
-        { id: 'fleet-150', name: 'Combo Flota 150', capacity: 150, monthlyPrice: 12750, effectiveUnitPrice: 85 }
+        { id: 'starter', name: 'Precio inicial', minUnits: 1, capacity: 9, effectiveUnitPrice: 100 },
+        { id: 'fleet-10', name: 'Flota 10+', minUnits: 10, capacity: 24, effectiveUnitPrice: 95 },
+        { id: 'fleet-25', name: 'Flota 25+', minUnits: 25, capacity: 49, effectiveUnitPrice: 90, popular: true },
+        { id: 'fleet-50', name: 'Flota 50+', minUnits: 50, capacity: 99, effectiveUnitPrice: 85 },
+        { id: 'fleet-100', name: 'Flota 100+', minUnits: 100, capacity: 149, effectiveUnitPrice: 80 },
+        { id: 'fleet-150', name: 'Flota 150', minUnits: 150, capacity: 150, effectiveUnitPrice: 75 }
       ];
       var catalog = fallbackCatalog.slice();
       var selectedPlan = null;
@@ -62,50 +62,59 @@
       var value = function (id) { return Math.max(0, Number(document.getElementById(id).value) || 0); };
       var getFleet = function () { return { barges: value('barges'), tugboats: value('tugs') }; };
       var getUnits = function () { var fleet = getFleet(); return fleet.barges + fleet.tugboats; };
-      function updateSummary(plan) {
+      function updateSummary(plan, monthlyPrice) {
         var fleet = getFleet();
         var annual = document.getElementById('annual').checked;
         var text = 'Flota consultada: ' + fleet.barges + ' barcazas y ' + fleet.tugboats + ' remolcadores (' + getUnits() + ' unidades). ';
-        if (plan) text += 'Plan recomendado: ' + plan.name + '. ' + money(plan.monthlyPrice) + ' por mes' + (annual ? ' o ' + money(plan.monthlyPrice * 12 * 0.9) + ' por ano con pago anual.' : '.');
+        if (plan) text += 'Tramo activo: ' + plan.name + '. ' + getUnits() + ' unidades x ' + money(plan.effectiveUnitPrice) + ' = ' + money(monthlyPrice) + ' por mes' + (annual ? ' o ' + money(monthlyPrice * 12 * 0.9) + ' por ano con pago anual.' : '.');
+        else if (getUnits() === 0) text += 'Agrega al menos una embarcacion para ver el calculo.';
         else text += 'Propuesta personalizada para una flota de mas de 150 unidades.';
         document.getElementById('quoteSummary').textContent = text;
       }
       function calculate() {
         var units = getUnits();
-        var plan = catalog.find(function (item) { return units <= item.capacity; }) || null;
+        var plan = catalog.find(function (item) { return units >= item.minUnits && units <= item.capacity; }) || null;
         var annual = document.getElementById('annual').checked;
         var result = document.getElementById('result');
         var proposalButton = document.getElementById('proposalButton');
         document.getElementById('total').textContent = units;
         selectedPlan = plan;
+        if (units === 0) {
+          proposalButton.textContent = 'Agrega una embarcacion para calcular';
+          result.innerHTML = '<div class="box wide"><span>Empeza tu calculo</span><b>Ingresa una barcaza o un remolcador para ver el precio en vivo.</b></div>';
+          updateSummary(null, 0);
+          return;
+        }
         if (!plan) {
           proposalButton.textContent = 'Solicitar propuesta personalizada';
           result.innerHTML = '<div class="box wide"><span>Plan recomendado</span><b>Flota personalizada: solicitar propuesta</b></div>';
-          updateSummary(null);
+          updateSummary(null, 0);
           return;
         }
         proposalButton.textContent = 'Solicitar propuesta para mi flota';
-        var individual = catalog[0] ? catalog[0].monthlyPrice : plan.monthlyPrice;
-        var individualMonthly = units * individual;
-        var saving = Math.max(0, individualMonthly - plan.monthlyPrice);
-        var annualRegular = plan.monthlyPrice * 12;
+        var baseRate = catalog[0] ? catalog[0].effectiveUnitPrice : plan.effectiveUnitPrice;
+        var monthlyPrice = units * plan.effectiveUnitPrice;
+        var baseMonthly = units * baseRate;
+        var saving = Math.max(0, baseMonthly - monthlyPrice);
+        var annualRegular = monthlyPrice * 12;
         var annualPrepay = annualRegular * 0.9;
         var annualSaving = annualRegular - annualPrepay;
-        result.innerHTML = '<div class="box wide"><span>Plan recomendado</span><b>' + plan.name + ' | hasta ' + plan.capacity + ' unidades</b></div>' +
-          '<div class="box"><span>Precio mensual del plan</span><b>' + money(plan.monthlyPrice) + '</b></div>' +
-          '<div class="box"><span>Costo efectivo por unidad</span><b>' + money(plan.effectiveUnitPrice) + ' / mes</b></div>' +
-          '<div class="box"><span>Equivalente individual</span><b>' + money(individualMonthly) + ' / mes</b></div>' +
-          '<div class="box"><span>Ahorro por el combo</span><b>' + money(saving) + ' / mes</b></div>' +
+        var nextPlan = catalog.find(function (item) { return item.minUnits > units; });
+        result.innerHTML = '<div class="box wide"><span>Regla activa</span><b>' + plan.name + ': de ' + plan.minUnits + ' a ' + plan.capacity + ' unidades, ' + money(plan.effectiveUnitPrice) + ' por unidad / mes</b></div>' +
+          '<div class="box wide"><span>Calculo de tu flota</span><b>' + units + ' unidades x ' + money(plan.effectiveUnitPrice) + ' = ' + money(monthlyPrice) + ' / mes</b></div>' +
+          '<div class="box"><span>Precio mensual real</span><b>' + money(monthlyPrice) + '</b></div>' +
+          '<div class="box"><span>Costo por unidad</span><b>' + money(plan.effectiveUnitPrice) + ' / mes</b></div>' +
+          '<div class="box"><span>Precio base sin descuento</span><b>' + money(baseMonthly) + ' / mes</b></div>' +
+          '<div class="box"><span>Ahorro por tramo</span><b>' + money(saving) + ' / mes</b></div>' +
           '<div class="box"><span>Compromiso anual mensual</span><b>' + money(annualRegular) + ' / ano</b></div>' +
           '<div class="box"><span>Prepago anual (-10%)</span><b>' + money(annualPrepay) + ' / ano</b></div>' +
-          '<div class="box wide"><span>Beneficio por prepago anual</span><b>' + money(annualSaving) + ' de ahorro adicional' + (annual ? ' | seleccionaste esta modalidad' : ' | disponible al seleccionar pago anual') + '</b></div>';
-        updateSummary(plan);
+          '<div class="box wide"><span>' + (nextPlan ? 'Siguiente descuento' : 'Mejor tarifa disponible') + '</span><b>' + (nextPlan ? 'Con ' + (nextPlan.minUnits - units) + ' unidad' + (nextPlan.minUnits - units === 1 ? '' : 'es') + ' mas: ' + money(nextPlan.effectiveUnitPrice) + ' por unidad / mes.' : 'Ya alcanzaste la mejor tarifa estandar.') + ' Prepago anual: ' + money(annualSaving) + ' de ahorro adicional' + (annual ? ' | seleccionado' : ' | disponible al seleccionar pago anual') + '</b></div>';
+        updateSummary(plan, monthlyPrice);
       }
       function choosePlan(planId) {
         var plan = catalog.find(function (item) { return item.id === planId; });
         if (plan) {
-          var remaining = plan.capacity;
-          document.getElementById('barges').value = Math.max(0, remaining - value('tugs'));
+          document.getElementById('barges').value = Math.max(0, plan.minUnits - value('tugs'));
           selectedPlan = plan;
         }
         calculate();
@@ -114,7 +123,7 @@
       }
       function renderPlans() {
         document.getElementById('plans').innerHTML = catalog.map(function (plan) {
-          return '<article class="card ' + (plan.popular ? 'popular' : '') + '"><h3>' + plan.name + (plan.popular ? ' | Mas elegido' : '') + '</h3><div class="price">' + money(plan.monthlyPrice) + '</div><p>Hasta ' + plan.capacity + ' embarcaciones.<br>' + money(plan.effectiveUnitPrice) + ' por unidad.</p><button class="button" type="button" data-plan="' + plan.id + '">Elegir este plan</button></article>';
+          return '<article class="card ' + (plan.popular ? 'popular' : '') + '"><h3>' + plan.name + (plan.popular ? ' | Mas elegido' : '') + '</h3><div class="price">' + money(plan.effectiveUnitPrice) + '</div><p>Por unidad / mes.<br>De ' + plan.minUnits + ' a ' + plan.capacity + ' embarcaciones. Solo se factura tu cantidad real.</p><button class="button" type="button" data-plan="' + plan.id + '">Calcular este tramo</button></article>';
         }).join('');
         document.querySelectorAll('[data-plan]').forEach(function (button) {
           button.addEventListener('click', function () { choosePlan(button.dataset.plan); });

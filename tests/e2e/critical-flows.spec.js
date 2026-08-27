@@ -47,9 +47,9 @@ test.describe('Landing Page', () => {
         await page.goto(`${BASE_URL}/pricing.html`);
         await expect(page.locator('h1')).toBeVisible();
         await expect(page.locator('#plans .card')).toHaveCount(6);
-        await expect(page.locator('#plans')).toContainText('Unidad Individual');
-        await expect(page.locator('#plans')).toContainText('Combo Flota 25');
-        await expect(page.locator('#plans')).toContainText('Combo Flota 150');
+        await expect(page.locator('#plans')).toContainText('Precio inicial');
+        await expect(page.locator('#plans')).toContainText('Flota 25+');
+        await expect(page.locator('#plans')).toContainText('Flota 150');
     });
 
     test('Calculadora recomienda un plan y prepara la solicitud comercial', async ({ page }) => {
@@ -57,8 +57,8 @@ test.describe('Landing Page', () => {
         await expect(page.locator('#plans .card')).toHaveCount(6);
         await page.locator('#barges').fill('22');
         await page.locator('#tugs').fill('3');
-        await expect(page.locator('#result')).toContainText('Combo Flota 25');
-        await expect(page.locator('#result')).toContainText('USD 2,500');
+        await expect(page.locator('#result')).toContainText('Flota 25+');
+        await expect(page.locator('#result')).toContainText('USD 2,250');
         await page.locator('#proposalButton').click();
         await expect(page.locator('#quoteSummary')).toContainText('22 barcazas y 3 remolcadores');
     });

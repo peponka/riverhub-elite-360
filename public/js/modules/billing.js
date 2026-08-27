@@ -12,7 +12,7 @@ const BillingModule = (() => {
         try {
             const response = await fetch('/api/pricing');
             const { plans } = await response.json();
-            target.innerHTML = plans.map((plan) => `<article class="bill-plan-card ${plan.popular ? 'popular' : ''}">${plan.popular ? '<div class="bill-popular-tag">MAS ELEGIDO</div>' : ''}<h3 class="bill-plan-name">${plan.name}</h3><div class="bill-plan-price"><span class="bill-currency">USD</span><span class="bill-amount">${plan.monthlyPrice.toLocaleString('en-US')}</span><span class="bill-period">/ mes</span></div><div class="bill-plan-limits"><span><i class="fas fa-ship"></i> Hasta ${plan.capacity} embarcaciones</span></div><p>Cada unidad puede ser una barcaza o un remolcador.</p><a class="bill-select-btn" href="/pricing.html#contacto">Solicitar demo</a></article>`).join('');
+            target.innerHTML = plans.map((plan) => `<article class="bill-plan-card ${plan.popular ? 'popular' : ''}">${plan.popular ? '<div class="bill-popular-tag">MAS ELEGIDO</div>' : ''}<h3 class="bill-plan-name">${plan.name}</h3><div class="bill-plan-price"><span class="bill-currency">USD</span><span class="bill-amount">${plan.effectiveUnitPrice.toLocaleString('en-US')}</span><span class="bill-period">/ unidad / mes</span></div><div class="bill-plan-limits"><span><i class="fas fa-ship"></i> De ${plan.minUnits} a ${plan.capacity} embarcaciones</span></div><p>Se factura solamente la cantidad real de barcazas y remolcadores.</p><a class="bill-select-btn" href="/pricing.html#contacto">Calcular mi flota</a></article>`).join('');
         } catch (_) { target.innerHTML = '<p>No se pudo cargar el catalogo. Volve a intentarlo.</p>'; }
     };
     return { init };

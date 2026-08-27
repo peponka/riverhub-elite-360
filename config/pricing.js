@@ -1,11 +1,12 @@
-// Fuente unica de verdad para precios y cupos facturables de ViaBarcazas.
+// Fuente unica de verdad para los tramos facturables de ViaBarcazas.
+// El cliente paga por las unidades reales de su flota, nunca por cupos vacios.
 const PLANES = Object.freeze([
-    { id: 'individual', name: 'Unidad Individual', capacity: 1, monthlyPrice: 115, effectiveUnitPrice: 115 },
-    { id: 'fleet-10', name: 'Combo Flota 10', capacity: 10, monthlyPrice: 1100, effectiveUnitPrice: 110, },
-    { id: 'fleet-25', name: 'Combo Flota 25', capacity: 25, monthlyPrice: 2500, effectiveUnitPrice: 100, popular: true },
-    { id: 'fleet-50', name: 'Combo Flota 50', capacity: 50, monthlyPrice: 4750, effectiveUnitPrice: 95 },
-    { id: 'fleet-100', name: 'Combo Flota 100', capacity: 100, monthlyPrice: 9000, effectiveUnitPrice: 90 },
-    { id: 'fleet-150', name: 'Combo Flota 150', capacity: 150, monthlyPrice: 12750, effectiveUnitPrice: 85 }
+    { id: 'starter', name: 'Precio inicial', minUnits: 1, capacity: 9, effectiveUnitPrice: 100 },
+    { id: 'fleet-10', name: 'Flota 10+', minUnits: 10, capacity: 24, effectiveUnitPrice: 95 },
+    { id: 'fleet-25', name: 'Flota 25+', minUnits: 25, capacity: 49, effectiveUnitPrice: 90, popular: true },
+    { id: 'fleet-50', name: 'Flota 50+', minUnits: 50, capacity: 99, effectiveUnitPrice: 85 },
+    { id: 'fleet-100', name: 'Flota 100+', minUnits: 100, capacity: 149, effectiveUnitPrice: 80 },
+    { id: 'fleet-150', name: 'Flota 150', minUnits: 150, capacity: 150, effectiveUnitPrice: 75 }
 ]);
 
 const COMMERCIAL_TERMS = Object.freeze({
@@ -29,13 +30,13 @@ function calculateFleetPricing({ barges = 0, tugboats = 0, annualPrepay = false 
     }
 
     const billableUnits = normalizedBarges + normalizedTugboats;
-    const plan = PLANES.find((item) => billableUnits <= item.capacity);
+    const plan = PLANES.find((item) => billableUnits >= item.minUnits && billableUnits <= item.capacity);
     if (!plan) {
         return { barges: normalizedBarges, tugboats: normalizedTugboats, billableUnits, customQuote: true, plan: null };
     }
 
     const prepaymentDiscount = annualPrepay ? COMMERCIAL_TERMS.annualPrepaymentDiscountPct : 0;
-    const monthlyPrice = plan.monthlyPrice;
+    const monthlyPrice = billableUnits * plan.effectiveUnitPrice;
     return {
         barges: normalizedBarges,
         tugboats: normalizedTugboats,
@@ -45,7 +46,7 @@ function calculateFleetPricing({ barges = 0, tugboats = 0, annualPrepay = false 
         monthlyPrice,
         annualPrepayTotal: Math.round(monthlyPrice * 12 * (1 - prepaymentDiscount / 100)),
         annualPrepaymentDiscountPct: prepaymentDiscount,
-        savingsVsIndividual: Math.max(0, billableUnits * PLANES[0].monthlyPrice - monthlyPrice)
+        savingsVsIndividual: Math.max(0, billableUnits * PLANES[0].effectiveUnitPrice - monthlyPrice)
     };
 }
 
