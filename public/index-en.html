@@ -2272,9 +2272,74 @@ document.addEventListener('DOMContentLoaded',function(){
         "Volver arriba": "Back to top"
     };
 
+    Object.assign(copy, {
+        "LECTURA EN VIVO": "LIVE INSIGHT",
+        "La hidrovía,": "The waterway,",
+        "medida en tiempo real.": "measured in real time.",
+        "Los datos que ViaBarcazas cruza todos los días para decirte cuándo conviene zarpar y por dónde.": "The data ViaBarcazas brings together every day to tell you when and where it makes sense to depart.",
+        "Nivel del río — Puerto Rosario (m)": "River level — Port of Rosario (m)",
+        "ENE": "JAN",
+        "FEB": "FEB",
+        "MAR": "MAR",
+        "ABR": "APR",
+        "MAY": "MAY",
+        "JUN": "JUN",
+        "CRECIDA · ABR": "HIGH WATER · APR",
+        "Tráfico por país": "Traffic by country",
+        "Brasil": "Brazil",
+        "Calado navegable disponible": "Available navigable draft",
+        "Ocupación portuaria promedio": "Average port occupancy",
+        "Puertos sin restricción hoy": "Ports open today",
+        "Barcazas activas en la ruta hoy": "Barges active on the route today",
+        "Convoyes en tránsito ahora": "Convoys currently underway",
+        "Alertas de bajante activas": "Active low-water alerts",
+        "La cuenta que nadie te hace": "The calculation nobody makes",
+        "antes de elegir camión.": "before choosing trucking.",
+        "No es solo el flete del viaje. Es el gasoil, las emisiones y hacia dónde va el tráfico de acá a 2030 — la cuenta completa.": "It is not only the freight cost of the voyage. It is diesel, emissions and where traffic is heading through 2030 — the complete calculation.",
+        "Un camión, multiplicado por 60": "One truck, multiplied by 60",
+        "Una sola formación de convoy mueve lo mismo que 960 camiones, a una fracción del costo por tonelada. La diferencia aparece en cualquier planilla de costos apenas la hacés.": "One barge convoy moves the same cargo as 960 trucks, at a fraction of the cost per tonne. The difference appears in any cost sheet as soon as you run the numbers.",
+        "Menos gasoil quemado por tonelada": "Less diesel burned per tonne",
+        "Mover carga por agua gasta hasta 5 veces menos combustible por tonelada-kilómetro que moverla por ruta. No es una promesa verde: es física.": "Moving cargo by water uses up to five times less fuel per tonne-kilometre than moving it by road. It is not a green promise: it is physics.",
+        "El tráfico no para de crecer": "Traffic keeps growing",
+        "8% más carga cada año, y más de USD 2.000M en dragado y terminales previstos hasta 2030. Quien no tenga los datos ordenados para entonces, va a quedar mirando desde afuera.": "Cargo grows 8% every year, with more than USD 2 billion planned for dredging and terminals through 2030. Those without organized data will be left looking from outside.",
+        "3.442 km de río.": "3,442 km of river.",
+        "Cero excusas para no verlos.": "No excuses not to see it.",
+        "De Corumbá a Nueva Palmira, ViaBarcazas convierte cada tramo en un dato: posición satelital, convoyes de hasta 40.000 toneladas armados con IA, combustible bajo control y un Copiloto que conoce la ruta tan bien como tu capitán más viejo.": "From Corumbá to Nueva Palmira, ViaBarcazas turns every stretch into data: satellite positioning, AI-built convoys of up to 40,000 tonnes, fuel under control and a Copilot that knows the route as well as your most experienced captain.",
+        "Integrado con tecnología": "Integrated with world-class",
+        "de clase mundial.": "technology.",
+        "CARGAS QUE TRANSITAN LA PARANÁ-PARAGUAY": "CARGO MOVING THROUGH THE PARANÁ-PARAGUAY",
+        "Soja & Cereales": "Soybeans & Grains",
+        "Mineral de Hierro": "Iron ore",
+        "Combustibles": "Fuels",
+        "Contenedores": "Containers",
+        "Madera & Celulosa": "Timber & Pulp",
+        "Clinker & Cemento": "Clinker & Cement",
+        "Químicos": "Chemicals",
+        "Fertilizantes": "Fertilizers",
+        "Vehículos": "Vehicles",
+        "Respuestas a lo que": "Answers to what",
+        "todos preguntan.": "everyone asks.",
+        "¿Tengo que instalar algo a bordo?": "Do I need to install anything on board?",
+        "No. Corre entero en la nube y toma los datos AIS y GPS que tu embarcación ya emite. No mandamos técnicos ni instalamos equipos: cargás tu flota y arrancás.": "No. It runs fully in the cloud and uses the AIS and GPS data your vessel already transmits. We do not send technicians or install equipment: add your fleet and get started.",
+        "¿Y si se corta el internet en medio del río?": "What if the internet drops in the middle of the river?",
+        "El mapa en vivo necesita conexión, pero el dato AIS se sigue capturando y se pone al día apenas vuelve la señal. La app de a bordo carga bitácora y novedades sin señal, y sincroniza sola cuando hay cobertura.": "The live map needs a connection, but AIS data continues to be captured and catches up as soon as the signal returns. The onboard app records logbook entries and updates without a signal, then synchronizes automatically when coverage returns.",
+        "¿Quién puede ver los datos de mi flota?": "Who can see my fleet data?",
+        "Solo tu empresa. Cada cuenta vive en su propio entorno aislado, cifrado en tránsito y en reposo, y cumplimos LGPD y GDPR. Nadie de afuera —ni otro cliente— entra a tus datos.": "Only your company. Each account runs in its own isolated environment, encrypted in transit and at rest, and we comply with LGPD and GDPR. No one outside your company — not even another customer — can access your data.",
+        "¿La competencia puede rastrear mis barcazas?": "Can competitors track my barges?",
+        "No con nuestros datos. El AIS público que ya existe en sitios como MarineTraffic sigue siendo público, eso no lo cambiamos; pero todo lo que ves adentro de ViaBarcazas —consumo, mantenimiento, tripulación— es privado de tu cuenta.": "Not through our data. Public AIS on sites such as MarineTraffic remains public; we cannot change that. But everything you see inside ViaBarcazas — fuel use, maintenance and crew — is private to your account.",
+        "¿Cuánto tarda en estar andando?": "How long does it take to get started?",
+        "Entre 1 y 5 días según cuántas embarcaciones cargues. Con flotas chicas (hasta 10) solés quedar operativo el mismo día, con capacitación remota incluida para tu equipo.": "Between 1 and 5 days, depending on how many vessels you add. With small fleets (up to 10), you can usually be operational the same day, including remote training for your team.",
+        "¿Hay que firmar contrato a largo plazo?": "Do I need to sign a long-term contract?",
+        "No. Cancelás cuando quieras, sin multa. Tus datos quedan disponibles para exportar 30 días después de dar de baja la cuenta.": "No. Cancel whenever you want, with no penalty. Your data remains available for export for 30 days after account cancellation.",
+        "¿Dónde funciona ViaBarcazas?": "Where does ViaBarcazas operate?",
+        "Pensado para la Hidrovía Paraguay-Paraná: Paraguay, Argentina, Brasil, Uruguay y Bolivia. Disponible en español e inglés.": "Built for the Paraguay-Paraná Waterway: Paraguay, Argentina, Brazil, Uruguay and Bolivia. Available in Spanish and English.",
+        "¿Qué nivel de soporte tiene cada plan?": "What level of support is included in each plan?",
+        "Amarre: email en horario laboral. Convoy: respuesta prioritaria en menos de 4 horas. Armador: soporte 24/7 con un account manager asignado y SLA garantizado.": "Mooring: email during business hours. Convoy: priority response within 4 hours. Fleet Owner: 24/7 support with a dedicated account manager and guaranteed SLA."
+    });
+
     function translateTextNode(node) {
         var parent = node.parentElement;
-        if (!parent || parent.closest("script, style, noscript, svg")) return;
+        if (!parent || parent.closest("script, style, noscript")) return;
         var raw = node.nodeValue;
         var key = raw.replace(/\s+/g, " ").trim();
         var translation = copy[key];
@@ -2301,11 +2366,19 @@ document.addEventListener('DOMContentLoaded',function(){
         });
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", translatePage);
-    } else {
+    function translateWhenReady() {
         translatePage();
+        window.setTimeout(translatePage, 0);
+        window.setTimeout(translatePage, 350);
+        window.setTimeout(translatePage, 2500);
     }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", translateWhenReady);
+    } else {
+        translateWhenReady();
+    }
+    window.addEventListener("load", translatePage);
 }());
 </script>
 </body>
