@@ -46,21 +46,29 @@ test.describe('Landing Page', () => {
     test('Pricing page carga correctamente', async ({ page }) => {
         await page.goto(`${BASE_URL}/pricing.html`);
         await expect(page.locator('h1')).toBeVisible();
-        // Verificar que los 3 planes están presentes
-        await expect(page.locator('text=Unidad Individual')).toBeVisible();
-        await expect(page.locator('text=Combo Flota 25')).toBeVisible();
-        await expect(page.locator('text=Combo Flota 150')).toBeVisible();
+        await expect(page.locator('#plans .card')).toHaveCount(6);
+        await expect(page.locator('#plans')).toContainText('Unidad Individual');
+        await expect(page.locator('#plans')).toContainText('Combo Flota 25');
+        await expect(page.locator('#plans')).toContainText('Combo Flota 150');
     });
 
-    test('Toggle de facturación cambia precios', async ({ page }) => {
+    test('Calculadora recomienda un plan y prepara la solicitud comercial', async ({ page }) => {
         await page.goto(`${BASE_URL}/pricing.html`);
-        // Precio mensual inicial
+        await expect(page.locator('#plans .card')).toHaveCount(6);
         await page.locator('#barges').fill('22');
-        await page.locator('#tugboats').fill('3');
-        await expect(page.locator('#quote')).toContainText('Combo Flota 25');
-        await expect(page.locator('#quote')).toContainText('2.500');
+        await page.locator('#tugs').fill('3');
+        await expect(page.locator('#result')).toContainText('Combo Flota 25');
+        await expect(page.locator('#result')).toContainText('USD 2,500');
+        await page.locator('#proposalButton').click();
+        await expect(page.locator('#quoteSummary')).toContainText('22 barcazas y 3 remolcadores');
+    });
+
+    test('Calculadora solicita propuesta personalizada para una flota grande', async ({ page }) => {
+        await page.goto(`${BASE_URL}/pricing.html`);
+        await expect(page.locator('#plans .card')).toHaveCount(6);
         await page.locator('#barges').fill('151');
-        await expect(page.locator('#quote')).toContainText('solicitar propuesta');
+        await expect(page.locator('#result')).toContainText('Flota personalizada');
+        await expect(page.locator('#proposalButton')).toContainText('Solicitar propuesta personalizada');
     });
 
     test('Onboarding page carga', async ({ page }) => {

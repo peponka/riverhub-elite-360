@@ -1,6 +1,123 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Calculadora de flota | ViaBarcazas</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet"><style>
-:root{--ink:#07352b;--deep:#062d25;--paper:#f5f2e9;--line:#a8c9bd;--mint:#dbf1e5;--accent:#ff7655}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}.nav{height:70px;padding:0 6%;display:flex;justify-content:space-between;align-items:center;background:#fff}.brand{font-weight:700;font-size:20px}.nav a,.cta{color:var(--ink);text-decoration:none;font-weight:700}.cta{background:var(--accent);color:white;padding:12px 20px;border-radius:9px}.hero{text-align:center;padding:62px 20px 35px}.hero h1{font:700 clamp(42px,6vw,72px)/.95 Newsreader,serif;margin:0}.hero p{max-width:650px;margin:17px auto;line-height:1.65}.calculator{max-width:900px;margin:0 auto 65px;padding:32px;background:var(--deep);border-radius:18px;color:#fff}.calculator h2{font:700 34px Newsreader,serif;margin:0 0 6px}.calculator>p{margin:0 0 26px;color:#c9e2d9}.inputrow{display:grid;grid-template-columns:1fr 1fr;gap:18px}.label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#d4f4e2}.stepper{display:grid;grid-template-columns:52px 1fr 52px;height:58px}.stepper button{background:#104a3c;border:1px solid var(--line);color:#fff;font-size:27px;cursor:pointer}.stepper button:first-child{border-radius:10px 0 0 10px}.stepper button:last-child{border-radius:0 10px 10px 0}.stepper input{width:100%;border:1px solid var(--line);border-left:0;border-right:0;background:#0a3d32;color:#fff;text-align:center;font-size:23px;font-weight:700}.total{margin:24px 0;padding:16px;border-radius:11px;background:#0c493b;text-align:center;font-size:17px}.total strong{font-size:26px;margin-left:8px}.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{padding:17px;background:white;border-radius:10px;color:var(--ink)}.box span{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:#55766d}.box b{display:block;margin-top:7px;font-size:20px}.wide{grid-column:span 2;background:var(--mint)}.annual{display:flex;gap:9px;align-items:center;margin-top:20px;font-size:13px}.plans{max-width:1050px;margin:auto;padding:0 20px 60px}.plans h2{text-align:center;font:700 43px Newsreader,serif}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid #d4ded7;border-radius:13px;padding:22px}.card.popular{border:3px solid #168064}.card h3{margin:0;font-size:16px}.price{font:700 33px Newsreader,serif;margin:14px 0 4px}.card p{font-size:13px;line-height:1.5}.note{max-width:900px;margin:0 auto 45px;text-align:center;font-size:13px}@media(max-width:650px){.inputrow,.result,.grid{grid-template-columns:1fr}.wide{grid-column:span 1}.calculator{margin:0 14px 45px;padding:22px}.hero{padding-top:45px}.nav{padding:0 20px}}
-</style></head><body><nav class="nav"><a class="brand" href="/">ViaBarcazas</a><a class="cta" href="mailto:ventas@viabarcazas.com?subject=Propuesta%20ViaBarcazas">Hablar con ventas</a></nav><header class="hero"><h1>Calculá tu plan.</h1><p>Una barcaza y un remolcador tienen el mismo valor: cada uno ocupa una unidad dentro del plan.</p></header><main><section class="calculator"><h2>Calculadora de flota</h2><p>Ingresá cuántas embarcaciones administrás. El plan se recomienda automáticamente.</p><div class="inputrow"><div><label class="label" for="barges">Barcazas</label><div class="stepper"><button onclick="change('barges',-1)">−</button><input id="barges" type="number" min="0" value="20"><button onclick="change('barges',1)">+</button></div></div><div><label class="label" for="tugs">Remolcadores</label><div class="stepper"><button onclick="change('tugs',-1)">−</button><input id="tugs" type="number" min="0" value="5"><button onclick="change('tugs',1)">+</button></div></div></div><div class="total">Unidades facturables: <strong id="total">25</strong></div><div id="result" class="result"></div><label class="annual"><input id="annual" type="checkbox"> Pago anual anticipado: 10% de descuento máximo.</label></section><section class="plans"><h2>Combos mensuales</h2><div id="plans" class="grid"></div></section><p class="note">Más de 150 embarcaciones: propuesta personalizada. Piloto comercial: 60 días, hasta 15 embarcaciones, USD 3.000.</p></main><script>
-let catalog=[];const money=n=>'USD '+Number(n).toLocaleString('en-US');function change(id,delta){const el=document.getElementById(id);el.value=Math.max(0,(Number(el.value)||0)+delta);calculate()}function calculate(){const barges=Math.max(0,Number(document.getElementById('barges').value)||0),tugs=Math.max(0,Number(document.getElementById('tugs').value)||0),units=barges+tugs,plan=catalog.find(p=>units<=p.capacity),annual=document.getElementById('annual').checked;document.getElementById('total').textContent=units;if(!plan){document.getElementById('result').innerHTML='<div class="box wide"><span>Plan recomendado</span><b>Flota personalizada: solicitar propuesta</b></div>';return}const saving=Math.max(0,units*125-plan.monthlyPrice);document.getElementById('result').innerHTML=`<div class="box"><span>Plan recomendado</span><b>${plan.name}</b></div><div class="box"><span>Precio mensual</span><b>${money(plan.monthlyPrice)}</b></div><div class="box"><span>Precio por unidad</span><b>${money(plan.effectiveUnitPrice)}</b></div><div class="box"><span>Ahorro vs. individuales</span><b>${money(saving)} / mes</b></div>${annual?`<div class="box wide"><span>Pago anual anticipado</span><b>${money(plan.monthlyPrice*12*.9)} por año</b></div>`:''}`}function drawPlans(){document.getElementById('plans').innerHTML=catalog.map(p=>`<article class="card ${p.popular?'popular':''}"><h3>${p.name}${p.popular?' · Más elegido':''}</h3><div class="price">${money(p.monthlyPrice)}</div><p>Hasta ${p.capacity} embarcaciones.<br>${money(p.effectiveUnitPrice)} por unidad.</p></article>`).join('')}fetch('/api/pricing').then(r=>r.json()).then(data=>{catalog=data.plans;drawPlans();calculate()});['barges','tugs','annual'].forEach(id=>document.getElementById(id).addEventListener('input',calculate));
-document.querySelector('.calculator h2').textContent='¿Cuánto cuesta mi flota?';document.querySelector('.calculator h2 + p').innerHTML='<strong>1.</strong> Cargá tus barcazas. <strong>2.</strong> Sumá tus remolcadores. Abajo ves el plan y el precio final.';document.querySelector('label[for="barges"]').textContent='1. Cantidad de barcazas';document.querySelector('label[for="tugs"]').textContent='2. Cantidad de remolcadores';document.querySelector('.total').innerHTML='Tu flota tiene <strong id="total">25</strong> unidades facturables <small>(barcazas + remolcadores)</small>';calculate();
-</script><script>function calculate(){const barges=Math.max(0,Number(document.getElementById('barges').value)||0),tugs=Math.max(0,Number(document.getElementById('tugs').value)||0),units=barges+tugs,plan=catalog.find(p=>units<=p.capacity),annual=document.getElementById('annual').checked;document.getElementById('total').textContent=units;if(!plan){document.getElementById('result').innerHTML='<div class="box wide"><span>Plan recomendado</span><b>Flota personalizada: solicitar propuesta</b></div>';return}const saving=Math.max(0,units*(catalog[0]?.monthlyPrice||115)-plan.monthlyPrice);document.getElementById('result').innerHTML=`<div class="box"><span>Plan recomendado</span><b>${plan.name}</b></div><div class="box"><span>Precio mensual</span><b>${money(plan.monthlyPrice)}</b></div><div class="box"><span>Precio por unidad</span><b>${money(plan.effectiveUnitPrice)}</b></div><div class="box"><span>Ahorro vs. individuales</span><b>${money(saving)} / mes</b></div>${annual?`<div class="box wide"><span>Pago anual anticipado</span><b>${money(plan.monthlyPrice*12*.9)} por año</b></div>`:''}`}</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Calculadora de flota | ViaBarcazas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#07352b;--deep:#062d25;--paper:#f5f2e9;--line:#a8c9bd;--mint:#dbf1e5;--accent:#e85c3c;--muted:#55766d}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif}.nav{min-height:70px;padding:14px 6%;display:flex;gap:20px;justify-content:space-between;align-items:center;background:#fff}.brand{font-weight:700;font-size:20px;color:var(--ink);text-decoration:none}.cta,.button{border:0;cursor:pointer;background:var(--accent);color:#fff;padding:12px 20px;border-radius:9px;font:700 14px 'Plus Jakarta Sans',sans-serif;text-decoration:none;display:inline-block}.hero{text-align:center;padding:62px 20px 35px}.hero h1{font:700 clamp(42px,6vw,72px)/.95 Newsreader,serif;margin:0}.hero p{max-width:650px;margin:17px auto;line-height:1.65}.calculator,.contact{max-width:900px;margin:0 auto 65px;padding:32px;background:var(--deep);border-radius:18px;color:#fff}.calculator h2,.contact h2{font:700 34px Newsreader,serif;margin:0 0 6px}.calculator>p,.contact>p{margin:0 0 26px;color:#c9e2d9}.inputrow{display:grid;grid-template-columns:1fr 1fr;gap:18px}.label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#d4f4e2}.stepper{display:grid;grid-template-columns:52px 1fr 52px;height:58px}.stepper button{background:#104a3c;border:1px solid var(--line);color:#fff;font-size:27px;cursor:pointer}.stepper button:first-child{border-radius:10px 0 0 10px}.stepper button:last-child{border-radius:0 10px 10px 0}.stepper input{width:100%;border:1px solid var(--line);border-left:0;border-right:0;background:#0a3d32;color:#fff;text-align:center;font-size:23px;font-weight:700}.total{margin:24px 0;padding:16px;border-radius:11px;background:#0c493b;text-align:center;font-size:17px}.total strong{font-size:26px;margin-left:8px}.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{padding:17px;background:white;border-radius:10px;color:var(--ink)}.box span{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}.box b{display:block;margin-top:7px;font-size:20px}.wide{grid-column:span 2;background:var(--mint)}.annual{display:flex;gap:9px;align-items:center;margin-top:20px;font-size:13px}.proposal-action{margin-top:22px;text-align:center}.plans{max-width:1050px;margin:auto;padding:0 20px 60px}.plans h2{text-align:center;font:700 43px Newsreader,serif}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid #d4ded7;border-radius:13px;padding:22px;display:flex;flex-direction:column}.card.popular{border:3px solid #168064}.card h3{margin:0;font-size:16px}.price{font:700 33px Newsreader,serif;margin:14px 0 4px}.card p{font-size:13px;line-height:1.5;flex:1}.card .button{width:100%;text-align:center;background:var(--deep);margin-top:12px}.note{max-width:900px;margin:0 auto 45px;text-align:center;font-size:13px}.contact{background:#fff;color:var(--ink);border:1px solid #d4ded7}.contact>p{color:var(--muted)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field.wide{grid-column:span 2}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{border:1px solid #b8cdc4;border-radius:8px;padding:12px;font:400 15px 'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff}.field textarea{min-height:105px;resize:vertical}.form-note{font-size:12px;color:var(--muted);margin:14px 0}.status{display:none;margin-top:15px;padding:13px;border-radius:8px;background:var(--mint);font-weight:600}.status.error{background:#ffe0d8;color:#7e260f}.footer-note{padding:28px;text-align:center;font-size:12px;color:var(--muted)}@media(max-width:650px){.inputrow,.result,.grid,.formgrid{grid-template-columns:1fr}.wide,.field.wide{grid-column:span 1}.calculator,.contact{margin:0 14px 45px;padding:22px}.hero{padding-top:45px}.nav{padding:14px 20px}.nav .cta{padding:10px 14px}}
+  </style>
+</head>
+<body>
+  <nav class="nav"><a class="brand" href="/">ViaBarcazas</a><a class="cta" href="#contacto">Hablar con ventas</a></nav>
+  <header class="hero"><h1>Calcula tu plan.</h1><p>Una barcaza y un remolcador tienen el mismo valor: cada uno ocupa una unidad dentro del plan.</p></header>
+  <main>
+    <section class="calculator">
+      <h2>Cuanto cuesta mi flota?</h2><p><strong>1.</strong> Carga tus barcazas. <strong>2.</strong> Suma tus remolcadores. Abajo ves el plan y el precio final.</p>
+      <div class="inputrow">
+        <div><label class="label" for="barges">1. Cantidad de barcazas</label><div class="stepper"><button type="button" data-step="barges:-1">-</button><input id="barges" type="number" min="0" value="20"><button type="button" data-step="barges:1">+</button></div></div>
+        <div><label class="label" for="tugs">2. Cantidad de remolcadores</label><div class="stepper"><button type="button" data-step="tugs:-1">-</button><input id="tugs" type="number" min="0" value="5"><button type="button" data-step="tugs:1">+</button></div></div>
+      </div>
+      <div class="total">Tu flota tiene <strong id="total">25</strong> unidades facturables</div>
+      <div id="result" class="result"></div>
+      <label class="annual"><input id="annual" type="checkbox"> Pago anual anticipado: 10% de descuento maximo.</label>
+      <div class="proposal-action"><button id="proposalButton" class="button" type="button">Solicitar propuesta para mi flota</button></div>
+    </section>
+    <section class="plans"><h2>Combos mensuales</h2><div id="plans" class="grid"></div></section>
+    <p class="note">Mas de 150 embarcaciones: propuesta personalizada. Piloto comercial: 60 dias, hasta 15 embarcaciones, USD 3.000.</p>
+    <section id="contacto" class="contact">
+      <h2>Solicita una propuesta</h2><p>Recibimos el pedido con el calculo de flota para preparar una propuesta comercial precisa.</p>
+      <form id="proposalForm" novalidate>
+        <div class="formgrid">
+          <div class="field"><label for="name">Nombre *</label><input id="name" required autocomplete="name" placeholder="Tu nombre completo"></div>
+          <div class="field"><label for="company">Empresa *</label><input id="company" required autocomplete="organization" placeholder="Nombre de la empresa"></div>
+          <div class="field"><label for="email">Email *</label><input id="email" required type="email" autocomplete="email" placeholder="tu@empresa.com"></div>
+          <div class="field"><label for="country">Pais *</label><select id="country" required><option value="">Seleccionar pais</option><option>Argentina</option><option>Paraguay</option><option>Brasil</option><option>Uruguay</option><option>Bolivia</option><option>Otro</option></select></div>
+          <div class="field wide"><label for="message">Comentario (opcional)</label><textarea id="message" placeholder="Contanos sobre la operacion que queres digitalizar."></textarea></div>
+        </div>
+        <p id="quoteSummary" class="form-note"></p>
+        <button class="button" type="submit">Enviar solicitud comercial</button>
+        <div id="formStatus" class="status" role="status"></div>
+      </form>
+    </section>
+  </main>
+  <footer class="footer-note">ViaBarcazas | Gestion de flotas para la Hidrovia Paraguay-Parana</footer>
+  <script>
+    (function () {
+      var catalog = [];
+      var selectedPlan = null;
+      var money = function (amount) { return 'USD ' + Number(amount || 0).toLocaleString('en-US'); };
+      var value = function (id) { return Math.max(0, Number(document.getElementById(id).value) || 0); };
+      var getFleet = function () { return { barges: value('barges'), tugboats: value('tugs') }; };
+      var getUnits = function () { var fleet = getFleet(); return fleet.barges + fleet.tugboats; };
+      function updateSummary(plan) {
+        var fleet = getFleet();
+        var annual = document.getElementById('annual').checked;
+        var text = 'Flota consultada: ' + fleet.barges + ' barcazas y ' + fleet.tugboats + ' remolcadores (' + getUnits() + ' unidades). ';
+        if (plan) text += 'Plan recomendado: ' + plan.name + '. ' + money(plan.monthlyPrice) + ' por mes' + (annual ? ' o ' + money(plan.monthlyPrice * 12 * 0.9) + ' por ano con pago anual.' : '.');
+        else text += 'Propuesta personalizada para una flota de mas de 150 unidades.';
+        document.getElementById('quoteSummary').textContent = text;
+      }
+      function calculate() {
+        var units = getUnits();
+        var plan = catalog.find(function (item) { return units <= item.capacity; }) || null;
+        var annual = document.getElementById('annual').checked;
+        var result = document.getElementById('result');
+        var proposalButton = document.getElementById('proposalButton');
+        document.getElementById('total').textContent = units;
+        selectedPlan = plan;
+        if (!plan) {
+          proposalButton.textContent = 'Solicitar propuesta personalizada';
+          result.innerHTML = '<div class="box wide"><span>Plan recomendado</span><b>Flota personalizada: solicitar propuesta</b></div>';
+          updateSummary(null);
+          return;
+        }
+        proposalButton.textContent = 'Solicitar propuesta para mi flota';
+        var individual = catalog[0] ? catalog[0].monthlyPrice : plan.monthlyPrice;
+        var saving = Math.max(0, units * individual - plan.monthlyPrice);
+        result.innerHTML = '<div class="box"><span>Plan recomendado</span><b>' + plan.name + '</b></div><div class="box"><span>Precio mensual</span><b>' + money(plan.monthlyPrice) + '</b></div><div class="box"><span>Precio por unidad</span><b>' + money(plan.effectiveUnitPrice) + '</b></div><div class="box"><span>Ahorro vs. individuales</span><b>' + money(saving) + ' / mes</b></div>' + (annual ? '<div class="box wide"><span>Pago anual anticipado</span><b>' + money(plan.monthlyPrice * 12 * 0.9) + ' por ano</b></div>' : '');
+        updateSummary(plan);
+      }
+      function choosePlan(planId) {
+        var plan = catalog.find(function (item) { return item.id === planId; });
+        if (plan) {
+          var remaining = plan.capacity;
+          document.getElementById('barges').value = Math.max(0, remaining - value('tugs'));
+          selectedPlan = plan;
+        }
+        calculate();
+        document.getElementById('contacto').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.setTimeout(function () { document.getElementById('name').focus(); }, 500);
+      }
+      document.querySelectorAll('[data-step]').forEach(function (button) {
+        button.addEventListener('click', function () { var parts = button.dataset.step.split(':'); var input = document.getElementById(parts[0]); input.value = Math.max(0, value(parts[0]) + Number(parts[1])); calculate(); });
+      });
+      document.querySelectorAll('#barges,#tugs,#annual').forEach(function (input) { input.addEventListener('input', calculate); input.addEventListener('change', calculate); });
+      document.getElementById('proposalButton').addEventListener('click', function () { choosePlan(selectedPlan ? selectedPlan.id : null); });
+      document.getElementById('proposalForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var form = event.currentTarget;
+        var status = document.getElementById('formStatus');
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        var fleet = getFleet();
+        var details = 'Solicitud comercial desde la calculadora. ' + document.getElementById('quoteSummary').textContent + ' Comentario: ' + document.getElementById('message').value;
+        var payload = { nombre: document.getElementById('name').value.trim(), empresa: document.getElementById('company').value.trim(), pais: document.getElementById('country').value, flota: fleet.barges + ' barcazas + ' + fleet.tugboats + ' remolcadores', email: document.getElementById('email').value.trim(), mensaje: details };
+        status.className = 'status'; status.style.display = 'block'; status.textContent = 'Enviando solicitud...';
+        fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+          .then(function (response) { if (!response.ok) throw new Error('request_failed'); return response.json(); })
+          .then(function () { status.className = 'status'; status.textContent = 'Solicitud recibida. El equipo comercial te contactara dentro de 24 horas habiles.'; form.reset(); calculate(); })
+          .catch(function () { status.className = 'status error'; status.textContent = 'No pudimos registrar la solicitud. Escribinos a info@viabarcazas.com e incluye el resumen mostrado arriba.'; });
+      });
+      fetch('/api/pricing').then(function (response) { if (!response.ok) throw new Error('catalog_failed'); return response.json(); }).then(function (data) {
+        catalog = data.plans || [];
+        document.getElementById('plans').innerHTML = catalog.map(function (plan) { return '<article class="card ' + (plan.popular ? 'popular' : '') + '"><h3>' + plan.name + (plan.popular ? ' | Mas elegido' : '') + '</h3><div class="price">' + money(plan.monthlyPrice) + '</div><p>Hasta ' + plan.capacity + ' embarcaciones.<br>' + money(plan.effectiveUnitPrice) + ' por unidad.</p><button class="button" type="button" data-plan="' + plan.id + '">Elegir este plan</button></article>'; }).join('');
+        document.querySelectorAll('[data-plan]').forEach(function (button) { button.addEventListener('click', function () { choosePlan(button.dataset.plan); }); });
+        calculate();
+      }).catch(function () { document.getElementById('result').innerHTML = '<div class="box wide"><b>No se pudo cargar el catalogo comercial.</b></div>'; });
+      calculate();
+    }());
+  </script>
+</body>
+</html>

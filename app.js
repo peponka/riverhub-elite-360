@@ -773,6 +773,11 @@ ${voyageContext}`;
     }
 });
 
+// The modular routes add ETA. Mount them after the legacy AI handlers so the
+// established Copilot endpoints keep their existing production behavior.
+const aiRoutes = require('./routes/aiRoutes')(aiLimiter, authenticateUser);
+app.use('/api/ai', aiRoutes);
+
 // --- HYDROLOGY (modularized) ---
 if (hydrologyRoutes) {
     app.use('/api/hydrology', hydrologyRoutes);
