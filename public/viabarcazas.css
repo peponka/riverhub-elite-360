@@ -68,6 +68,7 @@ html,body{font-family:'Manrope',-apple-system,sans-serif;background:var(--bg-pri
 .fleet-chip svg{color:var(--accent)}
 .fleet-chip .chip-name{font-size:11px;font-weight:600}
 .fleet-chip .chip-type{font-size:9px;color:var(--accent);font-weight:700;letter-spacing:0.3px}
+.convoy-drop-zone{cursor:pointer;transition:border-color .15s,background .15s,transform .15s}.convoy-drop-zone.convoy-drop-target{border-color:var(--accent);background:rgba(37,211,102,.12);transform:translateY(-1px)}.convoy-drop-zone.convoy-filled{border-color:var(--accent);color:var(--text-primary);background:rgba(37,211,102,.08);font-weight:700}.convoy-filled small{display:block;font-size:9px;color:var(--accent);font-weight:700;margin-top:3px}.fleet-chip.convoy-selected{outline:2px solid var(--accent);outline-offset:2px}.fleet-chip.convoy-assigned{opacity:.4!important;cursor:not-allowed!important}.convoy-manual-help{margin-top:12px;font-size:11px;color:var(--text-secondary);display:flex;gap:10px;align-items:center;flex-wrap:wrap}.convoy-manual-help button{border:1px solid var(--separator);background:transparent;color:var(--text-primary);border-radius:7px;padding:5px 9px;font:600 11px Manrope,sans-serif;cursor:pointer}
 #leaflet-map{width:100%;height:100%;border-radius:0}
 .map-legend{position:absolute;bottom:20px;left:20px;background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:16px;z-index:500;font-size:12px}
 .map-legend h4{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;margin-bottom:8px}

@@ -1713,32 +1713,65 @@ function vesselIconSVG(type){
     var house=hasHouse?'<rect x="18" y="1.5" width="7" height="5" rx="1" fill="currentColor"/><rect x="19.5" y="0" width="4" height="2" fill="currentColor"/>':'';
     return '<svg viewBox="0 0 32 18" width="28" height="16" style="display:block;margin:0 auto 6px" aria-hidden="true"><path d="M2,15 L2,10 L6,10 L8,6.5 L27,6.5 L29,10 L30,10 L30,15 Z" fill="currentColor"/>'+house+'<line x1="0" y1="15.5" x2="32" y2="15.5" stroke="currentColor" stroke-width="1" opacity="0.4"/></svg>';
 }
-// CONVOY - Load fleet chips for drag-and-drop
+// CONVOY - Manual formation state. The AI suggestion and manual builder share
+// the same fleet, but manual placement remains a local draft until saved.
+var manualConvoy={vessels:{},assignments:{},selectedId:null,availableCount:0,totalCount:0};
+function convoyIsTug(v){var type=String(v.type||v.vessel_type||'').toLowerCase();return type.indexOf('remolcador')>=0||type.indexOf('empujador')>=0;}
+function convoyNotice(message){if(typeof showToast==='function')showToast(message,'warning');else console.warn(message);}
+function renderManualConvoy(){
+    document.querySelectorAll('#view-convoy .convoy-drop-zone').forEach(function(slot){
+        var slotId=slot.dataset.slot, vesselId=manualConvoy.assignments[slotId], vessel=vesselId&&manualConvoy.vessels[vesselId];
+        slot.classList.toggle('convoy-filled',!!vessel);
+        slot.innerHTML=vessel?vesselIconSVG(vessel.type||vessel.vessel_type)+'<span>'+(vessel.name||vessel.vessel_name||'--')+'</span><small>CLIC PARA QUITAR</small>':'<i class="fa-regular fa-clone"></i> '+(slotId==='proa'?'REMOLCADOR (Proa)':slotId==='popa'?'REMOLCADOR (Popa)':slotId.toUpperCase());
+    });
+    document.querySelectorAll('#convoy-chips .fleet-chip').forEach(function(chip){
+        var assigned=Object.keys(manualConvoy.assignments).some(function(slot){return manualConvoy.assignments[slot]===chip.dataset.vesselId;});
+        chip.classList.toggle('convoy-assigned',assigned);
+        chip.classList.toggle('convoy-selected',manualConvoy.selectedId===chip.dataset.vesselId);
+        chip.draggable=!assigned;
+    });
+    var used=Object.keys(manualConvoy.assignments).length;
+    var subtitle=document.querySelector('#view-convoy .viabarcazas-subtitle');
+    if(subtitle)subtitle.textContent='FORMACION ('+used+'/'+manualConvoy.totalCount+') - '+manualConvoy.availableCount+' DISPONIBLES';
+}
+function placeManualConvoyVessel(slotId,vesselId){
+    var vessel=manualConvoy.vessels[vesselId];if(!vessel)return;
+    var tugSlot=slotId==='proa'||slotId==='popa';
+    if(tugSlot!==convoyIsTug(vessel)){convoyNotice(tugSlot?'Ese espacio es solo para remolcadores.':'Las posiciones centrales son solo para barcazas.');return;}
+    Object.keys(manualConvoy.assignments).forEach(function(slot){if(manualConvoy.assignments[slot]===vesselId)delete manualConvoy.assignments[slot];});
+    manualConvoy.assignments[slotId]=vesselId;manualConvoy.selectedId=null;renderManualConvoy();
+}
+function setupManualConvoySlots(){
+    document.querySelectorAll('#view-convoy .convoy-drop-zone').forEach(function(slot){
+        if(slot.dataset.manualBound)return;slot.dataset.manualBound='1';
+        slot.addEventListener('dragover',function(e){e.preventDefault();slot.classList.add('convoy-drop-target');});
+        slot.addEventListener('dragleave',function(){slot.classList.remove('convoy-drop-target');});
+        slot.addEventListener('drop',function(e){e.preventDefault();slot.classList.remove('convoy-drop-target');placeManualConvoyVessel(slot.dataset.slot,e.dataTransfer.getData('text/plain'));});
+        slot.addEventListener('click',function(){var assigned=manualConvoy.assignments[slot.dataset.slot];if(manualConvoy.selectedId)placeManualConvoyVessel(slot.dataset.slot,manualConvoy.selectedId);else if(assigned){delete manualConvoy.assignments[slot.dataset.slot];renderManualConvoy();}});
+    });
+    var clear=document.getElementById('convoy-clear-btn');
+    if(clear&&!clear.dataset.manualBound){clear.dataset.manualBound='1';clear.addEventListener('click',function(){manualConvoy.assignments={};manualConvoy.selectedId=null;renderManualConvoy();});}
+}
 async function loadConvoy(){
     try{
-        var r=await sb.from('vessels').select('*').limit(100);var data=r.data;
+        var r=await sb.from('vessels').select('*').limit(100),data=r.data||[];
         var chips=document.getElementById('convoy-chips');if(!chips)return;
-        chips.innerHTML='';
-        if(data&&data.length>0){
-            var count=0;
-            data.forEach(function(v){
-                var s=(trad(v.status||'')).toLowerCase();
-                var isBusy=s.indexOf('viaje')>=0||s==='active';
-                var chip=document.createElement('div');
-                chip.className='fleet-chip';
-                chip.style.opacity=isBusy?'0.5':'1';
-                chip.style.cursor=isBusy?'not-allowed':'grab';
-                chip.innerHTML=vesselIconSVG(v.type||v.vessel_type)+'<div class="chip-name">'+(v.name||v.vessel_name||'--')+'</div><div class="chip-type">'+trad(v.type||v.vessel_type||'BARCAZA').toUpperCase()+'</div>';
-                if(!isBusy){
-                    chip.draggable=true;
-                    chip.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',v.name||v.vessel_name||'');});
-                }
-                chips.appendChild(chip);
-                if(!isBusy)count++;
-            });
-            document.querySelector('#view-convoy .viabarcazas-subtitle').textContent='FORMACION (0/'+data.length+') - '+count+' DISPONIBLES';
-        }
-    }catch(e){/* Convoy: */;}
+        manualConvoy={vessels:{},assignments:{},selectedId:null,availableCount:0,totalCount:data.length};chips.innerHTML='';setupManualConvoySlots();
+        data.forEach(function(v){
+            var id=String(v.id||v.name||v.vessel_name||''),s=(trad(v.status||'')).toLowerCase(),isBusy=s.indexOf('viaje')>=0||s==='active';
+            if(!id)return;manualConvoy.vessels[id]=v;
+            var chip=document.createElement('div');chip.className='fleet-chip';chip.dataset.vesselId=id;
+            chip.style.opacity=isBusy?'0.5':'1';chip.style.cursor=isBusy?'not-allowed':'grab';
+            chip.innerHTML=vesselIconSVG(v.type||v.vessel_type)+'<div class="chip-name">'+(v.name||v.vessel_name||'--')+'</div><div class="chip-type">'+trad(v.type||v.vessel_type||'BARCAZA').toUpperCase()+'</div>';
+            if(!isBusy){
+                manualConvoy.availableCount++;chip.draggable=true;
+                chip.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',id);});
+                chip.addEventListener('click',function(){manualConvoy.selectedId=manualConvoy.selectedId===id?null:id;renderManualConvoy();});
+            }
+            chips.appendChild(chip);
+        });
+        renderManualConvoy();
+    }catch(e){console.error('loadConvoy:',e);}
 }
 
 // TRACKING - Full cargo tracking with timeline
