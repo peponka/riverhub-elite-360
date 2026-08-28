@@ -1719,9 +1719,13 @@ var manualConvoy={vessels:{},assignments:{},selectedId:null,availableCount:0,tot
 function convoyIsTug(v){var type=String(v.type||v.vessel_type||'').toLowerCase();return type.indexOf('remolcador')>=0||type.indexOf('empujador')>=0;}
 function convoyNotice(message){if(typeof showToast==='function')showToast(message,'warning');else console.warn(message);}
 function renderManualConvoy(){
+    var selected=manualConvoy.selectedId&&manualConvoy.vessels[manualConvoy.selectedId];
+    var instruction=document.getElementById('convoy-manual-instruction');
+    if(instruction)instruction.textContent=!selected?'Arrastrá una embarcación a un espacio, o seleccionála y hacé clic en el espacio. Hacé clic en una unidad ubicada para quitarla.':convoyIsTug(selected)?(selected.name||selected.vessel_name)+' es remolcador: elegí PROA o POPA.':(selected.name||selected.vessel_name)+' es barcaza: elegí una posición central.';
     document.querySelectorAll('#view-convoy .convoy-drop-zone').forEach(function(slot){
         var slotId=slot.dataset.slot, vesselId=manualConvoy.assignments[slotId], vessel=vesselId&&manualConvoy.vessels[vesselId];
         slot.classList.toggle('convoy-filled',!!vessel);
+        slot.classList.toggle('convoy-slot-allowed',!!selected&&((slotId==='proa'||slotId==='popa')===convoyIsTug(selected)));
         slot.innerHTML=vessel?vesselIconSVG(vessel.type||vessel.vessel_type)+'<span>'+(vessel.name||vessel.vessel_name||'--')+'</span><small>CLIC PARA QUITAR</small>':'<i class="fa-regular fa-clone"></i> '+(slotId==='proa'?'REMOLCADOR (Proa)':slotId==='popa'?'REMOLCADOR (Popa)':slotId.toUpperCase());
     });
     document.querySelectorAll('#convoy-chips .fleet-chip').forEach(function(chip){
