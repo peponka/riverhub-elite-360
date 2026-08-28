@@ -12,12 +12,12 @@
 </head>
 <body>
   <nav class="nav">
-    <a class="brand" href="/">ViaBarcazas</a>
+    <a id="brandLink" class="brand" href="index.html">ViaBarcazas</a>
     <div class="actions">
       <div class="languages" aria-label="Language">
-        <a class="lang" data-lang="es" href="/pricing.html" title="Español">ES</a>
-        <a class="lang" data-lang="en" href="/pricing.html?lang=en" title="English">EN</a>
-        <a class="lang" data-lang="pt" href="/pricing.html?lang=pt" title="Português">PT</a>
+        <a class="lang" data-lang="es" href="pricing.html" title="Español">ES</a>
+        <a class="lang" data-lang="en" href="pricing.html?lang=en" title="English">EN</a>
+        <a class="lang" data-lang="pt" href="pricing.html?lang=pt" title="Português">PT</a>
       </div>
       <a id="salesLink" class="cta" href="#contacto">Hablar con ventas</a>
     </div>
@@ -66,7 +66,7 @@
     }[lang];
     var $=function(id){return document.getElementById(id)}, money=function(n){return 'USD '+Number(n||0).toLocaleString('en-US')}, value=function(){return Math.max(0,Number($('units').value)||0)}, selected=function(n){return tiers.filter(function(t){return n>=t.min&&n<=t.max})[0]||null}, annual=function(){return document.querySelector('input[name="billing"]:checked').value==='annual'}, set=function(id,v){$(id).textContent=v};
     function staticText(){
-      document.documentElement.lang=lang; document.title=text.title; document.querySelectorAll('.lang').forEach(function(a){a.classList.toggle('active',a.dataset.lang===lang)});
+      document.documentElement.lang=lang; document.title=text.title; $('brandLink').href=lang==='en'?'index-en.html':lang==='pt'?'index-pt.html':'index.html'; document.querySelectorAll('.lang').forEach(function(a){a.classList.toggle('active',a.dataset.lang===lang)});
       set('salesLink',text.sales);set('heroTitle',text.hero);set('heroText',text.heroText);set('calculatorTitle',text.calc);set('calculatorText',text.calcText);set('unitsLabel',text.units);set('fleetIntro',text.fleet);set('activeRule',text.rule);set('monthlyOption',text.monthly);set('annualOption',text.annual);set('checkoutButton',text.pay);set('plansTitle',text.plans);set('note',text.note);set('contactTitle',text.contact);set('contactText',text.contactText);set('nameLabel',text.name);set('companyLabel',text.company);set('emailLabel',text.email);set('countryLabel',text.country);set('messageLabel',text.message);set('formButton',text.send);set('checkoutTitle',text.checkout);set('checkoutText',text.checkoutText);set('checkoutCancel',text.back);set('checkoutConfirm',text.confirm);set('footer',text.footer);
       $('name').placeholder=text.namePlaceholder;$('company').placeholder=text.companyPlaceholder;$('email').placeholder=text.emailPlaceholder;$('message').placeholder=text.messagePlaceholder;
       $('country').innerHTML='<option value="">'+text.countryBlank+'</option><option>Argentina</option><option>Paraguay</option><option>Brasil</option><option>Uruguay</option><option>Bolivia</option><option>Other</option>';

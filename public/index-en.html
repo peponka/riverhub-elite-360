@@ -370,7 +370,7 @@
 
 <!-- NAV -->
 <nav class="nav">
-    <a class="nav-brand" href="/">
+    <a class="nav-brand" href="index-en.html">
         <svg class="nav-logo" width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#128C7E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="2" y1="25" x2="46" y2="25" stroke="#128C7E" stroke-width="1.3" opacity="0.28"/><circle cx="24" cy="33" r="3" fill="#25D366"/></svg>
         <span>ViaBarcazas</span>
     </a>
@@ -394,7 +394,7 @@
 
 <!-- BRAND HEADER — white bar, big normal-size wordmark, sits beside the rail -->
 <div class="brand-header">
-    <a class="brand-mark" href="/">
+    <a class="brand-mark" href="index-en.html">
         <svg width="42" height="42" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ViaBarcazas"><path d="M6 13 L24 33 L42 13" stroke="#0b7769" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="2" y1="25" x2="46" y2="25" stroke="#0b7769" stroke-width="1.3" opacity="0.28"/><circle cx="24" cy="33" r="3" fill="#25D366"/></svg>
         <span>ViaBarcazas</span>
     </a>
@@ -813,36 +813,36 @@ function switchCopilotoTab(idx) {
 
 <div class="section-alt">
 <section class="roi-section reveal" id="roi">
-    <div class="section-tag">LA PLATA QUE SE ESCAPA</div>
-    <h2>Poné los números de tu flota<br><em>y mirá cuánto se pierde.</em></h2>
-    <p class="section-desc">Ingresá los datos de tu flota y veé el impacto proyectado en tiempo real. Sin registro.</p>
+    <div class="section-tag">THE COST OF INEFFICIENCY</div>
+    <h2>Enter your fleet figures<br><em>and see what is being lost.</em></h2>
+    <p class="section-desc">Enter your fleet data and see the projected impact in real time. No sign-up required.</p>
 
     <div class="roi-sliders">
         <div class="roi-slider-group">
             <div class="roi-slider-label">
-                <span>Barcazas</span>
+                <span>Barges</span>
                 <div class="roi-slider-value" id="roi-barcazas-val">10</div>
             </div>
             <input type="range" class="roi-slider" id="roi-barcazas" min="1" max="150" value="10" oninput="calculateROI()">
         </div>
         <div class="roi-slider-group">
             <div class="roi-slider-label">
-                <span>Remolcadores</span>
+                <span>Tugboats</span>
                 <div class="roi-slider-value" id="roi-remolcadores-val">3</div>
             </div>
             <input type="range" class="roi-slider" id="roi-remolcadores" min="1" max="30" value="3" oninput="calculateROI()">
         </div>
         <div class="roi-slider-group">
             <div class="roi-slider-label">
-                <span>Combustible mensual (kL)</span>
+                <span>Monthly fuel (kL)</span>
                 <div class="roi-slider-value" id="roi-consumo-val">500</div>
             </div>
             <input type="range" class="roi-slider" id="roi-consumo" min="10" max="5000" value="500" step="10" oninput="calculateROI()">
-            <div class="roi-slider-hint">kL = kilolitros (1.000 litros)</div>
+            <div class="roi-slider-hint">kL = kiloliters (1,000 liters)</div>
         </div>
         <div class="roi-slider-group">
             <div class="roi-slider-label">
-                <span>Costo por litro (USD)</span>
+                <span>Cost per liter (USD)</span>
                 <div class="roi-slider-value" id="roi-costo-val">1.2</div>
             </div>
             <input type="range" class="roi-slider" id="roi-costo" min="0.5" max="3.0" value="1.2" step="0.1" oninput="calculateROI()">
@@ -850,39 +850,39 @@ function switchCopilotoTab(idx) {
     </div>
 
     <div class="roi-receipt">
-        <div class="roi-receipt-title">RESUMEN — TU FLOTA HOY</div>
+        <div class="roi-receipt-title">SUMMARY — YOUR FLEET TODAY</div>
         <div class="roi-receipt-line">
-            <span>Combustible mal gastado / año</span>
+            <span>Fuel wasted / year</span>
             <span class="roi-receipt-val warn" id="roi-ahorro">$0</span>
         </div>
         <div class="roi-receipt-line">
-            <span>Plan ViaBarcazas / mes</span>
+            <span>ViaBarcazas plan / month</span>
             <span class="roi-receipt-val" id="roi-costo-mensual">$0</span>
         </div>
         <div class="roi-receipt-divider"></div>
         <div class="roi-receipt-line total">
-            <span>Ahorro neto, año 1<div class="roi-receipt-sub">Ya descontado el costo de la plataforma</div></span>
+            <span>Net savings, year 1<div class="roi-receipt-sub">After deducting platform costs</div></span>
             <span class="roi-receipt-val" id="roi-neto">$0</span>
         </div>
-        <div class="roi-receipt-stamp">ROI EN <span id="roi-payback">0 MESES</span></div>
+        <div class="roi-receipt-stamp">ROI IN <span id="roi-payback">0 MONTHS</span></div>
     </div>
     <div class="roi-extra">
         <div class="roi-extra-item">
             <div class="roi-extra-value" id="roi-litros">0 kL</div>
-            <div class="roi-extra-label">Combustible ahorrado / año</div>
+            <div class="roi-extra-label">Fuel saved / year</div>
         </div>
         <div class="roi-extra-item">
             <div class="roi-extra-value" id="roi-co2">0 t</div>
-            <div class="roi-extra-label">CO₂ no emitido / año</div>
+            <div class="roi-extra-label">CO₂ emissions avoided / year</div>
         </div>
         <div class="roi-extra-item">
             <div class="roi-extra-value">16%</div>
-            <div class="roi-extra-label">Reducción de consumo estimada</div>
+            <div class="roi-extra-label">Estimated consumption reduction</div>
         </div>
     </div>
 
     <div class="roi-cta-line">
-        <a href="#contacto">Hablar con un especialista sobre tu flota <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="#contacto">Talk to a fleet specialist <i class="fa-solid fa-arrow-right"></i></a>
     </div>
 </section>
 </div>
@@ -896,7 +896,7 @@ function calculateROI() {
     // Update slider display values
     document.getElementById('roi-barcazas-val').textContent = barcazas;
     document.getElementById('roi-remolcadores-val').textContent = remolcadores;
-    document.getElementById('roi-consumo-val').textContent = consumo.toLocaleString('es-AR');
+    document.getElementById('roi-consumo-val').textContent = consumo.toLocaleString('en-US');
     document.getElementById('roi-costo-val').textContent = costo.toFixed(1);
 
     // Calculate savings (16% fuel reduction)
@@ -917,7 +917,7 @@ function calculateROI() {
         costoMensualText = '$549';
     } else {
         costoMensual = 0;
-        costoMensualText = 'a medida';
+        costoMensualText = 'Custom';
     }
 
     // Calculate ROI in months
@@ -927,29 +927,29 @@ function calculateROI() {
     if (costoMensual > 0 && ahorroAnual > 0) {
         roiMeses = costoAnual / ahorroAnual * 12;
         if (roiMeses < 1) {
-            roiText = '< 1 mes';
+            roiText = '< 1 month';
         } else {
-            roiText = Math.ceil(roiMeses) + ' meses';
+            roiText = Math.ceil(roiMeses) + ' months';
         }
     } else {
-        roiText = 'Contactar';
+        roiText = 'Contact us';
     }
 
     // Calculate net savings year 1
     var ahorroNeto = ahorroAnual - costoAnual;
 
     // Update display
-    document.getElementById('roi-ahorro').textContent = '$' + Math.round(ahorroAnual).toLocaleString('es-AR');
+    document.getElementById('roi-ahorro').textContent = '$' + Math.round(ahorroAnual).toLocaleString('en-US');
     document.getElementById('roi-costo-mensual').textContent = costoMensualText;
     document.getElementById('roi-payback').textContent = roiText;
-    document.getElementById('roi-litros').textContent = Math.round(litrosAhorrados / 1000).toLocaleString('es-AR') + ' kL';
-    document.getElementById('roi-co2').textContent = Math.round(co2Toneladas).toLocaleString('es-AR') + ' t';
+    document.getElementById('roi-litros').textContent = Math.round(litrosAhorrados / 1000).toLocaleString('en-US') + ' kL';
+    document.getElementById('roi-co2').textContent = Math.round(co2Toneladas).toLocaleString('en-US') + ' t';
 
     var netoEl = document.getElementById('roi-neto');
     if (costoMensual === 0) {
-        netoEl.textContent = 'A medida';
+        netoEl.textContent = 'Custom';
     } else {
-        netoEl.textContent = (ahorroNeto < 0 ? '-' : '') + '$' + Math.abs(Math.round(ahorroNeto)).toLocaleString('es-AR');
+        netoEl.textContent = (ahorroNeto < 0 ? '-' : '') + '$' + Math.abs(Math.round(ahorroNeto)).toLocaleString('en-US');
     }
 }
 // Init on load
@@ -988,34 +988,34 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
 </style>
 
 <section class="caso-exito-section reveal" id="caso-exito">
-    <div class="section-tag">CASO DE ÉXITO</div>
-    <h2>Así lo usa un operador<br><em>real de la hidrovía.</em></h2>
+    <div class="section-tag">SUCCESS STORY</div>
+    <h2>How a real<br><em>waterway operator uses it.</em></h2>
 
     <div class="caso-card">
-        <div class="caso-label">PROGRAMA PILOTO — SECTOR ASUNCIÓN-ROSARIO</div>
+        <div class="caso-label">PILOT PROGRAM — ASUNCIÓN-ROSARIO SECTOR</div>
         <div class="caso-steps">
             <div class="caso-step">
-                <h4>ANTES</h4>
-                <p>Armador chico, 9 barcazas y 2 remolcadores. La posición de la flota vivía en el celular de cada capitán y en llamadas por radio VHF.</p>
+                <h4>BEFORE</h4>
+                <p>Small operator, 9 barges, and 2 tugboats. Fleet positions lived on each captain's phone and in VHF radio calls.</p>
             </div>
             <div class="caso-step">
-                <h4>LO QUE DOLÍA</h4>
-                <p>Ningún dato de consumo por tramo, así que nadie sabía si el gasto de combustible era normal o no. Dos incidentes menores quedaron sin registro formal.</p>
+                <h4>THE PROBLEM</h4>
+                <p>No fuel-consumption data by leg, so no one knew whether fuel spending was normal. Two minor incidents went without a formal record.</p>
             </div>
             <div class="caso-step">
-                <h4>PUESTA EN MARCHA</h4>
-                <p>4 días de carga de datos, sin parar la operación. El AIS que ya tenían se conectó directo, sin instalar nada nuevo a bordo.</p>
+                <h4>GETTING STARTED</h4>
+                <p>4 days of data loading, without stopping operations. Their existing AIS connected directly, with nothing new to install on board.</p>
             </div>
             <div class="caso-step">
-                <h4>DESPUÉS</h4>
-                <p>Toda la flota visible desde una sola pantalla. 16% menos combustible en el tramo más consumido. La bitácora en papel desapareció del todo.</p>
+                <h4>AFTER</h4>
+                <p>The entire fleet visible from a single screen. 16% less fuel on the highest-consumption leg. The paper logbook was eliminated completely.</p>
             </div>
         </div>
-        <p class="caso-note">Cifras del programa piloto; varían según flota y ruta. Detalle completo disponible bajo acuerdo de confidencialidad.</p>
+        <p class="caso-note">Pilot-program figures; they vary by fleet and route. Full details are available under a confidentiality agreement.</p>
     </div>
 
     <div class="caso-cta">
-        <a href="#contacto">Conocer más → Solicitar Demo <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="#contacto">Learn more → Request a demo <i class="fa-solid fa-arrow-right"></i></a>
     </div>
 </section>
 
@@ -1026,7 +1026,7 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
         <div class="section-tag">PRECIOS</div>
         <h2>Tres tamaños de flota,<br><em>un solo panel.</em></h2>
         <p style="color:var(--text2);font-size:16px;margin-top:16px;max-width:520px;margin-inline:auto;line-height:1.7">Empezá con lo que necesitás hoy. Escalá cuando tu operación crezca. Sin contratos largos, sin sorpresas.</p>
-        <a href="pricing.html" class="price-btn dark" style="display:inline-block;width:auto;margin-top:20px;padding-inline:24px">Calcula el precio exacto de tu flota</a>
+        <a href="pricing-en.html" class="price-btn dark" style="display:inline-block;width:auto;margin-top:20px;padding-inline:24px">Calculate your exact fleet price</a>
     </div>
 
     <!-- GARANTÍA STRIP -->
@@ -1209,9 +1209,9 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
             <span>HIDROVÍA PARANÁ — PARAGUAY</span>
             <i class="fa-solid fa-water"></i>
         </div>
-        <h2>3.442 kilómetros de río.<br>Un solo <em>panel para leerlo.</em></h2>
-        <p>Cinco países, más de 100 millones de toneladas al año, y una sola vía que las mueve a todas. Soja, minerales, combustibles, contenedores: todo pasa por acá, y ViaBarcazas está construido para esta hidrovía puntual, no adaptado de otra.</p>
-        <p style="font-size:14px;color:var(--text2);margin-top:12px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7">Del mineral de hierro que sale de Corumbá a los puertos de aguas profundas de Rosario y Buenos Aires, este corredor sostiene buena parte de la economía del Mercosur — y la mayoría de las flotas todavía lo gestionan a ojo, sin un dato centralizado.</p>
+        <h2>3,442 kilometers of river.<br>One <em>dashboard to read it.</em></h2>
+        <p>Five countries, more than 100 million tonnes a year, and one waterway moving it all. Soybeans, minerals, fuels, containers: everything passes through here, and ViaBarcazas is built for this specific waterway, not adapted from somewhere else.</p>
+        <p style="font-size:14px;color:var(--text2);margin-top:12px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7">From the iron ore leaving Corumbá to the deep-water ports of Rosario and Buenos Aires, this corridor supports a large share of the Mercosur economy, yet most fleets still manage it by eye, without centralized data.</p>
         <div class="country-flags" style="margin-top:24px">
             <div class="country-flag"><div class="flag-dot" style="background:#60A5FA"></div>Argentina</div>
             <div class="country-flag"><div class="flag-dot" style="background:#F87171"></div>Paraguay</div>
@@ -1246,7 +1246,7 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
 
                     <circle cx="260" cy="60" r="6" fill="#34D399"/>
                     <text x="274" y="57" class="river-map-label">Corumbá / Ladário</text>
-                    <text x="274" y="71" class="river-map-country">BRASIL · KM 2.770</text>
+                    <text x="274" y="71" class="river-map-country">BRAZIL · KM 2.770</text>
 
                     <circle cx="200" cy="214" r="6" fill="#F87171"/>
                     <text x="214" y="211" class="river-map-label">Concepción</text>
@@ -1266,7 +1266,7 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
 
                     <circle cx="200" cy="721" r="6.5" fill="#25D366"/>
                     <text x="105" y="718" class="river-map-label" text-anchor="end">Rosario</text>
-                    <text x="105" y="732" class="river-map-country" text-anchor="end">HUB SOJERO · KM 420</text>
+                    <text x="105" y="732" class="river-map-country" text-anchor="end">SOY HUB · KM 420</text>
 
                     <circle cx="230" cy="772" r="6" fill="#25D366"/>
                     <text x="244" y="769" class="river-map-label">Buenos Aires</text>
@@ -1279,21 +1279,21 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
                 <div class="hidrovia-map-glow"></div>
             </div>
             <div class="route-info reveal">
-                <h3>Puertos estratégicos<br><em>de la Paraná-Paraguay</em></h3>
-                <p>La hidrovía atraviesa el corazón productivo del Mercosur. Cada puerto es un nodo crítico en la cadena de exportación de granos, minerales y combustibles que mueve la economía regional.</p>
+                <h3>Key ports<br><em>on the Paraná-Paraguay</em></h3>
+                <p>The waterway crosses the productive heart of Mercosur. Every port is a critical node in the export chain for grains, minerals and fuels that keeps the regional economy moving.</p>
                 <div class="port-table-wrap">
                     <table class="port-table">
                         <thead>
-                            <tr><th>Puerto</th><th>País</th><th class="num">Km</th><th>Tramo siguiente</th></tr>
+                            <tr><th>Port</th><th>Country</th><th class="num">Km</th><th>Next leg</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td class="port-cell"><span class="port-dot brasil"></span>Corumbá / Ladário</td><td>Brasil</td><td class="num">2.770</td><td class="leg">760 km · ~3-4 días</td></tr>
-                            <tr><td class="port-cell"><span class="port-dot paraguay"></span>Concepción</td><td>Paraguay</td><td class="num">2.010</td><td class="leg">380 km · ~2 días</td></tr>
-                            <tr><td class="port-cell"><span class="port-dot paraguay"></span>Asunción</td><td>Paraguay</td><td class="num">1.630</td><td class="leg">430 km · ~2-3 días</td></tr>
-                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Barranqueras</td><td>Argentina</td><td class="num">1.200</td><td class="leg">620 km · ~3 días</td></tr>
-                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Santa Fe</td><td>Argentina</td><td class="num">580</td><td class="leg">160 km · ~1 día</td></tr>
-                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Rosario (Hub Sojero)</td><td>Argentina</td><td class="num">420</td><td class="leg">180 km · ~1 día</td></tr>
-                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Buenos Aires</td><td>Argentina</td><td class="num">240</td><td class="leg">240 km · ~1-2 días</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot brasil"></span>Corumbá / Ladário</td><td>Brazil</td><td class="num">2.770</td><td class="leg">760 km · ~3-4 days</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot paraguay"></span>Concepción</td><td>Paraguay</td><td class="num">2.010</td><td class="leg">380 km · ~2 days</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot paraguay"></span>Asunción</td><td>Paraguay</td><td class="num">1.630</td><td class="leg">430 km · ~2-3 days</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Barranqueras</td><td>Argentina</td><td class="num">1.200</td><td class="leg">620 km · ~3 days</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Santa Fe</td><td>Argentina</td><td class="num">580</td><td class="leg">160 km · ~1 day</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Rosario (Soy Hub)</td><td>Argentina</td><td class="num">420</td><td class="leg">180 km · ~1 day</td></tr>
+                            <tr><td class="port-cell"><span class="port-dot argentina"></span>Buenos Aires</td><td>Argentina</td><td class="num">240</td><td class="leg">240 km · ~1-2 days</td></tr>
                             <tr><td class="port-cell"><span class="port-dot uruguay"></span>Nueva Palmira</td><td>Uruguay</td><td class="num">0</td><td class="leg">—</td></tr>
                         </tbody>
                     </table>
@@ -1307,7 +1307,7 @@ document.addEventListener('DOMContentLoaded', function() { calculateROI(); });
         <div class="hv-strip reveal">
             <div class="hv-strip-item">
                 <div class="hv-stat-num" data-target="3442">0</div>
-                <div class="hv-stat-label">Kilómetros navegables</div>
+                <div class="hv-stat-label">Navigable kilometers</div>
             </div>
             <div class="hv-strip-item">
                 <div class="hv-stat-num" data-target="100">0</div>
@@ -2212,12 +2212,20 @@ document.addEventListener('DOMContentLoaded',function(){
         "Cómo Funciona": "How it works",
         "CASO DE ÉXITO": "CASE STUDY",
         "Caso de Éxito": "Case study",
+        "Así lo usa un operador": "How a real",
+        "real de la hidrovía.": "waterway operator uses it.",
+        "ANTES": "BEFORE",
         "DESPUÉS": "AFTER",
         "DÍA 2": "DAY 2",
         "LA DIFERENCIA": "THE DIFFERENCE",
         "LO QUE DOLÍA": "THE PROBLEM",
         "PROGRAMA PILOTO — SECTOR ASUNCIÓN-ROSARIO": "PILOT PROGRAM — ASUNCIÓN-ROSARIO SECTOR",
         "PUESTA EN MARCHA": "GETTING STARTED",
+        "Armador chico, 9 barcazas y 2 remolcadores. La posición de la flota vivía en el celular de cada capitán y en llamadas por radio VHF.": "Small operator, 9 barges, and 2 tugboats. Fleet positions lived on each captain's phone and in VHF radio calls.",
+        "Ningún dato de consumo por tramo, así que nadie sabía si el gasto de combustible era normal o no. Dos incidentes menores quedaron sin registro formal.": "No fuel-consumption data by leg, so no one knew whether fuel spending was normal. Two minor incidents went without a formal record.",
+        "4 días de carga de datos, sin parar la operación. El AIS que ya tenían se conectó directo, sin instalar nada nuevo a bordo.": "4 days of data loading, without stopping operations. Their existing AIS connected directly, with nothing new to install on board.",
+        "Toda la flota visible desde una sola pantalla. 16% menos combustible en el tramo más consumido. La bitácora en papel desapareció del todo.": "The entire fleet visible from a single screen. 16% less fuel on the highest-consumption leg. The paper logbook was eliminated completely.",
+        "Cifras del programa piloto; varían según flota y ruta. Detalle completo disponible bajo acuerdo de confidencialidad.": "Pilot-program figures; they vary by fleet and route. Full details are available under a confidentiality agreement.",
         "TECNOLOGÍA": "TECHNOLOGY",
         "Política de Cookies": "Cookie policy",
         "Política de Privacidad": "Privacy policy",
@@ -2287,6 +2295,9 @@ document.addEventListener('DOMContentLoaded',function(){
         "CRECIDA · ABR": "HIGH WATER · APR",
         "Tráfico por país": "Traffic by country",
         "Brasil": "Brazil",
+        "País": "Country",
+        "Puerto": "Port",
+        "Tramo siguiente": "Next leg",
         "Calado navegable disponible": "Available navigable draft",
         "Ocupación portuaria promedio": "Average port occupancy",
         "Puertos sin restricción hoy": "Ports open today",
@@ -2304,6 +2315,23 @@ document.addEventListener('DOMContentLoaded',function(){
         "8% más carga cada año, y más de USD 2.000M en dragado y terminales previstos hasta 2030. Quien no tenga los datos ordenados para entonces, va a quedar mirando desde afuera.": "Cargo grows 8% every year, with more than USD 2 billion planned for dredging and terminals through 2030. Those without organized data will be left looking from outside.",
         "3.442 km de río.": "3,442 km of river.",
         "Cero excusas para no verlos.": "No excuses not to see it.",
+        "3.442 kilómetros de río.": "3,442 kilometers of river.",
+        "Un solo panel para leerlo.": "One dashboard to read it.",
+        "Cinco países, más de 100 millones de toneladas al año, y una sola vía que las mueve a todas. Soja, minerales, combustibles, contenedores: todo pasa por acá, y ViaBarcazas está construido para esta hidrovía puntual, no adaptado de otra.": "Five countries, more than 100 million tonnes a year, and one waterway moving it all. Soybeans, minerals, fuels, containers: everything passes through here, and ViaBarcazas is built for this specific waterway, not adapted from somewhere else.",
+        "Del mineral de hierro que sale de Corumbá a los puertos de aguas profundas de Rosario y Buenos Aires, este corredor sostiene buena parte de la economía del Mercosur — y la mayoría de las flotas todavía lo gestionan a ojo, sin un dato centralizado.": "From the iron ore leaving Corumbá to the deep-water ports of Rosario and Buenos Aires, this corridor supports a large share of the Mercosur economy, yet most fleets still manage it by eye, without centralized data.",
+        "La hidrovía atraviesa el corazón productivo del Mercosur. Cada puerto es un nodo crítico en la cadena de exportación de granos, minerales y combustibles que mueve la economía regional.": "The waterway crosses the productive heart of Mercosur. Every port is a critical node in the export chain for grains, minerals and fuels that keeps the regional economy moving.",
+        "HUB SOJERO · KM 420": "SOY HUB · KM 420",
+        "BRASIL · KM 2.770": "BRAZIL · KM 2.770",
+        "de la Paraná-Paraguay": "on the Paraná-Paraguay",
+        "Brasil": "Brazil",
+        "760 km · ~3-4 días": "760 km · ~3-4 days",
+        "380 km · ~2 días": "380 km · ~2 days",
+        "430 km · ~2-3 días": "430 km · ~2-3 days",
+        "620 km · ~3 días": "620 km · ~3 days",
+        "160 km · ~1 día": "160 km · ~1 day",
+        "180 km · ~1 día": "180 km · ~1 day",
+        "240 km · ~1-2 días": "240 km · ~1-2 days",
+        "Rosario (Hub Sojero)": "Rosario (Soy Hub)",
         "De Corumbá a Nueva Palmira, ViaBarcazas convierte cada tramo en un dato: posición satelital, convoyes de hasta 40.000 toneladas armados con IA, combustible bajo control y un Copiloto que conoce la ruta tan bien como tu capitán más viejo.": "From Corumbá to Nueva Palmira, ViaBarcazas turns every stretch into data: satellite positioning, AI-built convoys of up to 40,000 tonnes, fuel under control and a Copilot that knows the route as well as your most experienced captain.",
         "Integrado con tecnología": "Integrated with world-class",
         "de clase mundial.": "technology.",
@@ -2381,5 +2409,6 @@ document.addEventListener('DOMContentLoaded',function(){
     window.addEventListener("load", translatePage);
 }());
 </script>
+<script src="landing-locales.js"></script>
 </body>
 </html>
