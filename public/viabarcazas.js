@@ -1747,7 +1747,7 @@ function setupManualConvoySlots(){
         slot.addEventListener('dragover',function(e){e.preventDefault();slot.classList.add('convoy-drop-target');});
         slot.addEventListener('dragleave',function(){slot.classList.remove('convoy-drop-target');});
         slot.addEventListener('drop',function(e){e.preventDefault();slot.classList.remove('convoy-drop-target');placeManualConvoyVessel(slot.dataset.slot,e.dataTransfer.getData('text/plain'));});
-        slot.addEventListener('click',function(){var assigned=manualConvoy.assignments[slot.dataset.slot];if(manualConvoy.selectedId)placeManualConvoyVessel(slot.dataset.slot,manualConvoy.selectedId);else if(assigned){delete manualConvoy.assignments[slot.dataset.slot];renderManualConvoy();}});
+        slot.addEventListener('click',function(){var assigned=manualConvoy.assignments[slot.dataset.slot];if(assigned){delete manualConvoy.assignments[slot.dataset.slot];renderManualConvoy();}else if(manualConvoy.selectedId)placeManualConvoyVessel(slot.dataset.slot,manualConvoy.selectedId);});
     });
     var clear=document.getElementById('convoy-clear-btn');
     if(clear&&!clear.dataset.manualBound){clear.dataset.manualBound='1';clear.addEventListener('click',function(){manualConvoy.assignments={};manualConvoy.selectedId=null;renderManualConvoy();});}
