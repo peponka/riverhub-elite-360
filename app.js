@@ -524,12 +524,19 @@ app.post('/api/ai/optimize-convoy', aiLimiter, authenticateUser, async (req, res
 
         // SECURITY: extract companyId from user profile, not from client body
         const sb = req.app.locals.supabase;
-        const { data: profile } = await sb.from('user_profiles').select('company_id').eq('user_id', req.user.id).single();
+        const { data: profile } = await sb.from('user_profiles').select('company_id, role').eq('user_id', req.user.id).single();
         const safeCompanyId = profile?.company_id;
-        if (!safeCompanyId) return res.status(403).json({ error: 'Company ID required' });
+        const isSuperadmin = String(profile?.role || '').toLowerCase() === 'superadmin';
+        if (!safeCompanyId && !isSuperadmin) return res.status(403).json({ error: 'Company ID required' });
         
         const headers = { 'apikey': supabaseKey, 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json' };
-        const vesselsRes = await fetch(`${supabaseUrl}/rest/v1/vessels?company_id=eq.${safeCompanyId}&select=id,name,type,status,draft,engine_power,fuel_capacity,current_lat,current_lng`, { headers });
+        const vesselUrl = new URL('/rest/v1/vessels', supabaseUrl);
+        vesselUrl.searchParams.set('select', 'id,name,type,status,draft,engine_power,fuel_capacity,current_lat,current_lng');
+        // A superadmin already has database-level authorization to view all fleets, so
+        // the optimizer must use the same visible fleet as the screen. Tenant users
+        // remain strictly scoped to their own company.
+        if (!isSuperadmin) vesselUrl.searchParams.set('company_id', `eq.${safeCompanyId}`);
+        const vesselsRes = await fetch(vesselUrl, { headers });
         const vessels = await vesselsRes.json();
         
         console.log(`[Convoy AI] vessels: ${Array.isArray(vessels) ? vessels.length : 'ERR'}, status: ${vesselsRes.status}`);
