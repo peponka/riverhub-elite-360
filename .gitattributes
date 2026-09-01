@@ -1,0 +1,18 @@
+# Normaliza todos los archivos de texto a LF al confirmarlos en el repo,
+# sin importar el fin de línea que use el editor/SO de quien commitea.
+* text=auto eol=lf
+
+# Binarios: nunca tocar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.gif binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
+*.pdf binary
+*.zip binary
