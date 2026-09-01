@@ -80,38 +80,36 @@
             <div class="sidebar-user"><div class="user-avatar" id="user-initials">--</div><div class="user-info"><div class="user-name" id="user-display">Cargando...</div><div class="user-role">SUPERADMIN - ASU</div></div></div>
         </div>
         <div class="sidebar-nav">
-            <div class="nav-section-label">AHORA</div>
+            <div class="nav-section-label">Núcleo</div>
             <a class="nav-item active" data-view="dashboard"><i class="fa-solid fa-grip"></i>Panel de Control</a>
             <a class="nav-item" data-view="mapa"><i class="fa-solid fa-map"></i>Mapa de Flota</a>
-            <a class="nav-item" data-view="copiloto"><i class="fa-solid fa-robot"></i>Copiloto IA</a>
-            <div class="nav-section-label">PLANIFICACIÓN</div>
+            <a class="nav-item" data-view="fleet"><i class="fa-solid fa-anchor"></i>Gestion de Flota</a>
+            <a class="nav-item" data-view="bitacora"><i class="fa-solid fa-book"></i>Bitacora Digital</a>
+            <a class="nav-item" data-view="combustible"><i class="fa-solid fa-gas-pump"></i>Combustible</a>
+            <a class="nav-item" data-view="mantenimiento"><i class="fa-solid fa-wrench"></i>Mantenimiento</a>
             <a class="nav-item" data-view="convoy"><i class="fa-solid fa-link"></i>Armador de Convoy</a>
             <a class="nav-item" data-view="viajes"><i class="fa-solid fa-file-lines"></i>Gestion de Viajes</a>
-            <a class="nav-item" data-view="prezarpe"><i class="fa-solid fa-clipboard-check"></i>Pre-Zarpe</a>
-            <div class="nav-section-label">FLOTA</div>
-            <a class="nav-item" data-view="fleet"><i class="fa-solid fa-anchor"></i>Gestion de Flota</a>
-            <a class="nav-item" data-view="tripulacion"><i class="fa-solid fa-users"></i>Tripulacion &amp; Safety</a>
-            <a class="nav-item" data-view="combustible"><i class="fa-solid fa-gas-pump"></i>Combustible</a>
-            <a class="nav-item" data-view="liquidos"><i class="fa-solid fa-droplet"></i>Líquidos (Tanques)</a>
-            <a class="nav-item" data-view="calado"><i class="fa-solid fa-ruler-vertical"></i>Calados &amp; Hidrometria</a>
-            <a class="nav-item" data-view="mantenimiento"><i class="fa-solid fa-wrench"></i>Mantenimiento</a>
-            <a class="nav-item" data-view="panol"><i class="fa-solid fa-box-archive"></i>Panol (Inventario)</a>
-            <a class="nav-item" data-view="incidentes"><i class="fa-solid fa-triangle-exclamation"></i>Incidentes</a>
-            <a class="nav-item" data-view="contratos"><i class="fa-solid fa-file-contract"></i>Contratos de Flete</a>
-            <div class="nav-section-label">COMUNICACIÓN</div>
-            <a class="nav-item" data-view="bitacora"><i class="fa-solid fa-book"></i>Bitacora Digital</a>
-            <a class="nav-item" data-view="comunicaciones"><i class="fa-solid fa-tower-broadcast"></i>Comunicaciones</a>
-            <a class="nav-item" onclick="window.location.href='admin-whatsapp-viabarcazas.html'" style="cursor:pointer"><i class="fab fa-whatsapp" style="color:#25D366"></i>WhatsApp Alerts<span id="nav-wa-badge" style="background:#25D366;color:#fff;font-size:10px;font-weight:700;border-radius:10px;padding:2px 7px;margin-left:auto;display:none">0</span></a>
-            <div class="nav-section-label">INTELIGENCIA</div>
-            <a class="nav-item" data-view="hidrologia"><i class="fa-solid fa-water"></i>Pronostico Hidrovia</a>
-            <a class="nav-item" data-view="reportes"><i class="fa-solid fa-chart-pie"></i>Reportes &amp; Analytics</a>
-            <a class="nav-item" data-view="briefing"><i class="fa-solid fa-newspaper"></i>Briefing Diario</a>
-            <a class="nav-item" data-view="tracking"><i class="fa-solid fa-location-dot"></i>Tracking de Cargas</a>
-            <a class="nav-item" onclick="window.location.href='admin-facturacion-ia-viabarcazas.html'" style="cursor:pointer"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Facturación IA</a>
-            <div class="nav-section-label">CUENTA</div>
-            <a class="nav-item" data-view="planes"><i class="fa-solid fa-credit-card"></i>Planes &amp; Facturacion</a>
-            <a class="nav-item" onclick="window.location.href='portal-clientes.html'" style="cursor:pointer"><i class="fa-solid fa-building" style="color:#059669"></i>Portal de Cliente</a>
-            <a class="nav-item" data-view="admin" id="nav-admin" style="display:none"><i class="fa-solid fa-shield-halved"></i>Panel Admin</a>
+            <details class="nav-more">
+                <summary class="nav-section-label">Más módulos <i class="fa-solid fa-chevron-down nav-more-chevron"></i></summary>
+                <a class="nav-item" data-view="copiloto"><i class="fa-solid fa-robot"></i>Copiloto IA</a>
+                <a class="nav-item" data-view="prezarpe"><i class="fa-solid fa-clipboard-check"></i>Pre-Zarpe</a>
+                <a class="nav-item" data-view="tripulacion"><i class="fa-solid fa-users"></i>Tripulacion &amp; Safety</a>
+                <a class="nav-item" data-view="liquidos"><i class="fa-solid fa-droplet"></i>Líquidos (Tanques)</a>
+                <a class="nav-item" data-view="calado"><i class="fa-solid fa-ruler-vertical"></i>Calados &amp; Hidrometria</a>
+                <a class="nav-item" data-view="panol"><i class="fa-solid fa-box-archive"></i>Panol (Inventario)</a>
+                <a class="nav-item" data-view="incidentes"><i class="fa-solid fa-triangle-exclamation"></i>Incidentes</a>
+                <a class="nav-item" data-view="contratos"><i class="fa-solid fa-file-contract"></i>Contratos de Flete</a>
+                <a class="nav-item" data-view="comunicaciones"><i class="fa-solid fa-tower-broadcast"></i>Comunicaciones</a>
+                <a class="nav-item" onclick="window.location.href='admin-whatsapp-viabarcazas.html'" style="cursor:pointer"><i class="fab fa-whatsapp" style="color:#25D366"></i>WhatsApp Alerts<span id="nav-wa-badge" style="background:#25D366;color:#fff;font-size:10px;font-weight:700;border-radius:10px;padding:2px 7px;margin-left:auto;display:none">0</span></a>
+                <a class="nav-item" data-view="hidrologia"><i class="fa-solid fa-water"></i>Pronostico Hidrovia</a>
+                <a class="nav-item" data-view="reportes"><i class="fa-solid fa-chart-pie"></i>Reportes &amp; Analytics</a>
+                <a class="nav-item" data-view="briefing"><i class="fa-solid fa-newspaper"></i>Briefing Diario</a>
+                <a class="nav-item" data-view="tracking"><i class="fa-solid fa-location-dot"></i>Tracking de Cargas</a>
+                <a class="nav-item" onclick="window.location.href='admin-facturacion-ia-viabarcazas.html'" style="cursor:pointer"><i class="fa-solid fa-file-invoice-dollar" style="color:#7C3AED"></i>Facturación IA</a>
+                <a class="nav-item" data-view="planes"><i class="fa-solid fa-credit-card"></i>Planes &amp; Facturacion</a>
+                <a class="nav-item" onclick="window.location.href='portal-clientes.html'" style="cursor:pointer"><i class="fa-solid fa-building" style="color:#059669"></i>Portal de Cliente</a>
+                <a class="nav-item" data-view="admin" id="nav-admin" style="display:none"><i class="fa-solid fa-shield-halved"></i>Panel Admin</a>
+            </details>
             <div style="padding:20px 24px;margin-top:auto;"><button class="btn-secondary" style="width:100%;" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesion</button></div>
         </div>
     </nav>
@@ -145,7 +143,7 @@
                 <div style="display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--separator);border-radius:14px;overflow:hidden;margin-bottom:16px" id="dash-kpi-grid">
                     <div class="kpi-card" style="position:relative;overflow:hidden">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                            <div class="kpi-label">FLOTA ACTIVA</div>
+                            <div class="kpi-label">Flota activa</div>
                             <div style="width:30px;height:30px;border-radius:9px;background:var(--accent)22;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-ship" style="color:var(--accent);font-size:13px"></i></div>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px">
@@ -156,7 +154,7 @@
                     </div>
                     <div class="kpi-card" style="position:relative;overflow:hidden">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                            <div class="kpi-label">ALARMAS CRÍTICAS</div>
+                            <div class="kpi-label">Alarmas críticas</div>
                             <div style="width:30px;height:30px;border-radius:9px;background:var(--warning)22;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);font-size:13px"></i></div>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px">
@@ -166,7 +164,7 @@
                     </div>
                     <div class="kpi-card" style="position:relative;overflow:hidden">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                            <div class="kpi-label">CONSUMO TOTAL</div>
+                            <div class="kpi-label">Consumo total</div>
                             <div style="width:30px;height:30px;border-radius:9px;background:var(--orange)22;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-gas-pump" style="color:var(--orange);font-size:13px"></i></div>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
@@ -177,7 +175,7 @@
                     </div>
                     <div class="kpi-card" style="position:relative;overflow:hidden">
                         <div style="display:flex;align-items:center;justify-content:space-between">
-                            <div class="kpi-label">CALADO MÍNIMO</div>
+                            <div class="kpi-label">Calado mínimo</div>
                             <div style="width:30px;height:30px;border-radius:9px;background:var(--accent-teal)22;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-ruler-vertical" style="color:var(--accent-teal);font-size:13px"></i></div>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
@@ -192,7 +190,7 @@
                                  como activas/total: es disponibilidad de flota, no
                                  puntualidad de rutas. Se renombra para no prometer
                                  una métrica que el sistema todavía no calcula. -->
-                            <div class="kpi-label">DISPONIBILIDAD FLOTA</div>
+                            <div class="kpi-label">Disponibilidad flota</div>
                             <div style="width:30px;height:30px;border-radius:9px;background:var(--success)22;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-ship" style="color:var(--success);font-size:13px"></i></div>
                         </div>
                         <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
@@ -207,7 +205,7 @@
                 <div onclick="window.location.href='admin-whatsapp-viabarcazas.html'" style="cursor:pointer;background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;box-shadow:0 2px 8px rgba(37,211,102,0.25)">
                     <i class="fab fa-whatsapp" style="font-size:28px;color:white;opacity:0.9;flex-shrink:0"></i>
                     <div style="flex:1;min-width:0">
-                        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:1px">ALERTAS WHATSAPP · META API</div>
+                        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:0.5px">Alertas WhatsApp · Meta API</div>
                         <div style="font-size:13px;color:white;margin-top:3px"><span id="dash-wa-contacts">--</span> contactos activos · <span id="dash-wa-sent">--</span> enviados hoy</div>
                     </div>
                     <button onclick="event.stopPropagation();window.location.href='admin-whatsapp-viabarcazas.html'" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:white;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0"><i class="fab fa-whatsapp"></i> Enviar Alerta</button>
@@ -219,7 +217,7 @@
                     <div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
                             <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px">
-                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-sun" style="font-size:24px;color:var(--warning)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">METEOROLOGÍA · ASU</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-weather2">Cargando...</div></div></div>
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-sun" style="font-size:24px;color:var(--warning)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">Meteorología · ASU</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-weather2">Cargando...</div></div></div>
                                 <div style="display:flex;gap:16px;margin-top:10px">
                                     <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-temperature-half" style="width:14px"></i> <span id="dash-temp">--</span>°C</div>
                                     <div style="font-size:11px;color:var(--text-secondary)"><i class="fa-solid fa-wind" style="width:14px"></i> <span id="dash-wind">--</span> km/h</div>
@@ -227,7 +225,7 @@
                                 </div>
                             </div>
                             <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:18px">
-                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-water" style="font-size:24px;color:var(--accent)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">HIDROVÍA · NIVEL</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-hidro-status">Consultando...</div></div></div>
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fa-solid fa-water" style="font-size:24px;color:var(--accent)"></i><div><div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">Hidrovía · nivel</div><div style="font-size:13px;font-weight:500;margin-top:2px" id="dash-hidro-status">Consultando...</div></div></div>
                                 <div style="display:flex;gap:16px;margin-top:10px">
                                     <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">ASU</span> <span id="dash-h-asu">--</span></div>
                                     <div style="font-size:11px;color:var(--text-secondary)"><span style="font-weight:600">PIL</span> <span id="dash-h-pir">--</span></div>
@@ -236,23 +234,23 @@
                             </div>
                         </div>
                         <!-- Vessel Cards Grid -->
-                        <div class="section-title" style="display:flex;align-items:center;justify-content:space-between"><span>Embarcaciones Recientes</span><span style="font-size:11px;color:var(--accent);cursor:pointer" onclick="navigate('fleet')">Ver todas →</span></div>
-                        <div id="dash-vessels" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+                        <div class="section-title" style="display:flex;align-items:center;justify-content:space-between"><span>Atención Requerida</span><span style="font-size:11px;color:var(--accent);cursor:pointer" onclick="navigate('fleet')">Ver toda la flota →</span></div>
+                        <div id="dash-vessels" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div><div class="empty-state" id="dash-vessels-empty" style="display:none;padding:24px 12px"><i class="fa-regular fa-circle-check" style="font-size:22px"></i><p style="font-size:12px">Toda la flota operativa. Sin unidades que requieran atención.</p></div>
                         <!-- Dashboard Mini Charts -->
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
                             <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:16px">
                                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                                    <div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">COMBUSTIBLE · 7 DÍAS</div>
+                                    <div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">Combustible · 7 días</div>
                                     <i class="fa-solid fa-gas-pump" style="font-size:12px;color:var(--accent);opacity:0.5"></i>
                                 </div>
-                                <canvas id="dash-fuel-trend" height="100"></canvas>
+                                <canvas id="dash-fuel-trend" height="100"></canvas><div class="empty-state empty-state-compact" id="dash-fuel-trend-empty" style="display:none"><i class="fa-solid fa-gas-pump"></i><p>Todavía no hay cargas suficientes para graficar la tendencia.</p></div>
                             </div>
                             <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:16px">
                                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                                    <div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:1px">FLOTA · UTILIZACIÓN</div>
+                                    <div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px">Flota · utilización</div>
                                     <i class="fa-solid fa-chart-pie" style="font-size:12px;color:var(--success);opacity:0.5"></i>
                                 </div>
-                                <canvas id="dash-fleet-util" height="100"></canvas>
+                                <canvas id="dash-fleet-util" height="100"></canvas><div class="empty-state empty-state-compact" id="dash-fleet-util-empty" style="display:none"><i class="fa-solid fa-ship"></i><p>Registrá tu primera embarcación para ver esta métrica.</p></div>
                             </div>
                         </div>
                         <!-- Activity feed -->
@@ -270,12 +268,12 @@
                         <div id="dash-live-vessels" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto"></div>
                         <!-- Selected vessel detail -->
                         <div id="dash-vessel-detail" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--separator)">
-                            <div style="font-size:10px;font-weight:600;letter-spacing:0.5px;color:var(--text-secondary);margin-bottom:8px">SELECCIONADA · <span id="dash-sel-imo">--</span></div>
+                            <div style="font-size:10px;font-weight:600;letter-spacing:0.5px;color:var(--text-secondary);margin-bottom:8px">Seleccionada · <span id="dash-sel-imo">--</span></div>
                             <div style="font-size:18px;font-weight:700;color:var(--text-primary)" id="dash-sel-name">--</div>
                             <div style="font-size:11px;color:var(--text-secondary);margin-top:2px" id="dash-sel-route">--</div>
                             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
-                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">CONVOY</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-convoy">--</div></div>
-                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">COMBUSTIBLE</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-fuel">--%</div></div>
+                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">Convoy</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-convoy">--</div></div>
+                                <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">Combustible</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-fuel">--%</div></div>
                                 <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px">ETA</div><div style="font-size:16px;font-weight:700;margin-top:2px" id="dash-sel-eta">--</div></div>
                             </div>
                             <div style="display:flex;gap:8px;margin-top:12px">
@@ -294,9 +292,9 @@
             <!-- FLEET -->
             <div class="view" id="view-fleet">
                 <div class="fleet-page-header"><div><div class="viabarcazas-title">Gestión de <em>Flota.</em></div><div class="viabarcazas-subtitle">CONTROL DE ACTIVOS · FLOTA OPERATIVA</div></div><div class="header-actions"><button class="btn-export" onclick="exportFleet('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i><span>PDF</span></button><button class="btn-export" onclick="exportFleet('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i><span>Excel</span></button><button class="btn-primary" onclick="openModal('fleet')"><i class="fa-solid fa-plus"></i> Agregar activo</button></div></div>
-                <div class="fleet-stat-row"><div class="fleet-stat-cell fleet-stat-total"><div class="fleet-stat-top"><span class="fleet-stat-icon"><i class="fa-solid fa-ship"></i></span><span class="fleet-stat-kicker">INVENTARIO</span></div><div class="stat-val" id="fleet-total">0</div><div class="stat-lbl">Total de activos</div></div><div class="fleet-stat-cell fleet-stat-service"><div class="fleet-stat-top"><span class="fleet-stat-icon"><i class="fa-solid fa-signal"></i></span><span class="fleet-stat-kicker">OPERACIÓN</span></div><div class="stat-val" id="fleet-service">0</div><div class="stat-lbl">En servicio</div></div><div class="fleet-stat-cell fleet-stat-dock"><div class="fleet-stat-top"><span class="fleet-stat-icon"><i class="fa-solid fa-anchor"></i></span><span class="fleet-stat-kicker">MANTENIMIENTO</span></div><div class="stat-val" id="fleet-dock">0</div><div class="stat-lbl">En dique o taller</div></div></div>
-                <div class="fleet-empty-state" id="fleet-empty-state"><div class="fleet-empty-icon"><i class="fa-solid fa-ship"></i></div><div><div class="fleet-empty-kicker">FLOTA TODAVÍA SIN REGISTROS</div><h2>Empezá por registrar tu primer activo</h2><p>Agregá un remolcador, barcaza o embarcación para habilitar el seguimiento operativo y la distribución de tu flota.</p></div><button class="btn-primary" onclick="openModal('fleet')"><i class="fa-solid fa-plus"></i> Registrar embarcación</button></div>
-                <div class="fleet-section-heading" id="fleet-analytics-heading"><div><span class="fleet-section-kicker">LECTURA OPERATIVA</span><h2>Composición de la flota</h2></div><span class="fleet-updated"><i class="fa-regular fa-circle-check"></i> Datos sincronizados</span></div>
+                <div class="fleet-stat-row"><div class="fleet-stat-cell fleet-stat-total"><div class="fleet-stat-top"><span class="fleet-stat-icon"><i class="fa-solid fa-ship"></i></span><span class="fleet-stat-kicker">Inventario</span></div><div class="stat-val" id="fleet-total">0</div><div class="stat-lbl">Total de activos</div></div><div class="fleet-stat-cell fleet-stat-service"><div class="fleet-stat-top"><span class="fleet-stat-icon"><i class="fa-solid fa-signal"></i></span><span class="fleet-stat-kicker">Operación</span></div><div class="stat-val" id="fleet-service">0</div><div class="stat-lbl">En servicio</div></div><div class="fleet-stat-cell fleet-stat-dock"><div class="fleet-stat-top"><span class="fleet-stat-icon"><i class="fa-solid fa-anchor"></i></span><span class="fleet-stat-kicker">Mantenimiento</span></div><div class="stat-val" id="fleet-dock">0</div><div class="stat-lbl">En dique o taller</div></div></div>
+                <div class="fleet-empty-state" id="fleet-empty-state"><div class="fleet-empty-icon"><i class="fa-solid fa-ship"></i></div><div><div class="fleet-empty-kicker">Flota todavía sin registros</div><h2>Empezá por registrar tu primer activo</h2><p>Agregá un remolcador, barcaza o embarcación para habilitar el seguimiento operativo y la distribución de tu flota.</p></div><button class="btn-primary" onclick="openModal('fleet')"><i class="fa-solid fa-plus"></i> Registrar embarcación</button></div>
+                <div class="fleet-section-heading" id="fleet-analytics-heading"><div><span class="fleet-section-kicker">Lectura operativa</span><h2>Composición de la flota</h2></div><span class="fleet-updated"><i class="fa-regular fa-circle-check"></i> Datos sincronizados</span></div>
                 <div class="fleet-charts-row" id="fleet-charts-row">
                     <div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:14px;padding:20px">
                         <div style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:14px">Distribución por estado</div>
@@ -307,7 +305,7 @@
                         <div style="height:180px"><canvas id="fleet-type-chart"></canvas></div>
                     </div>
                 </div>
-                <div class="fleet-section-heading fleet-assets-heading"><div><span class="fleet-section-kicker">ACTIVOS REGISTRADOS</span><h2>Embarcaciones de la flota</h2></div><span class="fleet-updated" id="fleet-assets-count">0 activos</span></div>
+                <div class="fleet-section-heading fleet-assets-heading"><div><span class="fleet-section-kicker">Activos registrados</span><h2>Embarcaciones de la flota</h2></div><span class="fleet-updated" id="fleet-assets-count">0 activos</span></div>
                 <table class="data-table"><thead><tr><th>EMBARCACIÓN</th><th>TIPO</th><th>ESTADO</th><th>UBICACIÓN</th></tr></thead><tbody id="fleet-tbody"></tbody></table>
             </div>
             <!-- COPILOTO -->
@@ -351,7 +349,7 @@
                 </div>
 
                 <!-- CHAT -->
-                <div style="margin-top:20px;font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:1px;text-transform:uppercase;">Asistente Conversacional</div>
+                <div style="margin-top:20px;font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px;">Asistente Conversacional</div>
                 <div style="position:relative;margin-top:8px;border-radius:10px;overflow:hidden;background:var(--surface-low);">
                     <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;opacity:0.10;pointer-events:none;">
                         <ellipse cx="200" cy="110" rx="150" ry="150" fill="none" stroke="#25D366" stroke-width="1"/>
@@ -393,13 +391,13 @@
                 </div>
 
                 <div style="margin-top:20px">
-                    <div class="convoy-remolcador convoy-drop-zone" data-slot="proa"><i class="fa-regular fa-clone"></i> REMOLCADOR (Proa)</div>
-                    <div style="margin:8px 0;font-size:10px;color:var(--text-secondary);text-align:center;letter-spacing:1px;">BARCAZAS</div>
+                    <div class="convoy-remolcador convoy-drop-zone" data-slot="proa"><i class="fa-regular fa-clone"></i> Remolcador (Proa)</div>
+                    <div style="margin:8px 0;font-size:10px;color:var(--text-secondary);text-align:center;letter-spacing:0.5px;">Barcazas</div>
                     <div class="convoy-grid"><div class="convoy-slot convoy-drop-zone" data-slot="f1-p1"><i class="fa-regular fa-clone"></i>F1-P1</div><div class="convoy-slot convoy-drop-zone" data-slot="f1-p2"><i class="fa-regular fa-clone"></i>F1-P2</div><div class="convoy-slot convoy-drop-zone" data-slot="f1-p3"><i class="fa-regular fa-clone"></i>F1-P3</div><div class="convoy-slot convoy-drop-zone" data-slot="f1-p4"><i class="fa-regular fa-clone"></i>F1-P4</div><div class="convoy-slot convoy-drop-zone" data-slot="f2-p1"><i class="fa-regular fa-clone"></i>F2-P1</div><div class="convoy-slot convoy-drop-zone" data-slot="f2-p2"><i class="fa-regular fa-clone"></i>F2-P2</div><div class="convoy-slot convoy-drop-zone" data-slot="f2-p3"><i class="fa-regular fa-clone"></i>F2-P3</div><div class="convoy-slot convoy-drop-zone" data-slot="f2-p4"><i class="fa-regular fa-clone"></i>F2-P4</div></div>
-                    <div class="convoy-remolcador convoy-drop-zone" data-slot="popa" style="margin-top:8px"><i class="fa-regular fa-clone"></i> REMOLCADOR (Popa)</div>
+                    <div class="convoy-remolcador convoy-drop-zone" data-slot="popa" style="margin-top:8px"><i class="fa-regular fa-clone"></i> Remolcador (Popa)</div>
                 </div>
                 <div class="convoy-manual-help" id="convoy-manual-help"><span id="convoy-manual-instruction">Arrastrá una embarcación a un espacio, o seleccionála y hacé clic en el espacio. Hacé clic en una unidad ubicada para quitarla.</span><button type="button" id="convoy-clear-btn">Limpiar formación</button></div>
-                <div class="viabarcazas-subtitle" style="margin-top:24px">FLOTA DISPONIBLE</div>
+                <div class="viabarcazas-subtitle" style="margin-top:24px;text-transform:none">Flota disponible</div>
                 <div class="fleet-chips" id="convoy-chips"></div>
             </div>
             <!-- VIAJES -->
@@ -411,10 +409,10 @@
             <!-- BITACORA -->
             <div class="view" id="view-bitacora">
                 <div class="view-header logbook-page-header"><div><div class="viabarcazas-title">Bitácora<br><em>Digital.</em></div><div class="viabarcazas-subtitle">REGISTRO OPERATIVO - HISTORIAL</div></div><div class="header-actions"><button class="btn-export" onclick="exportBitacora('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i></button><button class="btn-export" onclick="exportBitacora('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i></button><button class="btn-primary" onclick="openModal('bitacora')"><i class="fa-solid fa-plus"></i> Nueva entrada</button></div></div>
-                <div class="stat-row logbook-stat-row"><div class="stat-cell logbook-stat-cell logbook-stat-total"><span class="logbook-stat-kicker">HISTORIAL</span><div class="stat-val" id="bit-total">0</div><div class="stat-lbl">Entradas registradas</div></div><div class="stat-cell logbook-stat-cell logbook-stat-today"><span class="logbook-stat-kicker">ACTIVIDAD</span><div class="stat-val" id="bit-today">0</div><div class="stat-lbl">Entradas de hoy</div></div><div class="stat-cell logbook-stat-cell logbook-stat-categories"><span class="logbook-stat-kicker">COBERTURA</span><div class="stat-val" id="bit-categories">0</div><div class="stat-lbl">Categorías operativas</div></div></div>
-                <div class="logbook-search search-wrapper"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="bit-search" placeholder="Buscar por embarcación, tipo o descripción..." oninput="filterBitacora()"><span class="logbook-search-hint">ÚLTIMAS 30 ENTRADAS</span></div>
-                <div class="logbook-list-heading"><div><span class="logbook-section-kicker">TRAZABILIDAD OPERATIVA</span><h2>Actividad reciente</h2></div><span class="logbook-list-note"><i class="fa-solid fa-clock-rotate-left"></i> Más recientes primero</span></div>
-                <div id="bitacora-list"></div><div class="logbook-empty-state" id="bitacora-empty"><div class="logbook-empty-icon"><i class="fa-solid fa-book-open"></i></div><div><span class="logbook-section-kicker">HISTORIAL LIMPIO</span><h2>Sin entradas registradas</h2><p>Agregá una observación para dejar constancia de la operación y facilitar el seguimiento.</p></div><button class="btn-primary" onclick="openModal('bitacora')"><i class="fa-solid fa-plus"></i> Nueva entrada</button></div>
+                <div class="stat-row logbook-stat-row"><div class="stat-cell logbook-stat-cell logbook-stat-total"><span class="logbook-stat-kicker">Historial</span><div class="stat-val" id="bit-total">0</div><div class="stat-lbl">Entradas registradas</div></div><div class="stat-cell logbook-stat-cell logbook-stat-today"><span class="logbook-stat-kicker">Actividad</span><div class="stat-val" id="bit-today">0</div><div class="stat-lbl">Entradas de hoy</div></div><div class="stat-cell logbook-stat-cell logbook-stat-categories"><span class="logbook-stat-kicker">Cobertura</span><div class="stat-val" id="bit-categories">0</div><div class="stat-lbl">Categorías operativas</div></div></div>
+                <div class="logbook-search search-wrapper"><i class="fa-solid fa-magnifying-glass"></i><input class="search-bar" id="bit-search" placeholder="Buscar por embarcación, tipo o descripción..." oninput="filterBitacora()"><span class="logbook-search-hint">Últimas 30 entradas</span></div>
+                <div class="logbook-list-heading"><div><span class="logbook-section-kicker">Trazabilidad operativa</span><h2>Actividad reciente</h2></div><span class="logbook-list-note"><i class="fa-solid fa-clock-rotate-left"></i> Más recientes primero</span></div>
+                <div id="bitacora-list"></div><div class="logbook-empty-state" id="bitacora-empty"><div class="logbook-empty-icon"><i class="fa-solid fa-book-open"></i></div><div><span class="logbook-section-kicker">Historial limpio</span><h2>Sin entradas registradas</h2><p>Agregá una observación para dejar constancia de la operación y facilitar el seguimiento.</p></div><button class="btn-primary" onclick="openModal('bitacora')"><i class="fa-solid fa-plus"></i> Nueva entrada</button></div>
             </div>
             <!-- COMUNICACIONES -->
             <div class="view" id="view-comunicaciones">
@@ -467,20 +465,20 @@
             <!-- COMBUSTIBLE -->
             <div class="view" id="view-combustible">
                 <div class="fuel-page-header"><div><div class="viabarcazas-title">Bunker y <em>Combustible.</em></div><div class="viabarcazas-subtitle">GESTIÓN DE CONSUMO · CONTROL OPERATIVO</div></div><div class="header-actions"><button class="btn-export" onclick="exportFuel('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i><span>PDF</span></button><button class="btn-export" onclick="exportFuel('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i><span>Excel</span></button><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Registrar carga</button></div></div>
-                <div class="fuel-stat-row"><div class="fuel-stat-cell fuel-stat-loads"><div class="fuel-stat-top"><span class="fuel-stat-icon"><i class="fa-solid fa-bolt"></i></span><span class="fuel-stat-kicker">ACTIVIDAD</span></div><div class="stat-val" id="fuel-count">0</div><div class="stat-lbl">Cargas registradas</div><div class="fuel-stat-foot">en el período actual</div></div><div class="fuel-stat-cell fuel-stat-volume"><div class="fuel-stat-top"><span class="fuel-stat-icon"><i class="fa-solid fa-droplet"></i></span><span class="fuel-stat-kicker">VOLUMEN</span></div><div class="stat-val" id="fuel-total">0L</div><div class="stat-lbl">Consumo acumulado</div><div class="fuel-stat-foot">litros cargados</div></div><div class="fuel-stat-cell fuel-stat-efficiency"><div class="fuel-stat-top"><span class="fuel-stat-icon"><i class="fa-solid fa-gauge-high"></i></span><span class="fuel-stat-kicker">RENDIMIENTO</span></div><div class="stat-val">--</div><div class="stat-lbl">Eficiencia operativa</div><div class="fuel-stat-foot">requiere datos de navegación</div></div></div>
+                <div class="fuel-stat-row"><div class="fuel-stat-cell fuel-stat-loads"><div class="fuel-stat-top"><span class="fuel-stat-icon"><i class="fa-solid fa-bolt"></i></span><span class="fuel-stat-kicker">Actividad</span></div><div class="stat-val" id="fuel-count">0</div><div class="stat-lbl">Cargas registradas</div><div class="fuel-stat-foot">en el período actual</div></div><div class="fuel-stat-cell fuel-stat-volume"><div class="fuel-stat-top"><span class="fuel-stat-icon"><i class="fa-solid fa-droplet"></i></span><span class="fuel-stat-kicker">Volumen</span></div><div class="stat-val" id="fuel-total">0L</div><div class="stat-lbl">Consumo acumulado</div><div class="fuel-stat-foot">litros cargados</div></div><div class="fuel-stat-cell fuel-stat-efficiency"><div class="fuel-stat-top"><span class="fuel-stat-icon"><i class="fa-solid fa-gauge-high"></i></span><span class="fuel-stat-kicker">Rendimiento</span></div><div class="stat-val">--</div><div class="stat-lbl">Eficiencia operativa</div><div class="fuel-stat-foot">requiere datos de navegación</div></div></div>
                 <div class="fuel-reference" id="fuel-reference"></div>
                 <div class="fuel-analytics-row" id="fuel-analytics-row">
                     <div class="fuel-panel fuel-trend-panel">
-                        <div class="fuel-panel-heading"><div><span class="fuel-panel-kicker">COMPORTAMIENTO</span><h2>Tendencia de consumo</h2><p>Litros cargados durante los últimos 7 días</p></div><span class="fuel-panel-badge"><i class="fa-solid fa-chart-line"></i> 7 días</span></div>
+                        <div class="fuel-panel-heading"><div><span class="fuel-panel-kicker">Comportamiento</span><h2>Tendencia de consumo</h2><p>Litros cargados durante los últimos 7 días</p></div><span class="fuel-panel-badge"><i class="fa-solid fa-chart-line"></i> 7 días</span></div>
                         <div style="height:220px"><canvas id="fuel-trend-chart"></canvas></div>
                     </div>
                     <div class="fuel-panel fuel-insights-panel">
-                        <div class="fuel-panel-heading"><div><span class="fuel-panel-kicker">LECTURA IA</span><h2><i class="fa-solid fa-lightbulb"></i> Insights y alertas</h2></div></div>
+                        <div class="fuel-panel-heading"><div><span class="fuel-panel-kicker">Lectura IA</span><h2><i class="fa-solid fa-lightbulb"></i> Insights y alertas</h2></div></div>
                         <div id="fuel-insights" style="display:flex;flex-direction:column;gap:10px"></div>
                     </div>
                 </div>
-                <div class="fuel-list-heading"><div><span class="fuel-panel-kicker">REGISTRO OPERATIVO</span><h2>Cargas recientes</h2></div><span class="fuel-list-note"><i class="fa-regular fa-clock"></i> Últimas 20 cargas</span></div>
-                <div id="fuel-list"></div><div class="fuel-empty-state" id="fuel-empty"><div class="fuel-empty-icon"><i class="fa-solid fa-gas-pump"></i></div><div><span class="fuel-panel-kicker">SIN REGISTROS AÚN</span><h2>Registrá la primera carga de combustible</h2><p>Así vas a poder comparar consumo, detectar desvíos y seguir el costo operativo de la flota.</p></div><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Registrar carga</button></div>
+                <div class="fuel-list-heading"><div><span class="fuel-panel-kicker">Registro operativo</span><h2>Cargas recientes</h2></div><span class="fuel-list-note"><i class="fa-regular fa-clock"></i> Últimas 20 cargas</span></div>
+                <div id="fuel-list"></div><div class="fuel-empty-state" id="fuel-empty"><div class="fuel-empty-icon"><i class="fa-solid fa-gas-pump"></i></div><div><span class="fuel-panel-kicker">Sin registros aún</span><h2>Registrá la primera carga de combustible</h2><p>Así vas a poder comparar consumo, detectar desvíos y seguir el costo operativo de la flota.</p></div><button class="btn-primary" onclick="openModal('fuel')"><i class="fa-solid fa-plus"></i> Registrar carga</button></div>
             </div>
             <!-- LIQUIDOS (TANQUES) -->
             <div class="view" id="view-liquidos">
@@ -491,8 +489,8 @@
             <!-- MANTENIMIENTO -->
             <div class="view" id="view-mantenimiento">
                 <div class="maint-page-header"><div><div class="viabarcazas-title">Órdenes de <em>Mantenimiento.</em></div><div class="viabarcazas-subtitle">GESTIÓN PREVENTIVA · CORRECTIVA · CRÍTICA</div></div><div class="header-actions"><button class="btn-export" onclick="exportMaint('pdf')" title="Exportar PDF"><i class="fa-solid fa-file-pdf"></i><span>PDF</span></button><button class="btn-export" onclick="exportMaint('excel')" title="Exportar Excel"><i class="fa-solid fa-file-excel"></i><span>Excel</span></button><button class="btn-primary" onclick="openModal('maint')"><i class="fa-solid fa-plus"></i> Nueva orden</button></div></div>
-                <div class="maint-stat-row"><div class="maint-stat-cell maint-stat-pending"><div class="maint-stat-top"><span class="maint-stat-icon"><i class="fa-solid fa-clock"></i></span><span class="maint-stat-kicker">POR RESOLVER</span></div><div class="stat-val" id="maint-pending">0</div><div class="stat-lbl">Órdenes pendientes</div></div><div class="maint-stat-cell maint-stat-progress"><div class="maint-stat-top"><span class="maint-stat-icon"><i class="fa-solid fa-spinner"></i></span><span class="maint-stat-kicker">EN TALLER</span></div><div class="stat-val" id="maint-progress">0</div><div class="stat-lbl">En progreso</div></div><div class="maint-stat-cell maint-stat-done"><div class="maint-stat-top"><span class="maint-stat-icon"><i class="fa-solid fa-circle-check"></i></span><span class="maint-stat-kicker">RESULTADO</span></div><div class="stat-val" id="maint-done">0</div><div class="stat-lbl">Completadas</div></div></div>
-                <div class="maint-list-heading"><div><span class="maint-section-kicker">SEGUIMIENTO OPERATIVO</span><h2>Órdenes recientes</h2></div><span class="maint-list-note"><i class="fa-solid fa-layer-group"></i> Vista por prioridad</span></div>
+                <div class="maint-stat-row"><div class="maint-stat-cell maint-stat-pending"><div class="maint-stat-top"><span class="maint-stat-icon"><i class="fa-solid fa-clock"></i></span><span class="maint-stat-kicker">Por resolver</span></div><div class="stat-val" id="maint-pending">0</div><div class="stat-lbl">Órdenes pendientes</div></div><div class="maint-stat-cell maint-stat-progress"><div class="maint-stat-top"><span class="maint-stat-icon"><i class="fa-solid fa-spinner"></i></span><span class="maint-stat-kicker">En taller</span></div><div class="stat-val" id="maint-progress">0</div><div class="stat-lbl">En progreso</div></div><div class="maint-stat-cell maint-stat-done"><div class="maint-stat-top"><span class="maint-stat-icon"><i class="fa-solid fa-circle-check"></i></span><span class="maint-stat-kicker">Resultado</span></div><div class="stat-val" id="maint-done">0</div><div class="stat-lbl">Completadas</div></div></div>
+                <div class="maint-list-heading"><div><span class="maint-section-kicker">Seguimiento operativo</span><h2>Órdenes recientes</h2></div><span class="maint-list-note"><i class="fa-solid fa-layer-group"></i> Vista por prioridad</span></div>
                 <div id="maint-list"></div>
             </div>
             <!-- PANOL -->

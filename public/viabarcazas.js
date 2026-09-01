@@ -635,19 +635,41 @@ async function loadDashMiniCharts(vessels){
             if(fuelByDay.hasOwnProperty(k))fuelByDay[k]+=(f.liters||0);
         });
         var fuelLabels=Object.keys(fuelByDay);var fuelValues=Object.values(fuelByDay);
+        // Antes se graficaba siempre, incluso en 0 (linea plana enganosa).
+        // Si no hay litros cargados en la ventana de 7 dias, mostramos un
+        // estado vacio explicito en vez de un grafico con datos falsos.
+        var fuelTotal7=fuelValues.reduce(function(a,b){return a+b},0);
         var ctx1=document.getElementById('dash-fuel-trend');
-        if(ctx1){
-            if(dashFuelTrendChart)dashFuelTrendChart.destroy();
-            dashFuelTrendChart=new Chart(ctx1,{type:'line',data:{labels:fuelLabels,datasets:[{data:fuelValues,borderColor:'#25D366',backgroundColor:'rgba(37,211,102,0.10)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#25D366',pointBorderColor:'#0F231C',pointBorderWidth:2,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' L'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2',font:{size:9},callback:function(v){return v>999?(v/1000).toFixed(0)+'k':v}}},x:{grid:{display:false},ticks:{color:'#A9B8B2',font:{size:9},maxRotation:0}}}}});
+        var ctx1Empty=document.getElementById('dash-fuel-trend-empty');
+        if(fuelTotal7<=0){
+            if(ctx1)ctx1.style.display='none';
+            if(ctx1Empty)ctx1Empty.style.display='';
+        }else{
+            if(ctx1)ctx1.style.display='';
+            if(ctx1Empty)ctx1Empty.style.display='none';
+            if(ctx1){
+                if(dashFuelTrendChart)dashFuelTrendChart.destroy();
+                dashFuelTrendChart=new Chart(ctx1,{type:'line',data:{labels:fuelLabels,datasets:[{data:fuelValues,borderColor:'#25D366',backgroundColor:'rgba(37,211,102,0.10)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#25D366',pointBorderColor:'#0F231C',pointBorderWidth:2,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+' L'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'#A9B8B2',font:{size:9},callback:function(v){return v>999?(v/1000).toFixed(0)+'k':v}}},x:{grid:{display:false},ticks:{color:'#A9B8B2',font:{size:9},maxRotation:0}}}}});
+            }
         }
     }catch(e){/* Fuel trend: */;}
     try{
         var active=0,docked=0,maint=0;
         (vessels||[]).forEach(function(v){var s=(trad(v.status||'')).toLowerCase();if(s==='en viaje'||s==='active'||s==='activo'||s==='navegando'||s==='en_viaje')active++;else if(s.indexOf('manten')>=0)maint++;else docked++;});
         var ctx2=document.getElementById('dash-fleet-util');
-        if(ctx2){
-            if(dashFleetUtilChart)dashFleetUtilChart.destroy();
-            dashFleetUtilChart=new Chart(ctx2,{type:'doughnut',data:{labels:['Navegando','En Puerto','Mantenimiento'],datasets:[{data:[active,docked,maint],backgroundColor:['#34D399','#128C7E','#FBBF24'],borderWidth:0,borderRadius:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#A9B8B2',font:{family:'Manrope',size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}}});
+        var ctx2Empty=document.getElementById('dash-fleet-util-empty');
+        // Sin embarcaciones cargadas el donut queda vacio y confunde; se
+        // reemplaza por un estado vacio explicito (misma logica que Combustible arriba).
+        if((vessels||[]).length===0){
+            if(ctx2)ctx2.style.display='none';
+            if(ctx2Empty)ctx2Empty.style.display='';
+        }else{
+            if(ctx2)ctx2.style.display='';
+            if(ctx2Empty)ctx2Empty.style.display='none';
+            if(ctx2){
+                if(dashFleetUtilChart)dashFleetUtilChart.destroy();
+                dashFleetUtilChart=new Chart(ctx2,{type:'doughnut',data:{labels:['Navegando','En Puerto','Mantenimiento'],datasets:[{data:[active,docked,maint],backgroundColor:['#34D399','#128C7E','#FBBF24'],borderWidth:0,borderRadius:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#A9B8B2',font:{family:'Manrope',size:10},padding:8,usePointStyle:true,pointStyleWidth:8}}}}});
+            }
         }
     }catch(e){/* Fleet util: */;}
 }
@@ -696,17 +718,30 @@ async function loadDashHydro(){
     }catch(e){/* Hydro: */;}
 }
 
+// Antes duplicaba la lista completa de "Embarcaciones" de la columna
+// derecha (mismo dato, mismo estado). Ahora resalta solo lo que necesita
+// atencion (mantenimiento), para que cada bloque del dashboard aporte
+// algo distinto. La columna derecha sigue siendo el navegador completo.
 function loadDashRecentVessels(vessels){
     var container=document.getElementById('dash-vessels');if(!container)return;
-    container.innerHTML=vessels.slice(0,4).map(function(v){
+    var empty=document.getElementById('dash-vessels-empty');
+    var needsAttention=(vessels||[]).filter(function(v){
         var s=(trad(v.status||'')).toLowerCase();
-        var isActive=s==='en viaje'||s==='active'||s==='activo'||s==='navegando'||s==='en_viaje';
-        var isMaint=s.indexOf('manten')>=0;
-        var borderColor=isActive?'var(--success)':isMaint?'var(--warning)':'var(--accent)';
-        return '<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:14px;border-left:3px solid '+borderColor+'">'+
+        return s.indexOf('manten')>=0;
+    });
+    if(needsAttention.length===0){
+        container.innerHTML='';
+        container.style.display='none';
+        if(empty)empty.style.display='';
+        return;
+    }
+    container.style.display='grid';
+    if(empty)empty.style.display='none';
+    container.innerHTML=needsAttention.slice(0,4).map(function(v){
+        return '<div style="background:var(--bg-secondary);border:0.5px solid var(--separator);border-radius:12px;padding:14px;border-left:3px solid var(--warning)">'+
             '<div style="font-size:13px;font-weight:600">'+(v.name||v.vessel_name||'')+'</div>'+
             '<div style="font-size:11px;color:var(--text-secondary);margin-top:4px">'+(trad(v.type||v.vessel_type||''))+' · '+(v.location||v.current_position||'--')+'</div>'+
-            '<div style="font-size:10px;margin-top:6px;color:'+borderColor+';font-weight:600">'+(v.status||'--').toUpperCase()+'</div></div>';
+            '<div style="font-size:10px;margin-top:6px;color:var(--warning);font-weight:600">'+(v.status||'--')+'</div></div>';
     }).join('');
 }
 
