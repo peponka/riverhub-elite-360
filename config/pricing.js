@@ -1,12 +1,13 @@
 // Fuente unica de verdad para los tramos facturables de ViaBarcazas.
 // El cliente paga por las unidades reales de su flota, nunca por cupos vacios.
+// A partir de 150 unidades no hay tramo: calculateFleetPricing() no
+// encuentra plan y devuelve customQuote:true (propuesta personalizada).
 const PLANES = Object.freeze([
-    { id: 'starter', name: 'Precio inicial', minUnits: 1, capacity: 9, effectiveUnitPrice: 100 },
-    { id: 'fleet-10', name: 'Flota 10+', minUnits: 10, capacity: 24, effectiveUnitPrice: 95 },
-    { id: 'fleet-25', name: 'Flota 25+', minUnits: 25, capacity: 49, effectiveUnitPrice: 90, popular: true },
-    { id: 'fleet-50', name: 'Flota 50+', minUnits: 50, capacity: 99, effectiveUnitPrice: 85 },
-    { id: 'fleet-100', name: 'Flota 100+', minUnits: 100, capacity: 149, effectiveUnitPrice: 80 },
-    { id: 'fleet-150', name: 'Flota 150', minUnits: 150, capacity: 150, effectiveUnitPrice: 75 }
+    { id: 'starter', name: 'Precio inicial', minUnits: 1, capacity: 9, effectiveUnitPrice: 120 },
+    { id: 'fleet-10', name: 'Flota 10+', minUnits: 10, capacity: 24, effectiveUnitPrice: 110 },
+    { id: 'fleet-25', name: 'Flota 25+', minUnits: 25, capacity: 49, effectiveUnitPrice: 100, popular: true },
+    { id: 'fleet-50', name: 'Flota 50+', minUnits: 50, capacity: 99, effectiveUnitPrice: 92 },
+    { id: 'fleet-100', name: 'Flota 100+', minUnits: 100, capacity: 149, effectiveUnitPrice: 85 }
 ]);
 
 const COMMERCIAL_TERMS = Object.freeze({

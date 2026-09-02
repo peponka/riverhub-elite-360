@@ -905,16 +905,22 @@ function calculateROI() {
     var ahorroAnual = litrosAhorrados * costo;
     var co2Toneladas = litrosAhorrados * 2.68 / 1000; // ~2.68 kg CO2 por litro de gasoil
 
-    // Calculate monthly cost based on total vessels
+    // Calculate monthly cost based on total vessels, usando la misma
+    // escala por unidad que pricing.html y config/pricing.js (backend).
+    var ROI_TIERS = [
+        { min: 1, max: 9, rate: 120 },
+        { min: 10, max: 24, rate: 110 },
+        { min: 25, max: 49, rate: 100 },
+        { min: 50, max: 99, rate: 92 },
+        { min: 100, max: 149, rate: 85 }
+    ];
     var totalVessels = barcazas + remolcadores;
+    var roiTier = ROI_TIERS.filter(function (t) { return totalVessels >= t.min && totalVessels <= t.max; })[0] || null;
     var costoMensual = 0;
     var costoMensualText = '';
-    if (totalVessels <= 5) {
-        costoMensual = 179;
-        costoMensualText = '$179';
-    } else if (totalVessels <= 20) {
-        costoMensual = 549;
-        costoMensualText = '$549';
+    if (roiTier) {
+        costoMensual = totalVessels * roiTier.rate;
+        costoMensualText = '$' + costoMensual.toLocaleString('es-AR');
     } else {
         costoMensual = 0;
         costoMensualText = 'a medida';
@@ -1875,10 +1881,10 @@ function toggleFAQ(index) {
       "url": "https://viabarcazas.com",
       "offers": {
         "@type": "AggregateOffer",
-        "lowPrice": "179",
-        "highPrice": "549",
+        "lowPrice": "85",
+        "highPrice": "120",
         "priceCurrency": "USD",
-        "offerCount": "3"
+        "offerCount": "5"
       },
       "featureList": [
         "Mapa AIS en tiempo real",

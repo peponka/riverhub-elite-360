@@ -107,7 +107,7 @@ test.describe('Security', () => {
         expect(checkout.status()).toBe(410);
         const catalog = await request.get('/api/pricing');
         expect(catalog.status()).toBe(200);
-        expect((await catalog.json()).plans).toHaveLength(6);
+        expect((await catalog.json()).plans).toHaveLength(5);
     });
 
     test('Security headers are present', async ({ request }) => {

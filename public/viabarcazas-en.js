@@ -1240,36 +1240,10 @@ var commBtn=document.getElementById('comm-send-btn');
 if(commBtn){commBtn.addEventListener('click',async function(){var i=document.querySelector('#view-comunicaciones .comm-input');var m=i.value.trim();if(!m)return;try{await sb.from('comms').insert({message:m,sender:'Web',channel:'CH-16'});i.value='';loadComms();}catch(e){console.error('Comms:',e);}});}
 
 // PRICING
-var currentPeriod='monthly';
-function togglePeriod(period){
-    currentPeriod=period;
-    document.getElementById('plan-monthly').classList.toggle('active',period==='monthly');
-    document.getElementById('plan-yearly').classList.toggle('active',period==='yearly');
-    document.querySelectorAll('.plan-amount').forEach(function(el){
-        var val=parseInt(el.dataset[period]);
-        el.textContent='$'+val.toLocaleString('en-US');
-    });
-}
-var planNames={barcaza:'Per Barge',combo:'Fleet Combo',enterprise:'Enterprise',ilimitado:'Unlimited'};
-var planPrices={barcaza:{monthly:149,yearly:119},combo:{monthly:899,yearly:719},enterprise:{monthly:1499,yearly:1199},ilimitado:{monthly:2499,yearly:1999}};
-function selectPlan(plan){
-    var price=planPrices[plan][currentPeriod];
-    var name=planNames[plan];
-    document.getElementById('modal-title').textContent='Checkout - '+name;
-    document.getElementById('modal-body').innerHTML='<div style="background:var(--surface-low);border-radius:12px;padding:20px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">'+esc(name)+'</span><span style="font-family:Bricolage Grotesque,sans-serif;font-size:28px;font-weight:400">$'+price.toLocaleString('en-US')+'</span></div><p style="font-size:11px;color:var(--text-secondary);margin-top:4px">Billing '+(currentPeriod==='monthly'?'monthly':'yearly')+' - 14 days free</p></div><div style="text-align:center;padding:20px 0"><i class="fa-solid fa-lock" style="font-size:32px;color:var(--accent);margin-bottom:12px"></i><p style="font-size:14px;color:var(--text-primary);font-weight:600">Secure payment via external gateway</p><p style="font-size:12px;color:var(--text-secondary);margin-top:8px">Upon confirmation you will be redirected to the secure payment gateway to complete the transaction.</p></div>';
-    document.getElementById('modal-overlay').classList.add('open');
-    document.getElementById('modal-submit').textContent='Subscribe '+esc(name);
-    document.getElementById('modal-submit').onclick=function(){processPayment(plan,price)};
-}
-async function processPayment(plan,price){
-    document.getElementById('modal-submit').disabled=true;
-    document.getElementById('modal-submit').textContent='Redirecting...';
-    setTimeout(function(){
-        document.getElementById('modal-body').innerHTML='<div style="text-align:center;padding:40px 0"><i class="fa-solid fa-envelope" style="font-size:48px;color:var(--accent)"></i><h3 style="font-family:Bricolage Grotesque,sans-serif;font-size:24px;margin-top:16px">Request Sent</h3><p style="color:var(--text-secondary);margin-top:8px">Our team will contact you to activate your <strong>'+esc(planNames[plan])+'</strong>.</p><p style="color:var(--text-secondary);font-size:12px;margin-top:4px">You will receive an email with payment instructions.</p></div>';
-        document.getElementById('modal-submit').style.display='none';
-        document.querySelector('.modal-actions .btn-secondary').textContent='Close';
-    },1500);
-}
+// El checkout automatico via modal+processPayment (con precios fijos
+// $149/$899/$1499/$2499) quedo desconectado del modelo real de
+// precios por unidad. #view-planes ahora usa tarjetas estaticas que
+// mandan directo a pricing.html, igual que en la version en espanol.
 
 // ADMIN PANEL
 function checkAdminAccess(){
