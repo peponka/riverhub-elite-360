@@ -995,35 +995,53 @@ function ingestRelayPosition(position) {
     return true;
 }
 
-// VesselAPI usa el mismo cuadro geografico que AISStream (HIDROVIA_BOX),
-// pero como filtro plano lat/lon en vez del formato anidado de AISStream.
-const VESSELAPI_BOX = {
-    latBottom: HIDROVIA_BOX[0][0][0], lonLeft: HIDROVIA_BOX[0][0][1],
-    latTop: HIDROVIA_BOX[0][1][0], lonRight: HIDROVIA_BOX[0][1][1]
-};
-
-// Grilla de recuadros de VESSELAPI_TILE_DEG x VESSELAPI_TILE_DEG (span
-// 2*VESSELAPI_TILE_DEG, con margen bajo el limite de 4 grados de VesselAPI).
-// Con 1.8 de lado: 10 recuadros en latitud x 6 en longitud = 60 recuadros.
-function buildVesselApiTiles(box, tileDeg) {
-    const tiles = [];
-    for (let lat = box.latBottom; lat < box.latTop; lat += tileDeg) {
-        const latTop = Math.min(lat + tileDeg, box.latTop);
-        for (let lon = box.lonLeft; lon < box.lonRight; lon += tileDeg) {
-            const lonRight = Math.min(lon + tileDeg, box.lonRight);
-            tiles.push({ latBottom: lat, latTop, lonLeft: lon, lonRight });
-        }
-    }
-    return tiles;
+// La caja rectangular original (HIDROVIA_BOX) cubre de punta a punta
+// Paraguay/Chaco/Santa Fe -- casi todo tierra firme sin trafico fluvial.
+// De 60 recuadros armados con esa caja, solo 3 tenian barcos (zona
+// Rosario-San Lorenzo-Buenos Aires). En vez de la grilla completa, se
+// arma un corredor de recuadros centrados en el trazado real del rio
+// Paraguay -> confluencia -> Parana, siguiendo los puertos/curvas
+// conocidos de norte a sur. Cada punto es el centro de un recuadro de
+// VESSELAPI_HALF_DEG*2 de lado (span = 4*VESSELAPI_HALF_DEG, con margen
+// bajo el limite de 4 grados de VesselAPI).
+const VESSELAPI_CORRIDOR = [
+    { lat: -20.5, lon: -58.2 }, // Bahia Negra (frontera con Brasil)
+    { lat: -21.4, lon: -57.9 }, // Fuerte Olimpo
+    { lat: -22.5, lon: -57.6 }, // Puerto Casado / Vallemi
+    { lat: -23.5, lon: -57.4 }, // Concepcion (PY)
+    { lat: -24.4, lon: -57.5 },
+    { lat: -25.3, lon: -57.6 }, // Asuncion (PY)
+    { lat: -26.1, lon: -58.0 },
+    { lat: -26.9, lon: -58.3 }, // Pilar (PY)
+    { lat: -27.6, lon: -58.7 }, // Confluencia Parana-Paraguay / Corrientes
+    { lat: -28.5, lon: -59.0 },
+    { lat: -29.3, lon: -59.3 }, // Goya / Reconquista
+    { lat: -30.2, lon: -59.9 },
+    { lat: -31.1, lon: -60.4 },
+    { lat: -31.7, lon: -60.7 }, // Santa Fe
+    { lat: -32.4, lon: -60.7 },
+    { lat: -33.0, lon: -60.6 }, // Rosario / San Lorenzo
+    { lat: -33.6, lon: -60.0 }, // San Nicolas / Ramallo
+    { lat: -34.1, lon: -59.0 }, // Zarate / Campana
+    { lat: -34.6, lon: -58.3 }, // Rio de la Plata / Buenos Aires
+    { lat: -35.0, lon: -57.5 }  // estuario exterior
+];
+const VESSELAPI_HALF_DEG = 0.9; // recuadro de 1.8 grados de lado, span 3.6
+function buildVesselApiCorridorTiles(points, halfDeg) {
+    return points.map(p => ({
+        latBottom: p.lat - halfDeg, latTop: p.lat + halfDeg,
+        lonLeft: p.lon - halfDeg, lonRight: p.lon + halfDeg
+    }));
 }
 
-const VESSELAPI_TILE_DEG = 1.8;
-const VESSELAPI_TILES = buildVesselApiTiles(VESSELAPI_BOX, VESSELAPI_TILE_DEG);
-// Un recuadro por tick. Con 60 recuadros y un tick cada 5s, una vuelta
-// completa a toda la Hidrovia tarda 5 minutos y usa 60 requests en esos
-// 5 minutos -- muy por debajo del limite de VesselAPI (300 req/5min en
-// endpoints de ubicacion).
-const VESSELAPI_TICK_MS = 2 * 1000;
+const VESSELAPI_TILES = buildVesselApiCorridorTiles(VESSELAPI_CORRIDOR, VESSELAPI_HALF_DEG);
+// Un recuadro por tick. Se calibra para no pasarse de la cuota MENSUAL
+// del plan (no es un tema del limite corto de 300 req/5min, ese sobra):
+// con el plan gratuito de VesselAPI (150 llamadas/mes) hay que estirar
+// ~150 llamadas a lo largo de ~30 dias para no gastar todo el mes en
+// unas horas y quedar sin cuota el resto del mes. Si se sube de plan,
+// avisar para achicar este intervalo y actualizar mas seguido.
+const VESSELAPI_TICK_MS = 4.8 * 60 * 60 * 1000; // ~4h48min por recuadro
 let vesselApiTileIndex = 0;
 
 // Corta el polling por completo ante 429/403: seguir reintentando cada
@@ -1520,8 +1538,8 @@ server.listen(PORT, '0.0.0.0', () => {
     if (VESSELAPI_KEY) {
         pollVesselApiNextTile();
         vesselApiPollTimer = setInterval(pollVesselApiNextTile, VESSELAPI_TICK_MS);
-        const vueltaMin = Math.round(VESSELAPI_TILES.length * VESSELAPI_TICK_MS / 60000);
-        console.log(`📡 VesselAPI: polling activado (fuente secundaria, ${VESSELAPI_TILES.length} recuadros, vuelta completa cada ~${vueltaMin} min)`);
+        const vueltaHoras = (VESSELAPI_TILES.length * VESSELAPI_TICK_MS / 3600000).toFixed(1);
+        console.log(`📡 VesselAPI: polling activado (fuente secundaria, corredor de ${VESSELAPI_TILES.length} recuadros, vuelta completa cada ~${vueltaHoras}h)`);
     } else {
         console.log('VesselAPI desactivado: falta VESSELAPI_KEY');
     }
