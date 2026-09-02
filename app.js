@@ -1015,7 +1015,8 @@ async function pollVesselApi() {
             headers: { Authorization: `Bearer ${VESSELAPI_KEY}` }
         });
         if (!res.ok) {
-            console.warn(`⚠️ VesselAPI: HTTP ${res.status}`);
+            const body = await res.text().catch(() => '');
+            console.warn(`⚠️ VesselAPI: HTTP ${res.status} — ${body.slice(0, 300)}`);
             return;
         }
         const data = await res.json();
