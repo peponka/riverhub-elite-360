@@ -877,12 +877,13 @@ const AIS_DIRECT_STREAM = process.env.AIS_DIRECT_STREAM !== 'false';
 const AIS_RELAY_TOKEN = process.env.AIS_RELAY_TOKEN || '';
 
 // VesselAPI: segunda fuente de posiciones AIS, en paralelo a AISStream.io
-// (no la reemplaza). Es REST por polling, no websocket, asi que se consulta
-// cada VESSELAPI_POLL_MS en vez de mantener una conexion abierta. Usa el
-// mismo normalizador que el relay externo (ingestRelayPosition) para que
-// terminen en el mismo estado compartido y en el mismo mapa.
+// (no la reemplaza). Es REST por polling, no websocket. VesselAPI limita
+// cada consulta a un span (|dLat|+|dLon|) de maximo 4 grados -- mucho mas
+// chico que los ~28 grados de toda la Hidrovia -- asi que la zona se parte
+// en una grilla de recuadros chicos que se van rotando (ver VESSELAPI_TILES
+// mas abajo). Usa el mismo normalizador que el relay externo
+// (ingestRelayPosition) para que terminen en el mismo estado compartido.
 const VESSELAPI_KEY = process.env.VESSELAPI_KEY || '';
-const VESSELAPI_POLL_MS = 30 * 1000; // 10 req/5min, muy por debajo del limite (300/5min)
 let vesselApiPollTimer = null;
 let aisConnected = false;
 let aisReconnectTimer = null;
@@ -1001,14 +1002,38 @@ const VESSELAPI_BOX = {
     latTop: HIDROVIA_BOX[0][1][0], lonRight: HIDROVIA_BOX[0][1][1]
 };
 
-async function pollVesselApi() {
+// Grilla de recuadros de VESSELAPI_TILE_DEG x VESSELAPI_TILE_DEG (span
+// 2*VESSELAPI_TILE_DEG, con margen bajo el limite de 4 grados de VesselAPI).
+// Con 1.8 de lado: 10 recuadros en latitud x 6 en longitud = 60 recuadros.
+function buildVesselApiTiles(box, tileDeg) {
+    const tiles = [];
+    for (let lat = box.latBottom; lat < box.latTop; lat += tileDeg) {
+        const latTop = Math.min(lat + tileDeg, box.latTop);
+        for (let lon = box.lonLeft; lon < box.lonRight; lon += tileDeg) {
+            const lonRight = Math.min(lon + tileDeg, box.lonRight);
+            tiles.push({ latBottom: lat, latTop, lonLeft: lon, lonRight });
+        }
+    }
+    return tiles;
+}
+
+const VESSELAPI_TILE_DEG = 1.8;
+const VESSELAPI_TILES = buildVesselApiTiles(VESSELAPI_BOX, VESSELAPI_TILE_DEG);
+// Un recuadro por tick. Con 60 recuadros y un tick cada 5s, una vuelta
+// completa a toda la Hidrovia tarda 5 minutos y usa 60 requests en esos
+// 5 minutos -- muy por debajo del limite de VesselAPI (300 req/5min en
+// endpoints de ubicacion).
+const VESSELAPI_TICK_MS = 5 * 1000;
+let vesselApiTileIndex = 0;
+
+async function pollVesselApiTile(box, tileLabel) {
     if (!VESSELAPI_KEY) return;
     try {
         const qs = new URLSearchParams({
-            'filter.latBottom': VESSELAPI_BOX.latBottom,
-            'filter.latTop': VESSELAPI_BOX.latTop,
-            'filter.lonLeft': VESSELAPI_BOX.lonLeft,
-            'filter.lonRight': VESSELAPI_BOX.lonRight,
+            'filter.latBottom': box.latBottom,
+            'filter.latTop': box.latTop,
+            'filter.lonLeft': box.lonLeft,
+            'filter.lonRight': box.lonRight,
             'pagination.limit': 50
         });
         const res = await fetch(`https://api.vesselapi.com/v1/location/vessels/bounding-box?${qs}`, {
@@ -1016,7 +1041,7 @@ async function pollVesselApi() {
         });
         if (!res.ok) {
             const body = await res.text().catch(() => '');
-            console.warn(`⚠️ VesselAPI: HTTP ${res.status} — ${body.slice(0, 300)}`);
+            console.warn(`⚠️ VesselAPI: HTTP ${res.status} (recuadro ${tileLabel}) — ${body.slice(0, 300)}`);
             return;
         }
         const data = await res.json();
@@ -1034,10 +1059,18 @@ async function pollVesselApi() {
             });
             if (ok) accepted += 1;
         }
-        if (vessels.length) console.log(`📡 VesselAPI: ${accepted}/${vessels.length} posiciones aceptadas`);
+        if (vessels.length) console.log(`📡 VesselAPI: ${accepted}/${vessels.length} posiciones aceptadas (recuadro ${tileLabel})`);
     } catch (e) {
-        console.warn('⚠️ VesselAPI: fallo el polling:', e.message);
+        console.warn(`⚠️ VesselAPI: fallo el polling (recuadro ${tileLabel}):`, e.message);
     }
+}
+
+function pollVesselApiNextTile() {
+    if (!VESSELAPI_KEY || VESSELAPI_TILES.length === 0) return;
+    const i = vesselApiTileIndex;
+    const box = VESSELAPI_TILES[i];
+    vesselApiTileIndex = (i + 1) % VESSELAPI_TILES.length;
+    pollVesselApiTile(box, `${i + 1}/${VESSELAPI_TILES.length}`);
 }
 
 app.post('/api/internal/ais-ingest', (req, res) => {
@@ -1467,9 +1500,10 @@ server.listen(PORT, '0.0.0.0', () => {
     hydrateAisPositions().finally(startAISStream);
 
     if (VESSELAPI_KEY) {
-        pollVesselApi();
-        vesselApiPollTimer = setInterval(pollVesselApi, VESSELAPI_POLL_MS);
-        console.log('📡 VesselAPI: polling activado (fuente secundaria)');
+        pollVesselApiNextTile();
+        vesselApiPollTimer = setInterval(pollVesselApiNextTile, VESSELAPI_TICK_MS);
+        const vueltaMin = Math.round(VESSELAPI_TILES.length * VESSELAPI_TICK_MS / 60000);
+        console.log(`📡 VesselAPI: polling activado (fuente secundaria, ${VESSELAPI_TILES.length} recuadros, vuelta completa cada ~${vueltaMin} min)`);
     } else {
         console.log('VesselAPI desactivado: falta VESSELAPI_KEY');
     }
