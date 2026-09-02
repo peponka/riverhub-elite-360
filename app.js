@@ -1026,8 +1026,23 @@ const VESSELAPI_TILES = buildVesselApiTiles(VESSELAPI_BOX, VESSELAPI_TILE_DEG);
 const VESSELAPI_TICK_MS = 2 * 1000;
 let vesselApiTileIndex = 0;
 
+// Corta el polling por completo ante 429/403: seguir reintentando cada
+// pocos segundos es exactamente el patron que VesselAPI castiga con una
+// suspension de cuenta por "sustained quota abuse" (le paso esto al
+// key real el 2/9 con un tick de 2s -- cuota mensual agotada y despues
+// 6 horas de bloqueo por no frenar ante el 429). Una vez que corta, no
+// se reintenta solo: requiere un redeploy (o reinicio) para retomar,
+// asi el operador se entera y decide si subir de plan o esperar.
+let vesselApiHalted = false;
+function haltVesselApiPolling(reason) {
+    if (vesselApiHalted) return;
+    vesselApiHalted = true;
+    if (vesselApiPollTimer) { clearInterval(vesselApiPollTimer); vesselApiPollTimer = null; }
+    console.error(`🛑 VesselAPI: polling detenido (${reason}). Requiere redeploy/reinicio para reanudar.`);
+}
+
 async function pollVesselApiTile(box, tileLabel) {
-    if (!VESSELAPI_KEY) return;
+    if (!VESSELAPI_KEY || vesselApiHalted) return;
     try {
         const qs = new URLSearchParams({
             'filter.latBottom': box.latBottom,
@@ -1042,6 +1057,9 @@ async function pollVesselApiTile(box, tileLabel) {
         if (!res.ok) {
             const body = await res.text().catch(() => '');
             console.warn(`⚠️ VesselAPI: HTTP ${res.status} (recuadro ${tileLabel}) — ${body.slice(0, 300)}`);
+            if (res.status === 429 || res.status === 403) {
+                haltVesselApiPolling(`HTTP ${res.status} en recuadro ${tileLabel}`);
+            }
             return;
         }
         const data = await res.json();
@@ -1066,7 +1084,7 @@ async function pollVesselApiTile(box, tileLabel) {
 }
 
 function pollVesselApiNextTile() {
-    if (!VESSELAPI_KEY || VESSELAPI_TILES.length === 0) return;
+    if (!VESSELAPI_KEY || VESSELAPI_TILES.length === 0 || vesselApiHalted) return;
     const i = vesselApiTileIndex;
     const box = VESSELAPI_TILES[i];
     vesselApiTileIndex = (i + 1) % VESSELAPI_TILES.length;
