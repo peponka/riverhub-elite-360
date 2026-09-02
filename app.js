@@ -1023,7 +1023,7 @@ const VESSELAPI_TILES = buildVesselApiTiles(VESSELAPI_BOX, VESSELAPI_TILE_DEG);
 // completa a toda la Hidrovia tarda 5 minutos y usa 60 requests en esos
 // 5 minutos -- muy por debajo del limite de VesselAPI (300 req/5min en
 // endpoints de ubicacion).
-const VESSELAPI_TICK_MS = 5 * 1000;
+const VESSELAPI_TICK_MS = 2 * 1000;
 let vesselApiTileIndex = 0;
 
 async function pollVesselApiTile(box, tileLabel) {
