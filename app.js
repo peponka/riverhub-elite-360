@@ -875,6 +875,15 @@ if (!process.env.AIS_API_KEY) {
 const HIDROVIA_BOX = [[[-36.0, -63.0], [-18.0, -53.0]]];
 const AIS_DIRECT_STREAM = process.env.AIS_DIRECT_STREAM !== 'false';
 const AIS_RELAY_TOKEN = process.env.AIS_RELAY_TOKEN || '';
+
+// VesselAPI: segunda fuente de posiciones AIS, en paralelo a AISStream.io
+// (no la reemplaza). Es REST por polling, no websocket, asi que se consulta
+// cada VESSELAPI_POLL_MS en vez de mantener una conexion abierta. Usa el
+// mismo normalizador que el relay externo (ingestRelayPosition) para que
+// terminen en el mismo estado compartido y en el mismo mapa.
+const VESSELAPI_KEY = process.env.VESSELAPI_KEY || '';
+const VESSELAPI_POLL_MS = 30 * 1000; // 10 req/5min, muy por debajo del limite (300/5min)
+let vesselApiPollTimer = null;
 let aisConnected = false;
 let aisReconnectTimer = null;
 let aisReconnectAttempts = 0;
@@ -983,6 +992,51 @@ function ingestRelayPosition(position) {
     aisConnected = true;
     io.emit('position_update', app.locals.aisPositions[mmsi]);
     return true;
+}
+
+// VesselAPI usa el mismo cuadro geografico que AISStream (HIDROVIA_BOX),
+// pero como filtro plano lat/lon en vez del formato anidado de AISStream.
+const VESSELAPI_BOX = {
+    latBottom: HIDROVIA_BOX[0][0][0], lonLeft: HIDROVIA_BOX[0][0][1],
+    latTop: HIDROVIA_BOX[0][1][0], lonRight: HIDROVIA_BOX[0][1][1]
+};
+
+async function pollVesselApi() {
+    if (!VESSELAPI_KEY) return;
+    try {
+        const qs = new URLSearchParams({
+            'filter.latBottom': VESSELAPI_BOX.latBottom,
+            'filter.latTop': VESSELAPI_BOX.latTop,
+            'filter.lonLeft': VESSELAPI_BOX.lonLeft,
+            'filter.lonRight': VESSELAPI_BOX.lonRight,
+            'pagination.limit': 50
+        });
+        const res = await fetch(`https://api.vesselapi.com/v1/location/vessels/bounding-box?${qs}`, {
+            headers: { Authorization: `Bearer ${VESSELAPI_KEY}` }
+        });
+        if (!res.ok) {
+            console.warn(`⚠️ VesselAPI: HTTP ${res.status}`);
+            return;
+        }
+        const data = await res.json();
+        const vessels = Array.isArray(data?.vessels) ? data.vessels : [];
+        let accepted = 0;
+        for (const v of vessels) {
+            const ok = ingestRelayPosition({
+                mmsi: v.mmsi,
+                name: v.vessel_name,
+                lat: v.latitude,
+                lon: v.longitude,
+                speed: v.sog,
+                course: v.cog,
+                heading: v.heading
+            });
+            if (ok) accepted += 1;
+        }
+        if (vessels.length) console.log(`📡 VesselAPI: ${accepted}/${vessels.length} posiciones aceptadas`);
+    } catch (e) {
+        console.warn('⚠️ VesselAPI: fallo el polling:', e.message);
+    }
 }
 
 app.post('/api/internal/ais-ingest', (req, res) => {
@@ -1410,6 +1464,14 @@ server.listen(PORT, '0.0.0.0', () => {
     // Rehidratar primero: asi el mapa tiene datos desde el segundo cero en
     // vez de esperar a que los barcos vuelvan a emitir uno por uno.
     hydrateAisPositions().finally(startAISStream);
+
+    if (VESSELAPI_KEY) {
+        pollVesselApi();
+        vesselApiPollTimer = setInterval(pollVesselApi, VESSELAPI_POLL_MS);
+        console.log('📡 VesselAPI: polling activado (fuente secundaria)');
+    } else {
+        console.log('VesselAPI desactivado: falta VESSELAPI_KEY');
+    }
 });
 
 // Render manda SIGTERM antes de reiniciar en cada deploy: se vuelca lo que
