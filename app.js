@@ -885,6 +885,34 @@ const AIS_RELAY_TOKEN = process.env.AIS_RELAY_TOKEN || '';
 // (ingestRelayPosition) para que terminen en el mismo estado compartido.
 const VESSELAPI_KEY = process.env.VESSELAPI_KEY || '';
 let vesselApiPollTimer = null;
+
+// Refuerzo satelital: filter.sat=true SOLO existe en el endpoint de UN
+// barco (GET /v1/vessel/{mmsi}/position), no en el de recuadro geografico
+// que usa el corredor de arriba -- VesselAPI no ofrece "barrido satelital
+// por zona", asi que no se puede simplemente agregarle el parametro a las
+// consultas del corredor. En cambio, se arma un refuerzo satelital sobre
+// los barcos que YA conocemos (por AISStream o por el corredor terrestre,
+// sin necesidad de una lista manual): cada tanto se revisa un barco
+// conocido y, solo si su ultima posicion esta vieja (probablemente porque
+// salio de cobertura terrestre -- el caso tipico del tramo norte, Bahia
+// Negra/Concepcion), se lo vuelve a consultar con filter.sat=true. Si
+// todavia hay dato terrestre fresco, VesselAPI lo devuelve gratis (no gasta
+// credito); el credito satelital ($25 = 50 creditos, no vencen) solo se
+// descuenta cuando de verdad no hay otra fuente.
+const VESSELAPI_SAT_ENABLED = process.env.VESSELAPI_SAT_ENABLED !== 'false';
+const VESSELAPI_SAT_TICK_MS = 30 * 60 * 1000; // revisa 1 barco conocido cada 30 min
+const VESSELAPI_SAT_STALE_MS = 3 * 60 * 60 * 1000; // no molestar si ya se actualizo hace <3h (igual seria gratis, pero para no gastar requests de mas)
+// Tope propio de seguridad, aparte del circuit breaker de 429/403: nunca
+// mas de esta cantidad de consultas CON filter.sat=true por dia, para no
+// repetir el agotamiento/suspension que ya pasamos. Es un techo pesimista
+// (asume que cada consulta gasta 1 credito, aunque la mayoria van a salir
+// gratis por dato terrestre fresco).
+const VESSELAPI_SAT_DAILY_CAP = 10;
+let vesselApiSatPollTimer = null;
+let vesselApiSatRosterIndex = 0;
+let vesselApiSatCallsToday = 0;
+let vesselApiSatCallsDate = '';
+
 let aisConnected = false;
 let aisReconnectTimer = null;
 let aisReconnectAttempts = 0;
@@ -1056,6 +1084,7 @@ function haltVesselApiPolling(reason) {
     if (vesselApiHalted) return;
     vesselApiHalted = true;
     if (vesselApiPollTimer) { clearInterval(vesselApiPollTimer); vesselApiPollTimer = null; }
+    if (vesselApiSatPollTimer) { clearInterval(vesselApiSatPollTimer); vesselApiSatPollTimer = null; }
     console.error(`🛑 VesselAPI: polling detenido (${reason}). Requiere redeploy/reinicio para reanudar.`);
 }
 
@@ -1107,6 +1136,90 @@ function pollVesselApiNextTile() {
     const box = VESSELAPI_TILES[i];
     vesselApiTileIndex = (i + 1) % VESSELAPI_TILES.length;
     pollVesselApiTile(box, `${i + 1}/${VESSELAPI_TILES.length}`);
+}
+
+// --- Refuerzo satelital (filter.sat=true) ---
+// No hay lista fija de barcos: el "roster" es simplemente todo MMSI que ya
+// vimos, sea por AISStream o por el corredor terrestre de VesselAPI. Cada
+// VESSELAPI_SAT_TICK_MS se revisa el siguiente barco del roster en orden
+// round-robin; si su ultima posicion es reciente (< VESSELAPI_SAT_STALE_MS)
+// se lo salta sin gastar ningun llamado. Si esta vieja -- tipicamente
+// porque salio de la cobertura terrestre, el caso del tramo norte
+// Bahia Negra/Concepcion -- se lo consulta con filter.sat=true en el
+// endpoint de un solo barco. VesselAPI devuelve gratis si todavia hay dato
+// terrestre fresco de su lado y solo descuenta 1 credito si de verdad tuvo
+// que usar satelite; la respuesta no distingue cual de los dos paso, asi
+// que el tope diario de abajo cuenta INTENTOS, no creditos confirmados
+// (mas conservador, pero es lo unico medible sin visibilidad del billing).
+function vesselApiSatCapKey() {
+    // Fecha en UTC-3 (Argentina/Paraguay) para que el contador se reinicie
+    // a la medianoche local, no a la de UTC.
+    const d = new Date(Date.now() - 3 * 60 * 60 * 1000);
+    return d.toISOString().slice(0, 10);
+}
+
+function vesselApiSatCapCheck() {
+    const today = vesselApiSatCapKey();
+    if (vesselApiSatCallsDate !== today) {
+        vesselApiSatCallsDate = today;
+        vesselApiSatCallsToday = 0;
+    }
+    return vesselApiSatCallsToday < VESSELAPI_SAT_DAILY_CAP;
+}
+
+async function pollVesselApiSatelliteNext() {
+    if (!VESSELAPI_KEY || !VESSELAPI_SAT_ENABLED || vesselApiHalted) return;
+
+    const roster = Object.keys(app.locals.aisPositions || {});
+    if (roster.length === 0) return;
+
+    if (!vesselApiSatCapCheck()) {
+        return; // tope diario alcanzado, esperar al proximo dia (UTC-3)
+    }
+
+    if (vesselApiSatRosterIndex >= roster.length) vesselApiSatRosterIndex = 0;
+    const mmsi = roster[vesselApiSatRosterIndex];
+    vesselApiSatRosterIndex = (vesselApiSatRosterIndex + 1) % roster.length;
+
+    const known = app.locals.aisPositions[mmsi];
+    const lastSeenMs = known?.timestamp ? new Date(known.timestamp).getTime() : 0;
+    const ageMs = Date.now() - lastSeenMs;
+    if (lastSeenMs && ageMs < VESSELAPI_SAT_STALE_MS) {
+        return; // dato terrestre todavia fresco, no hace falta reforzar con satelite
+    }
+
+    vesselApiSatCallsToday += 1;
+    try {
+        const qs = new URLSearchParams({ 'filter.idType': 'mmsi', 'filter.sat': 'true' });
+        const res = await fetch(`https://api.vesselapi.com/v1/vessel/${mmsi}/position?${qs}`, {
+            headers: { Authorization: `Bearer ${VESSELAPI_KEY}` }
+        });
+        if (!res.ok) {
+            const body = await res.text().catch(() => '');
+            console.warn(`⚠️ VesselAPI (sat): HTTP ${res.status} (MMSI ${mmsi}) — ${body.slice(0, 300)}`);
+            if (res.status === 429 || res.status === 403) {
+                haltVesselApiPolling(`HTTP ${res.status} en refuerzo satelital (MMSI ${mmsi})`);
+            }
+            return;
+        }
+        const data = await res.json();
+        const v = data?.vesselPosition;
+        if (!v) return;
+        const ok = ingestRelayPosition({
+            mmsi: v.mmsi,
+            name: v.vessel_name,
+            lat: v.latitude,
+            lon: v.longitude,
+            speed: v.sog,
+            course: v.cog,
+            heading: v.heading
+        });
+        if (ok) {
+            console.log(`🛰️ VesselAPI (sat): MMSI ${mmsi} actualizado (intento satelital ${vesselApiSatCallsToday}/${VESSELAPI_SAT_DAILY_CAP} hoy)`);
+        }
+    } catch (e) {
+        console.warn(`⚠️ VesselAPI (sat): fallo la consulta (MMSI ${mmsi}):`, e.message);
+    }
 }
 
 app.post('/api/internal/ais-ingest', (req, res) => {
@@ -1540,6 +1653,13 @@ server.listen(PORT, '0.0.0.0', () => {
         vesselApiPollTimer = setInterval(pollVesselApiNextTile, VESSELAPI_TICK_MS);
         const vueltaHoras = (VESSELAPI_TILES.length * VESSELAPI_TICK_MS / 3600000).toFixed(1);
         console.log(`📡 VesselAPI: polling activado (fuente secundaria, corredor de ${VESSELAPI_TILES.length} recuadros, vuelta completa cada ~${vueltaHoras}h)`);
+
+        if (VESSELAPI_SAT_ENABLED) {
+            vesselApiSatPollTimer = setInterval(pollVesselApiSatelliteNext, VESSELAPI_SAT_TICK_MS);
+            console.log(`🛰️ VesselAPI: refuerzo satelital activado (1 barco conocido cada ${VESSELAPI_SAT_TICK_MS / 60000} min, tope ${VESSELAPI_SAT_DAILY_CAP} intentos/dia)`);
+        } else {
+            console.log('VesselAPI: refuerzo satelital desactivado (VESSELAPI_SAT_ENABLED=false)');
+        }
     } else {
         console.log('VesselAPI desactivado: falta VESSELAPI_KEY');
     }
