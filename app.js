@@ -1185,7 +1185,7 @@ async function pollVesselApiTile(box, tileLabel) {
             });
             if (ok) accepted += 1;
         }
-        if (vessels.length) console.log(`📡 VesselAPI: ${accepted}/${vessels.length} posiciones aceptadas (recuadro ${tileLabel})`);
+        console.log(`📡 VesselAPI: recuadro ${tileLabel} -- ${vessels.length} barco(s) recibido(s), ${accepted} aceptado(s)`);
     } catch (e) {
         console.warn(`⚠️ VesselAPI: fallo el polling (recuadro ${tileLabel}):`, e.message);
     }
@@ -1232,9 +1232,13 @@ async function pollVesselApiSatelliteNext() {
     if (!VESSELAPI_KEY || !VESSELAPI_SAT_ENABLED || vesselApiHalted) return;
 
     const roster = Object.keys(app.locals.aisPositions || {});
-    if (roster.length === 0) return;
+    if (roster.length === 0) {
+        console.log('🛰️ VesselAPI (sat): sin barcos conocidos todavia, nada para reforzar');
+        return;
+    }
 
     if (!vesselApiSatCapCheck()) {
+        console.log(`🛰️ VesselAPI (sat): tope diario alcanzado (${vesselApiSatCallsToday}/${VESSELAPI_SAT_DAILY_CAP}), espera al proximo dia`);
         return; // tope diario alcanzado, esperar al proximo dia (UTC-3)
     }
 
@@ -1246,6 +1250,7 @@ async function pollVesselApiSatelliteNext() {
     const lastSeenMs = known?.timestamp ? new Date(known.timestamp).getTime() : 0;
     const ageMs = Date.now() - lastSeenMs;
     if (lastSeenMs && ageMs < VESSELAPI_SAT_STALE_MS) {
+        console.log(`🛰️ VesselAPI (sat): MMSI ${mmsi} todavia fresco (${Math.round(ageMs / 60000)} min), se salta gratis`);
         return; // dato terrestre todavia fresco, no hace falta reforzar con satelite
     }
 
