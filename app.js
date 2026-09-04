@@ -1064,12 +1064,13 @@ function buildVesselApiCorridorTiles(points, halfDeg) {
 
 const VESSELAPI_TILES = buildVesselApiCorridorTiles(VESSELAPI_CORRIDOR, VESSELAPI_HALF_DEG);
 // Un recuadro por tick. Se calibra para no pasarse de la cuota MENSUAL
-// del plan (no es un tema del limite corto de 300 req/5min, ese sobra):
-// con el plan gratuito de VesselAPI (150 llamadas/mes) hay que estirar
-// ~150 llamadas a lo largo de ~30 dias para no gastar todo el mes en
-// unas horas y quedar sin cuota el resto del mes. Si se sube de plan,
-// avisar para achicar este intervalo y actualizar mas seguido.
-const VESSELAPI_TICK_MS = 4.8 * 60 * 60 * 1000; // ~4h48min por recuadro
+// del plan (no es un tema del limite corto de 300 req/5min, ese sobra).
+// Actualizado el 4/9/2026 tras subir de Free (150/mes) a Basic (1500/mes):
+// 40 min/recuadro -> vuelta completa cada ~13.3h -> ~1080 llamadas/mes del
+// corredor. Sumado al tope diario del refuerzo satelital (10/dia = ~300/mes
+// en el peor caso), da ~1380/mes, con margen bajo las 1500 del plan. Si se
+// vuelve a subir de plan, achicar mas este intervalo.
+const VESSELAPI_TICK_MS = 40 * 60 * 1000; // 40min por recuadro
 let vesselApiTileIndex = 0;
 
 // Corta el polling por completo ante 429/403: seguir reintentando cada
