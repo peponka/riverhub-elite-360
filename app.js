@@ -1006,6 +1006,37 @@ function ingestRelayPosition(position) {
         return false;
     }
 
+    // VesselAPI informa el timestamp real del reporte AIS (position.timestamp),
+    // que puede ser bastante mas viejo que el momento en que lo recibimos --
+    // una consulta REST a un recuadro lejano puede tardar, o el ultimo dato
+    // conocido de un barco puede tener horas. Si no viene un timestamp valido
+    // (AISStream/relay, que llegan practicamente en tiempo real), se usa el
+    // momento de recepcion como aproximacion.
+    const receivedAtMs = Date.now();
+    let observedAtMs = receivedAtMs;
+    if (position.timestamp) {
+        const parsed = new Date(position.timestamp).getTime();
+        // Descarta timestamps invalidos, del futuro (reloj desincronizado del
+        // proveedor) o mas viejos que la ventana de rehidratacion.
+        if (Number.isFinite(parsed) &&
+            parsed <= receivedAtMs + 5 * 60 * 1000 &&
+            parsed > receivedAtMs - AIS_MAX_AGE_HOURS * 3600 * 1000) {
+            observedAtMs = parsed;
+        }
+    }
+
+    // No dejar que una respuesta vieja (tipico de una consulta lenta a
+    // VesselAPI) pise una posicion mas nueva que ya tenemos, sea de la misma
+    // fuente o de AISStream -- "ultimo que llega gana" sin esto podia mostrar
+    // un dato desactualizado como si fuera el mas reciente.
+    const current = app.locals.aisPositions[mmsi];
+    if (current && current.timestamp) {
+        const currentMs = new Date(current.timestamp).getTime();
+        if (Number.isFinite(currentMs) && currentMs > observedAtMs) {
+            return true; // dato valido pero superado por uno mas nuevo, no se aplica
+        }
+    }
+
     app.locals.aisPositions[mmsi] = {
         mmsi,
         name: String(position.name || 'Unknown').slice(0, 120),
@@ -1013,7 +1044,7 @@ function ingestRelayPosition(position) {
         speed: Number(position.speed) || 0,
         course: Number(position.course) || 0,
         heading: Number(position.heading) || 0,
-        timestamp: new Date().toISOString()
+        timestamp: new Date(observedAtMs).toISOString()
     };
     aisDirty.add(mmsi);
     app.locals.aisLastMessageAt = new Date().toISOString();
@@ -1065,12 +1096,15 @@ function buildVesselApiCorridorTiles(points, halfDeg) {
 const VESSELAPI_TILES = buildVesselApiCorridorTiles(VESSELAPI_CORRIDOR, VESSELAPI_HALF_DEG);
 // Un recuadro por tick. Se calibra para no pasarse de la cuota MENSUAL
 // del plan (no es un tema del limite corto de 300 req/5min, ese sobra).
-// Actualizado el 4/9/2026 tras subir de Free (150/mes) a Basic (1500/mes):
-// 40 min/recuadro -> vuelta completa cada ~13.3h -> ~1080 llamadas/mes del
-// corredor. Sumado al tope diario del refuerzo satelital (10/dia = ~300/mes
-// en el peor caso), da ~1380/mes, con margen bajo las 1500 del plan. Si se
-// vuelve a subir de plan, achicar mas este intervalo.
-const VESSELAPI_TICK_MS = 40 * 60 * 1000; // 40min por recuadro
+// Actualizado el 4/9/2026: el calculo anterior (40min/recuadro) daba
+// margen real de solo ~73 llamadas/mes contando meses de 31 dias --
+// insuficiente si hay varios redeploys en un dia (cada arranque hace una
+// llamada extra del corredor de entrada). Con 45min/recuadro: vuelta
+// completa cada ~15h -> ~992 llamadas/mes del corredor (31 dias). Sumado
+// al tope diario del refuerzo satelital (10/dia = ~310/mes en el peor
+// caso), da ~1302/mes sobre el limite de 1500 del plan Basic -- ~13% de
+// margen. Si se vuelve a subir de plan, achicar este intervalo.
+const VESSELAPI_TICK_MS = 45 * 60 * 1000; // 45min por recuadro
 let vesselApiTileIndex = 0;
 
 // Corta el polling por completo ante 429/403: seguir reintentando cada
@@ -1121,7 +1155,8 @@ async function pollVesselApiTile(box, tileLabel) {
                 lon: v.longitude,
                 speed: v.sog,
                 course: v.cog,
-                heading: v.heading
+                heading: v.heading,
+                timestamp: v.timestamp
             });
             if (ok) accepted += 1;
         }
@@ -1213,7 +1248,8 @@ async function pollVesselApiSatelliteNext() {
             lon: v.longitude,
             speed: v.sog,
             course: v.cog,
-            heading: v.heading
+            heading: v.heading,
+            timestamp: v.timestamp
         });
         if (ok) {
             console.log(`🛰️ VesselAPI (sat): MMSI ${mmsi} actualizado (intento satelital ${vesselApiSatCallsToday}/${VESSELAPI_SAT_DAILY_CAP} hoy)`);
@@ -1652,25 +1688,30 @@ server.listen(PORT, '0.0.0.0', () => {
 ║   AIS: Hidrovía Paraguay-Paraná         ║
 ╚══════════════════════════════════════════╝
     `);
-    // Rehidratar primero: asi el mapa tiene datos desde el segundo cero en
-    // vez de esperar a que los barcos vuelvan a emitir uno por uno.
-    hydrateAisPositions().finally(startAISStream);
+    // Rehidratar primero y recien ahi arrancar TODAS las fuentes en vivo
+    // (AISStream y los dos pollers de VesselAPI). hydrateAisPositions escribe
+    // directo en app.locals.aisPositions sin comparar timestamps, asi que si
+    // el corredor arrancara antes de terminar la rehidratacion, una respuesta
+    // rapida de VesselAPI podia quedar pisada por un dato viejo de la base.
+    hydrateAisPositions().finally(() => {
+        startAISStream();
 
-    if (VESSELAPI_KEY) {
-        pollVesselApiNextTile();
-        vesselApiPollTimer = setInterval(pollVesselApiNextTile, VESSELAPI_TICK_MS);
-        const vueltaHoras = (VESSELAPI_TILES.length * VESSELAPI_TICK_MS / 3600000).toFixed(1);
-        console.log(`📡 VesselAPI: polling activado (fuente secundaria, corredor de ${VESSELAPI_TILES.length} recuadros, vuelta completa cada ~${vueltaHoras}h)`);
+        if (VESSELAPI_KEY) {
+            pollVesselApiNextTile();
+            vesselApiPollTimer = setInterval(pollVesselApiNextTile, VESSELAPI_TICK_MS);
+            const vueltaHoras = (VESSELAPI_TILES.length * VESSELAPI_TICK_MS / 3600000).toFixed(1);
+            console.log(`📡 VesselAPI: polling activado (fuente secundaria, corredor de ${VESSELAPI_TILES.length} recuadros, vuelta completa cada ~${vueltaHoras}h)`);
 
-        if (VESSELAPI_SAT_ENABLED) {
-            vesselApiSatPollTimer = setInterval(pollVesselApiSatelliteNext, VESSELAPI_SAT_TICK_MS);
-            console.log(`🛰️ VesselAPI: refuerzo satelital activado (1 barco conocido cada ${VESSELAPI_SAT_TICK_MS / 60000} min, tope ${VESSELAPI_SAT_DAILY_CAP} intentos/dia)`);
+            if (VESSELAPI_SAT_ENABLED) {
+                vesselApiSatPollTimer = setInterval(pollVesselApiSatelliteNext, VESSELAPI_SAT_TICK_MS);
+                console.log(`🛰️ VesselAPI: refuerzo satelital activado (1 barco conocido cada ${VESSELAPI_SAT_TICK_MS / 60000} min, tope ${VESSELAPI_SAT_DAILY_CAP} intentos/dia)`);
+            } else {
+                console.log('VesselAPI: refuerzo satelital desactivado (VESSELAPI_SAT_ENABLED=false)');
+            }
         } else {
-            console.log('VesselAPI: refuerzo satelital desactivado (VESSELAPI_SAT_ENABLED=false)');
+            console.log('VesselAPI desactivado: falta VESSELAPI_KEY');
         }
-    } else {
-        console.log('VesselAPI desactivado: falta VESSELAPI_KEY');
-    }
+    });
 });
 
 // Render manda SIGTERM antes de reiniciar en cada deploy: se vuelca lo que
