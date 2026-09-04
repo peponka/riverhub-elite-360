@@ -1300,13 +1300,20 @@ function startAISStream() {
             // if de abajo, no matcheaba, y se descartaba en silencio: el
             // endpoint seguia diciendo "connected: true" con cero datos y sin
             // rastro del motivo en ningun lado.
-            if (msg.error || msg.Error || (msg.MessageType && msg.MessageType !== 'PositionReport')) {
-                const detalle = msg.error || msg.Error || JSON.stringify(msg).slice(0, 200);
+            if (msg.error || msg.Error) {
+                const detalle = msg.error || msg.Error;
                 app.locals.aisLastError = { at: new Date().toISOString(), detalle: String(detalle).slice(0, 300) };
-                console.warn('⚠️ AIS mensaje no-posicion:', detalle);
+                console.warn('⚠️ AIS error del proveedor:', detalle);
                 // A provider-side error can leave the socket open but unusable.
                 // Close it so the bounded backoff decides when to try again.
                 if (ws.readyState === WebSocket.OPEN) ws.close(4008, 'AIS provider error');
+                return;
+            }
+
+            if (msg.MessageType && msg.MessageType !== 'PositionReport') {
+                // Mensaje informativo del proveedor (ej. SubscriptionConfirmation)
+                // que confirma que la suscripcion se acepto correctamente -- no es
+                // un error, asi que no cierra el socket ni cuenta como falla.
                 return;
             }
 
