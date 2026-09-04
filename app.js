@@ -1099,13 +1099,38 @@ const VESSELAPI_TILES = buildVesselApiCorridorTiles(VESSELAPI_CORRIDOR, VESSELAP
 // Actualizado el 4/9/2026: el calculo anterior (40min/recuadro) daba
 // margen real de solo ~73 llamadas/mes contando meses de 31 dias --
 // insuficiente si hay varios redeploys en un dia (cada arranque hace una
-// llamada extra del corredor de entrada). Con 45min/recuadro: vuelta
-// completa cada ~15h -> ~992 llamadas/mes del corredor (31 dias). Sumado
-// al tope diario del refuerzo satelital (10/dia = ~310/mes en el peor
-// caso), da ~1302/mes sobre el limite de 1500 del plan Basic -- ~13% de
-// margen. Si se vuelve a subir de plan, achicar este intervalo.
+// llamada extra del corredor de entrada). Con 45min/recuadro: ~992
+// llamadas/mes del corredor (31 dias). Sumado al tope diario del refuerzo
+// satelital (10/dia = ~310/mes en el peor caso), da ~1302/mes sobre el
+// limite de 1500 del plan Basic -- ~13% de margen. Si se vuelve a subir
+// de plan, achicar este intervalo.
 const VESSELAPI_TICK_MS = 45 * 60 * 1000; // 45min por recuadro
-let vesselApiTileIndex = 0;
+
+// Los primeros VESSELAPI_NORTH_COUNT recuadros de VESSELAPI_CORRIDOR son
+// la zona norte real (Bahia Negra, Fuerte Olimpo, Puerto Casado/Vallemi,
+// Concepcion) -- ahi es donde falta cobertura terrestre. El resto (sur)
+// ya tiene AIS en tiempo real via AISStream. Se arma un orden de visita
+// que intercala 1 recuadro del norte por cada recuadro del sur, en vez
+// de recorrerlos todos parejo: el mismo total de llamadas/dia, pero
+// redistribuido para darle mucha mas frecuencia a la zona que realmente
+// lo necesita (el sur no pierde nada porque AISStream ya lo cubre en
+// vivo).
+const VESSELAPI_NORTH_COUNT = 4;
+function buildVesselApiSchedule(tileCount, northCount) {
+    const north = [];
+    for (let i = 0; i < northCount; i++) north.push(i);
+    const south = [];
+    for (let i = northCount; i < tileCount; i++) south.push(i);
+    if (south.length === 0) return north; // corredor todo "norte", no hay nada que intercalar
+    const schedule = [];
+    for (let s = 0; s < south.length; s++) {
+        schedule.push(north[s % north.length]);
+        schedule.push(south[s]);
+    }
+    return schedule;
+}
+const VESSELAPI_SCHEDULE = buildVesselApiSchedule(VESSELAPI_TILES.length, VESSELAPI_NORTH_COUNT);
+let vesselApiScheduleIndex = 0;
 
 // Corta el polling por completo ante 429/403: seguir reintentando cada
 // pocos segundos es exactamente el patron que VesselAPI castiga con una
@@ -1167,11 +1192,11 @@ async function pollVesselApiTile(box, tileLabel) {
 }
 
 function pollVesselApiNextTile() {
-    if (!VESSELAPI_KEY || VESSELAPI_TILES.length === 0 || vesselApiHalted) return;
-    const i = vesselApiTileIndex;
-    const box = VESSELAPI_TILES[i];
-    vesselApiTileIndex = (i + 1) % VESSELAPI_TILES.length;
-    pollVesselApiTile(box, `${i + 1}/${VESSELAPI_TILES.length}`);
+    if (!VESSELAPI_KEY || VESSELAPI_SCHEDULE.length === 0 || vesselApiHalted) return;
+    const tileIdx = VESSELAPI_SCHEDULE[vesselApiScheduleIndex];
+    const box = VESSELAPI_TILES[tileIdx];
+    vesselApiScheduleIndex = (vesselApiScheduleIndex + 1) % VESSELAPI_SCHEDULE.length;
+    pollVesselApiTile(box, `${tileIdx + 1}/${VESSELAPI_TILES.length}`);
 }
 
 // --- Refuerzo satelital (filter.sat=true) ---
@@ -1699,8 +1724,10 @@ server.listen(PORT, '0.0.0.0', () => {
         if (VESSELAPI_KEY) {
             pollVesselApiNextTile();
             vesselApiPollTimer = setInterval(pollVesselApiNextTile, VESSELAPI_TICK_MS);
-            const vueltaHoras = (VESSELAPI_TILES.length * VESSELAPI_TICK_MS / 3600000).toFixed(1);
-            console.log(`📡 VesselAPI: polling activado (fuente secundaria, corredor de ${VESSELAPI_TILES.length} recuadros, vuelta completa cada ~${vueltaHoras}h)`);
+            const surCount = VESSELAPI_TILES.length - VESSELAPI_NORTH_COUNT;
+            const cicloHoras = (VESSELAPI_SCHEDULE.length * VESSELAPI_TICK_MS / 3600000).toFixed(1);
+            const norteHoras = (VESSELAPI_SCHEDULE.length / VESSELAPI_NORTH_COUNT * VESSELAPI_TICK_MS / 3600000).toFixed(1);
+            console.log(`📡 VesselAPI: polling activado (fuente secundaria, ${VESSELAPI_TILES.length} recuadros -- ${VESSELAPI_NORTH_COUNT} del norte cada ~${norteHoras}h, ${surCount} del sur cada ~${cicloHoras}h)`);
 
             if (VESSELAPI_SAT_ENABLED) {
                 vesselApiSatPollTimer = setInterval(pollVesselApiSatelliteNext, VESSELAPI_SAT_TICK_MS);
