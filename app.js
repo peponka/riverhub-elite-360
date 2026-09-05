@@ -1148,44 +1148,64 @@ function haltVesselApiPolling(reason) {
     console.error(`🛑 VesselAPI: polling detenido (${reason}). Requiere redeploy/reinicio para reanudar.`);
 }
 
+// Cada pagina extra de un recuadro es una llamada mas contra la cuota
+// MENSUAL (ver comentario arriba de VESSELAPI_TICK_MS, ~13% de margen) --
+// por eso el recorrido de paginas es acotado, no "hasta agotar nextToken".
+// Solo se pide una pagina de mas cuando la anterior vino llena (50/50,
+// senal real de que hay mas barcos en el recuadro) y nunca mas de
+// VESSELAPI_MAX_PAGES_PER_TILE en total por tile por tick.
+const VESSELAPI_MAX_PAGES_PER_TILE = 2;
+
 async function pollVesselApiTile(box, tileLabel) {
     if (!VESSELAPI_KEY || vesselApiHalted) return;
+    let totalVessels = 0;
+    let totalAccepted = 0;
+    let nextToken = null;
+    let pages = 0;
     try {
-        const qs = new URLSearchParams({
-            'filter.latBottom': box.latBottom,
-            'filter.latTop': box.latTop,
-            'filter.lonLeft': box.lonLeft,
-            'filter.lonRight': box.lonRight,
-            'pagination.limit': 50
-        });
-        const res = await fetch(`https://api.vesselapi.com/v1/location/vessels/bounding-box?${qs}`, {
-            headers: { Authorization: `Bearer ${VESSELAPI_KEY}` }
-        });
-        if (!res.ok) {
-            const body = await res.text().catch(() => '');
-            console.warn(`⚠️ VesselAPI: HTTP ${res.status} (recuadro ${tileLabel}) — ${body.slice(0, 300)}`);
-            if (res.status === 429 || res.status === 403) {
-                haltVesselApiPolling(`HTTP ${res.status} en recuadro ${tileLabel}`);
-            }
-            return;
-        }
-        const data = await res.json();
-        const vessels = Array.isArray(data?.vessels) ? data.vessels : [];
-        let accepted = 0;
-        for (const v of vessels) {
-            const ok = ingestRelayPosition({
-                mmsi: v.mmsi,
-                name: v.vessel_name,
-                lat: v.latitude,
-                lon: v.longitude,
-                speed: v.sog,
-                course: v.cog,
-                heading: v.heading,
-                timestamp: v.timestamp
+        do {
+            pages += 1;
+            const params = {
+                'filter.latBottom': box.latBottom,
+                'filter.latTop': box.latTop,
+                'filter.lonLeft': box.lonLeft,
+                'filter.lonRight': box.lonRight,
+                'pagination.limit': 50
+            };
+            if (nextToken) params['pagination.nextToken'] = nextToken;
+            const qs = new URLSearchParams(params);
+            const res = await fetch(`https://api.vesselapi.com/v1/location/vessels/bounding-box?${qs}`, {
+                headers: { Authorization: `Bearer ${VESSELAPI_KEY}` }
             });
-            if (ok) accepted += 1;
-        }
-        console.log(`📡 VesselAPI: recuadro ${tileLabel} -- ${vessels.length} barco(s) recibido(s), ${accepted} aceptado(s)`);
+            if (!res.ok) {
+                const body = await res.text().catch(() => '');
+                console.warn(`⚠️ VesselAPI: HTTP ${res.status} (recuadro ${tileLabel}, pagina ${pages}) — ${body.slice(0, 300)}`);
+                if (res.status === 429 || res.status === 403) {
+                    haltVesselApiPolling(`HTTP ${res.status} en recuadro ${tileLabel}`);
+                }
+                nextToken = null;
+                break;
+            }
+            const data = await res.json();
+            const vessels = Array.isArray(data?.vessels) ? data.vessels : [];
+            for (const v of vessels) {
+                const ok = ingestRelayPosition({
+                    mmsi: v.mmsi,
+                    name: v.vessel_name,
+                    lat: v.latitude,
+                    lon: v.longitude,
+                    speed: v.sog,
+                    course: v.cog,
+                    heading: v.heading,
+                    timestamp: v.timestamp
+                });
+                if (ok) totalAccepted += 1;
+            }
+            totalVessels += vessels.length;
+            nextToken = data?.nextToken || null;
+        } while (nextToken && pages < VESSELAPI_MAX_PAGES_PER_TILE);
+        const masNote = nextToken ? ` (quedan mas, tope ${VESSELAPI_MAX_PAGES_PER_TILE} pagina(s)/tile)` : '';
+        console.log(`📡 VesselAPI: recuadro ${tileLabel} -- ${totalVessels} barco(s) recibido(s) en ${pages} pagina(s), ${totalAccepted} aceptado(s)${masNote}`);
     } catch (e) {
         console.warn(`⚠️ VesselAPI: fallo el polling (recuadro ${tileLabel}):`, e.message);
     }
